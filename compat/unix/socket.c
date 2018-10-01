@@ -102,8 +102,8 @@ compat_socket_t compat_socket_selfpipe_get_read_fd( compat_socket_selfpipe_t *se
 
 void compat_socket_selfpipe_wake( compat_socket_selfpipe_t *self )
 {
-  const char dummy = 0;
-  write( self->write_fd, &dummy, 1 );
+    const char dummy = 0;
+    if (write( self->write_fd, &dummy, 1)) {};
 }
 
 void compat_socket_selfpipe_discard_data( compat_socket_selfpipe_t *self )

@@ -30,17 +30,16 @@
 
 #include "compat.h"
 
-extern const char *fuse_progname;	/* argv[0] */
+extern const char *fuse_progname; // argv[0]
 
-extern int fuse_exiting;		/* Shall we exit now? */
+extern int fuse_exiting; // Shall we exit now?
 
-extern int fuse_emulation_paused;	/* Is Spectrum emulation paused? */
-int fuse_emulation_pause(void);		/* Stop and start emulation */
+extern int fuse_emulation_paused; // Is Spectrum emulation paused?
+int fuse_emulation_pause(void); // Stop and start emulation
 int fuse_emulation_unpause(void);
 
-void fuse_abort( void ) GCC_NORETURN;	/* Emergency shutdown */
+void fuse_abort(void) GCC_NORETURN; // Emergency shutdown
 
-extern libspectrum_creator *fuse_creator; /* Creator information for file
-					     formats which support this */
+extern libspectrum_creator *fuse_creator; // Creator information for file formats which support this
 
-#endif			/* #ifndef FUSE_FUSE_H */
+#endif // #ifndef FUSE_FUSE_H
