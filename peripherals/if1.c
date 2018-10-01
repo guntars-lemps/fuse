@@ -60,9 +60,9 @@ enum {
  Microdrive cartridge
    GAP      PREAMBLE      15 byte      GAP      PREAMBLE      15 byte    512     1
  [-----][00 00 ... ff ff][BLOCK HEAD][-----][00 00 ... ff ff][REC HEAD][ DATA ][CHK]
- Preamble = 10 * 0x00 + 2 * 0xff (12 byte) 
+ Preamble = 10 * 0x00 + 2 * 0xff (12 byte)
 */
- 
+
 typedef struct microdrive_t {
   utils_file file;
   char *filename;		/* old filename */
@@ -103,7 +103,7 @@ typedef struct if1_ula_t {
   int data_out; /* interpreted outgoing data */
   int count_out;
   int esc_in;	/* if we compose an escape seq */
-  
+
   int net;	/* Network in/out (really 1 wire bus :-) */
   int net_data;	/* Interpreted network data */
   int net_state;	/* Interpreted network data */
@@ -118,7 +118,7 @@ typedef struct if1_ula_t {
  CONTRO WO $EF(239)     --- --- WAT CTS ERA R/w CLK DTA
 
  MDR DT RW $E7(231)     D7  D6  D5  D4  D3  D2  D1  D0
- 
+
  COMM I RO $F7(247)     TX  --- --- --- --- --- --- NET
 
  COMM O WO $F7(247)     --- --- --- --- --- --- --- NET/RX
@@ -252,7 +252,7 @@ update_menu( enum if1_menu_item what )
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M2_WP_SET,
 		      !MDR_IN( 2 ) ? 0 : !MDR_WP( 2 ) );
   }
-  
+
   if( what == UMENU_ALL || what == UMENU_MDRV3 ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M3_EJECT, MDR_IN( 3 ) );
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M3_WP_SET,
@@ -264,31 +264,31 @@ update_menu( enum if1_menu_item what )
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M4_WP_SET,
 		      !MDR_IN( 4 ) ? 0 : !MDR_WP( 4 ) );
   }
-  
+
   if( what == UMENU_ALL || what == UMENU_MDRV5 ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M5_EJECT, MDR_IN( 5 ) );
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M5_WP_SET,
 		      !MDR_IN( 5 ) ? 0 : !MDR_WP( 5 ) );
   }
-  
+
   if( what == UMENU_ALL || what == UMENU_MDRV6 ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M6_EJECT, MDR_IN( 6 ) );
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M6_WP_SET,
 		      !MDR_IN( 6 ) ? 0 : !MDR_WP( 6 ) );
   }
-  
+
   if( what == UMENU_ALL || what == UMENU_MDRV7 ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M7_EJECT, MDR_IN( 7 ) );
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M7_WP_SET,
 		      !MDR_IN( 7 ) ? 0 : !MDR_WP( 7 ) );
   }
-  
+
   if( what == UMENU_ALL || what == UMENU_MDRV8 ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M8_EJECT, MDR_IN( 8 ) );
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_M8_WP_SET,
 		      !MDR_IN( 8 ) ? 0 : !MDR_WP( 8 ) );
   }
-  
+
   if( what == UMENU_ALL || what == UMENU_RS232 ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1_RS232_UNPLUG_R,
                     ( if1_ula.fd_r > -1 ) ? 1 : 0 );
@@ -322,7 +322,7 @@ if1_init( void *context )
     microdrive[m].inserted = 0;
     microdrive[m].modified = 0;
   }
-  
+
   if( settings_current.rs232_rx ) {
     if1_plug( settings_current.rs232_rx, 1 );
     libspectrum_free( settings_current.rs232_rx );
@@ -413,7 +413,7 @@ if1_reset( int hard_reset GCC_UNUSED )
   }
 
   machine_current->ram.romcs = 0;
-  
+
   if1_ula.cts = 2;		/* force to emit first out if raw */
   if1_ula.comms_clk = 0;
   if1_ula.comms_data = 0;
@@ -427,7 +427,7 @@ if1_reset( int hard_reset GCC_UNUSED )
 		       UI_STATUSBAR_STATE_INACTIVE );
 
   if1_mdr_status = 0;
-  
+
   if1_available = 1;
 }
 
@@ -637,15 +637,15 @@ port_ctr_in( void )
       }
     }
   }
-  
+
   if( if1_ula.dtr == 0 )
     ret &= 0xf7;	/* %11110111 */
 
-  /* Here we have to poll, the 'SinclairNet' busy flag but never used by 
+  /* Here we have to poll, the 'SinclairNet' busy flag but never used by
      software in Interface 1 */
   if( if1_ula.busy == 0 )
     ret &= 0xef;	/* %11101111 */
-  /*    fprintf( stderr, "Read CTR ( %%%d%d%d%d%d%d%d%d ).\n", 
+  /*    fprintf( stderr, "Read CTR ( %%%d%d%d%d%d%d%d%d ).\n",
 	!!(ret & 128), !!(ret & 64), !!(ret & 32), !!(ret & 16),
 	!!(ret & 8), !!(ret & 4), !!(ret & 2), !!(ret & 1)); */
   microdrives_restart();
@@ -728,7 +728,7 @@ no_rs232_in:
     read( if1_ula.fd_net, &if1_ula.net, 1 );	/* Ok, if no byte, we send last*/
   } else {/* if( if1_ula.s_net_mode == 1 ) if we do interpreted */
 /* Here is the input routine. There are several stage in input
-   and output. So first for output. if1 first do SEND-SC 
+   and output. So first for output. if1 first do SEND-SC
    (http://www.wearmouth.demon.co.uk/if1_2.htm#L101E) to send
    a Sync-Out signal and SEND-SC do first a NET-STATE
    (http://www.wearmouth.demon.co.uk/if1_2.htm#L0FBC) to see
@@ -742,7 +742,7 @@ no_rs232_in:
    128 times the net wire (we do two round, because to differentiate
    net out routines...)
 */
-  
+
     if( if1_ula.net_state < 0x0100 ) {	/* if1 may in NET-STATE */
       if1_ula.net_state++;
       if1_ula.net = 0;
@@ -807,7 +807,7 @@ port_mdr_out( libspectrum_byte val )
   for( m = 0; m < 8; m++ ) {
 
     microdrive_t *mdr = &microdrive[ m ];
- 
+
     if( mdr->motor_on && mdr->inserted ) {
 #ifdef IF1_DEBUG_MDR
       fprintf(stderr, "#%05d  %03d(%03d): 0x%02x\n",
@@ -825,7 +825,7 @@ port_mdr_out( libspectrum_byte val )
       }
       if( mdr->transfered > 11 &&
 	  mdr->transfered < mdr->max_bytes + 12 ) {
- 
+
 	libspectrum_microdrive_set_data( mdr->cartridge, mdr->head_pos,
  					 val );
  	increment_head( m );
@@ -849,7 +849,7 @@ port_ctr_out( libspectrum_byte val )
     }
     microdrive[0].motor_on = (val & 0x01) ? 0 : 1;
 
-    if( microdrive[0].motor_on || microdrive[1].motor_on || 
+    if( microdrive[0].motor_on || microdrive[1].motor_on ||
 	microdrive[2].motor_on || microdrive[3].motor_on ||
 	microdrive[4].motor_on || microdrive[5].motor_on ||
 	microdrive[6].motor_on || microdrive[7].motor_on ) {
@@ -876,7 +876,7 @@ port_ctr_out( libspectrum_byte val )
        via resistor R4, to the base of transistor Q1 (NET). When COMMS_OUT
        is high Q3 is enabled this selecting RS232, and when it is low
        Q1 is enabled selecting the network.
-	 
+
        OK, the schematics offer a different interpretation, because if
        COMMS_OUT pin level high (>+3V) then Q3 is off (the basis cannot
        be more higher potential then emitter (NPN transistor), so whatever
@@ -885,9 +885,9 @@ port_ctr_out( libspectrum_byte val )
        If COMMS_OUT pin level goes low (~0V), then Q3 basis (connected
        to IC1 RX DATA pin) can be higher level (>+3V) than emitter, so
        the basis potential of Q4 depend on IC1 RX DATA.
-	 
+
        OK, Summa summarum I assume that, the COMMS OUT pin is a
-       negated output of the if1 ULA CTR register's COMMS DATA bit. 
+       negated output of the if1 ULA CTR register's COMMS DATA bit.
     */
     /* C_DATA = 1 */
     if( if1_ula.comms_data == 0 ) {
@@ -901,14 +901,14 @@ port_ctr_out( libspectrum_byte val )
   if1_ula.comms_data = ( val & 0x01 ) ? 1 : 0;
   if1_ula.comms_clk = ( val & 0x02 ) ? 1 : 0;
   val = ( val & 0x10 ) ? 1 : 0;
-  if( settings_current.rs232_handshake && 
+  if( settings_current.rs232_handshake &&
       if1_ula.fd_t != -1 && if1_ula.cts != val ) {
     char data = val ? 0x03 : 0x02;
     do {} while( write( if1_ula.fd_t, "", 1 ) != 1 );
     do {} while( write( if1_ula.fd_t, &data, 1 ) != 1 );
   }
   if1_ula.cts = val;
-    
+
 #ifdef IF1_DEBUG_NET
   fprintf( stderr, "Set CTS to %d, set WAIT to %d and COMMS_DATA to %d\n",
 	   if1_ula.cts, if1_ula.wait, if1_ula.comms_data );
@@ -950,7 +950,7 @@ port_net_out( libspectrum_byte val )
       if( val )
         if1_ula.count_out = -1;
     }
-      
+
     if( if1_ula.count_out == -1 ) {
       if1_ula.count_out = 13;
       if1_ula.data_out = '?';
@@ -992,7 +992,7 @@ port_net_out( libspectrum_byte val )
       } else if( if1_ula.net_state == 0x0208 ) {
 	if1_ula.net_data &= 0xff;
 	if1_ula.net_state++;		/* OK, now we get data bytes... */
-        
+
 /*	lseek( if1_ula.fd_net, 0, SEEK_SET );  start a packet */
 		/* first we send the station number */
         do {} while( write( if1_ula.fd_net, &if1_ula.net_data, 1 ) == -1 );
@@ -1003,7 +1003,7 @@ port_net_out( libspectrum_byte val )
 	fprintf( stderr, "SC-OUT send network number: %d\n",
 	                                   if1_ula.net_data ^ 0xff );
 #endif
-      } else if( if1_ula.net_state > 192 && if1_ula.net_state < 0x0200 && 
+      } else if( if1_ula.net_state > 192 && if1_ula.net_state < 0x0200 &&
         ( ( val & 0x01 ) == 0 ) ) {
 	/* NET-STATE ask as many times.... and now send a 0 */
 /*	  if1_ula.net = 1; */
@@ -1019,7 +1019,7 @@ static void
 if1_port_out( libspectrum_word port GCC_UNUSED, libspectrum_byte val )
 {
 #ifdef IF1_DEBUG_NET_1
-  fprintf( stderr, "In if1_port_out( %%%d%d%d%d%d%d%d%d => 0x%04x ).\n", 
+  fprintf( stderr, "In if1_port_out( %%%d%d%d%d%d%d%d%d => 0x%04x ).\n",
 	!!(val & 128), !!(val & 64), !!(val & 32), !!(val & 16),
 	!!(val & 8), !!(val & 4), !!(val & 2), !!(val & 1), port);
 #endif
@@ -1051,7 +1051,7 @@ microdrives_restart( void )
     while( ( microdrive[m].head_pos % LIBSPECTRUM_MICRODRIVE_BLOCK_LEN ) != 0  &&
            ( microdrive[m].head_pos % LIBSPECTRUM_MICRODRIVE_BLOCK_LEN ) != LIBSPECTRUM_MICRODRIVE_HEAD_LEN )
       increment_head( m ); /* put head in the start of a block */
-	
+
     microdrive[m].transfered = 0; /* reset current number of bytes written */
 
     if( ( microdrive[m].head_pos % LIBSPECTRUM_MICRODRIVE_BLOCK_LEN ) == 0 ) {
@@ -1059,7 +1059,7 @@ microdrives_restart( void )
     } else {
       microdrive[m].max_bytes = LIBSPECTRUM_MICRODRIVE_HEAD_LEN + LIBSPECTRUM_MICRODRIVE_DATA_LEN + 1; /* up to 528 bytes for data blocks */
     }
-  }	
+  }
 }
 
 void
@@ -1084,9 +1084,9 @@ if1_mdr_new( microdrive_t *mdr )
                   ( rand() >> 2 ) + ( rand() >> 2 ) )
 		  / rnd_factor;
   } else
-    len = settings_current.mdr_len = settings_current.mdr_len < 10 ? 10 : 
+    len = settings_current.mdr_len = settings_current.mdr_len < 10 ? 10 :
 	    settings_current.mdr_len > LIBSPECTRUM_MICRODRIVE_BLOCK_MAX ? LIBSPECTRUM_MICRODRIVE_BLOCK_MAX : settings_current.mdr_len;
-  
+
   /* Erase the entire cartridge */
   libspectrum_microdrive_set_cartridge_len( mdr->cartridge, len );
 
@@ -1238,8 +1238,8 @@ if1_mdr_save( int which, int saveas )
 int
 if1_mdr_write( int which, const char *filename )
 {
-  microdrive_t *mdr = &microdrive[which];  
-  
+  microdrive_t *mdr = &microdrive[which];
+
   libspectrum_microdrive_mdr_write( mdr->cartridge, &mdr->file.buffer,
 			            &mdr->file.length );
 
@@ -1262,10 +1262,6 @@ if1_mdr_write( int which, const char *filename )
 void
 if1_plug( const char *filename, int what )
 {
-#ifdef WIN32
-  ui_error( UI_ERROR_ERROR, "Not yet implemented on Win32" );
-  return; 
-#else
   int fd = -1;
 
   switch( what ) {
@@ -1294,7 +1290,7 @@ if1_plug( const char *filename, int what )
   }
 
   /* rs232_handshake == 0 -> we assume DTR(DSR) always 1 if tx and rx plugged */
-  if( !settings_current.rs232_handshake && 
+  if( !settings_current.rs232_handshake &&
 	if1_ula.fd_t != -1 && if1_ula.fd_r != -1 )
     if1_ula.dtr = 1;
 
@@ -1306,7 +1302,6 @@ if1_plug( const char *filename, int what )
 
   if1_ula.s_net_mode = settings_current.raw_s_net ? 0 : 1;
   update_menu( UMENU_RS232 );
-#endif
 }
 
 void
@@ -1331,7 +1326,7 @@ if1_unplug( int what )
     break;
   }
   /* rs232_handshake == 0 -> we assume DTR(DSR) always 1 if tx and rx plugged */
-  if( !settings_current.rs232_handshake && 
+  if( !settings_current.rs232_handshake &&
 	( if1_ula.fd_t == -1 || if1_ula.fd_r == -1 ) )
     if1_ula.dtr = 0;
   update_menu( UMENU_RS232 );

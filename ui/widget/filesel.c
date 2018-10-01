@@ -36,12 +36,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#ifdef WIN32
-#include <windows.h>
-#include <direct.h>
-#include <ctype.h>
-#endif				/* #ifdef WIN32 */
-
 #include "fuse.h"
 #include "ui/ui.h"
 #include "utils.h"
@@ -79,10 +73,6 @@ size_t widget_numfiles;	  /* The number of files in the current
 static const char *title;
 static int is_saving;
 
-#ifdef WIN32
-static int is_drivesel = 0;
-static int is_rootdir;
-#endif				/* #ifdef WIN32 */
 
 #define ENTRIES_PER_SCREEN (is_saving ? 32 : 36)
 
@@ -109,10 +99,6 @@ static int widget_print_all_filenames( struct widget_dirent **filenames, int n,
 				       const char *dir );
 static int widget_print_filename( struct widget_dirent *filename, int position,
 				  int inverted );
-#ifdef WIN32
-static void widget_filesel_chdrv( void );
-static void widget_filesel_drvlist( void );
-#endif				/* #ifdef WIN32 */
 static int widget_filesel_chdir( void );
 
 /* The filename to return */
@@ -140,7 +126,7 @@ widget_get_filename( const char *title, int saving )
     filename = utils_safe_strdup( widget_filesel_name );
 
   return filename;
-  
+
 }
 
 char *
@@ -246,7 +232,7 @@ amiga_asl( char *title, BOOL is_saving ) {
         filename = ( STRPTR ) AllocVec( 1024, MEMF_CLEAR );
 #endif				/* #ifndef __MORPHOS__ */
 
-        strcpy( filename,filereq->fr_Drawer );	
+        strcpy( filename,filereq->fr_Drawer );
 #ifndef __MORPHOS__
         IDOS->AddPart( filename, filereq->fr_File, 1024 );
 #else				/* #ifndef __MORPHOS__ */
@@ -295,11 +281,6 @@ static int widget_scandir( const char *dir, struct widget_dirent ***namelist,
     return -1;
   }
 
-#ifdef WIN32
-  /* Assume this is the root directory, unless we find an entry named ".." */
-  is_rootdir = 1;
-#endif				/* #ifdef WIN32 */
-
   while( !done ) {
     char name[ PATH_MAX ];
 
@@ -310,11 +291,6 @@ static int widget_scandir( const char *dir, struct widget_dirent ***namelist,
     {
     case COMPAT_DIR_RESULT_OK:
       if( select_fn( name ) ) {
-#ifdef WIN32
-        if( is_rootdir && !strcmp( name, ".." ) ) {
-          is_rootdir = 0;
-        }
-#endif				/* #ifdef WIN32 */
         if( widget_add_filename( &allocated, &number, namelist, name ) ) {
           compat_closedir( directory );
           return -1;
@@ -349,79 +325,24 @@ static int widget_scandir( const char *dir, struct widget_dirent ***namelist,
     return -1;
   }
 
-#ifdef WIN32
-  if( is_rootdir ) {
-    /* Add a fake ".." entry for drive selection */
-    if( widget_add_filename( &allocated, &number, namelist, ".." ) ) {
-      return -1;
-    }
-  }
-#endif				/* #ifdef WIN32 */
 
   return number;
 }
-
-#ifdef WIN32
-static int widget_scandrives( struct widget_dirent ***namelist )
-{
-  int allocated, number;
-  unsigned long drivemask;
-  int i;
-  char drive[3];
-  const char *driveletters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-  drive[1] = ':';
-  drive[2] = '\0';
-
-  *namelist = malloc( 32 * sizeof(**namelist) );
-  if( !*namelist ) return -1;
-
-  allocated = 32; number = 0;
-
-  drivemask = _getdrives();
-  if( !drivemask ) {
-    free( *namelist );
-    *namelist = NULL;
-    return -1;
-  }
-
-  for( i = 0; i < 26; i++ ) {
-    if( drivemask & 1) {
-      drive[0] = driveletters[i];
-      if( widget_add_filename( &allocated, &number, namelist, drive ) ) {
-        return -1;
-      }
-    }
-    drivemask >>= 1;
-  }
-
-  return number;
-}
-#endif
 
 static void widget_scan( char *dir )
 {
   struct stat file_info;
 
   size_t i; int error;
-  
+
   /* Free the memory belonging to the files in the previous directory */
   for( i=0; i<widget_numfiles; i++ ) {
     free( widget_filenames[i]->name );
     free( widget_filenames[i] );
   }
 
-#ifdef WIN32
-  if( dir ) {
-    widget_numfiles = widget_scandir( dir, &widget_filenames,
-				      widget_select_file );
-  } else {
-    widget_numfiles = widget_scandrives( &widget_filenames );
-  }
-#else				/* #ifdef WIN32 */
-  widget_numfiles = widget_scandir( dir, &widget_filenames,
-				    widget_select_file );
-#endif				/* #ifdef WIN32 */
+
+  widget_numfiles = widget_scandir( dir, &widget_filenames,  widget_select_file );
 
   if( widget_numfiles == (size_t)-1 ) return;
 
@@ -443,10 +364,8 @@ widget_select_file( const char *name )
   /* Skip current directory */
   if( !strcmp( name, "." ) ) return 0;
 
-#ifndef WIN32
   /* Skip hidden files/directories */
   if( strlen( name ) > 1 && name[0] == '.' && name[1] != '.' ) return 0;
-#endif				/* #ifdef WIN32 */
 
   return 1;
 }
@@ -481,17 +400,9 @@ widget_filesel_draw( void *data )
   title = filesel_data->title;
 
 #if !defined AMIGA && !defined __MORPHOS__
-#ifdef WIN32
-  if( !is_drivesel ) {
-    directory = widget_getcwd();
-    if( directory == NULL ) return 1;
-  } else {
-    directory = NULL;
-  }
-#else				/* #ifdef WIN32 */
+
   directory = widget_getcwd();
   if( directory == NULL ) return 1;
-#endif				/* #ifdef WIN32 */
 
   widget_scan( directory );
   new_current_file = current_file = 0;
@@ -501,14 +412,8 @@ widget_filesel_draw( void *data )
   error = widget_dialog_with_border( 1, 2, 30, 22 );
   if( error ) {
     free( directory );
-    return error; 
+    return error;
   }
-
-#ifdef WIN32
-  if( directory == NULL ) {
-    directory = utils_safe_strdup( "Drive selection" );
-  }
-#endif				/* #ifdef WIN32 */
 
   /* Show all the filenames */
   widget_print_all_filenames( widget_filenames, widget_numfiles,
@@ -576,11 +481,6 @@ static char* widget_getcwd( void )
     }
   } while(1);
 
-#ifdef WIN32
-  if( directory[0] && directory[1] == ':' ) {
-    directory[0] = toupper( directory[0] );
-  }
-#endif
 
   return directory;
 }
@@ -602,7 +502,7 @@ static int widget_print_all_filenames( struct widget_dirent **filenames, int n,
     int prefix = widget_stringwidth( "..." ) + 1;
     while( widget_stringwidth( dir ) > 223 - prefix ) dir++;
     snprintf( buffer, sizeof( buffer ), "...%s", dir );
-    widget_print_title( 24, WIDGET_COLOUR_FOREGROUND, buffer );  
+    widget_print_title( 24, WIDGET_COLOUR_FOREGROUND, buffer );
   } else {
     widget_print_title( 24, WIDGET_COLOUR_FOREGROUND, dir );
   }
@@ -723,36 +623,6 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
 }
 #endif /* ifndef AMIGA */
 
-#ifdef WIN32
-static void
-widget_filesel_chdrv( void )
-{
-  char *fn;
-
-  if( chdir( widget_filenames[ current_file ]->name ) ) {
-    ui_error( UI_ERROR_ERROR, "Could not change directory" );
-    return;
-  }
-
-  is_drivesel = 0;
-  fn = widget_getcwd();
-  widget_scan( fn ); free( fn );
-  new_current_file = 0;
-  /* Force a redisplay of all filenames */
-  current_file = 1; top_left_file = 1;
-}
-
-static void
-widget_filesel_drvlist( void )
-{
-  is_drivesel = 1;
-  widget_scan( NULL );
-  new_current_file = 0;
-  /* Force a redisplay of all filenames */
-  current_file = 1; top_left_file = 1;
-}
-#endif				/* #ifdef WIN32 */
-
 static int
 widget_filesel_chdir( void )
 {
@@ -784,14 +654,10 @@ widget_filesel_chdir( void )
 in Win32 errno resulting from chdir on file is EINVAL which may mean many things
 this will not be fixed in mingw - must use native function instead
 http://thread.gmane.org/gmane.comp.gnu.mingw.user/9197
-*/ 
+*/
 
   if( chdir( fn ) == -1 ) {
-#ifndef WIN32
     if( errno == ENOTDIR ) {
-#else   /* #ifndef WIN32 */
-    if( GetFileAttributes( fn ) != FILE_ATTRIBUTE_DIRECTORY ) {
-#endif  /* #ifndef WIN32 */
       widget_filesel_name = fn; fn = NULL;
       if( exit_all_widgets ) {
 	widget_end_all( WIDGET_FINISHED_OK );
@@ -824,7 +690,7 @@ widget_filesel_keyhandler( input_key key )
     if( key == INPUT_KEY_Escape ) widget_end_widget( WIDGET_FINISHED_CANCEL );
     return;
   }
-  
+
 #if defined AMIGA || defined __MORPHOS__
   if( exit_all_widgets ) {
     widget_end_all( err );
@@ -844,12 +710,12 @@ widget_filesel_keyhandler( input_key key )
 				top_left_file, current_file        );
     break;
 #endif
-    
+
   case INPUT_KEY_Escape:
   case INPUT_JOYSTICK_FIRE_2:
     widget_end_widget( WIDGET_FINISHED_CANCEL );
     break;
-  
+
   case INPUT_KEY_Left:
   case INPUT_KEY_5:
   case INPUT_KEY_h:
@@ -938,18 +804,8 @@ widget_filesel_keyhandler( input_key key )
   case INPUT_KEY_Return:
   case INPUT_KEY_KP_Enter:
   case INPUT_JOYSTICK_FIRE_1:
-#ifdef WIN32
-    if( is_drivesel ) {
-      widget_filesel_chdrv();
-    } else if( is_rootdir &&
-	       !strcmp( widget_filenames[ current_file ]->name, ".." ) ) {
-      widget_filesel_drvlist();
-    } else {
-#endif				/* #ifdef WIN32 */
       if( widget_filesel_chdir() ) return;
-#ifdef WIN32
-    }
-#endif				/* #ifdef WIN32 */
+
     break;
 
   default:	/* Keep gcc happy */
@@ -957,15 +813,7 @@ widget_filesel_keyhandler( input_key key )
 
   }
 
-#ifdef WIN32
-  if( is_drivesel ) {
-    dirtitle = utils_safe_strdup( "Drive selection" );
-  } else {
-#endif				/* #ifdef WIN32 */
-    dirtitle = widget_getcwd();
-#ifdef WIN32
-  }
-#endif				/* #ifdef WIN32 */
+  dirtitle = widget_getcwd();
 
   /* If we moved the cursor */
   if( new_current_file != current_file ) {
@@ -993,10 +841,10 @@ widget_filesel_keyhandler( input_key key )
 
       widget_print_filename( widget_filenames[ current_file ],
 			     current_file - top_left_file, 0 );
-	  
+
       widget_print_filename( widget_filenames[ new_current_file ],
 			     new_current_file - top_left_file, 1 );
-        
+
       widget_display_lines( 2, 21 );
     }
 

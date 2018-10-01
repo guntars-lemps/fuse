@@ -1,27 +1,27 @@
 /* w5100.c: Wiznet W5100 emulation - internal routines
-   
+
    Emulates a minimal subset of the Wiznet W5100 TCP/IP controller.
 
    Copyright (c) 2011-2015 Philip Kendall
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation, Inc.,
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-   
+
    Author contact information:
-   
+
    E-mail: philip-fuse@shadowmagic.org.uk
- 
+
 */
 
 #ifndef FUSE_W5100_INTERNALS_H
@@ -29,9 +29,7 @@
 
 #include <signal.h>
 
-#ifndef WIN32
 #include <sys/select.h>
-#endif
 
 typedef enum w5100_socket_mode {
   W5100_SOCKET_MODE_CLOSED = 0x00,
@@ -58,7 +56,7 @@ enum w5100_socket_registers {
   W5100_SOCKET_CR,
   W5100_SOCKET_IR,
   W5100_SOCKET_SR,
-  
+
   W5100_SOCKET_PORT0,
   W5100_SOCKET_PORT1,
 

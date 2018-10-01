@@ -52,10 +52,6 @@
 #include "ui/widget/widget_internals.h"
 #include "utils.h"
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 /* Bitmap font storage */
 typedef struct {
   libspectrum_byte bitmap[15], left, width, defined;
@@ -297,7 +293,7 @@ size_t widget_charwidth( int c )
 void widget_rectangle( int x, int y, int w, int h, int col )
 {
     int mx, my;
-    
+
     for( my = 0; my < h; my++ )
       for( mx = 0; mx < w; mx++ )
         widget_putpixel( x + mx, y + my, col );
@@ -330,7 +326,7 @@ widget_draw_rectangle_outline(int x, int y, int w, int h, int colour )
   widget_draw_line_horiz( x, y+h-1, w, colour );
   widget_draw_line_vert( x, y, h, colour );
   widget_draw_line_vert( x+w-1, y, h, colour );
-}   
+}
 
 void
 widget_draw_rectangle_solid( int x, int y, int w, int h, int colour )
@@ -519,7 +515,7 @@ int widget_do( widget_type which, void *data )
   /* Process this widget until it returns */
   widget_return[ui_widget_level].finished = 0;
   while( ! widget_return[ui_widget_level].finished ) {
-    
+
     /* Go to sleep for a bit */
     timer_sleep( 10 );
 
@@ -536,7 +532,7 @@ int widget_do( widget_type which, void *data )
 
   /* Now return to the previous widget level */
   ui_widget_level--;
-    
+
   if( ui_widget_level >= 0 ) {
 
     /* If we're going back to another widget, set up its keyhandler and

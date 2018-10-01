@@ -1,27 +1,27 @@
 /* w5100_socket.c: Wiznet W5100 emulation - sockets code
-   
+
    Emulates a minimal subset of the Wiznet W5100 TCP/IP controller.
 
    Copyright (c) 2011-2015 Philip Kendall
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation, Inc.,
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-   
+
    Author contact information:
-   
+
    E-mail: philip-fuse@shadowmagic.org.uk
- 
+
 */
 
 #include <config.h>
@@ -31,14 +31,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#ifdef WIN32
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#else
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#endif
 
 #include "fuse.h"
 #include "ui/ui.h"
@@ -186,9 +181,9 @@ w5100_socket_open( nic_w5100_socket_t *socket_obj )
     int protocol = tcp ? IPPROTO_TCP : IPPROTO_UDP;
     const char *description = tcp ? "TCP" : "UDP";
     int final_state = tcp ? W5100_SOCKET_STATE_INIT : W5100_SOCKET_STATE_UDP;
-#ifndef WIN32
+
     int one = 1;
-#endif
+
 
     w5100_socket_clean( socket_obj );
 
@@ -201,8 +196,6 @@ w5100_socket_open( nic_w5100_socket_t *socket_obj )
       return;
     }
 
-#ifndef WIN32
-    /* Windows warning: this could forcibly bind sockets already in use */
     if( setsockopt( socket_obj->fd, SOL_SOCKET, SO_REUSEADDR, &one,
       sizeof(one) ) == -1 ) {
       nic_w5100_error( UI_ERROR_ERROR,
@@ -210,7 +203,7 @@ w5100_socket_open( nic_w5100_socket_t *socket_obj )
         socket_obj->id, compat_socket_get_error(),
         compat_socket_get_strerror() );
     }
-#endif
+
 
     socket_obj->state = final_state;
 
@@ -256,7 +249,7 @@ w5100_socket_listen( nic_w5100_t *self, nic_w5100_socket_t *socket )
         return;
 
     if( listen( socket->fd, 1 ) == -1 ) {
-      nic_w5100_error( UI_ERROR_ERROR, 
+      nic_w5100_error( UI_ERROR_ERROR,
                        "w5100: failed to listen on socket %d; errno %d: %s\n",
                        socket->id, compat_socket_get_error(),
                        compat_socket_get_strerror() );
@@ -276,7 +269,7 @@ w5100_socket_connect( nic_w5100_t *self, nic_w5100_socket_t *socket )
 {
   if( socket->state == W5100_SOCKET_STATE_INIT ) {
     struct sockaddr_in sa;
-    
+
     if( !socket->socket_bound )
       if( w5100_socket_bind_port( self, socket ) )
         return;

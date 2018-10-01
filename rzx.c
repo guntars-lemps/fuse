@@ -29,10 +29,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef WIN32
-#include <windows.h>
-#endif				/* #ifdef WIN32 */
-
 #include "debugger/debugger.h"
 #include "event.h"
 #include "fuse.h"
@@ -254,11 +250,11 @@ rzx_get_initial_snapshot( void )
       /* If we get this then there can't have been an initial snap to start
          from */
       return NULL;
-      
+
     case LIBSPECTRUM_RZX_SNAPSHOT_BLOCK:
       /* Got initial snap */
       return libspectrum_rzx_iterator_get_snap( it );
-      
+
     default:
       continue;
 
@@ -412,7 +408,7 @@ int rzx_stop_playback( int add_interrupt )
   debugger_event( end_event );
 
   return 0;
-}  
+}
 
 static void
 start_recording( libspectrum_rzx *to_rzx, int competition_mode )
@@ -571,7 +567,7 @@ autosave_prune( void )
 
     case LIBSPECTRUM_RZX_INPUT_BLOCK:
       frames += libspectrum_rzx_iterator_get_frames( it ); break;
-      
+
     case LIBSPECTRUM_RZX_SNAPSHOT_BLOCK:
       if( libspectrum_rzx_iterator_snap_is_automatic( it ) ) {
         prune_info_t info = { it, frames };
@@ -635,7 +631,7 @@ autosave_reset( void )
     case LIBSPECTRUM_RZX_INPUT_BLOCK:
       frames += libspectrum_rzx_iterator_get_frames( it );
       break;
-      
+
     case LIBSPECTRUM_RZX_SNAPSHOT_BLOCK:
       if( libspectrum_rzx_iterator_snap_is_automatic( it ) ) {
         frames = 0;
@@ -667,7 +663,7 @@ static int recording_frame( void )
 
   /* If we're in competition mode, check we're running at close to 100%
      speed */
-  if( rzx_competition_mode && 
+  if( rzx_competition_mode &&
       fabs( current_speed - 100.0 ) > SPEED_TOLERANCE ) {
 
     rzx_stop_recording();
@@ -787,7 +783,7 @@ get_rollback_list( libspectrum_rzx *from_rzx )
 
     case LIBSPECTRUM_RZX_INPUT_BLOCK:
       frames += libspectrum_rzx_iterator_get_frames( it ); break;
-      
+
     case LIBSPECTRUM_RZX_SNAPSHOT_BLOCK:
       rollback_points = g_slist_append( rollback_points,
 					GINT_TO_POINTER( frames ) );
@@ -804,7 +800,7 @@ get_rollback_list( libspectrum_rzx *from_rzx )
   if( frames )
     rollback_points = g_slist_append( rollback_points,
 				      GINT_TO_POINTER( frames ) );
-  
+
   return rollback_points;
 }
 

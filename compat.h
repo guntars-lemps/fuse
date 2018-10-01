@@ -31,10 +31,6 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#ifdef WIN32
-#include <winsock2.h>
-#endif
-
 // Remove the gcc-specific incantations if we're not using gcc
 #ifdef __GNUC__
 

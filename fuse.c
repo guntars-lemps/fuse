@@ -31,23 +31,19 @@
 #include <sys/types.h>
 #include <time.h>
 
-#ifdef WIN32
-#include <windows.h>
-#endif				/* #ifdef WIN32 */
-
 #include <unistd.h>
 
-/* We need to include SDL.h on Mac O X and Windows to do some magic
-   bootstrapping by redefining main. As we now allow SDL joystick code to be
-   used in the GTK+ and Xlib UIs we need to also do the magic when that code is
-   in use, feel free to look away for the next line */
+// We need to include SDL.h on Mac O X and Windows to do some magic
+// bootstrapping by redefining main. As we now allow SDL joystick code to be
+// used in the GTK+ and Xlib UIs we need to also do the magic when that code is
+// in use, feel free to look away for the next line
 #if defined UI_SDL || (defined USE_JOYSTICK && !defined HAVE_JSW_H && (defined UI_X || defined UI_GTK) )
-#include <SDL.h>		/* Needed on MacOS X and Windows */
-#endif /* #if defined UI_SDL || (defined USE_JOYSTICK && !defined HAVE_JSW_H && (defined UI_X || defined UI_GTK) ) */
+#include <SDL.h> // Needed on MacOS X and Windows
+#endif // #if defined UI_SDL || (defined USE_JOYSTICK && !defined HAVE_JSW_H && (defined UI_X || defined UI_GTK) )
 
 #ifdef GEKKO
 #include <fat.h>
-#endif				/* #ifdef GEKKO */
+#endif // #ifdef GEKKO
 
 #ifdef HAVE_LIB_XML2
 #include <libxml/encoding.h>
@@ -109,81 +105,75 @@
 
 #include "z80/z80.h"
 
-/* What name were we called under? */
+// What name were we called under?
 const char *fuse_progname;
 
-/* A flag to say when we want to exit the emulator */
+// A flag to say when we want to exit the emulator
 int fuse_exiting;
 
-/* Is Spectrum emulation currently paused, and if so, how many times? */
+// Is Spectrum emulation currently paused, and if so, how many times?/
 int fuse_emulation_paused;
 
-/* The creator information we'll store in file formats that support this */
+// The creator information we'll store in file formats that support this
 libspectrum_creator *fuse_creator;
 
-/* The earliest version of libspectrum we need */
+// The earliest version of libspectrum we need
 static const char * const LIBSPECTRUM_MIN_VERSION = "0.5.0";
 
-/* The various types of file we may want to run on startup */
+// The various types of file we may want to run on startup
 typedef struct start_files_t {
 
-  const char *disk_plus3;
-  const char *disk_opus;
-  const char *disk_plusd;
-  const char *disk_beta;
-  const char *disk_didaktik80;
-  const char *disk_disciple;
-  const char *dock;
-  const char *if2;
-  const char *playback;
-  const char *recording;
-  const char *snapshot;
-  const char *tape;
+    const char *disk_plus3;
+    const char *disk_opus;
+    const char *disk_plusd;
+    const char *disk_beta;
+    const char *disk_didaktik80;
+    const char *disk_disciple;
+    const char *dock;
+    const char *if2;
+    const char *playback;
+    const char *recording;
+    const char *snapshot;
+    const char *tape;
 
-  const char *simpleide_master, *simpleide_slave;
-  const char *zxatasp_master, *zxatasp_slave;
-  const char *zxcf;
-  const char *divide_master, *divide_slave;
-  const char *divmmc;
-  const char *zxmmc;
-  const char *mdr[8];
+    const char *simpleide_master, *simpleide_slave;
+    const char *zxatasp_master, *zxatasp_slave;
+    const char *zxcf;
+    const char *divide_master, *divide_slave;
+    const char *divmmc;
+    const char *zxmmc;
+    const char *mdr[8];
 
 } start_files_t;
 
-/* Context for the display startup routine */
+// Context for the display startup routine
 static display_startup_context display_context;
 
 static int fuse_init(int argc, char **argv);
 
-static void creator_register_startup( void );
+static void creator_register_startup(void);
 
 static void fuse_show_copyright(void);
-static void fuse_show_version( void );
-static void fuse_show_help( void );
+static void fuse_show_version(void);
+static void fuse_show_help(void);
 
-static int setup_start_files( start_files_t *start_files );
-static int parse_nonoption_args( int argc, char **argv, int first_arg,
-				 start_files_t *start_files );
-static int do_start_files( start_files_t *start_files );
+static int setup_start_files(start_files_t *start_files);
+static int parse_nonoption_args(int argc, char **argv, int first_arg, start_files_t *start_files);
+static int do_start_files(start_files_t *start_files);
 
 static int fuse_end(void);
 
-#ifdef UI_WIN32
-int fuse_main(int argc, char **argv)
-#else
+
 int main(int argc, char **argv)
-#endif
+
 {
   int r;
 
-#ifdef WIN32
-  SetErrorMode( SEM_FAILCRITICALERRORS | SEM_NOOPENFILEERRORBOX );
-#endif
 
 #ifdef GEKKO
   fatInitDefault();
-#endif				/* #ifdef GEKKO */
-  
+#endif                /* #ifdef GEKKO */
+
   if(fuse_init(argc,argv)) {
     fprintf(stderr,"%s: error initialising -- giving up!\n", fuse_progname);
     return 1;
@@ -203,7 +193,7 @@ int main(int argc, char **argv)
   }
 
   fuse_end();
-  
+
   return r;
 }
 
@@ -215,7 +205,7 @@ fuse_libspectrum_init( void *context )
   } else {
     ui_error( UI_ERROR_ERROR,
               "libspectrum version %s found, but %s required",
-	      libspectrum_version(), LIBSPECTRUM_MIN_VERSION );
+          libspectrum_version(), LIBSPECTRUM_MIN_VERSION );
     return 1;
   }
 
@@ -266,7 +256,7 @@ setuid_init( void *context )
       return 1;
     }
   }
-#endif				/* #ifdef HAVE_GETEUID */
+#endif                /* #ifdef HAVE_GETEUID */
 
   return 0;
 }
@@ -362,7 +352,7 @@ static int fuse_init(int argc, char **argv)
     fuse_progname = argv[0];
   else
     fuse_progname = "fuse";
-  
+
   libspectrum_error_function = ui_libspectrum_error;
 
 #ifdef GEKKO
@@ -415,13 +405,13 @@ creator_init( void *context )
   unsigned int version[4] = { 0, 0, 0, 0 };
   char *custom, osname[ 256 ];
   static const size_t CUSTOM_SIZE = 256;
-  
+
   libspectrum_error error; int sys_error;
 
   const char *gcrypt_version;
 
   sscanf( VERSION, "%u.%u.%u.%u",
-	  &version[0], &version[1], &version[2], &version[3] );
+      &version[0], &version[1], &version[2], &version[3] );
 
   for( i=0; i<4; i++ ) if( version[i] > 0xff ) version[i] = 0xff;
 
@@ -434,11 +424,11 @@ creator_init( void *context )
   if( error ) { libspectrum_creator_free( fuse_creator ); return error; }
 
   error = libspectrum_creator_set_major( fuse_creator,
-					 version[0] * 0x100 + version[1] );
+                     version[0] * 0x100 + version[1] );
   if( error ) { libspectrum_creator_free( fuse_creator ); return error; }
 
   error = libspectrum_creator_set_minor( fuse_creator,
-					 version[2] * 0x100 + version[3] );
+                     version[2] * 0x100 + version[3] );
   if( error ) { libspectrum_creator_free( fuse_creator ); return error; }
 
   custom = libspectrum_new( char, CUSTOM_SIZE );
@@ -447,8 +437,8 @@ creator_init( void *context )
   if( !gcrypt_version ) gcrypt_version = "not available";
 
   snprintf( custom, CUSTOM_SIZE,
-	    "gcrypt: %s\nlibspectrum: %s\nuname: %s", gcrypt_version,
-	    libspectrum_version(), osname );
+        "gcrypt: %s\nlibspectrum: %s\nuname: %s", gcrypt_version,
+        libspectrum_version(), osname );
 
   error = libspectrum_creator_set_custom(
     fuse_creator, (libspectrum_byte*)custom, strlen( custom )
@@ -545,7 +535,7 @@ int fuse_emulation_pause(void)
     ui_error( UI_ERROR_INFO, "Stopping competition mode RZX recording" );
     error = rzx_stop_recording(); if( error ) return error;
   }
-      
+
   /* If we had sound enabled (and hence doing the speed regulation),
      turn it off */
   sound_pause();
@@ -589,7 +579,7 @@ setup_start_files( start_files_t *start_files )
 
   start_files->simpleide_master =
     utils_safe_strdup( settings_current.simpleide_master_file );
-  start_files->simpleide_slave = 
+  start_files->simpleide_slave =
     utils_safe_strdup( settings_current.simpleide_slave_file );
 
   start_files->zxatasp_master =
@@ -624,7 +614,7 @@ setup_start_files( start_files_t *start_files )
 /* Make 'best guesses' as to what to do with non-option arguments */
 static int
 parse_nonoption_args( int argc, char **argv, int first_arg,
-		      start_files_t *start_files )
+              start_files_t *start_files )
 {
   size_t i, j;
   const char *filename;
@@ -646,7 +636,7 @@ parse_nonoption_args( int argc, char **argv, int first_arg,
     if( error ) return error;
 
     error = libspectrum_identify_file_with_class( &type, &class, filename,
-						  file.buffer, file.length );
+                          file.buffer, file.length );
     if( error ) {
       utils_close_file( &file );
       return error;
@@ -662,21 +652,21 @@ parse_nonoption_args( int argc, char **argv, int first_arg,
 
     case LIBSPECTRUM_CLASS_HARDDISK:
       if( settings_current.zxcf_active ) {
-	start_files->zxcf = filename;
+    start_files->zxcf = filename;
       } else if( settings_current.zxatasp_active ) {
-	start_files->zxatasp_master = filename;
+    start_files->zxatasp_master = filename;
       } else if( settings_current.simpleide_active ) {
-	start_files->simpleide_master = filename;
+    start_files->simpleide_master = filename;
       } else if( settings_current.divide_enabled ) {
-	start_files->divide_master = filename;
+    start_files->divide_master = filename;
       } else if( settings_current.divmmc_enabled ) {
-	start_files->divmmc = filename;
+    start_files->divmmc = filename;
       } else if( settings_current.zxmmc_enabled ) {
-	start_files->zxmmc = filename;
+    start_files->zxmmc = filename;
       } else {
-	/* No IDE interface active, so activate the ZXCF */
-	settings_current.zxcf_active = 1;
-	start_files->zxcf = filename;
+    /* No IDE interface active, so activate the ZXCF */
+    settings_current.zxcf_active = 1;
+    start_files->zxcf = filename;
       }
       break;
 
@@ -705,10 +695,10 @@ parse_nonoption_args( int argc, char **argv, int first_arg,
         start_files->disk_plus3 = filename;
       else if( machine_current->capabilities &
                  LIBSPECTRUM_MACHINE_CAPABILITY_TRDOS_DISK )
-        start_files->disk_beta = filename; 
+        start_files->disk_beta = filename;
       else {
         if( periph_is_active( PERIPH_TYPE_BETA128 ) )
-          start_files->disk_beta = filename; 
+          start_files->disk_beta = filename;
         else if( periph_is_active( PERIPH_TYPE_PLUSD ) )
           start_files->disk_plusd = filename;
         else if( periph_is_active( PERIPH_TYPE_DIDAKTIK80 ) )
@@ -729,9 +719,9 @@ parse_nonoption_args( int argc, char **argv, int first_arg,
     case LIBSPECTRUM_CLASS_MICRODRIVE:
       for( j = 0; j < 8; j++ ) {
         if( !start_files->mdr[j] ) {
-	  start_files->mdr[j] = filename;
-	  break;
-	}
+      start_files->mdr[j] = filename;
+      break;
+    }
       }
       break;
 
@@ -746,12 +736,12 @@ parse_nonoption_args( int argc, char **argv, int first_arg,
 
     case LIBSPECTRUM_CLASS_UNKNOWN:
       ui_error( UI_ERROR_WARNING, "couldn't identify '%s'; ignoring it",
-		filename );
+        filename );
       break;
 
     default:
       ui_error( UI_ERROR_ERROR, "parse_nonoption_args: unknown file class %d",
-		class );
+        class );
       break;
 
     }
@@ -877,27 +867,27 @@ do_start_files( start_files_t *start_files )
 
   if( start_files->simpleide_master ) {
     error = simpleide_insert( start_files->simpleide_master,
-			      LIBSPECTRUM_IDE_MASTER );
+                  LIBSPECTRUM_IDE_MASTER );
     simpleide_reset( 0 );
     if( error ) return error;
   }
 
   if( start_files->simpleide_slave ) {
     error = simpleide_insert( start_files->simpleide_slave,
-			      LIBSPECTRUM_IDE_SLAVE );
+                  LIBSPECTRUM_IDE_SLAVE );
     simpleide_reset( 0 );
     if( error ) return error;
   }
 
   if( start_files->zxatasp_master ) {
     error = zxatasp_insert( start_files->zxatasp_master,
-			    LIBSPECTRUM_IDE_MASTER );
+                LIBSPECTRUM_IDE_MASTER );
     if( error ) return error;
   }
 
   if( start_files->zxatasp_slave ) {
     error = zxatasp_insert( start_files->zxatasp_slave,
-			    LIBSPECTRUM_IDE_SLAVE );
+                LIBSPECTRUM_IDE_SLAVE );
     if( error ) return error;
   }
 
@@ -907,13 +897,13 @@ do_start_files( start_files_t *start_files )
 
   if( start_files->divide_master ) {
     error = divide_insert( start_files->divide_master,
-			    LIBSPECTRUM_IDE_MASTER );
+                LIBSPECTRUM_IDE_MASTER );
     if( error ) return error;
   }
 
   if( start_files->divide_slave ) {
     error = divide_insert( start_files->divide_slave,
-			    LIBSPECTRUM_IDE_SLAVE );
+                LIBSPECTRUM_IDE_SLAVE );
     if( error ) return error;
   }
 
@@ -937,7 +927,7 @@ do_start_files( start_files_t *start_files )
 
   if( start_files->recording ) {
     error = rzx_start_recording( start_files->recording,
-				 settings_current.embed_snapshot );
+                 settings_current.embed_snapshot );
     if( error ) return error;
   }
 
@@ -947,7 +937,7 @@ do_start_files( start_files_t *start_files )
 /* Tidy-up function called at end of emulation */
 static int fuse_end(void)
 {
-  movie_stop();		/* stop movie recording */
+  movie_stop();        /* stop movie recording */
 
   startup_manager_run_end();
 

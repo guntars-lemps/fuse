@@ -96,11 +96,7 @@ print hashline( __LINE__ ), << 'CODE';
 #include "utils.h"
 
 /* The name of our configuration file */
-#ifdef WIN32
-#define CONFIG_FILE_NAME "fuse.cfg"
-#else				/* #ifdef WIN32 */
 #define CONFIG_FILE_NAME ".fuserc"
-#endif				/* #ifdef WIN32 */
 
 /* The current settings of options, etc */
 settings_info settings_current;
@@ -433,12 +429,12 @@ parse_ini( utils_file *file, settings_info *settings )
     cpos = cpos_new;
     if( val_int ) {
 	*val_int = atoi( (char *)cpos );
-	while( cpos < file->buffer + file->length && 
+	while( cpos < file->buffer + file->length &&
 		( *cpos != '\\0' && *cpos != '\\r' && *cpos != '\\n' ) ) cpos++;
     } else if( val_char ) {
 	char *value = (char *)cpos;
 	size_t n = 0;
-	while( cpos < file->buffer + file->length && 
+	while( cpos < file->buffer + file->length &&
 		( *cpos != '\\0' && *cpos != '\\r' && *cpos != '\\n' ) ) cpos++;
 	n = (char *)cpos - value;
 	if( n > 0 ) {
@@ -489,7 +485,7 @@ settings_boolean_write( compat_fd doc, const char* name, int config )
 static int
 settings_numeric_write( compat_fd doc, const char* name, int config )
 {
-  char buffer[80]; 
+  char buffer[80];
   snprintf( buffer, sizeof( buffer ), "%d", config );
   return settings_string_write( doc, name, buffer );
 }
