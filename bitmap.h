@@ -26,22 +26,23 @@
 #ifndef FUSE_BITMAP_H
 #define FUSE_BITMAP_H
 
-static inline void
-bitmap_set( libspectrum_byte *b, const size_t n )
+
+static inline void bitmap_set(libspectrum_byte *b, const size_t n)
 {
-  b[ n / 8 ] |= ( 1 << ( n % 8 ) );
+    b[n / 8] |= (1 << (n % 8));
 }
 
-static inline void
-bitmap_reset( libspectrum_byte *b, const size_t n )
+
+static inline void bitmap_reset(libspectrum_byte *b, const size_t n)
 {
-  b[ n / 8 ] &= ~( 1 << ( n % 8 ) );
+    b[n / 8] &= ~(1 << (n % 8));
 }
 
-static inline int
-bitmap_test( const libspectrum_byte *b, const size_t n )
+
+static inline int bitmap_test(const libspectrum_byte *b, const size_t n)
 {
-  return b[ n / 8 ] & ( 1 << ( n % 8 ) );
+    return b[n / 8] & (1 << (n % 8));
 }
 
-#endif			/* #ifndef FUSE_BITMAP_H */
+
+#endif // #ifndef FUSE_BITMAP_H
