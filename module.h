@@ -34,13 +34,11 @@ typedef void (*module_snapshot_to_fn)(libspectrum_snap *snap);
 
 typedef struct module_info_t
 {
-
     module_reset_fn reset;
     module_romcs_fn romcs;
     module_snapshot_enabled_fn snapshot_enabled;
     module_snapshot_from_fn snapshot_from;
     module_snapshot_to_fn snapshot_to;
-
 } module_info_t;
 
 int module_register(module_info_t *module);

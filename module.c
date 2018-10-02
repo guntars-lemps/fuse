@@ -34,91 +34,100 @@
 
 static GSList *registered_modules = NULL;
 
-int
-module_register(module_info_t *module)
+int module_register(module_info_t *module)
 {
     registered_modules = g_slist_append(registered_modules, module);
 
     return 0;
 }
 
-void
-module_end(void)
+
+void module_end(void)
 {
     g_slist_free(registered_modules);
     registered_modules = NULL;
 }
 
-static void
-reset(gpointer data, gpointer user_data)
+
+static void reset(gpointer data, gpointer user_data)
 {
     const module_info_t *module = data;
     int hard_reset = GPOINTER_TO_INT(user_data);
 
-    if (module->reset) module->reset(hard_reset);
+    if (module->reset) {
+        module->reset(hard_reset);
+    }
 }
 
-void
-module_reset(int hard_reset)
+
+void module_reset(int hard_reset)
 {
     g_slist_foreach(registered_modules, reset, GINT_TO_POINTER(hard_reset));
 }
 
-static void
-romcs(gpointer data, gpointer user_data GCC_UNUSED)
+
+static void romcs(gpointer data, gpointer user_data GCC_UNUSED)
 {
     const module_info_t *module = data;
 
-    if (module->romcs) module->romcs();
+    if (module->romcs) {
+        module->romcs();
+    }
 }
 
-void
-module_romcs(void)
+
+void module_romcs(void)
 {
     g_slist_foreach(registered_modules, romcs, NULL);
 }
 
-static void
-snapshot_enabled(gpointer data, gpointer user_data)
+
+static void snapshot_enabled(gpointer data, gpointer user_data)
 {
     const module_info_t *module = data;
     libspectrum_snap *snap = user_data;
 
-    if (module->snapshot_enabled) module->snapshot_enabled(snap);
+    if (module->snapshot_enabled) {
+        module->snapshot_enabled(snap);
+    }
 }
 
-void
-module_snapshot_enabled(libspectrum_snap *snap)
+
+void module_snapshot_enabled(libspectrum_snap *snap)
 {
     g_slist_foreach(registered_modules, snapshot_enabled, snap);
 }
 
-static void
-snapshot_from(gpointer data, gpointer user_data)
+
+static void snapshot_from(gpointer data, gpointer user_data)
 {
     const module_info_t *module = data;
     libspectrum_snap *snap = user_data;
 
-    if (module->snapshot_from) module->snapshot_from(snap);
+    if (module->snapshot_from) {
+        module->snapshot_from(snap);
+    }
 }
 
-void
-module_snapshot_from(libspectrum_snap *snap)
+
+void module_snapshot_from(libspectrum_snap *snap)
 {
     g_slist_foreach(registered_modules, snapshot_from, snap);
 }
 
-static void
-snapshot_to(gpointer data, gpointer user_data)
+
+static void snapshot_to(gpointer data, gpointer user_data)
 {
     const module_info_t *module = data;
     libspectrum_snap *snap = user_data;
 
-    if (module->snapshot_to) module->snapshot_to(snap);
+    if (module->snapshot_to) {
+        module->snapshot_to(snap);
+    }
 }
 
-void
-module_snapshot_to(libspectrum_snap *snap)
+
+void module_snapshot_to(libspectrum_snap *snap)
 {
     g_slist_foreach(registered_modules, snapshot_to, snap);
 }

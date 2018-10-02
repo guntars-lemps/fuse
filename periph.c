@@ -65,12 +65,12 @@ typedef struct periph_port_private_t {
 static GSList *ports = NULL;
 
 // The strings used for debugger events
-static const char * const page_event_string = "page",
-    * const unpage_event_string = "unpage";
+static const char * const page_event_string = "page";
+static const char * const unpage_event_string = "unpage";
+
 
 // Place one port response in the list of currently active ones
-static void
-port_register(periph_type type, const periph_port_t *port)
+static void port_register(periph_type type, const periph_port_t *port)
 {
     periph_port_private_t *private;
 
@@ -82,15 +82,15 @@ port_register(periph_type type, const periph_port_t *port)
     ports = g_slist_append(ports, private);
 }
 
+
 // Register a peripheral with the system
-void
-periph_register(periph_type type, const periph_t *periph)
+void periph_register(periph_type type, const periph_t *periph)
 {
     periph_private_t *private;
 
-    if (!peripherals)
-    peripherals = g_hash_table_new_full(NULL, NULL, NULL, libspectrum_free);
-
+    if (!peripherals) {
+        peripherals = g_hash_table_new_full(NULL, NULL, NULL, libspectrum_free);
+    }
     private = libspectrum_new(periph_private_t, 1);
 
     private->present = PERIPH_PRESENT_NEVER;
@@ -100,59 +100,64 @@ periph_register(periph_type type, const periph_t *periph)
     g_hash_table_insert(peripherals, GINT_TO_POINTER(type), private);
 }
 
+
 // Get the data about one peripheral
-static gint
-find_by_type(gconstpointer data, gconstpointer user_data)
+static gint find_by_type(gconstpointer data, gconstpointer user_data)
 {
     const periph_port_private_t *periph = data;
     periph_type type = GPOINTER_TO_INT(user_data);
     return periph->type - type;
 }
 
+
 // Set whether a peripheral can be present on this machine or not
-void
-periph_set_present(periph_type type, periph_present present)
+void periph_set_present(periph_type type, periph_present present)
 {
     periph_private_t *type_data = g_hash_table_lookup(peripherals, GINT_TO_POINTER(type));
-    if (type_data) type_data->present = present;
+    if (type_data) {
+        type_data->present = present;
+    }
 }
 
+
 // Mark a specific peripheral as (in)active
-int
-periph_activate_type(periph_type type, int active)
+int periph_activate_type(periph_type type, int active)
 {
     periph_private_t *private = g_hash_table_lookup(peripherals, GINT_TO_POINTER(type));
-    if (!private || private->active == active) return 0;
+    if (!private || (private->active == active)) {
+        return 0;
+    }
 
     private->active = active;
 
     if (active) {
-    const periph_port_t *ptr;
-    if (private->periph->activate)
-      private->periph->activate();
-    for (ptr = private->periph->ports; ptr && ptr->mask != 0; ptr++)
-      port_register(type, ptr);
+        const periph_port_t *ptr;
+        if (private->periph->activate) {
+            private->periph->activate();
+        }
+        for (ptr = private->periph->ports; ptr && (ptr->mask != 0); ptr++) {
+            port_register(type, ptr);
+        }
     } else {
-    GSList *found;
-    while ((found = g_slist_find_custom(ports, GINT_TO_POINTER(type), find_by_type)) != NULL)
-      ports = g_slist_remove(ports, found->data);
+        GSList *found;
+        while ((found = g_slist_find_custom(ports, GINT_TO_POINTER(type), find_by_type)) != NULL) {
+            ports = g_slist_remove(ports, found->data);
+        }
     }
-
     return 1;
 }
 
+
 // Is a specific peripheral active at the moment?
-int
-periph_is_active(periph_type type)
+int periph_is_active(periph_type type)
 {
     periph_private_t *type_data = g_hash_table_lookup(peripherals, GINT_TO_POINTER(type));
     return type_data ? type_data->active : 0;
 }
 
-/* Work out whether a peripheral is present on this machine, and mark it
-   (in)active as appropriate */
-static void
-set_activity(gpointer key, gpointer value, gpointer user_data)
+
+// Work out whether a peripheral is present on this machine, and mark it (in)active as appropriate
+static void set_activity(gpointer key, gpointer value, gpointer user_data)
 {
     periph_type type = GPOINTER_TO_INT(key);
     periph_private_t *private = value;
@@ -160,20 +165,23 @@ set_activity(gpointer key, gpointer value, gpointer user_data)
     int *needs_hard_reset = (int *)user_data;
 
     switch (private->present) {
-    case PERIPH_PRESENT_NEVER: active = 0; break;
-    case PERIPH_PRESENT_OPTIONAL:
-    active = private->periph->option ? *(private->periph->option) : 0; break;
-    case PERIPH_PRESENT_ALWAYS: active = 1; break;
+        case PERIPH_PRESENT_NEVER:
+            active = 0;
+            break;
+        case PERIPH_PRESENT_OPTIONAL:
+            active = private->periph->option ? *(private->periph->option) : 0;
+            break;
+        case PERIPH_PRESENT_ALWAYS:
+            active = 1;
+            break;
     }
 
-    *needs_hard_reset =
-    (periph_activate_type(type, active) && private->periph->hard_reset) ||
-    *needs_hard_reset;
+    *needs_hard_reset = *needs_hard_reset || (periph_activate_type(type, active) && private->periph->hard_reset);
 }
 
+
 // Work out whether a peripheral needs a hard reset without (de)activate
-static void
-get_hard_reset(gpointer key, gpointer value, gpointer user_data)
+static void get_hard_reset(gpointer key, gpointer value, gpointer user_data)
 {
     periph_private_t *private = value;
     int active = 0;
@@ -181,35 +189,42 @@ get_hard_reset(gpointer key, gpointer value, gpointer user_data)
     int periph_hard_reset = 0;
 
     switch (private->present) {
-    case PERIPH_PRESENT_NEVER: active = 0; break;
-    case PERIPH_PRESENT_OPTIONAL:
-    active = private->periph->option ? *(private->periph->option) : 0; break;
-    case PERIPH_PRESENT_ALWAYS: active = 1; break;
+        case PERIPH_PRESENT_NEVER:
+            active = 0;
+            break;
+        case PERIPH_PRESENT_OPTIONAL:
+            active = private->periph->option ? *(private->periph->option) : 0;
+            break;
+        case PERIPH_PRESENT_ALWAYS:
+            active = 1;
+            break;
     }
 
-    periph_hard_reset = (private && (private->active != active) &&
-                        private->periph->hard_reset);
+    periph_hard_reset = (private && (private->active != active) && private->periph->hard_reset);
 
     *machine_hard_reset = (periph_hard_reset || *machine_hard_reset);
 }
 
-static void
-disable_optional(gpointer key, gpointer value, gpointer user_data)
+
+static void disable_optional(gpointer key, gpointer value, gpointer user_data)
 {
     periph_private_t *private = value;
 
     switch (private->present) {
-    case PERIPH_PRESENT_NEVER:
-    case PERIPH_PRESENT_OPTIONAL:
-    if (private->periph->option) *(private->periph->option) = 0;
-    break;
-    default: break;
+        case PERIPH_PRESENT_NEVER:
+        case PERIPH_PRESENT_OPTIONAL:
+            if (private->periph->option) {
+                *(private->periph->option) = 0;
+            }
+            break;
+        default:
+            break;
     }
 }
 
+
 // Free the memory used by a peripheral-port response pair
-static void
-free_peripheral(gpointer data, gpointer user_data GCC_UNUSED)
+static void free_peripheral(gpointer data, gpointer user_data GCC_UNUSED)
 {
     periph_port_private_t *private = data;
     libspectrum_free(private);
@@ -513,8 +528,7 @@ periph_postcheck(void)
 }
 
 // Register debugger page/unpage events for a peripheral
-void
-periph_register_paging_events(const char *type_string, int *page_event,
+void periph_register_paging_events(const char *type_string, int *page_event,
                    int *unpage_event)
 {
     *page_event = debugger_event_register(type_string, page_event_string);
