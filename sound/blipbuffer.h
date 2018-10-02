@@ -44,7 +44,7 @@ The source now almost according to C89. (except of course `inline')
 */
 typedef long blip_time_t;
 
-/*  Output samples are 16-bit signed, with a range of -32767 to 32767 */
+// Output samples are 16-bit signed, with a range of -32767 to 32767
 typedef short blip_sample_t;
 
 typedef const char *blargg_err_t;
@@ -100,9 +100,9 @@ void blip_buffer_end_frame( Blip_Buffer * buff, blip_time_t time );
 long blip_buffer_read_samples( Blip_Buffer * buff, blip_sample_t * dest,
                                long max_samples, int stereo );
 
-/*  Additional optional features */
+// Additional optional features
 
-/*  Set frequency high-pass filter frequency, where higher values reduce bass more */
+// Set frequency high-pass filter frequency, where higher values reduce bass more
 void blip_buffer_set_bass_freq( Blip_Buffer * buff, int frequency );
 
 /*  Remove all available samples and clear buffer to silence. If 'entire_buffer' is
@@ -119,7 +119,7 @@ blip_buffer_samples_avail( Blip_Buffer * buff );
 */
 void blip_buffer_remove_samples( Blip_Buffer * buff, long count );
 
-/*  Experimental features */
+// Experimental features
 
 void blip_buffer_remove_silence( Blip_Buffer * buff, long count );
 
@@ -142,7 +142,7 @@ blip_resampled_time_t blip_buffer_clock_rate_factor( Blip_Buffer * buff,
 #define BLIP_PHASE_BITS 6
 #endif
 
-/*	 Internal */
+// Internal
 #define BLIP_WIDEST_IMPULSE_ 16
 #define BLIP_RES (1 << BLIP_PHASE_BITS)
 
@@ -166,7 +166,7 @@ void _blip_synth_treble_eq( Blip_Synth_ * synth_, struct blip_eq_s *eq );
 
 void _blip_synth_volume_unit( Blip_Synth_ * synth_, double v );
 
-/*  Quality level. Start with blip_good_quality. */
+// Quality level. Start with blip_good_quality.
 #define BLIP_MED_QUALITY 8
 #define BLIP_GOOD_QUALITY 12
 #define BLIP_HIGH_QUALITY 16
@@ -184,10 +184,10 @@ typedef struct Blip_Synth_s {
 
 void blip_synth_set_volume( Blip_Synth * synth, double v );
 
-/*  Configure low-pass filter (see notes.txt)*/
+// Configure low-pass filter (see notes.txt)
 void blip_synth_set_treble_eq( Blip_Synth * synth, double treble );
 
-/*  Get/set Blip_Buffer used for output */
+// Get/set Blip_Buffer used for output
 void blip_synth_set_output( Blip_Synth * synth, Blip_Buffer * b );
 
 /*  Update amplitude of waveform at given time. Using this requires a separate
@@ -195,7 +195,7 @@ Blip_Synth for each waveform. */
 void blip_synth_update( Blip_Synth * synth, blip_time_t time,
                         int amplitude );
 
-/*  Low-level interface */
+// Low-level interface
 
 void blip_synth_offset_resampled( Blip_Synth * synth,
                                  blip_resampled_time_t, int delta,
@@ -205,7 +205,7 @@ Blip_Synth *new_Blip_Synth( void );
 void delete_Blip_Synth( Blip_Synth ** synth );
 
 #define BLIP_EQ_DEF_CUTOFF 0
-/*  Low-pass equalization parameters */
+// Low-pass equalization parameters
 
 typedef struct blip_eq_s {
   double treble;
@@ -216,7 +216,7 @@ typedef struct blip_eq_s {
 
 #define BLIP_SAMPLE_BITS 30
 
-/*  End of public interface */
+// End of public interface
 
 #define BLIP_UNSCALED 65535
 #define BLIP_MAX_LENGTH 0

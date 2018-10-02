@@ -50,7 +50,7 @@ widget_roms_draw( void *data )
 
   if( data ) info = data;
 
-  /* Get a copy of the current settings */
+  // Get a copy of the current settings
   if( !info->initialised ) {
 
     widget_settings = malloc( sizeof( settings_info ) );
@@ -69,7 +69,7 @@ widget_roms_draw( void *data )
   rom_count = info->count;
   is_peripheral = info->is_peripheral;
 
-  /* Blank the main display area */
+  // Blank the main display area
   widget_dialog_with_border( 1, 2, 30, rom_count + 2 );
 
   widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, info->title );

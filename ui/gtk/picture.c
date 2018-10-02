@@ -38,7 +38,7 @@
 #include "ui/ui.h"
 #include "utils.h"
 
-/* An RGB image of the keyboard picture */
+// An RGB image of the keyboard picture
 static guchar picture[ DISPLAY_SCREEN_HEIGHT * DISPLAY_ASPECT_WIDTH * 4 ];
 static const gint picture_pitch = DISPLAY_ASPECT_WIDTH * 4;
 
@@ -100,7 +100,7 @@ gtkui_picture( const char *filename, int border )
     gtkstock_create_close( dialog, NULL, G_CALLBACK( gtk_widget_hide ),
 			   FALSE );
 
-    /* Stop users resizing this window */
+    // Stop users resizing this window
     gtk_window_set_resizable( GTK_WINDOW( dialog ), FALSE );
 
     dialog_created = 1;

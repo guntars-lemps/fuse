@@ -93,14 +93,14 @@ static const periph_t ula_periph_full_decode = {
   /* .activate = */ NULL,
 };
 
-/* Debugger system variables */
+// Debugger system variables
 static const char * const debugger_type_string = "ula";
 static const char * const last_byte_detail_string = "last";
 static const char * const tstates_detail_string = "tstates";
 static const char * const mem7ffd_detail_string = "mem7ffd";
 static const char * const mem1ffd_detail_string = "mem1ffd";
 
-/* Adapter just to get the return type to be what the debugger is expecting */
+// Adapter just to get the return type to be what the debugger is expecting
 static libspectrum_dword
 get_last_byte( void )
 {
@@ -194,7 +194,7 @@ ula_read( libspectrum_word port, libspectrum_byte *attached )
   return r;
 }
 
-/* What happens when we write to the ULA? */
+// What happens when we write to the ULA?
 static void
 ula_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 {
@@ -204,7 +204,7 @@ ula_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
   sound_beeper( tstates,
                 (!!(b & 0x10) << 1) + ( (!(b & 0x8)) | tape_microphone ) );
 
-  /* FIXME: shouldn't really be using the memory capabilities here */
+  // FIXME: shouldn't really be using the memory capabilities here
 
   if( machine_current->timex ) {
 
@@ -216,12 +216,12 @@ ula_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 
   } else if( machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY || !settings_current.issue2 ) {
 
-    /* 128K always acts like an Issue 3 */
+    // 128K always acts like an Issue 3
     ula_default_value = b & 0x10 ? 0xff : 0xbf;
 
   } else {
 
-    /* Issue 2 */
+    // Issue 2
     ula_default_value = b & 0x18 ? 0xff : 0xbf;
 
   }
@@ -254,14 +254,14 @@ ula_to_snapshot( libspectrum_snap *snap )
   libspectrum_snap_set_out_ula( snap, last_byte );
   libspectrum_snap_set_tstates( snap, tstates );
   libspectrum_snap_set_issue2( snap, settings_current.issue2 );
-}  
+}
 
 void
 ula_contend_port_early( libspectrum_word port )
 {
   if( memory_map_read[ port >> MEMORY_PAGE_SIZE_LOGARITHM ].contended )
     tstates += ula_contention_no_mreq[ tstates ];
-   
+
   tstates++;
 }
 

@@ -37,34 +37,34 @@
 
 #define ID_STATUSBAR 900
 
-/* Reduce listview flickering. Defined from WINVER >= 6.00 */
+// Reduce listview flickering. Defined from WINVER >= 6.00
 #ifndef LVS_EX_DOUBLEBUFFER
 #define LVS_EX_DOUBLEBUFFER 0x00010000
 #endif
 
-/* window handler */
+// window handler
 HWND fuse_hWnd;
 
-/* application instance */
+// application instance
 HINSTANCE fuse_hInstance;
 
-/* status bar handle */
+// status bar handle
 HWND fuse_hStatusWindow;
 
-/* pokefinder window handle */
+// pokefinder window handle
 HWND fuse_hPFWnd;
 
-/* debugger window handle */
+// debugger window handle
 HWND fuse_hDBGWnd;
 
-/* about window handle */
+// about window handle
 HWND fuse_hABOWnd;
 
 /*
  * Display routines (win32display.c)
  */
 
-/* The colour palette in use */
+// The colour palette in use
 extern libspectrum_dword win32display_colours[16];
 
 int win32display_init( void );

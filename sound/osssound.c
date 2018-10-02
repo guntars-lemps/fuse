@@ -34,7 +34,7 @@
 #include "spectrum.h"
 #include "ui/ui.h"
 
-/* using (8) 64 byte frags for 8kHz, scale up for higher */
+// using (8) 64 byte frags for 8kHz, scale up for higher
 #define BASE_SOUND_FRAG_PWR	6
 
 
@@ -49,7 +49,7 @@ int sound_lowlevel_init(const char *device,int *freqptr,int *stereoptr)
 {
 int frag,tmp,flags;
 
-/* select a default device if we weren't explicitly given one */
+// select a default device if we weren't explicitly given one
 if(device==NULL) device = "/dev/dsp";
 
 /* Open the sound device non-blocking to avoid hangs if it is being
@@ -82,7 +82,7 @@ tmp=AFMT_S16_NE;
 sixteenbit=1;
 if(settings_current.sound_force_8bit || ioctl(soundfd,SNDCTL_DSP_SETFMT,&tmp)==-1)
   {
-  /* try 8-bit - may be an 8-bit-only device */
+  // try 8-bit - may be an 8-bit-only device
   tmp=AFMT_U8;
   if((ioctl(soundfd,SNDCTL_DSP_SETFMT,&tmp))==-1)
     {
@@ -95,11 +95,11 @@ if(settings_current.sound_force_8bit || ioctl(soundfd,SNDCTL_DSP_SETFMT,&tmp)==-
   sixteenbit=0;
   }
 
-/* XXX should it warn if it didn't get the stereoness it wanted? */
+// XXX should it warn if it didn't get the stereoness it wanted?
 tmp=(*stereoptr)?1:0;
 if(ioctl(soundfd,SNDCTL_DSP_STEREO,&tmp)<0)
   {
-  /* if it failed, make sure the opposite is ok */
+  // if it failed, make sure the opposite is ok
   tmp=(*stereoptr)?0:1;
   if(ioctl(soundfd,SNDCTL_DSP_STEREO,&tmp)<0)
     {

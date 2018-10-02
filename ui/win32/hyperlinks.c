@@ -29,7 +29,7 @@
 #define PROP_UNDERLINE_FONT     TEXT("_Hyperlink_Underline_Font_")
 
 
-LRESULT CALLBACK 
+LRESULT CALLBACK
 _HyperlinkParentProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   WNDPROC pfnOrigProc = (WNDPROC) GetProp(hwnd, PROP_ORIGINAL_PROC);
@@ -58,7 +58,7 @@ _HyperlinkParentProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
   return CallWindowProc(pfnOrigProc, hwnd, message, wParam, lParam);
 }
 
-LRESULT CALLBACK 
+LRESULT CALLBACK
 _HyperlinkProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   WNDPROC pfnOrigProc = (WNDPROC) GetProp(hwnd, PROP_ORIGINAL_PROC);
@@ -120,10 +120,10 @@ _HyperlinkProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
   return CallWindowProc(pfnOrigProc, hwnd, message, wParam, lParam);
 }
 
-BOOL 
+BOOL
 ConvertStaticToHyperlink(HWND hwndCtl)
 {
-  /* Subclass the parent so we can color the controls as we desire. */
+  // Subclass the parent so we can color the controls as we desire.
 
   HWND hwndParent = GetParent(hwndCtl);
   if (NULL != hwndParent) {
@@ -133,18 +133,18 @@ ConvertStaticToHyperlink(HWND hwndCtl)
       SetWindowLongPtr(hwndParent, GWLP_WNDPROC, (LONG_PTR) (WNDPROC) _HyperlinkParentProc);
     }
   }
-  /* Make sure the control will send notifications. */
+  // Make sure the control will send notifications.
 
   DWORD dwStyle = GetWindowLong(hwndCtl, GWL_STYLE);
   SetWindowLong(hwndCtl, GWL_STYLE, dwStyle | SS_NOTIFY);
 
-  /* Subclass the existing control. */
+  // Subclass the existing control.
 
   WNDPROC pfnOrigProc = (WNDPROC) GetWindowLongPtr(hwndCtl, GWLP_WNDPROC);
   SetProp(hwndCtl, PROP_ORIGINAL_PROC, (HANDLE) pfnOrigProc);
   SetWindowLongPtr(hwndCtl, GWLP_WNDPROC, (LONG_PTR) (WNDPROC) _HyperlinkProc);
 
-  /* Create an updated font by adding an underline. */
+  // Create an updated font by adding an underline.
 
   HFONT hOrigFont = (HFONT) SendMessage(hwndCtl, WM_GETFONT, 0, 0);
   SetProp(hwndCtl, PROP_ORIGINAL_FONT, (HANDLE) hOrigFont);
@@ -156,14 +156,14 @@ ConvertStaticToHyperlink(HWND hwndCtl)
   HFONT hFont = CreateFontIndirect(&lf);
   SetProp(hwndCtl, PROP_UNDERLINE_FONT, (HANDLE) hFont);
 
-  /* Set a flag on the control so we know what color it should be. */
+  // Set a flag on the control so we know what color it should be.
 
   SetProp(hwndCtl, PROP_STATIC_HYPERLINK, (HANDLE) 1);
 
   return TRUE;
 }
 
-BOOL 
+BOOL
 ConvertCtlStaticToHyperlink(HWND hwndParent, UINT uiCtlId)
 {
   return ConvertStaticToHyperlink(GetDlgItem(hwndParent, uiCtlId));

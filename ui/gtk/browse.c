@@ -58,7 +58,7 @@ static GtkWidget
 
 static int dialog_created; // Have we created the dialog box yet?
 
-/* List columns */
+// List columns
 enum
 {
   COL_PIX = 0, // Pixmap
@@ -71,7 +71,7 @@ void
 menu_media_tape_browse( GtkAction *gtk_action GCC_UNUSED,
                         gpointer data GCC_UNUSED )
 {
-  /* Firstly, stop emulation */
+  // Firstly, stop emulation
   fuse_emulation_pause();
 
   if( !dialog_created )
@@ -84,7 +84,7 @@ menu_media_tape_browse( GtkAction *gtk_action GCC_UNUSED,
 
   gtk_widget_show_all( dialog );
 
-  /* Carry on with emulation */
+  // Carry on with emulation
   fuse_emulation_unpause();
 }
 
@@ -98,7 +98,7 @@ create_block_list( void )
 
   view = gtk_tree_view_new();
 
-  /* Add columns */
+  // Add columns
   renderer = gtk_cell_renderer_pixbuf_new();
   gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( view ),
                                                -1,
@@ -123,7 +123,7 @@ create_block_list( void )
                                                "text", COL_DATA,
                                                NULL );
 
-  /* Create data model */
+  // Create data model
   store = gtk_list_store_new( NUM_COLS, GDK_TYPE_PIXBUF, G_TYPE_STRING,
                               G_TYPE_STRING );
 
@@ -131,7 +131,7 @@ create_block_list( void )
   gtk_tree_view_set_model( GTK_TREE_VIEW( view ), model );
   g_object_unref( model );
 
-  /* Fast move tape */
+  // Fast move tape
   g_signal_connect( G_OBJECT( view ), "row-activated",
                     G_CALLBACK( select_row ), model );
 
@@ -143,33 +143,33 @@ create_dialog( void )
 {
   GtkWidget *scrolled_window, *content_area;
 
-  /* Give me a new dialog box */
+  // Give me a new dialog box
   dialog = gtkstock_dialog_new( "Fuse - Browse Tape",
 				G_CALLBACK( delete_dialog ) );
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog ) );
 
-  /* And a scrolled window to pack the list into */
+  // And a scrolled window to pack the list into
   scrolled_window = gtk_scrolled_window_new( NULL, NULL );
   gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( scrolled_window ),
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC );
   gtk_box_pack_start( GTK_BOX( content_area ), scrolled_window, TRUE, TRUE, 0 );
 
-  /* The tape marker pixbuf */
+  // The tape marker pixbuf
   tape_marker_pixbuf = gdk_pixbuf_new_from_xpm_data( gtkpixmap_tape_marker );
-  /* FIXME: unref this at exit */
+  // FIXME: unref this at exit
 
-  /* And the list itself */
+  // And the list itself
   blocks = create_block_list();
   gtk_container_add( GTK_CONTAINER( scrolled_window ), GTK_WIDGET( blocks ) );
 
-  /* And the "tape modified" label */
+  // And the "tape modified" label
   modified_label = gtk_label_new( "" );
   gtk_box_pack_start( GTK_BOX( content_area ), modified_label, FALSE, FALSE, 0 );
 
-  /* Create the OK button */
+  // Create the OK button
   gtkstock_create_close( dialog, NULL, G_CALLBACK( browse_done ), FALSE );
 
-  /* Make the window big enough to show at least some data */
+  // Make the window big enough to show at least some data
   gtk_window_set_default_size( GTK_WINDOW( dialog ), -1, 250 );
 
   dialog_created = 1;
@@ -224,7 +224,7 @@ add_block_details( libspectrum_tape_block *block, void *user_data )
   libspectrum_tape_block_description( block_type, 80, block );
   tape_block_details( data_detail, 80, block );
 
-  /* Append a new row and fill data */
+  // Append a new row and fill data
   gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
   gtk_list_store_set( GTK_LIST_STORE( model ), &iter,
                       COL_PIX, NULL,
@@ -233,7 +233,7 @@ add_block_details( libspectrum_tape_block *block, void *user_data )
                       -1 );
 }
 
-/* Called when a row is selected */
+// Called when a row is selected
 static void
 select_row( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
             GtkTreeViewColumn *col GCC_UNUSED, gpointer user_data )
@@ -244,19 +244,19 @@ select_row( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
   GtkTreeIter iter;
   GtkTreeModel *model = user_data;
 
-  /* Get selected row */
+  // Get selected row
   row = -1;
   indices = gtk_tree_path_get_indices( path );
   if( indices ) row = indices[0];
 
-  /* Don't do anything if the current block was clicked on */
+  // Don't do anything if the current block was clicked on
   current_block = tape_get_current_block();
   if( row == current_block ) return;
 
-  /* Otherwise, select the new block */
+  // Otherwise, select the new block
   tape_select_block_no_update( row );
 
-  /* Mark selected block */
+  // Mark selected block
   if( current_block != -1 ) {
     gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path );
 
@@ -265,7 +265,7 @@ select_row( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
                         -1 );
   }
 
-  /* Unmark former block */
+  // Unmark former block
   if( current_block != -1 ) {
     path = gtk_tree_path_new_from_indices( current_block, -1 );
 
@@ -302,7 +302,7 @@ mark_row( GtkTreeModel *model, int row )
                       -1 );
 }
 
-/* Called if the OK button is clicked */
+// Called if the OK button is clicked
 static void
 browse_done( GtkWidget *widget GCC_UNUSED, gpointer data GCC_UNUSED )
 {
@@ -310,7 +310,7 @@ browse_done( GtkWidget *widget GCC_UNUSED, gpointer data GCC_UNUSED )
   gtk_widget_destroy( dialog );
 }
 
-/* Catch attempts to delete the window and just hide it instead */
+// Catch attempts to delete the window and just hide it instead
 static gboolean
 delete_dialog( GtkWidget *widget, GdkEvent *event GCC_UNUSED,
 	       gpointer user_data GCC_UNUSED )

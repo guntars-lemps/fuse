@@ -62,7 +62,7 @@ win32mouse_position( LPARAM lParam )
 
 void
 win32mouse_button( int button, int down )
-/* button is: 1 - left, 2 - middle, 3 - right, down is: 1 - down, 0 - up */
+// button is: 1 - left, 2 - middle, 3 - right, down is: 1 - down, 0 - up
 {
   ui_mouse_button( button, down );
   return;
@@ -78,7 +78,7 @@ ui_mouse_grab( int startup )
   ui_statusbar_update( UI_STATUSBAR_ITEM_MOUSE, UI_STATUSBAR_STATE_ACTIVE );
   return 1;
 
-/* doesn't seem like SetCapture can return an error */
+// doesn't seem like SetCapture can return an error
 /*
   ui_error( UI_ERROR_WARNING, "Mouse grab failed" );
   return 0;

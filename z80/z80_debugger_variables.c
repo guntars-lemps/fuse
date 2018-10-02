@@ -257,7 +257,7 @@ z80_debugger_variables_init( void )
 
   debugger_system_variable_register( debugger_type_string, memptr_detail_string,
 		  		     get_memptr, set_memptr );
-  /* WZ is a synonym for MEMPTR */
+  // WZ is a synonym for MEMPTR
   debugger_system_variable_register( debugger_type_string, wz_detail_string,
 		  		     get_memptr, set_memptr );
 

@@ -46,17 +46,17 @@ memorybrowser_init( HWND hwndDlg );
 void
 menu_machine_memorybrowser( int action );
 
-/* helper constants for memory listview's scrollbar */
+// helper constants for memory listview's scrollbar
 static const int memorysb_min = 0x0000;
 static const int memorysb_max = 0x10000;
 static const int memorysb_step = 0x10;
 
-/* Visual styles could change visible rows */
+// Visual styles could change visible rows
 static int memorysb_page_inc = 0xa0;
 static int memorysb_page_size = 0x140;
 static int memorysb_page_rows = 20;
 
-/* Address of first visible row */
+// Address of first visible row
 static libspectrum_word memaddr = 0x0000;
 
 static void
@@ -90,7 +90,7 @@ update_display( HWND hwndDlg, libspectrum_word base )
     }
     text[2][ 0x10 ] = '\0';
 
-    /* append the item */
+    // append the item
     lvi.iItem = SendDlgItemMessage( hwndDlg, IDC_MEM_LV,
                                     LVM_GETITEMCOUNT, 0, 0 );
     lvi.iSubItem = 0;
@@ -115,14 +115,14 @@ scroller( HWND hwndDlg, WPARAM scroll_command )
   SCROLLINFO si;
 
   memset( &si, 0, sizeof( si ) );
-  si.cbSize = sizeof(si); 
-  si.fMask = SIF_POS; 
+  si.cbSize = sizeof(si);
+  si.fMask = SIF_POS;
   GetScrollInfo( GetDlgItem( hwndDlg, IDC_MEM_SB ), SB_CTL, &si );
 
   int value = si.nPos;
   int selected = 0;
-  
-  /* in Windows we have to read the command and scroll the scrollbar manually */
+
+  // in Windows we have to read the command and scroll the scrollbar manually
   switch( LOWORD( scroll_command ) ) {
     case SB_BOTTOM:
       value = memorysb_max;
@@ -157,21 +157,21 @@ scroller( HWND hwndDlg, WPARAM scroll_command )
     value = memorysb_max - memorysb_page_size;
   if( value < memorysb_min ) value = memorysb_min;
 
-  /* Drop the low bits before displaying anything */
+  // Drop the low bits before displaying anything
   base = value; base &= 0xfff0;
 
   if( base != memaddr ) {
-    /* set the new scrollbar position */
+    // set the new scrollbar position
     memset( &si, 0, sizeof(si) );
-    si.cbSize = sizeof(si); 
-    si.fMask = SIF_POS; 
+    si.cbSize = sizeof(si);
+    si.fMask = SIF_POS;
     si.nPos = base;
     SetScrollInfo( GetDlgItem( hwndDlg, IDC_MEM_SB ), SB_CTL, &si, TRUE );
 
     update_display( hwndDlg, base );
   }
 
-  /* Select row according to last scroll command */
+  // Select row according to last scroll command
   ListView_SetItemState( GetDlgItem( hwndDlg, IDC_MEM_LV ), selected,
                          LVIS_SELECTED, LVIS_SELECTED );
 
@@ -214,27 +214,27 @@ memorybrowser_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam,
     }
 
     case WM_VSCROLL:
-      /* Accept vertical scroll from listview too */
+      // Accept vertical scroll from listview too
       scroller( hwndDlg, wParam );
       return TRUE;
-   
+
     case WM_MOUSEWHEEL:
     {
-      /* get current position */
+      // get current position
       SCROLLINFO si;
       memset( &si, 0, sizeof(si) );
       si.cbSize = sizeof(si);
       si.fMask = SIF_POS;
       GetScrollInfo( GetDlgItem( hwndDlg, IDC_MEM_SB ), SB_CTL, &si );
 
-      /* convert delta displacement to memory displacement */
+      // convert delta displacement to memory displacement
       short delta = (short) HIWORD( wParam ) / WHEEL_DELTA;
       int value = si.nPos - delta * memorysb_step;
       if( value > memorysb_max - memorysb_page_size )
         value = memorysb_max - memorysb_page_size;
       if( value < memorysb_min ) value = memorysb_min;
 
-      /* scroll to new position */
+      // scroll to new position
       scroller( hwndDlg, MAKEWPARAM( SB_THUMBPOSITION, value ) );
       return TRUE;
     }
@@ -257,7 +257,7 @@ memory_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     }
 
     case WM_KEYDOWN:
-    {    
+    {
       WORD scroll_notify = 0xffff;
 
       switch( wParam )
@@ -287,7 +287,7 @@ memory_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
             break;
       }
 
-      /* Inform parent window about key scrolling */
+      // Inform parent window about key scrolling
       if( scroll_notify != 0xffff ) {
         SendMessage( GetParent( hWnd ), WM_VSCROLL,
                      MAKEWPARAM( scroll_notify, 0 ), (LPARAM) NULL );
@@ -299,7 +299,7 @@ memory_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
     case WM_MOUSEWHEEL:
     {
-      /* Inform parent window about mouse scrolling */
+      // Inform parent window about mouse scrolling
       SendMessage( GetParent( hWnd ), WM_MOUSEWHEEL, wParam, lParam );
       return 0;
     }
@@ -322,23 +322,23 @@ memorybrowser_init( HWND hwndDlg )
 
   error = win32ui_get_monospaced_font( &font ); if( error ) return;
 
-  /* subclass listview to catch keydown and mousewheel messages */
+  // subclass listview to catch keydown and mousewheel messages
   HWND hwnd_list = GetDlgItem( hwndDlg, IDC_MEM_LV );
   WNDPROC orig_proc = (WNDPROC) GetWindowLongPtr( hwnd_list, GWLP_WNDPROC );
   SetProp( hwnd_list, "original_proc", (HANDLE) orig_proc );
-  SetWindowLongPtr( hwnd_list, GWLP_WNDPROC, 
+  SetWindowLongPtr( hwnd_list, GWLP_WNDPROC,
                     (LONG_PTR) (WNDPROC) memory_listview_proc );
 
-  /* set extended listview style to select full row, when an item is selected */
+  // set extended listview style to select full row, when an item is selected
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( hwndDlg, IDC_MEM_LV,
-                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 ); 
+                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
   lv_ext_style |= LVS_EX_FULLROWSELECT;
   lv_ext_style |= LVS_EX_DOUBLEBUFFER;
   SendDlgItemMessage( hwndDlg, IDC_MEM_LV,
-                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style ); 
+                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
-  /* create columns */
+  // create columns
   LVCOLUMN lvc;
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
   lvc.fmt = LVCFMT_LEFT;
@@ -351,21 +351,21 @@ memorybrowser_init( HWND hwndDlg )
     SendDlgItemMessage( hwndDlg, IDC_MEM_LV, LVM_INSERTCOLUMN, i,
                         ( LPARAM ) &lvc );
   }
-  
-  /* set font of the listview to monospaced one */
+
+  // set font of the listview to monospaced one
   SendDlgItemMessage( hwndDlg, IDC_MEM_LV , WM_SETFONT,
                       (WPARAM) font, FALSE );
 
-  /* Recalculate visible rows, Visual Styles could change rows height */
+  // Recalculate visible rows, Visual Styles could change rows height
   memorysb_page_rows = SendDlgItemMessage( hwndDlg, IDC_MEM_LV,
                                            LVM_GETCOUNTPERPAGE, 0, 0 );
   memorysb_page_size = memorysb_page_rows * memorysb_step;
   memorysb_page_inc = memorysb_page_size / 2;
 
-  /* set the scrollbar parameters */
+  // set the scrollbar parameters
   SCROLLINFO si;
-  si.cbSize = sizeof(si); 
-  si.fMask = SIF_POS | SIF_RANGE | SIF_PAGE; 
+  si.cbSize = sizeof(si);
+  si.fMask = SIF_POS | SIF_RANGE | SIF_PAGE;
   si.nPos = memaddr;
   si.nMin = memorysb_min;
   si.nMax = memorysb_max;
@@ -374,7 +374,7 @@ memorybrowser_init( HWND hwndDlg )
 
   update_display( hwndDlg, memaddr );
 
-  /* Recalculate columns width, high DPI resolutions have larger sizes */
+  // Recalculate columns width, high DPI resolutions have larger sizes
   ListView_SetColumnWidth( hwnd_list, 0, LVSCW_AUTOSIZE_USEHEADER );
   ListView_SetColumnWidth( hwnd_list, 1, LVSCW_AUTOSIZE );
   ListView_SetColumnWidth( hwnd_list, 2, LVSCW_AUTOSIZE_USEHEADER );

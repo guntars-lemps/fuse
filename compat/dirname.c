@@ -46,33 +46,33 @@ dirname (char *path)
   static const char dot[] = ".";
   char *last_slash;
 
-  /* Find last '/'.  */
+  // Find last '/'.
   last_slash = path != NULL ? strrchr (path, FUSE_DIR_SEP_CHR) : NULL;
 
   if (last_slash != NULL && last_slash != path && last_slash[1] == '\0')
     {
-      /* Determine whether all remaining characters are slashes.  */
+      // Determine whether all remaining characters are slashes.
       char *runp;
 
       for (runp = last_slash; runp != path; --runp)
 	if (runp[-1] != FUSE_DIR_SEP_CHR)
 	  break;
 
-      /* The '/' is the last character, we have to look further.  */
+      // The '/' is the last character, we have to look further.
       if (runp != path)
 	last_slash = __memrchr (path, FUSE_DIR_SEP_CHR, runp - path);
     }
 
   if (last_slash != NULL)
     {
-      /* Determine whether all remaining characters are slashes.  */
+      // Determine whether all remaining characters are slashes.
       char *runp;
 
       for (runp = last_slash; runp != path; --runp)
 	if (runp[-1] != FUSE_DIR_SEP_CHR)
 	  break;
 
-      /* Terminate the path.  */
+      // Terminate the path.
       if (runp == path)
 	{
 	  /* The last slash is the first character in the string.  We have to

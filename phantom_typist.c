@@ -38,18 +38,18 @@
 #include "settings.h"
 #include "timer/timer.h"
 
-/* The various high level ways the phantom typist can type */
+// The various high level ways the phantom typist can type
 typedef enum phantom_typist_highlevel_mode_t {
-  /* Use keyword entry */
+  // Use keyword entry
   PHANTOM_TYPIST_HIGHLEVEL_MODE_KEYWORD,
 
-  /* Use keystroke entry */
+  // Use keystroke entry
   PHANTOM_TYPIST_HIGHLEVEL_MODE_KEYSTROKE,
 
-  /* Use the loader option from the menu */
+  // Use the loader option from the menu
   PHANTOM_TYPIST_HIGHLEVEL_MODE_MENU,
 
-  /* Use the loader option from the menu but with an additional delay */
+  // Use the loader option from the menu but with an additional delay
   PHANTOM_TYPIST_HIGHLEVEL_MODE_PLUS2A,
 
   /* Use the loader option from the menu but with an additional delay
@@ -57,12 +57,12 @@ typedef enum phantom_typist_highlevel_mode_t {
   PHANTOM_TYPIST_HIGHLEVEL_MODE_PLUS3
 } phantom_typist_highlevel_mode_t;
 
-/* The various strings of keypresses that the phantom typist can use */
+// The various strings of keypresses that the phantom typist can use
 typedef enum phantom_typist_mode_t {
-  /* J, SS + P, SS + P, Enter => LOAD "" */
+  // J, SS + P, SS + P, Enter => LOAD ""
   PHANTOM_TYPIST_MODE_JPP,
 
-  /* J, SS + P, SS + P, CS + SS, I, Enter => LOAD ""CODE */
+  // J, SS + P, SS + P, CS + SS, I, Enter => LOAD ""CODE
   PHANTOM_TYPIST_MODE_JPPI,
 
   PHANTOM_TYPIST_MODE_ENTER, // Enter only
@@ -71,7 +71,7 @@ typedef enum phantom_typist_mode_t {
      LOAD ""CODE in BASIC */
   PHANTOM_TYPIST_MODE_DOWN_LOADPPCODE,
 
-  /* Wait a bit and then perform the above */
+  // Wait a bit and then perform the above
   PHANTOM_TYPIST_MODE_WAIT_DOWN_LOADPPCODE,
 
   /* Wait a bit, Down, Enter,
@@ -80,89 +80,89 @@ typedef enum phantom_typist_mode_t {
      LOAD "t" followed by LOAD ""CODE in BASIC */
   PHANTOM_TYPIST_MODE_PLUS3_CODE_BLOCK,
 
-  /* L, O, A, D, SS + P, SS + P, Enter => LOAD "" */
+  // L, O, A, D, SS + P, SS + P, Enter => LOAD ""
   PHANTOM_TYPIST_MODE_LOADPP,
 
-  /* L, O, A, D, SS + P, SS + P, C, O, D, E, Enter => LOAD ""CODE */
+  // L, O, A, D, SS + P, SS + P, C, O, D, E, Enter => LOAD ""CODE
   PHANTOM_TYPIST_MODE_LOADPPCODE
 } phantom_typist_mode_t;
 
 typedef enum phantom_typist_state_t {
-  /* The phantom typist is inactive */
+  // The phantom typist is inactive
   PHANTOM_TYPIST_STATE_INACTIVE,
 
-  /* The phantom typist is waiting for the keyboard to be read */
+  // The phantom typist is waiting for the keyboard to be read
   PHANTOM_TYPIST_STATE_WAITING,
 
-  /* JPP mode */
+  // JPP mode
   PHANTOM_TYPIST_STATE_LOAD,
   PHANTOM_TYPIST_STATE_QUOTE1,
   PHANTOM_TYPIST_STATE_QUOTE2,
   PHANTOM_TYPIST_STATE_ENTER,
 
-  /* Enter mode */
+  // Enter mode
   PHANTOM_TYPIST_STATE_ENTER_ONLY,
   PHANTOM_TYPIST_STATE_WAIT_AFTER_ENTER,
 
-  /* LOAD mode - chains into the quotes of JPP mode */
+  // LOAD mode - chains into the quotes of JPP mode
   PHANTOM_TYPIST_STATE_LOAD_L,
   PHANTOM_TYPIST_STATE_LOAD_O,
   PHANTOM_TYPIST_STATE_LOAD_A,
   PHANTOM_TYPIST_STATE_LOAD_D,
 
-  /* For producing "CODE" in keyword mode */
+  // For producing "CODE" in keyword mode
   PHANTOM_TYPIST_STATE_EXTENDED_MODE,
   PHANTOM_TYPIST_STATE_CODE,
 
-  /* For producing "CODE" in single character entry mode */
+  // For producing "CODE" in single character entry mode
   PHANTOM_TYPIST_STATE_CODE_C,
   PHANTOM_TYPIST_STATE_CODE_O,
   PHANTOM_TYPIST_STATE_CODE_D,
   PHANTOM_TYPIST_STATE_CODE_E,
 
-  /* For selecting 128K BASIC or similar */
+  // For selecting 128K BASIC or similar
   PHANTOM_TYPIST_STATE_LONG_WAIT_DOWN,
   PHANTOM_TYPIST_STATE_WAIT_DOWN,
   PHANTOM_TYPIST_STATE_DOWN,
   PHANTOM_TYPIST_STATE_SELECT_BASIC,
   PHANTOM_TYPIST_STATE_WAIT,
 
-  /* For selecting tape on a +3 machine */
+  // For selecting tape on a +3 machine
   PHANTOM_TYPIST_STATE_TCOLON_T,
   PHANTOM_TYPIST_STATE_TCOLON_COLON,
 
-  /* For typing L and O somewhat slowly */
+  // For typing L and O somewhat slowly
   PHANTOM_TYPIST_STATE_SLOW_LOAD_L,
   PHANTOM_TYPIST_STATE_SLOW_LOAD_O,
 
 } phantom_typist_state_t;
 
-/* States for the phantom typist state machine */
+// States for the phantom typist state machine
 struct state_info_t {
-  /* The keys to be pressed in this state */
+  // The keys to be pressed in this state
   keyboard_key_name keys_to_press[2];
 
-  /* The function used to determine the next state */
+  // The function used to determine the next state
   phantom_typist_state_t (*next_state_fn)( void );
 
-  /* The next state to move to - used if next_state_fn is NULL */
+  // The next state to move to - used if next_state_fn is NULL
   phantom_typist_state_t next_state;
 
-  /* The number of frames to wait before acting in this state */
+  // The number of frames to wait before acting in this state
   int delay_before_state;
 };
 
-/* Next state selector functions */
+// Next state selector functions
 static phantom_typist_state_t t_colon_or_quote( void );
 static phantom_typist_state_t code_or_enter( void );
 static phantom_typist_state_t next_command_or_end( void );
 
-/* Reset function */
+// Reset function
 static void phantom_typist_reset( int hard_reset );
 
-/* Definitions for the phantom typist's state machine */
+// Definitions for the phantom typist's state machine
 static struct state_info_t state_info[] = {
-  /* INACTIVE and WAITING - data not used */
+  // INACTIVE and WAITING - data not used
   { { 0, 0 }, NULL, 0, 0 },
   { { 0, 0 }, NULL, 0, 0 },
 
@@ -172,7 +172,7 @@ static struct state_info_t state_info[] = {
   { { KEYBOARD_Enter, KEYBOARD_NONE }, next_command_or_end, 0, 0 },
 
   { { KEYBOARD_Enter, KEYBOARD_NONE }, NULL, PHANTOM_TYPIST_STATE_WAIT_AFTER_ENTER, 3 },
-  /* This state is here to "swallow" the pause while the +3 checks for a disk */
+  // This state is here to "swallow" the pause while the +3 checks for a disk
   { { KEYBOARD_NONE, KEYBOARD_NONE }, NULL, PHANTOM_TYPIST_STATE_INACTIVE, 600 },
 
   { { KEYBOARD_l, KEYBOARD_NONE }, NULL, PHANTOM_TYPIST_STATE_LOAD_O, 2 },
@@ -508,7 +508,7 @@ phantom_typist_ula_read( libspectrum_word port )
 
   switch( phantom_typist_state ) {
     case PHANTOM_TYPIST_STATE_INACTIVE:
-      /* Do nothing */
+      // Do nothing
       break;
 
     case PHANTOM_TYPIST_STATE_WAITING:

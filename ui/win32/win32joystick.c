@@ -45,7 +45,7 @@
 
 #else // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
-/* Functions to handle Joystick events */
+// Functions to handle Joystick events
 #include "ui/ui.h"
 #include "ui/uijoystick.h"
 
@@ -142,7 +142,7 @@ do_axis( int which, WORD value, input_key negative, input_key positive )
   event1.types.joystick.button = negative;
   event2.types.joystick.button = positive;
 
-  /* MS Windows sends a value between 0 and 65535, hopefully those will work */
+  // MS Windows sends a value between 0 and 65535, hopefully those will work
   if( value > 49152 ) {
     event1.type = INPUT_EVENT_JOYSTICK_RELEASE;
     event2.type = INPUT_EVENT_JOYSTICK_PRESS;
@@ -161,12 +161,12 @@ do_axis( int which, WORD value, input_key negative, input_key positive )
 void
 ui_joystick_end( void )
 {
-  /* Initialization and unitialization is handled by MS Windows */
+  // Initialization and unitialization is handled by MS Windows
 }
 
 #endif // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
-/* Win32 UI functions to handle Joystick options menus */
+// Win32 UI functions to handle Joystick options menus
 struct button_info {
   int *setting;
   TCHAR name[80];
@@ -279,7 +279,7 @@ dialog_init( HWND hwndDlg, struct joystick_info *info )
                                    hwndDlg );
     }
     else {
-      /* disable the button configuration part of the dialog */
+      // disable the button configuration part of the dialog
       SendMessage( info->button[i].label, WM_SETTEXT,
                    0, ( LPARAM ) TEXT( "N/A" ) );
       SendMessage( info->button[i].static_label, WM_SETTEXT,
@@ -452,11 +452,11 @@ show_key_selection_popoup( HWND hwndDlg, LPARAM lParam )
 
   info = ( struct button_info * ) GetWindowLongPtr( ( HWND ) lParam,
                                                     GWLP_USERDATA );
-  /* create a popup right over the button that has been clicked */
+  // create a popup right over the button that has been clicked
   GetWindowRect( ( HWND ) lParam, &rect );
   hpopup = GetSubMenu( LoadMenu( fuse_hInstance,
                      MAKEINTRESOURCE( IDR_JOYSTICKS_POPUP ) ), 0 );
-  /* popup returns the key value */
+  // popup returns the key value
   menu_id = TrackPopupMenu( hpopup, TPM_LEFTALIGN | TPM_TOPALIGN |
                             TPM_NONOTIFY | TPM_RETURNCMD |
                             TPM_RIGHTBUTTON, rect.left, rect.top, 0,

@@ -155,13 +155,13 @@ RS232:
     every other 0x00 + 0x## are discarded
 */
 
-/* 8KB ROM */
+// 8KB ROM
 #define ROM_SIZE 0x2000
 
-/* One 8KB memory chunk accessible by the Z80 when /ROMCS is low */
+// One 8KB memory chunk accessible by the Z80 when /ROMCS is low
 static memory_page if1_memory_map_romcs[MEMORY_PAGES_IN_8K];
 
-/* IF1 paged out ROM activated? */
+// IF1 paged out ROM activated?
 int if1_active = 0;
 int if1_available = 0;
 static int if1_mdr_status = 0;
@@ -231,10 +231,10 @@ static const periph_t if1_periph = {
   /* .activate = */ NULL,
 };
 
-/* Memory source */
+// Memory source
 static int if1_memory_source;
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "if1";
 static int page_event, unpage_event;
 
@@ -398,7 +398,7 @@ if1_reset( int hard_reset GCC_UNUSED )
     return;
   }
 
-  /* Check for an Interface 1 ROM */
+  // Check for an Interface 1 ROM
   if( machine_load_rom_bank( if1_memory_map_romcs, 0,
 			     settings_current.rom_interface_1,
 			     settings_default.rom_interface_1,
@@ -593,7 +593,7 @@ port_ctr_in( void )
       block = mdr->head_pos / 543 + ( mdr->max_bytes == 15 ? 0 : 256 );
       if( mdr->pream[block] == SYNC_OK ) { // if formatted
 	if( mdr->gap ) {
-	/* ret &= 0xff;  GAP and SYNC high ? */
+	// ret &= 0xff;  GAP and SYNC high ?
 	  mdr->gap--;
         } else {
 	  ret &= 0xf9; // GAP and SYNC low
@@ -605,12 +605,12 @@ port_ctr_in( void )
 	  }
         }
       }
-      /* if write protected */
+      // if write protected
       if( libspectrum_microdrive_write_protect( mdr->cartridge) )
 	ret &= 0xfe; // active bit
     }
   }
-  /* Here we have to poll, the if1_ula DTR 'line' */
+  // Here we have to poll, the if1_ula DTR 'line'
   if( if1_ula.rs232_buffer > 0xff ) { // buffer empty
     unsigned char byte;
     int yes = 1;
@@ -696,7 +696,7 @@ port_net_in( void )
   if( if1_ula.fd_r == -1 )
     goto no_rs232_in;
 
-    /* Here is the RS232 input routine */
+    // Here is the RS232 input routine
   if( if1_ula.cts ) { // If CTS == 1
     if( if1_ula.count_in == 0 ) {
       if( if1_ula.fd_r >= 0 && read_rs232() == 1 ) {
@@ -709,7 +709,7 @@ port_net_in( void )
       if1_ula.count_in++;
     } else if( if1_ula.count_in >= 5 && if1_ula.count_in < 13 ) {
       if1_ula.tx = ( if1_ula.data_in & 0x01 ) ? 0 : 1;
-	/*				 send .. (data bits :-) */
+	// send .. (data bits :-)
       if1_ula.data_in >>= 1; // prepare next bit :-)
       if1_ula.count_in++;
     } else
@@ -724,7 +724,7 @@ no_rs232_in:
     goto no_snet_in;
 
     if (if1_ula.s_net_mode == 0 ) { // if we do raw
-        /* Here is the input routine */
+        // Here is the input routine
         if (read( if1_ula.fd_net, &if1_ula.net, 1)) {}; // Ok, if no byte, we send last
     } else {/* if( if1_ula.s_net_mode == 1 ) if we do interpreted */
 /* Here is the input routine. There are several stage in input
@@ -803,7 +803,7 @@ port_mdr_out( libspectrum_byte val )
 {
   int m, block;
 
-  /* allow access to the port only if motor 1 is ON and there's a file open */
+  // allow access to the port only if motor 1 is ON and there's a file open
   for( m = 0; m < 8; m++ ) {
 
     microdrive_t *mdr = &microdrive[ m ];
@@ -844,7 +844,7 @@ port_ctr_out( libspectrum_byte val )
   if( !( val & 0x02 ) && ( if1_ula.comms_clk ) ) { // ~~\__
 
     for( m = 7; m > 0; m-- ) {
-      /* Rotate one drive */
+      // Rotate one drive
       microdrive[m].motor_on = microdrive[m - 1].motor_on;
     }
     microdrive[0].motor_on = (val & 0x01) ? 0 : 1;
@@ -889,7 +889,7 @@ port_ctr_out( libspectrum_byte val )
        OK, Summa summarum I assume that, the COMMS OUT pin is a
        negated output of the if1 ULA CTR register's COMMS DATA bit.
     */
-    /* C_DATA = 1 */
+    // C_DATA = 1
     if( if1_ula.comms_data == 0 ) {
       if1_ula.count_out = 0;
       if1_ula.data_out = 0;
@@ -957,7 +957,7 @@ port_net_out( libspectrum_byte val )
       do {} while( write( if1_ula.fd_t, "", 1 ) != 1 );
     }
     if( if1_ula.count_out == 13 ) {
-        /* Here is the output routine */
+        // Here is the output routine
       if( if1_ula.data_out == 0x00 ) {
         if1_ula.data_out = '*';
         do {} while( write( if1_ula.fd_t, "", 1 ) != 1 );
@@ -968,7 +968,7 @@ port_net_out( libspectrum_byte val )
     if1_ula.rx = val & 0x01; // set rx
   } else { // if( if1_ula.comms_data == 1 ) SinclairNET :-)
     if( if1_ula.s_net_mode == 0 ) { // if we out bit by bit, do it
-        /* Here is the output routine */
+        // Here is the output routine
 
 /* OK, examining the schematics of if1 and the disassembly of if1 ROM, I
    see that the Q1 and Q2 transistors negate the RX DATA signal, and the
@@ -993,8 +993,8 @@ port_net_out( libspectrum_byte val )
 	if1_ula.net_data &= 0xff;
 	if1_ula.net_state++; // OK, now we get data bytes...
 
-/*	lseek( if1_ula.fd_net, 0, SEEK_SET );  start a packet */
-		/* first we send the station number */
+// lseek( if1_ula.fd_net, 0, SEEK_SET );  start a packet
+		// first we send the station number
         do {} while( write( if1_ula.fd_net, &if1_ula.net_data, 1 ) == -1 );
 #ifdef HAVE_FSYNC
         fsync( if1_ula.fd_net );
@@ -1005,8 +1005,8 @@ port_net_out( libspectrum_byte val )
 #endif
       } else if( if1_ula.net_state > 192 && if1_ula.net_state < 0x0200 &&
         ( ( val & 0x01 ) == 0 ) ) {
-	/* NET-STATE ask as many times.... and now send a 0 */
-/*	  if1_ula.net = 1; */
+	// NET-STATE ask as many times.... and now send a 0
+// if1_ula.net = 1;
 	if1_ula.net_state = 0x0200; // Send the station number
       }
       if1_ula.net = ( val & 0x01 ) ? 0 : 1; // set net wire?
@@ -1087,7 +1087,7 @@ if1_mdr_new( microdrive_t *mdr )
     len = settings_current.mdr_len = settings_current.mdr_len < 10 ? 10 :
 	    settings_current.mdr_len > LIBSPECTRUM_MICRODRIVE_BLOCK_MAX ? LIBSPECTRUM_MICRODRIVE_BLOCK_MAX : settings_current.mdr_len;
 
-  /* Erase the entire cartridge */
+  // Erase the entire cartridge
   libspectrum_microdrive_set_cartridge_len( mdr->cartridge, len );
 
   for( i = 0; i < len * LIBSPECTRUM_MICRODRIVE_BLOCK_LEN; i++ )
@@ -1097,7 +1097,7 @@ if1_mdr_new( microdrive_t *mdr )
 	i > 0; i-- )
     mdr->pream[255 + i] = mdr->pream[i-1] = SYNC_NO;
 
-  /* but don't write-protect */
+  // but don't write-protect
   libspectrum_microdrive_set_write_protect( mdr->cartridge, 0 );
 
   mdr->inserted = 1;
@@ -1134,9 +1134,9 @@ if1_mdr_insert( int which, const char *filename )
 
   mdr = &microdrive[ which ];
 
-  /* Eject any cartridge already in the drive */
+  // Eject any cartridge already in the drive
   if( mdr->inserted ) {
-    /* Abort the insert if we want to keep the current cartridge */
+    // Abort the insert if we want to keep the current cartridge
     if( if1_mdr_eject( which ) ) return 0;
   }
 
@@ -1163,7 +1163,7 @@ if1_mdr_insert( int which, const char *filename )
   mdr->inserted = 1;
   mdr->modified = 0;
   mdr->filename = utils_safe_strdup( filename );
-  /* we assume formatted cartridges */
+  // we assume formatted cartridges
   for( i = libspectrum_microdrive_cartridge_len( mdr->cartridge );
 	i > 0; i-- )
     mdr->pream[255 + i] = mdr->pream[i-1] = SYNC_OK;
@@ -1289,7 +1289,7 @@ if1_plug( const char *filename, int what )
     break;
   }
 
-  /* rs232_handshake == 0 -> we assume DTR(DSR) always 1 if tx and rx plugged */
+  // rs232_handshake == 0 -> we assume DTR(DSR) always 1 if tx and rx plugged
   if( !settings_current.rs232_handshake &&
 	if1_ula.fd_t != -1 && if1_ula.fd_r != -1 )
     if1_ula.dtr = 1;
@@ -1325,7 +1325,7 @@ if1_unplug( int what )
     if1_ula.fd_net = -1;
     break;
   }
-  /* rs232_handshake == 0 -> we assume DTR(DSR) always 1 if tx and rx plugged */
+  // rs232_handshake == 0 -> we assume DTR(DSR) always 1 if tx and rx plugged
   if( !settings_current.rs232_handshake &&
 	( if1_ula.fd_t == -1 || if1_ula.fd_r == -1 ) )
     if1_ula.dtr = 0;

@@ -58,13 +58,13 @@ const libspectrum_byte halfcarry_sub_table[] =
 const libspectrum_byte overflow_add_table[] = { 0, 0, 0, FLAG_V, FLAG_V, 0, 0, 0 };
 const libspectrum_byte overflow_sub_table[] = { 0, FLAG_V, 0, 0, 0, 0, FLAG_V, 0 };
 
-/* Some more tables; initialised in z80_init_tables() */
+// Some more tables; initialised in z80_init_tables()
 
 libspectrum_byte sz53_table[0x100]; // The S, Z, 5 and 3 bits of the index
 libspectrum_byte parity_table[0x100]; // The parity of the lookup value
 libspectrum_byte sz53p_table[0x100]; // OR the above two tables together
 
-/* This is what everything acts on! */
+// This is what everything acts on!
 processor z80;
 
 int z80_interrupt_event;
@@ -99,7 +99,7 @@ z80_interrupt_event_fn( libspectrum_dword event_tstates, int type,
   if( z80_interrupt() ) rzx_frame();
 }
 
-/* Set up the z80 emulation */
+// Set up the z80 emulation
 int
 z80_init( void *context )
 {
@@ -129,7 +129,7 @@ z80_register_startup( void )
                             ARRAY_SIZE( dependencies ), z80_init, NULL, NULL );
 }
 
-/* Initalise the tables used to set flags */
+// Initalise the tables used to set flags
 static void z80_init_tables(void)
 {
   int i,j,k;
@@ -148,7 +148,7 @@ static void z80_init_tables(void)
 
 }
 
-/* Reset the z80 */
+// Reset the z80
 void
 z80_reset( int hard_reset )
 {
@@ -171,7 +171,7 @@ z80_reset( int hard_reset )
   z80.interrupts_enabled_at = -1;
 }
 
-/* Process a z80 maskable interrupt */
+// Process a z80 maskable interrupt
 int
 z80_interrupt( void )
 {
@@ -218,7 +218,7 @@ z80_interrupt( void )
 	   emulate fetching of additional bytes. */
 	PC = 0x0038; break;
       case 1:
-	/* RST 38 */
+	// RST 38
 	PC = 0x0038; break;
       case 2:
 	/* We assume 0xff is on the data bus, as the Spectrum leaves it pulled
@@ -246,11 +246,11 @@ z80_interrupt( void )
   }
 }
 
-/* Process a z80 non-maskable interrupt */
+// Process a z80 non-maskable interrupt
 static void
 z80_nmi( libspectrum_dword ts, int type, void *user_data )
 {
-  /* TODO: this isn't ideal */
+  // TODO: this isn't ideal
   if( spectranet_available && spectranet_nmi_flipflop() )
     return;
 
@@ -261,20 +261,20 @@ z80_nmi( libspectrum_dword ts, int type, void *user_data )
 
   writebyte( --SP, PCH ); writebyte( --SP, PCL );
 
-  /* TODO: check whether any of these should occur before PC is pushed. */
+  // TODO: check whether any of these should occur before PC is pushed.
   if( machine_current->capabilities &
       LIBSPECTRUM_MACHINE_CAPABILITY_SCORP_MEMORY ) {
 
-    /* Page in ROM 2 */
+    // Page in ROM 2
     writeport_internal( 0x1ffd, machine_current->ram.last_byte2 | 0x02 );
 
   } else if( beta_available ) {
 
-    /* Page in TR-DOS ROM */
+    // Page in TR-DOS ROM
     beta_page();
   } else if( spectranet_available ) {
 
-    /* Page in spectranet */
+    // Page in spectranet
     spectranet_nmi();
   }
 
@@ -282,14 +282,14 @@ z80_nmi( libspectrum_dword ts, int type, void *user_data )
   PC = 0x0066;
 }
 
-/* Special peripheral processing for RETN */
+// Special peripheral processing for RETN
 void
 z80_retn( void )
 {
   spectranet_retn();
 }
 
-/* Routines for transferring the Z80 contents to and from snapshots */
+// Routines for transferring the Z80 contents to and from snapshots
 static void
 z80_from_snapshot( libspectrum_snap *snap )
 {

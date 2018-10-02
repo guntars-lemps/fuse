@@ -56,7 +56,7 @@
 #include "z80/z80_macros.h"
 #include "options.h" // needed for get combo options
 
-/* A 16KB memory chunk accessible by the Z80 when /ROMCS is low */
+// A 16KB memory chunk accessible by the Z80 when /ROMCS is low
 memory_page beta_memory_map_romcs[MEMORY_PAGES_IN_16K];
 static int beta_memory_source;
 
@@ -89,7 +89,7 @@ static const periph_t beta_peripheral = {
   /* .activate = */ NULL,
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "beta128";
 static int page_event, unpage_event;
 
@@ -99,7 +99,7 @@ static void beta_enabled_snapshot( libspectrum_snap *snap );
 static void beta_from_snapshot( libspectrum_snap *snap );
 static void beta_to_snapshot( libspectrum_snap *snap );
 
-/* 16KB ROM */
+// 16KB ROM
 #define ROM_SIZE 0x4000
 
 static module_info_t beta_module_info = {
@@ -341,12 +341,12 @@ beta_sp_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 {
   if( !beta_active ) return;
 
-  /* reset 0x04 and then set it to reset controller */
+  // reset 0x04 and then set it to reset controller
   beta_select_drive( b & 0x03 );
-  /* 0x08 = block hlt, normally set */
+  // 0x08 = block hlt, normally set
   wd_fdc_set_hlt( beta_fdc, ( ( b & 0x08 ) ? 1 : 0 ) );
   fdd_set_head( beta_fdc->current_drive, ( ( b & 0x10 ) ? 0 : 1 ) );
-  /* 0x20 = density, reset = FM, set = MFM */
+  // 0x20 = density, reset = FM, set = MFM
   beta_fdc->dden = b & 0x20 ? 1 : 0;
 
   beta_system_register = b;
@@ -390,7 +390,7 @@ beta_disk_insert( beta_drive_number which, const char *filename,
 static int
 ui_drive_autoload( void )
 {
-  /* Clear AY registers (and more) from current machine */
+  // Clear AY registers (and more) from current machine
   machine_reset(1);
 
   if( ( machine_current->capabilities &
@@ -528,7 +528,7 @@ ui_drive_is_available( void )
 static const fdd_params_t *
 ui_drive_get_params_a( void )
 {
-  /* +1 => there is no `Disabled' */
+  // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_beta128a_type() + 1 ];
 }
 

@@ -44,7 +44,7 @@
 #include "utils.h"
 #include "win32internals.h"
 
-/* Map OEM unshifted keys to Fuse input layer keysym */
+// Map OEM unshifted keys to Fuse input layer keysym
 extern const keysyms_map_t oem_keysyms_map[];
 
 static GHashTable *oem_keysyms_hash;

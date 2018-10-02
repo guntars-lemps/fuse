@@ -26,7 +26,7 @@
 
 #include <libspectrum.h>
 
-/* Whether DivMMC is currently paged in */
+// Whether DivMMC is currently paged in
 extern int divmmc_active;
 
 /* Notify DivMMC hardware of an opcode fetch to one of the designated

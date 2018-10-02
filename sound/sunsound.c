@@ -42,7 +42,7 @@
 #include "sound.h"
 #include "ui/ui.h"
 
-/* using (8) 64 byte frags for 8kHz, scale up for higher */
+// using (8) 64 byte frags for 8kHz, scale up for higher
 #define BASE_SOUND_FRAG_PWR	6
 
 static int soundfd = -1;
@@ -93,7 +93,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 	sixteenbit = 1;
 	if (settings_current.sound_force_8bit ||
 	    ioctl(soundfd, AUDIO_SETINFO, &ai) == -1) {
-		/* try 8-bit */
+		// try 8-bit
 		ai.play.encoding = AUDIO_ENCODING_LINEAR8;
 		ai.play.precision = 8;
 		sixteenbit = 0;
@@ -109,7 +109,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
 	ai.play.channels = *stereoptr ? 2 : 1;
 	if (ioctl(soundfd, AUDIO_SETINFO, &ai) == -1) {
-		/* if it failed make sure the opposite is ok */
+		// if it failed make sure the opposite is ok
 		ai.play.channels = *stereoptr ? 1 : 2;
 		if (ioctl(soundfd, AUDIO_SETINFO, &ai) == -1) {
 			settings_current.sound = 0;
@@ -119,7 +119,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 			close(soundfd);
 			return 1;
 		}
-		/* FIXME: is this line correct? */
+		// FIXME: is this line correct?
 		*stereoptr = *stereoptr ? 1 : 2;
 	}
 

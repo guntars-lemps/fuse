@@ -28,7 +28,7 @@
 
 #include <libspectrum.h>
 
-/* IF2 cart inserted? */
+// IF2 cart inserted?
 extern int if2_active;
 
 void if2_register_startup( void );

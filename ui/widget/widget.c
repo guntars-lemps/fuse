@@ -52,7 +52,7 @@
 #include "ui/widget/widget_internals.h"
 #include "utils.h"
 
-/* Bitmap font storage */
+// Bitmap font storage
 typedef struct {
   libspectrum_byte bitmap[15], left, width, defined;
 } widget_font_character;
@@ -71,10 +71,10 @@ static const widget_font_character default_keyword = {
   { 0x7C, 0x82, 0xEE, 0xD6, 0xBA, 0x7C }, 1, 6, 1
 }; // "(K)"
 
-/* The current widget keyhandler */
+// The current widget keyhandler
 widget_keyhandler_fn widget_keyhandler;
 
-/* The data used for recursive widgets */
+// The data used for recursive widgets
 typedef struct widget_recurse_t {
 
   widget_type type; // Which type of widget are we?
@@ -86,7 +86,7 @@ typedef struct widget_recurse_t {
 
 static widget_recurse_t widget_return[10]; // The stack to recurse on
 
-/* The settings used whilst playing with an options dialog box */
+// The settings used whilst playing with an options dialog box
 settings_info widget_options_settings;
 
 static int widget_read_font( const char *filename )
@@ -121,7 +121,7 @@ static int widget_read_font( const char *filename )
     }
     width = file.buffer[i+2] >> 4 & 15;
 
-    /* weed out invalid character codes and misdefined characters */
+    // weed out invalid character codes and misdefined characters
     if( page != 0 // we don't currently have more than page 0
 	|| i + 3 + width > file.length || (left >= 0 && left + width > 8) )
     {
@@ -343,7 +343,7 @@ widget_draw_rectangle_solid( int x, int y, int w, int h, int colour )
     x = 0;
   }
 
-  /* clip rectangle to screen edges */
+  // clip rectangle to screen edges
   if( x + w > DISPLAY_SCREEN_WIDTH - 1 )
     w = DISPLAY_SCREEN_WIDTH - x;
 
@@ -401,7 +401,7 @@ void widget_print_checkbox( int x, int y, int colour, int value )
     }
 }
 
-/* Arrows for any scrollable widget */
+// Arrows for any scrollable widget
 void
 widget_up_arrow( int x, int y, int colour )
 {
@@ -430,7 +430,7 @@ widget_down_arrow( int x, int y, int colour )
   }
 }
 
-/* Force screen rasters y to (y+h) inclusive to be redrawn */
+// Force screen rasters y to (y+h) inclusive to be redrawn
 void
 widget_display_rasters( int y, int h )
 {
@@ -441,7 +441,7 @@ widget_display_rasters( int y, int h )
   uidisplay_frame_end();
 }
 
-/* Global initialisation/end routines */
+// Global initialisation/end routines
 
 int widget_init( void )
 {
@@ -477,17 +477,17 @@ int widget_end( void )
     free( widget_filenames );
   }
 
-  /* we don't currently have more than page 0 */
+  // we don't currently have more than page 0
   free( widget_font[0] );
 
   return 0;
 }
 
-/* General widget routine */
+// General widget routine
 
 int widget_do( widget_type which, void *data )
 {
-  /* If we don't have a UI yet, we can't output widgets */
+  // If we don't have a UI yet, we can't output widgets
   if( !display_ui_initialised ) return 1;
 
   if( which == WIDGET_TYPE_QUERY && !settings_current.confirm_actions ) {
@@ -497,40 +497,40 @@ int widget_do( widget_type which, void *data )
 
   if( ui_widget_level == -1 ) uidisplay_frame_save();
 
-  /* We're now one widget level deeper */
+  // We're now one widget level deeper
   ui_widget_level++;
 
-  /* Store what type of widget we are and what data we were given */
+  // Store what type of widget we are and what data we were given
   widget_return[ui_widget_level].type = which;
   widget_return[ui_widget_level].data = data;
 
   uidisplay_frame_restore();
 
-  /* Draw this widget */
+  // Draw this widget
   widget_data[ which ].draw( data );
 
-  /* Set up the keyhandler for this widget */
+  // Set up the keyhandler for this widget
   widget_keyhandler = widget_data[which].keyhandler;
 
-  /* Process this widget until it returns */
+  // Process this widget until it returns
   widget_return[ui_widget_level].finished = 0;
   while( ! widget_return[ui_widget_level].finished ) {
 
-    /* Go to sleep for a bit */
+    // Go to sleep for a bit
     timer_sleep( 10 );
 
-    /* Process any events */
+    // Process any events
     ui_event();
   }
 
-  /* Do any post-widget processing if it exists */
+  // Do any post-widget processing if it exists
   if( widget_data[which].finish ) {
     widget_data[which].finish( widget_return[ui_widget_level].finished );
   }
 
   uidisplay_frame_restore();
 
-  /* Now return to the previous widget level */
+  // Now return to the previous widget level
   ui_widget_level--;
 
   if( ui_widget_level >= 0 ) {
@@ -547,7 +547,7 @@ int widget_do( widget_type which, void *data )
 
   } else {
 
-    /* Refresh the Spectrum's display, including the border */
+    // Refresh the Spectrum's display, including the border
     display_refresh_all();
 
   }
@@ -555,7 +555,7 @@ int widget_do( widget_type which, void *data )
   return 0;
 }
 
-/* End the currently running widget */
+// End the currently running widget
 int
 widget_end_widget( widget_finish_state state )
 {
@@ -563,7 +563,7 @@ widget_end_widget( widget_finish_state state )
   return 0;
 }
 
-/* End all currently running widgets */
+// End all currently running widgets
 int widget_end_all( widget_finish_state state )
 {
   int i;
@@ -622,7 +622,7 @@ widget_calculate_menu_width(widget_menu_entry *menu)
       total_width += 3*8;
     }
 
-    /* If this has extra details, leave room for the extra text */
+    // If this has extra details, leave room for the extra text
     if( ptr->detail ) total_width += widget_stringwidth( ptr->detail() )+2*8;
 
     if (total_width > max_width)
@@ -691,8 +691,8 @@ widget_t widget_data[] = {
 
 #ifndef UI_SDL
 #ifndef UI_X
-/* The statusbar handling functions */
-/* TODO: make these do something useful */
+// The statusbar handling functions
+// TODO: make these do something useful
 int
 ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
 {
@@ -733,7 +733,7 @@ ui_query( const char *message )
   return widget_query.save;
 }
 
-/* FIXME: make this do something useful */
+// FIXME: make this do something useful
 int
 ui_get_rollback_point( GSList *points )
 {

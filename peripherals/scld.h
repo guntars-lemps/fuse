@@ -129,7 +129,7 @@ void scld_dec_write( libspectrum_word port, libspectrum_byte b );
 void scld_hsr_write( libspectrum_word port, libspectrum_byte b );
 
 void scld_memory_map( void );
-/* Initialise the memory map to point to the home bank */
+// Initialise the memory map to point to the home bank
 void scld_memory_map_home( void );
 
 libspectrum_byte hires_get_attr( void );

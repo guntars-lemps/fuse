@@ -107,13 +107,13 @@ spec128_common_reset( int contention )
   for( i = 0; i < 16; i++ )
     memory_ram_set_16k_contention( i, i & 1 ? contention : 0 );
 
-  /* 0x0000: ROM 0 */
+  // 0x0000: ROM 0
   memory_map_16k( 0x0000, memory_map_rom, 0 );
-  /* 0x4000: RAM 5 */
+  // 0x4000: RAM 5
   memory_map_16k( 0x4000, memory_map_ram, 5 );
-  /* 0x8000: RAM 2 */
+  // 0x8000: RAM 2
   memory_map_16k( 0x8000, memory_map_ram, 2 );
-  /* 0xc000: RAM 0 */
+  // 0xc000: RAM 0
   memory_map_16k( 0xc000, memory_map_ram, 0 );
 
   return 0;

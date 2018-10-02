@@ -24,7 +24,7 @@
 #ifndef FUSE_Z80_H
 #define FUSE_Z80_H
 
-/* Union allowing a register pair to be accessed as bytes or as a word */
+// Union allowing a register pair to be accessed as bytes or as a word
 typedef union {
 #ifdef WORDS_BIGENDIAN
   struct { libspectrum_byte h,l; } b;
@@ -34,7 +34,7 @@ typedef union {
   libspectrum_word w;
 } regpair;
 
-/* What's stored in the main processor */
+// What's stored in the main processor
 typedef struct {
   regpair af,bc,de,hl;
   regpair af_,bc_,de_,hl_;

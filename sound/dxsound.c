@@ -31,7 +31,7 @@
 #include "sound.h"
 #include "ui/ui.h"
 
-/* same as for SDL Sound */
+// same as for SDL Sound
 #define MAX_AUDIO_BUFFER 8192*5
 
 static LPDIRECTSOUND lpDS; // DirectSound object
@@ -48,10 +48,10 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   WAVEFORMATEX pcmwf; /* waveformat struct */
   DSBUFFERDESC dsbd; // buffer description
 
-  /* Initialize COM */
+  // Initialize COM
   CoInitialize(NULL);
 
-  /* create DirectSound object */
+  // create DirectSound object
   if( CoCreateInstance( &CLSID_DirectSound, NULL, CLSCTX_INPROC_SERVER,
 			&IID_IDirectSound, (void**)&lpDS ) != DS_OK ) {
     settings_current.sound = 0;
@@ -60,7 +60,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 
-  /* initialize it */
+  // initialize it
   if( IDirectSound_Initialize( lpDS, NULL ) != DS_OK ) {
     settings_current.sound = 0;
     ui_error( UI_ERROR_ERROR, "Couldn't initialize DirectSound." );
@@ -68,7 +68,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 
-  /* set normal cooperative level */
+  // set normal cooperative level
   if( IDirectSound_SetCooperativeLevel( lpDS, GetDesktopWindow(),
 					DSSCL_NORMAL ) != DS_OK ) {
     settings_current.sound = 0;
@@ -78,7 +78,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 
-  /* create wave format description */
+  // create wave format description
   memset( &pcmwf, 0, sizeof( WAVEFORMATEX ) );
 
   pcmwf.cbSize = 0;
@@ -97,7 +97,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   pcmwf.wFormatTag = WAVE_FORMAT_PCM;
 
-  /* create sound buffer description */
+  // create sound buffer description
   memset( &dsbd, 0, sizeof( DSBUFFERDESC ) );
   dsbd.dwBufferBytes = MAX_AUDIO_BUFFER;
 
@@ -107,7 +107,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   dsbd.dwSize = sizeof( DSBUFFERDESC );
   dsbd.lpwfxFormat = &pcmwf;
 
-  /* attempt to create the buffer */
+  // attempt to create the buffer
   if( IDirectSound_CreateSoundBuffer( lpDS, &dsbd, &lpDSBuffer, NULL )
       != DS_OK ) {
     settings_current.sound = 0;
@@ -117,7 +117,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 
-  /* play buffer */
+  // play buffer
   if( IDirectSoundBuffer_Play( lpDSBuffer, 0, 0, DSBPLAY_LOOPING ) != DS_OK ) {
     settings_current.sound = 0;
     ui_error( UI_ERROR_ERROR, "Couldn't play sound." );
@@ -145,7 +145,7 @@ sound_lowlevel_end( void )
   CoUninitialize();
 }
 
-/* Copying data to the buffer */
+// Copying data to the buffer
 void
 sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 {
@@ -153,7 +153,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   int i1, i2;
   int lsb = 1;
 
-  /* two pair because of circular buffer */
+  // two pair because of circular buffer
   UCHAR *ucbuffer1, *ucbuffer2;
   DWORD length1, length2;
   DWORD playcursor;
@@ -177,14 +177,14 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
       Sleep(10);
     }
 
-    /* lock the buffer */
+    // lock the buffer
     hres = IDirectSoundBuffer_Lock( lpDSBuffer, nextpos, (DWORD)len,
                                   (void **)&ucbuffer1, &length1,
                                   (void **)&ucbuffer2, &length2,
                                   0 );
     if( hres != DS_OK ) return; // couldn't get a lock on the buffer
 
-    /* write to the first part of buffer */
+    // write to the first part of buffer
     for( i1 = 0; i1 < length1 && len > 0; i1++ ) {
       if( sixteenbit ) {
         if( lsb ) {
@@ -202,7 +202,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
     }
 
     if( ucbuffer2 ) {
-      /* write to the second part of buffer */
+      // write to the second part of buffer
       for( i2 = 0; i2 < length2 && len > 0; i2++ ) {
         if( sixteenbit ) {
           if( lsb ) {
@@ -224,7 +224,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 
     if( nextpos >= MAX_AUDIO_BUFFER ) nextpos -= MAX_AUDIO_BUFFER;
 
-    /* unlock the buffer */
+    // unlock the buffer
     IDirectSoundBuffer_Unlock( lpDSBuffer, ucbuffer1, i1, ucbuffer2, i2 );
   }
 }

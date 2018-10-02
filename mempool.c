@@ -117,7 +117,7 @@ mempool_free( int pool )
   g_array_set_size( p, 0 );
 }
 
-/* Tidy-up function called at end of emulation */
+// Tidy-up function called at end of emulation
 static void
 mempool_end( void )
 {
@@ -145,7 +145,7 @@ mempool_register_startup( void )
                             mempool_end );
 }
 
-/* Unit test helper routines */
+// Unit test helper routines
 
 int
 mempool_get_pools( void )

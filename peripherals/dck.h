@@ -27,7 +27,7 @@
 #ifndef FUSE_DCK_H
 #define FUSE_DCK_H
 
-/* Dock cart inserted? */
+// Dock cart inserted?
 extern int dck_active;
 
 int dck_insert( const char *filename );

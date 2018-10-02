@@ -96,7 +96,7 @@ typedef struct fdd_t {
   void ( *fdc_index ) ( void *fdc );
   void *fdc; // if not NULL FDC wait for an index pulse
 
-/*--private section, fdc may never use it */
+// --private section, fdc may never use it
   int unreadable; // disk unreadable in this drive
   int do_read_weak;
   int c_head; // current head (side)
@@ -118,23 +118,23 @@ extern const fdd_params_t fdd_params[];
 void fdd_register_startup( void );
 
 const char *fdd_strerror( int error );
-/* initialize the fdd_t struct, and set fdd_heads and cylinders (e.g. 2/83 ) */
+// initialize the fdd_t struct, and set fdd_heads and cylinders (e.g. 2/83 )
 int fdd_init( fdd_t *d, fdd_type_t type, const fdd_params_t *dt, int reinit );
-/* load the given disk into the fdd. if upsidedown = 1, floppy upsidedown in drive :) */
+// load the given disk into the fdd. if upsidedown = 1, floppy upsidedown in drive :)
 int fdd_load( fdd_t *d, int upsidedown );
-/* unload the disk from fdd */
+// unload the disk from fdd
 void fdd_unload( fdd_t *d );
-/* set fdd head */
+// set fdd head
 void fdd_set_head( fdd_t *d, int head );
-/* step one track according to d->direction direction. set d->tr00 if reach track 0 */
+// step one track according to d->direction direction. set d->tr00 if reach track 0
 void fdd_step( fdd_t *d, fdd_dir_t direction );
-/* set floppy position ( upsidedown or not )*/
+// set floppy position ( upsidedown or not )
 void fdd_motoron( fdd_t *d, int on );
-/* start (1) or stop (0) spindle motor */
+// start (1) or stop (0) spindle motor
 void fdd_head_load( fdd_t *d, int load );
-/* load (1) or unload (0) head */
+// load (1) or unload (0) head
 void fdd_select( fdd_t *d, int select );
-/* select (1) or unselect (0) FDD */
+// select (1) or unselect (0) FDD
 void fdd_flip( fdd_t *d, int upsidedown );
 /* Read the next byte from disk. The byte will go into d->data.
    If d->data = 0xffnn then this byte was recorded with different clock 'mark'.
@@ -147,11 +147,11 @@ int fdd_read_data( fdd_t *d );
    d->idx is set if we reach the 'index hole'.
 */
 int fdd_write_data( fdd_t *d );
-/* set write protect status on loaded disk */
+// set write protect status on loaded disk
 void fdd_wrprot( fdd_t *d, int wrprot );
-/* to reach index hole */
+// to reach index hole
 void fdd_wait_index_hole( fdd_t *d );
-/* set floppy position ( upsidedown or not )*/
+// set floppy position ( upsidedown or not )
 void fdd_flip( fdd_t *d, int upsidedown );
 
 #endif // FUSE_FDD_H

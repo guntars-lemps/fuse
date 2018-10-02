@@ -92,18 +92,18 @@ screenshot_write( const char *filename, scaler_type scaler )
     base_width = DISPLAY_ASPECT_WIDTH;
   }
 
-  /* Change from paletted data to RGB data */
+  // Change from paletted data to RGB data
   error = get_rgb32_data( rgb_data1, rgb_stride, base_height, base_width );
   if( error ) return error;
 
-  /* Actually scale the data here */
+  // Actually scale the data here
   scaler_get_proc32( scaler )( rgb_data1, rgb_stride, rgb_data2, rgb_stride,
 			       base_width, base_height );
 
   height = base_height * scaler_get_scaling_factor( scaler );
   width  = base_width  * scaler_get_scaling_factor( scaler );
 
-  /* Reduce from RGB(padding byte) to just RGB */
+  // Reduce from RGB(padding byte) to just RGB
   error = rgb32_to_rgb24( png_data, png_stride, rgb_data2, rgb_stride,
 			  height, width );
   if( error ) return error;
@@ -145,7 +145,7 @@ screenshot_write( const char *filename, scaler_type scaler )
 
   png_init_io( png_ptr, f );
 
-  /* Make files as small as possible */
+  // Make files as small as possible
   png_set_compression_level( png_ptr, Z_BEST_COMPRESSION );
 
   png_set_IHDR( png_ptr, info_ptr,
@@ -196,7 +196,7 @@ get_rgb32_data( libspectrum_byte *rgb32_data, size_t stride,
 
   libspectrum_byte grey_palette[16];
 
-  /* Addition of 0.5 is to avoid rounding errors */
+  // Addition of 0.5 is to avoid rounding errors
   for( i = 0; i < 16; i++ )
     grey_palette[i] = ( 0.299 * palette[i][0] +
 			0.587 * palette[i][1] +
@@ -322,7 +322,7 @@ set_hicolor_pixels_and_attribute( int x, int y, libspectrum_byte* scr_data )
 
   libspectrum_word offset = display_get_offset( x, y );
   scr_data[ offset ] = pixel_data;
-  /* write attribute into bitmap order buffer after bitmap */
+  // write attribute into bitmap order buffer after bitmap
   scr_data[ MONO_BITMAP_SIZE + offset ] = attribute_data;
 }
 
@@ -357,7 +357,7 @@ set_standard_pixels_and_attribute( int x, int y, libspectrum_byte* scr_data )
   scr_data[ display_get_offset( x, y ) ] = pixel_data;
 
   if( y%8 == 0 ) {
-    /* write attribute into standard attribute order buffer after bitmap */
+    // write attribute into standard attribute order buffer after bitmap
     attribute_offset = x + (y/8 * DISPLAY_WIDTH_COLS);
     scr_data[ MONO_BITMAP_SIZE + attribute_offset ] = attribute_data;
   }
@@ -387,7 +387,7 @@ set_mlt_pixels_and_attribute( int x, int y, libspectrum_byte* mlt_data )
   libspectrum_byte attribute_data = (display_last_screen[ index ] & 0xff00)>>8;
 
   mlt_data[ display_get_offset( x, y ) ] = pixel_data;
-  /* write attribute into linear buffer following bitmap */
+  // write attribute into linear buffer following bitmap
   mlt_data[ MONO_BITMAP_SIZE + x + y * DISPLAY_WIDTH_COLS ] = attribute_data;
 }
 
@@ -480,7 +480,7 @@ screenshot_scr_read( const char *filename )
   case HICOLOUR_SCR_SIZE:
     /* If it is a Timex and it is not in hi colour mode, copy screen and switch
         mode if neccesary */
-    /* If it is not a Timex copy the mono bitmap and raise an error */
+    // If it is not a Timex copy the mono bitmap and raise an error
     if( machine_current->timex ) {
       if( !scld_last_dec.name.b1 )
         scld_dec_write( 0xff, ( scld_last_dec.byte & ~HIRESATTR ) | EXTCOLOUR );
@@ -498,7 +498,7 @@ screenshot_scr_read( const char *filename )
   case HIRES_SCR_SIZE:
     /* If it is a Timex and it is not in hi res mode, copy screen and switch
         mode if neccesary */
-    /* If it is not a Timex scale the bitmap and raise an error */
+    // If it is not a Timex scale the bitmap and raise an error
     if( machine_current->timex ) {
       memcpy( &RAM[ memory_current_screen ][display_get_addr(0,0)],
                 screen.buffer, MONO_BITMAP_SIZE );
@@ -518,7 +518,7 @@ screenshot_scr_read( const char *filename )
           convert_hires_to_lores( *(screen.buffer + MONO_BITMAP_SIZE + i),
                                   *(screen.buffer + i) );
 
-      /* set attributes based on hires attribute byte */
+      // set attributes based on hires attribute byte
       for( i = 0; i < 768; i++ )
         RAM[ memory_current_screen ][display_get_addr(0,0) +
             MONO_BITMAP_SIZE + i] = attr;
@@ -558,7 +558,7 @@ screenshot_mlt_read( const char *filename )
 
   /* If it is a Timex and it is not in hi colour mode, copy screen and switch
       mode if neccesary */
-  /* If it is not a Timex copy the mono bitmap and raise an error */
+  // If it is not a Timex copy the mono bitmap and raise an error
   if( machine_current->timex ) {
     if( !scld_last_dec.name.b1 )
       scld_dec_write( 0xff, ( scld_last_dec.byte & ~HIRESATTR ) | EXTCOLOUR );

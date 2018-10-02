@@ -77,7 +77,7 @@ menu_file_loadbinarydata( int action )
   info.on_change_filename = &change_load_filename;
   info.on_execute = &load_data;
 
-  /* Information display */
+  // Information display
   DialogBoxParam( fuse_hInstance, MAKEINTRESOURCE( IDD_BINARY ), fuse_hWnd,
                   binarydata_proc, ( LPARAM ) &info );
 
@@ -97,7 +97,7 @@ binarydata_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
       TCHAR buffer[80];
       info = ( struct binary_info * ) lParam;
 
-      /* save the pointer to info with this dialog window */
+      // save the pointer to info with this dialog window
       SetWindowLongPtr( hwndDlg, GWLP_USERDATA, ( LONG_PTR ) info );
 
       SendMessage( hwndDlg, WM_SETTEXT, 0, ( LPARAM ) info->dialog_title );
@@ -154,15 +154,15 @@ change_load_filename( HWND hwndDlg, LONG_PTR user_data )
   error = utils_read_file( new_filename, &new_file );
   if( error ) { free( new_filename ); return; }
 
-  /* Remove the data for the old file */
+  // Remove the data for the old file
   utils_close_file( &info->file );
 
   free( info->filename );
 
-  /* Put the new data in */
+  // Put the new data in
   info->filename = new_filename; info->file = new_file;
 
-  /* And update the displayed information */
+  // And update the displayed information
   SendDlgItemMessage( hwndDlg, IDC_BINARY_STATIC_PATH, WM_SETTEXT,
                       0, ( LPARAM ) new_filename );
 
@@ -257,7 +257,7 @@ menu_file_savebinarydata( int action )
   info.on_change_filename = &change_save_filename;
   info.on_execute = &save_data;
 
-  /* Information display */
+  // Information display
   DialogBoxParam( fuse_hInstance, MAKEINTRESOURCE( IDD_BINARY ), fuse_hWnd,
                   binarydata_proc, ( LPARAM ) &info );
 

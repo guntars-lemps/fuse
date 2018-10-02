@@ -74,7 +74,7 @@ spec_se_init( fuse_machine_info *machine )
 static void
 dock_exrom_reset( void )
 {
-  /* The dock is always active on the SE */
+  // The dock is always active on the SE
   dck_active = 1;
 }
 
@@ -98,32 +98,32 @@ spec_se_reset( void )
   scld_home_map_16k( 0x8000, memory_map_ram, 8 );
   scld_home_map_16k( 0xc000, memory_map_ram, 0 );
 
-  /* RAM pages 1, 3, 5 and 7 contended */
+  // RAM pages 1, 3, 5 and 7 contended
   for( i = 0; i < 8; i++ )
     memory_ram_set_16k_contention( i, i & 1 );
 
   periph_clear();
   machines_periph_128();
-  
-  /* SE style memory paging present */
+
+  // SE style memory paging present
   periph_set_present( PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_NEVER );
   periph_set_present( PERIPH_TYPE_SE_MEMORY, PERIPH_PRESENT_ALWAYS );
 
-  /* ULA uses full decoding */
+  // ULA uses full decoding
   periph_set_present( PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER );
   periph_set_present( PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS );
 
-  /* As does the AY chip */
+  // As does the AY chip
   periph_set_present( PERIPH_TYPE_AY, PERIPH_PRESENT_NEVER );
   periph_set_present( PERIPH_TYPE_AY_FULL_DECODE, PERIPH_PRESENT_ALWAYS );
 
-  /* Timex-style AY also present */
+  // Timex-style AY also present
   periph_set_present( PERIPH_TYPE_AY_TIMEX, PERIPH_PRESENT_ALWAYS );
 
-  /* SCLD always present */
+  // SCLD always present
   periph_set_present( PERIPH_TYPE_SCLD, PERIPH_PRESENT_ALWAYS );
 
-  /* ZX Printer available */
+  // ZX Printer available
   periph_set_present( PERIPH_TYPE_ZXPRINTER_FULL_DECODE,
                       PERIPH_PRESENT_OPTIONAL );
 
@@ -197,12 +197,12 @@ spec_se_memory_map( void )
   spec128_memory_map();
   scld_memory_map();
 
-  /* Exceptions apply if an odd bank is paged in via 0x7ffd */
+  // Exceptions apply if an odd bank is paged in via 0x7ffd
   if( machine_current->ram.current_page & 0x01 ) {
 
   /* If so, bits 2 and 3 of 0xf4 also control whether the DOCK/EXROM
      is paged in at 0xc000 and 0xe000 respectively */
-    exrom_dock = 
+    exrom_dock =
       scld_last_dec.name.altmembank ? timex_exrom : timex_dock;
 
     if( scld_last_hsr & ( 1 << 2 ) )

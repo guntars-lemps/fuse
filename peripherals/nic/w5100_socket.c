@@ -143,14 +143,14 @@ w5100_write_socket_mr( nic_w5100_socket_t *socket, libspectrum_byte b )
     case W5100_SOCKET_MODE_CLOSED:
       break;
     case W5100_SOCKET_MODE_TCP:
-      /* We support only "disable no delayed ACK" */
+      // We support only "disable no delayed ACK"
       if( flags != 0x20 ) {
         ui_error( UI_ERROR_WARNING, "w5100: unsupported flags 0x%02x set for TCP mode on socket %d\n", b & 0xf0, socket->id );
         flags = 0x20;
       }
       break;
     case W5100_SOCKET_MODE_UDP:
-      /* We don't support multicast */
+      // We don't support multicast
       if( flags != 0x00 ) {
         ui_error( UI_ERROR_WARNING, "w5100: unsupported flags 0x%02x set for UDP mode on socket %d\n", b & 0xf0, socket->id );
         flags = 0;
@@ -640,7 +640,7 @@ w5100_socket_process_read( nic_w5100_socket_t *socket )
     libspectrum_byte *dest = &socket->rx_buffer[offset];
 
     if( udp ) {
-      /* Add the W5100's UDP header */
+      // Add the W5100's UDP header
       memcpy( buffer, &sa.sin_addr.s_addr, 4 );
       memcpy( buffer + 4, &sa.sin_port, 2 );
       buffer[6] = (bytes_read >> 8) & 0xff;
@@ -732,7 +732,7 @@ w5100_socket_process_tcp_write( nic_w5100_socket_t *socket )
 
   nic_w5100_debug( "w5100: writing to TCP socket %d\n", socket->id );
 
-  /* If the data wraps round the write buffer, write it in two chunks */
+  // If the data wraps round the write buffer, write it in two chunks
   if( offset + length > 0x800 )
     length = 0x800 - offset;
 

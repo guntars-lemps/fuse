@@ -50,7 +50,7 @@
 #include "z80/z80.h"
 #include "z80/z80_macros.h"
 
-/* The various debugger panes */
+// The various debugger panes
 typedef enum debugger_pane {
 
   DEBUGGER_PANE_BEGIN = 1, // Start marker
@@ -66,7 +66,7 @@ typedef enum debugger_pane {
 
 } debugger_pane;
 
-/* The columns used in the breakpoints pane */
+// The columns used in the breakpoints pane
 
 enum {
   BREAKPOINTS_COLUMN_ID,
@@ -79,7 +79,7 @@ enum {
   BREAKPOINTS_COLUMN_COUNT
 };
 
-/* The columns used in the disassembly pane */
+// The columns used in the disassembly pane
 
 enum {
   DISASSEMBLY_COLUMN_ADDRESS,
@@ -88,7 +88,7 @@ enum {
   DISASSEMBLY_COLUMN_COUNT
 };
 
-/* The columns used in the stack pane */
+// The columns used in the stack pane
 
 enum {
   STACK_COLUMN_ADDRESS,
@@ -98,7 +98,7 @@ enum {
   STACK_COLUMN_COUNT
 };
 
-/* The columns used in the events pane */
+// The columns used in the events pane
 
 enum {
   EVENTS_COLUMN_TIME,
@@ -178,22 +178,22 @@ static GtkListStore *breakpoints_model, *disassembly_model, *stack_model,
 
 static GtkAdjustment *disassembly_scrollbar_adjustment;
 
-/* The top line of the current disassembly */
+// The top line of the current disassembly
 static libspectrum_word disassembly_top;
 
-/* The next line below the current disassembly */
+// The next line below the current disassembly
 static libspectrum_word disassembly_bottom;
 
-/* Have we created the above yet? */
+// Have we created the above yet?
 static int dialog_created = 0;
 
-/* Is the debugger window active (as opposed to the debugger itself)? */
+// Is the debugger window active (as opposed to the debugger itself)?
 static int debugger_active;
 
-/* The UIManager used to create the menu bar */
+// The UIManager used to create the menu bar
 static GtkUIManager *ui_manager_debugger = NULL;
 
-/* The debugger's menu bar */
+// The debugger's menu bar
 const gchar debugger_menu[] =
 "<menubar name='DebuggerMenu'>"
 "  <menu name='View' action='VIEW'>"
@@ -206,7 +206,7 @@ const gchar debugger_menu[] =
 "  </menu>"
 "</menubar>";
 
-/* The debugger's menu actions */
+// The debugger's menu actions
 static GtkActionEntry menu_data[] = {
 
   { "VIEW", NULL, "_View", NULL, NULL, NULL },
@@ -243,7 +243,7 @@ ui_debugger_activate( void )
 
   fuse_emulation_pause();
 
-  /* Create the dialog box if it doesn't already exist */
+  // Create the dialog box if it doesn't already exist
   if( !dialog_created ) if( create_dialog() ) return 1;
 
   gtk_widget_show_all( dialog );
@@ -259,7 +259,7 @@ ui_debugger_activate( void )
 void
 ui_breakpoints_updated( void )
 {
-  /* TODO: Refresh debugger list here */
+  // TODO: Refresh debugger list here
 }
 
 static int
@@ -365,14 +365,14 @@ create_dialog( void )
 				G_CALLBACK( delete_dialog ) );
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog ) );
 
-  /* The menu bar */
+  // The menu bar
   error = create_menu_bar( GTK_BOX( content_area ), &accel_group );
   if( error ) return error;
 
-  /* Keyboard shortcuts */
+  // Keyboard shortcuts
   gtk_window_add_accel_group( GTK_WINDOW( dialog ), accel_group );
 
-  /* Some boxes to contain the things we want to display */
+  // Some boxes to contain the things we want to display
   hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
   gtk_box_pack_start( GTK_BOX( content_area ), hbox, TRUE, TRUE, 5 );
 
@@ -382,7 +382,7 @@ create_dialog( void )
   hbox2 = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 5 );
   gtk_box_pack_start( GTK_BOX( vbox ), hbox2, TRUE, TRUE, 0 );
 
-  /* The main display areas */
+  // The main display areas
   error = create_register_display( GTK_BOX( hbox2 ), font );
   if( error ) return error;
 
@@ -396,7 +396,7 @@ create_dialog( void )
   error = create_command_entry( GTK_BOX( content_area ), accel_group );
   if( error ) return error;
 
-  /* The action buttons */
+  // The action buttons
 
   error = create_buttons( GTK_DIALOG( dialog ), accel_group );
   if( error ) return error;
@@ -416,10 +416,10 @@ create_menu_bar( GtkBox *parent, GtkAccelGroup **accel_group )
   GtkWidget *menu_bar;
   guint ui_menu_id;
 
-  /* FIXME: we should unref this at some point */
+  // FIXME: we should unref this at some point
   ui_manager_debugger = gtk_ui_manager_new();
 
-  /* Load actions */
+  // Load actions
   menu_action_group = gtk_action_group_new( "DebuggerActionGroup" );
   gtk_action_group_add_actions( menu_action_group, menu_data,
 				ARRAY_SIZE( menu_data ), NULL );
@@ -429,7 +429,7 @@ create_menu_bar( GtkBox *parent, GtkAccelGroup **accel_group )
                                       0 );
   g_object_unref( menu_action_group );
 
-  /* Load the menu */
+  // Load the menu
   ui_menu_id = gtk_ui_manager_add_ui_from_string( ui_manager_debugger,
                                                   debugger_menu,
                                                   sizeof( debugger_menu ),
@@ -609,11 +609,11 @@ create_disassembly( GtkBox *parent, gtkui_font font )
   static const gchar *const titles[] =
     { "Address", "Instruction" };
 
-  /* A box to hold the disassembly listing and the scrollbar */
+  // A box to hold the disassembly listing and the scrollbar
   disassembly_box = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
   gtk_box_pack_start( parent, disassembly_box, TRUE, TRUE, 0 );
 
-  /* The disassembly itself */
+  // The disassembly itself
   disassembly_model =
     gtk_list_store_new( DISASSEMBLY_COLUMN_COUNT, G_TYPE_STRING, G_TYPE_STRING );
 
@@ -627,7 +627,7 @@ create_disassembly( GtkBox *parent, gtkui_font font )
 
   gtk_box_pack_start( GTK_BOX( disassembly_box ), disassembly, TRUE, TRUE, 0 );
 
-  /* The disassembly scrollbar */
+  // The disassembly scrollbar
   disassembly_scrollbar_adjustment = GTK_ADJUSTMENT(
     gtk_adjustment_new( 0, 0x0000, 0x10000, 1, 20, 20 ) );
   g_signal_connect( G_OBJECT( disassembly_scrollbar_adjustment ),
@@ -637,12 +637,12 @@ create_disassembly( GtkBox *parent, gtkui_font font )
                                  disassembly_scrollbar_adjustment );
   gtk_box_pack_start( GTK_BOX( disassembly_box ), scrollbar, FALSE, FALSE, 0 );
 
-  /* Scrolling with keys */
+  // Scrolling with keys
   g_signal_connect( GTK_TREE_VIEW( disassembly ), "key-press-event",
                     G_CALLBACK( disassembly_key_press ),
                     disassembly_scrollbar_adjustment );
 
-  /* Scrolling with mouse wheel */
+  // Scrolling with mouse wheel
   g_signal_connect( GTK_TREE_VIEW( disassembly ), "scroll-event",
                     G_CALLBACK( disassembly_wheel_scroll ),
                     disassembly_scrollbar_adjustment );
@@ -747,24 +747,24 @@ create_command_entry( GtkBox *parent, GtkAccelGroup *accel_group )
 {
   GtkWidget *hbox, *entry, *eval_button;
 
-  /* An hbox to hold the command entry widget and the 'evaluate' button */
+  // An hbox to hold the command entry widget and the 'evaluate' button
   hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 5 );
   gtk_box_pack_start( parent, hbox, FALSE, FALSE, 0 );
 
-  /* The command entry widget */
+  // The command entry widget
   entry = gtk_entry_new();
   g_signal_connect( G_OBJECT( entry ), "activate",
 		    G_CALLBACK( evaluate_command ), NULL );
   gtk_box_pack_start( GTK_BOX( hbox ), entry, TRUE, TRUE, 0 );
 
-  /* The 'command evaluate' button */
+  // The 'command evaluate' button
   eval_button = gtk_button_new_with_label( "Evaluate" );
   g_signal_connect_swapped( G_OBJECT( eval_button ), "clicked",
 			    G_CALLBACK( evaluate_command ),
 			    G_OBJECT( entry ) );
   gtk_box_pack_start( GTK_BOX( hbox ), eval_button, FALSE, FALSE, 0 );
 
-  /* Return is equivalent to clicking on 'evaluate' */
+  // Return is equivalent to clicking on 'evaluate'
   gtk_widget_add_accelerator( eval_button, "clicked", accel_group,
 			      GDK_KEY_Return, 0, 0 );
 
@@ -779,7 +779,7 @@ create_buttons( GtkDialog *parent, GtkAccelGroup *accel_group )
     cont  = { "Continue", G_CALLBACK( gtkui_debugger_done_continue ), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE },
     brk   = { "Break", G_CALLBACK( gtkui_debugger_break ), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE };
 
-  /* Create the action buttons for the dialog box */
+  // Create the action buttons for the dialog box
   gtkstock_create_button( GTK_WIDGET( parent ), accel_group, &step );
   continue_button = gtkstock_create_button( GTK_WIDGET( parent ), accel_group,
 					    &cont );
@@ -803,7 +803,7 @@ activate_debugger( void )
   return 0;
 }
 
-/* Update the debugger's display */
+// Update the debugger's display
 int
 ui_debugger_update( void )
 {
@@ -905,7 +905,7 @@ ui_debugger_update( void )
   update_breakpoints();
   update_disassembly();
 
-  /* And the stack display */
+  // And the stack display
   gtk_list_store_clear( stack_model );
 
   for( i = 0, address = SP + 38; i < 20; i++, address -= 2 ) {
@@ -922,7 +922,7 @@ ui_debugger_update( void )
     gtk_list_store_set( stack_model, &it, STACK_COLUMN_ADDRESS, buffer1, STACK_COLUMN_VALUE_TEXT, buffer2, STACK_COLUMN_VALUE_INT, (gint)contents, -1 );
   }
 
-  /* And the events display */
+  // And the events display
   update_events();
 
   return 0;
@@ -992,7 +992,7 @@ update_memory_map( void )
       offset = page->offset;
     }
 
-    /* We expect the next page to have an increased offset */
+    // We expect the next page to have an increased offset
     offset += MEMORY_PAGE_SIZE;
   }
 
@@ -1083,7 +1083,7 @@ update_disassembly( void )
     snprintf( buffer1, sizeof( buffer1 ), format_16_bit(), address );
     debugger_disassemble( buffer2, sizeof( buffer2 ), &length, address );
 
-    /* pad to 16 characters (long instruction) to avoid varying width */
+    // pad to 16 characters (long instruction) to avoid varying width
     l = strlen( buffer2 );
     while( l < 16 ) buffer2[l++] = ' ';
     buffer2[l] = 0;
@@ -1125,13 +1125,13 @@ deactivate_debugger( void )
   return 0;
 }
 
-/* Set the disassembly to start at 'address' */
+// Set the disassembly to start at 'address'
 int
 ui_debugger_disassemble( libspectrum_word address )
 {
   disassembly_top = address;
 
-  /* Block further events while adjusting scrollbar. */
+  // Block further events while adjusting scrollbar.
   g_signal_handlers_block_by_func( G_OBJECT( disassembly_scrollbar_adjustment ),
                                    G_CALLBACK( move_disassembly ), NULL );
 
@@ -1139,11 +1139,11 @@ ui_debugger_disassemble( libspectrum_word address )
      higher */
   gtk_adjustment_set_value( disassembly_scrollbar_adjustment, address );
 
-  /* Enable events for scrollbar */
+  // Enable events for scrollbar
   g_signal_handlers_unblock_by_func( G_OBJECT(disassembly_scrollbar_adjustment),
                                      G_CALLBACK( move_disassembly ),  NULL );
 
-  /* And update the disassembly if the debugger is active */
+  // And update the disassembly if the debugger is active
   if( debugger_active ) {
     update_disassembly();
   }
@@ -1151,7 +1151,7 @@ ui_debugger_disassemble( libspectrum_word address )
   return 0;
 }
 
-/* Called when the disassembly scrollbar is moved */
+// Called when the disassembly scrollbar is moved
 static void
 move_disassembly( GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED )
 {
@@ -1159,7 +1159,7 @@ move_disassembly( GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED )
   int cursor_row;
   libspectrum_word addresss;
 
-  /* FIXME: Movements are imprecise while dragging the scroll bar */
+  // FIXME: Movements are imprecise while dragging the scroll bar
   value = gtk_adjustment_get_value( adjustment );
 
   cursor_row = gtkui_list_get_cursor( GTK_TREE_VIEW( disassembly ) );
@@ -1197,14 +1197,14 @@ move_disassembly( GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED )
     addresss = debugger_search_instruction( disassembly_top, -1 );
     ui_debugger_disassemble( addresss );
 
-  /* Anything else, just set disassembly_top to that value */
+  // Anything else, just set disassembly_top to that value
   } else if( value != disassembly_top ) {
 
     ui_debugger_disassemble( value );
 
   }
 
-  /* Mark selected row */
+  // Mark selected row
   gtkui_list_set_cursor( GTK_TREE_VIEW( disassembly ), cursor_row );
 }
 
@@ -1221,7 +1221,7 @@ disassembly_key_press( GtkTreeView *list, GdkEventKey *event,
   page_size = gtk_adjustment_get_page_size( adjustment );
   page_increment = gtk_adjustment_get_page_increment( adjustment );
 
-  /* Get selected row */
+  // Get selected row
   cursor_row = gtkui_list_get_cursor( list );
 
   switch( event->keyval ) {
@@ -1267,7 +1267,7 @@ disassembly_key_press( GtkTreeView *list, GdkEventKey *event,
   if( initial_top != disassembly_top ) {
     update_disassembly();
 
-    /* Mark selected row */
+    // Mark selected row
     gtkui_list_set_cursor( list, cursor_row );
     return TRUE;
   }
@@ -1275,7 +1275,7 @@ disassembly_key_press( GtkTreeView *list, GdkEventKey *event,
   return FALSE;
 }
 
-/* Called when the wheel mouse is moved on the list (not on the scrollbar) */
+// Called when the wheel mouse is moved on the list (not on the scrollbar)
 static gboolean
 disassembly_wheel_scroll( GtkTreeView *list GCC_UNUSED, GdkEvent *event,
                           gpointer user_data )
@@ -1285,7 +1285,7 @@ disassembly_wheel_scroll( GtkTreeView *list GCC_UNUSED, GdkEvent *event,
 
   initial_top = disassembly_top;
 
-  /* Get selected row */
+  // Get selected row
   cursor_row = gtkui_list_get_cursor( list );
 
   switch( event->scroll.direction ) {
@@ -1309,12 +1309,12 @@ disassembly_wheel_scroll( GtkTreeView *list GCC_UNUSED, GdkEvent *event,
       int delta;
 
       if( gdk_event_get_scroll_deltas( event, &dx, &dy ) ) {
-        /* Calculate number of instructions to jump */
+        // Calculate number of instructions to jump
         total_dy += dy;
         page_size = gtk_adjustment_get_page_size( adjustment );
         delta = total_dy * pow( page_size, 2.0 / 3.0 );
 
-        /* Is movement significative? */
+        // Is movement significative?
         if( delta ) {
           addresss = debugger_search_instruction( disassembly_top, delta );
           ui_debugger_disassemble( addresss );
@@ -1331,7 +1331,7 @@ disassembly_wheel_scroll( GtkTreeView *list GCC_UNUSED, GdkEvent *event,
   }
 
   if( initial_top != disassembly_top ) {
-    /* Mark selected row */
+    // Mark selected row
     gtkui_list_set_cursor( list, cursor_row );
     return TRUE;
   }
@@ -1339,7 +1339,7 @@ disassembly_wheel_scroll( GtkTreeView *list GCC_UNUSED, GdkEvent *event,
   return FALSE;
 }
 
-/* Evaluate the command currently in the entry box */
+// Evaluate the command currently in the entry box
 static void
 evaluate_command( GtkWidget *widget, gpointer user_data GCC_UNUSED )
 {

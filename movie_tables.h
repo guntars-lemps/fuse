@@ -22,7 +22,7 @@
 */
 
 
-/* libspectrum_signed_word alaw_table[256] */
+// libspectrum_signed_word alaw_table[256]
 #define ALAW_TAB \
    -5504,  -5248,  -6016,  -5760,  -4480,  -4224,  -4992,  -4736, \
    -7552,  -7296,  -8064,  -7808,  -6528,  -6272,  -7040,  -6784, \
@@ -57,7 +57,7 @@
      688,    656,    752,    720,    560,    528,    624,    592, \
      944,    912,   1008,    976,    816,    784,    880,    848
 
-/* static unsigned char alaw_enc_table[2048 + 1] */
+// static unsigned char alaw_enc_table[2048 + 1]
 #define ALAW_ENC_TAB \
     0xd5, 0xd4, 0xd7, 0xd6, 0xd1, 0xd0, 0xd3, 0xd2, 0xdd, 0xdc, 0xdf, 0xde, \
     0xd9, 0xd8, 0xdb, 0xda, 0xc5, 0xc4, 0xc7, 0xc6, 0xc1, 0xc0, 0xc3, 0xc2, \

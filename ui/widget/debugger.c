@@ -58,14 +58,14 @@ struct {
 static libspectrum_word debugger_memaddr;
 static int breakpt_no = 0, breakpt_show = 0;
 
-/* Various data displays */
+// Various data displays
 static void display_registers( void );
 static void display_bytes( void );
 static void display_text( void );
 static void display_disasm( void );
 static void display_breakpts( void );
 
-/* Scrolling for the data displays */
+// Scrolling for the data displays
 static void scroll( int step );
 
 #define LC(X) ( (X)*8 - DISPLAY_BORDER_ASPECT_WIDTH )
@@ -88,7 +88,7 @@ int ui_debugger_activate( void )
 
 int ui_debugger_deactivate( int interruptible GCC_UNUSED )
 {
-  /* Refresh the Spectrum's display, including the border */
+  // Refresh the Spectrum's display, including the border
   display_refresh_all();
   return widget_end_all( WIDGET_FINISHED_OK );
 }
@@ -161,7 +161,7 @@ int widget_debugger_draw( void *data )
 
 void widget_debugger_keyhandler( input_key key )
 {
-  /* Display mode */
+  // Display mode
   switch ( key ) {
   case INPUT_KEY_Escape: // Close widget
     widget_end_widget( WIDGET_FINISHED_CANCEL );
@@ -382,7 +382,7 @@ static void display_registers( void )
       offset = page->offset;
     }
 
-    /* We expect the next page to have an increased offset */
+    // We expect the next page to have an increased offset
     offset += MEMORY_PAGE_SIZE;
   }
 }
@@ -548,7 +548,7 @@ static void scroll( int step )
 	debugger_memaddr += length;
     } else
       for( ; step; ++step ) {
-	/* For details, see ui/gtk/debugger.c:move_disassembly() */
+	// For details, see ui/gtk/debugger.c:move_disassembly()
 	size_t i, longest = 1;
 
 	for( i = 1; i <= 8; ++i ) {

@@ -35,19 +35,19 @@
 #include "z80/z80.h"
 #include "z80/z80_macros.h"
 
-/* The current activity state of the debugger */
+// The current activity state of the debugger
 enum debugger_mode_t debugger_mode;
 
-/* Which base should we display things in */
+// Which base should we display things in
 int debugger_output_base;
 
-/* Memory pool used by the lexer and parser */
+// Memory pool used by the lexer and parser
 int debugger_memory_pool;
 
-/* The event type used for time breakpoints */
+// The event type used for time breakpoints
 int debugger_breakpoint_event;
 
-/* Fuse's exit code */
+// Fuse's exit code
 static int exit_code = 0;
 
 static int
@@ -97,14 +97,14 @@ debugger_register_startup( void )
                             debugger_end );
 }
 
-/* Activate the debugger */
+// Activate the debugger
 int
 debugger_trap( void )
 {
   return ui_debugger_activate();
 }
 
-/* Step one instruction */
+// Step one instruction
 int
 debugger_step( void )
 {
@@ -113,16 +113,16 @@ debugger_step( void )
   return 0;
 }
 
-/* Step to the next instruction, ignoring CALLs etc */
+// Step to the next instruction, ignoring CALLs etc
 int
 debugger_next( void )
 {
   size_t length;
 
-  /* Find out how long the current instruction is */
+  // Find out how long the current instruction is
   debugger_disassemble( NULL, 0, &length, PC );
 
-  /* And add a breakpoint after that */
+  // And add a breakpoint after that
   debugger_breakpoint_add_address(
     DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, PC + length, 0,
     DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
@@ -133,7 +133,7 @@ debugger_next( void )
   return 0;
 }
 
-/* Set debugger_mode so that emulation will occur */
+// Set debugger_mode so that emulation will occur
 int
 debugger_run( void )
 {
@@ -165,7 +165,7 @@ debugger_breakpoint_exit( void )
   return 0;
 }
 
-/* Poke a value into RAM */
+// Poke a value into RAM
 int
 debugger_poke( libspectrum_word address, libspectrum_byte value )
 {
@@ -173,7 +173,7 @@ debugger_poke( libspectrum_word address, libspectrum_byte value )
   return 0;
 }
 
-/* Write a value to a port */
+// Write a value to a port
 int
 debugger_port_write( libspectrum_word port, libspectrum_byte value )
 {
@@ -181,7 +181,7 @@ debugger_port_write( libspectrum_word port, libspectrum_byte value )
   return 0;
 }
 
-/* Exit the emulator */
+// Exit the emulator
 void
 debugger_exit_emulator( debugger_expression *exit_code_expression )
 {
@@ -190,7 +190,7 @@ debugger_exit_emulator( debugger_expression *exit_code_expression )
   exit_code = exit_code_expression ?
     debugger_expression_evaluate( exit_code_expression ) : 0;
 
-  /* Ensure we break out of the main Z80 loop immediately */
+  // Ensure we break out of the main Z80 loop immediately
   event_add( 0, event_type_null );
 
   debugger_run();

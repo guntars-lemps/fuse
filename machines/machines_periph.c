@@ -192,7 +192,7 @@ base_peripherals( void )
   periph_set_present( PERIPH_TYPE_ZXCF, PERIPH_PRESENT_OPTIONAL );
 }
 
-/* Peripherals available on the 48K and 128K */
+// Peripherals available on the 48K and 128K
 static void
 base_peripherals_48_128( void )
 {
@@ -207,7 +207,7 @@ base_peripherals_48_128( void )
   periph_set_present( PERIPH_TYPE_USOURCE, PERIPH_PRESENT_OPTIONAL );
 }
 
-/* The set of peripherals available on the 48K and similar machines */
+// The set of peripherals available on the 48K and similar machines
 void
 machines_periph_48( void )
 {
@@ -220,7 +220,7 @@ machines_periph_48( void )
   periph_set_present( PERIPH_TYPE_DISCIPLE, PERIPH_PRESENT_OPTIONAL );
 }
 
-/* The set of peripherals available on the 128K and similar machines */
+// The set of peripherals available on the 128K and similar machines
 void
 machines_periph_128( void )
 {
@@ -229,7 +229,7 @@ machines_periph_128( void )
   periph_set_present( PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_ALWAYS );
 }
 
-/* The set of peripherals available on the +3 and similar machines */
+// The set of peripherals available on the +3 and similar machines
 void
 machines_periph_plus3( void )
 {
@@ -241,40 +241,40 @@ machines_periph_plus3( void )
   periph_set_present( PERIPH_TYPE_ZXMMC, PERIPH_PRESENT_OPTIONAL );
 }
 
-/* The set of peripherals available on the TC2068 and TS2068 */
+// The set of peripherals available on the TC2068 and TS2068
 void
 machines_periph_timex( void )
 {
   base_peripherals();
 
-  /* ULA uses full decoding */
+  // ULA uses full decoding
   periph_set_present( PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER );
   periph_set_present( PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS );
 
-  /* SCLD always present */
+  // SCLD always present
   periph_set_present( PERIPH_TYPE_SCLD, PERIPH_PRESENT_ALWAYS );
 
-  /* AY chip with joystick always present */
+  // AY chip with joystick always present
   periph_set_present( PERIPH_TYPE_AY_TIMEX_WITH_JOYSTICK, PERIPH_PRESENT_ALWAYS );
 
-  /* ZX Printer and Interface 2 available */
+  // ZX Printer and Interface 2 available
   periph_set_present( PERIPH_TYPE_INTERFACE2, PERIPH_PRESENT_OPTIONAL );
   periph_set_present( PERIPH_TYPE_ZXPRINTER_FULL_DECODE, PERIPH_PRESENT_OPTIONAL );
 }
 
-/* The set of peripherals available on the Pentagon and Scorpion */
+// The set of peripherals available on the Pentagon and Scorpion
 void
 machines_periph_pentagon( void )
 {
   base_peripherals();
 
-  /* 128K-style memory paging available */
+  // 128K-style memory paging available
   periph_set_present( PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_ALWAYS );
 
-  /* AY available */
+  // AY available
   periph_set_present( PERIPH_TYPE_AY, PERIPH_PRESENT_ALWAYS );
 
-  /* ULA uses full decoding */
+  // ULA uses full decoding
   periph_set_present( PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER );
   periph_set_present( PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS );
 

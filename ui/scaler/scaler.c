@@ -53,9 +53,9 @@ struct scaler_info {
 
 };
 
-/* The expander functions */
+// The expander functions
 
-/* Clip back to screen size after expansion */
+// Clip back to screen size after expansion
 static void clip( int *x, int *y, int *w, int *h,
 		  int image_width, int image_height );
 
@@ -215,9 +215,9 @@ scaler_get_expander( scaler_type scaler )
   return available_scalers[scaler].expander;
 }
 
-/* The expansion functions */
+// The expansion functions
 
-/* Clip after expansion */
+// Clip after expansion
 static inline void
 clip( int *x, int *y, int *w, int *h, int image_width, int image_height )
 {
@@ -227,7 +227,7 @@ clip( int *x, int *y, int *w, int *h, int image_width, int image_height )
   if ( *h > image_height - *y ) *h = image_height - *y;
 }
 
-/* Expand one pixel in all directions */
+// Expand one pixel in all directions
 static void
 expand_1( int *x, int *y, int *w, int *h, int image_width, int image_height )
 {
@@ -235,7 +235,7 @@ expand_1( int *x, int *y, int *w, int *h, int image_width, int image_height )
   clip( x, y, w, h, image_width, image_height );
 }
 
-/* Expand two pixels up and left and one pixel down and right */
+// Expand two pixels up and left and one pixel down and right
 static void
 expand_sai( int *x, int *y, int *w, int *h, int image_width, int image_height )
 {
@@ -243,7 +243,7 @@ expand_sai( int *x, int *y, int *w, int *h, int image_width, int image_height )
   clip( x, y, w, h, image_width, image_height );
 }
 
-/* Expand two pixels left and right */
+// Expand two pixels left and right
 static void
 expand_pal1( int *x, int *y, int *w, int *h, int image_width, int image_height )
 {
@@ -253,7 +253,7 @@ expand_pal1( int *x, int *y, int *w, int *h, int image_width, int image_height )
   clip( x, y, w, h, image_width, image_height );
 }
 
-/* Expand one pixels left and right */
+// Expand one pixels left and right
 static void
 expand_pal( int *x, int *y, int *w, int *h, int image_width, int image_height )
 {
@@ -261,7 +261,7 @@ expand_pal( int *x, int *y, int *w, int *h, int image_width, int image_height )
   clip( x, y, w, h, image_width, image_height );
 }
 
-/* Expand to a even y co-ord */
+// Expand to a even y co-ord
 static void
 expand_dotmatrix( int *x GCC_UNUSED, int *y GCC_UNUSED, int *w GCC_UNUSED,
 		  int *h, int image_width GCC_UNUSED,

@@ -40,9 +40,9 @@
 #include "ui/ui.h"
 #include "sound/blipbuffer.h"
 
-/* Do we have any of our sound devices available? */
+// Do we have any of our sound devices available?
 
-/* configuration */
+// configuration
 int sound_enabled = 0; // Are we currently using the sound card
 
 static int sound_enabled_ever = 0; /* whether sound has *ever* been in use; see
@@ -74,7 +74,7 @@ static unsigned int ay_tone_cycles, ay_env_cycles;
 static unsigned int ay_env_internal_tick, ay_env_tick;
 static unsigned int ay_tone_period[3], ay_noise_period, ay_env_period;
 
-/* Local copy of the AY registers */
+// Local copy of the AY registers
 static libspectrum_byte sound_ay_registers[16];
 
 struct ay_change_tag
@@ -117,7 +117,7 @@ sound_get_volume( int volume )
   return volume / 100.0;
 }
 
-/* Returns the emulation speed adjusted processor speed */
+// Returns the emulation speed adjusted processor speed
 libspectrum_dword
 sound_get_effective_processor_speed( void )
 {
@@ -166,7 +166,7 @@ sound_ay_init( void )
   };
   int f;
 
-  /* scale the values down to fit */
+  // scale the values down to fit
   for( f = 0; f < 16; f++ )
     ay_tone_levels[f] = ( levels[f] * AMPL_AY_TONE + 0x8000 ) / 0xffff;
 
@@ -214,7 +214,7 @@ sound_init( const char *device )
          is_in_sound_enabled_range() ) )
     return;
 
-  /* only try for stereo if we need it */
+  // only try for stereo if we need it
   sound_stereo_ay = option_enumerate_sound_stereo_ay();
 
   if( settings_current.sound &&
@@ -321,12 +321,12 @@ sound_init( const char *device )
   hz = ( float )sound_get_effective_processor_speed() /
                 machine_current->timings.tstates_per_frame;
 
-  /* Size of audio data we will get from running a single Spectrum frame */
+  // Size of audio data we will get from running a single Spectrum frame
   sound_framesiz = ( float )settings_current.sound_freq / hz;
   sound_framesiz++;
 
   samples = libspectrum_new0( blip_sample_t, sound_framesiz * sound_channels );
-  /* initialize movie settings... */
+  // initialize movie settings...
   movie_init_sound( settings_current.sound_freq, sound_stereo_ay );
 
 }
@@ -341,7 +341,7 @@ sound_pause( void )
 void
 sound_unpause( void )
 {
-  /* No sound if fastloading in progress */
+  // No sound if fastloading in progress
   if( settings_current.fastload && timer_fastloading_active() )
     return;
 
@@ -407,7 +407,7 @@ ay_do_tone( int level, unsigned int tone_count, int *var, int chan )
   }
 }
 
-/* bitmasks for envelope */
+// bitmasks for envelope
 #define AY_ENV_CONT	8
 #define AY_ENV_ATTACK	4
 #define AY_ENV_ALT	2
@@ -437,7 +437,7 @@ sound_ay_overlay( void )
   int last_chan1 = 0, last_chan2 = 0, last_chan3 = 0;
   unsigned int tone_count, noise_count;
 
-  /* If no AY chip, don't produce any AY sound (!) */
+  // If no AY chip, don't produce any AY sound (!)
   if( !( periph_is_active( PERIPH_TYPE_FULLER) ||
          periph_is_active( PERIPH_TYPE_MELODIK ) ||
          machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY ) )
@@ -445,17 +445,17 @@ sound_ay_overlay( void )
 
   for( f = 0; f < machine_current->timings.tstates_per_frame;
        f+= AY_CLOCK_DIVISOR * AY_CLOCK_RATIO ) {
-    /* update ay registers. */
+    // update ay registers.
     while( changes_left && f >= change_ptr->tstates ) {
       sound_ay_registers[ reg = change_ptr->reg ] = change_ptr->val;
       change_ptr++;
       changes_left--;
 
-      /* fix things as needed for some register changes */
+      // fix things as needed for some register changes
       switch ( reg ) {
       case 0: case 1: case 2: case 3: case 4: case 5:
         r = reg >> 1;
-        /* a zero-len period is the same as 1 */
+        // a zero-len period is the same as 1
         ay_tone_period[r] = ( sound_ay_registers[ reg & ~1 ] |
                               ( sound_ay_registers[ reg | 1 ] & 15 ) << 8 );
         if( !ay_tone_period[r] )
@@ -484,11 +484,11 @@ sound_ay_overlay( void )
       }
     }
 
-    /* the tone level if no enveloping is being used */
+    // the tone level if no enveloping is being used
     for( g = 0; g < 3; g++ )
       tone_level[g] = ay_tone_levels[ sound_ay_registers[ 8 + g ] & 15 ];
 
-    /* envelope */
+    // envelope
     envshape = sound_ay_registers[13];
     level = ay_tone_levels[ env_counter ];
 
@@ -496,7 +496,7 @@ sound_ay_overlay( void )
       if( sound_ay_registers[ 8 + g ] & 16 )
         tone_level[g] = level;
 
-    /* envelope output counter gets incr'd every 16 AY cycles. */
+    // envelope output counter gets incr'd every 16 AY cycles.
     ay_env_cycles += AY_CLOCK_DIVISOR;
     noise_count = 0;
     while( ay_env_cycles >= 16 ) {
@@ -506,7 +506,7 @@ sound_ay_overlay( void )
       while( ay_env_tick >= ay_env_period ) {
         ay_env_tick -= ay_env_period;
 
-        /* do a 1/16th-of-period incr/decr if needed */
+        // do a 1/16th-of-period incr/decr if needed
         if( env_first ||
             ( ( envshape & AY_ENV_CONT ) && !( envshape & AY_ENV_HOLD ) ) ) {
           if( env_rev )
@@ -523,7 +523,7 @@ sound_ay_overlay( void )
         while( ay_env_internal_tick >= 16 ) {
           ay_env_internal_tick -= 16;
 
-          /* end of cycle */
+          // end of cycle
           if( !( envshape & AY_ENV_CONT ) )
             env_counter = 0;
           else {
@@ -531,7 +531,7 @@ sound_ay_overlay( void )
               if( env_first && ( envshape & AY_ENV_ALT ) )
                 env_counter = ( env_counter ? 0 : 15 );
             } else {
-              /* non-hold */
+              // non-hold
               if( envshape & AY_ENV_ALT )
                 env_rev = !env_rev;
               else
@@ -542,7 +542,7 @@ sound_ay_overlay( void )
           env_first = 0;
         }
 
-        /* don't keep trying if period is zero */
+        // don't keep trying if period is zero
         if( !ay_env_period )
           break;
       }
@@ -599,7 +599,7 @@ sound_ay_overlay( void )
       last_chan3 = chan3;
     }
 
-    /* update noise RNG/filter */
+    // update noise RNG/filter
     ay_noise_tick += noise_count;
     while( ay_noise_tick >= ay_noise_period ) {
       ay_noise_tick -= ay_noise_period;
@@ -615,7 +615,7 @@ sound_ay_overlay( void )
       }
       rng >>= 1;
 
-      /* don't keep trying if period is zero */
+      // don't keep trying if period is zero
       if( !ay_noise_period )
         break;
     }
@@ -644,7 +644,7 @@ sound_ay_reset( void )
 {
   int f;
 
-  /* recalculate timings based on new machines ay clock */
+  // recalculate timings based on new machines ay clock
   sound_ay_init();
 
   ay_change_count = 0;
@@ -696,7 +696,7 @@ sound_frame( void )
   if( !sound_enabled )
     return;
 
-  /* overlay AY sound */
+  // overlay AY sound
   sound_ay_overlay();
 
   blip_buffer_end_frame( left_buf, machine_current->timings.tstates_per_frame );
@@ -731,7 +731,7 @@ sound_beeper( libspectrum_dword at_tstates, int on )
   if( !sound_enabled ) return;
 
   if( tape_is_playing() ) {
-    /* Timex machines have no loading noise */
+    // Timex machines have no loading noise
     if( !settings_current.sound_load || machine_current->timex ) on = on & 0x02;
   } else {
     /* ULA book says that MIC only isn't enough to drive the speaker as output

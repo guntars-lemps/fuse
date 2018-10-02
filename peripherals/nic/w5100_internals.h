@@ -85,7 +85,7 @@ typedef struct nic_w5100_socket_t {
 
   int id; // For debug use only
 
-  /* W5100 properties */
+  // W5100 properties
 
   w5100_socket_mode mode;
   libspectrum_byte flags;
@@ -110,7 +110,7 @@ typedef struct nic_w5100_socket_t {
   libspectrum_byte tx_buffer[0x800]; // Transmit buffer
   libspectrum_byte rx_buffer[0x800]; // Received buffer
 
-  /* Host properties */
+  // Host properties
 
   compat_socket_t fd; // Socket file descriptor
   int bind_count; // Number of writes to the Sn_PORTx registers we've received
@@ -159,9 +159,9 @@ void nic_w5100_socket_add_to_sets( nic_w5100_socket_t *socket, fd_set *readfds,
 void nic_w5100_socket_process_io( nic_w5100_socket_t *socket, fd_set readfds,
   fd_set writefds );
 
-/* Debug routines */
+// Debug routines
 
-/* Define this to spew debugging info to stdout */
+// Define this to spew debugging info to stdout
 #define W5100_DEBUG 0
 
 void nic_w5100_debug( const char *format, ... )

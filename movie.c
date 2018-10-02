@@ -244,7 +244,7 @@ movie_compress_area( int x, int y, int w, int h, int s )
         *b++ = d;
 	l++;
       }
-/*      d1 = d;				*/
+// d1 = d;
     }
     if( b - buff > 960 - 128 ) { // worst case 40*1.5 per line
       fwrite_compr( buff, b - buff, 1, of );
@@ -263,9 +263,9 @@ movie_compress_area( int x, int y, int w, int h, int s )
    on a Sinclair/Amstrad/Russian clone this will be a point on a 320x240
    canvas */
 
-/* x: 0 - 39; y: 0 - 239 */
+// x: 0 - 39; y: 0 - 239
 
-/* abcdefghijkl... cc# where # mean cc + # c char*/
+// abcdefghijkl... cc# where # mean cc + # c char
 
 void
 movie_add_area( int x, int y, int w, int h )
@@ -403,7 +403,7 @@ movie_pause( void )
 void
 movie_init_sound( int f, int s )
 {
-  /* initialise sound format */
+  // initialise sound format
   format = option_enumerate_movie_movie_compr() == 2 ? 'A' : 'P';
   freq = f;
   stereo = ( s ? 'S' : 'M' );
@@ -467,7 +467,7 @@ movie_add_sound( libspectrum_signed_word *buff, int len )
 void
 movie_start_frame( void )
 {
-  /* $ - ZX$, T - TX$, C - HiCol, R - HiRes */
+  // $ - ZX$, T - TX$, C - HiCol, R - HiRes
   head[0] = 'N';
   head[1] = settings_current.frame_rate;
   head[2] = get_screentype();
@@ -483,7 +483,7 @@ movie_start_frame( void )
 void
 movie_init( void )
 {
-  /* start movie recording if user requested... */
+  // start movie recording if user requested...
   if( settings_current.movie_start )
     movie_start( settings_current.movie_start );
 }

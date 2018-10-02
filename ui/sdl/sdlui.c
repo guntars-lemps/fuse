@@ -163,7 +163,7 @@ ui_statusbar_update_speed( float speed )
 
   snprintf( buffer, 15, "%s - %3.0f%%", fuse, speed );
 
-  /* FIXME: Icon caption should be snapshot name? */
+  // FIXME: Icon caption should be snapshot name?
   SDL_WM_SetCaption( buffer, fuse );
 
   return 0;

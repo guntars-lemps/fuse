@@ -100,7 +100,7 @@ gtkstock_create_button( GtkWidget *widget, GtkAccelGroup *accel,
 
   GtkWidget *icon = NULL;
   if( !strcmp( button->label, "_Close" ) )
-    icon = gtk_image_new_from_icon_name( "window-close", GTK_ICON_SIZE_BUTTON );    
+    icon = gtk_image_new_from_icon_name( "window-close", GTK_ICON_SIZE_BUTTON );
   else if( !strcmp( button->label, "_Open" ) )
     icon = gtk_image_new_from_icon_name( "document-open",GTK_ICON_SIZE_BUTTON );
   else if( !strcmp( button->label, "_Save" ) )
@@ -176,7 +176,7 @@ gtkstock_dialog_new( const gchar *title, GCallback destroy )
 {
   GtkWidget *dialog = gtk_dialog_new();
   if( title ) gtk_window_set_title( GTK_WINDOW( dialog ), title );
-  /* TODO: allow to keep the dialog after closing for gtk_dialog_run() */
+  // TODO: allow to keep the dialog after closing for gtk_dialog_run()
   g_signal_connect( G_OBJECT( dialog ), "delete-event",
 		    destroy ? destroy : DEFAULT_DESTROY, NULL );
   if( destroy == NULL ) gtk_window_set_modal( GTK_WINDOW( dialog ), TRUE );

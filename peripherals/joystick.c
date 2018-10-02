@@ -39,7 +39,7 @@
 #include "ui/ui.h"
 #include "ui/uijoystick.h"
 
-/* Number of joysticks known about & initialised */
+// Number of joysticks known about & initialised
 int joysticks_supported = 0;
 
 /* The bit masks used by the various joysticks. The order is the same
@@ -50,17 +50,17 @@ static const libspectrum_byte kempston_mask[5] =
 static const libspectrum_byte timex_mask[5] =
   { 0x04, 0x08, 0x01, 0x02, 0x80 };
 
-/* The keys used by the Cursor joystick */
+// The keys used by the Cursor joystick
 static const keyboard_key_name cursor_key[5] =
   { KEYBOARD_5, KEYBOARD_8, KEYBOARD_7, KEYBOARD_6, KEYBOARD_0 };
 
-/* The keys used by the two Sinclair joysticks */
+// The keys used by the two Sinclair joysticks
 static const keyboard_key_name sinclair1_key[5] =
   { KEYBOARD_6, KEYBOARD_7, KEYBOARD_9, KEYBOARD_8, KEYBOARD_0 };
 static const keyboard_key_name sinclair2_key[5] =
   { KEYBOARD_1, KEYBOARD_2, KEYBOARD_4, KEYBOARD_3, KEYBOARD_5 };
 
-/* The current values for the joysticks we can emulate */
+// The current values for the joysticks we can emulate
 static libspectrum_byte kempston_value;
 static libspectrum_byte timex1_value;
 static libspectrum_byte timex2_value;
@@ -121,7 +121,7 @@ static const periph_t kempston_loose_periph = {
   /* .activate = */ NULL,
 };
 
-/* Init/shutdown functions. Errors aren't important here */
+// Init/shutdown functions. Errors aren't important here
 
 int
 joystick_init( void *context )
@@ -237,7 +237,7 @@ joystick_press( int which, joystick_button button, int press )
   fuse_abort();
 }
 
-/* Read functions for specific interfaces */
+// Read functions for specific interfaces
 
 libspectrum_byte
 joystick_kempston_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )

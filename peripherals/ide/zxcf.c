@@ -41,7 +41,7 @@
 #include "unittests/unittests.h"
 #include "zxcf.h"
 
-/* A 16KB memory chunk accessible by the Z80 when /ROMCS is low */
+// A 16KB memory chunk accessible by the Z80 when /ROMCS is low
 static memory_page zxcf_memory_map_romcs[MEMORY_PAGES_IN_16K];
 static int zxcf_memory_source;
 
@@ -51,7 +51,7 @@ static int zxcf_memory_source;
 */
 
 
-/* Private function prototype */
+// Private function prototype
 
 static void set_zxcf_bank( int bank );
 static libspectrum_byte zxcf_memctl_read( libspectrum_word port,
@@ -61,7 +61,7 @@ static libspectrum_byte zxcf_ide_read( libspectrum_word port, libspectrum_byte *
 static void zxcf_ide_write( libspectrum_word port, libspectrum_byte data );
 static void zxcf_activate( void );
 
-/* Data */
+// Data
 
 static const periph_port_t zxcf_ports[] = {
   { 0x10f4, 0x10b4, zxcf_memctl_read, zxcf_memctl_write },
@@ -103,11 +103,11 @@ static module_info_t zxcf_module_info = {
 
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "zxcf";
 static int page_event, unpage_event;
 
-/* Housekeeping functions */
+// Housekeeping functions
 
 static int
 zxcf_init( void *context )
@@ -220,7 +220,7 @@ set_zxcf_bank( int bank )
   }
 }
 
-/* Port read/writes */
+// Port read/writes
 
 static libspectrum_byte
 zxcf_memctl_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
@@ -237,13 +237,13 @@ zxcf_memctl_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 
   last_memctl = data;
 
-  /* Bit 7 MEMOFF: 0=mem on, 1 =mem off */
+  // Bit 7 MEMOFF: 0=mem on, 1 =mem off
   machine_current->ram.romcs = ( data & 0x80 ) ? 0 : 1;
 
-  /* Bit 6 /MWRPROT: 0=mem protected, 1=mem writable */
+  // Bit 6 /MWRPROT: 0=mem protected, 1=mem writable
   zxcf_writeenable = ( data & 0x40 ) ? 1 : 0;
 
-  /* Bits 5-0: MEMBANK */
+  // Bits 5-0: MEMBANK
   set_zxcf_bank( data & 0x3f );
 
   machine_current->memory_map();

@@ -101,10 +101,10 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
 				  int inverted );
 static int widget_filesel_chdir( void );
 
-/* The filename to return */
+// The filename to return
 char* widget_filesel_name;
 
-/* Should we exit all widgets when we're done with this selector? */
+// Should we exit all widgets when we're done with this selector?
 static int exit_all_widgets;
 
 static char *
@@ -335,7 +335,7 @@ static void widget_scan( char *dir )
 
   size_t i; int error;
 
-  /* Free the memory belonging to the files in the previous directory */
+  // Free the memory belonging to the files in the previous directory
   for( i=0; i<widget_numfiles; i++ ) {
     free( widget_filenames[i]->name );
     free( widget_filenames[i] );
@@ -361,10 +361,10 @@ widget_select_file( const char *name )
 {
   if( !name ) return 0;
 
-  /* Skip current directory */
+  // Skip current directory
   if( !strcmp( name, "." ) ) return 0;
 
-  /* Skip hidden files/directories */
+  // Skip hidden files/directories
   if( strlen( name ) > 1 && name[0] == '.' && name[1] != '.' ) return 0;
 
   return 1;
@@ -387,7 +387,7 @@ static int widget_scan_compare( const struct widget_dirent **a,
 }
 #endif // ifdef AMIGA
 
-/* File selection widget */
+// File selection widget
 
 static int
 widget_filesel_draw( void *data )
@@ -408,14 +408,14 @@ widget_filesel_draw( void *data )
   new_current_file = current_file = 0;
   top_left_file = 0;
 
-  /* Create the dialog box */
+  // Create the dialog box
   error = widget_dialog_with_border( 1, 2, 30, 22 );
   if( error ) {
     free( directory );
     return error;
   }
 
-  /* Show all the filenames */
+  // Show all the filenames
   widget_print_all_filenames( widget_filenames, widget_numfiles,
 			      top_left_file, current_file, directory );
 
@@ -428,7 +428,7 @@ widget_filesel_draw( void *data )
 
 int widget_filesel_finish( widget_finish_state finished ) {
 
-  /* Return with null if we didn't finish cleanly */
+  // Return with null if we didn't finish cleanly
   if( finished != WIDGET_FINISHED_OK ) {
     if( widget_filesel_name ) free( widget_filesel_name );
     widget_filesel_name = NULL;
@@ -492,7 +492,7 @@ static int widget_print_all_filenames( struct widget_dirent **filenames, int n,
   int i;
   int error;
 
-  /* Give us a clean box to start with */
+  // Give us a clean box to start with
   error = widget_dialog_with_border( 1, 2, 30, 22 );
   if( error ) return error;
 
@@ -530,13 +530,13 @@ static int widget_print_all_filenames( struct widget_dirent **filenames, int n,
   if( i < n )
     widget_down_arrow( 1, is_saving ? 20 : 22, WIDGET_COLOUR_FOREGROUND );
 
-  /* Display that lot */
+  // Display that lot
   widget_display_lines( 2, 22 );
 
   return 0;
 }
 
-/* Print a filename onto the dialog box */
+// Print a filename onto the dialog box
 static int widget_print_filename( struct widget_dirent *filename, int position,
 				  int inverted )
 {
@@ -564,10 +564,10 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
   if (dir)
     dir = widget_charwidth( FUSE_DIR_SEP_CHR );
   else {
-    /* get filename extension */
+    // get filename extension
     dot = strrchr( filename->name, '.' );
 
-    /* if .gz or .bz2, we want the previous component too */
+    // if .gz or .bz2, we want the previous component too
     if( dot &&( !strcasecmp( dot, ".gz" ) || !strcasecmp( dot, ".bz2" ) ) ) {
       char *olddot = dot;
       *olddot = '\0';
@@ -577,17 +577,17 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
 	dot = olddot;
     }
 
-    /* if the dot is at the start of the name, ignore it */
+    // if the dot is at the start of the name, ignore it
     if( dot == filename->name )
       dot = 0;
   }
 
   if( dot ) {
-    /* split filename at extension separator */
+    // split filename at extension separator
     if( dot - filename->name < sizeof( buffer ) )
       buffer[dot - filename->name] = '\0';
 
-    /* get extension width (for display purposes) */
+    // get extension width (for display purposes)
     snprintf( suffix, sizeof( suffix ), "%s", dot );
     while( ( suffix_width = ( dot && !dir )
 	     ? widget_stringwidth( suffix ) : 0 ) > 110 ) {
@@ -628,7 +628,7 @@ widget_filesel_chdir( void )
 {
   char *fn, *ptr;
 
-  /* Get the new directory name */
+  // Get the new directory name
   fn = widget_getcwd();
   if( fn == NULL ) {
     widget_end_widget( WIDGET_FINISHED_CANCEL );
@@ -645,7 +645,7 @@ widget_filesel_chdir( void )
     return 1;
   }
 #ifndef GEKKO
-  /* Wii getcwd() already has the slash on the end */
+  // Wii getcwd() already has the slash on the end
   strcat( fn, FUSE_DIR_SEP_STR );
 #endif // #ifndef GEKKO
   strcat( fn, widget_filenames[ current_file ]->name );
@@ -668,7 +668,7 @@ http://thread.gmane.org/gmane.comp.gnu.mingw.user/9197
   } else {
     widget_scan( fn );
     new_current_file = 0;
-    /* Force a redisplay of all filenames */
+    // Force a redisplay of all filenames
     current_file = 1; top_left_file = 1;
   }
 
@@ -685,7 +685,7 @@ widget_filesel_keyhandler( input_key key )
   char *dirtitle;
 #endif
 
-  /* If there are no files (possible on the Wii), can't really do anything */
+  // If there are no files (possible on the Wii), can't really do anything
   if( widget_numfiles == 0 ) {
     if( key == INPUT_KEY_Escape ) widget_end_widget( WIDGET_FINISHED_CANCEL );
     return;
@@ -775,8 +775,8 @@ widget_filesel_keyhandler( input_key key )
 	  !widget_text_text || !*widget_text_text      )
 	break;
       if( !compat_is_absolute_path( widget_text_text ) ) {
-							/* relative name */
-        /* Get current dir name and allocate space for the leafname */
+							// relative name
+        // Get current dir name and allocate space for the leafname
         fn = widget_getcwd();
         ptr = fn;
         if( fn )
@@ -786,7 +786,7 @@ widget_filesel_keyhandler( input_key key )
 	  widget_end_widget( WIDGET_FINISHED_CANCEL );
 	  return;
         }
-        /* Append the leafname and return it */
+        // Append the leafname and return it
         strcat( fn, FUSE_DIR_SEP_STR );
         strcat( fn, widget_text_text );
       } else { // absolute name
@@ -815,7 +815,7 @@ widget_filesel_keyhandler( input_key key )
 
   dirtitle = widget_getcwd();
 
-  /* If we moved the cursor */
+  // If we moved the cursor
   if( new_current_file != current_file ) {
 
     /* If we've got off the top or bottom of the currently displayed
@@ -848,7 +848,7 @@ widget_filesel_keyhandler( input_key key )
       widget_display_lines( 2, 21 );
     }
 
-    /* Reset the current file marker */
+    // Reset the current file marker
     current_file = new_current_file;
 
   }

@@ -202,7 +202,7 @@ widget_pokemem_print_trainer( unsigned int left_edge, unsigned int width,
   while( ( w += 3 ) < ( left_edge + width - 1 ) * 8 - 2 )
     widget_putpixel( w, number * 8 + 31, 0 );
 
-  /* print check */
+  // print check
   x = ( left_edge + width - 2 ) * 8 - 2;
   y = number * 8 + 24;
 
@@ -232,11 +232,11 @@ widget_pokemem_update_line( unsigned int left_edge, unsigned int width,
   widget_pokemem_print_trainer( left_edge, width, index - top_index,
                                 trainer->disabled, entry->checked, buf );
 
-  /* First row in page */
+  // First row in page
   if( top_index && index == top_index )
     widget_up_arrow( left_edge, 3, WIDGET_COLOUR_FOREGROUND );
 
-  /* Last row in page */
+  // Last row in page
   if( top_index + page_size < pokemem_count &&
       ( index - top_index == page_size - 1 ) )
     widget_down_arrow( left_edge, page_size + 2, WIDGET_COLOUR_FOREGROUND );
@@ -340,7 +340,7 @@ widget_pokemem_store_new( void )
     pokemem_count = store->len;
   }
 
-  /* Adjust default selection to current data */
+  // Adjust default selection to current data
   if( pokemem_count == 0 ) {
     selected = -1;
     top_index = 0;
@@ -361,7 +361,7 @@ widget_pokemem_store_add( gpointer data, gpointer user_data GCC_UNUSED )
 
   if( !trainer ) return;
 
-  /* Append a new row and fill data */
+  // Append a new row and fill data
   entry.checked = trainer->active;
   entry.trainer = trainer;
   g_array_append_vals( store, &entry, 1 );
@@ -396,16 +396,16 @@ widget_pokemem_trainer_click( int index )
 
   if( !store ) return 1;
 
-  /* Disable incomplete trainers or active without restore value */
+  // Disable incomplete trainers or active without restore value
   entry = &g_array_index( store, entry_t, index );
   trainer = entry->trainer;
   if( trainer->disabled ) return 1;
 
-  /* Toggle current selection */
+  // Toggle current selection
   entry->checked = !entry->checked;
   widget_pokemem_update_line( menu_left_edge_x, menu_width, selected );
 
-  /* Request user for custom value */
+  // Request user for custom value
   if( entry->checked && trainer->ask_value ) {
     widget_pokemem_ask_value( trainer );
   }
@@ -440,7 +440,7 @@ widget_pokemem_add_custom_poke( void )
   widget_text_t text_data;
   char *endptr;
 
-  /* Bank */
+  // Bank
   memset( &text_data, 0, sizeof( widget_text_t ) );
   text_data.title = "Enter bank (optional)";
   text_data.allow = WIDGET_INPUT_DIGIT;
@@ -459,7 +459,7 @@ widget_pokemem_add_custom_poke( void )
 
   if( endptr == widget_text_text ) b = 8; // ignore bank by default
 
-  /* Address */
+  // Address
   text_data.title = "Enter address / offset";
   text_data.max_length = 5;
   if( widget_do_text( &text_data ) ) return 1;
@@ -481,7 +481,7 @@ widget_pokemem_add_custom_poke( void )
     return 1;
   }
 
-  /* Value */
+  // Value
   text_data.title = "Enter value";
   text_data.max_length = 3;
   if( widget_do_text( &text_data ) ) return 1;
@@ -502,7 +502,7 @@ widget_pokemem_add_custom_poke( void )
     return 1;
   }
 
-  /* Append a new row and fill data */
+  // Append a new row and fill data
   entry.trainer = trainer;
   entry.checked = trainer->active;
 

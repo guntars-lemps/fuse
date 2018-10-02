@@ -45,7 +45,7 @@
 static int pentagon_reset( void );
 static int pentagon_memory_map( void );
 
-int 
+int
 pentagon512_init( fuse_machine_info *machine )
 {
   machine->machine = LIBSPECTRUM_MACHINE_PENT512;
@@ -93,7 +93,7 @@ pentagon_reset(void)
   periph_clear();
   machines_periph_pentagon();
 
-  /* Earlier style Betadisk 128 interface */
+  // Earlier style Betadisk 128 interface
   periph_set_present( PERIPH_TYPE_BETA128_PENTAGON, PERIPH_PRESENT_ALWAYS );
 
   periph_set_present( PERIPH_TYPE_COVOX_FB, PERIPH_PRESENT_OPTIONAL );

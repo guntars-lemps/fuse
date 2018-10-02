@@ -42,33 +42,33 @@
  */
 
 typedef struct periph_private_t {
-  /* Can this peripheral ever be present on the currently emulated machine? */
+  // Can this peripheral ever be present on the currently emulated machine?
   periph_present present;
-  /* Is this peripheral currently active? */
-  int active; 
-  /* The actual peripheral data */
+  // Is this peripheral currently active?
+  int active;
+  // The actual peripheral data
   const periph_t *periph;
 } periph_private_t;
 
-/* All the peripherals we know about */
+// All the peripherals we know about
 static GHashTable *peripherals = NULL;
 
-/* Wrapper to pair up a port response with the peripheral it came from */
+// Wrapper to pair up a port response with the peripheral it came from
 typedef struct periph_port_private_t {
-  /* The peripheral this came from */
+  // The peripheral this came from
   periph_type type;
-  /* The port response */
+  // The port response
   periph_port_t port;
 } periph_port_private_t;
 
-/* The list of currently active ports */
+// The list of currently active ports
 static GSList *ports = NULL;
 
-/* The strings used for debugger events */
+// The strings used for debugger events
 static const char * const page_event_string = "page",
   * const unpage_event_string = "unpage";
 
-/* Place one port response in the list of currently active ones */
+// Place one port response in the list of currently active ones
 static void
 port_register( periph_type type, const periph_port_t *port )
 {
@@ -82,7 +82,7 @@ port_register( periph_type type, const periph_port_t *port )
   ports = g_slist_append( ports, private );
 }
 
-/* Register a peripheral with the system */
+// Register a peripheral with the system
 void
 periph_register( periph_type type, const periph_t *periph )
 {
@@ -100,7 +100,7 @@ periph_register( periph_type type, const periph_t *periph )
   g_hash_table_insert( peripherals, GINT_TO_POINTER( type ), private );
 }
 
-/* Get the data about one peripheral */
+// Get the data about one peripheral
 static gint
 find_by_type( gconstpointer data, gconstpointer user_data )
 {
@@ -109,7 +109,7 @@ find_by_type( gconstpointer data, gconstpointer user_data )
   return periph->type - type;
 }
 
-/* Set whether a peripheral can be present on this machine or not */
+// Set whether a peripheral can be present on this machine or not
 void
 periph_set_present( periph_type type, periph_present present )
 {
@@ -117,7 +117,7 @@ periph_set_present( periph_type type, periph_present present )
   if( type_data ) type_data->present = present;
 }
 
-/* Mark a specific peripheral as (in)active */
+// Mark a specific peripheral as (in)active
 int
 periph_activate_type( periph_type type, int active )
 {
@@ -141,7 +141,7 @@ periph_activate_type( periph_type type, int active )
   return 1;
 }
 
-/* Is a specific peripheral active at the moment? */
+// Is a specific peripheral active at the moment?
 int
 periph_is_active( periph_type type )
 {
@@ -166,12 +166,12 @@ set_activity( gpointer key, gpointer value, gpointer user_data )
   case PERIPH_PRESENT_ALWAYS: active = 1; break;
   }
 
-  *needs_hard_reset = 
+  *needs_hard_reset =
     ( periph_activate_type( type, active ) && private->periph->hard_reset ) ||
     *needs_hard_reset;
 }
 
-/* Work out whether a peripheral needs a hard reset without (de)activate */
+// Work out whether a peripheral needs a hard reset without (de)activate
 static void
 get_hard_reset( gpointer key, gpointer value, gpointer user_data )
 {
@@ -207,7 +207,7 @@ disable_optional( gpointer key, gpointer value, gpointer user_data )
   }
 }
 
-/* Free the memory used by a peripheral-port response pair */
+// Free the memory used by a peripheral-port response pair
 static void
 free_peripheral( gpointer data, gpointer user_data GCC_UNUSED )
 {
@@ -215,7 +215,7 @@ free_peripheral( gpointer data, gpointer user_data GCC_UNUSED )
   libspectrum_free( private );
 }
 
-/* Make a peripheral as being never present on this machine */
+// Make a peripheral as being never present on this machine
 static void
 set_type_inactive( gpointer key, gpointer value, gpointer user_data )
 {
@@ -224,14 +224,14 @@ set_type_inactive( gpointer key, gpointer value, gpointer user_data )
   type_data->active = 0;
 }
 
-/* Mark all peripherals as being never present on this machine */
+// Mark all peripherals as being never present on this machine
 static void
 set_types_inactive( void )
 {
   g_hash_table_foreach( peripherals, set_type_inactive, NULL );
 }
 
-/* Empty out the list of peripherals */
+// Empty out the list of peripherals
 void
 periph_clear( void )
 {
@@ -241,7 +241,7 @@ periph_clear( void )
   set_types_inactive();
 }
 
-/* Tidy-up function called at end of emulation */
+// Tidy-up function called at end of emulation
 void
 periph_end( void )
 {
@@ -257,7 +257,7 @@ periph_end( void )
  * The actual routines to read and write a port
  */
 
-/* Internal type used for passing to read_peripheral and write_peripheral */
+// Internal type used for passing to read_peripheral and write_peripheral
 struct peripheral_data_t {
 
   libspectrum_word port;
@@ -266,7 +266,7 @@ struct peripheral_data_t {
   libspectrum_byte value;
 };
 
-/* Read a byte from a port, taking the appropriate time */
+// Read a byte from a port, taking the appropriate time
 libspectrum_byte
 readport( libspectrum_word port )
 {
@@ -288,7 +288,7 @@ readport( libspectrum_word port )
   return b;
 }
 
-/* Read a byte from a specific port response */
+// Read a byte from a specific port response
 static void
 read_peripheral( gpointer data, gpointer user_data )
 {
@@ -307,17 +307,17 @@ read_peripheral( gpointer data, gpointer user_data )
   }
 }
 
-/* Read a byte from a port, taking no time */
+// Read a byte from a port, taking no time
 libspectrum_byte
 readport_internal( libspectrum_word port )
 {
   struct peripheral_data_t callback_info;
 
-  /* Trigger the debugger if wanted */
+  // Trigger the debugger if wanted
   if( debugger_mode != DEBUGGER_MODE_INACTIVE )
     debugger_check( DEBUGGER_BREAKPOINT_TYPE_PORT_READ, port );
 
-  /* If we're doing RZX playback, get a byte from the RZX file */
+  // If we're doing RZX playback, get a byte from the RZX file
   if( rzx_playback ) {
 
     libspectrum_error error;
@@ -336,7 +336,7 @@ readport_internal( libspectrum_word port )
     return value;
   }
 
-  /* If we're not doing RZX playback, get the byte normally */
+  // If we're not doing RZX playback, get the byte normally
   callback_info.port = port;
   callback_info.attached = 0x00;
   callback_info.value = 0xff;
@@ -348,7 +348,7 @@ readport_internal( libspectrum_word port )
       periph_merge_floating_bus( callback_info.value, callback_info.attached,
                                  machine_current->unattached_port() );
 
-  /* If we're RZX recording, store this byte */
+  // If we're RZX recording, store this byte
   if( rzx_recording ) rzx_store_byte( callback_info.value );
 
   return callback_info.value;
@@ -363,7 +363,7 @@ periph_merge_floating_bus( libspectrum_byte value, libspectrum_byte attached,
   return value & (floating_bus | attached);
 }
 
-/* Write a byte to a port, taking the appropriate time */
+// Write a byte to a port, taking the appropriate time
 void
 writeport( libspectrum_word port, libspectrum_byte b )
 {
@@ -372,7 +372,7 @@ writeport( libspectrum_word port, libspectrum_byte b )
   ula_contend_port_late( port ); tstates++;
 }
 
-/* Write a byte to a specific port response */
+// Write a byte to a specific port response
 static void
 write_peripheral( gpointer data, gpointer user_data )
 {
@@ -380,25 +380,25 @@ write_peripheral( gpointer data, gpointer user_data )
   struct peripheral_data_t *callback_info = user_data;
 
   periph_port_t *port = &( private->port );
-  
+
   if( port->write &&
       ( ( callback_info->port & port->mask ) == port->value ) )
     port->write( callback_info->port, callback_info->value );
 }
 
-/* Write a byte to a port, taking no time */
+// Write a byte to a port, taking no time
 void
 writeport_internal( libspectrum_word port, libspectrum_byte b )
 {
   struct peripheral_data_t callback_info;
 
-  /* Trigger the debugger if wanted */
+  // Trigger the debugger if wanted
   if( debugger_mode != DEBUGGER_MODE_INACTIVE )
     debugger_check( DEBUGGER_BREAKPOINT_TYPE_PORT_WRITE, port );
 
   callback_info.port = port;
   callback_info.value = b;
-  
+
   g_slist_foreach( ports, write_peripheral, &callback_info );
 }
 
@@ -506,13 +506,13 @@ periph_postcheck( void )
 {
   int needs_hard_reset = 0;
 
-  /* Detect if a hard reset is needed without (de)activating peripherals */
+  // Detect if a hard reset is needed without (de)activating peripherals
   g_hash_table_foreach( peripherals, get_hard_reset, &needs_hard_reset );
 
   return needs_hard_reset;
 }
 
-/* Register debugger page/unpage events for a peripheral */
+// Register debugger page/unpage events for a peripheral
 void
 periph_register_paging_events( const char *type_string, int *page_event,
 			       int *unpage_event )

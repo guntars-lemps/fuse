@@ -27,7 +27,7 @@
 
 #include "memory_pages.h"
 
-/* Types of breakpoint */
+// Types of breakpoint
 typedef enum debugger_breakpoint_type {
   DEBUGGER_BREAKPOINT_TYPE_EXECUTE,
   DEBUGGER_BREAKPOINT_TYPE_READ,
@@ -41,7 +41,7 @@ typedef enum debugger_breakpoint_type {
 extern const char *debugger_breakpoint_type_text[];
 extern const char debugger_breakpoint_type_abbr[][4];
 
-/* Lifetime of a breakpoint */
+// Lifetime of a breakpoint
 typedef enum debugger_breakpoint_life {
   DEBUGGER_BREAKPOINT_LIFE_PERMANENT,
   DEBUGGER_BREAKPOINT_LIFE_ONESHOT,
@@ -95,7 +95,7 @@ typedef union debugger_breakpoint_value {
 
 typedef struct debugger_expression debugger_expression;
 
-/* The breakpoint structure */
+// The breakpoint structure
 typedef struct debugger_breakpoint {
   size_t id;
 
@@ -111,7 +111,7 @@ typedef struct debugger_breakpoint {
 
 } debugger_breakpoint;
 
-/* The current breakpoints */
+// The current breakpoints
 extern GSList *debugger_breakpoints;
 
 int debugger_check( debugger_breakpoint_type type, libspectrum_dword value );
@@ -119,7 +119,7 @@ int debugger_check( debugger_breakpoint_type type, libspectrum_dword value );
 void
 debugger_breakpoint_reduce_tstates( libspectrum_dword tstates );
 
-/* Add a new breakpoint */
+// Add a new breakpoint
 int
 debugger_breakpoint_add_address(
   debugger_breakpoint_type type, int source, int page, libspectrum_word offset,

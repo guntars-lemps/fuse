@@ -306,14 +306,14 @@ MENU_CALLBACK( menu_options_filter )
 {
   scaler_type scaler;
 
-  /* Stop emulation */
+  // Stop emulation
   fuse_emulation_pause();
 
   scaler = menu_get_scaler( scaler_is_supported );
   if( scaler != SCALER_NUM && scaler != current_scaler )
     scaler_select_scaler( scaler );
 
-  /* Carry on with emulation again */
+  // Carry on with emulation again
   fuse_emulation_unpause();
 }
 
@@ -553,7 +553,7 @@ MENU_CALLBACK_WITH_ACTION( menu_media_flip )
   flip = !!( action & 0x100 );
 
   switch( type ) {
-  /* No flip option for IF1 */
+  // No flip option for IF1
   default:
     ui_media_drive_flip( type, which, flip );
     break;

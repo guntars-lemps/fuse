@@ -26,7 +26,7 @@
 
 #include <libspectrum.h>
 
-/* Whether DivIDE is currently paged in */
+// Whether DivIDE is currently paged in
 extern int divide_active;
 
 /* Notify DivIDE hardware of an opcode fetch to one of the designated

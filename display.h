@@ -28,36 +28,36 @@
 
 #include <libspectrum.h>
 
-/* The width and height of the Speccy's screen */
+// The width and height of the Speccy's screen
 #define DISPLAY_WIDTH_COLS  32
 #define DISPLAY_HEIGHT_ROWS 24
 
-/* The width and height of the Speccy's screen */
-/* Each main screen column can produce 16 pixels in hires mode */
+// The width and height of the Speccy's screen
+// Each main screen column can produce 16 pixels in hires mode
 #define DISPLAY_WIDTH         (DISPLAY_WIDTH_COLS * 16)
-/* Each main screen row can produce only 8 pixels in any mode */
+// Each main screen row can produce only 8 pixels in any mode
 #define DISPLAY_HEIGHT        (DISPLAY_HEIGHT_ROWS * 8)
 
-/* The width and height of the (emulated) border */
+// The width and height of the (emulated) border
 #define DISPLAY_BORDER_WIDTH_COLS  4
 #define DISPLAY_BORDER_HEIGHT_COLS 3
 
-/* The width and height of the (emulated) border */
-/* Each main screen column can produce 16 pixels in hires mode */
+// The width and height of the (emulated) border
+// Each main screen column can produce 16 pixels in hires mode
 #define DISPLAY_BORDER_WIDTH  (DISPLAY_BORDER_WIDTH_COLS * 16)
-/* Aspect corrected border width */
+// Aspect corrected border width
 #define DISPLAY_BORDER_ASPECT_WIDTH  (DISPLAY_BORDER_WIDTH_COLS * 8)
-/* Each main screen row can produce only 8 pixels in any mode */
+// Each main screen row can produce only 8 pixels in any mode
 #define DISPLAY_BORDER_HEIGHT (DISPLAY_BORDER_HEIGHT_COLS * 8)
 
-/* The width and height of the window we'll be displaying */
+// The width and height of the window we'll be displaying
 #define DISPLAY_SCREEN_WIDTH  (DISPLAY_WIDTH  + 2 * DISPLAY_BORDER_WIDTH)
 #define DISPLAY_SCREEN_HEIGHT (DISPLAY_HEIGHT + 2 * DISPLAY_BORDER_HEIGHT)
 
-/* And the width in columns */
+// And the width in columns
 #define DISPLAY_SCREEN_WIDTH_COLS (DISPLAY_WIDTH_COLS + 2 * DISPLAY_BORDER_WIDTH_COLS)
 
-/* The aspect ratio corrected display width */
+// The aspect ratio corrected display width
 #define DISPLAY_ASPECT_WIDTH  (DISPLAY_SCREEN_WIDTH / 2)
 
 extern int display_ui_initialised;

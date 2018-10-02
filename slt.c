@@ -36,7 +36,7 @@
 #include "spectrum.h"
 #include "ui/ui.h"
 
-/* .slt level data */
+// .slt level data
 
 static libspectrum_byte *slt[256];
 static size_t slt_length[256];

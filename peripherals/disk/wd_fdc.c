@@ -479,7 +479,7 @@ wd_fdc_type_i( wd_fdc *f )
       goto type_i_update;
     goto type_i_noupdate;
   }
-						/* SEEK or RESTORE */
+						// SEEK or RESTORE
   if ( !( b & 0x10 ) ) { // RESTORE
     f->track_register = 0xff;
     f->data_register = 0;
@@ -906,7 +906,7 @@ wd_fdc_spinup( wd_fdc *f, libspectrum_byte b )
     }
   }
 
-  /* For Type III commands on WD2797 */
+  // For Type III commands on WD2797
   if( f->type == WD2797 && ( b & 0xc0 ) == 0xc0 && ( b & 0x30 ) != 0x10 )
     fdd_set_head( d, b & 0x02 ? 1 : 0 );
 
@@ -958,7 +958,7 @@ wd_fdc_cr_write( wd_fdc *f, libspectrum_byte b )
   f->command_register = b;
   f->status_register |= WD_FDC_SR_BUSY;
 
-  /* keep spindle motor on: */
+  // keep spindle motor on:
   event_remove_type( motor_off_event );
 
   if( !( b & 0x80 ) ) { // Type I
@@ -1077,7 +1077,7 @@ wd_fdc_dr_read( wd_fdc *f )
 	fdd_read_data( d ); crc_add(f, d);
 	fdd_read_data( d ); crc_add(f, d);
 
-	/* FIXME: make this per-FDC */
+	// FIXME: make this per-FDC
 	event_remove_type( timeout_event ); // clear the timeout
 
 	if( f->crc == 0x0000 && f->data_multisector ) {
@@ -1135,7 +1135,7 @@ wd_fdc_dr_read( wd_fdc *f )
     }
     f->data_offset++;
   } else if( f->state == WD_FDC_STATE_READTRACK ) {
-						/* unformatted/out of track looks like 1x 0x00 */
+						// unformatted/out of track looks like 1x 0x00
     fdd_read_data( d ); // read a byte and give to host
     f->data_register = d->data & 0x00ff; // drop clock marks
     if( d->index ) {
@@ -1236,7 +1236,7 @@ wd_fdc_dr_write( wd_fdc *f, libspectrum_byte b )
   }
   if( ( f->flags & WD_FLAG_DRQ ) &&
 	f->status_register & WD_FDC_SR_BUSY ) { // we need a next datarq
-    /* wd_fdc_reset_datarq( f ); */
+    // wd_fdc_reset_datarq( f );
     event_add_with_data( tstates + 30 * // 30 us delay
 			       machine_current->timings.processor_speed / 1000000,
 			       fdc_event, f );

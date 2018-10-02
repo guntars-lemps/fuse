@@ -30,7 +30,7 @@
 #include "gtkinternals.h"
 #include "ui/ui.h"
 
-/* For XWarpPointer *only* - see below */
+// For XWarpPointer *only* - see below
 #include <gdk/gdkx.h>
 #include <X11/Xlib.h>
 

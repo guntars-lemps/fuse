@@ -49,7 +49,7 @@ typedef enum disk_type_t {
   DISK_FDI, // Full Disk Image ALT
   DISK_TD0,
 
-  /* DISCiPLE / +D / SAM Coupe */
+  // DISCiPLE / +D / SAM Coupe
   DISK_MGT, // ALT
   DISK_IMG, // OUT-OUT
   DISK_SAD, // OUT-OUT with geometry header
@@ -57,18 +57,18 @@ typedef enum disk_type_t {
   DISK_CPC,
   DISK_ECPC,
 
-  /* Beta disk interface (TR-DOS) */
+  // Beta disk interface (TR-DOS)
   DISK_TRD,
   DISK_SCL,
 
-  /* Opus Discovery */
+  // Opus Discovery
   DISK_OPD,
 
-  /* Didaktik 40/80 */
+  // Didaktik 40/80
   DISK_D40,
   DISK_D80,
 
-  /* Log disk structure (.log) */
+  // Log disk structure (.log)
   DISK_LOG,
 
   DISK_TYPE_LAST,
@@ -95,7 +95,7 @@ typedef struct disk_t {
   unsigned int flag;
   disk_error_t status; // last error code
   libspectrum_byte *data; // disk data
-/* private part */
+// private part
   int tlen; // length of a track with clock and other marks (bpt + 3/8bpt)
   libspectrum_byte *track; // current track data bytes
   libspectrum_byte *clocks; // clock marks bits

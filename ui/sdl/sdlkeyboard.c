@@ -83,8 +83,8 @@ sdlkeyboard_keypress( SDL_KeyboardEvent *keyevent )
 
   fuse_keysym = keysyms_remap( keyevent->keysym.sym );
 
-  /* Currently unicode_keysyms_map contains ASCII character keys */
-  if( ( keyevent->keysym.unicode & 0xFF80 ) == 0 ) 
+  // Currently unicode_keysyms_map contains ASCII character keys
+  if( ( keyevent->keysym.unicode & 0xFF80 ) == 0 )
     unicode_keysym = unicode_keysyms_remap( keyevent->keysym.unicode );
   else
     unicode_keysym = INPUT_KEY_NONE;

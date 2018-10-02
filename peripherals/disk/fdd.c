@@ -147,7 +147,7 @@ fdd_set_data( fdd_t *d, int fact )
   d->index = d->disk.i ? 0 : 1;
 }
 
-/* initialise fdd */
+// initialise fdd
 int
 fdd_init( fdd_t *d, fdd_type_t type, const fdd_params_t *dt, int reinit )
 {
@@ -262,7 +262,7 @@ fdd_select( fdd_t *d, int select )
 }
 
 
-/* load a disk into fdd */
+// load a disk into fdd
 int
 fdd_load( fdd_t *d, int upsidedown )
 {
@@ -312,7 +312,7 @@ fdd_unload( fdd_t *d )
     fdd_head_load( d, 0 );
 }
 
-/* change current head */
+// change current head
 void
 fdd_set_head( fdd_t *d, int head )
 {
@@ -327,7 +327,7 @@ fdd_set_head( fdd_t *d, int head )
   fdd_set_data( d, 0 );
 }
 
-/* change current track dir = 1 / -1 */
+// change current track dir = 1 / -1
 void
 fdd_step( fdd_t *d, fdd_dir_t direction )
 {
@@ -347,7 +347,7 @@ fdd_step( fdd_t *d, fdd_dir_t direction )
   if( d->loaded && d->selected ) d->dskchg = 1;
 }
 
-/* read/write next byte from/to sector */
+// read/write next byte from/to sector
 static int
 fdd_read_write_data( fdd_t *d, fdd_write_t write )
 {
@@ -401,7 +401,7 @@ fdd_read_write_data( fdd_t *d, fdd_write_t write )
       d->marks |= 0x01;
     if( bitmap_test( d->disk.weak, d->disk.i ) ) {
       d->marks |= 0x02;
-      /* mess up data byte */
+      // mess up data byte
       d->data &= rand() % 0xff, d->data |= rand() % 0xff;
     }
   }
@@ -411,14 +411,14 @@ fdd_read_write_data( fdd_t *d, fdd_write_t write )
   return d->status = FDD_OK;
 }
 
-/* read next byte from sector */
+// read next byte from sector
 int
 fdd_read_data( fdd_t *d )
 {
   return fdd_read_write_data( d, FDD_READ );
 }
 
-/* write next byte to sector */
+// write next byte to sector
 int
 fdd_write_data( fdd_t *d )
 {

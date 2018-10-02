@@ -26,7 +26,7 @@
 
 #include <libspectrum.h>
 
-/* Are we currently recording a .psg file? */
+// Are we currently recording a .psg file?
 extern int psg_recording;
 
 void psg_register_startup( void );

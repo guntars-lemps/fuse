@@ -117,7 +117,7 @@ MENU_CALLBACK_WITH_ACTION( menu_media_ide_eject );
  * Things to be defined elsewhere
  */
 
-/* Direct menu callbacks */
+// Direct menu callbacks
 
 MENU_CALLBACK( menu_file_savesnapshot );
 MENU_CALLBACK( menu_file_recording_record );

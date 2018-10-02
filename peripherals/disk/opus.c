@@ -46,14 +46,14 @@
 #include "options.h" // needed for get combo options
 #include "z80/z80.h"
 
-/* 8KB ROM */
+// 8KB ROM
 #define OPUS_ROM_SIZE 0x2000
-/* 2KB ROM */
+// 2KB ROM
 #define OPUS_RAM_SIZE 0x0800
 
 static int opus_rom_memory_source, opus_ram_memory_source;
 
-/* Two memory chunks accessible by the Z80 when /ROMCS is low */
+// Two memory chunks accessible by the Z80 when /ROMCS is low
 static memory_page opus_memory_map_romcs_rom[ MEMORY_PAGES_IN_8K ];
 static memory_page opus_memory_map_romcs_ram[ MEMORY_PAGES_IN_2K ];
 
@@ -66,7 +66,7 @@ static ui_media_drive_info_t opus_ui_drives[ OPUS_NUM_DRIVES ];
 
 static libspectrum_byte opus_ram[ OPUS_RAM_SIZE ];
 
-/* 6821 PIA internal registers */
+// 6821 PIA internal registers
 static libspectrum_byte data_reg_a, data_dir_a, control_a;
 static libspectrum_byte data_reg_b, data_dir_b, control_b;
 
@@ -93,7 +93,7 @@ static const periph_t opus_periph = {
   /* .activate = */ NULL,
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "opus";
 static int page_event, unpage_event;
 
@@ -122,7 +122,7 @@ opus_memory_map( void )
 
   memory_map_romcs_8k( 0x0000, opus_memory_map_romcs_rom );
   memory_map_romcs_2k( 0x2000, opus_memory_map_romcs_ram );
-  /* FIXME: should we add mirroring at 0x2800, 0x3000 and/or 0x3800? */
+  // FIXME: should we add mirroring at 0x2800, 0x3000 and/or 0x3800?
 }
 
 static void
@@ -299,7 +299,7 @@ opus_6821_access( libspectrum_byte reg, libspectrum_byte data,
       }
     } else {
       if( control_a & 0x04 ) {
-        /* printer never busy (bit 6) */
+        // printer never busy (bit 6)
         data_reg_a &= ~0x40;
         return data_reg_a;
       } else {
@@ -311,7 +311,7 @@ opus_6821_access( libspectrum_byte reg, libspectrum_byte data,
     if( dir ) {
       control_a = data;
     } else {
-      /* Always return bit 6 set to ACK parallel port actions */
+      // Always return bit 6 set to ACK parallel port actions
       return control_a | 0x40;
     }
     break;
@@ -523,7 +523,7 @@ opus_unittest( void )
 
   r += unittests_assert_8k_page( 0x0000, opus_rom_memory_source, 0 );
   r += unittests_assert_2k_page( 0x2000, opus_ram_memory_source, 0 );
-  /* FIXME: should we add mirroring at 0x2800, 0x3000 and/or 0x3800? */
+  // FIXME: should we add mirroring at 0x2800, 0x3000 and/or 0x3800?
   r += unittests_assert_4k_page( 0x3000, memory_source_rom, 0 );
   r += unittests_assert_16k_ram_page( 0x4000, 5 );
   r += unittests_assert_16k_ram_page( 0x8000, 2 );
@@ -545,7 +545,7 @@ ui_drive_is_available( void )
 static const fdd_params_t *
 ui_drive_get_params_1( void )
 {
-  /* +1 => there is no `Disabled' */
+  // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_opus1_type() + 1 ];
 }
 

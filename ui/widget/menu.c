@@ -220,7 +220,7 @@ static widget_menu_entry submenu_keyboard_buttons[] = {
 };
 
 #define MAX_JOYSTICK_TYPES 8
-/* joystick types + title of the window + NULL */
+// joystick types + title of the window + NULL
 static widget_menu_entry submenu_types[ MAX_JOYSTICK_TYPES + 2 ];
 static char joystick_names[ MAX_JOYSTICK_TYPES ][ 100 ];
 void set_joystick_type( int action );
@@ -294,7 +294,7 @@ int widget_menu_draw( void *data )
 
   menu = (widget_menu_entry*)data;
 
-  /* How many menu items do we have? */
+  // How many menu items do we have?
   for( ptr = &menu[1]; ptr->text; ptr++ )
     height += ptr->text[0] ? 2 : 1;
   menu_entries = ptr - &menu[1];
@@ -386,7 +386,7 @@ widget_menu_keyhandler( input_key key )
   }
 }
 
-/* General callbacks */
+// General callbacks
 
 scaler_type
 menu_get_scaler( scaler_available_fn selector )
@@ -553,7 +553,7 @@ menu_options_joysticks_select( int action )
     break;
   }
 
-  /* Populate joystick names */
+  // Populate joystick names
   if( JOYSTICK_TYPE_COUNT > MAX_JOYSTICK_TYPES )
     ui_error( UI_ERROR_ERROR, "Not all joystick types are displayed" );
 
@@ -587,7 +587,7 @@ set_joystick_type( int action )
   widget_end_all( WIDGET_FINISHED_OK );
 }
 
-/* Options/Select ROMs/<type> */
+// Options/Select ROMs/<type>
 int
 menu_select_roms_with_title( const char *title, size_t start, size_t count,
 			     int is_peripheral )
@@ -618,7 +618,7 @@ menu_machine_reset( int action )
 
   widget_end_all( WIDGET_FINISHED_OK );
 
-  /* Stop any ongoing RZX */
+  // Stop any ongoing RZX
   rzx_stop_recording();
   rzx_stop_playback( 1 );
 
@@ -734,26 +734,26 @@ set_active( struct widget_menu_entry *menu, const char *path, int active )
 {
   if( *path == '/' ) path++;
 
-  /* Skip the menu title */
+  // Skip the menu title
   menu++;
 
   for( ; menu->text; menu++ ) {
 
     const char *p = menu->text, *q = path;
 
-    /* Compare the two strings, but skip hotkey-delimiter characters */
+    // Compare the two strings, but skip hotkey-delimiter characters
     do {
       if( *p == 9 || *p == 10 ) p++;
     } while( *p && *p++ == *q++ );
 
     if( *p ) continue; // not matched
 
-    /* match, but with a submenu */
+    // match, but with a submenu
     if( *q == '/' ) return set_active( menu->submenu, q, active );
 
     if( *q ) continue; // not matched
 
-    /* we have a match */
+    // we have a match
     menu->inactive = !active;
     return 0;
   }

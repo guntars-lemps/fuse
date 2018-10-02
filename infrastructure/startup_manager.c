@@ -156,7 +156,7 @@ startup_manager_run( void )
     }
   } while( progress_made && registered_modules->len );
 
-  /* If there are still any modules left to be called, then that's bad */
+  // If there are still any modules left to be called, then that's bad
   if( registered_modules->len ) {
     ui_error( UI_ERROR_ERROR, "%u startup modules could not be called",
               registered_modules->len );

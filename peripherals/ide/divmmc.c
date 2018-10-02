@@ -40,7 +40,7 @@
 #include "divmmc.h"
 #include "divxxx.h"
 
-/* Private function prototypes */
+// Private function prototypes
 
 static void divmmc_control_write( libspectrum_word port, libspectrum_byte data );
 static void divmmc_card_select( libspectrum_word port, libspectrum_byte data );
@@ -50,7 +50,7 @@ static void divmmc_activate( void );
 static libspectrum_dword get_control_register( void );
 static void set_control_register( libspectrum_dword value );
 
-/* Data */
+// Data
 
 static const periph_port_t divmmc_ports[] = {
   { 0x00ff, 0x00e3, NULL, divmmc_control_write },
@@ -68,13 +68,13 @@ static const periph_t divmmc_periph = {
 
 static divxxx_t *divmmc_state;
 
-/* The card inserted into the DivMMC. For now, we emulate only one card. */
+// The card inserted into the DivMMC. For now, we emulate only one card.
 static libspectrum_mmc_card *card;
 
-/* The card currently selected via the "card select" call */
+// The card currently selected via the "card select" call
 static libspectrum_mmc_card *current_card;
 
-/* *Our* DivMMC has 128 Kb of RAM */
+// *Our* DivMMC has 128 Kb of RAM
 #define DIVMMC_PAGES 16
 #define DIVMMC_PAGE_LENGTH 0x2000
 
@@ -94,17 +94,17 @@ static module_info_t divmmc_module_info = {
 
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "divmmc";
 
-/* Debugger system variables */
+// Debugger system variables
 static const char * const debugger_type_string = "divmmc";
 static const char * const control_register_detail_string = "control";
 
-/* Eject menu item */
+// Eject menu item
 static const ui_menu_item eject_menu_item = UI_MENU_ITEM_MEDIA_IDE_DIVMMC_EJECT;
 
-/* Housekeeping functions */
+// Housekeeping functions
 
 static int
 divmmc_init( void *context )
@@ -214,7 +214,7 @@ divmmc_insert( const char *filename )
   if( error ) return error;
   return ui_menu_activate( eject_menu_item, 1 );
 }
-  
+
 void
 divmmc_commit( void )
 {
@@ -227,7 +227,7 @@ divmmc_eject( void )
   return mmc_eject( card );
 }
 
-/* Port read/writes */
+// Port read/writes
 
 static void
 divmmc_control_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
@@ -247,7 +247,7 @@ divmmc_card_select( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
       current_card = card;
       break;
     case 0x01:
-      /* TODO: select second card */
+      // TODO: select second card
       current_card = NULL;
       break;
     default:

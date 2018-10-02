@@ -30,12 +30,12 @@
 
 #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
-/* Fake joystick, or override UI-specific handling */
+// Fake joystick, or override UI-specific handling
 #include "../uijoystick.c"
 
 #else // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
-/* Use the svgalib joystick support */
+// Use the svgalib joystick support
 
 #include <string.h>
 #include <errno.h>
@@ -83,7 +83,7 @@ ui_joystick_init( void )
 {
   int i;
 
-  /* If we can't init the first, don't try the second */
+  // If we can't init the first, don't try the second
   if( init_stick( 0 ) ) {
     sticks = 0;
   } else if( init_stick( 1 ) ) {

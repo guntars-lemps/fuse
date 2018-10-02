@@ -28,7 +28,7 @@
 
 #include <libspectrum.h>
 
-/* The types of peripheral Fuse knows about */
+// The types of peripheral Fuse knows about
 typedef enum periph_type {
   PERIPH_TYPE_UNKNOWN,
 
@@ -52,9 +52,9 @@ typedef enum periph_type {
   PERIPH_TYPE_INTERFACE1, // Interface 1
   PERIPH_TYPE_INTERFACE2, // Interface 2
 
-  /* A Kempston joystick which requires b5, b6 and b7 reset to be read */
+  // A Kempston joystick which requires b5, b6 and b7 reset to be read
   PERIPH_TYPE_KEMPSTON,
-  /* A Kempston joystick which requires b5 only reset to be read */
+  // A Kempston joystick which requires b5 only reset to be read
   PERIPH_TYPE_KEMPSTON_LOOSE,
 
   PERIPH_TYPE_KEMPSTON_MOUSE, // Kempston mouse
@@ -87,7 +87,7 @@ typedef enum periph_type {
  * General peripheral list handling routines
  */
 
-/* For indicating the (optional) presence or absence of a peripheral */
+// For indicating the (optional) presence or absence of a peripheral
 typedef enum periph_present {
   PERIPH_PRESENT_NEVER, // Never present
   PERIPH_PRESENT_OPTIONAL, // Optionally present
@@ -99,7 +99,7 @@ typedef libspectrum_byte (*periph_port_read_function)( libspectrum_word port,
 typedef void (*periph_port_write_function)( libspectrum_word port,
 					    libspectrum_byte data );
 
-/* Information about a specific port response */
+// Information about a specific port response
 typedef struct periph_port_t {
 
   /* This peripheral responds to all port values where
@@ -114,35 +114,35 @@ typedef struct periph_port_t {
 
 typedef void (*periph_activate_function)( void );
 
-/* Information about a peripheral */
+// Information about a peripheral
 typedef struct periph_t {
-  /* The preferences option which controls this peripheral */
+  // The preferences option which controls this peripheral
   int *option;
-  /* The list of ports this peripheral responds to */
+  // The list of ports this peripheral responds to
   const periph_port_t *ports;
-  /* Hard reset required when added/removed */
+  // Hard reset required when added/removed
   int hard_reset;
-  /* Function to be called when the peripheral is activated */
+  // Function to be called when the peripheral is activated
   periph_activate_function activate;
 } periph_t;
 
-/* Register a peripheral with the system */
+// Register a peripheral with the system
 void periph_register( periph_type type, const periph_t *periph );
 
-/* Set whether a peripheral can be present on this machine or not */
+// Set whether a peripheral can be present on this machine or not
 void periph_set_present( periph_type type, periph_present present );
 
 /* Mark a specific peripheral as (in)active, returns 1 if the enabled state has
    changed */
 int periph_activate_type( periph_type type, int active );
 
-/* Is a specific peripheral active at the moment? */
+// Is a specific peripheral active at the moment?
 int periph_is_active( periph_type type );
 
-/* Empty out the list of peripherals */
+// Empty out the list of peripherals
 void periph_clear( void );
 
-/* Free up peripherals */
+// Free up peripherals
 void periph_end( void );
 
 /*
@@ -167,7 +167,7 @@ int periph_postcheck( void );
 
 void periph_disable_optional( void );
 
-/* Register debugger page/unpage events for a peripheral */
+// Register debugger page/unpage events for a peripheral
 void periph_register_paging_events( const char *type_string, int *page_event,
 				    int *unpage_event );
 

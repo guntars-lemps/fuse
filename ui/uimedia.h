@@ -76,7 +76,7 @@ int ui_media_drive_eject( int controller, int which );
 int ui_media_drive_flip( int controller, int which, int flip );
 int ui_media_drive_writeprotect( int controller, int which, int wrprot );
 
-/* These are (also) used in media menu items */
+// These are (also) used in media menu items
 typedef enum ui_media_controller {
   UI_MEDIA_CONTROLLER_PLUS3,
   UI_MEDIA_CONTROLLER_BETA,

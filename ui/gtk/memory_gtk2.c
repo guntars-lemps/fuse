@@ -39,7 +39,7 @@
 
 static libspectrum_word memaddr = 0x0000;
 
-/* List columns */
+// List columns
 enum
 {
   COL_ADDRESS = 0,
@@ -76,7 +76,7 @@ update_display( GtkTreeModel *model, libspectrum_word base )
     }
     text[2][ 0x10 ] = '\0';
 
-    /* Append a new row and fill data */
+    // Append a new row and fill data
     gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
     gtk_list_store_set( GTK_LIST_STORE( model ), &iter,
                         COL_ADDRESS, text[0],
@@ -93,7 +93,7 @@ scroller( GtkAdjustment *adjustment, gpointer user_data )
   libspectrum_word base;
   GtkTreeModel *model = user_data;
 
-  /* Drop the low bits before displaying anything */
+  // Drop the low bits before displaying anything
   base = gtk_adjustment_get_value( adjustment );
   base &= 0xfff0;
 
@@ -110,7 +110,7 @@ create_mem_list( void )
 
   view = gtk_tree_view_new();
 
-  /* Add columns */
+  // Add columns
   renderer = gtk_cell_renderer_text_new();
   gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( view ),
                                                -1,
@@ -135,7 +135,7 @@ create_mem_list( void )
                                                "text", COL_DATA,
                                                NULL );
 
-  /* Create data model */
+  // Create data model
   store = gtk_list_store_new( NUM_COLS, G_TYPE_STRING, G_TYPE_STRING,
                               G_TYPE_STRING );
 
@@ -168,7 +168,7 @@ menu_machine_memorybrowser( GtkAction *gtk_action GCC_UNUSED,
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog ) );
   gtk_box_pack_start( GTK_BOX( content_area ), box, TRUE, TRUE, 0 );
 
-  /* The list itself */
+  // The list itself
   list = create_mem_list();
   gtkui_set_font( list, font );
   model = gtk_tree_view_get_model( GTK_TREE_VIEW( list ) );

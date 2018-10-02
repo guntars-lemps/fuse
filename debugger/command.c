@@ -35,16 +35,16 @@
 #include "z80/z80.h"
 #include "z80/z80_macros.h"
 
-/* The last debugger command we were given to execute */
+// The last debugger command we were given to execute
 static char *command_buffer = NULL;
 
-/* And a pointer as to how much we've parsed */
+// And a pointer as to how much we've parsed
 static char *command_ptr;
 
 int yyparse( void );
 int yywrap( void );
 
-/* Evaluate the debugger command given in 'command' */
+// Evaluate the debugger command given in 'command'
 void
 debugger_command_evaluate( const char *command )
 {
@@ -54,19 +54,19 @@ debugger_command_evaluate( const char *command )
 
   command_buffer = utils_safe_strdup( command );
 
-  /* Start parsing at the start of the given command */
+  // Start parsing at the start of the given command
   command_ptr = command_buffer;
-    
-  /* Parse the command */
+
+  // Parse the command
   yyparse();
 
-  /* And free any memory we allocated while parsing */
+  // And free any memory we allocated while parsing
   mempool_free( debugger_memory_pool );
 
   ui_debugger_update();
 }
 
-/* Utility functions called from the flex scanner */
+// Utility functions called from the flex scanner
 
 int
 yywrap( void )
@@ -74,7 +74,7 @@ yywrap( void )
   return 1;
 }
 
-/* Called to get up to 'max_size' bytes of the command to be parsed */
+// Called to get up to 'max_size' bytes of the command to be parsed
 int
 debugger_command_input( char *buf, int *result, int max_size )
 {
@@ -93,9 +93,9 @@ debugger_command_input( char *buf, int *result, int max_size )
   }
 }
 
-/* Utility functions called by the bison parser */
+// Utility functions called by the bison parser
 
-/* The error callback if yyparse finds an error */
+// The error callback if yyparse finds an error
 void
 yyerror( const char *s )
 {

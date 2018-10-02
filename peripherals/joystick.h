@@ -28,12 +28,12 @@
 
 #include <libspectrum.h>
 
-/* Number of joysticks known about & initialised */
+// Number of joysticks known about & initialised
 extern int joysticks_supported;
 
 void joystick_register_startup( void );
 
-/* A constant to identify the joystick emulated via the keyboard */
+// A constant to identify the joystick emulated via the keyboard
 #define JOYSTICK_KEYBOARD 2
 
 typedef enum joystick_type_t {
@@ -70,7 +70,7 @@ typedef enum joystick_button {
    pressed */
 int joystick_press( int which, joystick_button button, int press );
 
-/* Interface-specific read functions */
+// Interface-specific read functions
 libspectrum_byte joystick_kempston_read ( libspectrum_word port,
 					  libspectrum_byte *attached );
 libspectrum_byte joystick_timex_read ( libspectrum_word port,

@@ -68,8 +68,8 @@ run_dialog( const char *title, GtkFileChooserAction action )
 
   gtk_dialog_set_default_response( GTK_DIALOG( dialog ), GTK_RESPONSE_ACCEPT );
 
-  /* TODO: select filter based on UI operation (snapshot, recording, screenshot) */
-  /* TODO: custom filter based file action (open, save) */
+  // TODO: select filter based on UI operation (snapshot, recording, screenshot)
+  // TODO: custom filter based file action (open, save)
   add_filter_defaults( dialog );
 
   if( current_folder )
@@ -317,7 +317,7 @@ add_filter_snapshot_files( GtkFileFilter *filter )
   gtk_file_filter_add_pattern( filter, "*.sp" );
   gtk_file_filter_add_pattern( filter, "*.szx" );
   gtk_file_filter_add_pattern( filter, "*.z80" );
-  gtk_file_filter_add_pattern( filter, "*.zx-state" );  
+  gtk_file_filter_add_pattern( filter, "*.zx-state" );
 
   gtk_file_filter_add_pattern( filter, "*.MGTSNP" );
   gtk_file_filter_add_pattern( filter, "*.SLT" );
@@ -327,7 +327,7 @@ add_filter_snapshot_files( GtkFileFilter *filter )
   gtk_file_filter_add_pattern( filter, "*.SP" );
   gtk_file_filter_add_pattern( filter, "*.SZX" );
   gtk_file_filter_add_pattern( filter, "*.Z80" );
-  gtk_file_filter_add_pattern( filter, "*.ZX-STATE" );  
+  gtk_file_filter_add_pattern( filter, "*.ZX-STATE" );
 }
 
 static void

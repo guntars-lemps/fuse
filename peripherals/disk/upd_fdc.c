@@ -33,10 +33,10 @@
 
 #define MAX_SIZE_CODE 8
 
-/* static const int UPD_FDC_MAIN_DRV_0_SEEK = 0x01; */
-/* static const int UPD_FDC_MAIN_DRV_1_SEEK = 0x02; */
-/* static const int UPD_FDC_MAIN_DRV_2_SEEK = 0x04; */
-/* static const int UPD_FDC_MAIN_DRV_3_SEEK = 0x08; */
+// static const int UPD_FDC_MAIN_DRV_0_SEEK = 0x01;
+// static const int UPD_FDC_MAIN_DRV_1_SEEK = 0x02;
+// static const int UPD_FDC_MAIN_DRV_2_SEEK = 0x04;
+// static const int UPD_FDC_MAIN_DRV_3_SEEK = 0x08;
 static const int UPD_FDC_MAIN_BUSY       = 0x10;
 static const int UPD_FDC_MAIN_EXECUTION  = 0x20;
 static const int UPD_FDC_MAIN_DATADIR    = 0x40;
@@ -68,7 +68,7 @@ static const int UPD_FDC_ST2_WRONG_CYLINDER=0x10;
 static const int UPD_FDC_ST2_DATA_ERROR  = 0x20; // CRC error in data field
 static const int UPD_FDC_ST2_CONTROL_MARK= 0x40;
 
-/* static const int UPD_FDC_ST3_TWO_SIDE    = 0x08; */
+// static const int UPD_FDC_ST3_TWO_SIDE    = 0x08;
 static const int UPD_FDC_ST3_TR00        = 0x10;
 static const int UPD_FDC_ST3_READY       = 0x20;
 static const int UPD_FDC_ST3_WRPROT      = 0x40;
@@ -151,7 +151,7 @@ upd_fdc_master_reset( upd_fdc *f )
   f->cycle = 0;
   f->last_sector_read = 0;
   f->read_id = 0;
-  /* preserve disabled state of speedlock_hack */
+  // preserve disabled state of speedlock_hack
   if( f->speedlock != -1 ) f->speedlock = 0;
 }
 
@@ -428,14 +428,14 @@ seek_step( upd_fdc *f, int start )
   if( start ) {
     i = f->us;
 
-    /* Drive already in seek state? */
+    // Drive already in seek state?
     if( f->main_status & ( 1 << i ) ) return;
 
-    /* Mark seek mode for fdd. It will be cleared by Sense Interrupt command */
+    // Mark seek mode for fdd. It will be cleared by Sense Interrupt command
     f->main_status |= 1 << i;
   } else {
 
-    /* Get drive in seek state that has completed the positioning */
+    // Get drive in seek state that has completed the positioning
     i=0;
     for( j = 1; j < 4; j++) {
       if( f->seek_age[j] > f->seek_age[i] )
@@ -449,7 +449,7 @@ seek_step( upd_fdc *f, int start )
 
   d = f->drive[i];
 
-  /* There is need to seek? */
+  // There is need to seek?
   if( f->pcn[i] == f->ncn[i] &&
       f->seek[i] == 2 && !d->tr00 ) { // recalibrate fail
     f->seek[i] = 5; // abnormal termination
@@ -460,7 +460,7 @@ seek_step( upd_fdc *f, int start )
     return;
   }
 
-  /* There is need to seek? */
+  // There is need to seek?
   if( f->pcn[i] == f->ncn[i] ||
     ( f->seek[i] == 2 && d->tr00 ) ) { // correct position
     if( f->seek[i] == 2 ) // recalibrate
@@ -472,7 +472,7 @@ seek_step( upd_fdc *f, int start )
     return;
   }
 
-  /* Drive not ready */
+  // Drive not ready
   if( !d->ready ) {
     if( f->seek[i] == 2 ) // recalibrate
       f->pcn[i] = f->rec[i] - ( 77 - f->pcn[i] ); // restore PCN
@@ -483,19 +483,19 @@ seek_step( upd_fdc *f, int start )
     return;
   }
 
-  /* Send step */
+  // Send step
   if( f->pcn[i] != f->ncn[i] ) {	/**FIXME if d->tr00 == 1 ??? */
     fdd_step( d, f->pcn[i] > f->ncn[i] ?
                         FDD_STEP_OUT : FDD_STEP_IN );
     f->pcn[i] += f->pcn[i] > f->ncn[i] ? -1 : 1;
 
-    /* Update age for active seek operations */
+    // Update age for active seek operations
     for( j = 0; j < 4; j++) {
       if( f->seek_age[j] > 0 ) f->seek_age[j]++;
     }
     f->seek_age[i] = 1;
 
-    /* wait step completion */
+    // wait step completion
     event_add_with_data( tstates + f->stp_rate *
                          machine_current->timings.processor_speed / 1000,
                          fdc_event, f );
@@ -920,7 +920,7 @@ upd_fdc_read_data( upd_fdc *f )
     f->data_offset++; // count read bytes
     fdd_read_data( d ); crc_add( f, d ); // read a byte
 
-    /* Speedlock hack */
+    // Speedlock hack
     if( f->speedlock > 0 && !d->do_read_weak ) { // do not conflict with fdd weak reads
       if( f->data_offset < 64 && d->data != 0xe5 )
         f->speedlock = 2; // W.E.C Le Mans type ...
@@ -930,7 +930,7 @@ upd_fdc_read_data( upd_fdc *f )
 	crc_add( f, d ); // mess up crc
       }
     }
-    /* EOSpeedlock hack */
+    // EOSpeedlock hack
 
     r = d->data & 0xff;
     if( f->data_offset == f->rlen ) { // send only rlen byte to host
@@ -1016,7 +1016,7 @@ upd_fdc_write_data( upd_fdc *f, libspectrum_byte data )
       f->state == UPD_FDC_STATE_EXE ) { // execution phase WRITE/FORMAT
     d = f->current_drive;
     if( f->cmd->id == UPD_CMD_WRITE_ID ) { // FORMAT
-		/* at the index hole... */
+		// at the index hole...
       f->data_register[f->data_offset + 5] = data; // read id fields
       f->data_offset++;
       if( f->data_offset == 4 ) { // C, H, R, N done => format track
@@ -1159,7 +1159,7 @@ upd_fdc_write_data( upd_fdc *f, libspectrum_byte data )
       return;
     }
   }
-/*----------- Command Phase ---------------*/
+// ----------- Command Phase ---------------
   if( f->cycle == 0 ) { // first byte -> command
     f->command_register = data;
     cmd_identify( f );
@@ -1175,7 +1175,7 @@ upd_fdc_write_data( upd_fdc *f, libspectrum_byte data )
        a value of 80H (invalid command) ... (82078 44pin) */
     if( ( f->intrq == UPD_INTRQ_NONE && f->cmd->id == UPD_CMD_SENSE_INT )
     ) {
-	/* this command will be INVALID */
+	// this command will be INVALID
       f->command_register = 0x00;
       cmd_identify( f );
     }
@@ -1189,7 +1189,7 @@ upd_fdc_write_data( upd_fdc *f, libspectrum_byte data )
       f->main_status |= UPD_FDC_MAIN_EXECUTION;
     }
 
-    /* select current drive and head if needed */
+    // select current drive and head if needed
     if( f->cmd->id != UPD_CMD_SENSE_INT &&
 	f->cmd->id != UPD_CMD_SPECIFY &&
 	f->cmd->id != UPD_CMD_VERSION &&
@@ -1204,7 +1204,7 @@ upd_fdc_write_data( upd_fdc *f, libspectrum_byte data )
       f->hd = ( f->data_register[0] & 0x04 ) >> 2;
       fdd_set_head( f->current_drive, f->hd );
 
-      /* identify READ_DELETED_DATA/WRITE_DELETED_DATA */
+      // identify READ_DELETED_DATA/WRITE_DELETED_DATA
       if( f->cmd->id == UPD_CMD_READ_DATA ||
     	  f->cmd->id == UPD_CMD_WRITE_DATA ) {
         f->del_data = ( f->command_register & 0x08 ) >> 3;
@@ -1307,7 +1307,7 @@ upd_fdc_write_data( upd_fdc *f, libspectrum_byte data )
       head_load( f );
       return;
     case UPD_CMD_READ_DATA:
-    /* Speedlock hack */
+    // Speedlock hack
       if( f->speedlock != -1 && !d->do_read_weak ) { // do not conflict with fdd weak read
 	u = ( f->data_register[2] & 0x01 ) + ( f->data_register[1] << 1 ) +
 	    ( f->data_register[3] << 8 );
@@ -1322,7 +1322,7 @@ upd_fdc_write_data( upd_fdc *f, libspectrum_byte data )
 	  f->last_sector_read = f->speedlock = 0;
 	}
       }
-    /* EOSpeedlock hack */
+    // EOSpeedlock hack
 
       f->rlen = 0x80 << ( f->data_register[4] > MAX_SIZE_CODE ? MAX_SIZE_CODE : f->data_register[4] );
       if( f->data_register[4] == 0 && f->data_register[7] < 128 )

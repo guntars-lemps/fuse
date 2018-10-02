@@ -62,7 +62,7 @@ pentagon_select_1f_read( libspectrum_word port, libspectrum_byte *attached )
   libspectrum_byte data;
   libspectrum_byte tmpattached = 0x00;
 
-  /* TODO: fine-grained attachment handling */
+  // TODO: fine-grained attachment handling
 
   data = beta_sr_read( port, &tmpattached );
   if( !tmpattached && settings_current.joy_kempston )
@@ -82,7 +82,7 @@ pentagon_select_ff_read( libspectrum_word port, libspectrum_byte *attached )
   libspectrum_byte data;
   libspectrum_byte tmpattached = 0x00;
 
-  /* TODO: fine-grained attachment handling */
+  // TODO: fine-grained attachment handling
 
   data = beta_sp_read( port, &tmpattached );
   if( !tmpattached )
@@ -95,7 +95,7 @@ pentagon_select_ff_read( libspectrum_word port, libspectrum_byte *attached )
 int
 pentagon_port_from_ula( libspectrum_word port GCC_UNUSED )
 {
-  /* No contended ports */
+  // No contended ports
   return 0;
 }
 
@@ -146,7 +146,7 @@ pentagon_reset(void)
   periph_clear();
   machines_periph_pentagon();
 
-  /* Earlier style Betadisk 128 interface */
+  // Earlier style Betadisk 128 interface
   periph_set_present( PERIPH_TYPE_BETA128_PENTAGON, PERIPH_PRESENT_ALWAYS );
 
   periph_set_present( PERIPH_TYPE_COVOX_FB, PERIPH_PRESENT_OPTIONAL );

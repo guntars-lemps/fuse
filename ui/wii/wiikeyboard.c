@@ -95,7 +95,7 @@ kbdthread_fn( void *arg )
   while( kbd != -1 ) {
     IOS_Ioctl( kbd, 0, NULL, 0, &event, sizeof(event) );
 
-    /* skip connect (0) and disconnect (1) events */
+    // skip connect (0) and disconnect (1) events
     if( event.msgtype != 2 ) continue;
 
     input_event_t fuse_event;
@@ -120,7 +120,7 @@ kbdthread_fn( void *arg )
 
 #undef POSTMODIFIER
 
-    /* post keyreleases: old keys that have no new keys */
+    // post keyreleases: old keys that have no new keys
     fuse_event.type = INPUT_EVENT_KEYRELEASE;
     for(i=0; i<6; i++) {
       if(oldevent.keys[i] == 0) break;
@@ -134,7 +134,7 @@ kbdthread_fn( void *arg )
       if( !found ) {
         fuse_event.types.key.spectrum_key = keysyms_remap(oldevent.keys[i]);
         fuse_event.types.key.native_key = fuse_event.types.key.spectrum_key;
-	      
+
         if( queuepos >= QUEUELEN ) {
 	  ui_error( UI_ERROR_WARNING, "%s: keyboard queue full", __func__ );
 	  continue;
@@ -184,7 +184,7 @@ wiikeyboard_init( void )
     IOS_Close(kbd);
     return 1;
   }
-  
+
   return 0;
 }
 
@@ -202,7 +202,7 @@ keyboard_update( void )
 
   for( i=0; i<releasequeuepos; i++ ) input_event(&(releasequeue[i]));
   releasequeuepos = 0;
-  
+
   LWP_MutexLock( kbdmutex );
   for(i=0; i<queuepos; i++) {
     if( queue[i].type == INPUT_EVENT_KEYRELEASE )

@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-/* Wii includes */
+// Wii includes
 #include <gccore.h>
 #include <ogcsys.h>
 
@@ -44,10 +44,10 @@
    DISPLAY_ASPECT WIDTH x DISPLAY_SCREEN_HEIGHT */
 int image_scale;
 
-/* The height and width of a 1x1 image in pixels */
+// The height and width of a 1x1 image in pixels
 int image_width, image_height;
 
-/* A copy of every pixel on the screen */
+// A copy of every pixel on the screen
 libspectrum_word display_image[2 * DISPLAY_SCREEN_HEIGHT][DISPLAY_SCREEN_WIDTH];
 
 /* An RGB image of the Spectrum screen; slightly bigger than the real
@@ -56,7 +56,7 @@ static unsigned char rgb_image[ 4 * 2 * ( DISPLAY_SCREEN_HEIGHT + 4 ) *
                                         ( DISPLAY_SCREEN_WIDTH  + 3 )   ];
 static const int rgb_pitch = ( DISPLAY_SCREEN_WIDTH + 3 ) * 4;
 
-/* The scaled image */
+// The scaled image
 static unsigned char scaled_image[ 4 * 3 * DISPLAY_SCREEN_HEIGHT *
                                   (size_t)(1.5 * DISPLAY_SCREEN_WIDTH) ];
 static const ptrdiff_t scaled_pitch = 4 * 1.5 * DISPLAY_SCREEN_WIDTH;
@@ -64,7 +64,7 @@ static const ptrdiff_t scaled_pitch = 4 * 1.5 * DISPLAY_SCREEN_WIDTH;
 static u32 *xfb = NULL;
 static GXRModeObj *rmode = NULL;
 
-/* The current size of the window (in units of DISPLAY_SCREEN_*) */
+// The current size of the window (in units of DISPLAY_SCREEN_*)
 static int wiidisplay_current_size=2;
 
 static int init_colours( void );
@@ -75,7 +75,7 @@ typedef struct {
 } rgb_t;
 
 rgb_t rgb_colours[16] = {
-  /* no bright */
+  // no bright
   {0, 0, 0}, // BLACK
   {0, 0, 192}, // BLUE
   {192, 0, 0}, // RED
@@ -84,7 +84,7 @@ rgb_t rgb_colours[16] = {
   {0, 192, 192}, // CYAN
   {192, 192, 0}, // YELLOW
   {192, 192, 192}, // WHITE
-  /* bright */
+  // bright
   {0, 0, 0}, // BLACK
   {0, 0, 255}, // BLUE
   {255, 0, 0}, // RED
@@ -167,7 +167,7 @@ init_colours( void )
 
     colour = rgb_colours[i];
 
-    /* Addition of 0.5 is to avoid rounding errors */
+    // Addition of 0.5 is to avoid rounding errors
     grey.r = grey.g = grey.b =
       ( 0.299 * colour.r + 0.587 * colour.g + 0.114 * colour.b ) + 0.5;
 
@@ -341,7 +341,7 @@ void wiidisplay_showmouse( float x, float y )
   int mousenewx = x*(DISPLAY_SCREEN_WIDTH/2-MOUSESIZEX);
   int mousenewy = y*(DISPLAY_SCREEN_HEIGHT-MOUSESIZEY);
 
-  /* if we had no old mouse and have no new mouse, forget it */
+  // if we had no old mouse and have no new mouse, forget it
   if( (mousex <= 0 || mousey <= 0) &&
       (mousenewx <= 0 || mousenewy <= 0) ) return;
 
@@ -354,7 +354,7 @@ void wiidisplay_showmouse( float x, float y )
   }
   uidisplay_area( mousex, mousey, MOUSESIZEX, MOUSESIZEY );
 
-  /* if we don't have a new mouse, remember that state and leave */
+  // if we don't have a new mouse, remember that state and leave
   if( mousenewx <= 0 || mousenewy <= 0 ) {
     mousex = mousenewx; mousey = mousenewy;
     return;
@@ -364,9 +364,9 @@ void wiidisplay_showmouse( float x, float y )
      picture and draw mouse cursor. */
   for( r=0; r<MOUSESIZEY; r++ )
     for( c=0; c<MOUSESIZEX; c++ ) {
-      /* put picture at new position into mouse cache */
+      // put picture at new position into mouse cache
       mousecache[r][c] = get_pixel( c+mousenewx, r+mousenewy );
-      /* put mouse cursor into picture */
+      // put mouse cursor into picture
       if( mousecursor[r][c] != 0xff )
 	put_pixel( mousenewx+c, mousenewy+r, mousecursor[r][c], 1 );
     }
@@ -390,7 +390,7 @@ uidisplay_area( int x, int y, int w, int h )
 
   palette = settings_current.bw_tv ? bw_colours : wiidisplay_colours;
 
-  /* Create the RGB image */
+  // Create the RGB image
   for( yy = y; yy < y + h; yy++ ) {
 
     libspectrum_dword *rgb; libspectrum_word *display;
@@ -403,7 +403,7 @@ uidisplay_area( int x, int y, int w, int h )
     for( i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
   }
 
-  /* Create scaled image */
+  // Create scaled image
   scaler_proc32( &rgb_image[ ( y + 2 ) * rgb_pitch + 4 * ( x + 1 ) ],
                  rgb_pitch,
                  &scaled_image[ scaled_y * scaled_pitch + 4 * scaled_x ],
@@ -411,11 +411,11 @@ uidisplay_area( int x, int y, int w, int h )
 
   w *= scale; h *= scale;
 
-  /* Blit to the real screen */
+  // Blit to the real screen
   int disp_x,disp_y;
   long ofs;
   u16 fb_pitch = rmode->fbWidth / 2;
-  /* ystart is an offset to center spectrum screen on wii screen */
+  // ystart is an offset to center spectrum screen on wii screen
   int ystart = ( rmode->xfbHeight - 2 * DISPLAY_SCREEN_HEIGHT ) / 4;
   u32 *dest, *next_line;
 
@@ -424,7 +424,7 @@ uidisplay_area( int x, int y, int w, int h )
     w += 1;
   }
 
-/* FIXME: optimize this procedure and implement double buffering */
+// FIXME: optimize this procedure and implement double buffering
   next_line = xfb + scaled_x / 2 + ( scaled_y + ystart ) * fb_pitch;
 
   for( disp_y = scaled_y; disp_y < scaled_y + h; disp_y++ ) {
@@ -465,7 +465,7 @@ wiidisplay_end( void )
   return 0;
 }
 
-/* Set one pixel in the display */
+// Set one pixel in the display
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
@@ -520,18 +520,18 @@ void
 uidisplay_plot16( int x, int y, libspectrum_word data,
                   libspectrum_byte ink, libspectrum_byte paper )
 {
-  /* FIXME: what should this do? */
+  // FIXME: what should this do?
   return;
 }
 
 void
 uidisplay_frame_save( void )
 {
-  /* FIXME: implement */
+  // FIXME: implement
 }
 
 void
 uidisplay_frame_restore( void )
 {
-  /* FIXME: implement */
+  // FIXME: implement
 }

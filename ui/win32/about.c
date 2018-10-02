@@ -41,7 +41,7 @@ static HFONT hBoldFont;
 void
 menu_help_about( int action )
 {
-  /* Firstly, stop emulation */
+  // Firstly, stop emulation
   fuse_emulation_pause();
 
   if( !IsWindow( fuse_hABOWnd ) ) {
@@ -53,7 +53,7 @@ menu_help_about( int action )
 
   ShowWindow( fuse_hABOWnd, SW_SHOW );
 
-  /* Carry on with emulation */
+  // Carry on with emulation
   fuse_emulation_unpause();
 }
 

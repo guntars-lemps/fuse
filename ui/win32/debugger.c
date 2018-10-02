@@ -57,7 +57,7 @@
 
  */
 
-/* The various debugger panes */
+// The various debugger panes
 typedef enum debugger_pane {
 
   DEBUGGER_PANE_BEGIN = 1, // Start marker
@@ -76,18 +76,18 @@ static int create_dialog( void );
 static int hide_hidden_panes( void );
 static UINT get_pane_menu_item( debugger_pane pane );
 static BOOL show_hide_pane( debugger_pane pane, int show );
-/* static int create_menu_bar( void ); this function is handled by rc */
+// static int create_menu_bar( void ); this function is handled by rc
 static void toggle_display( debugger_pane pane, UINT menu_item_id );
 static int create_register_display( HFONT font );
-/* int create_memory_map( void ); this function is handled by rc */
+// int create_memory_map( void ); this function is handled by rc
 static int create_breakpoints( void );
 static int create_disassembly( HFONT font );
 static int create_stack_display( HFONT font );
 static void stack_click( LPNMITEMACTIVATE lpnmitem );
 static int create_events( void );
 static void events_click( LPNMITEMACTIVATE lpnmitem );
-/* int create_command_entry( void ); this function is handled by rc */
-/* int create_buttons( void ); this function is handled by rc */
+// int create_command_entry( void ); this function is handled by rc
+// int create_buttons( void ); this function is handled by rc
 
 static int activate_debugger( void );
 static void update_memory_map( void );
@@ -111,22 +111,22 @@ static INT_PTR CALLBACK win32ui_debugger_proc( HWND hWnd, UINT msg,
 static LRESULT CALLBACK
 disassembly_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 
-/* The top line of the current disassembly */
+// The top line of the current disassembly
 static libspectrum_word disassembly_top;
 
-/* The next line below the current disassembly */
+// The next line below the current disassembly
 static libspectrum_word disassembly_bottom;
 
-/* helper constants for disassembly listview's scrollbar */
+// helper constants for disassembly listview's scrollbar
 static const int disassembly_min = 0x0000;
 static const int disassembly_max = 0xffff;
-/* Visual styles could change visible rows */
+// Visual styles could change visible rows
 static unsigned int disassembly_page = 20;
 
-/* Have we created the above yet? */
+// Have we created the above yet?
 static int dialog_created = 0;
 
-/* Is the debugger window active (as opposed to the debugger itself)? */
+// Is the debugger window active (as opposed to the debugger itself)?
 static int debugger_active;
 
 #define STUB do { printf("STUB: %s()\n", __func__); fflush(stdout); } while(0)
@@ -150,7 +150,7 @@ ui_debugger_activate( void )
 
   fuse_emulation_pause();
 
-  /* create_dialog will create the dialog or activate if it exists */
+  // create_dialog will create the dialog or activate if it exists
   if( !dialog_created ) if( create_dialog() ) return 1;
 
   ShowWindow( fuse_hDBGWnd, SW_SHOW );
@@ -166,7 +166,7 @@ ui_debugger_activate( void )
 void
 ui_breakpoints_updated( void )
 {
-  /* TODO: Refresh debugger list here */
+  // TODO: Refresh debugger list here
 }
 
 static int
@@ -229,7 +229,7 @@ show_hide_pane( debugger_pane pane, int show )
    show parameter needs to be SW_SHOW to reveal the pane,
    or SW_HIDE to hide it.
 */
-  /* FIXME: window needs to resize/collapse as panel are being hidden */
+  // FIXME: window needs to resize/collapse as panel are being hidden
   int i;
 
   switch( pane ) {
@@ -299,7 +299,7 @@ create_dialog( void )
   fuse_hDBGWnd = CreateDialog( fuse_hInstance, MAKEINTRESOURCE( IDD_DBG ),
                                fuse_hWnd, win32ui_debugger_proc );
 
-  /* The main display areas */
+  // The main display areas
   error = create_register_display( font );
   if( error ) return error;
 
@@ -311,7 +311,7 @@ create_dialog( void )
 
   error = create_events(); if( error ) return error;
 
-  /* Initially, have all the panes visible */
+  // Initially, have all the panes visible
   for( i = DEBUGGER_PANE_BEGIN; i < DEBUGGER_PANE_END; i++ ) {
 
     UINT check_item;
@@ -354,7 +354,7 @@ toggle_display( debugger_pane pane, UINT menu_item_id )
 static int
 create_register_display( HFONT font )
 {
-  /* this display is created in rc, just set the monospaced font */
+  // this display is created in rc, just set the monospaced font
   size_t i;
 
   for( i = 0; i < NUM_DBG_REGS; i++ ) {
@@ -372,7 +372,7 @@ create_breakpoints( void )
   LPCTSTR breakpoint_titles[] = { _T( "ID" ), _T( "Type" ), _T( "Value" ),
                                   _T( "Ignore" ), _T( "Life" ),
                                   _T( "Condition" ) };
-  /* set extended listview style to select full row, when an item is selected */
+  // set extended listview style to select full row, when an item is selected
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_BPS,
                                      LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
@@ -380,7 +380,7 @@ create_breakpoints( void )
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_BPS,
                       LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
-  /* create columns */
+  // create columns
   LVCOLUMN lvc;
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
   lvc.fmt = LVCFMT_LEFT;
@@ -404,16 +404,16 @@ create_disassembly( HFONT font )
 
   LPCTSTR disassembly_titles[] = { TEXT( "Address" ), TEXT( "Instruction" ) };
 
-  /* The disassembly listview itself */
+  // The disassembly listview itself
 
-  /* subclass listview to catch keydown and mousewheel messages */
+  // subclass listview to catch keydown and mousewheel messages
   HWND hwnd_list = GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_PC );
   WNDPROC orig_proc = (WNDPROC) GetWindowLongPtr( hwnd_list, GWLP_WNDPROC );
   SetProp( hwnd_list, "original_proc", (HANDLE) orig_proc );
   SetWindowLongPtr( hwnd_list, GWLP_WNDPROC,
                     (LONG_PTR) (WNDPROC) disassembly_listview_proc );
 
-  /* set extended listview style to select full row, when an item is selected */
+  // set extended listview style to select full row, when an item is selected
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_PC,
                                      LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
@@ -424,7 +424,7 @@ create_disassembly( HFONT font )
 
   win32ui_set_font( fuse_hDBGWnd, IDC_DBG_LV_PC, font );
 
-  /* create columns */
+  // create columns
   LVCOLUMN lvc;
   lvc.mask = LVCF_FMT | LVCF_TEXT;
   lvc.fmt = LVCFMT_LEFT;
@@ -436,15 +436,15 @@ create_disassembly( HFONT font )
                         ( LPARAM ) &lvc );
   }
 
-  /* Set columns width */
+  // Set columns width
   ListView_SetColumnWidth( hwnd_list, 0, LVSCW_AUTOSIZE_USEHEADER );
   ListView_SetColumnWidth( hwnd_list, 1, LVSCW_AUTOSIZE_USEHEADER );
 
-  /* Recalculate visible rows, Visual Styles could change rows height */
+  // Recalculate visible rows, Visual Styles could change rows height
   disassembly_page = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_PC,
                                          LVM_GETCOUNTPERPAGE, 0, 0 );
 
-  /* The disassembly scrollbar */
+  // The disassembly scrollbar
   SCROLLINFO si;
   si.cbSize = sizeof(si);
   si.fMask = SIF_POS | SIF_RANGE | SIF_PAGE;
@@ -465,7 +465,7 @@ create_stack_display( HFONT font )
 
   LPCTSTR stack_titles[] = { _T( "Address" ), _T( "Value" ) };
 
-  /* set extended listview style to select full row, when an item is selected */
+  // set extended listview style to select full row, when an item is selected
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_STACK,
                                      LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
@@ -475,7 +475,7 @@ create_stack_display( HFONT font )
 
   win32ui_set_font( fuse_hDBGWnd, IDC_DBG_LV_STACK, font );
 
-  /* create columns */
+  // create columns
   LVCOLUMN lvc;
   lvc.mask = LVCF_FMT | LVCF_TEXT;
   lvc.fmt = LVCFMT_LEFT;
@@ -487,7 +487,7 @@ create_stack_display( HFONT font )
                         ( LPARAM ) &lvc );
   }
 
-  /* Set columns width */
+  // Set columns width
   HWND hwnd_list = GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_STACK );
   ListView_SetColumnWidth( hwnd_list, 0, LVSCW_AUTOSIZE_USEHEADER );
   ListView_SetColumnWidth( hwnd_list, 1, LVSCW_AUTOSIZE_USEHEADER );
@@ -534,7 +534,7 @@ create_events( void )
   size_t i;
   LPCTSTR titles[] = { _T( "Time" ), _T( "Type" ) };
 
-  /* set extended listview style to select full row, when an item is selected */
+  // set extended listview style to select full row, when an item is selected
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
                                      LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
@@ -542,7 +542,7 @@ create_events( void )
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
                       LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
-  /* create columns */
+  // create columns
   LVCOLUMN lvc;
   lvc.mask = LVCF_FMT | LVCF_TEXT;
   lvc.fmt = LVCFMT_LEFT;
@@ -554,7 +554,7 @@ create_events( void )
                         ( LPARAM ) &lvc );
   }
 
-  /* Set columns width */
+  // Set columns width
   HWND hwnd_list = GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_EVENTS );
   ListView_SetColumnWidth( hwnd_list, 0, LVSCW_AUTOSIZE_USEHEADER );
   ListView_SetColumnWidth( hwnd_list, 1, LVSCW_AUTOSIZE_USEHEADER );
@@ -605,7 +605,7 @@ activate_debugger( void )
   return 0;
 }
 
-/* Update the debugger's display */
+// Update the debugger's display
 int
 ui_debugger_update( void )
 {
@@ -630,7 +630,7 @@ ui_debugger_update( void )
 
   if( !dialog_created ) return 0;
 
-  /* FIXME: verify all functions below are unicode compliant */
+  // FIXME: verify all functions below are unicode compliant
   for( i = 0; i < 12; i++ ) {
     _sntprintf( buffer, 5, "%3s ", register_name[i] );
     _sntprintf( &buffer[4], 76, format_16_bit(), *value_ptr[i] );
@@ -721,7 +721,7 @@ ui_debugger_update( void )
   update_breakpoints();
   update_disassembly();
 
-  /* And the stack display */
+  // And the stack display
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_STACK,
                       LVM_DELETEALLITEMS, 0, 0 );
 
@@ -736,7 +736,7 @@ ui_debugger_update( void )
     _sntprintf( disassembly_text[0], 40, format_16_bit(), address );
     _sntprintf( disassembly_text[1], 40, format_16_bit(), contents );
 
-    /* add the item */
+    // add the item
     lvi.iItem = i;
     lvi.iSubItem = 0;
     lvi.pszText = disassembly_text[0];
@@ -748,7 +748,7 @@ ui_debugger_update( void )
                         ( LPARAM ) &lvi );
   }
 
-  /* And the events display */
+  // And the events display
   update_events();
 
   return 0;
@@ -780,7 +780,7 @@ update_memory_map( void )
       SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_MAP11 + ( row * 4 ),
                           WM_SETTEXT, ( WPARAM ) 0, ( LPARAM ) buffer );
 
-      /* FIXME: memory_source_description is not unicode */
+      // FIXME: memory_source_description is not unicode
       _snprintf( buffer, 40, TEXT( "%s %d" ),
                  memory_source_description( page->source ), page->page_num );
 
@@ -805,11 +805,11 @@ update_memory_map( void )
       offset = page->offset;
     }
 
-    /* We expect the next page to have an increased offset */
+    // We expect the next page to have an increased offset
     offset += MEMORY_PAGE_SIZE;
   }
 
-  /* Hide unused rows */
+  // Hide unused rows
   for( i = row; i < 8; i++ ) {
     for( j = 0; j < 4; j++ ) {
       SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_MAP11 + ( i * 4 ) + j,
@@ -822,7 +822,7 @@ update_memory_map( void )
 static void
 update_breakpoints( void )
 {
-  /* FIXME: review this function for unicode compatibility */
+  // FIXME: review this function for unicode compatibility
   TCHAR buffer[ 1024 ],
     *breakpoint_text[6] = { &buffer[  0], &buffer[ 40], &buffer[80],
 			    &buffer[120], &buffer[160], &buffer[200] };
@@ -833,7 +833,7 @@ update_breakpoints( void )
   lvi.mask = LVIF_TEXT;
   int i;
 
-  /* Create the breakpoint list */
+  // Create the breakpoint list
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_BPS,
                       LVM_DELETEALLITEMS, 0, 0 );
 
@@ -888,11 +888,11 @@ update_breakpoints( void )
       _tcscpy( breakpoint_text[5], "" );
     }
 
-    /* get the count of items to insert as last element */
+    // get the count of items to insert as last element
     lvi.iItem = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_BPS,
                                     LVM_GETITEMCOUNT, 0, 0 );
 
-    /* append the breakpoint items */
+    // append the breakpoint items
     for( i = 0; i < 6; i++ ) {
       lvi.iSubItem = i;
       lvi.pszText = breakpoint_text[i];
@@ -924,14 +924,14 @@ update_disassembly( void )
     _sntprintf( disassembly_text[0], 40, format_16_bit(), address );
     debugger_disassemble( disassembly_text[1], 40, &length, address );
 
-    /* pad to 16 characters (long instruction) to avoid varying width */
+    // pad to 16 characters (long instruction) to avoid varying width
     l = _tcslen( disassembly_text[1] );
     while( l < 16 ) disassembly_text[1][l++] = ' ';
     disassembly_text[1][l] = 0;
 
     address += length;
 
-    /* append the item */
+    // append the item
     lvi.iItem = i;
     lvi.iSubItem = 0;
     lvi.pszText = disassembly_text[0];
@@ -949,7 +949,7 @@ update_disassembly( void )
 static void
 update_events( void )
 {
-  /* clear the listview */
+  // clear the listview
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
                       LVM_DELETEALLITEMS, 0, 0 );
 
@@ -967,14 +967,14 @@ add_event( gpointer data, gpointer user_data GCC_UNUSED )
   LV_ITEM lvi;
   lvi.mask = LVIF_TEXT;
 
-  /* Skip events which have been removed */
+  // Skip events which have been removed
   if( ptr->type == event_type_null ) return;
 
   _sntprintf( event_text[0], 40, "%d", ptr->tstates );
-  /* FIXME: event_name() is not unicode compliant */
+  // FIXME: event_name() is not unicode compliant
   _tcsncpy( event_text[1], event_name( ptr->type ), 40 );
 
-  /* append the item */
+  // append the item
   lvi.iItem = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
                                   LVM_GETITEMCOUNT, 0, 0 );
   lvi.iSubItem = 0;
@@ -996,7 +996,7 @@ deactivate_debugger( void )
   return 0;
 }
 
-/* Set the disassembly to start at 'address' */
+// Set the disassembly to start at 'address'
 int
 ui_debugger_disassemble( libspectrum_word address )
 {
@@ -1009,20 +1009,20 @@ ui_debugger_disassemble( libspectrum_word address )
   SetScrollInfo( GetDlgItem( fuse_hDBGWnd, IDC_DBG_SB_PC ),
                  SB_CTL, &si, TRUE );
 
-  /* And update the disassembly if the debugger is active */
+  // And update the disassembly if the debugger is active
   if( debugger_active ) update_disassembly();
 
   return 0;
 }
 
-/* Called when the disassembly scrollbar is moved */
+// Called when the disassembly scrollbar is moved
 static int
 move_disassembly( WPARAM scroll_command )
 {
   libspectrum_word address;
   int cursor_row;
 
-  /* in Windows we have to read the command and scroll the scrollbar manually */
+  // in Windows we have to read the command and scroll the scrollbar manually
   switch( LOWORD( scroll_command ) ) {
     case SB_BOTTOM:
       if( disassembly_bottom == disassembly_min ) return 0;
@@ -1051,10 +1051,10 @@ move_disassembly( WPARAM scroll_command )
       break;
     case SB_THUMBPOSITION:
     case SB_THUMBTRACK:
-      /* just set disassembly_top to that value */
+      // just set disassembly_top to that value
       address = HIWORD( scroll_command );
 
-      /* The scrollbar should constrain to min/max values */
+      // The scrollbar should constrain to min/max values
       if( address > disassembly_max - disassembly_page )
         address = debugger_search_instruction( disassembly_min,
                                                -disassembly_page );
@@ -1063,14 +1063,14 @@ move_disassembly( WPARAM scroll_command )
       return 1;
   }
 
-  /* Get selected row */
+  // Get selected row
   cursor_row = ListView_GetNextItem( GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_PC ),
                                      -1, LVNI_SELECTED );
 
-  /* Scroll to new position */
+  // Scroll to new position
   ui_debugger_disassemble( address );
 
-  /* Mark selected row */
+  // Mark selected row
   if( cursor_row >= 0 ) {
     ListView_SetItemState( GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_PC ),
                            cursor_row, LVIS_FOCUSED|LVIS_SELECTED,
@@ -1080,14 +1080,14 @@ move_disassembly( WPARAM scroll_command )
   return 0;
 }
 
-/* Evaluate the command currently in the entry box */
+// Evaluate the command currently in the entry box
 static void
 evaluate_command( void )
 {
   TCHAR *buffer;
   int buffer_size;
 
-  /* poll the size of the value in Evaluate text box first */
+  // poll the size of the value in Evaluate text box first
   buffer_size = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_ED_EVAL, WM_GETTEXTLENGTH,
                                    (WPARAM) 0, (LPARAM) 0 );
   buffer = malloc( ( buffer_size + 1 ) * sizeof( TCHAR ) );
@@ -1096,7 +1096,7 @@ evaluate_command( void )
     return;
   }
 
-  /* get the value in Evaluate text box first */
+  // get the value in Evaluate text box first
   if( SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_ED_EVAL, WM_GETTEXT,
                           (WPARAM) ( buffer_size + 1 ),
                           (LPARAM) buffer ) != buffer_size ) {
@@ -1105,7 +1105,7 @@ evaluate_command( void )
     return;
   }
 
-  /* FIXME: need to convert from TCHAR to char to comply with unicode */
+  // FIXME: need to convert from TCHAR to char to comply with unicode
   debugger_command_evaluate( buffer );
 
   free( buffer );
@@ -1169,7 +1169,7 @@ win32ui_debugger_proc( HWND hWnd GCC_UNUSED, UINT msg,
           evaluate_command();
           return 0;
 
-        /* menus */
+        // menus
         case IDM_DBG_REG:
           toggle_display( DEBUGGER_PANE_REGISTERS, IDM_DBG_REG );
           return 0;
@@ -1228,7 +1228,7 @@ disassembly_key_press( HWND hWnd, WPARAM wParam )
 
   initial_top = disassembly_top;
 
-  /* Get selected row */
+  // Get selected row
   cursor_row = ListView_GetNextItem( hWnd, -1, LVNI_SELECTED );
 
   switch( wParam ) {
@@ -1270,7 +1270,7 @@ disassembly_key_press( HWND hWnd, WPARAM wParam )
   }
 
   if( initial_top != disassembly_top ) {
-    /* Mark selected row */
+    // Mark selected row
     if( cursor_row >= 0 ) {
       ListView_SetItemState( hWnd, cursor_row, LVIS_FOCUSED|LVIS_SELECTED,
                              LVIS_FOCUSED|LVIS_SELECTED );
@@ -1288,17 +1288,17 @@ disassembly_wheel_scroll( HWND hWnd, WPARAM wParam )
   int cursor_row;
   short delta;
 
-  /* Get selected row */
+  // Get selected row
   cursor_row = ListView_GetNextItem( hWnd, -1, LVNI_SELECTED );
 
-  /* Convert wheel displacement to instruction displacement */
+  // Convert wheel displacement to instruction displacement
   delta = (short) HIWORD( wParam ) / WHEEL_DELTA;
 
-  /* Scroll to new position */
+  // Scroll to new position
   address = debugger_search_instruction( disassembly_top, -delta );
   ui_debugger_disassemble( address );
 
-  /* Mark selected row */
+  // Mark selected row
   if( cursor_row >= 0 ) {
     ListView_SetItemState( hWnd, cursor_row, LVIS_FOCUSED|LVIS_SELECTED,
                            LVIS_FOCUSED|LVIS_SELECTED );

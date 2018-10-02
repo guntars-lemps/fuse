@@ -42,7 +42,7 @@
    DISPLAY_ASPECT WIDTH x DISPLAY_SCREEN_HEIGHT */
 int image_scale;
 
-/* The height and width of a 1x1 image in pixels */
+// The height and width of a 1x1 image in pixels
 int image_width, image_height;
 
 /* A copy of every pixel on the screen, replaceable by plotting directly into
@@ -57,12 +57,12 @@ static guchar rgb_image[ 4 * 2 * ( DISPLAY_SCREEN_HEIGHT + 4 ) *
                                  ( DISPLAY_SCREEN_WIDTH  + 3 )   ];
 static const gint rgb_pitch = ( DISPLAY_SCREEN_WIDTH + 3 ) * 4;
 
-/* The scaled image */
+// The scaled image
 static guchar scaled_image[ 3 * DISPLAY_SCREEN_HEIGHT *
                             6 * DISPLAY_SCREEN_WIDTH ];
 static const ptrdiff_t scaled_pitch = 6 * DISPLAY_SCREEN_WIDTH;
 
-/* The colour palette */
+// The colour palette
 static const guchar rgb_colours[16][3] = {
 
   {   0,   0,   0 },
@@ -84,11 +84,11 @@ static const guchar rgb_colours[16][3] = {
 
 };
 
-/* And the colours (and black and white 'colours') in 32-bit format */
+// And the colours (and black and white 'colours') in 32-bit format
 libspectrum_dword gtkdisplay_colours[16];
 static libspectrum_dword bw_colours[16];
 
-/* Colour format for the back buffer in endianess-order */
+// Colour format for the back buffer in endianess-order
 typedef enum {
   FORMAT_x8r8g8b8, // Cairo  (GTK3)
   FORMAT_x8b8g8r8 // GdkRGB (GTK2)
@@ -103,10 +103,10 @@ static cairo_surface_t *surface = NULL;
 
 #endif // #if GTK_CHECK_VERSION( 3, 0, 0 )
 
-/* The current size of the window (in units of DISPLAY_SCREEN_*) */
+// The current size of the window (in units of DISPLAY_SCREEN_*)
 static int gtkdisplay_current_size=1;
 
-/* Extra height used for menu and status bars */
+// Extra height used for menu and status bars
 static int extra_height = 0;
 
 static int init_colours( colour_format_t format );
@@ -114,7 +114,7 @@ static void gtkdisplay_area(int x, int y, int width, int height);
 static void register_scalers( int force_scaler );
 static void gtkdisplay_load_gfx_mode( void );
 
-/* Callbacks */
+// Callbacks
 
 #if !GTK_CHECK_VERSION( 3, 0, 0 )
 static gint gtkdisplay_expose(GtkWidget *widget, GdkEvent *event,
@@ -141,7 +141,7 @@ init_colours( colour_format_t format )
     green = rgb_colours[i][1];
     blue  = rgb_colours[i][2];
 
-    /* Addition of 0.5 is to avoid rounding errors */
+    // Addition of 0.5 is to avoid rounding errors
     grey = ( 0.299 * red + 0.587 * green + 0.114 * blue ) + 0.5;
 
 #ifdef WORDS_BIGENDIAN
@@ -244,7 +244,7 @@ drawing_area_resize( int width, int height, int force_scaler )
   if( size > height / DISPLAY_SCREEN_HEIGHT )
     size = height / DISPLAY_SCREEN_HEIGHT;
 
-  /* If we're the same size as before, no need to do anything else */
+  // If we're the same size as before, no need to do anything else
   if( size == gtkdisplay_current_size ) return 0;
 
   gtkdisplay_current_size = size;
@@ -255,7 +255,7 @@ drawing_area_resize( int width, int height, int force_scaler )
 
 #if GTK_CHECK_VERSION( 3, 0, 0 )
 
-  /* Create a bigger surface for the new display size */
+  // Create a bigger surface for the new display size
   float scale = (float)gtkdisplay_current_size / image_scale;
   if( surface ) cairo_surface_destroy( surface );
 
@@ -311,7 +311,7 @@ register_scalers( int force_scaler )
   drawing_area_scale = (float)gtkdisplay_current_size / image_scale;
   scaling_factor = scaler_get_scaling_factor( current_scaler );
 
-  /* Override scaler if the image doesn't fit well in the drawing area */
+  // Override scaler if the image doesn't fit well in the drawing area
   if( force_scaler && drawing_area_scale != scaling_factor ) {
 
     switch( gtkdisplay_current_size ) {
@@ -358,7 +358,7 @@ uidisplay_area( int x, int y, int w, int h )
 
   palette = settings_current.bw_tv ? bw_colours : gtkdisplay_colours;
 
-  /* Create the RGB image */
+  // Create the RGB image
   for( yy = y; yy < y + h; yy++ ) {
 
     libspectrum_dword *rgb; libspectrum_word *display;
@@ -371,7 +371,7 @@ uidisplay_area( int x, int y, int w, int h )
     for( i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
   }
 
-  /* Create scaled image */
+  // Create scaled image
   scaler_proc32( &rgb_image[ ( y + 2 ) * rgb_pitch + 4 * ( x + 1 ) ],
                  rgb_pitch,
                  &scaled_image[ scaled_y * scaled_pitch + 4 * scaled_x ],
@@ -379,7 +379,7 @@ uidisplay_area( int x, int y, int w, int h )
 
   w *= scale; h *= scale;
 
-  /* Blit to the real screen */
+  // Blit to the real screen
   gtkdisplay_area( scaled_x, scaled_y, w, h );
 }
 
@@ -406,7 +406,7 @@ uidisplay_hotswap_gfx_mode( void )
 {
   fuse_emulation_pause();
 
-  /* Setup the new GFX mode */
+  // Setup the new GFX mode
   gtkdisplay_load_gfx_mode();
 
   fuse_emulation_unpause();
@@ -420,7 +420,7 @@ uidisplay_end( void )
   return 0;
 }
 
-/* Set one pixel in the display */
+// Set one pixel in the display
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
@@ -506,11 +506,11 @@ uidisplay_plot16( int x, int y, libspectrum_word data,
   }
 }
 
-/* Callbacks */
+// Callbacks
 
 #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
-/* Called by gtkui_drawing_area on "expose_event" */
+// Called by gtkui_drawing_area on "expose_event"
 static gint
 gtkdisplay_expose( GtkWidget *widget GCC_UNUSED, GdkEvent *event,
                    gpointer data GCC_UNUSED )
@@ -533,11 +533,11 @@ drawing_area_resize_callback( GtkWidget *widget GCC_UNUSED, GdkEvent *event,
 
 #else // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
-/* Called by gtkui_drawing_area on "draw" event */
+// Called by gtkui_drawing_area on "draw" event
 static gboolean
 gtkdisplay_draw( GtkWidget *widget, cairo_t *cr, gpointer user_data )
 {
-  /* Create a new surface for this gfx mode */
+  // Create a new surface for this gfx mode
   if( !surface ) {
     float scale = (float)gtkdisplay_current_size / image_scale;
 
@@ -549,7 +549,7 @@ gtkdisplay_draw( GtkWidget *widget, cairo_t *cr, gpointer user_data )
                                            scaled_pitch );
   }
 
-  /* Repaint the drawing area */
+  // Repaint the drawing area
   cairo_set_source_surface( cr, surface, 0, 0 );
   cairo_set_operator( cr, CAIRO_OPERATOR_SOURCE );
   cairo_paint( cr );
@@ -589,10 +589,10 @@ gtkdisplay_update_geometry( void )
      don't set geometry of widgets. See [bugs:#344] */
   geometry_widget = NULL;
 
-  /* Add extra space for menu bar */
+  // Add extra space for menu bar
   extra_height = gtkui_menubar_get_height();
 
-  /* Add extra space for status bar + padding */
+  // Add extra space for status bar + padding
   if( settings_current.statusbar ) {
     extra_height += gtkstatusbar_get_height();
   }
@@ -644,7 +644,7 @@ gtkdisplay_load_gfx_mode( void )
 
 #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
-  /* This function should be innocuous when the main window is shown */
+  // This function should be innocuous when the main window is shown
   gtk_window_set_default_size( GTK_WINDOW( gtkui_window ),
                                scale * image_width,
                                scale * image_height + extra_height );
@@ -656,6 +656,6 @@ gtkdisplay_load_gfx_mode( void )
   gtk_window_resize( GTK_WINDOW( gtkui_window ), scale * image_width,
                      scale * image_height + extra_height );
 
-  /* Redraw the entire screen... */
+  // Redraw the entire screen...
   display_refresh_all();
 }

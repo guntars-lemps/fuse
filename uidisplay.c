@@ -54,10 +54,10 @@ void uidisplay_spectrum_screen( const libspectrum_byte *screen, int border )
 
     for( x=0; x < DISPLAY_WIDTH_COLS; x++ ) {
 
-      /* Get the attribute byte */
+      // Get the attribute byte
       attr = screen[ display_attr_start[y] + x ];
-      
-      /* Split it into (possibly bright) INK and PAPER */
+
+      // Split it into (possibly bright) INK and PAPER
       ink = (attr & 0x07) + ( (attr & 0x40) >> 3 );
       paper = (attr & ( 0x0f << 3 ) ) >> 3;
 

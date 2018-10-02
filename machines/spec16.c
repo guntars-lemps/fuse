@@ -91,7 +91,7 @@ spec16_reset( void )
 {
   int error;
 
-  error = machine_load_rom( 0, settings_current.rom_16, 
+  error = machine_load_rom( 0, settings_current.rom_16,
                             settings_default.rom_16, 0x4000 );
   if( error ) return error;
 
@@ -101,7 +101,7 @@ spec16_reset( void )
   machines_periph_48();
   periph_update();
 
-  /* The one RAM page is contended */
+  // The one RAM page is contended
   memory_ram_set_16k_contention( 5, 1 );
 
   memory_map_16k( 0x0000, memory_map_rom, 0 );

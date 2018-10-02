@@ -122,7 +122,7 @@ win32ui_pokemem_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
               old_state = ( lpnmitem->uOldState & LVIS_STATEIMAGEMASK ) >> 12;
               trainer_t *trainer = (trainer_t *)lpnmitem->lParam;
 
-              /* Prevent the check of disabled trainers */
+              // Prevent the check of disabled trainers
               if( new_state != old_state && trainer->disabled )
               {
                 SetWindowLongPtr( hWnd, DWLP_MSGRESULT, TRUE );
@@ -142,7 +142,7 @@ win32ui_pokemem_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
               old_state = ( lpnmitem->uOldState & LVIS_STATEIMAGEMASK ) >> 12;
               trainer_t *trainer = (trainer_t *)lpnmitem->lParam;
 
-              /* Trainer checked, ask for custom value if needed */
+              // Trainer checked, ask for custom value if needed
               if( new_state != old_state && new_state == 2 && !trainer->active
                   && trainer->ask_value ) {
                 ListView_SetItemState( nmhdr->hwndFrom, lpnmitem->iItem,
@@ -175,14 +175,14 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     }
 
     case WM_VSCROLL:
-      /* do scroll and move edit */
+      // do scroll and move edit
       if( hwnd_edit ) {
         PostMessage( hWnd, WM_USER, (WPARAM) hwnd_edit, (LPARAM) hWnd );
       }
       break;
 
     case WM_HSCROLL:
-      /* do scroll and move edit */
+      // do scroll and move edit
       if( hwnd_edit ) {
         PostMessage( hWnd, WM_USER, (WPARAM) hwnd_edit, (LPARAM) hWnd );
       }
@@ -202,10 +202,10 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
       int result = ListView_SubItemHitTest( hWnd, &itemclicked );
 
-      /* Clicked on Value column? */
+      // Clicked on Value column?
       if( result >= 0 && itemclicked.iSubItem ) {
 
-        /* Get trainer */
+        // Get trainer
         LV_ITEM lvi;
         memset( &lvi, 0, sizeof( lvi ) );
         lvi.mask = LVIF_PARAM;
@@ -213,7 +213,7 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
         SendMessage( hWnd, LVM_GETITEM, 0, (LPARAM)&lvi );
         trainer_t *trainer = (trainer_t *)lvi.lParam;
 
-        /* Ask for custom value */
+        // Ask for custom value
         if( !trainer->active && trainer->ask_value  ) {
           ListView_SetItemState( hWnd, itemclicked.iItem, LVIS_SELECTED,
                                  LVIS_SELECTED );
@@ -237,7 +237,7 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
           LVITEM lvi;
           long val;
 
-          /* Edit cancelled? */
+          // Edit cancelled?
           if( !dispinfo->item.pszText ) return TRUE;
 
           memset( &lvi, 0, sizeof( lvi ) );
@@ -246,18 +246,18 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
           lvi.pszText = ( dispinfo->item.cchTextMax > 1 )?
                         dispinfo->item.pszText : (LPTSTR) TEXT( "0" );
 
-          /* Validate value */
+          // Validate value
           val = _ttol( lvi.pszText );
           if( val > 256 ) {
             val = 0;
             lvi.pszText = (LPTSTR) TEXT( "0" );
           }
 
-          /* Update listview */
+          // Update listview
           SendMessage( hWnd, LVM_SETITEMTEXT, (WPARAM) lvi.iItem,
                        (LPARAM) &lvi );
 
-          /* Update trainer */
+          // Update trainer
           memset( &lvi, 0, sizeof( lvi ) );
           lvi.mask = LVIF_PARAM;
           lvi.iItem = dispinfo->item.iItem;
@@ -291,7 +291,7 @@ edit_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
     case WM_GETDLGCODE:
     {
-      /* Allow ESC and Return keystroke capture */
+      // Allow ESC and Return keystroke capture
       MSG *m = (MSG *)lParam;
       if( m && ( m->wParam == VK_RETURN || m->wParam == VK_ESCAPE ) )
         return DLGC_WANTALLKEYS;
@@ -301,12 +301,12 @@ edit_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     case WM_KEYDOWN:
     {
       if( wParam == VK_RETURN ) {
-        /* Lost focus to confirm value */
+        // Lost focus to confirm value
         SetFocus( GetParent( hWnd ) );
         return TRUE;
       }
       else if ( wParam == VK_ESCAPE ) {
-        /* Lost focus to cancel edit */
+        // Lost focus to cancel edit
         cancel_edit = TRUE;
         SetFocus( GetParent( hWnd ) );
         return TRUE;
@@ -316,7 +316,7 @@ edit_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
     case WM_KILLFOCUS:
     {
-      /* Notify list end of label edit */
+      // Notify list end of label edit
       LV_DISPINFO lvDispinfo;
       memset( &lvDispinfo, 0, sizeof( LV_DISPINFO ) );
       lvDispinfo.hdr.hwndFrom = hWnd;
@@ -355,12 +355,12 @@ initialize_dialog( HWND hwnd_dialog )
   fuse_hPMWnd = hwnd_dialog;
   hwnd_list = GetDlgItem( hwnd_dialog, IDC_PM_LIST );
 
-  /* Replace message handler */
+  // Replace message handler
   WNDPROC orig_proc = (WNDPROC) GetWindowLongPtr( hwnd_list, GWLP_WNDPROC );
   SetProp( hwnd_list, "original_proc", (HANDLE) orig_proc );
   SetWindowLongPtr( hwnd_list, GWLP_WNDPROC, (LONG_PTR) (WNDPROC) listview_proc );
 
-  /* Set text limits */
+  // Set text limits
   SendDlgItemMessage( hwnd_dialog, IDC_PM_BANK_EDIT,  EM_LIMITTEXT, 1, 0 );
   SendDlgItemMessage( hwnd_dialog, IDC_PM_ADDR_EDIT,  EM_LIMITTEXT, 5, 0 );
   SendDlgItemMessage( hwnd_dialog, IDC_PM_VALUE_EDIT, EM_LIMITTEXT, 3, 0 );
@@ -373,14 +373,14 @@ initialize_dialog( HWND hwnd_dialog )
   lv_ext_style |= LVS_EX_CHECKBOXES;
   SendMessage( hwnd_list, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
-  /* Calculate columns width, reserve space for vertical scrollbar */
+  // Calculate columns width, reserve space for vertical scrollbar
   NONCLIENTMETRICS ncm;
   ncm.cbSize = sizeof( NONCLIENTMETRICS );
   SystemParametersInfo( SPI_GETNONCLIENTMETRICS, ncm.cbSize, &ncm, 0 );
   GetClientRect( hwnd_list, &rect );
   cx = rect.right - rect.left - ncm.iScrollWidth;
 
-  /* Create trainer column */
+  // Create trainer column
   LVCOLUMN lvc;
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
   lvc.fmt = LVCFMT_LEFT;
@@ -388,19 +388,19 @@ initialize_dialog( HWND hwnd_dialog )
   lvc.pszText = (LPTSTR) TEXT( "Trainer" );
   SendMessage( hwnd_list, LVM_INSERTCOLUMN, 0, (LPARAM) &lvc );
 
-  /* Create value column */
+  // Create value column
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
   lvc.cx = cx >> 2;
   lvc.pszText = (LPTSTR) TEXT( "Value" );
   SendMessage( hwnd_list, LVM_INSERTCOLUMN, 1, (LPARAM) &lvc );
 
-  /* Fill listview with data */
+  // Fill listview with data
   if( trainer_list ) {
-    /* Allocate memory */
+    // Allocate memory
     guint length = g_slist_length( trainer_list );
     SendMessage( hwnd_list, LVM_SETITEMCOUNT, length, 0 );
 
-    /* Loop data model */
+    // Loop data model
     g_slist_foreach( trainer_list, trainer_add, hwnd_list );
   }
 }
@@ -416,10 +416,10 @@ trainer_add( gpointer data, gpointer user_data )
 
   if( !trainer ) return;
 
-  /* Get count of items */
+  // Get count of items
   i = SendMessage( hwnd_list, LVM_GETITEMCOUNT, 0, 0 );
 
-  /* add trainer */
+  // add trainer
   memset( &lvi, 0, sizeof( lvi ) );
   lvi.mask = LVIF_TEXT | LVIF_PARAM;
   lvi.iItem = i;
@@ -430,7 +430,7 @@ trainer_add( gpointer data, gpointer user_data )
   lvi.lParam = (LPARAM)trainer;
   SendMessage( hwnd_list, LVM_INSERTITEM, 0, (LPARAM) &lvi );
 
-  /* add value */
+  // add value
   if( trainer->ask_value ) {
     _sntprintf( buffer, 80, "%d", trainer->value );
     memset( &lvi, 0, sizeof( lvi ) );
@@ -441,7 +441,7 @@ trainer_add( gpointer data, gpointer user_data )
     SendMessage( hwnd_list, LVM_SETITEM, 0, (LPARAM) &lvi );
   }
 
-  /* mark trainer checked or disabled */
+  // mark trainer checked or disabled
   if( trainer->disabled )
     state = 0;
   else
@@ -460,37 +460,37 @@ create_custom_edit( HWND parent, int item, int subitem )
   RECT subitemrect;
   int width, height;
 
-  /* Get item bounds */
+  // Get item bounds
   subitemrect.top = subitem;
   subitemrect.left = LVIR_BOUNDS;
   SendMessage( parent, LVM_GETSUBITEMRECT, item, (LPARAM) &subitemrect );
   height = subitemrect.bottom - subitemrect.top;
   width = subitemrect.right - subitemrect.left;
 
-  /* Create custom edit */
+  // Create custom edit
   hwnd_edit = CreateWindowEx( WS_EX_CLIENTEDGE, "EDIT", "",
                               WS_CHILD | WS_VISIBLE | ES_NUMBER,
                               subitemrect.left, subitemrect.top, width, height,
                               parent, (HMENU) IDC_PM_LIST_EDIT,
                               GetModuleHandle( NULL ), NULL );
   if( !hwnd_edit ) return;
- 
-  /* Replace message handler */
+
+  // Replace message handler
   WNDPROC orig_proc = (WNDPROC) GetWindowLongPtr( hwnd_edit, GWLP_WNDPROC );
   SetProp( hwnd_edit, "original_proc", (HANDLE) orig_proc );
   SetWindowLongPtr( hwnd_edit, GWLP_WNDPROC, (LONG_PTR) (WNDPROC) edit_proc );
 
-  /* Set proper font custom edit */
+  // Set proper font custom edit
   HFONT hFont = (HFONT) SendMessage( parent, WM_GETFONT, 0, 0 );
   SendMessage( hwnd_edit, WM_SETFONT, (WPARAM) hFont, (LPARAM) FALSE );
 
-  /* Set custom edit text */
+  // Set custom edit text
   TCHAR szEditText[4];
   SendMessage( hwnd_edit, EM_LIMITTEXT, 3, 0 );
   ListView_GetItemText( parent, item, subitem, szEditText, 4 );
   SendMessage( hwnd_edit, WM_SETTEXT, 0, (LPARAM) szEditText );
 
-  /* Focus edit control and select text */
+  // Focus edit control and select text
   SetFocus( hwnd_edit );
   SendMessage( hwnd_edit, EM_SETSEL, 0, -1 );
 
@@ -506,17 +506,17 @@ move_custom_edit( HWND hwnd_c_edit, HWND hwnd_parent )
   RECT header_rect, item_rect;
   int width, height;
 
-  /* Get current item position */
+  // Get current item position
   item_rect.top = subitem_edit;
   item_rect.left = LVIR_BOUNDS;
   SendMessage( hwnd_parent, LVM_GETSUBITEMRECT, item_edit, (LPARAM) &item_rect );
 
-  /* Get header position */
+  // Get header position
   hwnd_header = (HWND)SendMessage( hwnd_parent, LVM_GETHEADER, 0, 0 );
   GetWindowRect( hwnd_header, &header_rect );
   MapWindowPoints( HWND_DESKTOP, hwnd_parent, (LPPOINT) &header_rect, 2 );
 
-  /* Move Edit along with item */
+  // Move Edit along with item
   if( item_rect.top >= header_rect.bottom ) {
     width = item_rect.right - item_rect.left;
     height = item_rect.bottom - item_rect.top;
@@ -525,7 +525,7 @@ move_custom_edit( HWND hwnd_c_edit, HWND hwnd_parent )
                   width, height, SWP_NOZORDER | SWP_SHOWWINDOW );
   }
   else {
-    /* Hide custom edit when scrolls above header */
+    // Hide custom edit when scrolls above header
     SetWindowPos( hwnd_c_edit, NULL, 0, 0, 0, 0,
                   SWP_NOMOVE | SWP_NOZORDER | SWP_NOSIZE | SWP_HIDEWINDOW );
   }
@@ -536,7 +536,7 @@ pokemem_update_list( void )
 {
   int i, items;
 
-  /* Get count of items */
+  // Get count of items
   items = SendDlgItemMessage( fuse_hPMWnd, IDC_PM_LIST, LVM_GETITEMCOUNT,
                               0, 0 );
 
@@ -577,7 +577,7 @@ pokemem_add_custom_poke( void )
   HWND hwnd_control;
   trainer_t *trainer;
 
-  /* Parse bank */
+  // Parse bank
   length = SendDlgItemMessage( fuse_hPMWnd, IDC_PM_BANK_EDIT, WM_GETTEXT,
                                (WPARAM) buffer_size, (LPARAM) buffer );
 
@@ -590,11 +590,11 @@ pokemem_add_custom_poke( void )
     return;
   }
 
-  /* Parse address */
+  // Parse address
   length = SendDlgItemMessage( fuse_hPMWnd, IDC_PM_ADDR_EDIT, WM_GETTEXT,
                                (WPARAM) buffer_size, (LPARAM) buffer );
 
-  /* TODO: accept hex address */
+  // TODO: accept hex address
   a = ( length )? _ttol( buffer ) : 0;
 
   if( !length || a < 0 || a > 65535  ) {
@@ -605,7 +605,7 @@ pokemem_add_custom_poke( void )
     return;
   }
 
-  /* Parse value */
+  // Parse value
   length = SendDlgItemMessage( fuse_hPMWnd, IDC_PM_VALUE_EDIT, WM_GETTEXT,
                                (WPARAM) buffer_size, (LPARAM) buffer );
 
@@ -618,7 +618,7 @@ pokemem_add_custom_poke( void )
     return;
   }
 
-  /* Updadate model and view */
+  // Updadate model and view
   trainer = pokemem_trainer_list_add( b, a, v );
   if( !trainer ) {
     ui_error( UI_ERROR_ERROR, "Cannot add trainer" );
@@ -628,7 +628,7 @@ pokemem_add_custom_poke( void )
   hwnd_control = GetDlgItem( fuse_hPMWnd, IDC_PM_LIST );
   trainer_add( trainer, hwnd_control );
 
-  /* Mark custom trainer for activate */
+  // Mark custom trainer for activate
   if( !trainer->active && !trainer->disabled ) {
     LV_ITEM lvi;
     int index;
@@ -643,12 +643,12 @@ pokemem_add_custom_poke( void )
                         (WPARAM) index, (LPARAM) &lvi );
   }
 
-  /* Clear custom fields */
+  // Clear custom fields
   SetDlgItemText( fuse_hPMWnd, IDC_PM_BANK_EDIT,  NULL );
   SetDlgItemText( fuse_hPMWnd, IDC_PM_ADDR_EDIT,  NULL );
   SetDlgItemText( fuse_hPMWnd, IDC_PM_VALUE_EDIT, NULL );
 
-  /* Focus for new input */
+  // Focus for new input
   hwnd_control = GetDlgItem( fuse_hPMWnd, IDC_PM_ADDR_EDIT );
   SendMessage( fuse_hPMWnd, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
 }

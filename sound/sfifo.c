@@ -69,7 +69,7 @@ int sfifo_init(sfifo_t *f, int size)
 	for(; f->size <= size; f->size <<= 1)
 		;
 
-	/* Get buffer */
+	// Get buffer
 	if( 0 == (f->buffer = malloc(f->size)) )
 		return -ENOMEM;
 
@@ -90,7 +90,7 @@ void sfifo_close(sfifo_t *f)
  */
 void sfifo_flush(sfifo_t *f)
 {
-	/* Reset positions */
+	// Reset positions
 	f->readpos = 0;
 	f->writepos = 0;
 }
@@ -108,7 +108,7 @@ int sfifo_write(sfifo_t *f, const void *_buf, int len)
 	if(!f->buffer)
 		return -ENODEV; // No buffer!
 
-	/* total = len = min(space, len) */
+	// total = len = min(space, len)
 	total = sfifo_space(f);
 	DBG(printf("sfifo_space() = %d\n",total));
 	if(len > total)
@@ -143,7 +143,7 @@ int sfifo_write_user(sfifo_t *f, const void *buf, int len)
 	if(!f->buffer)
 		return -ENODEV; // No buffer!
 
-	/* total = len = min(space, len) */
+	// total = len = min(space, len)
 	total = sfifo_space(f);
 	if(len > total)
 		len = total;
@@ -183,7 +183,7 @@ int sfifo_read(sfifo_t *f, void *_buf, int len)
 	if(!f->buffer)
 		return -ENODEV; // No buffer!
 
-	/* total = len = min(used, len) */
+	// total = len = min(used, len)
 	total = sfifo_used(f);
 	DBG(printf("sfifo_used() = %d\n",total));
 	if(len > total)
@@ -218,7 +218,7 @@ int sfifo_read_user(sfifo_t *f, void *buf, int len)
 	if(!f->buffer)
 		return -ENODEV; // No buffer!
 
-	/* total = len = min(used, len) */
+	// total = len = min(used, len)
 	total = sfifo_used(f);
 	if(len > total)
 		len = total;

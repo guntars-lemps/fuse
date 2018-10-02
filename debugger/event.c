@@ -126,7 +126,7 @@ debugger_event( int event_code )
       ui_breakpoints_updated();
 }
 
-/* Tidy-up function called at end of emulation */
+// Tidy-up function called at end of emulation
 void
 debugger_event_end( void )
 {

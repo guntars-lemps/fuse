@@ -90,7 +90,7 @@ static int fullscreen_width = 0;
 static int fullscreen_x_off = 0;
 static int fullscreen_y_off = 0;
 
-/* The current size of the display (in units of DISPLAY_SCREEN_*) */
+// The current size of the display (in units of DISPLAY_SCREEN_*)
 static float sdldisplay_current_size = 1;
 
 static libspectrum_byte sdldisplay_is_full_screen = 0;
@@ -220,7 +220,7 @@ uidisplay_init( int width, int height )
   int no_modes;
   int i, mw = 0, mh = 0, mn = 0;
 
-  /* Get available fullscreen/software modes */
+  // Get available fullscreen/software modes
   modes=SDL_ListModes(NULL, SDL_FULLSCREEN|SDL_SWSURFACE);
 
   no_modes = ( modes == (SDL_Rect **) 0 || modes == (SDL_Rect **) -1 ) ? 1 : 0;
@@ -261,18 +261,18 @@ uidisplay_init( int width, int height )
   /* Check if there are any modes available, or if our resolution is restricted
      at all */
   if( no_modes ){
-    /* Just try whatever we have and see what happens */
+    // Just try whatever we have and see what happens
     max_fullscreen_height = 480;
     min_fullscreen_height = 240;
   } else if( mh > 0 ) {
-    /* set from command line */
+    // set from command line
     max_fullscreen_height = min_fullscreen_height = mh;
     fullscreen_width = mw;
   } else {
-    /* Record the largest supported fullscreen software mode */
+    // Record the largest supported fullscreen software mode
     max_fullscreen_height = modes[0]->h;
 
-    /* Record the smallest supported fullscreen software mode */
+    // Record the smallest supported fullscreen software mode
     for( i=0; modes[i]; ++i ) {
       min_fullscreen_height = modes[i]->h;
     }
@@ -292,7 +292,7 @@ uidisplay_init( int width, int height )
 
   SDL_WM_SetCaption( "Fuse", "Fuse" );
 
-  /* We can now output error messages to our output device */
+  // We can now output error messages to our output device
   display_ui_initialised = 1;
 
   sdl_load_status_icon( "cassette.bmp", red_cassette, green_cassette );
@@ -315,7 +315,7 @@ sdldisplay_allocate_colours( int numColours, Uint32 *colour_values,
     green = colour_palette[i].g;
      blue = colour_palette[i].b;
 
-    /* Addition of 0.5 is to avoid rounding errors */
+    // Addition of 0.5 is to avoid rounding errors
     grey = ( 0.299 * red + 0.587 * green + 0.114 * blue ) + 0.5;
 
     colour_values[i] = SDL_MapRGB( tmp_screen->format,  red, green, blue );
@@ -371,7 +371,7 @@ sdldisplay_load_gfx_mode( void )
 
   sdldisplay_force_full_refresh = 1;
 
-  /* Free the old surface */
+  // Free the old surface
   if( tmp_screen ) {
     free( tmp_screen->pixels );
     SDL_FreeSurface( tmp_screen );
@@ -384,7 +384,7 @@ sdldisplay_load_gfx_mode( void )
 
   sdldisplay_find_best_fullscreen_scaler();
 
-  /* Create the surface that contains the scaled graphics in 16 bit mode */
+  // Create the surface that contains the scaled graphics in 16 bit mode
   sdldisplay_gc = SDL_SetVideoMode(
     settings_current.full_screen && fullscreen_width ? fullscreen_width :
       image_width * sdldisplay_current_size,
@@ -403,15 +403,15 @@ sdldisplay_load_gfx_mode( void )
       !!( sdldisplay_gc->flags & ( SDL_FULLSCREEN | SDL_NOFRAME ) );
   sdldisplay_is_full_screen = settings_current.full_screen;
 
-  /* Distinguish 555 and 565 mode */
+  // Distinguish 555 and 565 mode
   if( sdldisplay_gc->format->Gmask >> sdldisplay_gc->format->Gshift == 0x1f )
     scaler_select_bitformat( 555 );
   else
     scaler_select_bitformat( 565 );
 
-  /* Create the surface used for the graphics in 16 bit before scaling */
+  // Create the surface used for the graphics in 16 bit before scaling
 
-  /* Need some extra bytes around when using 2xSaI */
+  // Need some extra bytes around when using 2xSaI
   tmp_screen_pixels = (Uint16*)calloc(tmp_screen_width*(image_height+3), sizeof(Uint16));
   tmp_screen = SDL_CreateRGBSurfaceFrom(tmp_screen_pixels,
                                         tmp_screen_width,
@@ -434,7 +434,7 @@ sdldisplay_load_gfx_mode( void )
 
   sdldisplay_allocate_colours( 16, colour_values, bw_values );
 
-  /* Redraw the entire screen... */
+  // Redraw the entire screen...
   display_refresh_all();
 
   return 0;
@@ -445,16 +445,16 @@ uidisplay_hotswap_gfx_mode( void )
 {
   fuse_emulation_pause();
 
-  /* Free the old surface */
+  // Free the old surface
   if( tmp_screen ) {
     free( tmp_screen->pixels );
     SDL_FreeSurface( tmp_screen ); tmp_screen = NULL;
   }
 
-  /* Setup the new GFX mode */
+  // Setup the new GFX mode
   if( sdldisplay_load_gfx_mode() ) return 1;
 
-  /* reset palette */
+  // reset palette
   SDL_SetColors( sdldisplay_gc, colour_palette, 0, 16 );
 
   /* Mac OS X resets the state of the cursor after a switch to full screen
@@ -542,7 +542,7 @@ sdl_blit_icon( SDL_Surface **icon,
     return;
   }
 
-  /* Adjust rects for the destination rect size */
+  // Adjust rects for the destination rect size
   updated_rects[num_rects].x = dst_x;
   updated_rects[num_rects].y = dst_y;
   updated_rects[num_rects].w = w * sdldisplay_current_size;
@@ -601,7 +601,7 @@ sdl_icon_overlay( Uint32 tmp_screen_pitch, Uint32 dstPitch )
   sdl_status_updated = 0;
 }
 
-/* Set one pixel in the display */
+// Set one pixel in the display
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
@@ -760,7 +760,7 @@ uidisplay_frame_end( void )
     fuse_abort();
   }
 
-  /* Force a full redraw if requested */
+  // Force a full redraw if requested
   if ( sdldisplay_force_full_refresh ) {
     num_rects = 1;
 
@@ -798,7 +798,7 @@ uidisplay_frame_end( void )
       dstPitch, r->w, dst_h
     );
 
-    /* Adjust rects for the destination rect size */
+    // Adjust rects for the destination rect size
     r->x = dst_x;
     r->y = dst_y;
     r->w *= sdldisplay_current_size;
@@ -810,7 +810,7 @@ uidisplay_frame_end( void )
 
   if( SDL_MUSTLOCK( sdldisplay_gc ) ) SDL_UnlockSurface( sdldisplay_gc );
 
-  /* Finally, blit all our changes to the screen */
+  // Finally, blit all our changes to the screen
   SDL_UpdateRects( sdldisplay_gc, num_rects, updated_rects );
 
   num_rects = 0;
@@ -881,7 +881,7 @@ uidisplay_end( void )
   return 0;
 }
 
-/* The statusbar handling function */
+// The statusbar handling function
 int
 ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
 {
@@ -893,7 +893,7 @@ ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
     return 0;
 
   case UI_STATUSBAR_ITEM_PAUSED:
-    /* We don't support pausing this version of Fuse */
+    // We don't support pausing this version of Fuse
     return 0;
 
   case UI_STATUSBAR_ITEM_TAPE:
@@ -907,7 +907,7 @@ ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
     return 0;
 
   case UI_STATUSBAR_ITEM_MOUSE:
-    /* We don't support showing a grab icon */
+    // We don't support showing a grab icon
     return 0;
 
   }

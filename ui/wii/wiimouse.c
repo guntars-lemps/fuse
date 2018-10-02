@@ -146,28 +146,28 @@ mouse_update( void )
         js = wpad->exp.nunchuk.js;
 
         if( js.mag >= 0.5 ) {
-          /* left */
+          // left
           if( js.ang >= 270-45 && js.ang <= 270+45 ) {
             if( last_nunchuck[ ctrlr ] != LEFT ) {
               POST_KEYPRESS( INPUT_JOYSTICK_LEFT );
               last_nunchuck[ ctrlr ] = LEFT;
             }
           }
-          /* right */
+          // right
           else if( js.ang >= 90-45 && js.ang <= 90+45 ) {
             if( last_nunchuck[ ctrlr ] != RIGHT ) {
               POST_KEYPRESS( INPUT_JOYSTICK_RIGHT );
               last_nunchuck[ ctrlr ] = RIGHT;
             }
           }
-          /* up */
+          // up
           else if( js.ang >= 360-45 || js.ang <= 45 ) {
             if( last_nunchuck[ ctrlr ] != UP ) {
               POST_KEYPRESS( INPUT_JOYSTICK_UP );
               last_nunchuck[ ctrlr ] = UP;
             }
           }
-          /* down */
+          // down
           else if( js.ang >= 180-45 && js.ang <= 180+45 ) {
             if( last_nunchuck[ ctrlr ] != DOWN ) {
               POST_KEYPRESS( INPUT_JOYSTICK_DOWN );

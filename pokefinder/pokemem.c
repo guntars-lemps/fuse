@@ -40,7 +40,7 @@ enum {
   POKEFILE_EOF = 'Y'
 };
 
-/* Expected data while parsing a file */
+// Expected data while parsing a file
 typedef enum do_t {
   DO_TRAINER,
   DO_POKE,
@@ -157,7 +157,7 @@ pokemem_read_from_buffer( const libspectrum_byte *buffer, size_t length )
 
     case POKEFILE_NEXT_TRAINER:
       if( do_now != DO_TRAINER ) {
-        /* Unexpected trainer, but parse it */
+        // Unexpected trainer, but parse it
         if( current_trainer ) current_trainer->disabled = 1;
       }
 
@@ -167,7 +167,7 @@ pokemem_read_from_buffer( const libspectrum_byte *buffer, size_t length )
 
     case POKEFILE_MORE_POKE:
       if( do_now != DO_POKE ) {
-        /* Skip unexpected poke */
+        // Skip unexpected poke
         if( current_trainer ) current_trainer->disabled = 1;
         pokemem_skip_line( &ptr, end );
         do_now = DO_TRAINER;
@@ -179,7 +179,7 @@ pokemem_read_from_buffer( const libspectrum_byte *buffer, size_t length )
       break;
 
     case POKEFILE_LAST_POKE:
-      /* Skip unexpected poke */
+      // Skip unexpected poke
       if( do_now != DO_POKE ) {
         if( current_trainer ) current_trainer->disabled = 1;
         pokemem_skip_line( &ptr, end );
@@ -197,9 +197,9 @@ pokemem_read_from_buffer( const libspectrum_byte *buffer, size_t length )
       break;
 
     default:
-      /* Unknown line */
+      // Unknown line
       if( do_now == DO_POKE ) {
-        /* Invalidate current trainer */
+        // Invalidate current trainer
         if( current_trainer ) current_trainer->disabled = 1;
         do_now = DO_TRAINER;
       }
@@ -221,10 +221,10 @@ pokemem_skip_line( const libspectrum_byte **ptr,
 {
   const libspectrum_byte *cpos = *ptr;
 
-  /* skip data */
+  // skip data
   while( cpos < end && ( *cpos != '\r' && *cpos != '\n' ) ) cpos++;
 
-  /* skip 'new line' like chars */
+  // skip 'new line' like chars
   while( cpos < end && ( *cpos == '\r' || *cpos == '\n' ) ) cpos++;
 
   *ptr = cpos;
@@ -239,16 +239,16 @@ pokemem_read_trainer( const libspectrum_byte **ptr,
   char *title;
   size_t length = 0;
 
-  /* get trainer length */
+  // get trainer length
   while( cpos < end && ( *cpos != '\0' && *cpos != '\r' && *cpos != '\n' ) )
     cpos++;
 
-  /* trim trailing spaces */
+  // trim trailing spaces
   clast = cpos;
   while( clast >= *ptr && isspace( *clast ) )
     clast--;
 
-  /* store data */
+  // store data
   length = clast - *ptr + 1;
   if( length > 80 ) length = 80;
   title = libspectrum_new( char, length + 1 );
@@ -260,7 +260,7 @@ pokemem_read_trainer( const libspectrum_byte **ptr,
   current_trainer->name = title;
   trainer_list = g_slist_append( trainer_list, current_trainer );
 
-  /* skip 'new line' like chars */
+  // skip 'new line' like chars
   while( cpos < end && ( *cpos == '\r' || *cpos == '\n' ) ) cpos++;
 
   *ptr = cpos;
@@ -276,10 +276,10 @@ pokemem_read_poke( const libspectrum_byte **ptr, const libspectrum_byte *end )
   items = sscanf( (const char *)cpos, "%1d %5d %3d %3d",
                   &bank, &address, &value, &restore );
 
-  /* skip data */
+  // skip data
   pokemem_skip_line( ptr, end );
 
-  /* validate data */
+  // validate data
   if( items < 4 ) {
     current_trainer->disabled = 1;
     return;
@@ -300,7 +300,7 @@ pokemem_poke_add( trainer_t *trainer, int bank, int address, int value,
     return NULL;
   }
 
-  /* ROM on normal mode memory configuration */
+  // ROM on normal mode memory configuration
   if( bank == 8 && address < 0x4000 ) {
     trainer->disabled = 1;
     return NULL;
@@ -316,7 +316,7 @@ pokemem_poke_add( trainer_t *trainer, int bank, int address, int value,
     return NULL;
   }
 
-  /* store data */
+  // store data
   current_poke = libspectrum_new( poke_t, 1 );
 
   current_poke->bank = bank;
@@ -325,14 +325,14 @@ pokemem_poke_add( trainer_t *trainer, int bank, int address, int value,
   current_poke->restore = restore;
   if( value == 256 ) trainer->ask_value = 1;
 
-  /* Check if current poke was already applied */
+  // Check if current poke was already applied
   if( value <= 255 && pokemem_mem_value( bank, address ) == value ) {
     poke_active = 1;
   } else {
     poke_active = 0;
   }
 
-  /* A trainer is active if all its pokes are applied */
+  // A trainer is active if all its pokes are applied
   if( !trainer->poke_list ) {
     trainer->active = poke_active;
   } else {
@@ -367,13 +367,13 @@ pokemem_trainer_list_add( libspectrum_byte bank, libspectrum_word address,
   title = libspectrum_new( char, 19 );
   snprintf( title, 19, "Custom %u,%u", address, value );
 
-  /* Create trainer */
+  // Create trainer
   current_trainer = libspectrum_new0( trainer_t, 1 );
   current_trainer->name = title;
 
   trainer_list = g_slist_append( trainer_list, current_trainer );
 
-  /* Create poke */
+  // Create poke
   pokemem_poke_add( current_trainer, bank, address, value, 0 );
 
   return current_trainer;
@@ -401,7 +401,7 @@ pokemem_poke_activate( gpointer data, gpointer user_data )
   libspectrum_word address = poke->address;
   libspectrum_byte value;
 
-  /* User custom value? */
+  // User custom value?
   value = ( poke->value > 255 )? trainer->value : poke->value;
 
   if( bank == 8 ) {
@@ -443,7 +443,7 @@ pokemem_poke_deactivate( gpointer data, gpointer user_data GCC_UNUSED )
 
 }
 
-/* Open or Drag'n'Drop a .pok file */
+// Open or Drag'n'Drop a .pok file
 int
 pokemem_set_pokfile( const char *filename )
 {
@@ -457,7 +457,7 @@ pokemem_set_pokfile( const char *filename )
   return 0;
 }
 
-/* Automatic search after the load of snapshots or tapes */
+// Automatic search after the load of snapshots or tapes
 int
 pokemem_find_pokfile( const char *path )
 {
@@ -482,7 +482,7 @@ pokemem_find_pokfile( const char *path )
 
   has_extension = ( last_dot > last_slash + 1 );
 
-  /* Try .pok extension */
+  // Try .pok extension
   if( has_extension ) {
     n = last_dot; // Replace file extension
     test_file[n] = '\0';
@@ -496,15 +496,15 @@ pokemem_find_pokfile( const char *path )
     return 0;
   }
 
-  /* Try .POK extension */
-  /* FIXME: Is filesystem case sensitive? */
+  // Try .POK extension
+  // FIXME: Is filesystem case sensitive?
   memcpy( &(test_file[n]), ".POK", 4 );
   if( compat_file_exists( test_file ) ) {
     pokfile = test_file;
     return 0;
   }
 
-  /* Browse POKES/ directory */
+  // Browse POKES/ directory
   if( last_slash >= 0 ) {
     n = last_slash + 1; // insert directory
     filename_size =
@@ -519,7 +519,7 @@ pokemem_find_pokfile( const char *path )
     test_file[ 5 ] = '\0';
   }
 
-  /* Try .pok extension */
+  // Try .pok extension
   strncat( test_file, FUSE_DIR_SEP_STR, 1 );
   strncat( test_file, &path[ n ], filename_size );
   strncat( test_file, ".pok", 4 );
@@ -529,8 +529,8 @@ pokemem_find_pokfile( const char *path )
     return 0;
   }
 
-  /* Try .POK extension */
-  /* FIXME: Is filesystem case sensitive? */
+  // Try .POK extension
+  // FIXME: Is filesystem case sensitive?
   n = n + 6 + filename_size;
   memcpy( &test_file[ n ], ".POK", 4 );
 
@@ -544,7 +544,7 @@ pokemem_find_pokfile( const char *path )
   return 1;
 }
 
-/* Finally load requested from UI */
+// Finally load requested from UI
 int
 pokemem_autoload_pokfile( void )
 {

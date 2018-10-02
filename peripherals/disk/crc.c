@@ -62,8 +62,8 @@ libspectrum_word crc_fdc_table[] = {
   0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
 };
 
-/* CRC-16-CCITT: G(x) = x^16 + x^12 + x^5 + 1  */
-libspectrum_word 
+// CRC-16-CCITT: G(x) = x^16 + x^12 + x^5 + 1
+libspectrum_word
 crc_fdc( libspectrum_word crc, libspectrum_byte data )
 {
   return ( ( crc << 8 ) ^ crc_fdc_table[( ( crc >> 8 ) ^ data ) & 0xff] ) &

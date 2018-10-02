@@ -25,7 +25,7 @@
 #ifndef FUSE_Z80_MACROS_H
 #define FUSE_Z80_MACROS_H
 
-/* Macros used for accessing the registers */
+// Macros used for accessing the registers
 #define A   z80.af.b.h
 #define F   z80.af.b.l
 #define AF  z80.af.w
@@ -88,7 +88,7 @@
 
 #define Q z80.q
 
-/* The flags */
+// The flags
 
 #define FLAG_C	0x01
 #define FLAG_N	0x02
@@ -129,7 +129,7 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
 
 #endif // #ifndef CORETEST
 
-/* Some commonly used instructions */
+// Some commonly used instructions
 #define AND(value)\
 {\
   A &= (value);\
@@ -233,7 +233,7 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
   Q = F;\
 }
 
-/* Macro for the {DD,FD} CB dd xx rotate/shift instructions */
+// Macro for the {DD,FD} CB dd xx rotate/shift instructions
 #define DDFDCB_ROTATESHIFT(time, target, instruction)\
 tstates+=(time);\
 {\

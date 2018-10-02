@@ -56,8 +56,8 @@ compat_socket_get_strerror( void )
   TCHAR *ptr;
   DWORD msg_size;
 
-  /* get description of last winsock error */
-  msg_size = FormatMessage( 
+  // get description of last winsock error
+  msg_size = FormatMessage(
                FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                NULL, WSAGetLastError(),
                MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
@@ -65,7 +65,7 @@ compat_socket_get_strerror( void )
 
   if( !msg_size ) return NULL;
 
-  /* skip 'new line' like chars */
+  // skip 'new line' like chars
   for( ptr = buffer; *ptr; ptr++ ) {
     if( ( *ptr == '\r' ) || ( *ptr == '\n' ) ) {
       *ptr = '\0';
@@ -83,10 +83,10 @@ selfpipe_test( compat_socket_selfpipe_t *self )
   int active;
   struct timeval tv = { 1, 0 };
 
-  /* Send testing packet */
+  // Send testing packet
   compat_socket_selfpipe_wake( self );
 
-  /* Safe reading from control socket */
+  // Safe reading from control socket
   FD_ZERO( &readfds );
   FD_SET( self->self_socket, &readfds );
   active = select( 0, &readfds, NULL, NULL, &tv );
@@ -94,7 +94,7 @@ selfpipe_test( compat_socket_selfpipe_t *self )
     return -1;
   }
 
-  /* Discard testing packet */
+  // Discard testing packet
   if( FD_ISSET( self->self_socket, &readfds ) ) {
     compat_socket_selfpipe_discard_data( self );
   }
@@ -111,7 +111,7 @@ compat_socket_selfpipe_alloc( void )
 
   compat_socket_selfpipe_t *self =
     libspectrum_new( compat_socket_selfpipe_t, 1 );
-  
+
   self->self_socket = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
   if( self->self_socket == compat_socket_invalid ) {
     ui_error( UI_ERROR_ERROR,
@@ -121,9 +121,9 @@ compat_socket_selfpipe_alloc( void )
     fuse_abort();
   }
 
-  /* Set nonblocking mode */
+  // Set nonblocking mode
   if( ioctlsocket( self->self_socket, FIONBIO, &mode ) == -1 ) {
-    ui_error( UI_ERROR_ERROR, 
+    ui_error( UI_ERROR_ERROR,
               "%s: %d: failed to set socket nonblocking; errno %d: %s\n",
               __FILE__, __LINE__, compat_socket_get_error(),
               compat_socket_get_strerror() );
@@ -142,7 +142,7 @@ compat_socket_selfpipe_alloc( void )
     fuse_abort();
   }
 
-  /* Get ephemeral port number */
+  // Get ephemeral port number
   if( getsockname( self->self_socket, (struct sockaddr *)&sa, &sa_len ) == -1 ) {
     ui_error( UI_ERROR_ERROR,
               "%s: %d: failed to get socket name; errno %d: %s\n",
@@ -152,8 +152,8 @@ compat_socket_selfpipe_alloc( void )
   }
 
   self->port = ntohs( sa.sin_port );
- 
-  /* Test communications in order to detect blocking firewalls */
+
+  // Test communications in order to detect blocking firewalls
   if( selfpipe_test( self ) == -1 ) {
     ui_error( UI_ERROR_ERROR,
               "Networking: failed to test internal communications" );
@@ -198,7 +198,7 @@ compat_socket_selfpipe_discard_data( compat_socket_selfpipe_t *self )
   static char bitbucket[0x100];
 
   do {
-    /* Socket is non blocking, so we can do this safely */
+    // Socket is non blocking, so we can do this safely
     bytes_read = recvfrom( self->self_socket, bitbucket, sizeof( bitbucket ),
                            0, (struct sockaddr*)&sa, &sa_length );
   } while( bytes_read != -1 );

@@ -39,7 +39,7 @@ static int current_block;
 static void
 dialog_init( HWND hwndDlg )
 {
-  /* set extended listview style to select full row, when an item is selected */
+  // set extended listview style to select full row, when an item is selected
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( hwndDlg, IDC_ROLLBACK_LV,
                                      LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
@@ -47,7 +47,7 @@ dialog_init( HWND hwndDlg )
   SendDlgItemMessage( hwndDlg, IDC_ROLLBACK_LV,
                       LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
-  /* Create the column in the listview */
+  // Create the column in the listview
   LVCOLUMN lvc;
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
   lvc.fmt = LVCFMT_LEFT;

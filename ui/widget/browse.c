@@ -39,16 +39,16 @@
 
 #define MAX_BLOCK_DESC 30
 
-/* The descriptions of the blocks */
+// The descriptions of the blocks
 static GSList *blocks;
 
-/* How many blocks we have in total */
+// How many blocks we have in total
 size_t block_count;
 
-/* Which block is shown on the top line of the widget */
+// Which block is shown on the top line of the widget
 static int top_line;
 
-/* Which block is currently highlighted */
+// Which block is currently highlighted
 static int highlight;
 
 static void show_blocks( void );

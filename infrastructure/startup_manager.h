@@ -24,7 +24,7 @@
 #ifndef FUSE_STARTUP_MANAGER_H
 #define FUSE_STARTUP_MANAGER_H
 
-/* The modules the startup manager knows about */
+// The modules the startup manager knows about
 typedef enum startup_manager_module {
 
   STARTUP_MANAGER_MODULE_AY,
@@ -81,30 +81,30 @@ typedef enum startup_manager_module {
 
 } startup_manager_module;
 
-/* Callback for each module's init function */
+// Callback for each module's init function
 typedef int (*startup_manager_init_fn)( void *context );
 
-/* Callback for each module's end function */
+// Callback for each module's end function
 typedef void (*startup_manager_end_fn)( void );
 
-/* Initialise the startup manager itself */
+// Initialise the startup manager itself
 void startup_manager_init( void );
 
-/* Register an module with the startup manager */
+// Register an module with the startup manager
 void startup_manager_register(
   startup_manager_module module, startup_manager_module *dependencies,
   size_t dependency_count, startup_manager_init_fn init_fn,
   void *init_context, startup_manager_end_fn end_fn );
 
-/* Register an module with no dependencies with the startup manager */
+// Register an module with no dependencies with the startup manager
 void startup_manager_register_no_dependencies(
   startup_manager_module module, startup_manager_init_fn init_fn,
   void *init_context, startup_manager_end_fn end_fn );
 
-/* Run all the registered init functions in the right order */
+// Run all the registered init functions in the right order
 int startup_manager_run( void );
 
-/* Run all the end functions in inverse order of the init functions */
+// Run all the end functions in inverse order of the init functions
 void startup_manager_run_end( void );
 
 #endif // #ifndef FUSE_STARTUP_MANAGER_H

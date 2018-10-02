@@ -41,7 +41,7 @@ int sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 {
   int flags, tmp, frag;
 
-  /* select a default device if we weren't explicitly given one */
+  // select a default device if we weren't explicitly given one
   if( device == NULL ) device = "/dev/audio";
 
   /* Open the sound device non-blocking to avoid hangs if it is being
@@ -74,7 +74,7 @@ int sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   if( settings_current.sound_force_8bit                ||
       ioctl( soundfd, AUDIO_SET_DATA_FORMAT, tmp ) < 0    ) {
 
-    /* try 8-bit - may be an 8-bit only device */
+    // try 8-bit - may be an 8-bit only device
     tmp = AUDIO_FORMAT_LINEAR8BIT;
     if( ioctl( soundfd, AUDIO_SET_DATA_FORMAT, tmp ) < 0 ) {
       settings_current.sound = 0;
@@ -148,7 +148,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 
     src = data; dst = buf8;
     len >>= 1;
-    /* TODO: confirm byteorder on IA64 */
+    // TODO: confirm byteorder on IA64
     for( f = 0; f < len; f++ )
       *dst++ = 128 + (int)( (*src++) / 256 );
 

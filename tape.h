@@ -59,7 +59,7 @@ int tape_present( void );
 void tape_record_start( void );
 int tape_record_stop( void );
 
-/* Call a user-supplied function for every block in the current tape */
+// Call a user-supplied function for every block in the current tape
 int
 tape_foreach( void (*function)( libspectrum_tape_block *block,
 				void *user_data),

@@ -82,7 +82,7 @@ textview_wheel_scroll_event( GtkWidget *widget, GdkEvent *event, gpointer user_d
         page_size = gtk_adjustment_get_page_size( adjustment );
         delta = total_dy * pow( page_size, 2.0 / 3.0 );
 
-        /* Is movement significative? */
+        // Is movement significative?
         if( delta ) {
           base += delta;
           total_dy = 0;
@@ -130,11 +130,11 @@ textview_key_press_event( GtkWidget *widget, GdkEventKey *event, gpointer user_d
 
   text_buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( widget ) );
 
-  /* Get line width (includes CR/LF) */
+  // Get line width (includes CR/LF)
   line_width = gtk_text_buffer_get_char_count( text_buffer ) /
                gtk_text_buffer_get_line_count( text_buffer );
 
-  /* Get row and offset of cursor */
+  // Get row and offset of cursor
   mark = gtk_text_buffer_get_insert( text_buffer );
   gtk_text_buffer_get_iter_at_mark( text_buffer, &iter, mark );
   line = gtk_text_iter_get_line( &iter );
@@ -288,7 +288,7 @@ scroller( GtkAdjustment *adjustment, gpointer user_data )
 {
   libspectrum_word base;
 
-  /* Drop the low bits before displaying anything */
+  // Drop the low bits before displaying anything
   base = gtk_adjustment_get_value( adjustment );
   base &= 0xfff0;
 
@@ -307,13 +307,13 @@ goto_offset( GtkWidget *widget GCC_UNUSED, gpointer user_data GCC_UNUSED )
   if( gtk_entry_get_text_length( GTK_ENTRY( widget ) ) == 0 )
      return;
 
-  /* Parse address */
+  // Parse address
   entry = gtk_entry_get_text( GTK_ENTRY( widget ) );
   errno = 0;
   base_num = ( g_str_has_prefix( entry, "0x" ) )? 16 : 10;
   offset = strtol( entry, &endptr, base_num );
 
-  /* Validate address */
+  // Validate address
   if( errno || offset < 0 || offset > 65535 || endptr == entry ||
       *endptr != '\0' ) {
     return;
@@ -340,14 +340,14 @@ menu_machine_memorybrowser( GtkAction *gtk_action GCC_UNUSED,
   dialog = gtkstock_dialog_new( "Fuse - Memory Browser", NULL );
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog ) );
 
-  /* Keyboard shortcuts */
+  // Keyboard shortcuts
   accel_group = gtk_accel_group_new();
   gtk_window_add_accel_group( GTK_WINDOW( dialog ), accel_group );
 
   gtkstock_create_close( dialog, accel_group, NULL, TRUE );
 
 #if GTK_CHECK_VERSION( 3, 6, 0 )
-  /* Go to offset */
+  // Go to offset
   box = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 8 );
   offset = gtk_search_entry_new();
   gtk_entry_set_width_chars( GTK_ENTRY( offset ), 7 );
@@ -363,7 +363,7 @@ menu_machine_memorybrowser( GtkAction *gtk_action GCC_UNUSED,
                     G_CALLBACK( goto_offset ), NULL );
 #endif
 
-  /* Create text buffers */
+  // Create text buffers
   tag_table = gtk_text_tag_table_new();
   tag = gtk_text_tag_new( "monospace" );
   g_object_set( tag, "family", "monospace", NULL );
@@ -378,7 +378,7 @@ menu_machine_memorybrowser( GtkAction *gtk_action GCC_UNUSED,
   buffer_hex = gtk_text_buffer_new( tag_table );
   buffer_data = gtk_text_buffer_new( tag_table );
 
-  /* Labels */
+  // Labels
   box = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 8 );
   box_address = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
   gtk_box_pack_start( GTK_BOX( box ), box_address, FALSE, FALSE, 0 );
@@ -395,7 +395,7 @@ menu_machine_memorybrowser( GtkAction *gtk_action GCC_UNUSED,
   label = gtk_label_new( "Data" );
   gtk_box_pack_start( GTK_BOX( box_data ), label, FALSE, FALSE, 0 );
 
-  /* Add views */
+  // Add views
   view_address = gtk_text_view_new_with_buffer( buffer_address );
   gtk_text_view_set_editable( GTK_TEXT_VIEW( view_address ), FALSE );
   gtk_text_view_set_left_margin( GTK_TEXT_VIEW( view_address ), 1 );
@@ -421,7 +421,7 @@ menu_machine_memorybrowser( GtkAction *gtk_action GCC_UNUSED,
   gtk_box_pack_start( GTK_BOX( box_data ), box_data_horizontal, FALSE, FALSE, 0 );
   gtk_box_pack_start( GTK_BOX( box_data_horizontal ), view_data, FALSE, FALSE, 0 );
 
-  /* Scroll */
+  // Scroll
   adjustment = GTK_ADJUSTMENT(
     gtk_adjustment_new( memaddr, 0x0000, 0xffff, VIEW_NUM_COLS,
                         ( VIEW_NUM_ROWS * VIEW_NUM_COLS ) / 2,
@@ -430,7 +430,7 @@ menu_machine_memorybrowser( GtkAction *gtk_action GCC_UNUSED,
   scrollbar = gtk_scrollbar_new( GTK_ORIENTATION_VERTICAL, adjustment );
   gtk_box_pack_start( GTK_BOX( box_data_horizontal ), scrollbar, FALSE, FALSE, 0 );
 
-  /* Allow scroll on text views */
+  // Allow scroll on text views
   g_signal_connect( view_address, "scroll-event",
                     G_CALLBACK( textview_wheel_scroll_event ), adjustment );
   g_signal_connect( view_hex, "scroll-event",

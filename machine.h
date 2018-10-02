@@ -40,17 +40,17 @@ typedef libspectrum_byte (*spectrum_unattached_port_fn)( void );
    via the libspectrum_timings_* functions */
 typedef struct machine_timings {
 
-  /* Processor speed */
+  // Processor speed
   libspectrum_dword processor_speed;
 
-  /* Line timings in tstates */
+  // Line timings in tstates
   libspectrum_word left_border, horizontal_screen, right_border;
   libspectrum_word tstates_per_line;
 
-  /* Interrupt length */
+  // Interrupt length
   libspectrum_word interrupt_length;
 
-  /* Frame timing */
+  // Frame timing
   libspectrum_dword tstates_per_frame;
 
 } machine_timings;
@@ -66,7 +66,7 @@ typedef struct fuse_machine_info {
   int timex; // Timex machine (keyboard emulation/loading sounds etc.)
 
   machine_timings timings; // How long do things take to happen?
-  /* Redraw line y this many tstates after interrupt */
+  // Redraw line y this many tstates after interrupt
   libspectrum_dword line_times[DISPLAY_SCREEN_HEIGHT+1];
 
   spectrum_raminfo ram; /* How do we access memory, and what's currently

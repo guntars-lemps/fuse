@@ -60,7 +60,7 @@ ui_init( int *argc, char ***argv )
   unsigned long windowFlags;
   XSetWindowAttributes windowAttributes;
 
-  /* Allocate memory for various things */
+  // Allocate memory for various things
 
   if( ui_widget_init() ) return 1;
 
@@ -91,7 +91,7 @@ ui_init( int *argc, char ***argv )
     return 1;
   }
 
-  /* Open a connection to the X server */
+  // Open a connection to the X server
 
   if ( ( display=XOpenDisplay(displayName)) == NULL ) {
     fprintf(stderr,"%s: cannot connect to X server %s\n", fuse_progname,
@@ -99,13 +99,13 @@ ui_init( int *argc, char ***argv )
     return 1;
   }
 
-  /* Set up our error handler */
+  // Set up our error handler
   xerror_expecting = xerror_error = 0;
   XSetErrorHandler( xerror_handler );
 
   xui_screenNum = DefaultScreen(display);
 
-  /* Create the main window */
+  // Create the main window
 
   xui_mainWindow = XCreateSimpleWindow(
     display, RootWindow( display, xui_screenNum ), 0, 0,
@@ -113,7 +113,7 @@ ui_init( int *argc, char ***argv )
     BlackPixel( display, xui_screenNum ), WhitePixel( display, xui_screenNum )
   );
 
-  /* Set standard window properties */
+  // Set standard window properties
 
   sizeHints->flags = PBaseSize | PResizeInc | PMaxSize | PMinSize;
 
@@ -151,7 +151,7 @@ ui_init( int *argc, char ***argv )
   XFree( wmHints );
   XFree( classHint );
 
-  /* Ask the server to use its backing store for this window */
+  // Ask the server to use its backing store for this window
 
   windowFlags=CWBackingStore;
   windowAttributes.backing_store=WhenMapped;
@@ -159,7 +159,7 @@ ui_init( int *argc, char ***argv )
   XChangeWindowAttributes(display, xui_mainWindow, windowFlags,
 			  &windowAttributes);
 
-  /* Select which types of event we want to receive */
+  // Select which types of event we want to receive
 
   XSelectInput(display, xui_mainWindow, ExposureMask | KeyPressMask |
 	       KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
@@ -181,14 +181,14 @@ ui_init( int *argc, char ***argv )
     XFreeGC( display, gc );
   }
 
-  /* Ask to be notified of window close requests */
+  // Ask to be notified of window close requests
 
   delete_window_atom = XInternAtom( display, "WM_DELETE_WINDOW", 0 );
   XSetWMProtocols( display, xui_mainWindow, &delete_window_atom, 1 );
 
   if( xdisplay_init() ) return 1;
 
-  /* And finally display the window */
+  // And finally display the window
   XMapWindow(display,xui_mainWindow);
 
   ui_mouse_present = 1;
@@ -256,16 +256,16 @@ int ui_end(void)
 {
   int error;
 
-  /* Don't display the window whilst doing all this */
+  // Don't display the window whilst doing all this
   XUnmapWindow(display,xui_mainWindow);
 
-  /* Tidy up the low level stuff */
+  // Tidy up the low level stuff
   error = xdisplay_end(); if( error ) return error;
 
-  /* Now free up the window itself */
+  // Now free up the window itself
   XDestroyWindow(display,xui_mainWindow);
 
-  /* And disconnect from the X server */
+  // And disconnect from the X server
   XCloseDisplay(display);
 
   ui_widget_end();

@@ -37,7 +37,7 @@ int
 ui_error_specific( ui_error_level severity, const char *message )
 {
   widget_error_t error_info;
-  /* Can't output widgets if we don't have a display yet */
+  // Can't output widgets if we don't have a display yet
   if( !display_ui_initialised ) return 0;
 
 
@@ -103,11 +103,11 @@ split_message( const char *message, char ***lines, size_t *count,
 
   while( *ptr ) {
 
-    /* Skip any whitespace */
+    // Skip any whitespace
     while( *ptr && isspace( *ptr ) ) ptr++;
     message = ptr;
 
-    /* Find end of word */
+    // Find end of word
     while( *ptr && !isspace( *ptr ) ) ptr++;
 
     /* message now points to a word of length (ptr-message); if
@@ -116,13 +116,13 @@ split_message( const char *message, char ***lines, size_t *count,
     while( widget_substringwidth( message, ptr - message ) >= line_length )
       message++;
 
-    /* Check we've got room for the word, plus some prefixing space */
+    // Check we've got room for the word, plus some prefixing space
     if( position + widget_substringwidth( message, ptr - message ) + 4
  	>= line_length ) {
 
       char **new_lines; size_t i;
 
-      /* If we've filled the screen, stop */
+      // If we've filled the screen, stop
       if( *count == 18 ) return 0;
 
       new_lines = realloc( (*lines), (*count + 1) * sizeof( char* ) );

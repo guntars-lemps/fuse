@@ -38,7 +38,7 @@
 #include "settings.h"
 
 #if !defined USE_JOYSTICK || defined HAVE_JSW_H
-/* Fake joystick, or override UI-specific handling */
+// Fake joystick, or override UI-specific handling
 #include "../uijoystick.c"
 
 #else // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
@@ -365,7 +365,7 @@ create_fire_button_selector( const char *title, struct button_info *info,
   gtk_container_set_border_width( GTK_CONTAINER( box ), 2 );
   gtk_container_add( GTK_CONTAINER( frame ), box );
 
-  /* Create label */
+  // Create label
   info->key = *info->setting;
   info->label = gtk_label_new( "" );
 
@@ -384,7 +384,7 @@ create_fire_button_selector( const char *title, struct button_info *info,
 
   gtk_box_pack_start( GTK_BOX( box ), info->label, TRUE, TRUE, 0 );
 
-  /* Create combobox */
+  // Create combobox
   combo = gtk_combo_box_new_with_model( model );
   renderer = gtk_cell_renderer_text_new();
   gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), renderer, TRUE );
@@ -393,7 +393,7 @@ create_fire_button_selector( const char *title, struct button_info *info,
   gtk_cell_layout_set_cell_data_func( GTK_CELL_LAYOUT( combo ), renderer,
                                       set_entry_properties, NULL, NULL );
 
-  /* Select first item */
+  // Select first item
   path = gtk_tree_path_new_from_indices( 0, -1 );
   gtk_tree_model_get_iter( model, &iter, path );
   gtk_tree_path_free( path );
@@ -427,7 +427,7 @@ key_callback( GtkComboBox *widget, gpointer user_data )
   keyboard_key_name key;
   GtkTreeModel *model;
 
-  /* Get current selection */
+  // Get current selection
   gtk_combo_box_get_active_iter( GTK_COMBO_BOX( widget ), &iter );
   memset( &value, 0, sizeof( value ) );
   model = gtk_combo_box_get_model( GTK_COMBO_BOX( widget ) );
@@ -435,7 +435,7 @@ key_callback( GtkComboBox *widget, gpointer user_data )
   key = g_value_get_int( &value );
   g_value_unset( &value );
 
-  /* Store and display selection */
+  // Store and display selection
   info->key = key;
   set_key_text( info->label, info->key );
 }

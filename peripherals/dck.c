@@ -43,7 +43,7 @@
 #include "utils.h"
 #include "debugger/debugger.h"
 
-/* Dock cart inserted? */
+// Dock cart inserted?
 int dck_active = 0;
 
 int
@@ -202,10 +202,10 @@ dck_reset( void )
 
   dck_active = 1;
 
-  /* Reset contention for pages */
+  // Reset contention for pages
   scld_set_exrom_dock_contention();
 
-  /* Make the menu item to eject the cartridge active */
+  // Make the menu item to eject the cartridge active
   ui_menu_activate( UI_MENU_ITEM_MEDIA_CARTRIDGE_DOCK_EJECT, 1 );
 
   return libspectrum_dck_free( dck, 0 );

@@ -142,15 +142,15 @@ tc2068_reset( void )
                             settings_default.rom_tc2068_1, 0x2000 );
   if( error ) return error;
 
-  /* 0x0000: ROM 0 */
+  // 0x0000: ROM 0
   scld_home_map_16k( 0x0000, memory_map_rom, 0 );
-  /* 0x4000: RAM 5, contended */
+  // 0x4000: RAM 5, contended
   memory_ram_set_16k_contention( 5, 1 );
   scld_home_map_16k( 0x4000, memory_map_ram, 5 );
-  /* 0x8000: RAM 2, not contended */
+  // 0x8000: RAM 2, not contended
   memory_ram_set_16k_contention( 2, 0 );
   scld_home_map_16k( 0x8000, memory_map_ram, 2 );
-  /* 0xc000: RAM 0, not contended */
+  // 0xc000: RAM 0, not contended
   memory_ram_set_16k_contention( 0, 0 );
   scld_home_map_16k( 0xc000, memory_map_ram, 0 );
 
@@ -200,13 +200,13 @@ tc2068_tc2048_common_reset( void )
 int
 tc2068_memory_map( void )
 {
-  /* Start by mapping in the default configuration */
+  // Start by mapping in the default configuration
   scld_memory_map_home();
 
-  /* Then apply horizontal memory */
+  // Then apply horizontal memory
   scld_memory_map();
 
-  /* And finally ROMCS overrides */
+  // And finally ROMCS overrides
   memory_romcs_map();
 
   return 0;

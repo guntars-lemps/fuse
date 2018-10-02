@@ -45,30 +45,30 @@
 #include "ui/uidisplay.h"
 #include "settings.h"
 
-/* A copy of every pixel on the screen */
+// A copy of every pixel on the screen
 libspectrum_word
   fbdisplay_image[ 2 * DISPLAY_SCREEN_HEIGHT ][ DISPLAY_SCREEN_WIDTH ];
 ptrdiff_t fbdisplay_pitch = DISPLAY_SCREEN_WIDTH * sizeof( libspectrum_word );
 
-/* The environment variable specifying which device to use */
+// The environment variable specifying which device to use
 static const char * const DEVICE_VARIABLE = "FRAMEBUFFER";
 
-/* The device we will use if device_env_variable is not specified */
+// The device we will use if device_env_variable is not specified
 static const char * const DEFAULT_DEVICE = "/dev/fb0";
 
 /* The size of a 1x1 image in units of
    DISPLAY_ASPECT WIDTH x DISPLAY_SCREEN_HEIGHT */
 int image_scale;
 
-/* The height and width of a 1x1 image in pixels */
+// The height and width of a 1x1 image in pixels
 int image_width, image_height;
 
-/* Are we in a Timex display mode? */
+// Are we in a Timex display mode?
 static int hires;
 
 static void register_scalers( void );
 
-/* probably 0rrrrrgggggbbbbb */
+// probably 0rrrrrgggggbbbbb
 static short rgbs[16], greys[16];
 
 static int fb_fd = -1; // The framebuffer's file descriptor
@@ -305,18 +305,18 @@ fb_set_mode( void )
     (settings_current.doublescan_mode == 1) ? fb_modes_doublescan :
 					      fb_modes_doublescan_alt;
 
-  /* First, try to use our preferred mode */
+  // First, try to use our preferred mode
   for( i=0; fb_modes[i].xres; i++ )
     if( fb_modes[i].xres == settings_current.fb_mode )
       if( !fb_select_mode( fb_modes + i ) )
 	return 0;
 
-  /* If that failed, try to use the first available mode */
+  // If that failed, try to use the first available mode
   for( i=0; fb_modes[i].xres; i++ )
     if( !fb_select_mode( fb_modes + i ) )
       return 0;
 
-  /* If that failed, we can't continue :-( */
+  // If that failed, we can't continue :-(
   fprintf( stderr, "%s: couldn't find a framebuffer mode to start in\n",
 	   fuse_progname );
   return 1;
@@ -401,7 +401,7 @@ uidisplay_area( int x, int start, int width, int height)
 
       if( hires ) {
 
-	/* Drop every second pixel */
+	// Drop every second pixel
 	for ( i = 0, point = gm + y * display.xres_virtual + x;
 	      i < width;
 	      i++, point++ )
@@ -448,7 +448,7 @@ fbdisplay_end( void )
   return 0;
 }
 
-/* Set one pixel in the display */
+// Set one pixel in the display
 void
 uidisplay_putpixel( int x, int y, int colour )
 {

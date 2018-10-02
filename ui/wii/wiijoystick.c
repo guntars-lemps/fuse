@@ -150,7 +150,7 @@ ui_joystick_poll( void )
       js = wpad->exp.nunchuk.js;
 
       if( js.mag < 0.5 ) {
-        /* stick tilted only halfway from the center - release all directions */
+        // stick tilted only halfway from the center - release all directions
         POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_DOWN );
         POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_UP );
         POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_LEFT );
@@ -162,22 +162,22 @@ ui_joystick_poll( void )
         int up_held = 0;
         int down_held = 0;
 
-        /* left */
+        // left
         if( js.ang >= 270-60 && js.ang <= 270+60 ) {
           POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_LEFT );
           left_held = 1;
         }
-        /* right */
+        // right
         if( js.ang >= 90-60 && js.ang <= 90+60 ) {
           POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_RIGHT );
           right_held = 1;
         }
-        /* up */
+        // up
         if( js.ang >= 360-60 || js.ang <= 60 ) {
           POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_UP );
           up_held = 1;
         }
-        /* down */
+        // down
         if( js.ang >= 180-60 && js.ang <= 180+60 ) {
           POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_DOWN );
           down_held = 1;

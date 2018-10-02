@@ -33,7 +33,7 @@
 
 sfifo_t sound_fifo;
 
-/* Number of Spectrum frames audio latency to use */
+// Number of Spectrum frames audio latency to use
 #define NUM_FRAMES 2
 
 static
@@ -44,17 +44,17 @@ OSStatus coreaudiowrite( void *inRefCon,
                          UInt32 inNumberFrames,
                          AudioBufferList *ioData );
 
-/* info about the format used for writing to output unit */
+// info about the format used for writing to output unit
 static AudioStreamBasicDescription deviceFormat;
 
 /* converts from Fuse format (signed 16 bit ints) to CoreAudio format (floats)
  */
 static AudioUnit gOutputUnit;
 
-/* Records sound writer status information */
+// Records sound writer status information
 static int audio_output_started;
 
-/* get the default output device for the HAL */
+// get the default output device for the HAL
 static int
 get_default_output_device(AudioDeviceID* device)
 {
@@ -67,7 +67,7 @@ get_default_output_device(AudioDeviceID* device)
     kAudioObjectPropertyElementMaster
   };
 
-  /* get the default output device for the HAL */
+  // get the default output device for the HAL
   count = sizeof( *device );
   err = AudioObjectGetPropertyData( kAudioObjectSystemObject, &property_address,
                                     0, NULL, &count, device);
@@ -81,7 +81,7 @@ get_default_output_device(AudioDeviceID* device)
   return 0;
 }
 
-/* get the nominal sample rate used by the supplied device */
+// get the nominal sample rate used by the supplied device
 static int
 get_default_sample_rate( AudioDeviceID device, Float64 *rate )
 {
@@ -94,7 +94,7 @@ get_default_sample_rate( AudioDeviceID device, Float64 *rate )
     kAudioObjectPropertyElementMaster
   };
 
-  /* get the default output device for the HAL */
+  // get the default output device for the HAL
   count = sizeof( *rate );
   err = AudioObjectGetPropertyData( device, &property_address, 0, NULL, &count,
                                     rate);
@@ -134,7 +134,7 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
   deviceFormat.mBitsPerChannel = 16;
   deviceFormat.mChannelsPerFrame = *stereoptr ? 2 : 1;
 
-  /* Open the default output unit */
+  // Open the default output unit
   AudioComponentDescription desc;
   desc.componentType = kAudioUnitType_Output;
   desc.componentSubType = kAudioUnitSubType_DefaultOutput;
@@ -154,7 +154,7 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
     return 1;
   }
 
-  /* Set up a callback function to generate output to the output unit */
+  // Set up a callback function to generate output to the output unit
   AURenderCallbackStruct input;
   input.inputProc = coreaudiowrite;
   input.inputProcRefCon = NULL;
@@ -209,13 +209,13 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
     return 1;
   }
 
-  /* wait to run sound until we have some sound to play */
+  // wait to run sound until we have some sound to play
   audio_output_started = 0;
 
   return 0;
 }
 
-/* Support pre Xcode 9 SDK */
+// Support pre Xcode 9 SDK
 #ifndef __Verify_noErr
 #define __Verify_noErr((a))  verify_noerr((a))
 #endif
@@ -242,13 +242,13 @@ sound_lowlevel_end( void )
   sfifo_close( &sound_fifo );
 }
 
-/* Copy data to fifo */
+// Copy data to fifo
 void
 sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 {
   int i = 0;
 
-  /* Convert to bytes */
+  // Convert to bytes
   libspectrum_signed_byte* bytes = (libspectrum_signed_byte*)data;
   len <<= 1;
 
@@ -284,7 +284,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 #define MIN(a,b)    (((a) < (b)) ? (a) : (b))
 #endif
 
-/* This is the audio processing callback. */
+// This is the audio processing callback.
 OSStatus coreaudiowrite( void *inRefCon,
                          AudioUnitRenderActionFlags *ioActionFlags,
                          const AudioTimeStamp *inTimeStamp,
@@ -296,17 +296,17 @@ OSStatus coreaudiowrite( void *inRefCon,
   int len = deviceFormat.mBytesPerFrame * inNumberFrames;
   uint8_t* out = ioData->mBuffers[0].mData;
 
-  /* Try to only read an even number of bytes so as not to fragment a sample */
+  // Try to only read an even number of bytes so as not to fragment a sample
   len = MIN( len, sfifo_used( &sound_fifo ) );
   len &= sound_stereo_ay != SOUND_STEREO_AY_NONE ? 0xfffc : 0xfffe;
 
-  /* Read input_size bytes from fifo into sound stream */
+  // Read input_size bytes from fifo into sound stream
   while( ( f = sfifo_read( &sound_fifo, out, len ) ) > 0 ) {
     out += f;
     len -= f;
   }
 
-  /* If we ran out of sound, make do with silence :( */
+  // If we ran out of sound, make do with silence :(
   if( f < 0 ) {
     for( f=0; f<len; f++ ) {
       *out++ = 0;

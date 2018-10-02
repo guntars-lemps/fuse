@@ -38,7 +38,7 @@ void timer_start_fastloading( void );
 void timer_stop_fastloading( void );
 int timer_fastloading_active( void );
 
-/* Internal routines */
+// Internal routines
 
 double timer_get_time( void );
 void timer_sleep( int ms );

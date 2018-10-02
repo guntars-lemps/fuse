@@ -45,7 +45,7 @@ get_keysyms( XKeyEvent *event, input_event_t *fuse_event )
 {
   KeySym native, spectrum;
 
-  /* Get keysyms taking into account Shift, Caps_Lock, Mode_switch modifiers */
+  // Get keysyms taking into account Shift, Caps_Lock, Mode_switch modifiers
   XLookupString( event, NULL, 0, &native, NULL );
   fuse_event->types.key.native_key = keysyms_remap( native );
 

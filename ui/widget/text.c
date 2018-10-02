@@ -115,12 +115,12 @@ widget_text_keyhandler( input_key key )
    * We rely on various INPUT_KEY_* being mapped directly onto ASCII.
    */
 
-  /* FIXME: we *don't* want keypresses filtered through the input layer */
+  // FIXME: we *don't* want keypresses filtered through the input layer
 
-  /* First, return if the character isn't printable ASCII. */
+  // First, return if the character isn't printable ASCII.
   if( key < ' ' || key > '~' ) return;
 
-  /* Return if the key isn't valid. */
+  // Return if the key isn't valid.
   switch( allow ) {
   case WIDGET_INPUT_ASCII:
     break;
@@ -135,7 +135,7 @@ widget_text_keyhandler( input_key key )
     break;
   }
 
-  /* If we've got this far, we have a valid key */
+  // If we've got this far, we have a valid key
   append_character( key );
 
   widget_text_draw_text();

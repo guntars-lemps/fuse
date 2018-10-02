@@ -30,7 +30,7 @@
 #include "compat.h"
 #include "ui/ui.h"
 
-/* FIXME: where should we get this prototype from? */
+// FIXME: where should we get this prototype from?
 extern int clock_gettime(struct timespec *tp);
 
 double

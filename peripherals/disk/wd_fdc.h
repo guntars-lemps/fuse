@@ -33,7 +33,7 @@
 #include "fdd.h"
 #include "fuse.h"
 
-/* Status register bits */
+// Status register bits
 enum {
   WD_FDC_SR_MOTORON = 1<<7, // Motor on or READY
   WD_FDC_SR_WRPROT  = 1<<6, // Write-protect
@@ -45,7 +45,7 @@ enum {
   WD_FDC_SR_BUSY    = 1<<0 // Busy (command under execution)
 };
 
-/* Configuration flags (interface-specific) */
+// Configuration flags (interface-specific)
 enum {
   WD_FLAG_NONE      = 0,
   /* The Beta 128 connects the HLD output pin to the READY input pin and
@@ -57,7 +57,7 @@ enum {
   /* The MB-02+ provides a READY signal to FDC instead of FDD, so we use
    * 'extra_signal' for this */
   WD_FLAG_RDY       = 1<<2,
-  /* HLT (input) pin not connected at all, so we assume it is always 1. */
+  // HLT (input) pin not connected at all, so we assume it is always 1.
   WD_FLAG_NOHLT     = 1<<3
 };
 
@@ -125,7 +125,7 @@ typedef struct wd_fdc {
   int ddam; // read a deleted data mark
   int rev; // revolution counter
 
-  /* state during transfer */
+  // state during transfer
   int data_check_head; // -1 no check, 0/1 wait side 0 or 1
   int data_multisector;
   int data_offset;
@@ -147,7 +147,7 @@ typedef struct wd_fdc {
 
 void wd_fdc_init_events( void );
 
-/* allocate an fdc */
+// allocate an fdc
 wd_fdc *wd_fdc_alloc_fdc( wd_type_t type, int hlt_time, unsigned int flags );
 void wd_fdc_master_reset( wd_fdc *f );
 

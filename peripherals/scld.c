@@ -129,10 +129,10 @@ scld_dec_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
     display_refresh_main_screen();
   }
 
-  /* Commit change to scld_last_dec */
+  // Commit change to scld_last_dec
   scld_last_dec = new_dec;
 
-  /* If we just reenabled interrupts, check for a retriggered interrupt */
+  // If we just reenabled interrupts, check for a retriggered interrupt
   if( old_dec.name.intdisable && !scld_last_dec.name.intdisable )
     z80_interrupt();
 
@@ -205,7 +205,7 @@ scld_memory_map( void )
       memory_map_8k( i * 0x2000, exrom_dock, i );
 }
 
-/* Initialise the memory map to point to the home bank */
+// Initialise the memory map to point to the home bank
 void
 scld_memory_map_home( void )
 {
@@ -233,7 +233,7 @@ scld_dock_exrom_from_snapshot( memory_page *dest, int page_num, int writable,
     page->save_to_snapshot = 1;
   }
 
-  /* Reset contention for pages */
+  // Reset contention for pages
   scld_set_exrom_dock_contention();
 }
 
@@ -330,7 +330,7 @@ scld_to_snapshot( libspectrum_snap *snap )
   }
 }
 
-/* Map 16K of memory and record default mapping for dock */
+// Map 16K of memory and record default mapping for dock
 void
 scld_home_map_16k( libspectrum_word address, memory_page source[],
                    int page_num )

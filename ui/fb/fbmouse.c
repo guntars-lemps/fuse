@@ -80,7 +80,7 @@ fbmouse_init(void)
 	     dlerror() );
 #endif
 
-  /* No libgpm support, no libgpm or gpm is not running - use our own code */
+  // No libgpm support, no libgpm or gpm is not running - use our own code
   if( try_open ("/dev/input/mice") &&
       try_open ("/dev/mouse") &&
       try_open ("/dev/psaux") ) {
@@ -110,7 +110,7 @@ fbmouse_init(void)
     mouse_mode = try_mouse_mode( 200, 4 ) ? ImPS2 : ExPS2;
   }
 
-  /* *Now* we want non-blocking I/O... */
+  // *Now* we want non-blocking I/O...
   i = 1;
   if( ioctl( mouse_fd, FIONBIO, &i ) )
     return fbmouse_end(); // couldn't get it
@@ -225,7 +225,7 @@ mouse_update( void )
   if( xoff || yoff ) ui_mouse_motion( xoff, -yoff );
 }
 
-/* Try to open the specified device. Return 0 on success. */
+// Try to open the specified device. Return 0 on success.
 static int
 try_open( const char *dev )
 {

@@ -35,7 +35,7 @@ keysyms_map_t keysyms_map[] = {
 scaler_type
 menu_get_scaler( scaler_available_fn selector )
 {
-  /* No scaler selected */
+  // No scaler selected
   return SCALER_NUM;
 }
 
@@ -43,14 +43,14 @@ int
 menu_select_roms_with_title( const char *title, size_t start, size_t count,
     int is_peripheral )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 void
 ui_breakpoints_updated( void )
 {
-  /* Do nothing */
+  // Do nothing
 }
 
 ui_confirm_save_t
@@ -68,125 +68,125 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type, int inputs )
 int
 ui_debugger_activate( void )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_debugger_deactivate( int interruptable )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_debugger_disassemble( libspectrum_word addr )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_debugger_update( void )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_end( void )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_error_specific( ui_error_level severity, const char *message )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_event( void )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 char*
 ui_get_open_filename( const char *title )
 {
-  /* No filename */
+  // No filename
   return NULL;
 }
 
 int
 ui_get_rollback_point( GSList *points )
 {
-  /* No rollback point */
+  // No rollback point
   return -1;
 }
 
 char*
 ui_get_save_filename( const char *title )
 {
-  /* No filename */
+  // No filename
   return NULL;
 }
 
 int
 ui_init( int *argc, char ***argv )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_menu_item_set_active( const char *path, int active )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_mouse_grab( int startup )
 {
-  /* Successful grab */
+  // Successful grab
   return 1;
 }
 
 int
 ui_mouse_release( int suspend )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 void
 ui_pokemem_selector( const char *filename )
 {
-  /* Do nothing */
+  // Do nothing
 }
 
 int
 ui_query( const char *message )
 {
-  /* Query confirmed */
+  // Query confirmed
   return 1;
 }
 
 int
 ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_statusbar_update_speed( float speed )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
@@ -194,47 +194,47 @@ int
 ui_tape_browser_update( ui_tape_browser_update_type change,
     libspectrum_tape_block *block )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 ui_widgets_reset( void )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 void
 uidisplay_area( int x, int y, int w, int h )
 {
-  /* Do nothing */
+  // Do nothing
 }
 
 int
 uidisplay_end( void )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 void
 uidisplay_frame_end( void )
 {
-  /* Do nothing */
+  // Do nothing
 }
 
 int
 uidisplay_hotswap_gfx_mode( void )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
 int
 uidisplay_init( int width, int height )
 {
-  /* No error */
+  // No error
   return 0;
 }
 
@@ -242,18 +242,18 @@ void
 uidisplay_plot16( int x, int y, libspectrum_word data,
     libspectrum_byte ink, libspectrum_byte paper )
 {
-  /* Do nothing */
+  // Do nothing
 }
 
 void
 uidisplay_plot8( int x, int y, libspectrum_byte data,
     libspectrum_byte ink, libspectrum_byte paper )
 {
-  /* Do nothing */
+  // Do nothing
 }
 
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
-  /* Do nothing */
+  // Do nothing
 }

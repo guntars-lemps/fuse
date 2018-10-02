@@ -34,7 +34,7 @@ GtkWidget *dialog, *list;
 static int dialog_created = 0;
 static int current_block;
 
-/* List columns */
+// List columns
 enum
 {
   COL_SECONDS = 0,
@@ -50,7 +50,7 @@ select_row( GtkButton *button GCC_UNUSED, gpointer user_data )
 
   current_block = -1;
 
-  /* Get selected row */
+  // Get selected row
   gtk_tree_view_get_cursor( GTK_TREE_VIEW( view ), &path, &focus_column );
   if( path ) {
     int *indices = gtk_tree_path_get_indices( path );
@@ -69,7 +69,7 @@ create_rollback_list( void )
 
   view = gtk_tree_view_new();
 
-  /* Add columns */
+  // Add columns
   renderer = gtk_cell_renderer_text_new();
   gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( view ),
                                                -1,
@@ -78,7 +78,7 @@ create_rollback_list( void )
                                                "text", COL_SECONDS,
                                                NULL );
 
-  /* Create data model */
+  // Create data model
   store = gtk_list_store_new( NUM_COLS, G_TYPE_STRING );
 
   model = GTK_TREE_MODEL( store );
@@ -121,7 +121,7 @@ update_list( GSList *points )
 
     snprintf( buffer, 256, "%.2f", GPOINTER_TO_INT( points->data ) / 50.0 );
 
-    /* Append a new row and fill data */
+    // Append a new row and fill data
     gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
     gtk_list_store_set( GTK_LIST_STORE( model ), &iter,
                         COL_SECONDS, buffer,

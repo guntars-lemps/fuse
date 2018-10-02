@@ -48,7 +48,7 @@ static int printer_text_enabled=0;
 static FILE *printer_graphics_file=NULL;
 static FILE *printer_text_file=NULL;
 
-/* for the ZX Printer */
+// for the ZX Printer
 static int zxpframes,zxpspeed,zxpnewspeed;
 static libspectrum_dword zxpcycles;
 static int zxpheight,zxppixel,zxpstylus;
@@ -56,11 +56,11 @@ static unsigned char zxpline[256];
 static unsigned int frames=0;
 static unsigned int zxplineofchar=0;
 
-/* last 8 pixel lines output, as bitmap */
+// last 8 pixel lines output, as bitmap
 static unsigned char zxplast8[32*8];
 
 
-/* for parallel */
+// for parallel
 static unsigned char parallel_data=0;
 
 /* see printer_parallel_strobe_write() comment; must be less than one
@@ -136,7 +136,7 @@ periph_register(PERIPH_TYPE_PARALLEL_PRINTER,&printer_parallel_periph);
 
 static void printer_text_init(void)
 {
-/* nothing yet, just a placeholder */
+// nothing yet, just a placeholder
 }
 
 
@@ -149,12 +149,12 @@ int overwrite=1;
 if(!printer_graphics_enabled || !settings_current.printer_graphics_filename)
   return(0);
 
-/* first, see if there's an existing file we can add to. */
+// first, see if there's an existing file we can add to.
 if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
   {
   char buf[7+10+1]; // 7 being length of pbmstart
 
-  /* check it has a header in our slightly odd format. */
+  // check it has a header in our slightly odd format.
   if(fread(buf,1,sizeof(buf),tmpf)==sizeof(buf) &&
      memcmp(buf,pbmstart,strlen(pbmstart))==0 &&
      buf[sizeof(buf)-1]=='\n')
@@ -168,7 +168,7 @@ if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
      */
     for(f=0;f<10;f++,ptr++)
       {
-      /* make sure it's a space or digit */
+      // make sure it's a space or digit
       if(!strchr(" 0123456789",*ptr))
         break;
 
@@ -182,7 +182,7 @@ if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
           break;
       }
 
-    /* if it got through that, reuse the file */
+    // if it got through that, reuse the file
     if(f==10)
       {
       overwrite=0;
@@ -204,13 +204,13 @@ if((printer_graphics_file=fopen(settings_current.printer_graphics_filename,
 
 if(overwrite)
   {
-  /* we reserve 10 chars for height */
+  // we reserve 10 chars for height
   fputs(pbmstart,printer_graphics_file);
   fprintf(printer_graphics_file,"%10d\n",0);
   }
 else
   {
-  /* if appending, seek to the correct place */
+  // if appending, seek to the correct place
   if(fseek(printer_graphics_file,
            strlen(pbmstart)+10+1+(256/8)*zxpheight,
            SEEK_SET)!=0)
@@ -232,7 +232,7 @@ static int printer_text_open_file(void)
 if(!printer_text_enabled || !settings_current.printer_text_filename)
   return(0);
 
-/* append to any existing file... */
+// append to any existing file...
 if((printer_text_file=fopen(settings_current.printer_text_filename,"a"))==NULL)
   {
   ui_error(UI_ERROR_ERROR,"Couldn't open '%s', text printout disabled",
@@ -241,7 +241,7 @@ if((printer_text_file=fopen(settings_current.printer_text_filename,"a"))==NULL)
   return(0);
   }
 
-/* ensure users have immediate access to text file contents */
+// ensure users have immediate access to text file contents
 setbuf( printer_text_file, NULL );
 
 return(1);
@@ -275,7 +275,7 @@ if(!printer_graphics_file && !printer_zxp_open_file())
 
 pos=ftell(printer_graphics_file);
 
-/* seek back to write the image height */
+// seek back to write the image height
 if(fseek(printer_graphics_file,strlen("P4\n256 "),SEEK_SET)!=0)
   ui_error(UI_ERROR_ERROR,
 	   "Couldn't seek to write graphics printout image height");
@@ -301,14 +301,14 @@ if(fseek(printer_graphics_file,pos,SEEK_SET)!=0)
 
 static void printer_zxp_end(void)
 {
-/* stop the printer */
+// stop the printer
 printer_zxp_write(0xfb,4);
 
-/* if not enabled or not opened, can't have written anything */
+// if not enabled or not opened, can't have written anything
 if(!printer_graphics_enabled || !printer_graphics_file || zxpheight==0)
   return;
 
-/* write header */
+// write header
 printer_zxp_update_header();
 
 fclose(printer_graphics_file);
@@ -330,7 +330,7 @@ if(printer_text_file)
 }
 
 
-/* output the last line printed as text. */
+// output the last line printed as text.
 static void printer_zxp_output_as_text(void)
 {
 static unsigned char charset[256*8];
@@ -352,7 +352,7 @@ for(x=0;x<32;x++)
   {
   c=-1;
 
-  /* try each char */
+  // try each char
   for(f=32;f<128 && c==-1;f++)
     {
     ptr=zxplast8+x;
@@ -365,7 +365,7 @@ for(x=0;x<32;x++)
         }
     }
 
-  /* can't do UDGs, too unreliable */
+  // can't do UDGs, too unreliable
 
   if(c==-1) c=32;
 
@@ -381,7 +381,7 @@ printer_text_output_char('\n');
 }
 
 
-/* output a pixel line */
+// output a pixel line
 static void printer_zxp_output_line(void)
 {
 unsigned char *ptr;
@@ -395,7 +395,7 @@ if(!printer_graphics_file && !printer_zxp_open_file())
 zxpheight++;
 zxplineofchar++;
 
-/* scroll up record of last char-line */
+// scroll up record of last char-line
 memmove(zxplast8,zxplast8+32,sizeof(zxplast8)-32);
 
 ptr=zxplast8+sizeof(zxplast8)-32;
@@ -552,7 +552,7 @@ else
       }
     zxpspeed=zxpstylus=0;
 
-    /* this marks the end of a char line or COPY */
+    // this marks the end of a char line or COPY
     zxplineofchar=0;
 
     /* this is pretty frequent (on a per-char-line basis!),
@@ -579,7 +579,7 @@ else
 
 void printer_zxp_reset(int hard_reset GCC_UNUSED)
 {
-/* stop printer - XXX not sure if the real one does this on reset */
+// stop printer - XXX not sure if the real one does this on reset
 printer_zxp_write(0xfb,4);
 
 zxplineofchar=0;
@@ -648,7 +648,7 @@ if(!settings_current.printer)
   return;
 if((old_on && !on) || (!old_on && on))
   {
-  /* got an edge */
+  // got an edge
 
   if(!second_edge)
     {
@@ -671,7 +671,7 @@ if((old_on && !on) || (!old_on && on))
       printer_text_output_char(last_data);
     else
       {
-      /* too long ago, treat it as first edge */
+      // too long ago, treat it as first edge
       last_data=parallel_data;
       second_edge=1;
       }
@@ -693,7 +693,7 @@ if(!settings_current.printer)
 
 *attached = 0xff; // TODO: check this
 
-/* bit 0 = busy. other bits high? */
+// bit 0 = busy. other bits high?
 
 return(0xfe); // never busy
 }

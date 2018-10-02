@@ -29,15 +29,15 @@
 #include "psg.h"
 #include "ui/ui.h"
 
-/* Are we currently recording a .psg file? */
+// Are we currently recording a .psg file?
 int psg_recording;
 
 static libspectrum_byte psg_register_values[ AY_REGISTERS ];
 
-/* booleans to indicate the registers written to in this frame */
+// booleans to indicate the registers written to in this frame
 static int psg_registers_written[ AY_REGISTERS ];
 
-/* number of prior frames with no AY events */
+// number of prior frames with no AY events
 static int psg_empty_frame_count;
 
 static FILE *psg_file;
@@ -58,21 +58,21 @@ psg_start_recording( const char *filename )
   int i;
 
   if( psg_recording ) return 1;
-  
+
   psg_file = fopen( filename, "wb" );
   if( psg_file == NULL ) {
     ui_error( UI_ERROR_ERROR, "unable to open PSG file for writing" );
     return 1;
   }
 
-  /* write PSG file header */
+  // write PSG file header
   if( fprintf( psg_file, "PSG\x1a" ) < 0 ) {
     ui_error( UI_ERROR_ERROR, "unable to write PSG file header" );
     return 1;
   }
   for( i = 0; i < 12; i++ ) putc( 0, psg_file );
 
-  /* begin with no registers written */
+  // begin with no registers written
   for( i = 0; i < AY_REGISTERS; i++ ) psg_registers_written[i] = 0;
 
   psg_empty_frame_count = 1;
@@ -86,10 +86,10 @@ psg_stop_recording( void )
 {
   if( !psg_recording ) return 1;
 
-  /* flush final frame */
+  // flush final frame
   psg_frame();
 
-  /* end file with the appropriate end-frame marker */
+  // end file with the appropriate end-frame marker
   write_frame_separator();
 
   fclose( psg_file );
@@ -128,7 +128,7 @@ psg_frame( void )
 
   if( !psg_recording ) return 0;
 
-  /* check if any AY sound events have happened this frame */
+  // check if any AY sound events have happened this frame
   ay_updated = 0;
   for( i = 0; i < 14 && !ay_updated; i++ )
     ay_updated = psg_registers_written[i];
@@ -146,7 +146,7 @@ psg_frame( void )
 
   } else {
 
-    /* AY not updated */
+    // AY not updated
     psg_empty_frame_count++;
 
   }

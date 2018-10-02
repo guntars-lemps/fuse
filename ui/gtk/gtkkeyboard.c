@@ -90,7 +90,7 @@ gtkkeyboard_keypress( GtkWidget *widget GCC_UNUSED, GdkEvent *event,
 
   return input_event( &fuse_event );
 
-  /* FIXME: handle F1 to deal with the pop-up menu */
+  // FIXME: handle F1 to deal with the pop-up menu
 }
 
 int

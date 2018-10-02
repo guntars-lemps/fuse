@@ -41,7 +41,7 @@
 #include "unittests/unittests.h"
 #include "zxatasp.h"
 
-/* A 16KB memory chunk accessible by the Z80 when /ROMCS is low */
+// A 16KB memory chunk accessible by the Z80 when /ROMCS is low
 static memory_page zxatasp_memory_map_romcs[MEMORY_PAGES_IN_16K];
 static int zxatasp_memory_source;
 
@@ -52,11 +52,11 @@ static int zxatasp_memory_source;
 */
 
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "zxatasp";
 static int page_event, unpage_event;
 
-/* Private function prototypes */
+// Private function prototypes
 
 static libspectrum_byte zxatasp_portA_read( libspectrum_word port,
 					    libspectrum_byte *attached );
@@ -83,7 +83,7 @@ static void zxatasp_writeide( libspectrum_ide_channel *chn,
 			      libspectrum_ide_register idereg );
 static void zxatasp_activate( void );
 
-/* Data */
+// Data
 
 static const periph_port_t zxatasp_ports[] = {
   { 0x039f, 0x009f, zxatasp_portA_read, zxatasp_portA_write },
@@ -116,7 +116,7 @@ static int memory_allocated = 0;
 
 static const size_t ZXATASP_NOT_PAGED = 0xff;
 
-/* We're ignoring all mode bits and only emulating mode 0, basic I/O */
+// We're ignoring all mode bits and only emulating mode 0, basic I/O
 static const libspectrum_byte MC8255_PORT_C_LOW_IO  = 0x01;
 static const libspectrum_byte MC8255_PORT_B_IO      = 0x02;
 static const libspectrum_byte MC8255_PORT_C_HI_IO   = 0x08;
@@ -165,7 +165,7 @@ static module_info_t zxatasp_module_info = {
 
 };
 
-/* Housekeeping functions */
+// Housekeeping functions
 
 static int
 zxatasp_init( void *context )
@@ -266,7 +266,7 @@ zxatasp_eject( libspectrum_ide_unit unit )
     UI_MENU_ITEM_MEDIA_IDE_ZXATASP_SLAVE_EJECT );
 }
 
-/* Port read/writes */
+// Port read/writes
 
 libspectrum_byte
 zxatasp_portA_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
@@ -310,20 +310,20 @@ zxatasp_portC_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
   libspectrum_byte oldC = zxatasp_portC;
   libspectrum_byte newC;
 
-  /* Determine new port C value, dependent on I/O modes */
+  // Determine new port C value, dependent on I/O modes
   newC = ( zxatasp_control & MC8255_PORT_C_LOW_IO )
             ? ( oldC & 0x0f ) : ( data & 0x0f );
 
   newC |= ( zxatasp_control & MC8255_PORT_C_HI_IO )
             ? ( oldC & 0xf0 ) : ( data & 0xf0 );
 
-  /* Set the new port value */
+  // Set the new port value
   zxatasp_portC = newC;
 
-  /* No action can occur if high part of port C is in input mode */
+  // No action can occur if high part of port C is in input mode
   if( zxatasp_control & MC8255_PORT_C_HI_IO ) return;
 
-  /* Check for any I/O action */
+  // Check for any I/O action
   if(  ( ZXATASP_READ_PRIMARY( newC ) ) &&
       !( ZXATASP_READ_PRIMARY( oldC ) )   ) {
     zxatasp_readide( zxatasp_idechn0, ( newC & ZXATASP_IDE_REG ) );
@@ -380,13 +380,13 @@ static void
 zxatasp_control_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 {
   if( data & MC8255_SETMODE ) {
-    /* Set the control word and reset the ports */
+    // Set the control word and reset the ports
     zxatasp_control = data;
     zxatasp_resetports();
 
   } else {
 
-    /* Set or reset a bit of port C */
+    // Set or reset a bit of port C
     libspectrum_byte bit = (data >> 1) & 7;
     libspectrum_byte newC = zxatasp_portC;
 
@@ -433,7 +433,7 @@ set_zxatasp_bank( int bank )
   }
 }
 
-/* IDE access */
+// IDE access
 
 static void
 zxatasp_readide(libspectrum_ide_channel *chn,

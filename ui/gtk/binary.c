@@ -143,7 +143,7 @@ create_binary_dialog( struct binary_info *info, const char *title )
   accel_group = gtk_accel_group_new();
   gtk_window_add_accel_group( GTK_WINDOW( info->dialog ), accel_group );
 
-  /* Command buttons */
+  // Command buttons
   gtkstock_create_ok_cancel( info->dialog, NULL, info->activate_data, info,
                              DEFAULT_DESTROY, DEFAULT_DESTROY );
 }
@@ -164,14 +164,14 @@ menu_file_loadbinarydata( GtkAction *gtk_action GCC_UNUSED,
   error = utils_read_file( info.filename, &info.file );
   if( error ) { free( info.filename ); fuse_emulation_unpause(); return; }
 
-  /* Information display */
+  // Information display
   info.load = 1;
   info.activate_data = G_CALLBACK( load_data );
   info.change_filename = G_CALLBACK( change_load_filename );
 
   create_binary_dialog( &info, "Fuse - Load Binary Data" );
 
-  /* Process the dialog */
+  // Process the dialog
   gtk_widget_show_all( info.dialog );
   gtk_main();
 
@@ -198,15 +198,15 @@ change_load_filename( GtkButton *button GCC_UNUSED, gpointer user_data )
   error = utils_read_file( new_filename, &new_file );
   if( error ) { free( new_filename ); return; }
 
-  /* Remove the data for the old file */
+  // Remove the data for the old file
   utils_close_file( &info->file );
 
   free( info->filename );
 
-  /* Put the new data in */
+  // Put the new data in
   info->filename = new_filename; info->file = new_file;
 
-  /* And update the displayed information */
+  // And update the displayed information
   gtk_label_set_text( GTK_LABEL( info->filename_widget ), new_filename );
 
   snprintf( buffer, 80, "%lu", (unsigned long)info->file.length );
@@ -278,7 +278,7 @@ menu_file_savebinarydata( GtkAction *gtk_action GCC_UNUSED,
 
   create_binary_dialog( &info, "Fuse - Save Binary Data" );
 
-  /* Process the dialog */
+  // Process the dialog
   gtk_widget_show_all( info.dialog );
   gtk_main();
 

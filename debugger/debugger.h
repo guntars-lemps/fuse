@@ -34,7 +34,7 @@
 
 #include "breakpoint.h"
 
-/* The current state of the debugger */
+// The current state of the debugger
 enum debugger_mode_t
 {
   DEBUGGER_MODE_INACTIVE, // No breakpoint set
@@ -44,7 +44,7 @@ enum debugger_mode_t
 
 extern enum debugger_mode_t debugger_mode;
 
-/* Which base should we display things in */
+// Which base should we display things in
 extern int debugger_output_base;
 
 void debugger_register_startup( void );
@@ -62,30 +62,30 @@ int debugger_run( void ); // Set debugger_mode so that emulation will occur
 void debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 			   libspectrum_word address );
 
-/* Get an instruction relative to a specific address */
+// Get an instruction relative to a specific address
 libspectrum_word debugger_search_instruction( libspectrum_word address,
                                               int delta );
 
-/* Evaluate a debugger command */
+// Evaluate a debugger command
 void debugger_command_evaluate( const char *command );
 
-/* Get a deparsed expression */
+// Get a deparsed expression
 int debugger_expression_deparse( char *buffer, size_t length,
 				 const debugger_expression *exp );
 
-/* Register an event type with the debugger */
+// Register an event type with the debugger
 int debugger_event_register( const char *type, const char *detail );
 
-/* Fire off a debugger event */
+// Fire off a debugger event
 void debugger_event( int event_code );
 
-/* Exit the emulator */
+// Exit the emulator
 void debugger_exit_emulator( debugger_expression *exit_code_expression );
 
-/* Get the exit code to be used when exiting the emulator */
+// Get the exit code to be used when exiting the emulator
 int debugger_get_exit_code( void );
 
-/* Debugger system variables */
+// Debugger system variables
 typedef libspectrum_dword (*debugger_get_system_variable_fn_t)( void );
 typedef void (*debugger_set_system_variable_fn_t)( libspectrum_dword value );
 
@@ -94,7 +94,7 @@ void debugger_system_variable_register(
   debugger_get_system_variable_fn_t get,
   debugger_set_system_variable_fn_t set );
 
-/* Unit tests */
+// Unit tests
 int debugger_disassemble_unittest( void );
 
 #endif // #ifndef FUSE_DEBUGGER_H

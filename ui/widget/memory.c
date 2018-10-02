@@ -80,7 +80,7 @@ widget_memory_keyhandler( input_key key )
     widget_end_all( WIDGET_FINISHED_OK );
     break;
 
-  /* Address selection */
+  // Address selection
   case INPUT_KEY_Up:
     memaddr -= 16;    widget_memory_draw( NULL ); break;
   case INPUT_KEY_Down:

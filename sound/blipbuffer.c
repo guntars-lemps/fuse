@@ -267,7 +267,7 @@ blip_buffer_clear( Blip_Buffer * buff, int entire_buffer )
 blargg_err_t
 blip_buffer_set_sample_rate( Blip_Buffer * buff, long new_rate, int msec )
 {
-  /* start with maximum length that resampled time can represent */
+  // start with maximum length that resampled time can represent
   long new_size = ( ULONG_MAX >> BLIP_BUFFER_ACCURACY ) - BUFFER_EXTRA - 64;
 
   if( msec != BLIP_MAX_LENGTH ) {
@@ -288,7 +288,7 @@ blip_buffer_set_sample_rate( Blip_Buffer * buff, long new_rate, int msec )
 
   buff->buffer_size_ = new_size;
 
-  /* update things based on the sample rate */
+  // update things based on the sample rate
   buff->sample_rate_ = new_rate;
   buff->length_ = new_size * 1000 / new_rate - 1;
   if( buff->clock_rate_ )
@@ -347,7 +347,7 @@ blip_buffer_remove_samples( Blip_Buffer * buff, long count )
   if( count ) {
     blip_buffer_remove_silence( buff, count );
 
-    /*  copy remaining samples to beginning and clear old samples */
+    // copy remaining samples to beginning and clear old samples
     remain = blip_buffer_samples_avail( buff ) + BUFFER_EXTRA;
     memmove( buff->buffer_, buff->buffer_ + count,
              remain * sizeof( buf_t_ ) );
@@ -355,7 +355,7 @@ blip_buffer_remove_samples( Blip_Buffer * buff, long count )
   }
 }
 
-/*  Blip_Synth_ */
+// Blip_Synth_
 
 void
 _blip_synth_init( Blip_Synth_ * synth_, short *p )
@@ -427,7 +427,7 @@ blip_eq_generate( blip_eq_t * eq, float *out, int count )
 
   gen_sinc( out, count, BLIP_RES * oversample, eq->treble, cutoff );
 
-  /* apply (half of) hamming window */
+  // apply (half of) hamming window
   to_fraction = PI / ( count - 1 );
   for( i = count; i--; )
     out[i] *= 0.54 - 0.46 * cos( i * to_fraction );
@@ -437,7 +437,7 @@ blip_eq_generate( blip_eq_t * eq, float *out, int count )
 void
 _blip_synth_adjust_impulse( Blip_Synth_ * synth_ )
 {
-  /* sum pairs for each phase and add error correction to end of first half */
+  // sum pairs for each phase and add error correction to end of first half
   int size = _blip_synth_impulses_size( synth_ );
 
   int i, p, p2, error;
@@ -471,16 +471,16 @@ _blip_synth_treble_eq( Blip_Synth_ * synth_, blip_eq_t * eq )
 
   blip_eq_generate( eq, &fimpulse[BLIP_RES], half_size );
 
-  /* need mirror slightly past center for calculation */
+  // need mirror slightly past center for calculation
   for( i = BLIP_RES; i--; )
     fimpulse[BLIP_RES + half_size + i] =
       fimpulse[BLIP_RES + half_size - 1 - i];
 
-  /* starts at 0 */
+  // starts at 0
   for( i = 0; i < BLIP_RES; i++ )
     fimpulse[i] = 0.0f;
 
-  /* find rescale factor */
+  // find rescale factor
   total = 0.0;
   for( i = 0; i < half_size; i++ )
     total += fimpulse[BLIP_RES + i];
@@ -491,7 +491,7 @@ _blip_synth_treble_eq( Blip_Synth_ * synth_, blip_eq_t * eq )
   rescale = base_unit / 2 / total;
   synth_->kernel_unit = ( long )base_unit;
 
-  /* integrate, first difference, rescale, convert to int */
+  // integrate, first difference, rescale, convert to int
   sum = 0.0;
   next = 0.0;
   impulses_size = _blip_synth_impulses_size( synth_ );
@@ -504,7 +504,7 @@ _blip_synth_treble_eq( Blip_Synth_ * synth_, blip_eq_t * eq )
 
   _blip_synth_adjust_impulse( synth_ );
 
-  /* volume might require rescaling */
+  // volume might require rescaling
   vol = synth_->volume_unit_;
   if( vol ) {
     synth_->volume_unit_ = 0.0;
@@ -518,7 +518,7 @@ _blip_synth_volume_unit( Blip_Synth_ * synth_, double new_unit )
   if( new_unit != synth_->volume_unit_ ) {
     double factor;
 
-    /* use default eq if it hasn't been set yet */
+    // use default eq if it hasn't been set yet
     if( !synth_->kernel_unit ) {
       blip_eq_t eq = { -8.0, 0, 44100, 0 };
 
@@ -531,7 +531,7 @@ _blip_synth_volume_unit( Blip_Synth_ * synth_, double new_unit )
     if( factor > 0.0 ) {
       int shift = 0;
 
-      /* if unit is really small, might need to attenuate kernel */
+      // if unit is really small, might need to attenuate kernel
       while( factor < 2.0 ) {
         shift++;
         factor *= 2.0;
@@ -588,7 +588,7 @@ blip_buffer_read_samples( Blip_Buffer * buff, blip_sample_t * out,
         accum += *in++;
         *out++ = ( blip_sample_t ) s;
 
-        /* clamp sample */
+        // clamp sample
         if( ( blip_sample_t ) s != s )
           out[-1] = ( blip_sample_t ) ( 0x7FFF - ( s >> 24 ) );
       }
@@ -603,7 +603,7 @@ blip_buffer_read_samples( Blip_Buffer * buff, blip_sample_t * out,
         *out = ( blip_sample_t ) s;
         out += 2;
 
-        /* clamp sample */
+        // clamp sample
         if( ( blip_sample_t ) s != s )
           out[-2] = ( blip_sample_t ) ( 0x7FFF - ( s >> 24 ) );
       }

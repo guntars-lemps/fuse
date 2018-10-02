@@ -45,7 +45,7 @@ typedef enum expression_type {
 
 enum precedence_t {
 
-  /* Lowest precedence */
+  // Lowest precedence
   PRECEDENCE_LOGICAL_OR,
   PRECEDENCE_LOGICAL_AND,
   PRECEDENCE_BITWISE_OR,
@@ -59,7 +59,7 @@ enum precedence_t {
   PRECEDENCE_DEREFERENCE,
 
   PRECEDENCE_ATOMIC,
-  /* Highest precedence */
+  // Highest precedence
 
 };
 
@@ -237,7 +237,7 @@ void
 debugger_expression_delete( debugger_expression *exp )
 {
   switch( exp->type ) {
-    
+
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
   case DEBUGGER_EXPRESSION_TYPE_SYSVAR:
     break;
@@ -255,7 +255,7 @@ debugger_expression_delete( debugger_expression *exp )
     libspectrum_free( exp->types.variable );
     break;
   }
-    
+
   libspectrum_free( exp );
 }
 
@@ -459,7 +459,7 @@ debugger_expression_deparse( char *buffer, size_t length,
   ui_error( UI_ERROR_ERROR, "unknown expression type %d", exp->type );
   fuse_abort();
 }
-  
+
 static int
 deparse_unaryop( char *buffer, size_t length,
 		 const struct unaryop_type *unaryop )
@@ -493,9 +493,9 @@ deparse_unaryop( char *buffer, size_t length,
   }
 
   if( brackets_possible )
-    brackets = ( unaryop->op->precedence                  < 
+    brackets = ( unaryop->op->precedence                  <
                  unaryop_precedence( unaryop->operation )   );
-    
+
   snprintf( buffer, length, "%s%s%s%s%s", operation_string,
 	    brackets ? "( " : "", operand_buffer,
 	    brackets ? " )" : "", operation_suffix );
@@ -571,7 +571,7 @@ static int
 brackets_necessary( int top_operation, debugger_expression *operand )
 {
   enum precedence_t top_precedence, bottom_precedence;
-  
+
   top_precedence = binaryop_precedence( top_operation );
   bottom_precedence = operand->precedence;
 
@@ -595,7 +595,7 @@ brackets_necessary( int top_operation, debugger_expression *operand )
 
     if( is_non_associative( top_operation ) ) return 1;
 
-    /* Sanity check */
+    // Sanity check
     if( operand->type != DEBUGGER_EXPRESSION_TYPE_BINARYOP ) {
       ui_error( UI_ERROR_ERROR,
 		"binary operator has same precedence as non-binary operator" );
@@ -611,13 +611,13 @@ brackets_necessary( int top_operation, debugger_expression *operand )
   return 0;
 }
 
-/* Is a binary operator non-associative? */
+// Is a binary operator non-associative?
 static int
 is_non_associative( int operation )
 {
   switch( operation ) {
 
-  /* Simple cases */
+  // Simple cases
   case '+': case '*': return 0;
   case '-': case '/': return 1;
 
@@ -630,7 +630,7 @@ is_non_associative( int operation )
   case DEBUGGER_TOKEN_GREATER_THAN_OR_EQUAL_TO:
     return 1;
 
-  /* The logical operators are associative */
+  // The logical operators are associative
   case DEBUGGER_TOKEN_LOGICAL_AND: return 0;
   case DEBUGGER_TOKEN_LOGICAL_OR: return 0;
 
@@ -642,7 +642,7 @@ is_non_associative( int operation )
 
   }
 
-  /* Should never get here */
+  // Should never get here
   ui_error( UI_ERROR_ERROR, "unknown binary operation %d", operation );
   fuse_abort();
 }

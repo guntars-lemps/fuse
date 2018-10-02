@@ -339,9 +339,9 @@ ui_media_drive_insert( const ui_media_drive_info_t *drive,
   int error;
   const fdd_params_t *dt;
 
-  /* Eject any disk already in the drive */
+  // Eject any disk already in the drive
   if( drive->fdd->loaded ) {
-    /* Abort the insert if we want to keep the current disk */
+    // Abort the insert if we want to keep the current disk
     if( drive_eject( drive ) )
       return 0;
   }
@@ -372,7 +372,7 @@ ui_media_drive_insert( const ui_media_drive_info_t *drive,
 
   fdd_load( drive->fdd, 0 );
 
-  /* Set the 'eject' item active */
+  // Set the 'eject' item active
   ui_media_drive_update_menus( drive, UI_MEDIA_DRIVE_UPDATE_ALL );
 
   if( filename && autoload && drive->autoload_hook ) {

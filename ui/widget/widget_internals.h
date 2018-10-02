@@ -33,23 +33,23 @@
 #include "settings.h"
 #include "widget.h"
 
-/* The default colours used in the widget */
+// The default colours used in the widget
 #define WIDGET_COLOUR_DISABLED   7 // White
 #define WIDGET_COLOUR_BACKGROUND 15 // Bright White
 #define WIDGET_COLOUR_FOREGROUND 0 // Black
 #define WIDGET_COLOUR_HIGHLIGHT  13 // Cyan
 #define WIDGET_COLOUR_TITLE      WIDGET_COLOUR_BACKGROUND
 
-/* The ways of finishing a widget */
+// The ways of finishing a widget
 typedef enum widget_finish_state {
   WIDGET_FINISHED_OK = 1,
   WIDGET_FINISHED_CANCEL,
 } widget_finish_state;
 
-/* A function to draw a widget */
+// A function to draw a widget
 typedef int (*widget_draw_fn)( void *data );
 
-/* The information we need to store for each widget */
+// The information we need to store for each widget
 typedef struct widget_t {
   widget_draw_fn draw; // Draw this widget
   int (*finish)( widget_finish_state finished ); // Post-widget processing
@@ -94,7 +94,7 @@ int widget_dialog_with_border( int x, int y, int width, int height );
 int split_message( const char *message, char ***lines, size_t *count,
 		   const size_t line_length );
 
-/* File selector */
+// File selector
 
 typedef struct widget_dirent {
   int mode;
@@ -114,25 +114,25 @@ int widget_filesel_save_draw( void* data );
 int widget_filesel_finish( widget_finish_state finished );
 void widget_filesel_keyhandler( input_key key );
 
-/* Tape menu */
+// Tape menu
 
 int widget_tape_draw( void* data );
 void widget_tape_keyhandler( input_key key );
 
-/* File menu */
+// File menu
 
 int widget_file_draw( void* data );
 void widget_file_keyhandler( input_key key );
 
-/* Options menu */
+// Options menu
 int widget_menu_filter( void *data );
 
-/* Machine menu */
+// Machine menu
 
 int widget_machine_draw( void* data );
 void widget_machine_keyhandler( input_key key );
 
-/* Keyboard picture */
+// Keyboard picture
 
 typedef struct widget_picture_data {
   const char *filename;
@@ -143,20 +143,20 @@ typedef struct widget_picture_data {
 int widget_picture_draw( void* data );
 void widget_picture_keyhandler( input_key key );
 
-/* Help menu */
+// Help menu
 
 int widget_help_draw( void* data );
 void widget_help_keyhandler( input_key key );
 
-/* General menu code */
+// General menu code
 
 int widget_menu_draw( void* data );
 void widget_menu_keyhandler( input_key key );
 
-/* More callbacks */
+// More callbacks
 scaler_type widget_select_scaler( int (*selector)( scaler_type ) );
 
-/* The generalised selector widget */
+// The generalised selector widget
 
 typedef struct widget_select_t {
 
@@ -174,13 +174,13 @@ int widget_select_draw( void *data );
 void widget_select_keyhandler( input_key key );
 int widget_select_finish( widget_finish_state finished );
 
-/* The tape browser widget */
+// The tape browser widget
 
 int widget_browse_draw( void* data );
 void widget_browse_keyhandler( input_key key );
 int widget_browse_finish( widget_finish_state finished );
 
-/* The text entry widget */
+// The text entry widget
 
 typedef enum widget_text_input_allow {
   WIDGET_INPUT_ASCII,
@@ -202,41 +202,41 @@ int widget_text_finish( widget_finish_state finished );
 
 extern char *widget_text_text; // The returned text
 
-/* The options widgets */
+// The options widgets
 int widget_options_finish( widget_finish_state finished );
 
-/* The error widget */
+// The error widget
 
 int widget_error_draw( void *data );
 void widget_error_keyhandler( input_key key );
 
-/* The debugger widget */
+// The debugger widget
 
 int widget_debugger_draw( void *data );
 void widget_debugger_keyhandler( input_key key );
 
-/* The poke file widget */
+// The poke file widget
 
 int widget_pokemem_draw( void *data );
 void widget_pokemem_keyhandler( input_key key );
 int widget_pokemem_finish( widget_finish_state finished );
 
-/* The poke finder widget */
+// The poke finder widget
 
 int widget_pokefinder_draw( void *data );
 void widget_pokefinder_keyhandler( input_key key );
 
-/* The memory browser widget */
+// The memory browser widget
 
 int widget_memory_draw( void *data );
 void widget_memory_keyhandler( input_key key );
 
-/* The about fuse widget */
+// The about fuse widget
 
 int widget_about_draw( void *data );
 void widget_about_keyhandler( input_key key );
 
-/* The ROM selector widget */
+// The ROM selector widget
 
 typedef struct widget_roms_info {
 
@@ -252,7 +252,7 @@ int widget_roms_draw( void *data );
 void widget_roms_keyhandler( input_key key );
 int widget_roms_finish( widget_finish_state finished );
 
-/* The query widgets */
+// The query widgets
 
 typedef union {
   int confirm;
@@ -267,7 +267,7 @@ int widget_query_save_draw( void *data );
 void widget_query_save_keyhandler( input_key key );
 int widget_query_finish( widget_finish_state finished );
 
-/* The widgets actually available */
+// The widgets actually available
 
 extern widget_t widget_data[];
 

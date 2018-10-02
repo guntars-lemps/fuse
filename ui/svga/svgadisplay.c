@@ -43,21 +43,21 @@
    scale * 4, so 2 => 0.5, 6 => 1.5, 4 => 1.0 */
 static int image_scale = 1;
 
-/* The height and width of a 1x1 image in pixels */
+// The height and width of a 1x1 image in pixels
 static int image_width, image_height, scaled_image_w, scaled_image_h;
 
-/* A copy of every pixel on the screen */
+// A copy of every pixel on the screen
 static libspectrum_word
   rgb_image[2 * ( DISPLAY_SCREEN_HEIGHT + 4 )][2 * ( DISPLAY_SCREEN_WIDTH  + 3 )];
 static const int rgb_pitch = 2 * ( DISPLAY_SCREEN_WIDTH + 3 );
 
-/* A scaled copy of the image displayed on the Spectrum's screen */
+// A scaled copy of the image displayed on the Spectrum's screen
 static libspectrum_word
   scaled_image[3*DISPLAY_SCREEN_HEIGHT][3*DISPLAY_SCREEN_WIDTH];
 static const ptrdiff_t scaled_pitch =
   3 * DISPLAY_SCREEN_WIDTH * sizeof( libspectrum_word );
 
-/* The line buffer for svga_putpixel ...*/
+// The line buffer for svga_putpixel ...
 static libspectrum_byte
   line_buff[3*4*DISPLAY_SCREEN_WIDTH];
 static libspectrum_byte *line_buff_ptr;
@@ -132,7 +132,7 @@ static void register_scalers( void );
 
 typedef struct svga_mode_t {
   int n;
-  /* vga_modeinfo *inf; */
+  // vga_modeinfo *inf;
   int width, height, bytesperpixel, colors;
   int depth;
 } svga_mode_t;
@@ -178,7 +178,7 @@ find_mode( int exact )
       if( inf->colors >= 16 && !( inf->flags & IS_MODEX ) &&
     	    inf->width >= 320 && inf->height >= 240 &&
 		inf->width <= 1280 && inf->height <= 1024 ) {
-	/* try exact match */
+	// try exact match
 	for( j = 0; j < 3; j++ ) {
 	  w = DISPLAY_ASPECT_WIDTH * ( j + 1 );
 	  h = DISPLAY_SCREEN_HEIGHT * ( j + 1 );
@@ -327,7 +327,7 @@ svgadisplay_init( void )
     }
   }
 
-  /* Error out if we couldn't find a VGA mode */
+  // Error out if we couldn't find a VGA mode
   if( !found_mode ) {
     ui_error( UI_ERROR_ERROR, "couldn't find a mode to start in" );
     return 1;
@@ -402,7 +402,7 @@ svgadisplay_allocate_colours4( void )
   int i;
   int red, green, blue;
 
-/*    Y  =  0.29900 * R + 0.58700 * G + 0.11400 * B */
+// Y  =  0.29900 * R + 0.58700 * G + 0.11400 * B
 
   if( settings_current.bw_tv ) {
     for( i=0; i<16; i++ ) { // grey
@@ -550,7 +550,7 @@ svgadisplay_setup_rgb_putpixel( void )
     svgadisplay_putpixel = svgadisplay_putpixel_32;
     break;
   }
-/*  resize_window( scaled_image_w, scaled_image_h ); */
+// resize_window( scaled_image_w, scaled_image_h );
 }
 
 int
@@ -597,7 +597,7 @@ svgadisplay_update_rect_noscale( int x, int y, int w, int h )
     if( x + w > scaled_image_w - xclip ) w = scaled_image_w - xclip - x;
     if( y + h > scaled_image_h - yclip ) h = scaled_image_h - yclip - y;
   }
-  /* Call putpixel multiple times */
+  // Call putpixel multiple times
   for( yy = y; yy < y + h; yy++ ) {
     line_buff_ptr = line_buff;
     for( xx = x; xx < x + w; xx++ )
@@ -631,7 +631,7 @@ svgadisplay_update_rect_scale( int x, int y, int w, int h )
     if( x + w > scaled_image_w - xclip ) w = scaled_image_w - xclip - x;
     if( y + h > scaled_image_h - yclip ) h = scaled_image_h - yclip - y;
   }
-  /* Call putpixel multiple times */
+  // Call putpixel multiple times
   for( yy = y; yy < y + h; yy++ ) {
     line_buff_ptr = line_buff;
     for( xx = x; xx < x + w; xx++ )
@@ -646,7 +646,7 @@ uidisplay_frame_end( void )
 {
   SVGA_Rect *r, *last_rect;
 
-  /* Force a full redraw if requested */
+  // Force a full redraw if requested
   if ( svgadisplay_force_full_refresh ) {
     num_rects = 1;
 
@@ -696,7 +696,7 @@ uidisplay_end( void )
   return 0;
 }
 
-/* Set one pixel in the display */
+// Set one pixel in the display
 void
 uidisplay_putpixel( int x, int y, int colour )
 {

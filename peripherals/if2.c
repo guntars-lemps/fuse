@@ -38,13 +38,13 @@
 #include "ui/ui.h"
 #include "unittests/unittests.h"
 
-/* A 16KB memory chunk accessible by the Z80 when /ROMCS is low */
+// A 16KB memory chunk accessible by the Z80 when /ROMCS is low
 static memory_page if2_memory_map_romcs[MEMORY_PAGES_IN_16K];
 
-/* IF2 cart inserted? */
+// IF2 cart inserted?
 int if2_active = 0;
 
-/* IF2 memory source */
+// IF2 memory source
 static int if2_memory_source;
 
 static void if2_reset( int hard_reset );

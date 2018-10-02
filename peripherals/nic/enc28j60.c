@@ -61,7 +61,7 @@
 #define ERXWRPTL(_x)          (_x)->registers[0][0x0e]
 #define ERXWRPTH(_x)          (_x)->registers[0][0x0f]
 
-/* Common registers (0x1b and up) are stored in bank 0 in this structure */
+// Common registers (0x1b and up) are stored in bank 0 in this structure
 #define ESTAT(_x)             (_x)->registers[0][0x1d]
 #define ECON2(_x)             (_x)->registers[0][0x1e]
 #define ECON1(_x)             (_x)->registers[0][0x1f]
@@ -76,7 +76,7 @@
 
 #define PHSTAT2_HI_LSTAT      (0x04)
 
-/* Helpers for reading/writing 13-bit SRAM pointer registers */
+// Helpers for reading/writing 13-bit SRAM pointer registers
 #define GET_PTR_REG(_x, _nm)          (((_nm ## H(_x) & 0x1f) * 0x0100) + _nm ## L(_x))
 #define SET_PTR_REG(_x, _nm, _v)      ((_nm ## H(_x) = HIBYTE(_v)),(_nm ## L(_x) = LOBYTE(_v)))
 
@@ -92,36 +92,36 @@
  * Ethernet frame layout
  * ------------------------------------------------------------------------ */
 
-/* Maximal Ethernet frame we can receive */
+// Maximal Ethernet frame we can receive
 #define ETH_MAX                         (0x600)
 
-/* Status info before the frame (ENC28J60 data sheet, figure 7-3) */
+// Status info before the frame (ENC28J60 data sheet, figure 7-3)
 #define ETH_STATUS_NEXT_LO              (0)
 #define ETH_STATUS_NEXT_HI              (1)
 #define ETH_STATUS_LENGTH               (6)
 
-/* ------------------------------------------------------------------------- */
+// -------------------------------------------------------------------------
 
 struct nic_enc28j60_t {
 
-  /* Reserve 6 bytes before the Ethernet frame for next pointer + RSV */
+  // Reserve 6 bytes before the Ethernet frame for next pointer + RSV
   libspectrum_byte eth_rx_buf[ETH_STATUS_LENGTH + ETH_MAX];
 
   libspectrum_byte sram[0x2000];
   libspectrum_byte registers[4][32];
 
-  /* Current register for RCR and WCR commands */
+  // Current register for RCR and WCR commands
   libspectrum_byte curr_register;
   libspectrum_byte curr_register_bank;
 
-  /* TAP file descriptor */
+  // TAP file descriptor
   int tap_fd;
 
   /* ---------------------------------------------------------------------------
    * SPI state
    * ------------------------------------------------------------------------ */
 
-  /* Number of valid bits currently held in MISO/MOSI shift registers (0..7) */
+  // Number of valid bits currently held in MISO/MOSI shift registers (0..7)
   libspectrum_byte miso_bits;
   libspectrum_byte miso_valid_bits;
 
@@ -154,7 +154,7 @@ nic_enc28j60_free( nic_enc28j60_t *self )
   libspectrum_free( self );
 }
 
-/* Poll for received frames. */
+// Poll for received frames.
 void
 nic_enc28j60_poll( nic_enc28j60_t *self )
 {
@@ -169,11 +169,11 @@ nic_enc28j60_poll( nic_enc28j60_t *self )
     libspectrum_word erxst   = GET_PTR_REG( self, ERXST );
     libspectrum_word erxnd   = GET_PTR_REG( self, ERXND );
 
-    /* Round total_length upwards to an even value */
+    // Round total_length upwards to an even value
     libspectrum_word total_length = (ETH_STATUS_LENGTH + n + 1) & 0x1ffe;
     libspectrum_word next_addr    = erxwrpt + total_length;
 
-    /* Sanity check */
+    // Sanity check
     if (erxwrpt > erxnd)
       return;
 
@@ -200,7 +200,7 @@ nic_enc28j60_poll( nic_enc28j60_t *self )
   }
 }
 
-/* Writing to some registers produces special side effects. */
+// Writing to some registers produces special side effects.
 static void
 perform_side_effects_for_write( nic_enc28j60_t *self )
 {
@@ -241,7 +241,7 @@ nic_enc28j60_reset( nic_enc28j60_t *self )
   ESTAT(self) = ESTAT_CLKRDY;
 }
 
-/* Produce one bit for MISO for the next IN I/O operation */
+// Produce one bit for MISO for the next IN I/O operation
 int
 nic_enc28j60_spi_produce_bit( nic_enc28j60_t *self )
 {
@@ -258,7 +258,7 @@ nic_enc28j60_spi_produce_bit( nic_enc28j60_t *self )
 
     case SPI_RBM:
       self->miso_bits = self->sram[ erdpt ];
-      /* Assume ECON2:AUTOINC to be set, wrap at ERXND */
+      // Assume ECON2:AUTOINC to be set, wrap at ERXND
       erdpt = (erdpt == GET_PTR_REG( self, ERXND )) ? GET_PTR_REG( self, ERXST )
                                                     : (erdpt + 1);
       SET_PTR_REG( self, ERDPT, erdpt );
@@ -277,7 +277,7 @@ nic_enc28j60_spi_produce_bit( nic_enc28j60_t *self )
   return bit;
 }
 
-/* Consume one bit from MOSI */
+// Consume one bit from MOSI
 void
 nic_enc28j60_spi_consume_bit( nic_enc28j60_t *self, int bit )
 {

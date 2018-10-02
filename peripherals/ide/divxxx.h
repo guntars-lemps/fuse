@@ -26,11 +26,11 @@
 
 #include <libspectrum.h>
 
-/* Type definition */
+// Type definition
 
 typedef struct divxxx_t divxxx_t;
 
-/* Allocation and deallocation */
+// Allocation and deallocation
 
 divxxx_t*
 divxxx_alloc( const char *eprom_source_name, size_t ram_page_count,
@@ -40,7 +40,7 @@ divxxx_alloc( const char *eprom_source_name, size_t ram_page_count,
 void
 divxxx_free( divxxx_t *divxxx );
 
-/* Getters */
+// Getters
 
 libspectrum_byte
 divxxx_get_control( divxxx_t *divxxx );
@@ -63,7 +63,7 @@ divxxx_get_ram_memory_source( divxxx_t *divxxx );
 libspectrum_byte*
 divxxx_get_ram( divxxx_t *divxxx, size_t which );
 
-/* Actions */
+// Actions
 
 void
 divxxx_reset( divxxx_t *divxxx, int hard_reset );

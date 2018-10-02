@@ -43,7 +43,7 @@
 #include "spectrum.h"
 #include "ui/ui.h"
 
-/* Number of Spectrum frames audio latency to use */
+// Number of Spectrum frames audio latency to use
 #define NUM_FRAMES 3
 
 static snd_pcm_t *pcm_handle;
@@ -58,7 +58,7 @@ static snd_output_t *output = NULL;
 void
 sound_lowlevel_end( void )
 {
-/* Stop PCM device and drop pending frames */
+// Stop PCM device and drop pending frames
   snd_pcm_drop( pcm_handle );
   snd_pcm_close( pcm_handle );
 }
@@ -83,7 +83,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 0;
 
   init_running = 1;
-/* select a default device if we weren't explicitly given one */
+// select a default device if we weren't explicitly given one
 
   option = device;
   while( option && *option ) {
@@ -132,7 +132,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     pcm_name = "default";
   if( snd_pcm_open( &pcm_handle, pcm_name , stream, 0 ) < 0 ) {
     if( strcmp( pcm_name, "default" ) == 0 ) {
-    /* we try a last one: plughw:0,0 but what a weired ALSA conf.... */
+    // we try a last one: plughw:0,0 but what a weired ALSA conf....
       if( snd_pcm_open( &pcm_handle, "plughw:0,0", stream, 0 ) < 0 ) {
         settings_current.sound = 0;
         ui_error( UI_ERROR_ERROR,
@@ -153,10 +153,10 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 
-/* Allocate the snd_pcm_hw_params_t structure on the stack. */
+// Allocate the snd_pcm_hw_params_t structure on the stack.
   snd_pcm_hw_params_alloca( &hw_params );
 
-/* Init hw_params with full configuration space */
+// Init hw_params with full configuration space
   if( snd_pcm_hw_params_any( pcm_handle, hw_params ) < 0 ) {
     settings_current.sound = 0;
     ui_error( UI_ERROR_ERROR,
@@ -177,7 +177,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 
-    /* Set sample format */
+    // Set sample format
   if( snd_pcm_hw_params_set_format( pcm_handle, hw_params,
 #if defined WORDS_BIGENDIAN
 				    SND_PCM_FORMAT_S16_BE
@@ -212,8 +212,8 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   }
 
   framesize = ch << 1; // we always use 16 bit sorry :-(
-/* Set sample rate. If the exact rate is not supported */
-/* by the hardware, use nearest possible rate.         */
+// Set sample rate. If the exact rate is not supported
+// by the hardware, use nearest possible rate.
   exact_rate = *freqptr;
   if( snd_pcm_hw_params_set_rate_near( pcm_handle, hw_params, &exact_rate,
 							NULL ) < 0) {
@@ -275,7 +275,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   }
 
   periods = nperiods;
-/* Set number of periods. Periods used to be called fragments. */
+// Set number of periods. Periods used to be called fragments.
   if( snd_pcm_hw_params_set_periods_near( pcm_handle, hw_params, &periods,
                                           NULL ) < 0 ) {
     settings_current.sound = 0;
@@ -292,8 +292,8 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   snd_pcm_hw_params_get_buffer_size( hw_params, &exact_bsize );
 
-  /* Apply HW parameter settings to */
-  /* PCM device and prepare device  */
+  // Apply HW parameter settings to
+  // PCM device and prepare device
 
   if( snd_pcm_hw_params( pcm_handle, hw_params ) < 0 ) {
     settings_current.sound = 0;

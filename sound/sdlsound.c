@@ -40,10 +40,10 @@ static void sdlwrite( void *userdata, Uint8 *stream, int len );
 
 sfifo_t sound_fifo;
 
-/* Number of Spectrum frames audio latency to use */
+// Number of Spectrum frames audio latency to use
 #define NUM_FRAMES 2
 
-/* Records sound writer status information */
+// Records sound writer status information
 static int audio_output_started;
 
 int
@@ -55,7 +55,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   int sound_framesiz;
 
 #ifndef __MORPHOS__
-  /* I'd rather just use setenv, but Windows doesn't have it */
+  // I'd rather just use setenv, but Windows doesn't have it
   if( device ) {
     const char *environment = "SDL_AUDIODRIVER=";
     char *command = libspectrum_new( char, strlen( environment ) +
@@ -138,7 +138,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 
-  /* wait to run sound until we have some sound to play */
+  // wait to run sound until we have some sound to play
   audio_output_started = 0;
 
   return 0;
@@ -155,13 +155,13 @@ sound_lowlevel_end( void )
   sfifo_close( &sound_fifo );
 }
 
-/* Copy data to fifo */
+// Copy data to fifo
 void
 sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 {
   int i = 0;
 
-  /* Convert to bytes */
+  // Convert to bytes
   libspectrum_signed_byte* bytes = (libspectrum_signed_byte*)data;
   len <<= 1;
 
@@ -189,17 +189,17 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 #define MIN(a,b)    (((a) < (b)) ? (a) : (b))
 #endif
 
-/* Write len samples from fifo into stream */
+// Write len samples from fifo into stream
 void
 sdlwrite( void *userdata, Uint8 *stream, int len )
 {
   int f;
 
-  /* Try to only read an even number of bytes so as not to fragment a sample */
+  // Try to only read an even number of bytes so as not to fragment a sample
   len = MIN( len, sfifo_used( &sound_fifo ) );
   len &= sound_stereo_ay ? 0xfffc : 0xfffe;
 
-  /* Read input_size bytes from fifo into sound stream */
+  // Read input_size bytes from fifo into sound stream
   while( ( f = sfifo_read( &sound_fifo, stream, len ) ) > 0 ) {
     stream += f;
     len -= f;

@@ -141,7 +141,7 @@ debugger_system_variable_text( char *buffer, size_t length,
   snprintf( buffer, length, "%s:%s", sysvar.type, sysvar.detail );
 }
 
-/* Tidy-up function called at end of emulation */
+// Tidy-up function called at end of emulation
 void
 debugger_system_variable_end( void )
 {

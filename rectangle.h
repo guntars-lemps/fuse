@@ -26,10 +26,10 @@
 #ifndef FUSE_RECTANGLE_H
 #define FUSE_RECTANGLE_H
 
-/* Used for grouping screen writes together */
+// Used for grouping screen writes together
 struct rectangle { int x,y; int w,h; };
 
-/* Those rectangles which weren't modified on the last line to be displayed */
+// Those rectangles which weren't modified on the last line to be displayed
 extern struct rectangle *rectangle_inactive;
 extern size_t rectangle_inactive_count, rectangle_inactive_allocated;
 

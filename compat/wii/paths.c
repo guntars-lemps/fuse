@@ -69,12 +69,12 @@ compat_get_next_path( path_context *ctx )
 
   switch( (ctx->state)++ ) {
 
-    /* First look relative to the current directory */
+    // First look relative to the current directory
   case 0:
     strncpy( ctx->path, ".", PATH_MAX );
     return 1;
 
-    /* Then relative to the Fuse executable */
+    // Then relative to the Fuse executable
   case 1:
 
     switch( ctx->type ) {
@@ -107,7 +107,7 @@ compat_get_next_path( path_context *ctx )
               path_segment );
     return 1;
 
-    /* Then where we may have installed the data files */
+    // Then where we may have installed the data files
   case 2:
 
     path2 = "sd:/apps/fuse";

@@ -41,7 +41,7 @@
 
 #ifdef BUILD_SPECCYBOOT
 
-/* Determine whether a bit has gone from high to low (or low to high) */
+// Determine whether a bit has gone from high to low (or low to high)
 #define GONE_LO(prev, curr, mask)     (((prev) & (mask)) && !((curr) & (mask)))
 #define GONE_HI(prev, curr, mask)     (((curr) & (mask)) && !((prev) & (mask)))
 
@@ -51,7 +51,7 @@ static nic_enc28j60_t *nic;
  * Spectrum I/O register state (IN/OUT from/to 0x9f)
  * ------------------------------------------------------------------------ */
 
-/* Individual bits when writing the register (OUT instructions) */
+// Individual bits when writing the register (OUT instructions)
 #define OUT_BIT_SPI_SCK                 (0x01)
 #define OUT_BIT_ETH_CS                  (0x08)
 #define OUT_BIT_ROM_CS                  (0x20)
@@ -96,7 +96,7 @@ static const periph_t speccyboot_periph = {
   /* .activate = */ NULL,
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "speccyboot";
 static int page_event, unpage_event;
 
@@ -207,7 +207,7 @@ speccyboot_register_write( libspectrum_word port GCC_UNUSED,
     }
   }
 
-  /* Update ROM paging status when the ROM_CS bit is cleared or set */
+  // Update ROM paging status when the ROM_CS bit is cleared or set
   if( GONE_LO( out_register_state, val, OUT_BIT_ROM_CS ) ) {
     speccyboot_page();
   } else if( GONE_HI( out_register_state, val, OUT_BIT_ROM_CS ) ) {
@@ -279,7 +279,7 @@ speccyboot_unittest( void )
 
 #else // #ifdef BUILD_SPECCYBOOT
 
-/* No speccyboot support */
+// No speccyboot support
 
 void
 speccyboot_register_startup( void )

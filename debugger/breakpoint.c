@@ -38,13 +38,13 @@
 #include "ui/ui.h"
 #include "utils.h"
 
-/* The current breakpoints */
+// The current breakpoints
 GSList *debugger_breakpoints;
 
-/* The next breakpoint ID to use */
+// The next breakpoint ID to use
 static size_t next_breakpoint_id;
 
-/* Textual representations of the breakpoint types and lifetimes */
+// Textual representations of the breakpoint types and lifetimes
 const char *debugger_breakpoint_type_text[] = {
   "Execute", "Read", "Write", "Port Read", "Port Write", "Time", "Event",
 };
@@ -79,7 +79,7 @@ static gint find_breakpoint_by_address( gconstpointer data,
 static void free_breakpoint( gpointer data, gpointer user_data );
 static void add_time_event( gpointer data, gpointer user_data );
 
-/* Add a breakpoint */
+// Add a breakpoint
 int
 debugger_breakpoint_add_address( debugger_breakpoint_type type, int source,
                                  int page, libspectrum_word offset,
@@ -226,7 +226,7 @@ breakpoint_add( debugger_breakpoint_type type, debugger_breakpoint_value value,
   return 0;
 }
 
-/* Check whether the debugger should become active at this point */
+// Check whether the debugger should become active at this point
 int
 debugger_check( debugger_breakpoint_type type, libspectrum_dword value )
 {
@@ -266,7 +266,7 @@ debugger_check( debugger_breakpoint_type type, libspectrum_dword value )
   if( signal_breakpoints_updated )
       ui_breakpoints_updated();
 
-  /* Debugger mode could have been reset by a breakpoint command */
+  // Debugger mode could have been reset by a breakpoint command
   return ( debugger_mode == DEBUGGER_MODE_HALTED );
 }
 
@@ -350,13 +350,13 @@ breakpoint_check( debugger_breakpoint *bp, debugger_breakpoint_type type,
     }
     break;
 
-    /* Port values must match after masking */
+    // Port values must match after masking
   case DEBUGGER_BREAKPOINT_TYPE_PORT_READ:
   case DEBUGGER_BREAKPOINT_TYPE_PORT_WRITE:
     if( ( value & bp->value.port.mask ) != bp->value.port.port ) return 0;
     break;
 
-    /* Timed breakpoints trigger if we're past the relevant time */
+    // Timed breakpoints trigger if we're past the relevant time
   case DEBUGGER_BREAKPOINT_TYPE_TIME:
     if( bp->value.time.triggered || bp->value.time.tstates > tstates ) return 0;
     break;
@@ -377,7 +377,7 @@ struct remove_t {
 
 };
 
-/* Remove breakpoint with the given ID */
+// Remove breakpoint with the given ID
 int
 debugger_breakpoint_remove( size_t id )
 {
@@ -389,7 +389,7 @@ debugger_breakpoint_remove( size_t id )
   if( debugger_mode == DEBUGGER_MODE_ACTIVE && !debugger_breakpoints )
     debugger_mode = DEBUGGER_MODE_INACTIVE;
 
-  /* If this was a timed breakpoint, remove the event as well */
+  // If this was a timed breakpoint, remove the event as well
   if( bp->type == DEBUGGER_BREAKPOINT_TYPE_TIME ) {
 
     struct remove_t remove;
@@ -449,7 +449,7 @@ remove_time( gpointer data, gpointer user_data )
   }
 }
 
-/* Remove all breakpoints at the given address */
+// Remove all breakpoints at the given address
 int
 debugger_breakpoint_clear( libspectrum_word address )
 {
@@ -498,13 +498,13 @@ find_breakpoint_by_address( gconstpointer data, gconstpointer user_data )
       bp->type != DEBUGGER_BREAKPOINT_TYPE_WRITE      )
     return 1;
 
-  /* Ignore all page-specific breakpoints */
+  // Ignore all page-specific breakpoints
   if( bp->value.address.source != memory_source_any ) return 1;
 
   return bp->value.address.offset - address;
 }
 
-/* Remove all breakpoints */
+// Remove all breakpoints
 int
 debugger_breakpoint_remove_all( void )
 {
@@ -514,7 +514,7 @@ debugger_breakpoint_remove_all( void )
   if( debugger_mode == DEBUGGER_MODE_ACTIVE )
     debugger_mode = DEBUGGER_MODE_INACTIVE;
 
-  /* Restart the breakpoint numbering */
+  // Restart the breakpoint numbering
   next_breakpoint_id = 1;
 
   ui_breakpoints_updated();
@@ -539,7 +539,7 @@ free_breakpoint( gpointer data, gpointer user_data GCC_UNUSED )
   case DEBUGGER_BREAKPOINT_TYPE_PORT_READ:
   case DEBUGGER_BREAKPOINT_TYPE_PORT_WRITE:
   case DEBUGGER_BREAKPOINT_TYPE_TIME:
-    /* No action needed */
+    // No action needed
     break;
   }
 
@@ -549,7 +549,7 @@ free_breakpoint( gpointer data, gpointer user_data GCC_UNUSED )
   libspectrum_free( bp );
 }
 
-/* Ignore breakpoint 'id' the next 'ignore' times it hits */
+// Ignore breakpoint 'id' the next 'ignore' times it hits
 int
 debugger_breakpoint_ignore( size_t id, size_t ignore )
 {
@@ -562,7 +562,7 @@ debugger_breakpoint_ignore( size_t id, size_t ignore )
   return 0;
 }
 
-/* Set the breakpoint's conditional expression */
+// Set the breakpoint's conditional expression
 int
 debugger_breakpoint_set_condition( size_t id, debugger_expression *condition )
 {

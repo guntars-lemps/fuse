@@ -95,8 +95,8 @@ run_dialog( const char *title, int is_saving )
   ofn.hwndOwner = fuse_hWnd;
   ofn.lpstrFilter = file_filter;
   ofn.lpstrCustomFilter = NULL;
-  /* TODO: select filter based on UI operation (snapshot, recording, screenshot) */
-  /* TODO: custom filter based file action (open, save) */
+  // TODO: select filter based on UI operation (snapshot, recording, screenshot)
+  // TODO: custom filter based file action (open, save)
   ofn.nFilterIndex = filter_index;
   ofn.lpstrFile = szFile;
   ofn.nMaxFile = sizeof( szFile );
@@ -112,8 +112,8 @@ run_dialog( const char *title, int is_saving )
   ofn.nFileOffset = 0;
   ofn.nFileExtension = 0;
   ofn.lpstrDefExt = NULL;
-/* ofn.pvReserved = NULL; */
-/* ofn.FlagsEx = 0; */
+// ofn.pvReserved = NULL;
+// ofn.FlagsEx = 0;
 
   if( is_saving ) {
     result = GetSaveFileName( &ofn );

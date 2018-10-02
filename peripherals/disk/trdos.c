@@ -101,7 +101,7 @@ trdos_read_fat( trdos_boot_info_t *info, const libspectrum_byte *sectors,
   info->have_boot_file = 0;
   info->basic_files_count = 0;
 
-  /* FAT sectors */
+  // FAT sectors
   for( i = 0; i < 8; i++ ) {
     sector = sectors + i * seclen * 2; // interleaved
 
@@ -111,22 +111,22 @@ trdos_read_fat( trdos_boot_info_t *info, const libspectrum_byte *sectors,
        load the sectors as interleaved: 1, 9, 2, 10, 3, ...
     */
 
-    /* FAT entries */
+    // FAT entries
     for( j = 0; j < 16; j++ ) {
       error = trdos_read_dirent( &entry, sector + j * 16 );
       if( error ) return 0;
 
-      /* Basic files */
+      // Basic files
       if( entry.filename[0] > 0x01 &&
           entry.file_extension == 'B' ) {
 
-        /* Boot file */
+        // Boot file
         if( !info->have_boot_file &&
             !strncmp( (const char *)entry.filename, "boot    ", 8 ) ) {
           info->have_boot_file = 1;
         }
 
-        /* First basic program */
+        // First basic program
         if( info->basic_files_count == 0 ) {
           memcpy( info->first_basic_file, entry.filename, 8 );
         }

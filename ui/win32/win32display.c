@@ -36,7 +36,7 @@
    DISPLAY_ASPECT WIDTH x DISPLAY_SCREEN_HEIGHT */
 int image_scale;
 
-/* The height and width of a 1x1 image in pixels */
+// The height and width of a 1x1 image in pixels
 int image_width, image_height;
 
 /* A copy of every pixel on the screen, replaceable by plotting directly into
@@ -52,12 +52,12 @@ static unsigned char rgb_image[ 4 * 2 * ( DISPLAY_SCREEN_HEIGHT + 4 ) *
                                         ( DISPLAY_SCREEN_WIDTH  + 3 )   ];
 static const int rgb_pitch = ( DISPLAY_SCREEN_WIDTH + 3 ) * 4;
 
-/* The scaled image */
+// The scaled image
 static unsigned char scaled_image[ 3 * DISPLAY_SCREEN_HEIGHT *
                                    6 * DISPLAY_SCREEN_WIDTH ];
 static const ptrdiff_t scaled_pitch = 6 * DISPLAY_SCREEN_WIDTH;
 
-/* Win32 specific variables */
+// Win32 specific variables
 static void *win32_pixdata;
 static BITMAPINFO fuse_BMI;
 static HBITMAP fuse_BMP;
@@ -87,7 +87,7 @@ static const unsigned char rgb_colours[16][3] = {
 libspectrum_dword win32display_colours[16];
 static libspectrum_dword bw_colours[16];
 
-/* The current size of the window (in units of DISPLAY_SCREEN_*) */
+// The current size of the window (in units of DISPLAY_SCREEN_*)
 static int win32display_current_size=1;
 
 static int init_colours( void );
@@ -136,12 +136,12 @@ win32display_init( void )
     for( x = 0; x < DISPLAY_SCREEN_WIDTH + 3; x++ )
       *(libspectrum_dword*)( rgb_image + y * rgb_pitch + 4 * x ) = black;
 
-  /* create the back buffer */
+  // create the back buffer
 
   memset( &fuse_BMI, 0, sizeof( fuse_BMI ) );
   fuse_BMI.bmiHeader.biSize = sizeof( fuse_BMI.bmiHeader );
   fuse_BMI.bmiHeader.biWidth = (size_t)( 1.5 * DISPLAY_SCREEN_WIDTH );
-  /* negative to avoid "shep-mode": */
+  // negative to avoid "shep-mode":
   fuse_BMI.bmiHeader.biHeight = -( 3 * DISPLAY_SCREEN_HEIGHT );
   fuse_BMI.bmiHeader.biPlanes = 1;
   fuse_BMI.bmiHeader.biBitCount = 32;
@@ -181,7 +181,7 @@ init_colours( void )
     green = rgb_colours[i][1];
     blue  = rgb_colours[i][2];
 
-    /* Addition of 0.5 is to avoid rounding errors */
+    // Addition of 0.5 is to avoid rounding errors
     grey = ( 0.299 * red + 0.587 * green + 0.114 * blue ) + 0.5;
 
 #ifdef WORDS_BIGENDIAN
@@ -210,7 +210,7 @@ win32display_drawing_area_resize( int width, int height, int force_scaler )
   if( size > height / DISPLAY_SCREEN_HEIGHT )
     size = height / DISPLAY_SCREEN_HEIGHT;
 
-  /* If we're the same size as before, no need to do anything else */
+  // If we're the same size as before, no need to do anything else
   if( size == win32display_current_size ) return 0;
 
   win32display_current_size = size;
@@ -325,7 +325,7 @@ uidisplay_area( int x, int y, int w, int h )
 
   palette = settings_current.bw_tv ? bw_colours : win32display_colours;
 
-  /* Create the RGB image */
+  // Create the RGB image
   for( yy = y; yy < y + h; yy++ ) {
 
     libspectrum_dword *rgb; libspectrum_word *display;
@@ -338,7 +338,7 @@ uidisplay_area( int x, int y, int w, int h )
     for( i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
   }
 
-  /* Create scaled image */
+  // Create scaled image
   scaler_proc32( &rgb_image[ ( y + 2 ) * rgb_pitch + 4 * ( x + 1 ) ],
                  rgb_pitch,
                  &scaled_image[ scaled_y * scaled_pitch + 4 * scaled_x ],
@@ -346,7 +346,7 @@ uidisplay_area( int x, int y, int w, int h )
 
   w *= scale; h *= scale;
 
-  /* Blit to the real screen */
+  // Blit to the real screen
   win32display_area( scaled_x, scaled_y, w, h );
 }
 
@@ -373,7 +373,7 @@ win32display_area(int x, int y, int width, int height)
     }
   }
 
-  /* Mark area for updating */
+  // Mark area for updating
   SetRect( &r, x, y, right, bottom );
   UnionRect( &invalidated_area, &invalidated_area, &r );
 }
@@ -383,7 +383,7 @@ uidisplay_hotswap_gfx_mode( void )
 {
   fuse_emulation_pause();
 
-  /* Setup the new GFX mode */
+  // Setup the new GFX mode
   win32display_load_gfx_mode();
 
   fuse_emulation_unpause();
@@ -405,7 +405,7 @@ win32display_end( void )
   return 0;
 }
 
-/* Set one pixel in the display */
+// Set one pixel in the display
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
@@ -500,7 +500,7 @@ win32display_load_gfx_mode( void )
   win32display_drawing_area_resize( scale * image_width, scale * image_height, 0 );
   win32ui_fuse_resize( scale * image_width, scale * image_height );
 
-  /* Redraw the entire screen... */
+  // Redraw the entire screen...
   display_refresh_all();
 }
 

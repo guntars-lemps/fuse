@@ -55,18 +55,18 @@
 #include "ui/ui.h"
 #include "utils.h"
 
-/* The main Fuse window */
+// The main Fuse window
 GtkWidget *gtkui_window;
 
-/* The area into which the screen will be drawn */
+// The area into which the screen will be drawn
 GtkWidget *gtkui_drawing_area;
 
 static GtkWidget *menu_bar;
 
-/* The UIManager used to create the menu bar */
+// The UIManager used to create the menu bar
 GtkUIManager *ui_manager_menu = NULL;
 
-/* True if we were paused via the Machine/Pause menu item */
+// True if we were paused via the Machine/Pause menu item
 static int paused = 0;
 
 /* Structure used by the radio button selection widgets (eg the
@@ -76,11 +76,11 @@ typedef struct gtkui_select_info {
   GtkWidget *dialog;
   GtkWidget **buttons;
 
-  /* Used by the graphics filter selectors */
+  // Used by the graphics filter selectors
   scaler_available_fn selector;
   scaler_type selected;
 
-  /* Used by the joystick confirmation */
+  // Used by the joystick confirmation
   ui_confirm_joystick_t joystick;
 
 } gtkui_select_info;
@@ -176,7 +176,7 @@ ui_init( int *argc, char ***argv )
   g_signal_connect(G_OBJECT(gtkui_window), "key-release-event",
 		   G_CALLBACK(gtkkeyboard_keyrelease), NULL);
 
-  /* If we lose the focus, disable all keys */
+  // If we lose the focus, disable all keys
   g_signal_connect( G_OBJECT( gtkui_window ), "focus-out-event",
 		    G_CALLBACK( gtkui_lose_focus ), NULL );
   g_signal_connect( G_OBJECT( gtkui_window ), "focus-in-event",
@@ -213,7 +213,7 @@ ui_init( int *argc, char ***argv )
     return 1;
   }
 
-  /* Set minimum size for drawing area */
+  // Set minimum size for drawing area
   gtk_widget_set_size_request( gtkui_drawing_area, DISPLAY_ASPECT_WIDTH,
                                DISPLAY_SCREEN_HEIGHT );
 
@@ -228,7 +228,7 @@ ui_init( int *argc, char ***argv )
 
   gtk_box_pack_start( GTK_BOX(box), gtkui_drawing_area, TRUE, TRUE, 0 );
 
-  /* Create the statusbar */
+  // Create the statusbar
   gtkstatusbar_create( GTK_BOX( box ) );
 
   gtk_widget_show_all( gtkui_window );
@@ -259,14 +259,14 @@ gtkui_make_menu(GtkAccelGroup **accel_group,
 
   ui_manager_menu = gtk_ui_manager_new();
 
-  /* Load actions */
+  // Load actions
   GtkActionGroup *menu_action_group = gtk_action_group_new( "MenuActionGroup" );
   gtk_action_group_add_actions( menu_action_group, menu_data, menu_data_size,
                                 NULL );
   gtk_ui_manager_insert_action_group( ui_manager_menu, menu_action_group, 0 );
   g_object_unref( menu_action_group );
 
-  /* Load the UI */
+  // Load the UI
   if( utils_find_file_path( "menu_data.ui", ui_file, UTILS_AUXILIARY_GTK ) ) {
     fprintf( stderr, "%s: Error getting path for menu_data.ui\n",
                      fuse_progname );
@@ -287,7 +287,7 @@ gtkui_make_menu(GtkAccelGroup **accel_group,
   g_signal_connect( G_OBJECT( *menu_bar ), "deactivate",
 		    G_CALLBACK( gtkui_menu_deactivate ), NULL );
 
-  /* Start various menus in the 'off' state */
+  // Start various menus in the 'off' state
   ui_menu_activate( UI_MENU_ITEM_AY_LOGGING, 0 );
   ui_menu_activate( UI_MENU_ITEM_FILE_MOVIE_RECORDING, 0 );
   ui_menu_activate( UI_MENU_ITEM_MACHINE_PROFILER, 0 );
@@ -311,7 +311,7 @@ ui_event(void)
 int
 ui_end(void)
 {
-  /* Don't display the window whilst doing all this! */
+  // Don't display the window whilst doing all this!
   gtk_widget_hide( gtkui_window );
 
   g_object_unref( ui_manager_menu );
@@ -319,17 +319,17 @@ ui_end(void)
   return 0;
 }
 
-/* Create a dialog box with the given error message */
+// Create a dialog box with the given error message
 int
 ui_error_specific( ui_error_level severity, const char *message )
 {
   GtkWidget *dialog, *label, *vbox, *content_area;
   const gchar *title;
 
-  /* If we don't have a UI yet, we can't output widgets */
+  // If we don't have a UI yet, we can't output widgets
   if( !display_ui_initialised ) return 0;
 
-  /* Set the appropriate title */
+  // Set the appropriate title
   switch( severity ) {
   case UI_ERROR_INFO:	 title = "Fuse - Info"; break;
   case UI_ERROR_WARNING: title = "Fuse - Warning"; break;
@@ -337,23 +337,23 @@ ui_error_specific( ui_error_level severity, const char *message )
   default:		 title = "Fuse - (Unknown Error Level)"; break;
   }
 
-  /* Create the dialog box */
+  // Create the dialog box
   dialog = gtkstock_dialog_new( title, G_CALLBACK( gtk_widget_destroy ) );
 
-  /* Add the OK button into the lower half */
+  // Add the OK button into the lower half
   gtkstock_create_close( dialog, NULL, G_CALLBACK (gtk_widget_destroy),
 			 FALSE );
 
-  /* Create a label with that message */
+  // Create a label with that message
   label = gtk_label_new( message );
 
-  /* Make a new vbox for the top part for saner spacing */
+  // Make a new vbox for the top part for saner spacing
   vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog ) );
   gtk_box_pack_start( GTK_BOX( content_area ), vbox, TRUE, TRUE, 0 );
   gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
 
-  /* Put the label in it */
+  // Put the label in it
   gtk_container_add( GTK_CONTAINER( vbox ), label );
 
   gtk_widget_show_all( dialog );
@@ -361,7 +361,7 @@ ui_error_specific( ui_error_level severity, const char *message )
   return 0;
 }
 
-/* The callbacks used by various routines */
+// The callbacks used by various routines
 
 static gboolean
 gtkui_lose_focus( GtkWidget *widget GCC_UNUSED,
@@ -380,7 +380,7 @@ gtkui_gain_focus( GtkWidget *widget GCC_UNUSED,
   return TRUE;
 }
 
-/* Called by the main window on a "delete-event" */
+// Called by the main window on a "delete-event"
 static gboolean
 gtkui_delete( GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED,
               gpointer data GCC_UNUSED )
@@ -389,7 +389,7 @@ gtkui_delete( GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED,
   return TRUE;
 }
 
-/* Called by the menu when File/Exit selected */
+// Called by the menu when File/Exit selected
 void
 menu_file_exit( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
 {
@@ -425,10 +425,10 @@ menu_get_scaler( scaler_available_fn selector )
      available */
   dialog.selector = selector;
 
-  /* No scaler currently selected */
+  // No scaler currently selected
   dialog.selected = SCALER_NUM;
 
-  /* Some space to store the radio buttons in */
+  // Some space to store the radio buttons in
   dialog.buttons = malloc( SCALER_NUM * sizeof(GtkWidget* ) );
   if( dialog.buttons == NULL ) {
     ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
@@ -437,7 +437,7 @@ menu_get_scaler( scaler_available_fn selector )
 
   count = 0;
 
-  /* Create the necessary widgets */
+  // Create the necessary widgets
   dialog.dialog = gtkstock_dialog_new( "Fuse - Select Scaler", NULL );
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog.dialog ) );
 
@@ -458,7 +458,7 @@ menu_get_scaler( scaler_available_fn selector )
     count++;
   }
 
-  /* Create and add the actions buttons to the dialog box */
+  // Create and add the actions buttons to the dialog box
   gtkstock_create_ok_cancel( dialog.dialog, NULL,
                              G_CALLBACK( menu_options_filter_done ),
                              (gpointer) &dialog, DEFAULT_DESTROY,
@@ -469,13 +469,13 @@ menu_get_scaler( scaler_available_fn selector )
 
   gtk_widget_show_all( dialog.dialog );
 
-  /* Process events until the window is done with */
+  // Process events until the window is done with
   gtk_main();
 
   return dialog.selected;
 }
 
-/* Callback used by the filter selection dialog */
+// Callback used by the filter selection dialog
 static void
 menu_options_filter_done( GtkWidget *widget GCC_UNUSED, gpointer user_data )
 {
@@ -509,7 +509,7 @@ gtkui_run_main_loop( gpointer user_data GCC_UNUSED )
   return FALSE;
 }
 
-/* Machine/Pause */
+// Machine/Pause
 void
 menu_machine_pause( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
 {
@@ -523,7 +523,7 @@ menu_machine_pause( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
     gtk_main_quit();
   } else {
 
-    /* Stop recording any competition mode RZX file */
+    // Stop recording any competition mode RZX file
     if( rzx_recording && rzx_competition_mode ) {
       ui_error( UI_ERROR_INFO, "Stopping competition mode RZX recording" );
       error = rzx_stop_recording(); if( error ) return;
@@ -532,13 +532,13 @@ menu_machine_pause( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
     paused = 1;
     ui_statusbar_update( UI_STATUSBAR_ITEM_PAUSED, UI_STATUSBAR_STATE_ACTIVE );
 
-    /* Create nested main loop outside this callback to allow unpause */
+    // Create nested main loop outside this callback to allow unpause
     g_idle_add( (GSourceFunc)gtkui_run_main_loop, NULL );
   }
 
 }
 
-/* Called by the menu when Machine/Reset selected */
+// Called by the menu when Machine/Reset selected
 void
 menu_machine_reset( GtkAction *gtk_action GCC_UNUSED, guint action )
 {
@@ -551,19 +551,19 @@ menu_machine_reset( GtkAction *gtk_action GCC_UNUSED, guint action )
   if( !gtkui_confirm( message ) )
     return;
 
-  /* Stop any ongoing RZX */
+  // Stop any ongoing RZX
   rzx_stop_recording();
   rzx_stop_playback( 1 );
 
   if( machine_reset( hard_reset ) ) {
     ui_error( UI_ERROR_ERROR, "couldn't reset machine: giving up!" );
 
-    /* FIXME: abort() seems a bit extreme here, but it'll do for now */
+    // FIXME: abort() seems a bit extreme here, but it'll do for now
     fuse_abort();
   }
 }
 
-/* Called by the menu when Machine/Select selected */
+// Called by the menu when Machine/Select selected
 void
 menu_machine_select( GtkAction *gtk_action GCC_UNUSED,
                      gpointer data GCC_UNUSED )
@@ -573,17 +573,17 @@ menu_machine_select( GtkAction *gtk_action GCC_UNUSED,
 
   int i;
 
-  /* Some space to store the radio buttons in */
+  // Some space to store the radio buttons in
   dialog.buttons = malloc( machine_count * sizeof(GtkWidget* ) );
   if( dialog.buttons == NULL ) {
     ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
     return;
   }
 
-  /* Stop emulation */
+  // Stop emulation
   fuse_emulation_pause();
 
-  /* Create the necessary widgets */
+  // Create the necessary widgets
   dialog.dialog = gtkstock_dialog_new( "Fuse - Select Machine", NULL );
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog.dialog ) );
 
@@ -606,7 +606,7 @@ menu_machine_select( GtkAction *gtk_action GCC_UNUSED,
     gtk_container_add( GTK_CONTAINER( content_area ), dialog.buttons[i] );
   }
 
-  /* Create and add the actions buttons to the dialog box */
+  // Create and add the actions buttons to the dialog box
   gtkstock_create_ok_cancel( dialog.dialog, NULL,
                              G_CALLBACK( menu_machine_select_done ),
                              (gpointer) &dialog, DEFAULT_DESTROY,
@@ -617,14 +617,14 @@ menu_machine_select( GtkAction *gtk_action GCC_UNUSED,
 
   gtk_widget_show_all( dialog.dialog );
 
-  /* Process events until the window is done with */
+  // Process events until the window is done with
   gtk_main();
 
-  /* And then carry on with emulation again */
+  // And then carry on with emulation again
   fuse_emulation_unpause();
 }
 
-/* Callback used by the machine selection dialog */
+// Callback used by the machine selection dialog
 static void
 menu_machine_select_done( GtkWidget *widget GCC_UNUSED, gpointer user_data )
 {
@@ -652,7 +652,7 @@ menu_machine_debugger( GtkAction *gtk_action GCC_UNUSED,
   if( paused ) ui_debugger_activate();
 }
 
-/* Called on machine selection */
+// Called on machine selection
 int
 ui_widgets_reset( void )
 {
@@ -669,7 +669,7 @@ menu_help_keyboard( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
 void
 menu_help_about( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
 {
-  /* TODO: show Fuse icon */
+  // TODO: show Fuse icon
   gtk_show_about_dialog( GTK_WINDOW( gtkui_window ),
                          "program-name", "Fuse",
                          "comments", "The Free Unix Spectrum Emulator",
@@ -680,7 +680,7 @@ menu_help_about( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
                          NULL );
 }
 
-/* Generic `tidy-up' callback */
+// Generic `tidy-up' callback
 void
 gtkui_destroy_widget_and_quit( GtkWidget *widget, gpointer data GCC_UNUSED )
 {
@@ -688,14 +688,14 @@ gtkui_destroy_widget_and_quit( GtkWidget *widget, gpointer data GCC_UNUSED )
   gtk_main_quit();
 }
 
-/* Functions to activate and deactivate certain menu items */
+// Functions to activate and deactivate certain menu items
 
 int
 ui_menu_item_set_active( const char *path, int active )
 {
   GtkWidget *menu_item;
 
-  /* Translate UI-indepentment path to GTK UI path */
+  // Translate UI-indepentment path to GTK UI path
   gchar *full_path = g_strdup_printf ("/MainMenu%s", path );
 
   menu_item = gtk_ui_manager_get_widget( ui_manager_menu, full_path );
@@ -743,7 +743,7 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type,
 
   if( !settings_current.joy_prompt ) return UI_CONFIRM_JOYSTICK_NONE;
 
-  /* Some space to store the radio buttons in */
+  // Some space to store the radio buttons in
   dialog.buttons =
     malloc( JOYSTICK_CONN_COUNT * sizeof( *dialog.buttons ) );
   if( !dialog.buttons ) {
@@ -751,10 +751,10 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type,
     return UI_CONFIRM_JOYSTICK_NONE;
   }
 
-  /* Stop emulation */
+  // Stop emulation
   fuse_emulation_pause();
 
-  /* Create the necessary widgets */
+  // Create the necessary widgets
   snprintf( title, sizeof( title ), "Fuse - Configure %s Joystick",
 	    libspectrum_joystick_name( libspectrum_type ) );
   dialog.dialog = gtkstock_dialog_new( title, NULL );
@@ -772,7 +772,7 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type,
     gtk_container_add( GTK_CONTAINER( content_area ), *button );
   }
 
-  /* Create and add the actions buttons to the dialog box */
+  // Create and add the actions buttons to the dialog box
   gtkstock_create_ok_cancel( dialog.dialog, NULL,
                              G_CALLBACK( confirm_joystick_done ),
                              (gpointer) &dialog, DEFAULT_DESTROY,
@@ -783,11 +783,11 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type,
 
   gtk_widget_show_all( dialog.dialog );
 
-  /* Process events until the window is done with */
+  // Process events until the window is done with
   dialog.joystick = UI_CONFIRM_JOYSTICK_NONE;
   gtk_main();
 
-  /* And then carry on with emulation again */
+  // And then carry on with emulation again
   fuse_emulation_unpause();
 
   return dialog.joystick;
@@ -841,7 +841,7 @@ gtkui_list_get_cursor( GtkTreeView *list )
   int *indices;
   int row = -1;
 
-  /* Get selected row */
+  // Get selected row
   gtk_tree_view_get_cursor( list, &path, &focus_column );
   if( path ) {
     indices = gtk_tree_path_get_indices( path );
@@ -866,7 +866,7 @@ key_press( GtkTreeView *list, GdkEventKey *event, gpointer user_data )
   step_increment = gtk_adjustment_get_step_increment( adjustment );
   num_rows = ( page_size + 1 ) / step_increment;
 
-  /* Get selected row */
+  // Get selected row
   cursor_row = gtkui_list_get_cursor( list );
 
   switch( event->keyval )
@@ -913,7 +913,7 @@ key_press( GtkTreeView *list, GdkEventKey *event, gpointer user_data )
   if( base != oldbase ) {
     gtk_adjustment_set_value( adjustment, base );
 
-    /* Mark selected row */
+    // Mark selected row
     gtkui_list_set_cursor( list, cursor_row );
     return TRUE;
   }
@@ -951,7 +951,7 @@ wheel_scroll_event( GtkTreeView *list, GdkEvent *event, gpointer user_data )
         page_size = gtk_adjustment_get_page_size( adjustment );
         delta = total_dy * pow( page_size, 2.0 / 3.0 );
 
-        /* Is movement significative? */
+        // Is movement significative?
         if( delta ) {
           base += delta;
           total_dy = 0;

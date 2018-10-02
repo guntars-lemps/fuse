@@ -96,11 +96,11 @@ scorpion_reset(void)
   periph_clear();
   machines_periph_pentagon();
 
-  /* +3-style memory paging */
+  // +3-style memory paging
   periph_set_present( PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_NEVER );
   periph_set_present( PERIPH_TYPE_PLUS3_MEMORY, PERIPH_PRESENT_ALWAYS );
 
-  /* Later style Betadisk 128 interface */
+  // Later style Betadisk 128 interface
   periph_set_present( PERIPH_TYPE_BETA128_PENTAGON_LATE, PERIPH_PRESENT_ALWAYS );
 
   periph_set_present( PERIPH_TYPE_COVOX_DD, PERIPH_PRESENT_OPTIONAL );
@@ -143,7 +143,7 @@ scorpion_memory_map( void )
 
   page = ( ( machine_current->ram.last_byte2 & 0x10 ) >> 1 ) |
            ( machine_current->ram.last_byte  & 0x07 );
-  
+
   spec128_select_page( page );
   machine_current->ram.current_page = page;
 

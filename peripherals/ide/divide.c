@@ -40,7 +40,7 @@
 #include "divide.h"
 #include "divxxx.h"
 
-/* Private function prototypes */
+// Private function prototypes
 
 static libspectrum_byte divide_ide_read( libspectrum_word port, libspectrum_byte *attached );
 static void divide_ide_write( libspectrum_word port, libspectrum_byte data );
@@ -48,7 +48,7 @@ static void divide_control_write( libspectrum_word port, libspectrum_byte data )
 static libspectrum_ide_register port_to_ide_register( libspectrum_byte port );
 static void divide_activate( void );
 
-/* Data */
+// Data
 
 static const periph_port_t divide_ports[] = {
   { 0x00e3, 0x00a3, divide_ide_read, divide_ide_write },
@@ -88,10 +88,10 @@ static module_info_t divide_module_info = {
 
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "divide";
 
-/* Housekeeping functions */
+// Housekeeping functions
 
 static int
 divide_init( void *context )
@@ -185,7 +185,7 @@ divide_eject( libspectrum_ide_unit unit )
     UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT );
 }
 
-/* Port read/writes */
+// Port read/writes
 
 static libspectrum_ide_register
 port_to_ide_register( libspectrum_byte port )

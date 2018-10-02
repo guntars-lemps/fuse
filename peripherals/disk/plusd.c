@@ -45,12 +45,12 @@
 #include "wd_fdc.h"
 #include "options.h" // needed for get combo options
 
-/* 8KB ROM */
+// 8KB ROM
 #define ROM_SIZE 0x2000
-/* 8KB RAM */
+// 8KB RAM
 #define RAM_SIZE 0x2000
 
-/* Two 8KB memory chunks accessible by the Z80 when /ROMCS is low */
+// Two 8KB memory chunks accessible by the Z80 when /ROMCS is low
 static memory_page plusd_memory_map_romcs_rom[ MEMORY_PAGES_IN_8K ];
 static memory_page plusd_memory_map_romcs_ram[ MEMORY_PAGES_IN_8K ];
 static int plusd_memory_source_rom;
@@ -73,7 +73,7 @@ static void plusd_from_snapshot( libspectrum_snap *snap );
 static void plusd_to_snapshot( libspectrum_snap *snap );
 static void plusd_activate( void );
 
-/* WD1770 registers */
+// WD1770 registers
 static libspectrum_byte plusd_sr_read( libspectrum_word port, libspectrum_byte *attached );
 static void plusd_cr_write( libspectrum_word port, libspectrum_byte b );
 static libspectrum_byte plusd_tr_read( libspectrum_word port, libspectrum_byte *attached );
@@ -99,7 +99,7 @@ static module_info_t plusd_module_info = {
 
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "plusd";
 static int page_event, unpage_event;
 
@@ -133,20 +133,20 @@ plusd_memory_map( void )
 }
 
 static const periph_port_t plusd_ports[] = {
-  /* ---- ---- 1110 0011 */
+  // ---- ---- 1110 0011
   { 0x00ff, 0x00e3, plusd_sr_read, plusd_cr_write },
-  /* ---- ---- 1110 1011 */
+  // ---- ---- 1110 1011
   { 0x00ff, 0x00eb, plusd_tr_read, plusd_tr_write },
-  /* ---- ---- 1111 0011 */
+  // ---- ---- 1111 0011
   { 0x00ff, 0x00f3, plusd_sec_read, plusd_sec_write },
-  /* ---- ---- 1111 1011 */
+  // ---- ---- 1111 1011
   { 0x00ff, 0x00fb, plusd_dr_read, plusd_dr_write },
 
-  /* ---- ---- 1110 1111 */
+  // ---- ---- 1110 1111
   { 0x00ff, 0x00ef, NULL, plusd_cn_write },
-  /* ---- ---- 1110 0111 */
+  // ---- ---- 1110 0111
   { 0x00ff, 0x00e7, plusd_patch_read, plusd_patch_write },
-  /* 0000 0000 1111 0111 */
+  // 0000 0000 1111 0111
   { 0x00ff, 0x00f7, plusd_printer_read, plusd_printer_write },
 
   { 0, 0, NULL, NULL }
@@ -334,7 +334,7 @@ plusd_cn_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
   drive = ( b & 0x03 ) == 2 ? 1 : 0;
   side = ( b & 0x80 ) ? 1 : 0;
 
-  /* TODO: set current_drive to NULL when bits 0 and 1 of b are '00' or '11' */
+  // TODO: set current_drive to NULL when bits 0 and 1 of b are '00' or '11'
   for( i = 0; i < PLUSD_NUM_DRIVES; i++ ) {
     fdd_set_head( &plusd_drives[ i ], side );
   }
@@ -355,7 +355,7 @@ plusd_cn_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 static libspectrum_byte
 plusd_patch_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached GCC_UNUSED )
 {
-  /* should we set bits in *attached? */
+  // should we set bits in *attached?
 
   plusd_page();
   return 0;
@@ -372,7 +372,7 @@ plusd_printer_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached
 {
   *attached = 0xff; // TODO: check this
 
-  /* bit 7 = busy. other bits high? */
+  // bit 7 = busy. other bits high?
 
   if(!settings_current.printer)
     return(0xff); // no printer attached
@@ -524,7 +524,7 @@ ui_drive_is_available( void )
 static const fdd_params_t *
 ui_drive_get_params_1( void )
 {
-  /* +1 => there is no `Disabled' */
+  // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_plusd1_type() + 1 ];
 }
 

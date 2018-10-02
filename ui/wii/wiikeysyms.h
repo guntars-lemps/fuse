@@ -24,7 +24,7 @@
 #ifndef FUSE_WIIKEYSYMS_H
 #define FUSE_WIIKEYSYMS_H
 
-/* definitions taken from http://wiibrew.org/wiki//dev/usb/kbd */
+// definitions taken from http://wiibrew.org/wiki//dev/usb/kbd
 
 enum {
 

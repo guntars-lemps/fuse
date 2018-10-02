@@ -42,7 +42,7 @@
 
 #define MESSAGE_MAX_LENGTH 256
 
-/* We don't start in a widget */
+// We don't start in a widget
 int ui_widget_level = -1;
 
 static char last_message[ MESSAGE_MAX_LENGTH ] = "";
@@ -71,19 +71,19 @@ ui_verror( ui_error_level severity, const char *format, va_list ap )
 
   vsnprintf( message, MESSAGE_MAX_LENGTH, format, ap );
 
-  /* Skip the message if the same message was displayed recently */
+  // Skip the message if the same message was displayed recently
   if( frames_since_last_message < 50 && !strcmp( message, last_message ) ) {
     frames_since_last_message = 0;
     return 0;
   }
 
-  /* And store the 'last message' */
+  // And store the 'last message'
   strncpy( last_message, message, MESSAGE_MAX_LENGTH );
   last_message[ MESSAGE_MAX_LENGTH - 1 ] = '\0';
 
   print_error_to_stderr( severity, message );
 
-  /* Do any UI-specific bits as well */
+  // Do any UI-specific bits as well
   ui_error_specific( severity, message );
 
   return 0;
@@ -166,7 +166,7 @@ ui_mouse_button( int button, int down )
 
   if( !ui_mouse_grabbed && !mouse_grab_suspended ) button = 2;
 
-  /* Possibly we'll end up handling _more_ than one mouse interface... */
+  // Possibly we'll end up handling _more_ than one mouse interface...
   switch( button ) {
   case 1:
     if( ui_mouse_grabbed ) kempmouse_update( 0, 0, kempston_button, down );
@@ -716,7 +716,7 @@ ui_menu_disk_update( void )
 
   drives_avail = ui_media_drive_any_available();
 
-  /* Set the disk menu items and statusbar appropriately */
+  // Set the disk menu items and statusbar appropriately
 
   if( drives_avail ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_DISK, 1 );

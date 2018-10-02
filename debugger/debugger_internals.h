@@ -26,10 +26,10 @@
 
 #include "debugger.h"
 
-/* Memory pool used by the lexer and parser */
+// Memory pool used by the lexer and parser
 extern int debugger_memory_pool;
 
-/* The event type used to trigger time breakpoints */
+// The event type used to trigger time breakpoints
 extern int debugger_breakpoint_event;
 
 void debugger_breakpoint_time_fn( libspectrum_dword tstates, int type, void *user_data );
@@ -47,17 +47,17 @@ int debugger_breakpoint_trigger( debugger_breakpoint *bp );
 int debugger_poke( libspectrum_word address, libspectrum_byte value );
 int debugger_port_write( libspectrum_word address, libspectrum_byte value );
 
-/* Utility functions called by the flex scanner */
+// Utility functions called by the flex scanner
 
 int debugger_command_input( char *buf, int *result, int max_size );
 int yylex( void );
 void yyerror( const char *s );
 
-/* The semantic values of some tokens */
+// The semantic values of some tokens
 
 typedef enum debugger_token {
 
-  /* Chosen to match up with Unicode values */
+  // Chosen to match up with Unicode values
   DEBUGGER_TOKEN_LOGICAL_AND = 0x2227,
   DEBUGGER_TOKEN_LOGICAL_OR = 0x2228,
 
@@ -67,12 +67,12 @@ typedef enum debugger_token {
   DEBUGGER_TOKEN_LESS_THAN_OR_EQUAL_TO = 0x2264,
   DEBUGGER_TOKEN_GREATER_THAN_OR_EQUAL_TO = 0x2265,
 
-  /* No real significance to this value */
+  // No real significance to this value
   DEBUGGER_TOKEN_DEREFERENCE = 0x1000,
 
 } debugger_token;
 
-/* Numeric expression stuff */
+// Numeric expression stuff
 
 debugger_expression*
 debugger_expression_new_number( libspectrum_dword number, int pool );
@@ -93,13 +93,13 @@ void debugger_expression_delete( debugger_expression* expression );
 libspectrum_dword
 debugger_expression_evaluate( debugger_expression* expression );
 
-/* Event handling */
+// Event handling
 
 void debugger_event_init( void );
 int debugger_event_is_registered( const char *type, const char *detail );
 void debugger_event_end( void );
 
-/* System variables handling */
+// System variables handling
 
 void debugger_system_variable_init( void );
 void debugger_system_variable_end( void );
@@ -110,7 +110,7 @@ void debugger_system_variable_set( const char *type, const char *detail,
 void debugger_system_variable_text( char *buffer, size_t length,
                                     int system_variable );
 
-/* Variables handling */
+// Variables handling
 
 void debugger_variable_init( void );
 void debugger_variable_end( void );

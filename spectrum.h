@@ -34,7 +34,7 @@
    precisely, since the ULA last pulled the /INT line to the Z80 low) */
 extern libspectrum_dword tstates;
 
-/* Things relating to memory */
+// Things relating to memory
 
 extern libspectrum_byte RAM[ SPECTRUM_RAM_PAGES ][0x4000];
 
@@ -45,13 +45,13 @@ typedef libspectrum_byte
 
 typedef struct spectrum_raminfo {
 
-  /* Is this port result supplied by the ULA? */
+  // Is this port result supplied by the ULA?
   spectrum_port_from_ula_function port_from_ula;
 
-  /* What's the actual delay at the current tstate with MREQ active */
+  // What's the actual delay at the current tstate with MREQ active
   spectrum_contention_delay_function contend_delay;
 
-  /* And without MREQ */
+  // And without MREQ
   spectrum_contention_delay_function contend_delay_no_mreq;
 
   int locked; // Is the memory configuration locked?
@@ -75,7 +75,7 @@ libspectrum_byte spectrum_contend_delay_76543210( libspectrum_dword time );
 libspectrum_byte spectrum_unattached_port( void );
 libspectrum_byte spectrum_unattached_port_none( void );
 
-/* Miscellaneous stuff */
+// Miscellaneous stuff
 
 extern int spectrum_frame_event;
 

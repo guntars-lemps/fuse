@@ -36,7 +36,7 @@
 #include "spec128.h"
 #include "spec48.h"
 
-/* The +2 emulation just uses the 128K routines */
+// The +2 emulation just uses the 128K routines
 
 static int specplus2_reset( void );
 

@@ -36,14 +36,14 @@
 #include "ui/ui.h"
 #include "zxmmc.h"
 
-/* Private function prototypes */
+// Private function prototypes
 
 static void zxmmc_card_select( libspectrum_word port, libspectrum_byte data );
 static libspectrum_byte zxmmc_mmc_read( libspectrum_word port,
                                         libspectrum_byte *attached );
 static void zxmmc_mmc_write( libspectrum_word port, libspectrum_byte data );
 
-/* Data */
+// Data
 
 static const periph_port_t zxmmc_ports[] = {
   { 0x00ff, 0x001f, NULL, zxmmc_card_select },
@@ -58,10 +58,10 @@ static const periph_t zxmmc_periph = {
   /* .activate = */ NULL,
 };
 
-/* The card inserted into the ZXMMC. For now, we emulate only one card. */
+// The card inserted into the ZXMMC. For now, we emulate only one card.
 static libspectrum_mmc_card *card;
 
-/* The card currently selected via the "card select" call */
+// The card currently selected via the "card select" call
 static libspectrum_mmc_card *current_card;
 
 static void zxmmc_reset( int hard_reset );
@@ -78,10 +78,10 @@ static module_info_t zxmmc_module_info = {
 
 };
 
-/* Eject menu item */
+// Eject menu item
 static const ui_menu_item eject_menu_item = UI_MENU_ITEM_MEDIA_IDE_ZXMMC_EJECT;
 
-/* Housekeeping functions */
+// Housekeeping functions
 
 static int
 zxmmc_init( void *context )
@@ -193,7 +193,7 @@ zxmmc_eject( void )
   return mmc_eject( card );
 }
 
-/* Port read/writes */
+// Port read/writes
 
 static void
 zxmmc_card_select( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
@@ -205,7 +205,7 @@ zxmmc_card_select( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
       current_card = card;
       break;
     case 0x01:
-      /* TODO: select second card */
+      // TODO: select second card
       current_card = NULL;
       break;
     default:

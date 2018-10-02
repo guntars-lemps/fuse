@@ -71,7 +71,7 @@ ui_event( void )
 
 int ui_end(void)
 {
-  /* Cleanup handled by atexit function */
+  // Cleanup handled by atexit function
   int error;
 
   error = wiikeyboard_end(); if( error ) return error;

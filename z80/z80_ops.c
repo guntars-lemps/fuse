@@ -108,7 +108,7 @@ enum {
 static libspectrum_byte opcode = 0x00;
 #endif
 
-/* Execute Z80 opcodes until the next event */
+// Execute Z80 opcodes until the next event
 void
 z80_do_opcodes( void )
 {
@@ -140,14 +140,14 @@ z80_do_opcodes( void )
 
   while( tstates < event_next_event ) {
 
-    /* Profiler */
+    // Profiler
     CHECK( profile, profile_active )
 
     profile_map( PC );
 
     END_CHECK
 
-    /* If we're due an end of frame from RZX playback, generate one */
+    // If we're due an end of frame from RZX playback, generate one
     CHECK( rzx, rzx_playback )
 
     if( R + rzx_instructions_offset >= rzx_instruction_count ) {
@@ -158,7 +158,7 @@ z80_do_opcodes( void )
 
     END_CHECK
 
-    /* Check if the debugger should become active at this point */
+    // Check if the debugger should become active at this point
     CHECK( debugger, debugger_mode != DEBUGGER_MODE_INACTIVE )
 
     if( debugger_check( DEBUGGER_BREAKPOINT_TYPE_EXECUTE, PC ) )
@@ -264,7 +264,7 @@ z80_do_opcodes( void )
 
     contend_read( PC, 4 );
 
-    /* Check to see if M1 cycles happen on even tstates */
+    // Check to see if M1 cycles happen on even tstates
     CHECK( evenm1, even_m1 )
 
     if( tstates & 1 ) {
@@ -332,7 +332,7 @@ z80_do_opcodes( void )
     CHECK( z80_iff2_read, z80.iff2_read )
 
     z80.iff2_read = 0;
-    /* Execute *one* instruction before reevaluating the checks */
+    // Execute *one* instruction before reevaluating the checks
     event_add( tstates, z80_nmos_iff2_event );
 
     END_CHECK

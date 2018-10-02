@@ -50,16 +50,16 @@ typedef enum upd_scan_t {
 } upd_scan_t;
 
 typedef enum upd_cmd_id_t {
-				/* ----v computer READ at execution phase*/
+				// ----v computer READ at execution phase
   UPD_CMD_READ_DATA = 0, // (non)deleted
   UPD_CMD_READ_DIAG,
-				/* ----v computer WRITE at execution phase*/
+				// ----v computer WRITE at execution phase
   UPD_CMD_WRITE_DATA, // (non)deleted
   UPD_CMD_WRITE_ID, // :) format
   UPD_CMD_SCAN, // equal/low-or-equal/high-or-equal
-				/* ----v NO data transfer at execution phase  */
+				// ----v NO data transfer at execution phase
   UPD_CMD_READ_ID,
-				/* ----v NO RW head contact  */
+				// ----v NO RW head contact
   UPD_CMD_RECALIBRATE,
   UPD_CMD_SENSE_INT,
   UPD_CMD_SPECIFY,
@@ -126,7 +126,7 @@ typedef struct upd_fdc {
   unsigned int last_sector_read;/* for Speedlock 'random' sector hack */
   int speedlock; // for Speedlock 'random' sector hack, -1 -> disable
 
-  /* state during transfer */
+  // state during transfer
   int data_offset;
 
   int cycle; // read/write cycle num
@@ -164,7 +164,7 @@ typedef struct upd_fdc {
 
 void upd_fdc_init_events( void );
 
-/* allocate an fdc */
+// allocate an fdc
 upd_fdc *upd_fdc_alloc_fdc( upd_type_t type, upd_clock_t clock );
 void upd_fdc_master_reset( upd_fdc *f );
 

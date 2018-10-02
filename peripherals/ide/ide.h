@@ -26,7 +26,7 @@
 
 #include "ui/ui.h"
 
-/* Insert the images into the master and slave units if appropriate */
+// Insert the images into the master and slave units if appropriate
 int
 ide_init( libspectrum_ide_channel *channel,
 	  char *master_setting, ui_menu_item master_menu_item,

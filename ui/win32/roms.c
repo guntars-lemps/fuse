@@ -45,7 +45,7 @@ static void roms_init( HWND hwndDlg, LPARAM lParam );
           MapDialogRect whenever drawing the interface at runtime (options
           dialog for example */
 
-/* The edit boxes used to display the current ROMs */
+// The edit boxes used to display the current ROMs
 static HWND rom[ SETTINGS_ROM_COUNT ];
 
 struct callback_info {
@@ -62,7 +62,7 @@ menu_select_roms_with_title( const char *title, size_t start, size_t n,
 {
   struct callback_info info;
 
-  /* Firstly, stop emulation */
+  // Firstly, stop emulation
   fuse_emulation_pause();
 
   _sntprintf( info.title, 256, "Fuse - Select ROMs - %s", title );
@@ -73,7 +73,7 @@ menu_select_roms_with_title( const char *title, size_t start, size_t n,
   DialogBoxParam( fuse_hInstance, MAKEINTRESOURCE( IDD_ROMS ), fuse_hWnd,
                   ( DLGPROC ) roms_proc, ( LPARAM ) &info );
 
-  /* And then carry on with emulation again */
+  // And then carry on with emulation again
   fuse_emulation_unpause();
 
   return 0;
@@ -83,12 +83,12 @@ static INT_PTR CALLBACK
 roms_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
   HWND hedit;
-  
+
   switch( uMsg ) {
 
     case WM_INITDIALOG:
       roms_init( hwndDlg, lParam );
-      /* save callback_info in userdata of this dialog */
+      // save callback_info in userdata of this dialog
       SetWindowLongPtr( hwndDlg, GWLP_USERDATA, ( LONG_PTR ) lParam );
       return FALSE;
 
@@ -103,7 +103,7 @@ roms_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
         case IDCANCEL:
           EndDialog( hwndDlg, 0 );
           return 0;
-          
+
         default:
           if( HIWORD( wParam ) == BN_CLICKED ) {
             hedit = ( HWND ) GetWindowLongPtr( ( HWND ) lParam, GWLP_USERDATA );
@@ -130,11 +130,11 @@ roms_init( HWND hwndDlg, LPARAM lParam )
   struct callback_info *info;
 
   info = ( struct callback_info * ) lParam;
-  
+
   for( i = 0; i < info->n; i++ )
     add_rom( hwndDlg, info->start, i, info->is_peripheral );
 
-  /* Move the OK and Cancel buttons */
+  // Move the OK and Cancel buttons
   RECT rect;
 
   rect.left = 25; rect.top = ( info->n * 30 ) + 5;
@@ -152,29 +152,29 @@ roms_init( HWND hwndDlg, LPARAM lParam )
               rect.left, rect.top,
               rect.right - rect.left, rect.bottom - rect.top,
               FALSE );
-              
-  /* resize the dialog as needed */
+
+  // resize the dialog as needed
   RECT window_rect, client_rect;
-  
+
   GetWindowRect( hwndDlg, &window_rect );
   GetClientRect( hwndDlg, &client_rect );
 
   rect.left = 0; rect.top = 0;
   rect.right = 163; rect.bottom = ( info->n * 30 ) + 24;
   MapDialogRect( hwndDlg, &rect );
-  
+
   /* rect now contains the size of the client area in pixels,
      now add window's absolute position on the screen */
   rect.left += window_rect.left;
   rect.top += window_rect.top;
-  
-  /* now just add the difference between client area and window area */
+
+  // now just add the difference between client area and window area
   rect.right += ( window_rect.right - window_rect.left )
               - ( client_rect.right - client_rect.left );
   rect.bottom += ( window_rect.bottom - window_rect.top )
                - ( client_rect.bottom - client_rect.top );
-  
-  /* MoveWindow doesn't really take rect, instead it's X, Y, sizeX and sizeY */
+
+  // MoveWindow doesn't really take rect, instead it's X, Y, sizeX and sizeY
   MoveWindow( hwndDlg, rect.left, rect.top, rect.right, rect.bottom, FALSE );
 }
 
@@ -189,8 +189,8 @@ add_rom( HWND hwndDlg, size_t start, size_t row, int is_peripheral )
   _sntprintf( buffer, 80, "ROM %lu", (unsigned long)row );
 
   font = ( HFONT ) SendMessage( hwndDlg, WM_GETFONT, 0, 0 );
-  
-  /* create a groupbox */
+
+  // create a groupbox
   rect.left = 0; rect.top = ( row * 30 );
   rect.right = 160; rect.bottom = ( row * 30 ) + 30;
   MapDialogRect( hwndDlg, &rect );
@@ -201,7 +201,7 @@ add_rom( HWND hwndDlg, size_t start, size_t row, int is_peripheral )
                            hwndDlg, 0, fuse_hInstance, 0 );
   SendMessage( hgroup, WM_SETFONT, ( WPARAM ) font, FALSE );
 
-  /* create an edit */
+  // create an edit
   setting = settings_get_rom_setting( &settings_current, start + row,
 				      is_peripheral );
 
@@ -215,10 +215,10 @@ add_rom( HWND hwndDlg, size_t start, size_t row, int is_peripheral )
                           rect.right - rect.left, rect.bottom - rect.top,
                           hwndDlg, 0, fuse_hInstance, 0 );
   SendMessage( hedit, WM_SETFONT, ( WPARAM ) font, FALSE );
-  
+
   rom[ row ] = hedit;
 
-  /* create a select... button */
+  // create a select... button
   rect.left = 120; rect.top = ( row * 30 ) + 10;
   rect.right = 120 + 35; rect.bottom = ( row * 30 ) + 10 + 14;
   MapDialogRect( hwndDlg, &rect );
@@ -228,8 +228,8 @@ add_rom( HWND hwndDlg, size_t start, size_t row, int is_peripheral )
                             rect.right - rect.left, rect.bottom - rect.top,
                             hwndDlg, 0, fuse_hInstance, 0 );
   SendMessage( hbutton, WM_SETFONT, ( WPARAM ) font, FALSE );
-  
-  /* associate handle to the edit box with each Select button as user data */
+
+  // associate handle to the edit box with each Select button as user data
   SetWindowLongPtr( hbutton, GWLP_USERDATA, ( LONG_PTR ) hedit );
 }
 
@@ -248,10 +248,10 @@ static void
 roms_done( HWND hwndDlg, LONG_PTR lParam )
 {
   size_t i;
-  
+
   TCHAR **setting; TCHAR *string;
   size_t string_len;
-  
+
   struct callback_info *info = ( struct callback_info * ) lParam;
 
   for( i = 0; i < info->n; i++ ) {

@@ -48,14 +48,14 @@
 
 #define INTRQ_ENABLED  0x80
 #define DATARQ_ENABLED 0x40
-/* 2KB RAM */
+// 2KB RAM
 #define RAM_SIZE 0x0800
-/* 14KB ROM */
+// 14KB ROM
 #define ROM_SIZE 0x3800
 
 static int didaktik_rom_memory_source, didaktik_ram_memory_source;
 
-/* Two memory chunks accessible by the Z80 when /ROMCS is low */
+// Two memory chunks accessible by the Z80 when /ROMCS is low
 static memory_page didaktik_memory_map_romcs_rom[ MEMORY_PAGES_IN_14K ];
 static memory_page didaktik_memory_map_romcs_ram[ MEMORY_PAGES_IN_2K ];
 
@@ -69,7 +69,7 @@ static ui_media_drive_info_t didaktik_ui_drives[ DIDAKTIK80_NUM_DRIVES ];
 
 static libspectrum_byte ram[ RAM_SIZE ];
 
-/* AUX byte */
+// AUX byte
 static libspectrum_byte aux_register;
 
 static void didaktik_reset( int hard_reset );
@@ -100,19 +100,19 @@ static module_info_t didaktik_module_info = {
 };
 
 static const periph_port_t didaktik_ports[] = {
-  /* ---- ---- 1000 0001 */
+  // ---- ---- 1000 0001
   { 0x00ff, 0x0081, didaktik_sr_read, didaktik_cr_write },
-  /* ---- ---- 1000 0011 */
+  // ---- ---- 1000 0011
   { 0x00ff, 0x0083, didaktik_tr_read, didaktik_tr_write },
-  /* ---- ---- 1000 0101 */
+  // ---- ---- 1000 0101
   { 0x00ff, 0x0085, didaktik_sec_read, didaktik_sec_write },
-  /* ---- ---- 1000 0111 */
+  // ---- ---- 1000 0111
   { 0x00ff, 0x0087, didaktik_dr_read, didaktik_dr_write },
 
-  /* ---- ---- 0xx- ---- */
+  // ---- ---- 0xx- ----
   { 0x0080, 0x0000, didaktik_8255_read, didaktik_8255_write },
 
-  /* ---- ---- 1000 1--1 */
+  // ---- ---- 1000 1--1
   { 0x00f9, 0x0089, NULL, didaktik_aux_write },
 
   { 0, 0, NULL, NULL }
@@ -125,7 +125,7 @@ static const periph_t didaktik_periph = {
   /* .activate = */ NULL,
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "didaktik80";
 static int page_event, unpage_event;
 
@@ -425,7 +425,7 @@ ui_drive_is_available( void )
 static const fdd_params_t *
 ui_drive_get_params_a( void )
 {
-  /* +1 => there is no `Disabled' */
+  // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_didaktik80a_type() + 1 ];
 }
 

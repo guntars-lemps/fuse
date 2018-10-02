@@ -43,7 +43,7 @@ static void add_rom( GtkBox *parent, size_t start, gint row,
 static void select_new_rom( GtkWidget *widget, gpointer data );
 static void roms_done( GtkButton *button, gpointer data );
 
-/* The labels used to display the current ROMs */
+// The labels used to display the current ROMs
 static GtkWidget *rom[ SETTINGS_ROM_COUNT ];
 
 struct callback_info {
@@ -65,10 +65,10 @@ menu_select_roms_with_title( const char *title, size_t start, size_t n,
   char buffer[ 256 ];
   size_t i;
 
-  /* Firstly, stop emulation */
+  // Firstly, stop emulation
   fuse_emulation_pause();
 
-  /* Give me a new dialog box */
+  // Give me a new dialog box
   snprintf( buffer, 256, "Fuse - Select ROMs - %s", title );
   dialog = gtkstock_dialog_new( buffer, NULL );
 
@@ -76,26 +76,26 @@ menu_select_roms_with_title( const char *title, size_t start, size_t n,
   info.n = n;
   info.is_peripheral = is_peripheral;
 
-  /* Create the OK and Cancel buttons */
+  // Create the OK and Cancel buttons
   gtkstock_create_ok_cancel( dialog, NULL, G_CALLBACK( roms_done ), &info,
                              DEFAULT_DESTROY, DEFAULT_DESTROY );
 
-  /* And the current values of each of the ROMs */
+  // And the current values of each of the ROMs
   vbox = GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( dialog ) ) );
 
   gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
   for( i = 0; i < n; i++ ) add_rom( vbox, start, i, is_peripheral );
 
-  /* Users shouldn't be able to resize this window */
+  // Users shouldn't be able to resize this window
   gtk_window_set_resizable( GTK_WINDOW( dialog ), FALSE );
 
-  /* Display the window */
+  // Display the window
   gtk_widget_show_all( dialog );
 
-  /* Process events until the window is done with */
+  // Process events until the window is done with
   gtk_main();
 
-  /* And then carry on with emulation again */
+  // And then carry on with emulation again
   fuse_emulation_unpause();
 
   return 0;
@@ -145,7 +145,7 @@ static void
 roms_done( GtkButton *button GCC_UNUSED, gpointer data )
 {
   size_t i;
-  
+
   char **setting; const char *string;
 
   struct callback_info *info = data;

@@ -55,14 +55,14 @@ int fbkeyboard_init(void)
   struct stat st;
   int i = 1;
 
-  /* First, set up the keyboard */
+  // First, set up the keyboard
   if( fstat( STDIN_FILENO, &st ) ) {
     fprintf( stderr, "%s: couldn't stat stdin: %s\n", fuse_progname,
 	     strerror( errno ) );
     return 1;
   }
 
-  /* check for character special, major 4, minor 0..63 */
+  // check for character special, major 4, minor 0..63
   if( !isatty(STDIN_FILENO) || !S_ISCHR(st.st_mode) ||
       ( st.st_rdev & ~63 ) != 0x0400 ) {
     fprintf( stderr, "%s: stdin isn't a local tty\n", fuse_progname );
@@ -73,7 +73,7 @@ int fbkeyboard_init(void)
   ioctl( STDIN_FILENO, KDGKBMODE, &old_kbmode );
   got_old_ts = 1;
 
-  /* We need non-blocking semi-cooked keyboard input */
+  // We need non-blocking semi-cooked keyboard input
   if( ioctl( STDIN_FILENO, FIONBIO, &i ) ) {
     fprintf( stderr, "%s: can't set stdin nonblocking: %s\n", fuse_progname,
 	     strerror( errno ) );
@@ -85,7 +85,7 @@ int fbkeyboard_init(void)
     return 1;
   }
 
-  /* Add in a bit of voodoo... */
+  // Add in a bit of voodoo...
   ts = old_ts;
   ts.c_cc[VTIME] = 0;
   ts.c_cc[VMIN] = 1;

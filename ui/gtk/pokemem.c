@@ -110,14 +110,14 @@ create_dialog( void )
 
   vbox = gtk_dialog_get_content_area( GTK_DIALOG( dialog ) );
 
-  /* Keyboard shortcuts */
+  // Keyboard shortcuts
   accel_group = gtk_accel_group_new();
   gtk_window_add_accel_group( GTK_WINDOW( dialog ), accel_group );
 
   hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
   gtk_box_pack_start( GTK_BOX( vbox ), hbox,  TRUE, TRUE, 5 );
 
-  /* Bank */
+  // Bank
   label = gtk_label_new( "Bank:" );
   bank = gtk_entry_new();
   gtk_entry_set_width_chars( GTK_ENTRY( bank ), 7 );
@@ -129,7 +129,7 @@ create_dialog( void )
   gtk_box_pack_start( GTK_BOX( hbox ), label, TRUE, TRUE, 5 );
   gtk_box_pack_start( GTK_BOX( hbox ), bank, TRUE, TRUE, 5 );
 
-  /* Address */
+  // Address
   label = gtk_label_new( "Address:" );
   address = gtk_entry_new();
   gtk_entry_set_width_chars( GTK_ENTRY( address ), 7 );
@@ -141,7 +141,7 @@ create_dialog( void )
   gtk_box_pack_start( GTK_BOX( hbox ), label, TRUE, TRUE, 5 );
   gtk_box_pack_start( GTK_BOX( hbox ), address, TRUE, TRUE, 5 );
 
-  /* Value */
+  // Value
   label = gtk_label_new( "Value:" );
   value = gtk_entry_new();
   gtk_entry_set_width_chars( GTK_ENTRY( value ), 7 );
@@ -153,7 +153,7 @@ create_dialog( void )
   gtk_box_pack_start( GTK_BOX( hbox ), label, TRUE, TRUE, 5 );
   gtk_box_pack_start( GTK_BOX( hbox ), value, TRUE, TRUE, 5 );
 
-  /* Create Add button for custom pokes */
+  // Create Add button for custom pokes
   static const gtkstock_button
     add  = { "_Add", G_CALLBACK( pokemem_add_custom_poke ), NULL, NULL,
              0, 0, 0, 0, GTK_RESPONSE_NONE };
@@ -162,11 +162,11 @@ create_dialog( void )
   label = gtk_label_new( "Choose active POKES:" );
   gtk_box_pack_start( GTK_BOX( vbox ), label, TRUE, TRUE, 5 );
 
-  /* Create list widget */
+  // Create list widget
   create_and_fill_treeview();
   scroll = gtk_scrolled_window_new( NULL, NULL );
 
-  /* Adjust size for list */
+  // Adjust size for list
 #if !GTK_CHECK_VERSION( 3, 0, 0 )
   gtk_widget_set_size_request( GTK_WIDGET( poke_list ), -1, 250 );
 #else
@@ -176,17 +176,17 @@ create_dialog( void )
   gtk_container_add( GTK_CONTAINER( scroll ), GTK_WIDGET( poke_list ) );
   gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scroll ), TRUE, TRUE, 5 );
 
-  /* Create and add the actions buttons to the dialog box */
+  // Create and add the actions buttons to the dialog box
   gtkstock_create_ok_cancel( dialog, accel_group,
                              G_CALLBACK( pokemem_update_list ),
                              (gpointer) &dialog,
                              G_CALLBACK( pokemem_close ),
                              G_CALLBACK( pokemem_close ) );
 
-  /* Users shouldn't be able to resize this window */
+  // Users shouldn't be able to resize this window
   gtk_window_set_resizable( GTK_WINDOW( dialog ), FALSE );
 
-  /* Process the dialog */
+  // Process the dialog
   gtk_widget_show_all( dialog );
   gtk_main();
 }
@@ -210,7 +210,7 @@ create_and_fill_treeview( void )
 
   renderer = gtk_cell_renderer_toggle_new();
 
-  /* First column, checkbox */
+  // First column, checkbox
   g_signal_connect( renderer, "toggled",
                     (GCallback) row_toggled_callback,
                     (gpointer) GTK_TREE_MODEL( store ) );
@@ -224,7 +224,7 @@ create_and_fill_treeview( void )
                                                "inconsistent", COL_INCONSISTENT,
                                                NULL );
 
-  /* Second column, name */
+  // Second column, name
   renderer = gtk_cell_renderer_text_new();
   gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( poke_list ),
                                                -1,
@@ -233,7 +233,7 @@ create_and_fill_treeview( void )
                                                "text", COL_NAME,
                                                NULL );
 
-  /* Third column, optional value */
+  // Third column, optional value
   renderer = gtk_cell_renderer_text_new();
   g_signal_connect( renderer, "edited", (GCallback)custom_value_changed,
                     (gpointer) GTK_TREE_MODEL( store ) );
@@ -246,7 +246,7 @@ create_and_fill_treeview( void )
                                                "editable", COL_EDITABLE,
                                                NULL);
 
-  /* Create and fill model */
+  // Create and fill model
   if( trainer_list ) {
     g_slist_foreach( trainer_list, trainer_add, store );
   }
@@ -270,7 +270,7 @@ trainer_add( gpointer data, gpointer user_data )
   if( trainer->ask_value )
     val = g_strdup_printf( "%d", trainer->value );
 
-  /* Append a new row and fill data */
+  // Append a new row and fill data
   gtk_list_store_append( store, &iter );
   gtk_list_store_set( store, &iter,
                       COL_CHECK, trainer->active,
@@ -343,7 +343,7 @@ pokemem_add_custom_poke( GtkWidget *widget GCC_UNUSED,
      return;
   }
 
-  /* Parse bank */
+  // Parse bank
   entry = gtk_entry_get_text( GTK_ENTRY( bank ) );
   errno = 0;
   b = strtol( entry, &endptr, 10 );
@@ -355,7 +355,7 @@ pokemem_add_custom_poke( GtkWidget *widget GCC_UNUSED,
 
   if( endptr == entry ) b = 8; // ignore bank by default
 
-  /* Parse address */
+  // Parse address
   entry = gtk_entry_get_text( GTK_ENTRY( address ) );
   errno = 0;
   base = ( g_str_has_prefix( entry, "0x" ) )? 16 : 10;
@@ -375,7 +375,7 @@ pokemem_add_custom_poke( GtkWidget *widget GCC_UNUSED,
     return;
   }
 
-  /* Parse value */
+  // Parse value
   entry = gtk_entry_get_text( GTK_ENTRY( value ) );
   errno = 0;
   v = strtol( entry, &endptr, 10 );
@@ -386,7 +386,7 @@ pokemem_add_custom_poke( GtkWidget *widget GCC_UNUSED,
     return;
   }
 
-  /* Update store and view */
+  // Update store and view
   trainer = pokemem_trainer_list_add( b, a, v );
   if( !trainer ) {
     ui_error( UI_ERROR_ERROR, "Cannot add trainer" );
@@ -397,7 +397,7 @@ pokemem_add_custom_poke( GtkWidget *widget GCC_UNUSED,
                           GTK_TREE_VIEW( poke_list ) ) );
   trainer_add( trainer, store );
 
-  /* Mark custom trainer for activate */
+  // Mark custom trainer for activate
   GtkTreeModel *model;
   GtkTreePath *path;
   GtkTreeIter iter;
@@ -412,7 +412,7 @@ pokemem_add_custom_poke( GtkWidget *widget GCC_UNUSED,
     gtk_tree_path_free( path );
   }
 
-  /* Clear custom fields */
+  // Clear custom fields
   gtk_editable_delete_text( GTK_EDITABLE( bank ), 0, -1 );
   gtk_editable_delete_text( GTK_EDITABLE( address ), 0, -1 );
   gtk_editable_delete_text( GTK_EDITABLE( value ), 0, -1 );
@@ -427,14 +427,14 @@ entry_validate_digit( GtkEntry *entry, const gchar *text, gint length,
   GtkEditable *editable = GTK_EDITABLE( entry );
   gchar *result = g_new( gchar, length );
 
-  /* Validate decimal and fill buffer to insert */
+  // Validate decimal and fill buffer to insert
   for( i = 0; i < length; i++ ) {
     if( !isdigit( text[i] ) ) continue;
 
     result[ count++ ] = text[i];
   }
 
-  /* Insert only validated text */
+  // Insert only validated text
   if( count > 0 ) {
     g_signal_handlers_block_by_func( G_OBJECT( editable ),
                                      G_CALLBACK( entry_validate_digit ),
@@ -459,7 +459,7 @@ entry_validate_address( GtkEntry *entry, const gchar *text, gint length,
   GString *full_text;
   gchar *result = NULL;
 
-  /* Validate hex or decimal number */
+  // Validate hex or decimal number
   full_text = g_string_new( gtk_entry_get_text( entry ) );
   prev_length = full_text->len;
   full_text = g_string_insert_len( full_text, *position, text, length );
@@ -490,7 +490,7 @@ entry_validate_address( GtkEntry *entry, const gchar *text, gint length,
   }
   g_string_free( full_text, TRUE );
 
-  /* Fill buffer to insert */
+  // Fill buffer to insert
   if( is_valid ) {
     max_length = ( is_hex )? 6 : 5;
     result = g_new( gchar, length );
@@ -500,7 +500,7 @@ entry_validate_address( GtkEntry *entry, const gchar *text, gint length,
     }
   }
 
-  /* Insert only validated text */
+  // Insert only validated text
   if( count > 0 ) {
     g_signal_handlers_block_by_func( G_OBJECT( editable ),
                                      G_CALLBACK( entry_validate_address ),
@@ -525,7 +525,7 @@ row_toggled_callback( GtkCellRendererToggle *cell GCC_UNUSED,
   trainer_t *trainer;
   gboolean flag;
 
-  /* Toggle current selection */
+  // Toggle current selection
   gtk_tree_model_get_iter_from_string( model, &iter, path_string );
   memset( &val, 0, sizeof( val ) );
   gtk_tree_model_get_value( model, &iter, COL_CHECK, &val );
@@ -533,7 +533,7 @@ row_toggled_callback( GtkCellRendererToggle *cell GCC_UNUSED,
   g_value_unset( &val );
   gtk_list_store_set( GTK_LIST_STORE( model ), &iter, COL_CHECK, flag, -1 );
 
-  /* Request user for custom value */
+  // Request user for custom value
   if( flag ) {
     memset( &gtrainer, 0, sizeof( gtrainer ) );
     gtk_tree_model_get_value( model, &iter, COL_TRAINER, &gtrainer );

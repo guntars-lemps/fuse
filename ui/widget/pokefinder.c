@@ -218,7 +218,7 @@ widget_pokefinder_keyhandler( input_key key )
     }
     break;
 
-  /* Address selection */
+  // Address selection
   case INPUT_KEY_Up:	scroll(  -1 ); break;
   case INPUT_KEY_Down:	scroll(   1 ); break;
   case INPUT_KEY_Left:	scroll(  -4 ); break;
@@ -226,7 +226,7 @@ widget_pokefinder_keyhandler( input_key key )
   case INPUT_KEY_Home:	scroll( -20 ); break;
   case INPUT_KEY_End:	scroll(  20 ); break;
 
-  /* Value alteration */
+  // Value alteration
   case INPUT_KEY_0:
   case INPUT_KEY_1:
   case INPUT_KEY_2:

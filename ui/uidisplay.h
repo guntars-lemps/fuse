@@ -26,7 +26,7 @@
 
 #include <libspectrum.h>
 
-/* User interface specific functions */
+// User interface specific functions
 
 int uidisplay_init( int width, int height );
 
@@ -43,7 +43,7 @@ void uidisplay_frame_restore( void );
 
 int uidisplay_end(void);
 
-/* General functions */
+// General functions
 
 void uidisplay_spectrum_screen( const libspectrum_byte *screen, int border );
 

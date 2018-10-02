@@ -61,7 +61,7 @@ static int init_dummies( void );
 libspectrum_dword tstates;
 libspectrum_dword event_next_event;
 
-/* 64Kb of RAM */
+// 64Kb of RAM
 static libspectrum_byte initial_memory[ 0x10000 ], memory[ 0x10000 ];
 
 libspectrum_byte readbyte( libspectrum_word address );
@@ -92,7 +92,7 @@ main( int argc, char **argv )
 
   if( init_dummies() ) return 1;
 
-  /* Initialise the tables used by the Z80 core */
+  // Initialise the tables used by the Z80 core
   z80_init( NULL );
 
   f = fopen( testsfile, "r" );
@@ -103,7 +103,7 @@ main( int argc, char **argv )
   }
 
   while( run_test( f ) ) {
-    /* Do nothing */
+    // Do nothing
   }
 
   if( fclose( f ) ) {
@@ -224,7 +224,7 @@ run_test( FILE *f )
 {
   size_t i;
 
-  /* Get ourselves into a known state */
+  // Get ourselves into a known state
   z80_reset( 1 ); tstates = 0;
   for( i = 0; i < 0x10000; i += 4 ) {
     memory[ i     ] = 0xde; memory[ i + 1 ] = 0xad;
@@ -233,12 +233,12 @@ run_test( FILE *f )
 
   if( read_test( f, &event_next_event ) ) return 0;
 
-  /* Grab a copy of the memory for comparison at the end */
+  // Grab a copy of the memory for comparison at the end
   memcpy( initial_memory, memory, 0x10000 );
 
   z80_do_opcodes();
 
-  /* And dump our final state */
+  // And dump our final state
   dump_z80_state();
   dump_memory_state();
 
@@ -269,7 +269,7 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
 
   } while( test_name[0] == '\n' );
 
-  /* FIXME: how should we read/write our data types? */
+  // FIXME: how should we read/write our data types?
   if( fscanf( f, "%x %x %x %x %x %x %x %x %x %x %x %x %x", &af, &bc,
 	      &de, &hl, &af_, &bc_, &de_, &hl_, &ix, &iy, &sp, &pc,
 	      &memptr ) != 13 ) {
@@ -351,7 +351,7 @@ dump_memory_state( void )
   }
 }
 
-/* Error 'handing': dump core as these should never be called */
+// Error 'handing': dump core as these should never be called
 
 void
 fuse_abort( void )
@@ -387,14 +387,14 @@ size_t slt_length[256];
 int
 tape_load_trap( void )
 {
-  /* Should never be called */
+  // Should never be called
   abort();
 }
 
 int
 tape_save_trap( void )
 {
-  /* Should never be called */
+  // Should never be called
   abort();
 }
 
@@ -622,7 +622,7 @@ void
 event_add_with_data( libspectrum_dword event_time GCC_UNUSED,
 		     int type GCC_UNUSED, void *user_data GCC_UNUSED )
 {
-  /* Do nothing */
+  // Do nothing
 }
 
 int

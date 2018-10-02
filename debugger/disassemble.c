@@ -36,7 +36,7 @@
 #include "memory_pages.h"
 #include "ui/ui.h"
 
-/* Used to flag whether we're after a DD or FD prefix */
+// Used to flag whether we're after a DD or FD prefix
 enum hl_type { USE_HL, USE_IX, USE_IY };
 
 static void disassemble_main( libspectrum_word address, char *buffer,
@@ -94,7 +94,7 @@ static const char *rotate_op( libspectrum_byte b );
 static const char *bit_op( libspectrum_byte b );
 static int bit_op_bit( libspectrum_byte b );
 
-/* A very thin wrapper to avoid exposing the USE_HL constant */
+// A very thin wrapper to avoid exposing the USE_HL constant
 void
 debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 		      libspectrum_word address )
@@ -102,7 +102,7 @@ debugger_disassemble( char *buffer, size_t buflen, size_t *length,
   disassemble_main( address, buffer, buflen, length, USE_HL );
 }
 
-/* Disassemble one instruction */
+// Disassemble one instruction
 static void
 disassemble_main( libspectrum_word address, char *buffer, size_t buflen,
 		  size_t *length, enum hl_type use_hl )
@@ -141,7 +141,7 @@ disassemble_main( libspectrum_word address, char *buffer, size_t buflen,
       source_reg( address, use_hl, buffer3, 40 );
       *length = 1;
     }
-    /* Note LD (HL),(HL) does not exist */
+    // Note LD (HL),(HL) does not exist
 
     snprintf( buffer, buflen, "LD %s,%s", buffer2, buffer3 );
 
@@ -152,11 +152,11 @@ disassemble_main( libspectrum_word address, char *buffer, size_t buflen,
     disassemble_11xxxxxx( address, buffer, buflen, length, use_hl );
   }
 
-  /* Increment the instruction length by the number of prefix bytes */
+  // Increment the instruction length by the number of prefix bytes
   *length += prefix_length;
 }
 
-/* Disassemble something of the form 00xxxxxx */
+// Disassemble something of the form 00xxxxxx
 static void
 disassemble_00xxxxxx( libspectrum_word address, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
@@ -235,7 +235,7 @@ disassemble_00xxxxxx( libspectrum_word address, char *buffer, size_t buflen,
   }
 }
 
-/* Disassemble something of the form 00xxx010 */
+// Disassemble something of the form 00xxx010
 static void
 disassemble_00xxx010( libspectrum_word address, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
@@ -263,7 +263,7 @@ disassemble_00xxx010( libspectrum_word address, char *buffer, size_t buflen,
   }
 }
 
-/* Disassemble something of the form 00xxx110 */
+// Disassemble something of the form 00xxx110
 static void
 disassemble_00xxx110( libspectrum_word address, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
@@ -291,7 +291,7 @@ disassemble_00xxx110( libspectrum_word address, char *buffer, size_t buflen,
   }
 }
 
-/* Disassemble something of the form 11xxxxxx */
+// Disassemble something of the form 11xxxxxx
 static void
 disassemble_11xxxxxx( libspectrum_word address, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
@@ -342,7 +342,7 @@ disassemble_11xxxxxx( libspectrum_word address, char *buffer, size_t buflen,
   }
 }
 
-/* Disassemble something for the form 11xxx001 */
+// Disassemble something for the form 11xxx001
 static void
 disassemble_11xxx001( libspectrum_byte b, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
@@ -368,7 +368,7 @@ disassemble_11xxx001( libspectrum_byte b, char *buffer, size_t buflen,
   }
 }
 
-/* Disassemble something for the form 11xxx011 */
+// Disassemble something for the form 11xxx011
 static void
 disassemble_11xxx011( libspectrum_word address, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
@@ -409,7 +409,7 @@ disassemble_11xxx011( libspectrum_word address, char *buffer, size_t buflen,
     break;
 
   case 0x05:
-    /* Note: does not get modified by DD or FD */
+    // Note: does not get modified by DD or FD
     snprintf( buffer, buflen, "EX DE,HL" ); *length = 1;
     break;
 
@@ -423,7 +423,7 @@ disassemble_11xxx011( libspectrum_word address, char *buffer, size_t buflen,
   }
 }
 
-/* Disassemble something for the form 11xxx101 */
+// Disassemble something for the form 11xxx101
 static void
 disassemble_11xxx101( libspectrum_word address, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
@@ -460,7 +460,7 @@ disassemble_11xxx101( libspectrum_word address, char *buffer, size_t buflen,
   }
 }
 
-/* Disassemble an instruction after a CB prefix */
+// Disassemble an instruction after a CB prefix
 static void
 disassemble_cb( libspectrum_word address, char *buffer, size_t buflen,
 		size_t *length )
@@ -480,7 +480,7 @@ disassemble_cb( libspectrum_word address, char *buffer, size_t buflen,
   }
 }
 
-/* Disassemble an instruction after an ED prefix */
+// Disassemble an instruction after an ED prefix
 static void
 disassemble_ed( libspectrum_word address, char *buffer, size_t buflen,
 		size_t *length )
@@ -492,7 +492,7 @@ disassemble_ed( libspectrum_word address, char *buffer, size_t buflen,
     "LD I,A", "LD R,A", "LD A,I", "LD A,R", "RRD", "RLD", "NOPD", "NOPD"
   };
 
-  /* Note 0xbc to 0xbf removed before this table is used */
+  // Note 0xbc to 0xbf removed before this table is used
   const char *opcode_101xxxxx[] = {
     "LDI",  "CPI",  "INI",  "OUTI", "NOPD", "NOPD", "NOPD", "NOPD",
     "LDD",  "CPD",  "IND",  "OUTD", "NOPD", "NOPD", "NOPD", "NOPD",
@@ -500,7 +500,7 @@ disassemble_ed( libspectrum_word address, char *buffer, size_t buflen,
     "LDDR", "CPDR", "INDR", "OTDR"
   };
 
-  /* The order in which the IM x instructions appear */
+  // The order in which the IM x instructions appear
   const int im_modes[] = { 0, 0, 1, 2 };
 
   b = readbyte_internal( address );
@@ -577,12 +577,12 @@ disassemble_ed( libspectrum_word address, char *buffer, size_t buflen,
   } else if( b < 0xa0 ) {
     snprintf( buffer, buflen, "NOPD" ); *length = 1;
   } else {
-    /* Note: 0xbc to 0xbf already removed */
+    // Note: 0xbc to 0xbf already removed
     snprintf( buffer, buflen, "%s", opcode_101xxxxx[ b & 0x1f ] ); *length = 1;
   }
 }
 
-/* Disassemble an instruction after DD/FD CB prefixes */
+// Disassemble an instruction after DD/FD CB prefixes
 static void
 disassemble_ddfd_cb( libspectrum_word address, char offset,
 		     enum hl_type use_hl, char *buffer, size_t buflen,
@@ -622,14 +622,14 @@ disassemble_ddfd_cb( libspectrum_word address, char offset,
   }
 }
 
-/* Get a text representation of a one-byte number */
+// Get a text representation of a one-byte number
 static void
 get_byte( char *buffer, size_t buflen, libspectrum_byte b )
 {
   snprintf( buffer, buflen, debugger_output_base == 10 ? "%d" : "%02X", b );
 }
 
-/* Get a text representation of an (LSB) two-byte number */
+// Get a text representation of an (LSB) two-byte number
 static void
 get_word( char *buffer, size_t buflen, libspectrum_word address )
 {
@@ -641,7 +641,7 @@ get_word( char *buffer, size_t buflen, libspectrum_word address )
   snprintf( buffer, buflen, debugger_output_base == 10 ? "%d" : "%04X", w );
 }
 
-/* Get a text representation of ( 'address' + 'offset' ) */
+// Get a text representation of ( 'address' + 'offset' )
 static void
 get_offset( char *buffer, size_t buflen, libspectrum_word address,
 	    libspectrum_byte offset )
@@ -665,7 +665,7 @@ reg_pair( libspectrum_byte b, enum hl_type use_hl )
   return "* INTERNAL ERROR *"; // Should never happen
 }
 
-/* Get whichever of HL, IX or IY is in use here */
+// Get whichever of HL, IX or IY is in use here
 static const char *
 hl_ix_iy( enum hl_type use_hl )
 {
@@ -677,7 +677,7 @@ hl_ix_iy( enum hl_type use_hl )
   return "* INTERNAL ERROR *"; // Should never happen
 }
 
-/* Get a text representation of '(IX+03)' or similar things */
+// Get a text representation of '(IX+03)' or similar things
 static void
 ix_iy_offset( char *buffer, size_t buflen, enum hl_type use_hl,
 	      libspectrum_byte offset )
@@ -693,7 +693,7 @@ ix_iy_offset( char *buffer, size_t buflen, enum hl_type use_hl,
   }
 }
 
-/* Get an 8-bit register, based on bits 0-2 of the opcode at 'address' */
+// Get an 8-bit register, based on bits 0-2 of the opcode at 'address'
 static int
 source_reg( libspectrum_word address, enum hl_type use_hl, char *buffer,
 	    size_t buflen )
@@ -702,7 +702,7 @@ source_reg( libspectrum_word address, enum hl_type use_hl, char *buffer,
 		     readbyte_internal( address + 1 ), buffer, buflen );
 }
 
-/* Get an 8-bit register, based on bits 3-5 of the opcode at 'address' */
+// Get an 8-bit register, based on bits 3-5 of the opcode at 'address'
 static int
 dest_reg( libspectrum_word address, enum hl_type use_hl, char *buffer,
 	  size_t buflen )
@@ -736,7 +736,7 @@ single_reg( int i, enum hl_type use_hl, libspectrum_byte offset,
   }
 }
 
-/* Various lookup tables for opcodes */
+// Various lookup tables for opcodes
 
 /* Addition/subtraction opcodes:
    10xxxrrr: 'xxx' selects the opcode and 'rrr' the register to be added
@@ -788,14 +788,14 @@ bit_op( libspectrum_byte b )
   return ops[ ( b >> 6 ) - 1 ];
 }
 
-/* Which bit is used by a BIT, RES or SET with this opcode (bits 3-5) */
+// Which bit is used by a BIT, RES or SET with this opcode (bits 3-5)
 static int
 bit_op_bit( libspectrum_byte b )
 {
   return ( b >> 3 ) & 0x07;
 }
 
-/* Get an instruction relative to a specific address */
+// Get an instruction relative to a specific address
 libspectrum_word
 debugger_search_instruction( libspectrum_word address, int delta )
 {
@@ -828,9 +828,9 @@ debugger_search_instruction( libspectrum_word address, int delta )
   return address;
 }
 
-/* Unit tests */
+// Unit tests
 
-/* Disassembly test data */
+// Disassembly test data
 libspectrum_byte test1_data[] = { 0x00 };
 
 libspectrum_byte test2_data[] = { 0xdd, 0x00 };

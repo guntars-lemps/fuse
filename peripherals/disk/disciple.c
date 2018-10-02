@@ -45,9 +45,9 @@
 #include "wd_fdc.h"
 #include "options.h" // needed for get combo options
 
-/* Two 8 KiB memory chunks accessible by the Z80 when /ROMCS is low */
-/* One 8 KiB chunk of ROM, one 8 KiB chunk of RAM */
-/* TODO: add support for 16 KiB ROM images. */
+// Two 8 KiB memory chunks accessible by the Z80 when /ROMCS is low
+// One 8 KiB chunk of ROM, one 8 KiB chunk of RAM
+// TODO: add support for 16 KiB ROM images.
 /* Real hardware supports the use of a 16 KiB ROM, but all of the 16 KiB
  * 'ROM dumps' for the DISCiPLE actually contain a dump of GDOS (RAM).
  * Uni-DOS also uses an 8 KiB ROM. */
@@ -58,8 +58,8 @@ static int disciple_memory_source_rom;
 static int disciple_memory_source_ram;
 
 int disciple_memswap = 0; // Are the ROM and RAM pages swapped?
-/* TODO: add support for 16 KiB ROM images. */
-/* int disciple_rombank = 0; */
+// TODO: add support for 16 KiB ROM images.
+// int disciple_rombank = 0;
 int disciple_inhibited;
 
 int disciple_available = 0;
@@ -79,7 +79,7 @@ static void disciple_enabled_snapshot( libspectrum_snap *snap );
 static void disciple_from_snapshot( libspectrum_snap *snap );
 static void disciple_to_snapshot( libspectrum_snap *snap );
 
-/* WD1770 registers */
+// WD1770 registers
 static libspectrum_byte disciple_sr_read( libspectrum_word port, libspectrum_byte *attached );
 static void disciple_cr_write( libspectrum_word port, libspectrum_byte b );
 static libspectrum_byte disciple_tr_read( libspectrum_word port, libspectrum_byte *attached );
@@ -98,9 +98,9 @@ static libspectrum_byte disciple_patch_read( libspectrum_word port, libspectrum_
 static void disciple_patch_write( libspectrum_word port, libspectrum_byte b );
 static void disciple_printer_write( libspectrum_word port, libspectrum_byte b );
 
-/* 8KB ROM */
+// 8KB ROM
 #define ROM_SIZE 0x2000
-/* 8KB RAM */
+// 8KB RAM
 #define RAM_SIZE 0x2000
 
 static module_info_t disciple_module_info = {
@@ -113,7 +113,7 @@ static module_info_t disciple_module_info = {
 
 };
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "disciple";
 static int page_event, unpage_event;
 
@@ -144,7 +144,7 @@ disciple_memory_map( void )
 
   if( !disciple_active ) return;
 
-  /* TODO: add support for 16 KiB ROM images. */
+  // TODO: add support for 16 KiB ROM images.
   rom_page = disciple_memory_map_romcs_rom;
 
   if( !disciple_memswap ) {
@@ -160,24 +160,24 @@ disciple_memory_map( void )
 }
 
 static const periph_port_t disciple_ports[] = {
-  /* ---- ---- 0001 1011 */
+  // ---- ---- 0001 1011
   { 0x00ff, 0x001b, disciple_sr_read, disciple_cr_write },
-  /* ---- ---- 0101 1011  */
+  // ---- ---- 0101 1011
   { 0x00ff, 0x005b, disciple_tr_read, disciple_tr_write },
-  /* ---- ---- 1001 1011 */
+  // ---- ---- 1001 1011
   { 0x00ff, 0x009b, disciple_sec_read, disciple_sec_write },
-  /* ---- ---- 1101 1011 */
+  // ---- ---- 1101 1011
   { 0x00ff, 0x00db, disciple_dr_read, disciple_dr_write },
 
-  /* ---- ---- 0001 1111 */
+  // ---- ---- 0001 1111
   { 0x00ff, 0x001f, disciple_joy_read, disciple_cn_write },
-  /* ---- ---- 0011 1011 */
+  // ---- ---- 0011 1011
   { 0x00ff, 0x003b, NULL, disciple_net_write },
-  /* ---- ---- 0111 1011 */
+  // ---- ---- 0111 1011
   { 0x00ff, 0x007b, disciple_boot_read, disciple_boot_write },
-  /* ---- ---- 1011 1011 */
+  // ---- ---- 1011 1011
   { 0x00ff, 0x00bb, disciple_patch_read, disciple_patch_write },
-  /* ---- ---- 1111 1011 */
+  // ---- ---- 1111 1011
   { 0x00ff, 0x00fb, NULL, disciple_printer_write },
 
   { 0, 0, NULL, NULL }
@@ -274,7 +274,7 @@ disciple_reset( int hard_reset )
     return;
   }
 
-  /* TODO: add support for 16 KiB ROM images. */
+  // TODO: add support for 16 KiB ROM images.
   if( machine_load_rom_bank( disciple_memory_map_romcs_rom, 0,
 			     settings_current.rom_disciple,
 			     settings_default.rom_disciple, ROM_SIZE ) ) {
@@ -298,8 +298,8 @@ disciple_reset( int hard_reset )
   disciple_active = 1;
 
   disciple_memswap = 0;
-  /* TODO: add support for 16 KiB ROM images. */
-  /* disciple_rombank = 0; */
+  // TODO: add support for 16 KiB ROM images.
+  // disciple_rombank = 0;
 
   if( hard_reset )
     memset( disciple_ram, 0, RAM_SIZE );
@@ -320,7 +320,7 @@ disciple_reset( int hard_reset )
 static void
 disciple_inhibit( void )
 {
-  /* TODO: check how this affects the hardware */
+  // TODO: check how this affects the hardware
   disciple_inhibited = 1;
 }
 
@@ -381,7 +381,7 @@ disciple_joy_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached 
 {
   *attached = 0xff; // TODO: check this
 
-  /* bit 6 - printer busy */
+  // bit 6 - printer busy
   if( !settings_current.printer )
     return 0xbf; // no printer attached
 
@@ -415,8 +415,8 @@ disciple_cn_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 
   printer_parallel_strobe_write( b & 0x40 );
 
-  /* We only support the use of an 8 KiB ROM. */
-  /* disciple_rombank = ( b & 0x08 ) ? 1 : 0; */
+  // We only support the use of an 8 KiB ROM.
+  // disciple_rombank = ( b & 0x08 ) ? 1 : 0;
   machine_current->memory_map();
   if( b & 0x10 )
     disciple_inhibit();
@@ -426,7 +426,7 @@ static void
 disciple_net_write( libspectrum_word port GCC_UNUSED,
 		    libspectrum_byte b GCC_UNUSED )
 {
-  /* TODO: implement network emulation */
+  // TODO: implement network emulation
 }
 
 static libspectrum_byte
@@ -557,7 +557,7 @@ ui_drive_is_available( void )
 static const fdd_params_t *
 ui_drive_get_params_1( void )
 {
-  /* +1 => there is no `Disabled' */
+  // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_disciple1_type() + 1 ];
 }
 

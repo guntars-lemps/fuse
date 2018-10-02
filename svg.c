@@ -67,7 +67,7 @@ xmlTextWriter* writer;
 
 static const
 libspectrum_byte palette[16][3] = {
-                                    /*  R    G    B */
+                                    // R    G    B
                                     {   0,   0,   0 },
                                     {   0,   0, 192 },
                                     { 192,   0,   0 },
@@ -86,7 +86,7 @@ libspectrum_byte palette[16][3] = {
                                     { 255, 255, 255 } };
 
 
-/* handle error messages setting attributes */
+// handle error messages setting attributes
 
 static int
 svg_attribute( const char *name, const char *value, const char *element)
@@ -166,14 +166,14 @@ svg_openfile( void )
   using the buffer
   */
 
-  /* start xml */
+  // start xml
 
   if( xmlTextWriterStartDocument( writer, NULL, ENCODING, NULL ) < 0 ) {
     ui_error( UI_ERROR_ERROR, "error on SVG document start" );
     return;
   }
 
-  /* svg */
+  // svg
 
   if( xmlTextWriterStartElement( writer, BAD_CAST "svg" ) < 0 ) {
     ui_error( UI_ERROR_ERROR, "error on SVG open" );
@@ -234,7 +234,7 @@ svg_openpath( void )
   static int svg_paper;
   static int svg_ink;
 
-  /* Background */
+  // Background
   svg_paper = ( ( readbyte_internal( 0x5c8d ) >> 3 ) & 15 ); // ATTR_P
   snprintf( svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
                                               palette[ svg_paper ][1],
@@ -312,7 +312,7 @@ svg_closefile( void )
 
 
 
-/* some init, open file (name)*/
+// some init, open file (name)
 void
 svg_startcapture( const char *name, svg_capture_type mode )
 {
@@ -373,7 +373,7 @@ svg_capture_draw( void )
 
   if( ( svg_capture_mode == SVG_CAPTURE_LINES ) &&
       ( ( z80.pc.w == 0x24ba ) || ( z80.pc.w == 0x2813 ) ) ) {
-    /* DRAW */
+    // DRAW
     if( xmlTextWriterStartElement( writer, BAD_CAST "line" ) < 0 ) {
       ui_error( UI_ERROR_ERROR, "error creating the SVG line" );
       return;
@@ -394,7 +394,7 @@ svg_capture_draw( void )
     err += ( svg_attribute( "stroke", svgcolor, "line" ) != 0 );
 
   } else {
-    /* PLOT */
+    // PLOT
     if( xmlTextWriterStartElement( writer, BAD_CAST "line" ) < 0 ) {
       ui_error( UI_ERROR_ERROR, "error creating the SVG DOT" );
       return;
@@ -502,7 +502,7 @@ svg_capture_char( void )
     svg_char = z80.af.b.h;
 
 
-    /* -- PAPER */
+    // -- PAPER
     if( svg_char < 165 )
       svg_rect( x_pos * 16, ( y_pos - 1 ) * 16, "16", "16", "0.4",
                 svgcolor_paper );
@@ -510,7 +510,7 @@ svg_capture_char( void )
     if( svg_char > 127 ) {
 
       if( svg_char < 144 ) {
-        /* GRAPHICS BLOCKS */
+        // GRAPHICS BLOCKS
         if( svg_char & 1 )
           svg_rect( 8 + x_pos * 16, ( y_pos - 1 ) * 16, "8", "8", "1",
                     svgcolor_ink );
@@ -528,7 +528,7 @@ svg_capture_char( void )
                     svgcolor_ink );
       }
       else if( svg_char < 165 ) {
-        /* 144-164 -> UDG "A"-"U" (pointed by $5C7B/$5C7C) */
+        // 144-164 -> UDG "A"-"U" (pointed by $5C7B/$5C7C)
         for( i = 0; i < 8; i++ ) {
           udg_ptr = ( readbyte_internal( 0x5c7c ) << 8 ) +
                       readbyte_internal( 0x5c7b );
@@ -541,7 +541,7 @@ svg_capture_char( void )
     } else {
 
 
-      /* -- INK and char */
+      // -- INK and char
 
       if( xmlTextWriterStartElement( writer, BAD_CAST "text" ) < 0 ) {
         ui_error( UI_ERROR_ERROR, "error creating the SVG text element" );
@@ -556,7 +556,7 @@ svg_capture_char( void )
       err += ( svg_attribute( "font-family", "monospace", "text" ) != 0 );
       err += ( svg_attribute( "stroke", svgcolor_ink, "text" ) != 0 );
 
-      /* FLASH attribute */
+      // FLASH attribute
       if( ( readbyte_internal( 0x5c8f ) & 128 ) != 0 ) {
         err += ( svg_attribute( "font-weight", "bold", "text" ) != 0 );
         err += ( svg_attribute( "stroke-width", "0.9", "text" ) != 0 );
@@ -620,7 +620,7 @@ svg_capture_scroll( void )
   char svgcolor[ BUFSZ ];
   static int svg_paper;
 
-  /* Background */
+  // Background
   svg_paper = ( ( readbyte_internal( 0x5c8d ) >> 3 ) & 15 ); // ATTR_P
   snprintf( svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
                                               palette[ svg_paper ][1],

@@ -36,7 +36,7 @@ void mempool_free( int pool );
 #define mempool_new( pool, type, count ) \
   ( ( type * ) mempool_malloc_n( (pool), (count), sizeof( type ) ) )
 
-/* Unit test helper routines */
+// Unit test helper routines
 
 int mempool_get_pools( void );
 int mempool_get_pool_size( int pool );

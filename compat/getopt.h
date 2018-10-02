@@ -65,7 +65,7 @@ extern int optind;
 
 extern int opterr;
 
-/* Set to an option character which was unrecognized.  */
+// Set to an option character which was unrecognized.
 
 extern int optopt;
 
@@ -105,7 +105,7 @@ struct option
   int val;
 };
 
-/* Names for the values of the `has_arg' field of `struct option'.  */
+// Names for the values of the `has_arg' field of `struct option'.
 
 # define no_argument		0
 # define required_argument	1
@@ -155,7 +155,7 @@ extern int getopt_long_only (int ___argc, char *const *___argv,
 			     const char *__shortopts,
 		             const struct option *__longopts, int *__longind);
 
-/* Internal only.  Users should not call this directly.  */
+// Internal only.  Users should not call this directly.
 extern int _getopt_internal (int ___argc, char *const *___argv,
 			     const char *__shortopts,
 		             const struct option *__longopts, int *__longind,
@@ -175,7 +175,7 @@ extern int _getopt_internal ();
 }
 #endif
 
-/* Make sure we later can get all the definitions and declarations.  */
+// Make sure we later can get all the definitions and declarations.
 #undef __need_getopt
 
 #endif // getopt.h

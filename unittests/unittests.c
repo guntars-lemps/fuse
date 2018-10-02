@@ -56,7 +56,7 @@ contention_test( void )
   int error = 0;
 
   for( i = 0; i < ULA_CONTENTION_SIZE; i++ ) {
-    /* Naive, but it will do for now */
+    // Naive, but it will do for now
     checksum += ula_contention[ i ] * ( i + 1 );
   }
 
@@ -230,15 +230,15 @@ floating_bus_test( void )
 static int
 floating_bus_merge_test( void )
 {
-  /* If peripherals asserted all lines, should see no change */
-  TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0xff, 0x00 ) == 0xaa ); 
-  TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0xff, 0xff ) == 0xaa ); 
+  // If peripherals asserted all lines, should see no change
+  TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0xff, 0x00 ) == 0xaa );
+  TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0xff, 0xff ) == 0xaa );
 
-  /* If peripherals asserted nothing, should pull all lines down */
-  TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0x00, 0x00 ) == 0x00 ); 
-  TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0x00, 0xff ) == 0xaa ); 
+  // If peripherals asserted nothing, should pull all lines down
+  TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0x00, 0x00 ) == 0x00 );
+  TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0x00, 0xff ) == 0xaa );
 
-  /* Tests when peripherals asserted some lines */
+  // Tests when peripherals asserted some lines
   TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0xf0, 0x00 ) == 0xa0 );
   TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0xf0, 0xff ) == 0xaa );
   TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0x0f, 0x00 ) == 0x0a );
@@ -292,14 +292,14 @@ mempool_test( void )
   TEST_ASSERT( mempool_get_pool_size( pool2 ) == 0 );
 
   mempool_malloc( pool2, 42 );
-  
+
   TEST_ASSERT( mempool_get_pool_size( pool2 ) == 1 );
 
   mempool_free( pool2 );
 
   TEST_ASSERT( mempool_get_pool_size( pool1 ) == 3 );
   TEST_ASSERT( mempool_get_pool_size( pool2 ) == 0 );
-  
+
   mempool_free( pool1 );
 
   TEST_ASSERT( mempool_get_pool_size( pool1 ) == 0 );
@@ -471,7 +471,7 @@ static int
 paging_test_plus3( void )
 {
   int r = 0;
-  
+
   r += paging_test_128_unlocked( 2 );
 
   writeport_internal( 0x7ffd, 0x00 );
@@ -668,7 +668,7 @@ paging_test_timex( int ram8000, int dock_source, int exrom_source )
   r += unittests_assert_8k_page( 0xa000, exrom_source, 5 );
   r += unittests_assert_8k_page( 0xc000, exrom_source, 6 );
   r += unittests_assert_8k_page( 0xe000, exrom_source, 7 );
-  
+
   writeport_internal( 0x00f4, 0x00 );
   r += assert_16k_rom_page( 0x0000, 0 );
   r += unittests_assert_16k_ram_page( 0x4000, 5 );

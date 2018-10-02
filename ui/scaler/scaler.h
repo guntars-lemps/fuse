@@ -62,7 +62,7 @@ typedef void ScalerProc( const libspectrum_byte *srcPtr,
 			 libspectrum_byte *dstPtr, libspectrum_dword dstPitch,
 			 int width, int height );
 
-/* The type of function used to expand the area dirtied by a scaler */
+// The type of function used to expand the area dirtied by a scaler
 typedef void scaler_expand_fn( int *x, int *y, int *w, int *h,
 			       int image_width, int image_height );
 

@@ -113,7 +113,7 @@ static periph_t ay_periph_timex = {
   /* .activate = */ NULL,
 };
 
-/* Debugger system variables */
+// Debugger system variables
 static const char * const debugger_type_string = "ay";
 static const char * const current_register_detail_string = "current";
 
@@ -182,11 +182,11 @@ ay_registerport_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attach
   if( current == 15 && !( machine_current->ay.registers[7] & 0x80 ) )
     return 0xff;
 
-  /* Otherwise return register value, appropriately masked */
+  // Otherwise return register value, appropriately masked
   return machine_current->ay.registers[ current ] & mask[ current ];
 }
 
-/* And when it's written to */
+// And when it's written to
 void
 ay_registerport_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 {

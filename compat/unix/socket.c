@@ -42,13 +42,13 @@ struct compat_socket_selfpipe_t {
 void
 compat_socket_networking_init( void )
 {
-  /* No action necessary */
+  // No action necessary
 }
 
 void
 compat_socket_networking_end( void )
 {
-  /* No action necessary */
+  // No action necessary
 }
 
 int

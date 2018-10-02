@@ -31,7 +31,7 @@
  * Display routines (gtkdisplay.c)
  */
 
-/* The colour palette in use */
+// The colour palette in use
 extern libspectrum_dword gtkdisplay_colours[ 16 ];
 
 void gtkdisplay_update_geometry( void );
@@ -112,7 +112,7 @@ GtkAccelGroup* gtkstock_create_ok_cancel( GtkWidget *widget,
 GtkAccelGroup* gtkstock_create_close( GtkWidget *widget, GtkAccelGroup *accel,
 				      GCallback destroy,
 				      gboolean esconly );
-	/* destroy==NULL => use DEFAULT_DESTROY */
+	// destroy==NULL => use DEFAULT_DESTROY
 
 #define DEFAULT_DESTROY ( G_CALLBACK( gtkui_destroy_widget_and_quit ) )
 

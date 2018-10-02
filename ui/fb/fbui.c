@@ -51,7 +51,7 @@ ui_init( int *argc, char ***argv )
     ui_error( UI_ERROR_ERROR, "ui_init: couldn't set atexit function" );
     return 1;
   }
-  
+
   handler.sa_handler = end_handler;
 
   error = sigaction( SIGTERM, &handler, NULL );
@@ -89,9 +89,9 @@ int ui_event( void )
 
 int ui_end( void )
 {
-  /* Cleanup handled by atexit function */
+  // Cleanup handled by atexit function
   int error;
-  
+
   error = fbkeyboard_end(); if( error ) return error;
   error = fbdisplay_end(); if( error ) return error;
 

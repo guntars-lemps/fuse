@@ -39,16 +39,16 @@ static void timer_frame_callback_sound( libspectrum_dword last_tstates );
  * Routines for estimating emulation speed
  */
 
-/* The actual time at the end of each of the last 10 emulated seconds */
+// The actual time at the end of each of the last 10 emulated seconds
 static double stored_times[10];
 
-/* Which is the next entry in 'stored_times' that we will update */
+// Which is the next entry in 'stored_times' that we will update
 static size_t next_stored_time;
 
-/* The number of frames until we next update 'stored_times' */
+// The number of frames until we next update 'stored_times'
 static int frames_until_update;
 
-/* The number of time samples we have for estimating speed */
+// The number of time samples we have for estimating speed
 static int samples;
 
 float current_speed = 100.0;
@@ -140,7 +140,7 @@ timer_register_startup( void )
 
 #ifdef SOUND_FIFO
 
-/* Callback-style sound based timer */
+// Callback-style sound based timer
 #include "sound/sfifo.h"
 
 extern sfifo_t sound_fifo;
@@ -150,7 +150,7 @@ timer_frame_callback_sound( libspectrum_dword last_tstates )
 {
   for(;;) {
 
-    /* Sleep while fifo is full */
+    // Sleep while fifo is full
     if( sfifo_space( &sound_fifo ) < sound_framesiz ) {
       timer_sleep( TEN_MS );
     } else {
@@ -165,7 +165,7 @@ timer_frame_callback_sound( libspectrum_dword last_tstates )
 
 #else // #ifdef SOUND_FIFO
 
-/* Blocking socket-style sound based timer */
+// Blocking socket-style sound based timer
 static void
 timer_frame_callback_sound( libspectrum_dword last_tstates )
 {
@@ -178,7 +178,7 @@ timer_frame_callback_sound( libspectrum_dword last_tstates )
 void
 timer_start_fastloading( void )
 {
-  /* If we're fastloading, turn sound off */
+  // If we're fastloading, turn sound off
   if( settings_current.fastload ) sound_pause();
 }
 
@@ -231,7 +231,7 @@ timer_frame( libspectrum_dword last_tstates, int event GCC_UNUSED,
       current_time = timer_get_time(); if( current_time < 0 ) return;
       difference = current_time - start_time;
 
-      /* Sleep while we are still 10ms ahead */
+      // Sleep while we are still 10ms ahead
       if( difference < 0 ) {
         timer_sleep( TEN_MS );
       } else {

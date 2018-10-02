@@ -27,7 +27,7 @@
 #include <config.h>
 
 #if !defined USE_JOYSTICK || defined HAVE_JSW_H
-/* Fake joystick, or override UI-specific handling */
+// Fake joystick, or override UI-specific handling
 #include "../uijoystick.c"
 
 #else // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
@@ -56,7 +56,7 @@ ui_joystick_init( void )
 #ifdef UI_SDL
   error = SDL_InitSubSystem( SDL_INIT_JOYSTICK );
 #else
-  /* Other UIs could handle joysticks by the SDL library */
+  // Other UIs could handle joysticks by the SDL library
   error = SDL_Init(SDL_INIT_JOYSTICK|SDL_INIT_VIDEO);
 #endif
 

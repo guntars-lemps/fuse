@@ -78,10 +78,10 @@ utils_open_file( const char *filename, int autoload,
   if( rzx_playback  ) error = rzx_stop_playback( 1 );
   if( error ) return error;
 
-  /* Read the file into a buffer */
+  // Read the file into a buffer
   if( utils_read_file( filename, &file ) ) return 1;
 
-  /* See if we can work out what it is */
+  // See if we can work out what it is
   if( libspectrum_identify_file_with_class( &type, &class, filename,
 					    file.buffer, file.length ) ) {
     utils_close_file( &file );
@@ -146,7 +146,7 @@ utils_open_file( const char *filename, int autoload,
       error = machine_select( LIBSPECTRUM_MACHINE_SCORP ); if( error ) break;
     }
 
-    /* Check that we actually got a Beta capable machine to insert the disk */
+    // Check that we actually got a Beta capable machine to insert the disk
     if( ( machine_current->capabilities &
           LIBSPECTRUM_MACHINE_CAPABILITY_TRDOS_DISK ) ||
         periph_is_active( PERIPH_TYPE_BETA128 ) ) {
@@ -185,7 +185,7 @@ utils_open_file( const char *filename, int autoload,
 	   LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK ) ) {
       error = machine_select( LIBSPECTRUM_MACHINE_TC2068 ); if( error ) break;
     }
-    /* Check that we actually got a Dock capable machine to insert the cart */
+    // Check that we actually got a Dock capable machine to insert the cart
     if( machine_current->capabilities &
 	   LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK ) {
       error = dck_insert( filename );
@@ -241,7 +241,7 @@ utils_open_file( const char *filename, int autoload,
   return 0;
 }
 
-/* Request a snapshot file from the user and it */
+// Request a snapshot file from the user and it
 int
 utils_open_snap( void )
 {
@@ -265,11 +265,11 @@ utils_find_auxiliary_file( const char *filename, utils_aux_type type )
 
   char path[ PATH_MAX ];
 
-  /* If given an absolute path, just look there */
+  // If given an absolute path, just look there
   if( compat_is_absolute_path( filename ) )
     return compat_file_open( filename, 0 );
 
-  /* Otherwise look in some likely locations */
+  // Otherwise look in some likely locations
   if( utils_find_file_path( filename, path, type ) ) {
     return COMPAT_FILE_OPEN_FAILED;
   }
@@ -278,7 +278,7 @@ utils_find_auxiliary_file( const char *filename, utils_aux_type type )
 
   if( fd != COMPAT_FILE_OPEN_FAILED ) return fd;
 
-  /* Give up. Couldn't find this file */
+  // Give up. Couldn't find this file
   return COMPAT_FILE_OPEN_FAILED;
 }
 
@@ -289,14 +289,14 @@ utils_find_file_path( const char *filename, char *ret_path,
 {
   path_context ctx;
 
-  /* If given an absolute path, just look there */
+  // If given an absolute path, just look there
   if( compat_is_absolute_path( filename ) ) {
     strncpy( ret_path, filename, PATH_MAX );
     ret_path[ PATH_MAX - 1 ] = '\0';
     return 0;
   }
 
-  /* Otherwise look in some likely locations */
+  // Otherwise look in some likely locations
   init_path_context( &ctx, type );
 
   while( compat_get_next_path( &ctx ) ) {

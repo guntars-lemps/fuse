@@ -28,7 +28,7 @@
 
 #include "widget_internals.h"
 
-/* Data for drawing the cursor */
+// Data for drawing the cursor
 static size_t highlight_line;
 
 const char *title;
@@ -54,7 +54,7 @@ widget_calculate_select_width( const char* title )
 {
   int i;
   int max_width = widget_stringwidth( title )+5*8;
-  /* Leave room for the option labels we'll be adding */
+  // Leave room for the option labels we'll be adding
   int label_width = widget_stringwidth( "A: " );
 
   for( i = 0; i < count; i++ ) {
@@ -90,7 +90,7 @@ widget_select_draw( void *data )
   width = widget_calculate_select_width( title );
   menu_left_edge_x = DISPLAY_WIDTH_COLS/2-width/2;
 
-  /* Blank the main display area */
+  // Blank the main display area
   widget_dialog_with_border( menu_left_edge_x, 2, width, count + 2 );
 
   widget_printstring( menu_left_edge_x*8+2, 16, WIDGET_COLOUR_TITLE, title );
@@ -176,13 +176,13 @@ widget_select_keyhandler( input_key key )
 	key - INPUT_KEY_a < (ptrdiff_t)count        )
     ) {
 
-    /* Remove the old highlight */
+    // Remove the old highlight
     widget_rectangle( menu_left_edge_x * 8 + 1, highlight_line * 8 + 24,
                       width * 8 - 2, 1 * 8, WIDGET_COLOUR_BACKGROUND );
     print_item( menu_left_edge_x, width, highlight_line,
                 WIDGET_COLOUR_FOREGROUND );
 
-    /*  draw the new one */
+    // draw the new one
     if( cursor_pressed ) {
       highlight_line = new_highlight_line;
     } else {

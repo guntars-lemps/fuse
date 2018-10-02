@@ -59,7 +59,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   WAVEFORMATEX pcmwf; // waveformat struct
   MMRESULT result;
 
-  /* create wave format description */
+  // create wave format description
   memset( &pcmwf, 0, sizeof( WAVEFORMATEX ) );
 
   pcmwf.cbSize = 0;
@@ -76,7 +76,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   pcmwf.nAvgBytesPerSec = pcmwf.nSamplesPerSec * pcmwf.nBlockAlign;
   pcmwf.wFormatTag = WAVE_FORMAT_PCM;
 
-  /* Open sound device for output */
+  // Open sound device for output
   result = waveOutOpen( &hwaveout, WAVE_MAPPER,
                         &pcmwf, ( DWORD_PTR ) sound_callback, 0,
                         CALLBACK_FUNCTION );
@@ -102,7 +102,7 @@ sound_lowlevel_end( void )
 {
   MMRESULT result;
 
-  /* reset the sound */
+  // reset the sound
   result = waveOutReset( hwaveout );
   if( result != MMSYSERR_NOERROR ) {
     settings_current.sound = 0;
@@ -110,7 +110,7 @@ sound_lowlevel_end( void )
     return;
   }
 
-  /* unprepare wave headers */
+  // unprepare wave headers
   if( wavehdr[ 0 ].dwFlags & WHDR_PREPARED ) {
     result = waveOutUnprepareHeader( hwaveout, &wavehdr[ 0 ], sizeof( WAVEHDR ) );
     if( result != MMSYSERR_NOERROR )
@@ -123,7 +123,7 @@ sound_lowlevel_end( void )
       sound_display_mmresult( "waveOutUnprepareHeader", result );
   }
 
-  /* close the device */
+  // close the device
   result = waveOutClose( hwaveout );
   if( result != MMSYSERR_NOERROR ) {
     settings_current.sound = 0;
@@ -140,7 +140,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   static unsigned char buf8[4096];
   MMRESULT result;
 
-  /* Convert to bytes */
+  // Convert to bytes
   unsigned char *bytes = (unsigned char *) data;
   len <<= 1;
   if( !sixteenbit ) {
@@ -150,7 +150,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 
     src = data; dst = buf8;
     len >>= 1;
-    /* TODO: confirm byteorder on IA64 */
+    // TODO: confirm byteorder on IA64
     for( f = 0; f < len; f++ )
       *dst++ = 128 + (int)( (*src++) / 256 );
 
@@ -162,22 +162,22 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
     return;
   }
 
-  /* wait for the buffer to finish playing */
+  // wait for the buffer to finish playing
   if( buffer_used[ current_buffer ] > 0 )
     WaitForSingleObject( sem_sound_done, INFINITE );
 
-  /* unprepare the header if it's prepared */
+  // unprepare the header if it's prepared
   if( wavehdr[ current_buffer ].dwFlags & WHDR_PREPARED ) {
     result = waveOutUnprepareHeader( hwaveout, &wavehdr[ current_buffer ], sizeof( WAVEHDR ) );
     if( result != MMSYSERR_NOERROR )
       sound_display_mmresult( "waveOutUnprepareHeader", result );
   }
 
-  /* copy the new wave into the buffer */
+  // copy the new wave into the buffer
   memcpy( buffers[ current_buffer ], bytes, len );
   buffer_used[ current_buffer ] = len;
 
-  /* prepare the header */
+  // prepare the header
   wavehdr[ current_buffer ].lpData = ( LPSTR ) bytes;
   wavehdr[ current_buffer ].dwBufferLength = len;
   wavehdr[ current_buffer ].dwLoops |= WHDR_BEGINLOOP | WHDR_ENDLOOP;
@@ -186,12 +186,12 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   if( result != MMSYSERR_NOERROR )
     sound_display_mmresult( "waveOutPrepareHeader", result );
 
-  /* play */
+  // play
   result = waveOutWrite( hwaveout, &wavehdr[ current_buffer ], sizeof( WAVEHDR ) );
   if( result != MMSYSERR_NOERROR )
     sound_display_mmresult( "waveOutWrite", result );
 
-  /* FIXME this could be done way easier */
+  // FIXME this could be done way easier
   current_buffer++;
   if( current_buffer == 2 )
     current_buffer = 0;

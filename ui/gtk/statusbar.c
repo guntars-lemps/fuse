@@ -57,7 +57,7 @@ gtkstatusbar_create( GtkBox *parent )
   status_bar = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 5 );
   gtk_box_pack_start( parent, status_bar, FALSE, FALSE, 3 );
 
-  /* FIXME: unref these pixbuf on statusbar destroy */
+  // FIXME: unref these pixbuf on statusbar destroy
   pixbuf_tape_inactive =
     gdk_pixbuf_new_from_xpm_data( gtkpixmap_tape_inactive );
   pixbuf_tape_active =

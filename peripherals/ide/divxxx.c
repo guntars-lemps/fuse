@@ -47,25 +47,25 @@ struct divxxx_t {
      flags allowed it */
   int automap;
 
-  /* True once memory has been allocated for this interface */
+  // True once memory has been allocated for this interface
   int memory_allocated;
 
-  /* EPROM */
+  // EPROM
   int eprom_memory_source;
   memory_page memory_map_eprom[ MEMORY_PAGES_IN_8K ];
   libspectrum_byte *eprom;
 
-  /* RAM */
+  // RAM
   size_t ram_page_count;
   int ram_memory_source;
   memory_page **memory_map_ram;
   libspectrum_byte **ram;
 
-  /* The debugger paging events for this interface */
+  // The debugger paging events for this interface
   int page_event;
   int unpage_event;
 
-  /* References to the current settings for this interface */
+  // References to the current settings for this interface
   const int *enabled;
   const int *write_protect;
 
@@ -236,7 +236,7 @@ divxxx_control_write( divxxx_t *divxxx, libspectrum_byte data )
 {
   int old_mapram;
 
-  /* MAPRAM bit cannot be reset, only set */
+  // MAPRAM bit cannot be reset, only set
   old_mapram = divxxx->control & DIVXXX_CONTROL_MAPRAM;
   divxxx_control_write_internal( divxxx, data | old_mapram );
 }
@@ -259,11 +259,11 @@ void
 divxxx_refresh_page_state( divxxx_t *divxxx )
 {
   if( divxxx->control & DIVXXX_CONTROL_CONMEM ) {
-    /* always paged in if conmem enabled */
+    // always paged in if conmem enabled
     divxxx_page( divxxx );
   } else if( *divxxx->write_protect
     || ( divxxx->control & DIVXXX_CONTROL_MAPRAM ) ) {
-    /* automap in effect */
+    // automap in effect
     if( divxxx->automap ) {
       divxxx_page( divxxx );
     } else {
@@ -285,7 +285,7 @@ divxxx_memory_map( divxxx_t *divxxx )
   if( !divxxx->active ) return;
 
   upper_ram_page = divxxx->control & (divxxx->ram_page_count - 1);
-  
+
   if( divxxx->control & DIVXXX_CONTROL_CONMEM ) {
     lower_page = divxxx->memory_map_eprom;
     lower_page_writable = !*divxxx->write_protect;

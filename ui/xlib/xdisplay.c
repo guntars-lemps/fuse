@@ -68,7 +68,7 @@ void xstatusbar_init( int size );
 typedef enum {
   MSB_RED = 0, // 0RGB
   LSB_RED, // 0BGR
-				/* ARGB/ABGR RGBA/BGRA ????*/
+				// ARGB/ABGR RGBA/BGRA ????
 } redmask_t;
 
 static XImage *image = NULL;	/* The image structure to draw the
@@ -82,7 +82,7 @@ Colormap currentMap; // The used colormap
    scale * 4, so 2 => 0.5, 6 => 1.5, 4 => 1.0 */
 static int image_scale = 1;
 
-/* The height and width of a 1x1 image in pixels */
+// The height and width of a 1x1 image in pixels
 static int image_width, image_height, scaled_image_w, scaled_image_h;
 
 /* An RGB image of the Spectrum screen; slightly bigger than the real
@@ -91,20 +91,20 @@ static libspectrum_word
   rgb_image[2 * ( DISPLAY_SCREEN_HEIGHT + 4 )][2 * ( DISPLAY_SCREEN_WIDTH  + 3 )];
 static const int rgb_pitch = 2 * ( DISPLAY_SCREEN_WIDTH + 3 );
 
-/* A scaled copy of the image displayed on the Spectrum's screen */
+// A scaled copy of the image displayed on the Spectrum's screen
 static libspectrum_word
   scaled_image[3 * DISPLAY_SCREEN_HEIGHT][3 * DISPLAY_SCREEN_WIDTH];
 static const ptrdiff_t scaled_pitch =
   3 * DISPLAY_SCREEN_WIDTH * 2;
 
-/* A scaled copy of the image displayed on the Spectrum's screen */
+// A scaled copy of the image displayed on the Spectrum's screen
 static libspectrum_word
   rgb_image_backup[2 * ( DISPLAY_SCREEN_HEIGHT + 4 )][2 * ( DISPLAY_SCREEN_WIDTH  + 3 )];
 
 static unsigned long colours[128];
 static int colours_allocated = 0;
 
-/* The current size of the window (in units of DISPLAY_SCREEN_*) */
+// The current size of the window (in units of DISPLAY_SCREEN_*)
 static int xdisplay_current_size = 1;
 static int xdisplay_depth = -1;
 static Visual *xdisplay_visual = NULL;
@@ -305,7 +305,7 @@ xdisplay_alloc_colour( Colormap *map, XColor *colour )
       fprintf( stderr,"%s: switching to private colour map\n", fuse_progname );
       *map = XCopyColormapAndFree( display, *map );
       XSetWindowColormap( display, xui_mainWindow, *map );
-      /* Need to repeat the failed allocation */
+      // Need to repeat the failed allocation
     } else {
       return 1;
     }
@@ -479,30 +479,30 @@ try_shm( void )
 */
   if( !image ) return 0;
 
-  /* Get an SHM to work with */
+  // Get an SHM to work with
   id = get_shm_id( image->bytes_per_line * image->height );
   if( id == -1 ) return 0;
 
-  /* Attempt to attach to the shared memory */
+  // Attempt to attach to the shared memory
   shm_info.shmid = id;
   image->data = shm_info.shmaddr = shmat( id, 0, 0 );
 
-  /* If we couldn't attach, remove the chunk and give up */
+  // If we couldn't attach, remove the chunk and give up
   if( image->data == (void*)-1 ) {
     shmctl( id, IPC_RMID, NULL );
     image->data = NULL;
     return 0;
   }
 
-  /* This may generate an X error */
+  // This may generate an X error
   xerror_error = 0; xerror_expecting = 1;
   error = !XShmAttach( display, &shm_info );
 
-  /* Force any X errors to occur before we disable traps */
+  // Force any X errors to occur before we disable traps
   XSync( display, False );
   xerror_expecting = 0;
 
-  /* If we caught an error, don't use SHM */
+  // If we caught an error, don't use SHM
   if( error || xerror_error ) {
     shmctl( id, IPC_RMID, NULL );
     shmdt( image->data ); image->data = NULL;
@@ -516,7 +516,7 @@ try_shm( void )
   return 1;
 }
 
-/* Get an SHM ID; also attempt to reclaim any stale chunks we find */
+// Get an SHM ID; also attempt to reclaim any stale chunks we find
 static int
 get_shm_id( const int size )
 {
@@ -528,7 +528,7 @@ get_shm_id( const int size )
   int pollution = 5;
 
   do {
-    /* See if a chunk already exists with this key */
+    // See if a chunk already exists with this key
     id = shmget( key, size, 0777 );
 
     /* If the chunk didn't already exist, try and create one for our
@@ -538,10 +538,10 @@ get_shm_id( const int size )
       continue; // And then jump to the end of the loop
     }
 
-    /* If the chunk already exists, try and get information about it */
+    // If the chunk already exists, try and get information about it
     if( shmctl( id, IPC_STAT, &shm ) != -1 ) {
 
-      /* If something's actively using this chunk, try another key */
+      // If something's actively using this chunk, try another key
       if( shm.shm_nattch ) {
 	key++;
       } else { // Otherwise, attempt to remove the chunk
@@ -662,7 +662,7 @@ xdisplay_configure_notify( int width, int height )
 {
   int size;
 
-  /* If we're the same size as before, nothing special needed */
+  // If we're the same size as before, nothing special needed
   size = width / DISPLAY_ASPECT_WIDTH;
   if( size != height / DISPLAY_SCREEN_HEIGHT ) { // out of aspect
     if( size > height / DISPLAY_SCREEN_HEIGHT ) {
@@ -677,10 +677,10 @@ xdisplay_configure_notify( int width, int height )
     return 0;
   }
 
-  /* Else set ourselves to the new height */
+  // Else set ourselves to the new height
   xdisplay_current_size = size;
 
-  /* Get a new scaler */
+  // Get a new scaler
   register_scalers();
 
   return 0;
@@ -691,11 +691,11 @@ xdisplay_update_rect_noscale( int x, int y, int w, int h )
 {
  int yy, xx;
 
-  /* Call putpixel multiple times */
+  // Call putpixel multiple times
   for( yy = y; yy < y + h; yy++ )
     for( xx = x; xx < x + w; xx++ )
       xdisplay_putpixel( xx, yy, &rgb_image[yy + 2][xx + 1] );
-  /* Blit to the real screen at the frame end end */
+  // Blit to the real screen at the frame end end
   xdisplay_area( x, y, w, h );
 }
 
@@ -717,11 +717,11 @@ xdisplay_update_rect_scale( int x, int y, int w, int h )
   w = w * image_scale >> 2;
   h = h * image_scale >> 2;
 
-  /* Call putpixel multiple times */
+  // Call putpixel multiple times
   for( yy = y; yy < y + h; yy++ )
     for( xx = x; xx < x + w; xx++ )
       xdisplay_putpixel( xx, yy, &scaled_image[yy][xx] );
-  /* Blit to the real screen */
+  // Blit to the real screen
   xdisplay_area( x, y, w, h );
 }
 
@@ -730,7 +730,7 @@ uidisplay_frame_end( void )
 {
   X_Rect *r, *last_rect;
 
-  /* Force a full redraw if requested */
+  // Force a full redraw if requested
   if ( xdisplay_force_full_refresh ) {
     num_rects = 1;
 
@@ -791,7 +791,7 @@ uidisplay_area( int x, int y, int w, int h )
 void
 xdisplay_area( int x, int y, int w, int h )
 {
-/* e.g. dwm first expose with too big w and h */
+// e.g. dwm first expose with too big w and h
   if( x + w > 3 * DISPLAY_ASPECT_WIDTH )
     w = 3 * DISPLAY_ASPECT_WIDTH - x;
 
@@ -801,7 +801,7 @@ xdisplay_area( int x, int y, int w, int h )
   if( shm_used ) {
 #ifdef X_USE_SHM
     XShmPutImage( display, xui_mainWindow, gc, image, x, y, x, y, w, h, True );
-    /* FIXME: should wait for an ShmCompletion event here */
+    // FIXME: should wait for an ShmCompletion event here
 #endif // #ifdef X_USE_SHM
   } else {
     XPutImage( display, xui_mainWindow, gc, image, x, y, x, y, w, h );
@@ -893,7 +893,7 @@ int
 xdisplay_end( void )
 {
   xdisplay_destroy_image();
-  /* Free the allocated GC */
+  // Free the allocated GC
   if( gc ) {
     XFreeGC( display, gc );
     gc = 0;
@@ -902,7 +902,7 @@ xdisplay_end( void )
   return 0;
 }
 
-/* Set one pixel in the display */
+// Set one pixel in the display
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
@@ -1013,7 +1013,7 @@ ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
     return 0;
 
   case UI_STATUSBAR_ITEM_PAUSED:
-    /* We don't support pausing this version of Fuse */
+    // We don't support pausing this version of Fuse
     return 0;
 
   case UI_STATUSBAR_ITEM_TAPE:
@@ -1027,7 +1027,7 @@ ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
     return 0;
 
   case UI_STATUSBAR_ITEM_MOUSE:
-    /* We don't support showing a grab icon */
+    // We don't support showing a grab icon
     return 0;
 
   }

@@ -61,7 +61,7 @@ win32statusbar_create( HWND hWnd )
 {
   DWORD dwStyle;
 
-  /* FIXME: destroy those icons later on using DeleteObject */
+  // FIXME: destroy those icons later on using DeleteObject
 
   icon_tape_inactive = LoadImage( fuse_hInstance, "win32bmp_tape_inactive",
                                   IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
@@ -95,10 +95,10 @@ win32statusbar_create( HWND hWnd )
                                        0, 0, 0, 0, hWnd, (HMENU)ID_STATUSBAR,
                                        fuse_hInstance, NULL );
 
-  /* minimum size of the status bar is the height of the highest icon */
+  // minimum size of the status bar is the height of the highest icon
   SendMessage( fuse_hStatusWindow, SB_SETMINHEIGHT, icons_part_height, 0 );
 
-  /* force redraw to apply the minimum height */
+  // force redraw to apply the minimum height
   SendMessage( fuse_hStatusWindow, WM_SIZE, 0, 0 );
 }
 
@@ -116,7 +116,7 @@ win32statusbar_set_visibility( int visible )
     ShowWindow( fuse_hStatusWindow, SW_HIDE );
   }
 
-  /* Update main window size */
+  // Update main window size
   win32ui_fuse_resize( win32display_scaled_width(), win32display_scaled_height() );
 
   return 0;
@@ -131,7 +131,7 @@ win32statusbar_update_machine( const char *name )
 int
 ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
 {
-  /* Fix flickering on +2A, +3 and +3e machines because of high refresh rate */
+  // Fix flickering on +2A, +3 and +3e machines because of high refresh rate
   if( item == UI_STATUSBAR_ITEM_DISK && icons_status[ item ] == state ) return 0;
 
   icons_status[ item ] = state;
@@ -217,7 +217,7 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
     if( src_bmp != NULL ) {
       new_icons_part_width += icons_part_margin;
 
-      /* create a bitmap mask on the fly */
+      // create a bitmap mask on the fly
       GetObject( src_bmp, sizeof( bmp ), &bmp );
       src_bmp_mask = CreateBitmap( bmp.bmWidth, bmp.bmHeight, 1, 1, NULL );
       src_dc = CreateCompatibleDC( NULL );
@@ -228,7 +228,7 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
       BitBlt( mask_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, src_dc, 0, 0, SRCCOPY );
       BitBlt( src_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, mask_dc, 0, 0, SRCINVERT );
 
-      /* blit the transparent icon onto the status bar */
+      // blit the transparent icon onto the status bar
       SelectObject( mask_dc, src_bmp_mask );
       BitBlt( dest_dc, rc_item.left + new_icons_part_width,
               rc_item.top + ( icons_part_height - bmp.bmHeight )
@@ -252,10 +252,10 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
   }
 
   if( new_icons_part_width > 0 ) new_icons_part_width += icons_part_margin;
-  /* FIXME: if the calculations are correction I shouldn't be adding this */
+  // FIXME: if the calculations are correction I shouldn't be adding this
   new_icons_part_width += ( 2 * icons_part_margin );
 
-  /* Resize icons part if needed */
+  // Resize icons part if needed
   if( new_icons_part_width != icons_part_width ) {
 	icons_part_width = new_icons_part_width;
     win32statusbar_resize( fuse_hWnd, 0, 0 );
@@ -268,7 +268,7 @@ win32statusbar_resize( HWND hWnd, WPARAM wParam GCC_UNUSED, LPARAM lParam )
   const int speed_bar_width = 70;
   RECT rcClient;
 
-  /* divide status bar */
+  // divide status bar
   int parts[3];
 
   if( LOWORD( lParam ) > 0 ) {

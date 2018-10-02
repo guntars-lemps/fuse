@@ -83,20 +83,20 @@ parse_driver_options( const char *device, int *driver_id, ao_option **options )
 {
   char *mutable, *option, *key, *value;
 
-  /* Get a copy of the device string we can modify */
+  // Get a copy of the device string we can modify
   if( !device || *device == '\0' )
     return 1;
 
   mutable = utils_safe_strdup( device );
 
-  /* First, find the device name */
+  // First, find the device name
   option = strchr( mutable, ':' );
   if( option ) *option++ = '\0';
 
   if( *mutable ) // ! \0
     *driver_id = ao_driver_id( mutable );
 
-  /* Now parse any further options */
+  // Now parse any further options
   while( option ) {
 
     key = option;
@@ -130,7 +130,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   int driver_id = -1;
   static ao_sample_format format = { .bits = 0 };
 
-  /* To prevent recursive errors */
+  // To prevent recursive errors
   static int sound_lowlevel_init_in_progress = 0;
 
   int error;

@@ -47,7 +47,7 @@ static int dialog_created; // Have we created the dialog box yet?
 void
 menu_media_tape_browse( int action )
 {
-  /* Firstly, stop emulation */
+  // Firstly, stop emulation
   fuse_emulation_pause();
 
   if( !dialog_created ) {
@@ -63,7 +63,7 @@ menu_media_tape_browse( int action )
 
   ShowWindow( dialog, SW_SHOW );
 
-  /* Carry on with emulation */
+  // Carry on with emulation
   fuse_emulation_unpause();
 }
 
@@ -74,7 +74,7 @@ dialog_init( HWND hwndDlg )
   LPCTSTR titles[3] = { _T( "" ), _T( "Block type" ), _T( "Data" ) };
   int titles_widths[3] = { 16, 115, 150 };
 
-  /* set extended listview style to select full row, when an item is selected */
+  // set extended listview style to select full row, when an item is selected
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV,
                                      LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
@@ -82,7 +82,7 @@ dialog_init( HWND hwndDlg )
   SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV,
                       LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
-  /* Create columns in the listview */
+  // Create columns in the listview
   LVCOLUMN lvc;
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
   lvc.fmt = LVCFMT_LEFT;
@@ -96,19 +96,19 @@ dialog_init( HWND hwndDlg )
                         ( LPARAM ) &lvc );
   }
 
-  /* create image list for the listview */
+  // create image list for the listview
   HBITMAP icon_tape_marker, icon_tape_marker_mask;
   BITMAP bmp;
   HIMAGELIST himl;
 
-  /* FIXME: need to destroy those objects later */
+  // FIXME: need to destroy those objects later
   icon_tape_marker = LoadImage( fuse_hInstance, "win32bmp_tape_marker",
                                 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
   icon_tape_marker_mask = LoadImage( fuse_hInstance, "win32bmp_tape_marker_mask",
                                      IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
   GetObject( icon_tape_marker, sizeof( bmp ), &bmp );
 
-  /* FIXME: destroy the list later */
+  // FIXME: destroy the list later
   himl = ImageList_Create( bmp.bmWidth, bmp.bmHeight,
                            ILC_COLOR | ILC_MASK, 1, 0 );
 
@@ -123,7 +123,7 @@ dialog_init( HWND hwndDlg )
 static INT_PTR CALLBACK
 dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-/* FIXME: implement resizing the dialog */
+// FIXME: implement resizing the dialog
   switch( uMsg ) {
 
     case WM_INITDIALOG:
@@ -147,7 +147,7 @@ dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
       break;
 
     case WM_CLOSE:
-      /* Catch attempts to delete the window and just hide it instead */
+      // Catch attempts to delete the window and just hide it instead
       ShowWindow( dialog, SW_HIDE );
       return 0;
   }
@@ -205,7 +205,7 @@ add_block_details( libspectrum_tape_block *block, void *user_data )
 
   _tcscpy( details[0], "" );
   libspectrum_tape_block_description( details[1], 80, block );
-  /* FIXME: why does it give such a big number of bytes? */
+  // FIXME: why does it give such a big number of bytes?
   tape_block_details( details[2], 80, block );
 
   lvi.mask = LVIF_TEXT | LVIF_IMAGE;
@@ -224,7 +224,7 @@ add_block_details( libspectrum_tape_block *block, void *user_data )
   }
 }
 
-/* Called when a row is selected */
+// Called when a row is selected
 static void
 select_row( LPNMITEMACTIVATE lpnmitem )
 {
@@ -232,14 +232,14 @@ select_row( LPNMITEMACTIVATE lpnmitem )
 
   row = lpnmitem->iItem;
 
-  /* Don't do anything if the current block was clicked on */
+  // Don't do anything if the current block was clicked on
   current_block = tape_get_current_block();
   if( row == current_block ) return;
 
-  /* Otherwise, select the new block */
+  // Otherwise, select the new block
   tape_select_block_no_update( row );
 
-  /* set the marker at the current item, clear others */
+  // set the marker at the current item, clear others
   size_t i, count;
   count = SendDlgItemMessage( dialog, IDC_BROWSE_LV,
                               LVM_GETITEMCOUNT, 0, 0 );

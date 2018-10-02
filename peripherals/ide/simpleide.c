@@ -35,12 +35,12 @@
 #include "simpleide.h"
 #include "ui/ui.h"
 
-/* Private function prototypes */
+// Private function prototypes
 
 static libspectrum_byte simpleide_read( libspectrum_word port, libspectrum_byte *attached );
 static void simpleide_write( libspectrum_word port, libspectrum_byte data );
 
-/* Data */
+// Data
 
 static const periph_port_t simpleide_ports[] = {
   { 0x0010, 0x0000, simpleide_read, simpleide_write },
@@ -69,7 +69,7 @@ static module_info_t simpleide_module_info = {
 
 };
 
-/* Housekeeping functions */
+// Housekeeping functions
 
 static int
 simpleide_init( void *context )
@@ -147,7 +147,7 @@ simpleide_eject( libspectrum_ide_unit unit )
     UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT );
 }
 
-/* Port read/writes */
+// Port read/writes
 
 static libspectrum_byte
 simpleide_read( libspectrum_word port, libspectrum_byte *attached )

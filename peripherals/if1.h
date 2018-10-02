@@ -27,7 +27,7 @@
 
 #include <libspectrum.h>
 
-/* IF1 */
+// IF1
 extern int if1_active;
 extern int if1_available;
 

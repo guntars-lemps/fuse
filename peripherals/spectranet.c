@@ -70,23 +70,23 @@ int spectranet_paged;
 int spectranet_paged_via_io;
 int spectranet_w5100_paged_a = 0, spectranet_w5100_paged_b = 0;
 
-/* Whether the programmable trap is active */
+// Whether the programmable trap is active
 int spectranet_programmable_trap_active;
 
-/* Where the programmable trap will trigger if active */
+// Where the programmable trap will trigger if active
 libspectrum_word spectranet_programmable_trap;
 
 #ifdef BUILD_SPECTRANET
 
-/* True if the next write to 0x023b will set the MSB of the programmable trap */
+// True if the next write to 0x023b will set the MSB of the programmable trap
 static int trap_write_msb;
 
-/* Whether the Spectranet's "suppress NMI" flipflop is set */
+// Whether the Spectranet's "suppress NMI" flipflop is set
 static int nmi_flipflop = 0;
 
 static int spectranet_source;
 
-/* Debugger events */
+// Debugger events
 static const char * const event_type_string = "spectranet";
 static int page_event, unpage_event;
 
@@ -209,7 +209,7 @@ spectranet_activate( void )
       memory_pool_allocate_persistent( 0x1000, 1 );
     memset( fake_bank, 0xff, 0x1000 );
 
-    /* Start of by mapping the fake data in everywhere */
+    // Start of by mapping the fake data in everywhere
     for( i = 0; i < SPECTRANET_PAGES; i++ )
       for( j = 0; j < MEMORY_PAGES_IN_4K; j++ ) {
         memory_page *page = &spectranet_full_map[i * MEMORY_PAGES_IN_4K + j];
@@ -222,7 +222,7 @@ spectranet_activate( void )
         page->page = fake_bank + page->offset;
       }
 
-    /* Pages 0x00 to 0x1f are the flash ROM */
+    // Pages 0x00 to 0x1f are the flash ROM
     rom = memory_pool_allocate_persistent( SPECTRANET_ROM_LENGTH, 1 );
     memset( rom, 0xff, SPECTRANET_ROM_LENGTH );
 
@@ -239,7 +239,7 @@ spectranet_activate( void )
     /* Pages 0x40 to 0x47 are the W5100 registers - handled in readbyte()
        and writebyte() */
 
-    /* Pages 0xc0 to 0xff are the RAM */
+    // Pages 0xc0 to 0xff are the RAM
     ram = memory_pool_allocate_persistent( SPECTRANET_RAM_LENGTH, 1 );
 
     for( i = 0; i < SPECTRANET_RAM_LENGTH / SPECTRANET_PAGE_LENGTH; i++ ) {
@@ -502,9 +502,9 @@ spectranet_flash_rom_write( libspectrum_word address, libspectrum_byte b )
   int pageb_page = spectranet_current_map[2 * MEMORY_PAGES_IN_4K].page_num;
 
   if( pageb_page < SPECTRANET_ROM_LENGTH / SPECTRANET_PAGE_LENGTH ) {
-    /* Which 16Kb flash page are we accessing */
+    // Which 16Kb flash page are we accessing
     int flash_page = pageb_page / 4;
-    /* And at what offset into that page */
+    // And at what offset into that page
     libspectrum_word flash_address = (pageb_page % 4) * SPECTRANET_PAGE_LENGTH + (address & 0xfff);
     flash_am29f010_write( flash_rom, flash_page, flash_address, b );
   }
@@ -512,7 +512,7 @@ spectranet_flash_rom_write( libspectrum_word address, libspectrum_byte b )
 
 #else // #ifdef BUILD_SPECTRANET
 
-/* No spectranet support */
+// No spectranet support
 
 void
 spectranet_register_startup( void )

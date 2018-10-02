@@ -80,7 +80,7 @@
 #endif
 
 #ifndef _
-/* This is for other GNU distributions with internationalized messages.  */
+// This is for other GNU distributions with internationalized messages.
 # if (HAVE_LIBINTL_H && ENABLE_NLS) || defined _LIBC
 #  include <libintl.h>
 #  ifndef _
@@ -134,7 +134,7 @@ char *optarg;
    Otherwise, `optind' communicates from one call to the next
    how much of ARGV has been scanned so far.  */
 
-/* 1003.2 says this must be 1 before any call.  */
+// 1003.2 says this must be 1 before any call.
 int optind = 1;
 
 /* Formerly, initialization of getopt depended on optind==0, which
@@ -197,7 +197,7 @@ static enum
   REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER
 } ordering;
 
-/* Value of POSIXLY_CORRECT environment variable.  */
+// Value of POSIXLY_CORRECT environment variable.
 static char *posixly_correct;
 
 #ifdef	__GNU_LIBRARY__
@@ -250,7 +250,7 @@ extern int strlen (const char *);
 
 #endif // not __GNU_LIBRARY__
 
-/* Handle permutation of arguments.  */
+// Handle permutation of arguments.
 
 /* Describe the part of ARGV that contains non-options that have
    been skipped.  `first_nonopt' is the index in ARGV of the first of them;
@@ -270,7 +270,7 @@ extern char **__libc_argv;
    indicating ARGV elements that should not be considered arguments.  */
 
 # ifdef USE_NONOPTION_FLAGS
-/* Defined in getopt_init.c  */
+// Defined in getopt_init.c
 extern char *__getopt_nonoption_flags;
 
 static int nonoption_flags_max_len;
@@ -345,11 +345,11 @@ exchange (argv)
     {
       if (top - middle > middle - bottom)
 	{
-	  /* Bottom segment is the short one.  */
+	  // Bottom segment is the short one.
 	  int len = middle - bottom;
 	  register int i;
 
-	  /* Swap it with the top part of the top segment.  */
+	  // Swap it with the top part of the top segment.
 	  for (i = 0; i < len; i++)
 	    {
 	      tem = argv[bottom + i];
@@ -357,16 +357,16 @@ exchange (argv)
 	      argv[top - (middle - bottom) + i] = tem;
 	      SWAP_FLAGS (bottom + i, top - (middle - bottom) + i);
 	    }
-	  /* Exclude the moved bottom segment from further swapping.  */
+	  // Exclude the moved bottom segment from further swapping.
 	  top -= len;
 	}
       else
 	{
-	  /* Top segment is the short one.  */
+	  // Top segment is the short one.
 	  int len = top - middle;
 	  register int i;
 
-	  /* Swap it with the bottom part of the bottom segment.  */
+	  // Swap it with the bottom part of the bottom segment.
 	  for (i = 0; i < len; i++)
 	    {
 	      tem = argv[bottom + i];
@@ -374,18 +374,18 @@ exchange (argv)
 	      argv[middle + i] = tem;
 	      SWAP_FLAGS (bottom + i, middle + i);
 	    }
-	  /* Exclude the moved top segment from further swapping.  */
+	  // Exclude the moved top segment from further swapping.
 	  bottom += len;
 	}
     }
 
-  /* Update records for the slots the non-options now occupy.  */
+  // Update records for the slots the non-options now occupy.
 
   first_nonopt += (optind - last_nonopt);
   last_nonopt = optind;
 }
 
-/* Initialize the internal data when the first call is made.  */
+// Initialize the internal data when the first call is made.
 
 #if defined __STDC__ && __STDC__
 static const char *_getopt_initialize (int, char *const *, const char *);
@@ -406,7 +406,7 @@ _getopt_initialize (argc, argv, optstring)
 
   posixly_correct = getenv ("POSIXLY_CORRECT");
 
-  /* Determine how to handle the ordering of options and nonoptions.  */
+  // Determine how to handle the ordering of options and nonoptions.
 
   if (optstring[0] == '-')
     {
@@ -552,7 +552,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 
   if (nextchar == NULL || *nextchar == '\0')
     {
-      /* Advance to the next ARGV-element.  */
+      // Advance to the next ARGV-element.
 
       /* Give FIRST_NONOPT & LAST_NONOPT rational values if OPTIND has been
 	 moved back by the user (who may also have changed the arguments).  */
@@ -627,7 +627,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		  + (longopts != NULL && argv[optind][1] == '-'));
     }
 
-  /* Decode the current option-ARGV-element.  */
+  // Decode the current option-ARGV-element.
 
   /* Check whether the ARGV-element is a long option.
 
@@ -665,7 +665,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	    if ((unsigned int) (nameend - nextchar)
 		== (unsigned int) strlen (p->name))
 	      {
-		/* Exact match found.  */
+		// Exact match found.
 		pfound = p;
 		indfound = option_index;
 		exact = 1;
@@ -673,7 +673,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	      }
 	    else if (pfound == NULL)
 	      {
-		/* First nonexact match found.  */
+		// First nonexact match found.
 		pfound = p;
 		indfound = option_index;
 	      }
@@ -681,7 +681,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		     || pfound->has_arg != p->has_arg
 		     || pfound->flag != p->flag
 		     || pfound->val != p->val)
-	      /* Second or later nonexact match found.  */
+	      // Second or later nonexact match found.
 	      ambig = 1;
 	  }
 
@@ -735,7 +735,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 
 		      if (argv[optind - 1][1] == '-')
 			{
-			  /* --option */
+			  // --option
 #if defined _LIBC && defined USE_IN_LIBIO
 			  n = __asprintf (&buf, _("\
 %s: option `--%s' doesn't allow an argument\n"),
@@ -748,7 +748,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 			}
 		      else
 			{
-			  /* +option or -option */
+			  // +option or -option
 #if defined _LIBC && defined USE_IN_LIBIO
 			  n = __asprintf (&buf, _("\
 %s: option `%c%s' doesn't allow an argument\n"),
@@ -840,7 +840,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 
 	      if (argv[optind][1] == '-')
 		{
-		  /* --option */
+		  // --option
 #if defined _LIBC && defined USE_IN_LIBIO
 		  n = __asprintf (&buf, _("%s: unrecognized option `--%s'\n"),
 				  argv[0], nextchar);
@@ -851,7 +851,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		}
 	      else
 		{
-		  /* +option or -option */
+		  // +option or -option
 #if defined _LIBC && defined USE_IN_LIBIO
 		  n = __asprintf (&buf, _("%s: unrecognized option `%c%s'\n"),
 				  argv[0], argv[optind][0], nextchar);
@@ -880,13 +880,13 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	}
     }
 
-  /* Look at and handle the next short option-character.  */
+  // Look at and handle the next short option-character.
 
   {
     char c = *nextchar++;
     char *temp = my_index (optstring, c);
 
-    /* Increment `optind' when we start to process its last character.  */
+    // Increment `optind' when we start to process its last character.
     if (*nextchar == '\0')
       ++optind;
 
@@ -901,7 +901,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 
 	    if (posixly_correct)
 	      {
-		/* 1003.2 specifies the format of this message.  */
+		// 1003.2 specifies the format of this message.
 #if defined _LIBC && defined USE_IN_LIBIO
 		n = __asprintf (&buf, _("%s: illegal option -- %c\n"),
 				argv[0], c);
@@ -934,7 +934,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	optopt = c;
 	return '?';
       }
-    /* Convenience. Treat POSIX -W foo same as long option --foo */
+    // Convenience. Treat POSIX -W foo same as long option --foo
     if (temp[0] == 'W' && temp[1] == ';')
       {
 	char *nameend;
@@ -945,7 +945,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	int indfound = 0;
 	int option_index;
 
-	/* This is an option that requires an argument.  */
+	// This is an option that requires an argument.
 	if (*nextchar != '\0')
 	  {
 	    optarg = nextchar;
@@ -957,7 +957,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	  {
 	    if (print_errors)
 	      {
-		/* 1003.2 specifies the format of this message.  */
+		// 1003.2 specifies the format of this message.
 #if defined _LIBC && defined USE_IN_LIBIO
 		char *buf;
 
@@ -1002,7 +1002,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	    {
 	      if ((unsigned int) (nameend - nextchar) == strlen (p->name))
 		{
-		  /* Exact match found.  */
+		  // Exact match found.
 		  pfound = p;
 		  indfound = option_index;
 		  exact = 1;
@@ -1010,12 +1010,12 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		}
 	      else if (pfound == NULL)
 		{
-		  /* First nonexact match found.  */
+		  // First nonexact match found.
 		  pfound = p;
 		  indfound = option_index;
 		}
 	      else
-		/* Second or later nonexact match found.  */
+		// Second or later nonexact match found.
 		ambig = 1;
 	    }
 	if (ambig && !exact)
@@ -1131,7 +1131,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       {
 	if (temp[2] == ':')
 	  {
-	    /* This is an option that accepts an argument optionally.  */
+	    // This is an option that accepts an argument optionally.
 	    if (*nextchar != '\0')
 	      {
 		optarg = nextchar;
@@ -1143,7 +1143,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	  }
 	else
 	  {
-	    /* This is an option that requires an argument.  */
+	    // This is an option that requires an argument.
 	    if (*nextchar != '\0')
 	      {
 		optarg = nextchar;
@@ -1155,7 +1155,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	      {
 		if (print_errors)
 		  {
-		    /* 1003.2 specifies the format of this message.  */
+		    // 1003.2 specifies the format of this message.
 #if defined _LIBC && defined USE_IN_LIBIO
 		    char *buf;
 

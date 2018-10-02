@@ -31,7 +31,7 @@
 
 #include <windows.h>
 
-/* An RGB image of the keyboard picture */
+// An RGB image of the keyboard picture
 /* the memory will be allocated by Windows
    ( DISPLAY_SCREEN_HEIGHT * DISPLAY_ASPECT_WIDTH * 4 bytes ) */
 static void *picture;
@@ -55,12 +55,12 @@ win32ui_picture( const char *filename, int border )
 
     BITMAPINFO picture_BMI;
 
-    /* create the picture buffer */
+    // create the picture buffer
 
     memset( &picture_BMI, 0, sizeof( picture_BMI ) );
     picture_BMI.bmiHeader.biSize = sizeof( picture_BMI.bmiHeader );
     picture_BMI.bmiHeader.biWidth = (size_t)( DISPLAY_ASPECT_WIDTH );
-    /* negative to avoid "shep-mode": */
+    // negative to avoid "shep-mode":
     picture_BMI.bmiHeader.biHeight = -DISPLAY_SCREEN_HEIGHT;
     picture_BMI.bmiHeader.biPlanes = 1;
     picture_BMI.bmiHeader.biBitCount = 32;
@@ -181,7 +181,7 @@ draw_screen( libspectrum_byte *screen, int border )
         libspectrum_dword pix =
           win32display_colours[ ( data & 0x80 ) ? ink : paper ];
 
-        /* rearrange pixel components */
+        // rearrange pixel components
         pix = ( pix & 0x0000ff00 ) |
               ( ( pix & 0x000000ff ) << 16 ) |
               ( ( pix & 0x00ff0000 ) >> 16 );

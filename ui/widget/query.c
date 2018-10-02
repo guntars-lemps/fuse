@@ -38,10 +38,10 @@ static const char * const title = "Fuse - Confirm";
 
 struct widget_query_entry;
 
-/* A generic click function */
+// A generic click function
 typedef void (*widget_query_click_fn)( void );
 
-/* A general menu */
+// A general menu
 typedef struct widget_query_entry {
   const char *text;
   int index;
@@ -172,13 +172,13 @@ internal_query_draw( widget_query_entry *query, int save, const char *message )
 
   height = num_message_lines;
 
-  /* How many options do we have? */
+  // How many options do we have?
   for( ptr = query; ptr->text; ptr++ )
     height ++;
 
   menu_left_edge_x = DISPLAY_WIDTH_COLS/2-menu_width/2;
 
-  /* Draw the dialog box */
+  // Draw the dialog box
   widget_dialog_with_border( menu_left_edge_x, 2, menu_width, 2 + height );
 
   widget_printstring( menu_left_edge_x*8+2, 16, WIDGET_COLOUR_TITLE, title );

@@ -94,7 +94,7 @@ init_stick( int which, const char *const device,
 
   case JSNoAccess:
 
-    /* FIXME: why is this commented out? */
+    // FIXME: why is this commented out?
 /*
     ui_error (UI_ERROR_ERROR,
 	      "failed to initialise joystick %i: %s",
@@ -127,14 +127,14 @@ int open_joystick( int which, const char *device, const char *calibration )
      only that */
   if( device && device[0] ) return init_stick( which, device, calibration );
 
-  /* Otherwise try /dev/input/js<n> and /dev/js<n> */
+  // Otherwise try /dev/input/js<n> and /dev/js<n>
   snprintf( path, PATH_MAX, "/dev/input/js%d", which );
   if( !init_stick( which, path, calibration ) ) return 0;
 
   snprintf( path, PATH_MAX, "/dev/js%d", which );
   if( !init_stick( which, path, calibration ) ) return 0;
 
-  /* Couldn't find this joystick */
+  // Couldn't find this joystick
   return 1;
 }
 
@@ -148,7 +148,7 @@ ui_joystick_init( void )
 
   cfgdir = compat_get_config_path(); if( !cfgdir ) return 1;
 
-  /* Default calibration file is ~/.joystick */
+  // Default calibration file is ~/.joystick
   calibration = libspectrum_new( char, strlen( cfgdir ) +
                                        strlen( JSDefaultCalibration ) + 2 );
 
@@ -160,7 +160,7 @@ ui_joystick_init( void )
     }
   }
 
-  /* If we can't init the first, don't try the second */
+  // If we can't init the first, don't try the second
   error = open_joystick( 0, settings_current.joystick_1, calibration );
   if( error ) {
     libspectrum_free( calibration );
@@ -264,7 +264,7 @@ do_axis( int which, double position, input_key negative, input_key positive )
 
 #else // #if defined USE_JOYSTICK && defined HAVE_JSW_H
 
-/* No joystick library */
+// No joystick library
 
 int
 ui_joystick_init( void )

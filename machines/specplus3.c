@@ -104,7 +104,7 @@ static ui_media_drive_info_t ui_drives[ SPECPLUS3_NUM_DRIVES ] = {
 int
 specplus3_port_from_ula( libspectrum_word port GCC_UNUSED )
 {
-  /* No contended ports */
+  // No contended ports
   return 0;
 }
 
@@ -155,7 +155,7 @@ specplus3_765_init( void )
   for( i = 0; i < SPECPLUS3_NUM_DRIVES; i++ ) {
     specplus3_drives[ i ].disk.flag = DISK_FLAG_PLUS3_CPC;
   }
-					/* builtin drive 1 head 42 track */
+					// builtin drive 1 head 42 track
   fdd_init( &specplus3_drives[ 0 ], FDD_SHUGART, &fdd_params[ 1 ], 0 );
   fdd_init( &specplus3_drives[ 1 ], FDD_SHUGART, NULL, 0 ); // drive geometry 'autodetect'
   specplus3_fdc->set_intrq = NULL;
@@ -236,11 +236,11 @@ specplus3_plus2a_common_reset( void )
   memory_current_screen = 5;
   memory_screen_mask = 0xffff;
 
-  /* All memory comes from the home bank */
+  // All memory comes from the home bank
   for( i = 0; i < MEMORY_PAGES_IN_64K; i++ )
     memory_map_read[i].source = memory_map_write[i].source = memory_source_ram;
 
-  /* RAM pages 4, 5, 6 and 7 contended */
+  // RAM pages 4, 5, 6 and 7 contended
   for( i = 0; i < 8; i++ )
     memory_ram_set_16k_contention( i, i >= 4 );
 
@@ -252,13 +252,13 @@ specplus3_plus2a_common_reset( void )
 static int
 normal_memory_map( int rom, int page )
 {
-  /* ROM as specified */
+  // ROM as specified
   memory_map_16k( 0x0000, memory_map_rom, rom );
-  /* RAM 5 */
+  // RAM 5
   memory_map_16k( 0x4000, memory_map_ram, 5 );
-  /* RAM 2 */
+  // RAM 2
   memory_map_16k( 0x8000, memory_map_ram, 2 );
-  /* RAM 0 */
+  // RAM 0
   memory_map_16k( 0xc000, memory_map_ram, page );
 
   return 0;
@@ -292,7 +292,7 @@ void
 specplus3_memoryport2_write_internal( libspectrum_word port GCC_UNUSED,
                                       libspectrum_byte b )
 {
-  /* Let the parallel printer code know about the strobe bit */
+  // Let the parallel printer code know about the strobe bit
   printer_parallel_strobe_write( b & 0x10 );
 
   /* If this was called by a machine which has a +3-style disk, set
@@ -304,7 +304,7 @@ specplus3_memoryport2_write_internal( libspectrum_word port GCC_UNUSED,
     fdd_motoron( &specplus3_drives[1], b & 0x08 );
   }
 
-  /* Store the last byte written in case we need it */
+  // Store the last byte written in case we need it
   machine_current->ram.last_byte2 = b;
 
   machine_current->memory_map();
@@ -313,7 +313,7 @@ specplus3_memoryport2_write_internal( libspectrum_word port GCC_UNUSED,
 void
 specplus3_memoryport2_write( libspectrum_word port, libspectrum_byte b )
 {
-  /* Do nothing else if we've locked the RAM configuration */
+  // Do nothing else if we've locked the RAM configuration
   if( machine_current->ram.locked ) return;
 
   specplus3_memoryport2_write_internal( port, b );
@@ -338,16 +338,16 @@ specplus3_memory_map( void )
     memory_current_screen = screen;
   }
 
-  /* Check whether we want a special RAM configuration */
+  // Check whether we want a special RAM configuration
   if( machine_current->ram.last_byte2 & 0x01 ) {
 
-    /* If so, select it */
+    // If so, select it
     machine_current->ram.special = 1;
     special_memory_map( ( machine_current->ram.last_byte2 & 0x06 ) >> 1 );
 
   } else {
 
-    /* If not, we're selecting the high bit of the current ROM */
+    // If not, we're selecting the high bit of the current ROM
     machine_current->ram.special = 0;
     normal_memory_map( rom, page );
 
@@ -392,7 +392,7 @@ specplus3_fdc_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
   upd_fdc_write_data( specplus3_fdc, data );
 }
 
-/* FDC UI related functions */
+// FDC UI related functions
 
 int
 specplus3_disk_insert( specplus3_drive_number which, const char *filename,
@@ -423,7 +423,7 @@ ui_drive_is_available( void )
 static const fdd_params_t *
 ui_drive_get_params_a( void )
 {
-  /* +1 => there is no `Disabled' */
+  // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_plus3a_type() + 1 ];
 }
 

@@ -130,10 +130,10 @@ update_pokefinder( void )
   int rcx, rcy;
   DWORD dw_res;
 
-  /* clear the listview */
+  // clear the listview
   SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LIST, LVM_DELETEALLITEMS, 0, 0 );
 
-  /* display suspected locations if < 20 */
+  // display suspected locations if < 20
   int i = 0;
   LV_ITEM lvi;
   lvi.mask = LVIF_TEXT;
@@ -157,11 +157,11 @@ update_pokefinder( void )
 	  _sntprintf( possible_text[0], 128, "%d", (unsigned)bank );
 	  _sntprintf( possible_text[1], 128, "0x%04X", (unsigned)bank_offset );
 
-          /* set new count of items */
+          // set new count of items
           SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LIST, LVM_SETITEMCOUNT,
                               i, 0 );
 
-          /* add the item */
+          // add the item
           lvi.iItem = i;
           lvi.iSubItem = 0;
           lvi.pszText = possible_text[0];
@@ -176,10 +176,10 @@ update_pokefinder( void )
         }
     }
 
-    /* show the listview */
+    // show the listview
     ShowWindow( lv_hWnd, SW_SHOW );
 
-    /* change the size of the listview */
+    // change the size of the listview
     dw_res = SendMessage( lv_hWnd, LVM_APPROXIMATEVIEWRECT, pokefinder_count,
                           MAKELPARAM( -1, -1 ) );
     rcx = lv_width; // same width
@@ -190,18 +190,18 @@ update_pokefinder( void )
     rcx = initial_width;
     rcy += initial_height + 10;
   } else {
-    /* hide the listview */
+    // hide the listview
     ShowWindow( lv_hWnd, SW_HIDE );
 
     rcx = initial_width;
     rcy = initial_height;
   }
 
-  /* change the size of the dialog */
+  // change the size of the dialog
   SetWindowPos( fuse_hPFWnd, NULL, 0, 0, rcx, rcy,
                 SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE );
 
-  /* print possible locations */
+  // print possible locations
   _sntprintf( buffer, 256, "Possible locations: %lu",
               (unsigned long)pokefinder_count );
   SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LOCATIONS, WM_SETTEXT, 0,
@@ -215,7 +215,7 @@ menu_machine_pokefinder( int action GCC_UNUSED )
   int cx;
 
   if (fuse_hPFWnd == NULL) {
-    /* FIXME: Implement accelerators for this dialog */
+    // FIXME: Implement accelerators for this dialog
     fuse_hPFWnd = CreateDialog( fuse_hInstance,
                                 MAKEINTRESOURCE( IDD_POKEFINDER ),
                                 fuse_hWnd,
@@ -225,12 +225,12 @@ menu_machine_pokefinder( int action GCC_UNUSED )
       return;
     }
 
-    /* store initial dialog dimensions */
+    // store initial dialog dimensions
     GetWindowRect( fuse_hPFWnd, &rect );
     initial_width = rect.right - rect.left;
     initial_height = rect.bottom - rect.top;
 
-    /* Set text limit */
+    // Set text limit
     SendDlgItemMessage( fuse_hPFWnd, IDC_PF_EDIT, EM_LIMITTEXT, 4, 0 );
 
     /* set extended listview style to select full row, when an item
@@ -242,13 +242,13 @@ menu_machine_pokefinder( int action GCC_UNUSED )
     SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LIST,
                         LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
-    /* calculate columns width */
+    // calculate columns width
     lv_hWnd = GetDlgItem( fuse_hPFWnd, IDC_PF_LIST );
     GetClientRect( lv_hWnd, &rect );
     cx = rect.right - rect.left;
     cx >>= 1;
 
-    /* create columns */
+    // create columns
     LVCOLUMN lvc;
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
     lvc.fmt = LVCFMT_LEFT;
@@ -262,7 +262,7 @@ menu_machine_pokefinder( int action GCC_UNUSED )
     SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LIST, LVM_INSERTCOLUMN, 1,
                         ( LPARAM ) &lvc );
 
-    /* store listview width */
+    // store listview width
     GetWindowRect( lv_hWnd, &rect );
     lv_width = rect.right - rect.left;
   } else {
@@ -293,7 +293,7 @@ win32ui_pokefinder_search( void )
   int buffer_size, base;
   HWND hwnd_control;
 
-  /* poll the size of the value in Search box first */
+  // poll the size of the value in Search box first
   buffer_size = SendDlgItemMessage( fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXTLENGTH,
                                    (WPARAM) 0, (LPARAM) 0 );
   buffer = malloc( ( buffer_size + 1 ) * sizeof( TCHAR ) );
@@ -302,7 +302,7 @@ win32ui_pokefinder_search( void )
     return;
   }
 
-  /* get the value in Search box first */
+  // get the value in Search box first
   if( SendDlgItemMessage( fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXT,
                           (WPARAM) ( buffer_size + 1 ),
                           (LPARAM) buffer ) != buffer_size ) {
@@ -344,7 +344,7 @@ win32ui_pokefinder_close( void )
 static void
 possible_click( LPNMITEMACTIVATE lpnmitem )
 {
-  /* FIXME: implement equivalent of GTK's select-via-keyboard to enter here */
+  // FIXME: implement equivalent of GTK's select-via-keyboard to enter here
 
   int error;
   libspectrum_word row;

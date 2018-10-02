@@ -26,31 +26,31 @@
 
 #include <libspectrum.h>
 
-/* The offset used to get the count of instructions from the R register */
+// The offset used to get the count of instructions from the R register
 extern int rzx_instructions_offset;
 
-/* The number of bytes read via IN during the current frame */
+// The number of bytes read via IN during the current frame
 extern size_t rzx_in_count;
 
-/* And the values of those bytes */
+// And the values of those bytes
 extern libspectrum_byte *rzx_in_bytes;
 
-/* How big is the above array? */
+// How big is the above array?
 extern size_t rzx_in_allocated;
 
-/* Are we currently recording a .rzx file? */
+// Are we currently recording a .rzx file?
 extern int rzx_recording;
 
-/* Are we currently playing back a .rzx file? */
+// Are we currently playing back a .rzx file?
 extern int rzx_playback;
 
-/* Is the .rzx file being recorded in competition mode? */
+// Is the .rzx file being recorded in competition mode?
 extern int rzx_competition_mode;
 
-/* The number of instructions in the current .rzx playback frame */
+// The number of instructions in the current .rzx playback frame
 extern size_t rzx_instruction_count;
 
-/* The actual RZX data */
+// The actual RZX data
 extern libspectrum_rzx *rzx;
 
 void rzx_register_startup( void );

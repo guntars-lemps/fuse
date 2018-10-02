@@ -62,14 +62,14 @@ static GtkWidget
 
 static GtkTreeModel *location_model; // The data of possible locations
 
-/* The possible locations */
+// The possible locations
 
 #define MAX_POSSIBLE 20
 
 int possible_page[ MAX_POSSIBLE ];
 libspectrum_word possible_offset[ MAX_POSSIBLE ];
 
-/* List columns */
+// List columns
 enum
 {
   COL_PAGE = 0,
@@ -100,7 +100,7 @@ create_location_list( void )
 
   view = gtk_tree_view_new();
 
-  /* Add columns */
+  // Add columns
   renderer = gtk_cell_renderer_text_new();
   gtk_tree_view_insert_column_with_attributes( GTK_TREE_VIEW( view ),
                                                -1,
@@ -117,14 +117,14 @@ create_location_list( void )
                                                "text", COL_OFFSET,
                                                NULL );
 
-  /* Create data model */
+  // Create data model
   store = gtk_list_store_new( NUM_COLS, G_TYPE_STRING, G_TYPE_STRING );
 
   location_model = GTK_TREE_MODEL( store );
   gtk_tree_view_set_model( GTK_TREE_VIEW( view ), location_model );
   g_object_unref( location_model );
 
-  /* Activate breakpoints */
+  // Activate breakpoints
   g_signal_connect( G_OBJECT( view ), "row-activated",
                     G_CALLBACK( possible_click ), NULL );
 
@@ -175,7 +175,7 @@ create_dialog( void )
 			   G_CALLBACK( gtkui_pokefinder_close ), TRUE );
   }
 
-  /* Users shouldn't be able to resize this window */
+  // Users shouldn't be able to resize this window
   gtk_window_set_resizable( GTK_WINDOW( dialog ), FALSE );
 
   dialog_created = 1;
@@ -281,7 +281,7 @@ update_pokefinder( void )
 	  snprintf( possible_text[0], 128, "%lu", (unsigned long)bank );
 	  snprintf( possible_text[1], 128, "0x%04X", (unsigned)bank_offset );
 
-	  /* Append a new row and fill data */
+	  // Append a new row and fill data
 	  gtk_list_store_append( GTK_LIST_STORE( location_model ), &iter );
 	  gtk_list_store_set( GTK_LIST_STORE( location_model ), &iter,
 	                      COL_PAGE, possible_text[0],
@@ -310,7 +310,7 @@ possible_click( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
 {
   int error, *indices, row;
 
-  /* Get selected row via double-clicks or keyboard */
+  // Get selected row via double-clicks or keyboard
   indices = gtk_tree_path_get_indices( path );
   if( !indices ) return;
   row = indices[0];

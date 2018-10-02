@@ -82,7 +82,7 @@ compat_get_next_path( path_context *ctx )
 
   switch( (ctx->state)++ ) {
 
-    /* First look relative to the Fuse executable */
+    // First look relative to the Fuse executable
   case 0:
     if( compat_is_absolute_path( fuse_progname ) ) {
       strncpy( buffer, fuse_progname, PATH_MAX );
@@ -98,7 +98,7 @@ compat_get_next_path( path_context *ctx )
               path_segment );
     return 1;
 
-    /* Then relative to %APPDATA%/Fuse directory */
+    // Then relative to %APPDATA%/Fuse directory
   case 1:
     path2 = getenv( "APPDATA" );
     if( !path2 ) return 0;
@@ -107,7 +107,7 @@ compat_get_next_path( path_context *ctx )
 
     return 1;
 
-    /* Then relative to the current directory */
+    // Then relative to the current directory
   case 2:
     snprintf( ctx->path, PATH_MAX, "." FUSE_DIR_SEP_STR "%s",
               path_segment );

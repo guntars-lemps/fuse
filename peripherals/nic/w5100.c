@@ -1,27 +1,27 @@
 /* w5100.c: Wiznet W5100 emulation - main code
-   
+
    Emulates a minimal subset of the Wiznet W5100 TCP/IP controller.
 
    Copyright (c) 2011-2015 Philip Kendall
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation, Inc.,
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-   
+
    Author contact information:
-   
+
    E-mail: philip-fuse@shadowmagic.org.uk
- 
+
 */
 
 #include <config.h>
@@ -43,7 +43,7 @@ enum w5100_registers {
   W5100_GWR1,
   W5100_GWR2,
   W5100_GWR3,
-  
+
   W5100_SUBR0,
   W5100_SUBR1,
   W5100_SUBR2,
@@ -127,7 +127,7 @@ w5100_io_thread( void *arg )
         nic_w5100_socket_process_io( &self->socket[i], readfds, writefds );
     }
     else if( compat_socket_get_error() == compat_socket_EBADF ) {
-      /* Do nothing - just loop again */
+      // Do nothing - just loop again
     }
     else {
       nic_w5100_debug( "w5100: select returned unexpected errno %d: %s\n",
@@ -145,7 +145,7 @@ nic_w5100_alloc( void )
   int error;
   int i;
   nic_w5100_t *self;
-  
+
   compat_socket_networking_init();
 
   self = libspectrum_new( nic_w5100_t, 1 );
@@ -198,7 +198,7 @@ nic_w5100_read( nic_w5100_t *self, libspectrum_word reg )
   if( reg < 0x030 ) {
     switch( reg ) {
       case W5100_MR:
-        /* We don't support any flags, so we always return zero here */
+        // We don't support any flags, so we always return zero here
         b = 0x00;
         nic_w5100_debug( "w5100: reading 0x%02x from MR\n", b );
         break;
@@ -220,18 +220,18 @@ nic_w5100_read( nic_w5100_t *self, libspectrum_word reg )
         nic_w5100_debug( "w5100: reading 0x%02x from SIPR%d\n", b, reg - W5100_SIPR0 );
         break;
       case W5100_IMR:
-        /* We support only "allow all" */
+        // We support only "allow all"
         b = 0xef;
         nic_w5100_debug( "w5100: reading 0x%02x from IMR\n", b );
         break;
       case W5100_RMSR: case W5100_TMSR:
-        /* We support only 2K per socket */
+        // We support only 2K per socket
         b = 0x55;
         nic_w5100_debug( "w5100: reading 0x%02x from %s\n", b, reg == W5100_RMSR ? "RMSR" : "TMSR" );
         break;
       default:
         b = 0xff;
-        /* This is a debug rather than a warning because it happens on snapshot save */
+        // This is a debug rather than a warning because it happens on snapshot save
         nic_w5100_debug( "w5100: reading 0x%02x from unsupported register 0x%03x\n", b, reg );
         break;
     }
@@ -270,10 +270,10 @@ w5100_write_imr( nic_w5100_t *self, libspectrum_byte b )
   nic_w5100_debug( "w5100: writing 0x%02x to IMR\n", b );
 
   if( b != 0xef )
-    nic_w5100_error( UI_ERROR_WARNING, 
+    nic_w5100_error( UI_ERROR_WARNING,
                      "w5100: unsupported value 0x%02x written to IMR\n", b );
 }
-  
+
 
 static void
 w5100_write__msr( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b )
@@ -283,7 +283,7 @@ w5100_write__msr( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b )
   nic_w5100_debug( "w5100: writing 0x%02x to %s\n", b, regname );
 
   if( b != 0x55 )
-    nic_w5100_error( UI_ERROR_WARNING, 
+    nic_w5100_error( UI_ERROR_WARNING,
                      "w5100: unsupported value 0x%02x written to %s\n",
                      b, regname );
 }
@@ -320,7 +320,7 @@ nic_w5100_write( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b )
         w5100_write__msr( self, reg, b );
         break;
       default:
-        /* This is a debug rather than a warning because it happens on snapshot load */
+        // This is a debug rather than a warning because it happens on snapshot load
         nic_w5100_debug( "w5100: writing 0x%02x to unsupported register 0x%03x\n", b, reg );
         break;
     }
@@ -332,7 +332,7 @@ nic_w5100_write( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b )
     nic_w5100_socket_write_tx_buffer( self, reg, b );
   }
   else
-    nic_w5100_error( UI_ERROR_WARNING, 
+    nic_w5100_error( UI_ERROR_WARNING,
                      "w5100: writing 0x%02x to unsupported register 0x%03x\n",
                      b, reg );
 }
