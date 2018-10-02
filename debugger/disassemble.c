@@ -122,17 +122,17 @@ disassemble_main( libspectrum_word address, char *buffer, size_t buflen,
     b = readbyte_internal( address );
   }
 
-  if( b < 0x40 ) {
+  if (b < 0x40 ) {
     disassemble_00xxxxxx( address, buffer, buflen, length, use_hl );
-  } else if( b == 0x76 ) {
-    snprintf( buffer, buflen, "HALT" ); *length = 1;
-  } else if( b < 0x80 ) {
+  } else if (b == 0x76 ) {
+    snprintf( buffer, buflen, "HALT"); *length = 1;
+  } else if (b < 0x80 ) {
 
-    if( ( b & 0x07 ) == 0x06 ) { // LD something,(HL)
+    if (( b & 0x07 ) == 0x06 ) { // LD something,(HL)
       dest_reg( address, USE_HL, buffer2, 40 );
       source_reg( address, use_hl, buffer3, 40 );
       *length = ( use_hl == USE_HL ? 1 : 2 );
-    } else if( ( ( b >> 3 ) & 0x07 ) == 0x06 ) { // LD (HL),something
+    } else if (( ( b >> 3 ) & 0x07 ) == 0x06 ) { // LD (HL),something
       dest_reg( address, use_hl, buffer2, 40 );
       source_reg( address, USE_HL, buffer3, 40 );
       *length = ( use_hl == USE_HL ? 1 : 2 );
@@ -145,7 +145,7 @@ disassemble_main( libspectrum_word address, char *buffer, size_t buflen,
 
     snprintf( buffer, buflen, "LD %s,%s", buffer2, buffer3 );
 
-  } else if( b < 0xc0 ) {
+  } else if (b < 0xc0 ) {
     *length = 1 + source_reg( address, use_hl, buffer2, 40 );
     snprintf( buffer, buflen, addition_op( b ), buffer2 );
   } else {
@@ -171,10 +171,10 @@ disassemble_00xxxxxx( libspectrum_word address, char *buffer, size_t buflen,
 
   libspectrum_byte b = readbyte_internal( address );
 
-  switch( b & 0x0f ) {
+  switch (b & 0x0f ) {
 
   case 0x00: case 0x08:
-    if( b <= 0x08 ) {
+    if (b <= 0x08 ) {
       snprintf( buffer, buflen, "%s", opcode_00xxx000[ b >> 3 ] ); *length = 1;
     } else {
       get_offset( buffer2, 40, address + 2, readbyte_internal( address + 1 ) );
@@ -243,7 +243,7 @@ disassemble_00xxx010( libspectrum_word address, char *buffer, size_t buflen,
   char buffer2[40];
   libspectrum_byte b = readbyte_internal( address );
 
-  switch( b >> 4 ) {
+  switch (b >> 4 ) {
 
   case 0: case 1:
     snprintf( buffer, buflen, "LD (%s),A", reg_pair( b, use_hl ) );
@@ -271,7 +271,7 @@ disassemble_00xxx110( libspectrum_word address, char *buffer, size_t buflen,
   char buffer2[40];
   libspectrum_byte b = readbyte_internal( address );
 
-  switch( b >> 4 ) {
+  switch (b >> 4 ) {
 
   case 0: case 1:
     snprintf( buffer, buflen, "LD A,(%s)", reg_pair( b, use_hl ) );
@@ -299,7 +299,7 @@ disassemble_11xxxxxx( libspectrum_word address, char *buffer, size_t buflen,
   char buffer2[40];
   libspectrum_byte b = readbyte_internal( address );
 
-  switch( b & 0x07 ) {
+  switch (b & 0x07 ) {
 
   case 0x00:
     snprintf( buffer, buflen, "RET %s", condition( b ) ); *length = 1;
@@ -347,20 +347,20 @@ static void
 disassemble_11xxx001( libspectrum_byte b, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
 {
-  switch( ( b >> 3 ) - 0x18 ) {
+  switch (( b >> 3 ) - 0x18 ) {
 
   case 0x00: case 0x02: case 0x04:
     snprintf( buffer, buflen, "POP %s", reg_pair( b, use_hl ) ); *length = 1;
     break;
 
-  case 0x01: snprintf( buffer, buflen, "RET" ); *length = 1; break;
-  case 0x03: snprintf( buffer, buflen, "EXX" ); *length = 1; break;
+  case 0x01: snprintf( buffer, buflen, "RET"); *length = 1; break;
+  case 0x03: snprintf( buffer, buflen, "EXX"); *length = 1; break;
 
   case 0x05:
     snprintf( buffer, buflen, "JP (%s)", hl_ix_iy( use_hl ) ); *length = 1;
     break;
 
-  case 0x06: snprintf( buffer, buflen, "POP AF" ); *length = 1; break;
+  case 0x06: snprintf( buffer, buflen, "POP AF"); *length = 1; break;
 
   case 0x07:
     snprintf( buffer, buflen, "LD SP,%s", hl_ix_iy( use_hl ) ); *length = 1;
@@ -376,7 +376,7 @@ disassemble_11xxx011( libspectrum_word address, char *buffer, size_t buflen,
   char buffer2[40];
   libspectrum_byte b = readbyte_internal( address );
 
-  switch( ( b >> 3 ) - 0x18 ) {
+  switch (( b >> 3 ) - 0x18 ) {
 
   case 0x00:
     get_word( buffer2, 40, address + 1 );
@@ -384,7 +384,7 @@ disassemble_11xxx011( libspectrum_word address, char *buffer, size_t buflen,
     break;
 
   case 0x01:
-    if( use_hl != USE_HL ) {
+    if (use_hl != USE_HL ) {
       char offset = readbyte_internal( address + 1 );
       disassemble_ddfd_cb( address+2, offset, use_hl, buffer, buflen,
 			   length );
@@ -410,15 +410,15 @@ disassemble_11xxx011( libspectrum_word address, char *buffer, size_t buflen,
 
   case 0x05:
     // Note: does not get modified by DD or FD
-    snprintf( buffer, buflen, "EX DE,HL" ); *length = 1;
+    snprintf( buffer, buflen, "EX DE,HL"); *length = 1;
     break;
 
   case 0x06:
-    snprintf( buffer, buflen, "DI" ); *length = 1;
+    snprintf( buffer, buflen, "DI"); *length = 1;
     break;
 
   case 0x07:
-    snprintf( buffer, buflen, "EI" ); *length = 1;
+    snprintf( buffer, buflen, "EI"); *length = 1;
     break;
   }
 }
@@ -431,7 +431,7 @@ disassemble_11xxx101( libspectrum_word address, char *buffer, size_t buflen,
   char buffer2[40];
   libspectrum_byte b = readbyte_internal( address );
 
-  switch( ( b >> 3 ) - 0x18 ) {
+  switch (( b >> 3 ) - 0x18 ) {
 
   case 0x00: case 0x02: case 0x04:
     snprintf( buffer, buflen, "PUSH %s", reg_pair( b, use_hl ) ); *length = 1;
@@ -455,7 +455,7 @@ disassemble_11xxx101( libspectrum_word address, char *buffer, size_t buflen,
     break;
 
   case 0x06:
-    snprintf( buffer, buflen, "PUSH AF" ); *length = 1;
+    snprintf( buffer, buflen, "PUSH AF"); *length = 1;
     break;
   }
 }
@@ -470,7 +470,7 @@ disassemble_cb( libspectrum_word address, char *buffer, size_t buflen,
 
   source_reg( address, USE_HL, buffer2, 40 );
 
-  if( b < 0x40 ) {
+  if (b < 0x40 ) {
     snprintf( buffer, buflen, "%s %s", rotate_op( b ), buffer2 );
     *length = 1;
   } else {
@@ -505,15 +505,15 @@ disassemble_ed( libspectrum_word address, char *buffer, size_t buflen,
 
   b = readbyte_internal( address );
 
-  if( b < 0x40 || b > 0xbb ) {
-    snprintf( buffer, buflen, "NOPD" ); *length = 1;
-  } else if( b < 0x80 ) {
+  if (b < 0x40 || b > 0xbb ) {
+    snprintf( buffer, buflen, "NOPD"); *length = 1;
+  } else if (b < 0x80 ) {
 
-    switch( b & 0x0f ) {
+    switch (b & 0x0f ) {
 
     case 0x00: case 0x08:
-      if( b == 0x70 ) {
-	snprintf( buffer, buflen, "IN F,(C)" ); *length = 1;
+      if (b == 0x70 ) {
+	snprintf( buffer, buflen, "IN F,(C)"); *length = 1;
       } else {
 	dest_reg( address, USE_HL, buffer2, 40 );
 	snprintf( buffer, buflen, "IN %s,(C)", buffer2 ); *length = 1;
@@ -521,8 +521,8 @@ disassemble_ed( libspectrum_word address, char *buffer, size_t buflen,
       break;
 
     case 0x01: case 0x09:
-      if( b == 0x71 ) {
-	snprintf( buffer, buflen, "OUT (C),0" ); *length = 1;
+      if (b == 0x71 ) {
+	snprintf( buffer, buflen, "OUT (C),0"); *length = 1;
       } else {
 	dest_reg( address, USE_HL, buffer2, 40 );
 	snprintf( buffer, buflen, "OUT (C),%s", buffer2 ); *length = 1;
@@ -541,14 +541,14 @@ disassemble_ed( libspectrum_word address, char *buffer, size_t buflen,
       break;
 
     case 0x04: case 0x0c:
-      snprintf( buffer, buflen, "NEG" ); *length = 1;
+      snprintf( buffer, buflen, "NEG"); *length = 1;
       break;
 
     case 0x05: case 0x0d:
-      if( b == 0x4d ) {
-	snprintf( buffer, buflen, "RETI" ); *length = 1;
+      if (b == 0x4d ) {
+	snprintf( buffer, buflen, "RETI"); *length = 1;
       } else {
-	snprintf( buffer, buflen, "RETN" ); *length = 1;
+	snprintf( buffer, buflen, "RETN"); *length = 1;
       }
       break;
 
@@ -574,8 +574,8 @@ disassemble_ed( libspectrum_word address, char *buffer, size_t buflen,
       break;
 
     }
-  } else if( b < 0xa0 ) {
-    snprintf( buffer, buflen, "NOPD" ); *length = 1;
+  } else if (b < 0xa0 ) {
+    snprintf( buffer, buflen, "NOPD"); *length = 1;
   } else {
     // Note: 0xbc to 0xbf already removed
     snprintf( buffer, buflen, "%s", opcode_101xxxxx[ b & 0x1f ] ); *length = 1;
@@ -591,8 +591,8 @@ disassemble_ddfd_cb( libspectrum_word address, char offset,
   libspectrum_byte b = readbyte_internal( address );
   char buffer2[40], buffer3[40];
 
-  if( b < 0x40 ) {
-    if( ( b & 0x07 ) == 0x06 ) {
+  if (b < 0x40 ) {
+    if (( b & 0x07 ) == 0x06 ) {
       ix_iy_offset( buffer2, 40, use_hl, offset );
       snprintf( buffer, buflen, "%s %s", rotate_op( b ), buffer2 );
       *length = 1;
@@ -603,12 +603,12 @@ disassemble_ddfd_cb( libspectrum_word address, char offset,
 		rotate_op( b ), buffer3 );
       *length = 1;
     }
-  } else if( b < 0x80 ) {
+  } else if (b < 0x80 ) {
     ix_iy_offset( buffer2, 40, use_hl, offset );
     snprintf( buffer, buflen, "BIT %d,%s", ( b >> 3 ) & 0x07, buffer2 );
     *length = 1;
   } else {
-    if( ( b & 0x07 ) == 0x06 ) {
+    if (( b & 0x07 ) == 0x06 ) {
       ix_iy_offset( buffer2, 40, use_hl, offset );
       snprintf( buffer, buflen, "%s %d,%s", bit_op( b ), bit_op_bit( b ),
 		buffer2 );
@@ -656,7 +656,7 @@ get_offset( char *buffer, size_t buflen, libspectrum_word address,
 static const char *
 reg_pair( libspectrum_byte b, enum hl_type use_hl )
 {
-  switch( ( b >> 4 ) & 0x03 ) {
+  switch (( b >> 4 ) & 0x03 ) {
   case 0: return "BC";
   case 1: return "DE";
   case 2: return hl_ix_iy( use_hl );
@@ -669,7 +669,7 @@ reg_pair( libspectrum_byte b, enum hl_type use_hl )
 static const char *
 hl_ix_iy( enum hl_type use_hl )
 {
-  switch( use_hl ) {
+  switch (use_hl ) {
   case USE_HL: return "HL";
   case USE_IX: return "IX";
   case USE_IY: return "IY";
@@ -682,7 +682,7 @@ static void
 ix_iy_offset( char *buffer, size_t buflen, enum hl_type use_hl,
 	      libspectrum_byte offset )
 {
-  if( offset < 0x80 ) {
+  if (offset < 0x80 ) {
     snprintf( buffer, buflen,
 	      debugger_output_base == 10 ? "(%s+%d)" : "(%s+%02X)",
 	      hl_ix_iy( use_hl ), offset );
@@ -719,13 +719,13 @@ single_reg( int i, enum hl_type use_hl, libspectrum_byte offset,
 {
   char buffer2[40];
 
-  if( i == 0x04 && use_hl != USE_HL ) {
+  if (i == 0x04 && use_hl != USE_HL ) {
     snprintf( buffer, buflen, "%sh", hl_ix_iy( use_hl ) );
     return 0;
-  } else if( i == 0x05 && use_hl != USE_HL ) {
+  } else if (i == 0x05 && use_hl != USE_HL ) {
     snprintf( buffer, buflen, "%sl", hl_ix_iy( use_hl ) );
     return 0;
-  } else if( i == 0x06 && use_hl != USE_HL ) {
+  } else if (i == 0x06 && use_hl != USE_HL ) {
     ix_iy_offset( buffer2, 40, use_hl, offset );
     snprintf( buffer, buflen, "%s", buffer2 );
     return 1;
@@ -802,23 +802,23 @@ debugger_search_instruction( libspectrum_word address, int delta )
   size_t j, length, longest;
   int i;
 
-  if( !delta ) return address;
+  if (!delta ) return address;
 
-  if( delta > 0 ) {
+  if (delta > 0 ) {
 
-    for( i = 0; i < delta; i++ ) {
+    for (i = 0; i < delta; i++) {
       debugger_disassemble( NULL, 0, &length, address );
       address += length;
     }
 
   } else {
 
-    for( i = 0; i > delta; i-- ) {
+    for (i = 0; i > delta; i-- ) {
       /* Look for _longest_ opcode which produces the current top in second
          place */
       for( longest = 1, j = 1; j <= 8; j++ ) {
         debugger_disassemble( NULL, 0, &length, address - j );
-        if( length == j ) longest = j;
+        if (length == j ) longest = j;
       }
       address -= longest;
     }
@@ -864,37 +864,37 @@ run_test( libspectrum_byte *data, size_t data_length, const char *expected )
 
   debugger_disassemble( disassembly, sizeof( disassembly ), &length, 0x4000 );
 
-  if( strcmp( disassembly, expected ) ) return 1;
-  if( length != data_length ) return 1;
+  if (strcmp( disassembly, expected ) ) return 1;
+  if (length != data_length ) return 1;
 
   return 0;
 }
 
 int
-debugger_disassemble_unittest( void )
+debugger_disassemble_unittest(void)
 {
   int r = 0;
 
-  r += run_test( test1_data, sizeof( test1_data ), "NOP" );
+  r += run_test( test1_data, sizeof( test1_data ), "NOP");
 
-  r += run_test( test2_data, sizeof( test2_data ), "NOP" );
-  r += run_test( test3_data, sizeof( test3_data ), "ADD IX,BC" );
-  r += run_test( test4_data, sizeof( test4_data ), "NOP" );
-  r += run_test( test5_data, sizeof( test5_data ), "RLC (IX+55)" );
+  r += run_test( test2_data, sizeof( test2_data ), "NOP");
+  r += run_test( test3_data, sizeof( test3_data ), "ADD IX,BC");
+  r += run_test( test4_data, sizeof( test4_data ), "NOP");
+  r += run_test( test5_data, sizeof( test5_data ), "RLC (IX+55)");
 
-  r += run_test( test6_data, sizeof( test6_data ), "NOP" );
-  r += run_test( test7_data, sizeof( test7_data ), "ADD IY,BC" );
-  r += run_test( test8_data, sizeof( test8_data ), "NOP" );
-  r += run_test( test9_data, sizeof( test9_data ), "RLC (IY+55)" );
+  r += run_test( test6_data, sizeof( test6_data ), "NOP");
+  r += run_test( test7_data, sizeof( test7_data ), "ADD IY,BC");
+  r += run_test( test8_data, sizeof( test8_data ), "NOP");
+  r += run_test( test9_data, sizeof( test9_data ), "RLC (IY+55)");
 
-  r += run_test( test10_data, sizeof( test10_data ), "ADD IY,BC" );
-  r += run_test( test11_data, sizeof( test11_data ), "ADD IX,BC" );
+  r += run_test( test10_data, sizeof( test10_data ), "ADD IY,BC");
+  r += run_test( test11_data, sizeof( test11_data ), "ADD IX,BC");
 
-  r += run_test( test12_data, sizeof( test12_data ), "ADD IY,BC" );
-  r += run_test( test13_data, sizeof( test13_data ), "ADD IX,BC" );
+  r += run_test( test12_data, sizeof( test12_data ), "ADD IY,BC");
+  r += run_test( test13_data, sizeof( test13_data ), "ADD IX,BC");
 
-  r += run_test( test14_data, sizeof( test14_data ), "LD A,(HL)" );
-  r += run_test( test15_data, sizeof( test15_data ), "LD A,(IX+55)" );
+  r += run_test( test14_data, sizeof( test14_data ), "LD A,(HL)");
+  r += run_test( test15_data, sizeof( test15_data ), "LD A,(IX+55)");
 
   return r;
 }

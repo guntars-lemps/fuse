@@ -59,8 +59,8 @@ typedef struct widget_t {
 int widget_end_widget( widget_finish_state state );
 int widget_end_all( widget_finish_state state );
 
-int widget_timer_init( void );
-int widget_timer_end( void );
+int widget_timer_init(void);
+int widget_timer_end(void);
 
 void widget_putpixel( int x, int y, int colour );
 void widget_rectangle( int x, int y, int w, int h, int col );

@@ -48,7 +48,7 @@ menu_select_roms_with_title( const char *title, size_t start, size_t count,
 }
 
 void
-ui_breakpoints_updated( void )
+ui_breakpoints_updated(void)
 {
   // Do nothing
 }
@@ -66,7 +66,7 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type, int inputs )
 }
 
 int
-ui_debugger_activate( void )
+ui_debugger_activate(void)
 {
   // No error
   return 0;
@@ -87,14 +87,14 @@ ui_debugger_disassemble( libspectrum_word addr )
 }
 
 int
-ui_debugger_update( void )
+ui_debugger_update(void)
 {
   // No error
   return 0;
 }
 
 int
-ui_end( void )
+ui_end(void)
 {
   // No error
   return 0;
@@ -108,7 +108,7 @@ ui_error_specific( ui_error_level severity, const char *message )
 }
 
 int
-ui_event( void )
+ui_event(void)
 {
   // No error
   return 0;
@@ -199,7 +199,7 @@ ui_tape_browser_update( ui_tape_browser_update_type change,
 }
 
 int
-ui_widgets_reset( void )
+ui_widgets_reset(void)
 {
   // No error
   return 0;
@@ -212,20 +212,20 @@ uidisplay_area( int x, int y, int w, int h )
 }
 
 int
-uidisplay_end( void )
+uidisplay_end(void)
 {
   // No error
   return 0;
 }
 
 void
-uidisplay_frame_end( void )
+uidisplay_frame_end(void)
 {
   // Do nothing
 }
 
 int
-uidisplay_hotswap_gfx_mode( void )
+uidisplay_hotswap_gfx_mode(void)
 {
   // No error
   return 0;

@@ -85,10 +85,10 @@ typedef enum startup_manager_module {
 typedef int (*startup_manager_init_fn)( void *context );
 
 // Callback for each module's end function
-typedef void (*startup_manager_end_fn)( void );
+typedef void (*startup_manager_end_fn)(void);
 
 // Initialise the startup manager itself
-void startup_manager_init( void );
+void startup_manager_init(void);
 
 // Register an module with the startup manager
 void startup_manager_register(
@@ -102,9 +102,9 @@ void startup_manager_register_no_dependencies(
   void *init_context, startup_manager_end_fn end_fn );
 
 // Run all the registered init functions in the right order
-int startup_manager_run( void );
+int startup_manager_run(void);
 
 // Run all the end functions in inverse order of the init functions
-void startup_manager_run_end( void );
+void startup_manager_run_end(void);
 
 #endif // #ifndef FUSE_STARTUP_MANAGER_H

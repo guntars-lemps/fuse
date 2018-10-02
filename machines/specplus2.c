@@ -38,7 +38,7 @@
 
 // The +2 emulation just uses the 128K routines
 
-static int specplus2_reset( void );
+static int specplus2_reset(void);
 
 int specplus2_init( fuse_machine_info *machine )
 {
@@ -63,19 +63,19 @@ int specplus2_init( fuse_machine_info *machine )
 }
 
 static int
-specplus2_reset( void )
+specplus2_reset(void)
 {
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_plus2_0,
                             settings_default.rom_plus2_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_plus2_1,
                             settings_default.rom_plus2_1, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   error = spec128_common_reset( 1 );
-  if( error ) return error;
+  if (error ) return error;
 
   periph_clear();
   machines_periph_128();

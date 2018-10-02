@@ -34,7 +34,7 @@
 // The colour palette in use
 extern libspectrum_dword gtkdisplay_colours[ 16 ];
 
-void gtkdisplay_update_geometry( void );
+void gtkdisplay_update_geometry(void);
 
 /*
  * Keyboard routines (gtkkeyboard.c)
@@ -124,7 +124,7 @@ int gtkui_get_monospaced_font( gtkui_font *font );
 void gtkui_free_font( gtkui_font font );
 void gtkui_set_font( GtkWidget *widget, gtkui_font font );
 
-int gtkui_menubar_get_height( void );
+int gtkui_menubar_get_height(void);
 
 /*
  * The menu data (menu_data.c)
@@ -154,7 +154,7 @@ extern const char *gtkpixmap_mouse_active[];
 
 
 int gtkstatusbar_create( GtkBox *parent );
-int gtkstatusbar_get_height( void );
+int gtkstatusbar_get_height(void);
 int gtkstatusbar_set_visibility( int visible );
 void gtkstatusbar_update_machine( const char *name );
 
@@ -170,6 +170,6 @@ int gtkui_list_get_cursor( GtkTreeView *list );
  * Dialog box reset
  */
 
-void gtkui_pokefinder_clear( void );
+void gtkui_pokefinder_clear(void);
 
 #endif // #ifndef FUSE_GTKINTERNALS_H

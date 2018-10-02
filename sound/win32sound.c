@@ -63,7 +63,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   memset( &pcmwf, 0, sizeof( WAVEFORMATEX ) );
 
   pcmwf.cbSize = 0;
-  if( settings_current.sound_force_8bit ) {
+  if (settings_current.sound_force_8bit ) {
     pcmwf.wBitsPerSample = 8;
     sixteenbit = 0;
   } else {
@@ -80,7 +80,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   result = waveOutOpen( &hwaveout, WAVE_MAPPER,
                         &pcmwf, ( DWORD_PTR ) sound_callback, 0,
                         CALLBACK_FUNCTION );
-  if( result != MMSYSERR_NOERROR )
+  if (result != MMSYSERR_NOERROR )
     sound_display_mmresult( "waveOutOpen", result );
 
   buffers[0] = buffer1;
@@ -98,34 +98,34 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 }
 
 void
-sound_lowlevel_end( void )
+sound_lowlevel_end(void)
 {
   MMRESULT result;
 
   // reset the sound
   result = waveOutReset( hwaveout );
-  if( result != MMSYSERR_NOERROR ) {
+  if (result != MMSYSERR_NOERROR ) {
     settings_current.sound = 0;
     sound_display_mmresult( "Couldn't stop sound (waveOutReset)", result );
     return;
   }
 
   // unprepare wave headers
-  if( wavehdr[ 0 ].dwFlags & WHDR_PREPARED ) {
+  if (wavehdr[ 0 ].dwFlags & WHDR_PREPARED ) {
     result = waveOutUnprepareHeader( hwaveout, &wavehdr[ 0 ], sizeof( WAVEHDR ) );
-    if( result != MMSYSERR_NOERROR )
+    if (result != MMSYSERR_NOERROR )
       sound_display_mmresult( "waveOutUnprepareHeader", result );
   }
 
-  if( wavehdr[ 1 ].dwFlags & WHDR_PREPARED ) {
+  if (wavehdr[ 1 ].dwFlags & WHDR_PREPARED ) {
     result = waveOutUnprepareHeader( hwaveout, &wavehdr[ 1 ], sizeof( WAVEHDR ) );
-    if( result != MMSYSERR_NOERROR )
+    if (result != MMSYSERR_NOERROR )
       sound_display_mmresult( "waveOutUnprepareHeader", result );
   }
 
   // close the device
   result = waveOutClose( hwaveout );
-  if( result != MMSYSERR_NOERROR ) {
+  if (result != MMSYSERR_NOERROR ) {
     settings_current.sound = 0;
     sound_display_mmresult( "Couldn't stop sound (waveOutClose)", result );
   }
@@ -143,7 +143,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   // Convert to bytes
   unsigned char *bytes = (unsigned char *) data;
   len <<= 1;
-  if( !sixteenbit ) {
+  if (!sixteenbit ) {
     libspectrum_signed_word *src;
     unsigned char *dst;
     int f;
@@ -157,19 +157,19 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
     bytes = buf8;
   }
 
-  if( len > BUFFER_SIZE ) {
+  if (len > BUFFER_SIZE ) {
     ui_error( UI_ERROR_WARNING, "%s: requested wave size exceeds the buffer size", __func__ );
     return;
   }
 
   // wait for the buffer to finish playing
-  if( buffer_used[ current_buffer ] > 0 )
+  if (buffer_used[ current_buffer ] > 0 )
     WaitForSingleObject( sem_sound_done, INFINITE );
 
   // unprepare the header if it's prepared
-  if( wavehdr[ current_buffer ].dwFlags & WHDR_PREPARED ) {
+  if (wavehdr[ current_buffer ].dwFlags & WHDR_PREPARED ) {
     result = waveOutUnprepareHeader( hwaveout, &wavehdr[ current_buffer ], sizeof( WAVEHDR ) );
-    if( result != MMSYSERR_NOERROR )
+    if (result != MMSYSERR_NOERROR )
       sound_display_mmresult( "waveOutUnprepareHeader", result );
   }
 
@@ -183,17 +183,17 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   wavehdr[ current_buffer ].dwLoops |= WHDR_BEGINLOOP | WHDR_ENDLOOP;
 
   result = waveOutPrepareHeader( hwaveout, &wavehdr[ current_buffer ], sizeof( WAVEHDR ) );
-  if( result != MMSYSERR_NOERROR )
+  if (result != MMSYSERR_NOERROR )
     sound_display_mmresult( "waveOutPrepareHeader", result );
 
   // play
   result = waveOutWrite( hwaveout, &wavehdr[ current_buffer ], sizeof( WAVEHDR ) );
-  if( result != MMSYSERR_NOERROR )
+  if (result != MMSYSERR_NOERROR )
     sound_display_mmresult( "waveOutWrite", result );
 
   // FIXME this could be done way easier
   current_buffer++;
-  if( current_buffer == 2 )
+  if (current_buffer == 2 )
     current_buffer = 0;
 }
 
@@ -221,7 +221,7 @@ sound_display_mmresult( const char * const func, MMRESULT result )
 static void CALLBACK
 sound_callback( HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2 )
 {
-  if( uMsg == WOM_DONE ) {
+  if (uMsg == WOM_DONE ) {
     EnterCriticalSection( &sound_lock );
     ReleaseSemaphore( sem_sound_done, 1, NULL );
     LeaveCriticalSection( &sound_lock );

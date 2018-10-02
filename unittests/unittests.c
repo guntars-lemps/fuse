@@ -50,18 +50,18 @@
 #include "unittests.h"
 
 static int
-contention_test( void )
+contention_test(void)
 {
   libspectrum_dword i, checksum = 0, target;
   int error = 0;
 
-  for( i = 0; i < ULA_CONTENTION_SIZE; i++ ) {
+  for (i = 0; i < ULA_CONTENTION_SIZE; i++) {
     // Naive, but it will do for now
     checksum += ula_contention[ i ] * ( i + 1 );
   }
 
-  if( settings_current.late_timings ) {
-    switch( machine_current->machine ) {
+  if (settings_current.late_timings ) {
+    switch (machine_current->machine ) {
     case LIBSPECTRUM_MACHINE_16:
     case LIBSPECTRUM_MACHINE_48:
     case LIBSPECTRUM_MACHINE_SE:
@@ -97,7 +97,7 @@ contention_test( void )
       break;
     }
   } else {
-    switch( machine_current->machine ) {
+    switch (machine_current->machine ) {
     case LIBSPECTRUM_MACHINE_16:
     case LIBSPECTRUM_MACHINE_48:
     case LIBSPECTRUM_MACHINE_SE:
@@ -134,7 +134,7 @@ contention_test( void )
     }
   }
 
-  if( checksum != target ) {
+  if (checksum != target ) {
     printf( "%s: contention test: checksum = %u, expected = %u\n", fuse_progname, checksum, target );
     error = 1;
   }
@@ -143,7 +143,7 @@ contention_test( void )
 }
 
 static int
-floating_bus_test( void )
+floating_bus_test(void)
 {
   libspectrum_dword checksum = 0, target;
   libspectrum_word offset;
@@ -155,8 +155,8 @@ floating_bus_test( void )
   for( tstates = 0; tstates < ULA_CONTENTION_SIZE; tstates++ )
     checksum += machine_current->unattached_port() * ( tstates + 1 );
 
-  if( settings_current.late_timings ) {
-    switch( machine_current->machine ) {
+  if (settings_current.late_timings ) {
+    switch (machine_current->machine ) {
     case LIBSPECTRUM_MACHINE_16:
     case LIBSPECTRUM_MACHINE_48:
       target = 3426156480UL;
@@ -186,7 +186,7 @@ floating_bus_test( void )
       break;
     }
   } else {
-    switch( machine_current->machine ) {
+    switch (machine_current->machine ) {
     case LIBSPECTRUM_MACHINE_16:
     case LIBSPECTRUM_MACHINE_48:
       target = 3427723200UL;
@@ -217,7 +217,7 @@ floating_bus_test( void )
     }
   }
 
-  if( checksum != target ) {
+  if (checksum != target ) {
     printf( "%s: floating bus test: checksum = %u, expected = %u\n", fuse_progname, checksum, target );
     error = 1;
   }
@@ -225,10 +225,10 @@ floating_bus_test( void )
   return error;
 }
 
-#define TEST_ASSERT(x) do { if( !(x) ) { printf("Test assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #x ); return 1; } } while( 0 )
+#define TEST_ASSERT(x) do { if (!(x) ) { printf("Test assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #x ); return 1; } } while( 0 )
 
 static int
-floating_bus_merge_test( void )
+floating_bus_merge_test(void)
 {
   // If peripherals asserted all lines, should see no change
   TEST_ASSERT( periph_merge_floating_bus( 0xaa, 0xff, 0x00 ) == 0xaa );
@@ -248,7 +248,7 @@ floating_bus_merge_test( void )
 }
 
 static int
-mempool_test( void )
+mempool_test(void)
 {
   int pool1, pool2;
   int initial_pools = mempool_get_pools();
@@ -314,7 +314,7 @@ assert_page( libspectrum_word base, libspectrum_word length, int source, int pag
   int base_index = base / MEMORY_PAGE_SIZE;
   int i;
 
-  for( i = 0; i < length / MEMORY_PAGE_SIZE; i++ ) {
+  for (i = 0; i < length / MEMORY_PAGE_SIZE; i++) {
     TEST_ASSERT( memory_map_read[ base_index + i ].source == source );
     TEST_ASSERT( memory_map_read[ base_index + i ].page_num == page );
     TEST_ASSERT( memory_map_write[ base_index + i ].source == source );
@@ -387,7 +387,7 @@ assert_all_ram( int ram0000, int ram4000, int ram8000, int ramc000 )
 }
 
 static int
-paging_test_16( void )
+paging_test_16(void)
 {
   int r = 0;
 
@@ -457,7 +457,7 @@ paging_test_128_locked( int ram8000 )
 }
 
 static int
-paging_test_128( void )
+paging_test_128(void)
 {
   int r = 0;
 
@@ -468,7 +468,7 @@ paging_test_128( void )
 }
 
 static int
-paging_test_plus3( void )
+paging_test_plus3(void)
 {
   int r = 0;
 
@@ -510,7 +510,7 @@ paging_test_plus3( void )
 }
 
 static int
-paging_test_scorpion( void )
+paging_test_scorpion(void)
 {
   int r = 0;
 
@@ -540,7 +540,7 @@ paging_test_scorpion( void )
 }
 
 static int
-paging_test_pentagon512_unlocked( void )
+paging_test_pentagon512_unlocked(void)
 {
   int r = 0;
 
@@ -568,7 +568,7 @@ paging_test_pentagon512_unlocked( void )
 }
 
 static int
-paging_test_pentagon512( void )
+paging_test_pentagon512(void)
 {
   int r = 0;
 
@@ -579,7 +579,7 @@ paging_test_pentagon512( void )
 }
 
 static int
-paging_test_pentagon1024( void )
+paging_test_pentagon1024(void)
 {
   int r = 0;
 
@@ -679,7 +679,7 @@ paging_test_timex( int ram8000, int dock_source, int exrom_source )
 }
 
 static int
-paging_test_se( void )
+paging_test_se(void)
 {
   int r = 0;
 
@@ -701,11 +701,11 @@ paging_test_se( void )
 }
 
 static int
-paging_test( void )
+paging_test(void)
 {
   int r = 0;
 
-  switch( machine_current->machine ) {
+  switch (machine_current->machine ) {
     case LIBSPECTRUM_MACHINE_16:
       r += paging_test_16();
       break;
@@ -751,7 +751,7 @@ paging_test( void )
   /* We don't run the peripheral unit tests with the 16K machine or the
      Spectrum SE so as to avoid the problem with them having different RAM
      pages at 0x8000 and/or 0xc000 */
-  if( machine_current->machine != LIBSPECTRUM_MACHINE_16 &&
+  if (machine_current->machine != LIBSPECTRUM_MACHINE_16 &&
       machine_current->machine != LIBSPECTRUM_MACHINE_SE    )
   {
     r += if1_unittest();
@@ -776,7 +776,7 @@ paging_test( void )
 }
 
 int
-unittests_run( void )
+unittests_run(void)
 {
   int r = 0;
 

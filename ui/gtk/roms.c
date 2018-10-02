@@ -84,7 +84,7 @@ menu_select_roms_with_title( const char *title, size_t start, size_t n,
   vbox = GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( dialog ) ) );
 
   gtk_container_set_border_width( GTK_CONTAINER( vbox ), 5 );
-  for( i = 0; i < n; i++ ) add_rom( vbox, start, i, is_peripheral );
+  for (i = 0; i < n; i++) add_rom( vbox, start, i, is_peripheral );
 
   // Users shouldn't be able to resize this window
   gtk_window_set_resizable( GTK_WINDOW( dialog ), FALSE );
@@ -121,7 +121,7 @@ add_rom( GtkBox *parent, size_t start, gint row, int is_peripheral )
   gtk_entry_set_text( GTK_ENTRY( rom[ row ] ), *setting );
   gtk_box_pack_start( GTK_BOX( hbox ), rom[ row ], FALSE, FALSE, 2 );
 
-  change_button = gtk_button_new_with_label( "Select..." );
+  change_button = gtk_button_new_with_label( "Select...");
   g_signal_connect( G_OBJECT( change_button ), "clicked",
 		    G_CALLBACK( select_new_rom ),
 		    rom[ row ] );
@@ -135,8 +135,8 @@ select_new_rom( GtkWidget *widget GCC_UNUSED, gpointer data )
 
   GtkWidget *entry = data;
 
-  filename = ui_get_open_filename( "Fuse - Select ROM" );
-  if( !filename ) return;
+  filename = ui_get_open_filename( "Fuse - Select ROM");
+  if (!filename ) return;
 
   gtk_entry_set_text( GTK_ENTRY( entry ), filename );
 }
@@ -150,7 +150,7 @@ roms_done( GtkButton *button GCC_UNUSED, gpointer data )
 
   struct callback_info *info = data;
 
-  for( i = 0; i < info->n; i++ ) {
+  for (i = 0; i < info->n; i++) {
 
     setting = settings_get_rom_setting( &settings_current, info->start + i,
 				        info->is_peripheral );

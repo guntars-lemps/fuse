@@ -38,7 +38,7 @@ win32ui_confirm( const char *string )
 
   /* Return value isn't an error code, but signifies whether to undertake
      the action */
-  if( !settings_current.confirm_actions ) return 1;
+  if (!settings_current.confirm_actions ) return 1;
 
   fuse_emulation_pause();
 
@@ -46,7 +46,7 @@ win32ui_confirm( const char *string )
 
   result = MessageBox( fuse_hWnd, string, "Fuse - Confirm",
                        MB_OKCANCEL | MB_ICONQUESTION );
-  if( result == IDOK ) confirm = 1;
+  if (result == IDOK ) confirm = 1;
 
   fuse_emulation_unpause();
 
@@ -59,7 +59,7 @@ ui_confirm_save_specific( const char *message )
   ui_confirm_save_t confirm;
   int result;
 
-  if( !settings_current.confirm_actions ) return UI_CONFIRM_SAVE_DONTSAVE;
+  if (!settings_current.confirm_actions ) return UI_CONFIRM_SAVE_DONTSAVE;
 
   fuse_emulation_pause();
 
@@ -67,7 +67,7 @@ ui_confirm_save_specific( const char *message )
 
   result = MessageBox( fuse_hWnd, message, "Fuse - Confirm",
                        MB_YESNOCANCEL | MB_ICONQUESTION );
-  switch( result )
+  switch (result )
   {
   case IDYES:
     confirm = UI_CONFIRM_SAVE_SAVE;

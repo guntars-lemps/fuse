@@ -89,7 +89,7 @@ win32statusbar_create( HWND hWnd )
                                  IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
   dwStyle = WS_CHILD | SBARS_SIZEGRIP;
-  if( settings_current.statusbar ) dwStyle = dwStyle | WS_VISIBLE;
+  if (settings_current.statusbar ) dwStyle = dwStyle | WS_VISIBLE;
 
   fuse_hStatusWindow = CreateWindowEx( 0, STATUSCLASSNAME, NULL, dwStyle,
                                        0, 0, 0, 0, hWnd, (HMENU)ID_STATUSBAR,
@@ -108,9 +108,9 @@ win32statusbar_set_visibility( int visible )
   int current_state;
 
   current_state = IsWindowVisible( fuse_hStatusWindow );
-  if( current_state == visible ) return 0;
+  if (current_state == visible ) return 0;
 
-  if( visible ) {
+  if (visible ) {
     ShowWindow( fuse_hStatusWindow, SW_SHOW );
   } else {
     ShowWindow( fuse_hStatusWindow, SW_HIDE );
@@ -132,7 +132,7 @@ int
 ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
 {
   // Fix flickering on +2A, +3 and +3e machines because of high refresh rate
-  if( item == UI_STATUSBAR_ITEM_DISK && icons_status[ item ] == state ) return 0;
+  if (item == UI_STATUSBAR_ITEM_DISK && icons_status[ item ] == state ) return 0;
 
   icons_status[ item ] = state;
 
@@ -173,11 +173,11 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
 
   new_icons_part_width = 0;
 
-  for( i=0; i<5; i++ ) {
+  for( i=0; i<5; i++) {
 
-    switch( icons_order[ i ] ) {
+    switch (icons_order[ i ] ) {
       case UI_STATUSBAR_ITEM_DISK:
-        switch( icons_status[ UI_STATUSBAR_ITEM_DISK ] ) {
+        switch (icons_status[ UI_STATUSBAR_ITEM_DISK ] ) {
           case UI_STATUSBAR_STATE_NOT_AVAILABLE:
             src_bmp = NULL; break;
           case UI_STATUSBAR_STATE_ACTIVE:
@@ -198,7 +198,7 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
         break;
 
       case UI_STATUSBAR_ITEM_MICRODRIVE:
-        switch( icons_status[ UI_STATUSBAR_ITEM_MICRODRIVE ] ) {
+        switch (icons_status[ UI_STATUSBAR_ITEM_MICRODRIVE ] ) {
           case UI_STATUSBAR_STATE_NOT_AVAILABLE:
             src_bmp = NULL; break;
           case UI_STATUSBAR_STATE_ACTIVE:
@@ -214,7 +214,7 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
         break;
     }
 
-    if( src_bmp != NULL ) {
+    if (src_bmp != NULL ) {
       new_icons_part_width += icons_part_margin;
 
       // create a bitmap mask on the fly
@@ -251,12 +251,12 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
     }
   }
 
-  if( new_icons_part_width > 0 ) new_icons_part_width += icons_part_margin;
+  if (new_icons_part_width > 0 ) new_icons_part_width += icons_part_margin;
   // FIXME: if the calculations are correction I shouldn't be adding this
   new_icons_part_width += ( 2 * icons_part_margin );
 
   // Resize icons part if needed
-  if( new_icons_part_width != icons_part_width ) {
+  if (new_icons_part_width != icons_part_width ) {
 	icons_part_width = new_icons_part_width;
     win32statusbar_resize( fuse_hWnd, 0, 0 );
   }
@@ -271,7 +271,7 @@ win32statusbar_resize( HWND hWnd, WPARAM wParam GCC_UNUSED, LPARAM lParam )
   // divide status bar
   int parts[3];
 
-  if( LOWORD( lParam ) > 0 ) {
+  if (LOWORD( lParam ) > 0 ) {
     parts[0] = LOWORD( lParam );
   }
   else {

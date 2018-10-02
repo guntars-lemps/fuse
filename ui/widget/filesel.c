@@ -92,14 +92,14 @@ static int widget_scan_compare( const widget_dirent **a,
 				const widget_dirent **b );
 
 #if !defined AMIGA && !defined __MORPHOS__
-static char* widget_getcwd( void );
+static char* widget_getcwd(void);
 #endif // ifndef AMIGA
 static int widget_print_all_filenames( struct widget_dirent **filenames, int n,
 				       int top_left, int current,
 				       const char *dir );
 static int widget_print_filename( struct widget_dirent *filename, int position,
 				  int inverted );
-static int widget_filesel_chdir( void );
+static int widget_filesel_chdir(void);
 
 // The filename to return
 char* widget_filesel_name;
@@ -117,12 +117,12 @@ widget_get_filename( const char *title, int saving )
   data.exit_all_widgets = 1;
   data.title = title;
 
-  if( saving ) {
+  if (saving ) {
     widget_do_fileselector_save( &data );
   } else {
     widget_do_fileselector( &data );
   }
-  if( widget_filesel_name )
+  if (widget_filesel_name )
     filename = utils_safe_strdup( widget_filesel_name );
 
   return filename;
@@ -154,12 +154,12 @@ static int widget_add_filename( int *allocated, int *number,
                                 const char *name ) {
   int i; size_t length;
 
-  if( ++*number > *allocated ) {
+  if (++*number > *allocated ) {
     struct widget_dirent **oldptr = *namelist;
 
     *namelist = realloc( (*namelist), 2 * *allocated * sizeof(**namelist) );
-    if( *namelist == NULL ) {
-      for( i=0; i<*number-1; i++ ) {
+    if (*namelist == NULL ) {
+      for( i=0; i<*number-1; i++) {
 	free( oldptr[i]->name );
 	free( oldptr[i] );
       }
@@ -170,8 +170,8 @@ static int widget_add_filename( int *allocated, int *number,
   }
 
   (*namelist)[*number-1] = malloc( sizeof(***namelist) );
-  if( !(*namelist)[*number-1] ) {
-    for( i=0; i<*number-1; i++ ) {
+  if (!(*namelist)[*number-1] ) {
+    for( i=0; i<*number-1; i++) {
       free( (*namelist)[i]->name );
       free( (*namelist)[i] );
     }
@@ -181,12 +181,12 @@ static int widget_add_filename( int *allocated, int *number,
   }
 
   length = strlen( name ) + 1;
-  if( length < 16 ) length = 16;
+  if (length < 16 ) length = 16;
 
   (*namelist)[*number-1]->name = malloc( length );
-  if( !(*namelist)[*number-1]->name ) {
+  if (!(*namelist)[*number-1]->name ) {
     free( (*namelist)[*number-1] );
-    for( i=0; i<*number-1; i++ ) {
+    for( i=0; i<*number-1; i++) {
       free( (*namelist)[i]->name );
       free( (*namelist)[i] );
     }
@@ -208,8 +208,8 @@ amiga_asl( char *title, BOOL is_saving ) {
   struct FileRequester *filereq;
 
 #ifndef __MORPHOS__
-  if( AslBase = IExec->OpenLibrary( "asl.library", 52 ) ) {
-    if( IAsl = ( struct AslIFace * ) IExec->GetInterface( AslBase,"main",1,NULL ) ) {
+  if (AslBase = IExec->OpenLibrary( "asl.library", 52 ) ) {
+    if (IAsl = ( struct AslIFace * ) IExec->GetInterface( AslBase,"main",1,NULL ) ) {
       filereq = IAsl->AllocAslRequestTags( ASL_FileRequest,
                                            ASLFR_RejectIcons,TRUE,
                                            ASLFR_TitleText,title,
@@ -217,10 +217,10 @@ amiga_asl( char *title, BOOL is_saving ) {
                                            ASLFR_InitialPattern,"#?.(sna|z80|szx|sp|snp|zxs|tap|tzx|csw|rzx|dsk|trd|scl|mdr|dck|hdf|rom|psg|scr|mlt|png|gz|bz2)",
                                            ASLFR_DoPatterns,TRUE,
                                            TAG_DONE );
-      if( err = IAsl->AslRequest( filereq, NULL ) ) {
+      if (err = IAsl->AslRequest( filereq, NULL ) ) {
         filename = ( STRPTR ) IExec->AllocVec( 1024, MEMF_CLEAR );
 #else // #ifndef __MORPHOS__
-  if( AslBase = OpenLibrary( "asl.library", 0 ) ) {
+  if (AslBase = OpenLibrary( "asl.library", 0 ) ) {
       filereq = AllocAslRequestTags( ASL_FileRequest,
                                      ASLFR_RejectIcons,TRUE,
                                      ASLFR_TitleText,title,
@@ -228,7 +228,7 @@ amiga_asl( char *title, BOOL is_saving ) {
                                      ASLFR_InitialPattern,"#?.(sna|z80|szx|sp|snp|zxs|tap|tzx|csw|rzx|dsk|trd|scl|mdr|dck|hdf|rom|psg|scr|mlt|png|gz|bz2)",
                                      ASLFR_DoPatterns,TRUE,
                                      TAG_DONE );
-      if( err = AslRequest( filereq, NULL ) ) {
+      if (err = AslRequest( filereq, NULL ) ) {
         filename = ( STRPTR ) AllocVec( 1024, MEMF_CLEAR );
 #endif // #ifndef __MORPHOS__
 
@@ -270,12 +270,12 @@ static int widget_scandir( const char *dir, struct widget_dirent ***namelist,
   int done = 0;
 
   *namelist = malloc( 32 * sizeof(**namelist) );
-  if( !*namelist ) return -1;
+  if (!*namelist ) return -1;
 
   allocated = 32; number = 0;
 
   directory = compat_opendir( dir );
-  if( !directory ) {
+  if (!directory ) {
     free( *namelist );
     *namelist = NULL;
     return -1;
@@ -287,11 +287,11 @@ static int widget_scandir( const char *dir, struct widget_dirent ***namelist,
     compat_dir_result_t result =
       compat_readdir( directory, name, sizeof( name ) );
 
-    switch( result )
+    switch (result )
     {
     case COMPAT_DIR_RESULT_OK:
-      if( select_fn( name ) ) {
-        if( widget_add_filename( &allocated, &number, namelist, name ) ) {
+      if (select_fn( name ) ) {
+        if (widget_add_filename( &allocated, &number, namelist, name ) ) {
           compat_closedir( directory );
           return -1;
         }
@@ -303,7 +303,7 @@ static int widget_scandir( const char *dir, struct widget_dirent ***namelist,
       break;
 
     case COMPAT_DIR_RESULT_ERROR:
-      for( i=0; i<number; i++ ) {
+      for( i=0; i<number; i++) {
         free( (*namelist)[i]->name );
         free( (*namelist)[i] );
       }
@@ -315,8 +315,8 @@ static int widget_scandir( const char *dir, struct widget_dirent ***namelist,
 
   }
 
-  if( compat_closedir( directory ) ) {
-    for( i=0; i<number; i++ ) {
+  if (compat_closedir( directory ) ) {
+    for( i=0; i<number; i++) {
       free( (*namelist)[i]->name );
       free( (*namelist)[i] );
     }
@@ -336,7 +336,7 @@ static void widget_scan( char *dir )
   size_t i; int error;
 
   // Free the memory belonging to the files in the previous directory
-  for( i=0; i<widget_numfiles; i++ ) {
+  for( i=0; i<widget_numfiles; i++) {
     free( widget_filenames[i]->name );
     free( widget_filenames[i] );
   }
@@ -344,9 +344,9 @@ static void widget_scan( char *dir )
 
   widget_numfiles = widget_scandir( dir, &widget_filenames,  widget_select_file );
 
-  if( widget_numfiles == (size_t)-1 ) return;
+  if (widget_numfiles == (size_t)-1 ) return;
 
-  for( i=0; i<widget_numfiles; i++ ) {
+  for( i=0; i<widget_numfiles; i++) {
     error = stat( widget_filenames[i]->name, &file_info );
     widget_filenames[i]->mode = error ? 0 : file_info.st_mode;
   }
@@ -359,13 +359,13 @@ static void widget_scan( char *dir )
 static int
 widget_select_file( const char *name )
 {
-  if( !name ) return 0;
+  if (!name ) return 0;
 
   // Skip current directory
-  if( !strcmp( name, "." ) ) return 0;
+  if (!strcmp( name, "." ) ) return 0;
 
   // Skip hidden files/directories
-  if( strlen( name ) > 1 && name[0] == '.' && name[1] != '.' ) return 0;
+  if (strlen( name ) > 1 && name[0] == '.' && name[1] != '.' ) return 0;
 
   return 1;
 }
@@ -376,9 +376,9 @@ static int widget_scan_compare( const struct widget_dirent **a,
   int isdir1 = S_ISDIR( (*a)->mode ),
       isdir2 = S_ISDIR( (*b)->mode );
 
-  if( isdir1 && !isdir2 ) {
+  if (isdir1 && !isdir2 ) {
     return -1;
-  } else if( isdir2 && !isdir1 ) {
+  } else if (isdir2 && !isdir1 ) {
     return 1;
   } else {
     return strcmp( (*a)->name, (*b)->name );
@@ -402,7 +402,7 @@ widget_filesel_draw( void *data )
 #if !defined AMIGA && !defined __MORPHOS__
 
   directory = widget_getcwd();
-  if( directory == NULL ) return 1;
+  if (directory == NULL ) return 1;
 
   widget_scan( directory );
   new_current_file = current_file = 0;
@@ -410,7 +410,7 @@ widget_filesel_draw( void *data )
 
   // Create the dialog box
   error = widget_dialog_with_border( 1, 2, 30, 22 );
-  if( error ) {
+  if (error ) {
     free( directory );
     return error;
   }
@@ -429,8 +429,8 @@ widget_filesel_draw( void *data )
 int widget_filesel_finish( widget_finish_state finished ) {
 
   // Return with null if we didn't finish cleanly
-  if( finished != WIDGET_FINISHED_OK ) {
-    if( widget_filesel_name ) free( widget_filesel_name );
+  if (finished != WIDGET_FINISHED_OK ) {
+    if (widget_filesel_name ) free( widget_filesel_name );
     widget_filesel_name = NULL;
   }
 
@@ -452,26 +452,26 @@ widget_filesel_save_draw( void *data )
 }
 
 #if !defined AMIGA && !defined __MORPHOS__
-static char* widget_getcwd( void )
+static char* widget_getcwd(void)
 {
   char *directory; size_t directory_length;
   char *ptr;
 
   directory_length = 64;
   directory = malloc( directory_length * sizeof( char ) );
-  if( directory == NULL ) {
+  if (directory == NULL ) {
     return NULL;
   }
 
   do {
     ptr = getcwd( directory, directory_length );
-    if( ptr ) break;
-    if( errno == ERANGE ) {
+    if (ptr ) break;
+    if (errno == ERANGE ) {
       ptr = directory;
       directory_length *= 2;
       directory =
 	(char*)realloc( directory, directory_length * sizeof( char ) );
-      if( directory == NULL ) {
+      if (directory == NULL ) {
 	free( ptr );
 	return NULL;
       }
@@ -494,10 +494,10 @@ static int widget_print_all_filenames( struct widget_dirent **filenames, int n,
 
   // Give us a clean box to start with
   error = widget_dialog_with_border( 1, 2, 30, 22 );
-  if( error ) return error;
+  if (error ) return error;
 
   widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, title );
-  if( widget_stringwidth( dir ) > 223 ) {
+  if (widget_stringwidth( dir ) > 223 ) {
     char buffer[128];
     int prefix = widget_stringwidth( "..." ) + 1;
     while( widget_stringwidth( dir ) > 223 - prefix ) dir++;
@@ -507,27 +507,27 @@ static int widget_print_all_filenames( struct widget_dirent **filenames, int n,
     widget_print_title( 24, WIDGET_COLOUR_FOREGROUND, dir );
   }
 
-  if( top_left ) widget_up_arrow( 1, 5, WIDGET_COLOUR_FOREGROUND );
+  if (top_left ) widget_up_arrow( 1, 5, WIDGET_COLOUR_FOREGROUND );
 
   /* Print the filenames, mostly normally, but with the currently
      selected file inverted */
-  for( i = top_left; i < n && i < top_left + ENTRIES_PER_SCREEN; i++ ) {
-    if( i == current ) {
+  for( i = top_left; i < n && i < top_left + ENTRIES_PER_SCREEN; i++) {
+    if (i == current ) {
       widget_print_filename( filenames[i], i-top_left, 1 );
     } else {
       widget_print_filename( filenames[i], i-top_left, 0 );
     }
   }
 
-  if( is_saving )
+  if (is_saving )
   {
     widget_printstring( 12, 22 * 8, WIDGET_COLOUR_FOREGROUND,
-				     "\012RETURN\001 = select" );
+				     "\012RETURN\001 = select");
     widget_printstring_right( 244, 22 * 8, WIDGET_COLOUR_FOREGROUND,
-					   "\012TAB\001 = enter name" );
+					   "\012TAB\001 = enter name");
   }
 
-  if( i < n )
+  if (i < n )
     widget_down_arrow( 1, is_saving ? 20 : 22, WIDGET_COLOUR_FOREGROUND );
 
   // Display that lot
@@ -568,7 +568,7 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
     dot = strrchr( filename->name, '.' );
 
     // if .gz or .bz2, we want the previous component too
-    if( dot &&( !strcasecmp( dot, ".gz" ) || !strcasecmp( dot, ".bz2" ) ) ) {
+    if (dot &&( !strcasecmp( dot, ".gz" ) || !strcasecmp( dot, ".bz2" ) ) ) {
       char *olddot = dot;
       *olddot = '\0';
       dot = strrchr( filename->name, '.' );
@@ -578,13 +578,13 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
     }
 
     // if the dot is at the start of the name, ignore it
-    if( dot == filename->name )
+    if (dot == filename->name )
       dot = 0;
   }
 
-  if( dot ) {
+  if (dot ) {
     // split filename at extension separator
-    if( dot - filename->name < sizeof( buffer ) )
+    if (dot - filename->name < sizeof( buffer ) )
       buffer[dot - filename->name] = '\0';
 
     // get extension width (for display purposes)
@@ -599,7 +599,7 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
   while( ( width = widget_stringwidth( buffer ) ) >=
 	 FILENAME_WIDTH - dir - ( dot ? truncated + suffix_width : 0 ) ) {
     truncated = 2;
-    if( suffix_width >= MAX_SUFFIX_WIDTH ) {
+    if (suffix_width >= MAX_SUFFIX_WIDTH ) {
       suffix_truncated = 2;
       suffix[strlen (suffix) - 1] = '\0';
       suffix_width = widget_stringwidth (suffix);
@@ -607,16 +607,16 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
     else
       buffer[strlen (buffer) - 1] = '\0';
   }
-  if( dir )
+  if (dir )
     strcat (buffer, FUSE_DIR_SEP_STR );
 
   widget_printstring( x + 1, y, foreground, buffer );
-  if( truncated )
+  if (truncated )
     widget_rectangle( x + width + 2, y, 1, 8, 4 );
-  if( dot )
+  if (dot )
     widget_printstring( x + width + 2 + truncated, y,
 			foreground ^ 2, suffix );
-  if( suffix_truncated )
+  if (suffix_truncated )
     widget_rectangle( x + FILENAME_WIDTH, y, 1, 8, 4 );
 
   return 0;
@@ -624,13 +624,13 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
 #endif // ifndef AMIGA
 
 static int
-widget_filesel_chdir( void )
+widget_filesel_chdir(void)
 {
   char *fn, *ptr;
 
   // Get the new directory name
   fn = widget_getcwd();
-  if( fn == NULL ) {
+  if (fn == NULL ) {
     widget_end_widget( WIDGET_FINISHED_CANCEL );
     return 1;
   }
@@ -639,7 +639,7 @@ widget_filesel_chdir( void )
      ( strlen( fn ) + 1 + strlen( widget_filenames[ current_file ]->name ) +
        1 ) * sizeof(char)
   );
-  if( fn == NULL ) {
+  if (fn == NULL ) {
     free( ptr );
     widget_end_widget( WIDGET_FINISHED_CANCEL );
     return 1;
@@ -656,10 +656,10 @@ this will not be fixed in mingw - must use native function instead
 http://thread.gmane.org/gmane.comp.gnu.mingw.user/9197
 */
 
-  if( chdir( fn ) == -1 ) {
-    if( errno == ENOTDIR ) {
+  if (chdir( fn ) == -1 ) {
+    if (errno == ENOTDIR ) {
       widget_filesel_name = fn; fn = NULL;
-      if( exit_all_widgets ) {
+      if (exit_all_widgets ) {
 	widget_end_all( WIDGET_FINISHED_OK );
       } else {
 	widget_end_widget( WIDGET_FINISHED_OK );
@@ -686,13 +686,13 @@ widget_filesel_keyhandler( input_key key )
 #endif
 
   // If there are no files (possible on the Wii), can't really do anything
-  if( widget_numfiles == 0 ) {
-    if( key == INPUT_KEY_Escape ) widget_end_widget( WIDGET_FINISHED_CANCEL );
+  if (widget_numfiles == 0 ) {
+    if (key == INPUT_KEY_Escape ) widget_end_widget( WIDGET_FINISHED_CANCEL );
     return;
   }
 
 #if defined AMIGA || defined __MORPHOS__
-  if( exit_all_widgets ) {
+  if (exit_all_widgets ) {
     widget_end_all( err );
   } else {
     widget_end_widget( err );
@@ -720,28 +720,28 @@ widget_filesel_keyhandler( input_key key )
   case INPUT_KEY_5:
   case INPUT_KEY_h:
   case INPUT_JOYSTICK_LEFT:
-    if( current_file > 0                 ) new_current_file--;
+    if (current_file > 0                 ) new_current_file--;
     break;
 
   case INPUT_KEY_Down:
   case INPUT_KEY_6:
   case INPUT_KEY_j:
   case INPUT_JOYSTICK_DOWN:
-    if( current_file+2 < widget_numfiles ) new_current_file += 2;
+    if (current_file+2 < widget_numfiles ) new_current_file += 2;
     break;
 
   case INPUT_KEY_Up:
   case INPUT_KEY_7: // Up
   case INPUT_KEY_k:
   case INPUT_JOYSTICK_UP:
-    if( current_file > 1                 ) new_current_file -= 2;
+    if (current_file > 1                 ) new_current_file -= 2;
     break;
 
   case INPUT_KEY_Right:
   case INPUT_KEY_8:
   case INPUT_KEY_l:
   case INPUT_JOYSTICK_RIGHT:
-    if( current_file < widget_numfiles-1 ) new_current_file++;
+    if (current_file < widget_numfiles-1 ) new_current_file++;
     break;
 
   case INPUT_KEY_Page_Up:
@@ -752,7 +752,7 @@ widget_filesel_keyhandler( input_key key )
 
   case INPUT_KEY_Page_Down:
     new_current_file = current_file + ENTRIES_PER_SCREEN;
-    if( new_current_file >= widget_numfiles )
+    if (new_current_file >= widget_numfiles )
       new_current_file = widget_numfiles - 1;
     break;
 
@@ -765,23 +765,23 @@ widget_filesel_keyhandler( input_key key )
     break;
 
   case INPUT_KEY_Tab:
-    if( is_saving ) {
+    if (is_saving ) {
       widget_text_t text_data;
       text_data.title = title;
       text_data.allow = WIDGET_INPUT_ASCII;
       text_data.max_length = 30;
       text_data.text[0] = 0;
-      if( widget_do_text( &text_data ) ||
+      if (widget_do_text( &text_data ) ||
 	  !widget_text_text || !*widget_text_text      )
 	break;
-      if( !compat_is_absolute_path( widget_text_text ) ) {
+      if (!compat_is_absolute_path( widget_text_text ) ) {
 							// relative name
         // Get current dir name and allocate space for the leafname
         fn = widget_getcwd();
         ptr = fn;
-        if( fn )
+        if (fn )
     	  fn = realloc( fn, strlen( fn ) + strlen( widget_text_text ) + 2 );
-        if( !fn ) {
+        if (!fn ) {
           free( ptr );
 	  widget_end_widget( WIDGET_FINISHED_CANCEL );
 	  return;
@@ -793,7 +793,7 @@ widget_filesel_keyhandler( input_key key )
 	fn = utils_safe_strdup( widget_text_text );
       }
       widget_filesel_name = fn;
-      if( exit_all_widgets ) {
+      if (exit_all_widgets ) {
 	widget_end_all( WIDGET_FINISHED_OK );
       } else {
 	widget_end_widget( WIDGET_FINISHED_OK );
@@ -804,7 +804,7 @@ widget_filesel_keyhandler( input_key key )
   case INPUT_KEY_Return:
   case INPUT_KEY_KP_Enter:
   case INPUT_JOYSTICK_FIRE_1:
-      if( widget_filesel_chdir() ) return;
+      if (widget_filesel_chdir() ) return;
 
     break;
 
@@ -816,18 +816,18 @@ widget_filesel_keyhandler( input_key key )
   dirtitle = widget_getcwd();
 
   // If we moved the cursor
-  if( new_current_file != current_file ) {
+  if (new_current_file != current_file ) {
 
     /* If we've got off the top or bottom of the currently displayed
        file list, then reset the top-left corner and display the whole
        thing */
-    if( new_current_file < top_left_file ) {
+    if (new_current_file < top_left_file ) {
 
       top_left_file = new_current_file & ~1;
       widget_print_all_filenames( widget_filenames, widget_numfiles,
 				  top_left_file, new_current_file, dirtitle );
 
-    } else if( new_current_file >= top_left_file+ENTRIES_PER_SCREEN ) {
+    } else if (new_current_file >= top_left_file+ENTRIES_PER_SCREEN ) {
 
       top_left_file = new_current_file & ~1;
       top_left_file -= ENTRIES_PER_SCREEN - 2;

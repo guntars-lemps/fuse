@@ -45,7 +45,7 @@ static GArray *registered_modules;
 static GArray *end_functions;
 
 void
-startup_manager_init( void )
+startup_manager_init(void)
 {
   registered_modules =
     g_array_new( FALSE, FALSE, sizeof( registered_module_t ) );
@@ -54,7 +54,7 @@ startup_manager_init( void )
 }
 
 void
-startup_manager_end( void )
+startup_manager_end(void)
 {
   g_array_free( registered_modules, TRUE );
   registered_modules = NULL;
@@ -97,7 +97,7 @@ remove_dependency( startup_manager_module module )
 {
   guint i, j;
 
-  for( i = 0; i < registered_modules->len; i++ ) {
+  for (i = 0; i < registered_modules->len; i++) {
     registered_module_t *registered_module =
       &g_array_index( registered_modules, registered_module_t, i );
     GArray *dependencies = registered_module->dependencies;
@@ -106,7 +106,7 @@ remove_dependency( startup_manager_module module )
       startup_manager_module dependency =
         g_array_index( dependencies, startup_manager_module, j );
 
-      if( dependency == module ) {
+      if (dependency == module ) {
         g_array_remove_index_fast( dependencies, j );
         break;
       }
@@ -115,7 +115,7 @@ remove_dependency( startup_manager_module module )
 }
 
 int
-startup_manager_run( void )
+startup_manager_run(void)
 {
   int progress_made;
   guint i;
@@ -132,16 +132,16 @@ startup_manager_run( void )
       registered_module_t *registered_module =
         &g_array_index( registered_modules, registered_module_t, i );
 
-      if( registered_module->dependencies->len == 0 ) {
+      if (registered_module->dependencies->len == 0 ) {
 
-        if( registered_module->init_fn ) {
+        if (registered_module->init_fn ) {
           error = registered_module->init_fn(
             registered_module->init_context
           );
-          if( error ) return error;
+          if (error ) return error;
         }
 
-        if( registered_module->end_fn )
+        if (registered_module->end_fn )
           g_array_append_val( end_functions, registered_module->end_fn );
 
         remove_dependency( registered_module->module );
@@ -157,7 +157,7 @@ startup_manager_run( void )
   } while( progress_made && registered_modules->len );
 
   // If there are still any modules left to be called, then that's bad
-  if( registered_modules->len ) {
+  if (registered_modules->len ) {
     ui_error( UI_ERROR_ERROR, "%u startup modules could not be called",
               registered_modules->len );
     return 1;
@@ -167,7 +167,7 @@ startup_manager_run( void )
 }
 
 void
-startup_manager_run_end( void )
+startup_manager_run_end(void)
 {
   guint i;
 

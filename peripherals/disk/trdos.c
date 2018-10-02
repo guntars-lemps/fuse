@@ -29,7 +29,7 @@
 int
 trdos_read_spec( trdos_spec_t *spec, const libspectrum_byte *src )
 {
-  if( *src ) return -1;
+  if (*src ) return -1;
 
   spec->first_free_sector   = src[225];
   spec->first_free_track    = src[226];
@@ -37,7 +37,7 @@ trdos_read_spec( trdos_spec_t *spec, const libspectrum_byte *src )
   spec->file_count          = src[228];
   spec->free_sectors        = src[229] + src[230] * 0x100;
   spec->id                  = src[231];
-  if( spec->id != 16 ) return -1;
+  if (spec->id != 16 ) return -1;
 
   memcpy( spec->password, src + 234, 9 );
   spec->deleted_files       = src[244];
@@ -102,7 +102,7 @@ trdos_read_fat( trdos_boot_info_t *info, const libspectrum_byte *sectors,
   info->basic_files_count = 0;
 
   // FAT sectors
-  for( i = 0; i < 8; i++ ) {
+  for (i = 0; i < 8; i++) {
     sector = sectors + i * seclen * 2; // interleaved
 
     /* Note: some TR-DOS versions like 5.04T have a turbo format with
@@ -114,20 +114,20 @@ trdos_read_fat( trdos_boot_info_t *info, const libspectrum_byte *sectors,
     // FAT entries
     for( j = 0; j < 16; j++ ) {
       error = trdos_read_dirent( &entry, sector + j * 16 );
-      if( error ) return 0;
+      if (error ) return 0;
 
       // Basic files
-      if( entry.filename[0] > 0x01 &&
+      if (entry.filename[0] > 0x01 &&
           entry.file_extension == 'B' ) {
 
         // Boot file
-        if( !info->have_boot_file &&
+        if (!info->have_boot_file &&
             !strncmp( (const char *)entry.filename, "boot    ", 8 ) ) {
           info->have_boot_file = 1;
         }
 
         // First basic program
-        if( info->basic_files_count == 0 ) {
+        if (info->basic_files_count == 0 ) {
           memcpy( info->first_basic_file, entry.filename, 8 );
         }
 

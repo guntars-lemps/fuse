@@ -31,7 +31,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 }
 
 void
-sound_lowlevel_end( void )
+sound_lowlevel_end(void)
 {
   fuse_abort();
 }

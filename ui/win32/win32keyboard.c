@@ -57,7 +57,7 @@ oem_keysyms_remap( WPARAM wParam )
   libspectrum_dword unshifted_char;
 
   mapped_code = MapVirtualKey( wParam, MAPVK_VK_TO_CHAR );
-  if( !mapped_code ) return INPUT_KEY_NONE;
+  if (!mapped_code ) return INPUT_KEY_NONE;
 
   unshifted_char = LOWORD( mapped_code );
   ptr = g_hash_table_lookup( oem_keysyms_hash, &unshifted_char );
@@ -66,7 +66,7 @@ oem_keysyms_remap( WPARAM wParam )
 }
 
 void
-win32keyboard_init( void )
+win32keyboard_init(void)
 {
   keysyms_map_t *ptr3;
 
@@ -77,7 +77,7 @@ win32keyboard_init( void )
 }
 
 void
-win32keyboard_end( void )
+win32keyboard_end(void)
 {
   g_hash_table_destroy( oem_keysyms_hash );
 }
@@ -88,7 +88,7 @@ win32keyboard_keypress( WPARAM wParam, LPARAM lParam )
   input_key fuse_keysym;
   input_event_t fuse_event;
 
-  switch( wParam ) {
+  switch (wParam ) {
   case VK_OEM_1:
   case VK_OEM_2:
   case VK_OEM_3:
@@ -109,7 +109,7 @@ win32keyboard_keypress( WPARAM wParam, LPARAM lParam )
     break;
   }
 
-  if( fuse_keysym == INPUT_KEY_NONE ) return;
+  if (fuse_keysym == INPUT_KEY_NONE ) return;
 
   fuse_event.type = INPUT_EVENT_KEYPRESS;
   fuse_event.types.key.native_key = fuse_keysym;
@@ -124,7 +124,7 @@ win32keyboard_keyrelease( WPARAM wParam, LPARAM lParam )
   input_key fuse_keysym;
   input_event_t fuse_event;
 
-  switch( wParam ) {
+  switch (wParam ) {
   case VK_OEM_1:
   case VK_OEM_2:
   case VK_OEM_3:
@@ -145,7 +145,7 @@ win32keyboard_keyrelease( WPARAM wParam, LPARAM lParam )
     break;
   }
 
-  if( fuse_keysym == INPUT_KEY_NONE ) return;
+  if (fuse_keysym == INPUT_KEY_NONE ) return;
 
   fuse_event.type = INPUT_EVENT_KEYRELEASE;
   fuse_event.types.key.native_key = fuse_keysym;

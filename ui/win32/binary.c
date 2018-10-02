@@ -66,13 +66,13 @@ menu_file_loadbinarydata( int action )
 
   fuse_emulation_pause();
 
-  info.dialog_title = (TCHAR *) TEXT( "Fuse - Load Binary Data" );
+  info.dialog_title = (TCHAR *) TEXT( "Fuse - Load Binary Data");
 
   info.filename = ui_get_open_filename( info.dialog_title );
-  if( !info.filename ) { fuse_emulation_unpause(); return; }
+  if (!info.filename ) { fuse_emulation_unpause(); return; }
 
   error = utils_read_file( info.filename, &info.file );
-  if( error ) { free( info.filename ); fuse_emulation_unpause(); return; }
+  if (error ) { free( info.filename ); fuse_emulation_unpause(); return; }
 
   info.on_change_filename = &change_load_filename;
   info.on_execute = &load_data;
@@ -92,7 +92,7 @@ binarydata_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
   struct binary_info *info = NULL;
 
-  switch( uMsg ) {
+  switch (uMsg ) {
     case WM_INITDIALOG: {
       TCHAR buffer[80];
       info = ( struct binary_info * ) lParam;
@@ -105,7 +105,7 @@ binarydata_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
       SendDlgItemMessage( hwndDlg, IDC_BINARY_STATIC_PATH, WM_SETTEXT,
                           0, ( LPARAM ) info->filename );
 
-      if( info->file.length != -1 ) {
+      if (info->file.length != -1 ) {
         _sntprintf( buffer, 80, "%lu", (unsigned long) info->file.length );
         SendDlgItemMessage( hwndDlg, IDC_BINARY_EDIT_LENGTH, WM_SETTEXT,
                             0, ( LPARAM ) buffer );
@@ -113,7 +113,7 @@ binarydata_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
       return FALSE;
     }
     case WM_COMMAND:
-      switch( LOWORD( wParam ) ) {
+      switch (LOWORD( wParam ) ) {
         case IDC_BINARY_BUTTON_BROWSE:
           info = ( struct binary_info * ) GetWindowLongPtr( hwndDlg, GWLP_USERDATA );
           info->on_change_filename( hwndDlg, ( LONG_PTR ) info ) ;
@@ -148,11 +148,11 @@ change_load_filename( HWND hwndDlg, LONG_PTR user_data )
   TCHAR buffer[80];
   int error;
 
-  new_filename = ui_get_open_filename( "Fuse - Load Binary Data" );
-  if( !new_filename ) return;
+  new_filename = ui_get_open_filename( "Fuse - Load Binary Data");
+  if (!new_filename ) return;
 
   error = utils_read_file( new_filename, &new_file );
-  if( error ) { free( new_filename ); return; }
+  if (error ) { free( new_filename ); return; }
 
   // Remove the data for the old file
   utils_close_file( &info->file );
@@ -193,16 +193,16 @@ load_data( HWND hwndDlg, LONG_PTR user_data )
   errno = 0;
   base = ( !_tcsncmp( _T("0x"), temp_buffer, strlen( _T("0x") ) ) )? 16 : 10;
   length = _tcstol( temp_buffer, &endptr, base );
-  if( errno || length < 1 || length > 0x10000 || endptr == temp_buffer ) {
+  if (errno || length < 1 || length > 0x10000 || endptr == temp_buffer ) {
     free( temp_buffer );
-    ui_error( UI_ERROR_ERROR, "Length must be between 1 and 65536" );
+    ui_error( UI_ERROR_ERROR, "Length must be between 1 and 65536");
     hwnd_control = GetDlgItem( hwndDlg, IDC_BINARY_EDIT_LENGTH );
     SendMessage( hwndDlg, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
   }
   free( temp_buffer );
 
-  if( length > info->file.length ) {
+  if (length > info->file.length ) {
     ui_error( UI_ERROR_ERROR,
 	      "'%s' contains only %lu bytes",
 	      info->filename, (unsigned long)info->file.length );
@@ -219,23 +219,23 @@ load_data( HWND hwndDlg, LONG_PTR user_data )
   errno = 0;
   base = ( !_tcsncmp( _T("0x"), temp_buffer, strlen( _T("0x") ) ) )? 16 : 10;
   start = _tcstol( temp_buffer, &endptr, base );
-  if( errno || start < 0 || start > 0xffff || endptr == temp_buffer ) {
+  if (errno || start < 0 || start > 0xffff || endptr == temp_buffer ) {
     free( temp_buffer );
-    ui_error( UI_ERROR_ERROR, "Start must be between 0 and 65535" );
+    ui_error( UI_ERROR_ERROR, "Start must be between 0 and 65535");
     hwnd_control = GetDlgItem( hwndDlg, IDC_BINARY_EDIT_START );
     SendMessage( hwndDlg, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
   }
   free( temp_buffer );
 
-  if( start + length > 0x10000 ) {
-    ui_error( UI_ERROR_ERROR, "Block ends after address 65535" );
+  if (start + length > 0x10000 ) {
+    ui_error( UI_ERROR_ERROR, "Block ends after address 65535");
     hwnd_control = GetDlgItem( hwndDlg, IDC_BINARY_EDIT_LENGTH );
     SendMessage( hwndDlg, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
   }
 
-  for( i = 0; i < length; i++ )
+  for (i = 0; i < length; i++)
     writebyte_internal( start + i, info->file.buffer[ i ] );
 
   EndDialog( hwndDlg, 0 );
@@ -248,10 +248,10 @@ menu_file_savebinarydata( int action )
 
   fuse_emulation_pause();
 
-  info.dialog_title = (TCHAR *) TEXT( "Fuse - Save Binary Data" );
+  info.dialog_title = (TCHAR *) TEXT( "Fuse - Save Binary Data");
 
   info.filename = ui_get_save_filename( info.dialog_title );
-  if( !info.filename ) { fuse_emulation_unpause(); return; }
+  if (!info.filename ) { fuse_emulation_unpause(); return; }
 
   info.file.length = -1; // let the dialog know to leave length box blank
   info.on_change_filename = &change_save_filename;
@@ -272,8 +272,8 @@ change_save_filename( HWND hwndDlg, LONG_PTR user_data )
   struct binary_info *info = ( struct binary_info * ) user_data;
   TCHAR *new_filename;
 
-  new_filename = ui_get_save_filename( "Fuse - Save Binary Data" );
-  if( !new_filename ) return;
+  new_filename = ui_get_save_filename( "Fuse - Save Binary Data");
+  if (!new_filename ) return;
 
   free( info->filename );
 
@@ -306,9 +306,9 @@ save_data( HWND hwndDlg, LONG_PTR user_data )
   errno = 0;
   base = ( !_tcsncmp( _T("0x"), temp_buffer, strlen( _T("0x") ) ) )? 16 : 10;
   length = _tcstol( temp_buffer, &endptr, base );
-  if( errno || length < 1 || length > 0x10000 || endptr == temp_buffer ) {
+  if (errno || length < 1 || length > 0x10000 || endptr == temp_buffer ) {
     free( temp_buffer );
-    ui_error( UI_ERROR_ERROR, "Length must be between 1 and 65536" );
+    ui_error( UI_ERROR_ERROR, "Length must be between 1 and 65536");
     hwnd_control = GetDlgItem( hwndDlg, IDC_BINARY_EDIT_LENGTH );
     SendMessage( hwndDlg, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
@@ -325,24 +325,24 @@ save_data( HWND hwndDlg, LONG_PTR user_data )
   errno = 0;
   base = ( !_tcsncmp( _T("0x"), temp_buffer, strlen( _T("0x") ) ) )? 16 : 10;
   start = _tcstol( temp_buffer, &endptr, base );
-  if( errno || start < 0 || start > 0xffff || endptr == temp_buffer ) {
+  if (errno || start < 0 || start > 0xffff || endptr == temp_buffer ) {
     free( temp_buffer );
-    ui_error( UI_ERROR_ERROR, "Start must be between 0 and 65535" );
+    ui_error( UI_ERROR_ERROR, "Start must be between 0 and 65535");
     hwnd_control = GetDlgItem( hwndDlg, IDC_BINARY_EDIT_START );
     SendMessage( hwndDlg, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
   }
   free( temp_buffer );
 
-  if( start + length > 0x10000 ) {
-    ui_error( UI_ERROR_ERROR, "Block ends after address 65535" );
+  if (start + length > 0x10000 ) {
+    ui_error( UI_ERROR_ERROR, "Block ends after address 65535");
     hwnd_control = GetDlgItem( hwndDlg, IDC_BINARY_EDIT_LENGTH );
     SendMessage( hwndDlg, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
   }
 
   error = utils_save_binary( start, length, info->filename );
-  if( error ) return;
+  if (error ) return;
 
   EndDialog( hwndDlg, 0 );
 }

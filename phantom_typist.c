@@ -143,7 +143,7 @@ struct state_info_t {
   keyboard_key_name keys_to_press[2];
 
   // The function used to determine the next state
-  phantom_typist_state_t (*next_state_fn)( void );
+  phantom_typist_state_t (*next_state_fn)(void);
 
   // The next state to move to - used if next_state_fn is NULL
   phantom_typist_state_t next_state;
@@ -153,9 +153,9 @@ struct state_info_t {
 };
 
 // Next state selector functions
-static phantom_typist_state_t t_colon_or_quote( void );
-static phantom_typist_state_t code_or_enter( void );
-static phantom_typist_state_t next_command_or_end( void );
+static phantom_typist_state_t t_colon_or_quote(void);
+static phantom_typist_state_t code_or_enter(void);
+static phantom_typist_state_t next_command_or_end(void);
 
 // Reset function
 static void phantom_typist_reset( int hard_reset );
@@ -224,7 +224,7 @@ phantom_typist_init( void *context )
 }
 
 void
-phantom_typist_register_startup( void )
+phantom_typist_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_PHANTOM_TYPIST, dependencies,
@@ -244,7 +244,7 @@ get_highlevel_mode( libspectrum_machine machine )
 {
   phantom_typist_highlevel_mode_t highlevel_mode;
 
-  switch( machine ) {
+  switch (machine ) {
     case LIBSPECTRUM_MACHINE_16:
     case LIBSPECTRUM_MACHINE_48:
     case LIBSPECTRUM_MACHINE_48_NTSC:
@@ -283,7 +283,7 @@ get_highlevel_mode( libspectrum_machine machine )
 }
 
 static void
-set_state_waiting( void )
+set_state_waiting(void)
 {
   command_count = 0;
   phantom_typist_state = PHANTOM_TYPIST_STATE_WAITING;
@@ -298,25 +298,25 @@ phantom_typist_activate( libspectrum_machine machine, int needs_code )
   phantom_typist_highlevel_mode_t highlevel_mode;
   const char *setting = settings_current.phantom_typist_mode;
 
-  if( strcasecmp( setting, "Keyword" ) == 0 ) {
+  if (strcasecmp( setting, "Keyword" ) == 0 ) {
     highlevel_mode = PHANTOM_TYPIST_HIGHLEVEL_MODE_KEYWORD;
-  } else if( strcasecmp( setting, "Keystroke" ) == 0) {
+  } else if (strcasecmp( setting, "Keystroke" ) == 0) {
     highlevel_mode = PHANTOM_TYPIST_HIGHLEVEL_MODE_KEYSTROKE;
-  } else if( strcasecmp( setting, "Menu" ) == 0) {
+  } else if (strcasecmp( setting, "Menu" ) == 0) {
     highlevel_mode = PHANTOM_TYPIST_HIGHLEVEL_MODE_MENU;
-  } else if( strcasecmp( setting, "Plus 2A" ) == 0 ||
+  } else if (strcasecmp( setting, "Plus 2A" ) == 0 ||
              strcasecmp( setting, "plus2a" ) == 0) {
     highlevel_mode = PHANTOM_TYPIST_HIGHLEVEL_MODE_PLUS2A;
-  } else if( strcasecmp( setting, "Plus 3" ) == 0 ||
+  } else if (strcasecmp( setting, "Plus 3" ) == 0 ||
              strcasecmp( setting, "plus3" ) == 0) {
     highlevel_mode = PHANTOM_TYPIST_HIGHLEVEL_MODE_PLUS3;
-  } else if( strcasecmp( setting, "Auto" ) == 0) {
+  } else if (strcasecmp( setting, "Auto" ) == 0) {
     highlevel_mode = get_highlevel_mode( machine );
   } else {
     highlevel_mode = PHANTOM_TYPIST_HIGHLEVEL_MODE_KEYWORD;
   }
 
-  switch( highlevel_mode ) {
+  switch (highlevel_mode ) {
     case PHANTOM_TYPIST_HIGHLEVEL_MODE_KEYWORD:
     default:
       phantom_typist_mode = needs_code ?
@@ -354,16 +354,16 @@ phantom_typist_activate( libspectrum_machine machine, int needs_code )
 }
 
 void
-phantom_typist_activate_disk( void )
+phantom_typist_activate_disk(void)
 {
   phantom_typist_mode = PHANTOM_TYPIST_MODE_ENTER;
   set_state_waiting();
 }
 
 void
-phantom_typist_deactivate( void )
+phantom_typist_deactivate(void)
 {
-  if( phantom_typist_is_active() ) {
+  if (phantom_typist_is_active() ) {
     phantom_typist_state = PHANTOM_TYPIST_STATE_WAITING;
     next_phantom_typist_state = PHANTOM_TYPIST_STATE_INACTIVE;
   }
@@ -372,7 +372,7 @@ phantom_typist_deactivate( void )
 static void
 process_waiting_state( libspectrum_byte high_byte )
 {
-  switch( high_byte ) {
+  switch (high_byte ) {
     case 0xfe:
     case 0xfd:
     case 0xfb:
@@ -385,8 +385,8 @@ process_waiting_state( libspectrum_byte high_byte )
       break;
   }
 
-  if( keyboard_ports_read == 0xff ) {
-    switch( phantom_typist_mode ) {
+  if (keyboard_ports_read == 0xff ) {
+    switch (phantom_typist_mode ) {
       case PHANTOM_TYPIST_MODE_JPP:
       case PHANTOM_TYPIST_MODE_JPPI:
         next_phantom_typist_state = PHANTOM_TYPIST_STATE_LOAD;
@@ -421,11 +421,11 @@ process_waiting_state( libspectrum_byte high_byte )
 }
 
 static phantom_typist_state_t
-t_colon_or_quote( void )
+t_colon_or_quote(void)
 {
   phantom_typist_state_t next_state;
 
-  if( phantom_typist_mode == PHANTOM_TYPIST_MODE_PLUS3_CODE_BLOCK &&
+  if (phantom_typist_mode == PHANTOM_TYPIST_MODE_PLUS3_CODE_BLOCK &&
       command_count == 0 ) {
     next_state = PHANTOM_TYPIST_STATE_TCOLON_T;
   } else {
@@ -436,11 +436,11 @@ t_colon_or_quote( void )
 }
 
 static phantom_typist_state_t
-code_or_enter( void )
+code_or_enter(void)
 {
   phantom_typist_state_t next_state;
 
-  switch( phantom_typist_mode ) {
+  switch (phantom_typist_mode ) {
     case PHANTOM_TYPIST_MODE_JPP:
     case PHANTOM_TYPIST_MODE_LOADPP:
       next_state = PHANTOM_TYPIST_STATE_ENTER;
@@ -467,11 +467,11 @@ code_or_enter( void )
 }
 
 static phantom_typist_state_t
-next_command_or_end( void )
+next_command_or_end(void)
 {
   phantom_typist_state_t next_state;
 
-  if( phantom_typist_mode == PHANTOM_TYPIST_MODE_PLUS3_CODE_BLOCK &&
+  if (phantom_typist_mode == PHANTOM_TYPIST_MODE_PLUS3_CODE_BLOCK &&
       command_count == 0 ) {
     next_state = PHANTOM_TYPIST_STATE_SLOW_LOAD_L;
   } else {
@@ -502,11 +502,11 @@ phantom_typist_ula_read( libspectrum_word port )
   libspectrum_byte r = 0xff;
   libspectrum_byte high_byte = port >> 8;
 
-  if( delay != 0 ) {
+  if (delay != 0 ) {
     return r;
   }
 
-  switch( phantom_typist_state ) {
+  switch (phantom_typist_state ) {
     case PHANTOM_TYPIST_STATE_INACTIVE:
       // Do nothing
       break;
@@ -524,17 +524,17 @@ phantom_typist_ula_read( libspectrum_word port )
 }
 
 int
-phantom_typist_is_active( void )
+phantom_typist_is_active(void)
 {
   return phantom_typist_state != PHANTOM_TYPIST_STATE_INACTIVE;
 }
 
 void
-phantom_typist_frame( void )
+phantom_typist_frame(void)
 {
   keyboard_ports_read = 0x00;
-  if( next_phantom_typist_state != phantom_typist_state ) {
-    if( phantom_typist_mode == PHANTOM_TYPIST_MODE_PLUS3_CODE_BLOCK &&
+  if (next_phantom_typist_state != phantom_typist_state ) {
+    if (phantom_typist_mode == PHANTOM_TYPIST_MODE_PLUS3_CODE_BLOCK &&
         phantom_typist_state == PHANTOM_TYPIST_STATE_ENTER ) {
       command_count++;
     }
@@ -542,12 +542,12 @@ phantom_typist_frame( void )
     phantom_typist_state = next_phantom_typist_state;
     delay = state_info[phantom_typist_state].delay_before_state;
 
-    if( next_phantom_typist_state == PHANTOM_TYPIST_STATE_INACTIVE ) {
+    if (next_phantom_typist_state == PHANTOM_TYPIST_STATE_INACTIVE ) {
       timer_stop_fastloading();
     }
   }
 
-  if( delay > 0 ) {
+  if (delay > 0 ) {
     delay--;
   }
 }

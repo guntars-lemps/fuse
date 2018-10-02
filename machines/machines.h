@@ -29,7 +29,7 @@
 #include "machine.h"
 
 int pentagon_init( fuse_machine_info *machine );
-int pentagon_shutdown( void );
+int pentagon_shutdown(void);
 int pentagon512_init( fuse_machine_info *machine );
 int pentagon1024_init( fuse_machine_info *machine );
 

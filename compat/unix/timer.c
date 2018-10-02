@@ -32,13 +32,13 @@
 #include "ui/ui.h"
 
 double
-compat_timer_get_time( void )
+compat_timer_get_time(void)
 {
   struct timeval tv;
   int error;
 
   error = gettimeofday( &tv, NULL );
-  if( error ) {
+  if (error ) {
     ui_error( UI_ERROR_ERROR, "%s: error getting time: %s", __func__, strerror( errno ) );
     return -1;
   }

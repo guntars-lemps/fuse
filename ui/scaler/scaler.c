@@ -124,13 +124,13 @@ scaler_expand_fn *scaler_expander;
 int
 scaler_select_scaler( scaler_type scaler )
 {
-  if( !scaler_is_supported( scaler ) ) return 1;
+  if (!scaler_is_supported( scaler ) ) return 1;
 
-  if( current_scaler == scaler ) return 0;
+  if (current_scaler == scaler ) return 0;
 
   current_scaler = scaler;
 
-  if( settings_current.start_scaler_mode ) libspectrum_free( settings_current.start_scaler_mode );
+  if (settings_current.start_scaler_mode ) libspectrum_free( settings_current.start_scaler_mode );
   settings_current.start_scaler_mode =
     utils_safe_strdup( available_scalers[current_scaler].id );
 
@@ -147,8 +147,8 @@ scaler_select_id( const char *id )
 {
   scaler_type i;
 
-  for( i=0; i < SCALER_NUM; i++ ) {
-    if( ! strcmp( available_scalers[i].id, id ) ) {
+  for( i=0; i < SCALER_NUM; i++) {
+    if (! strcmp( available_scalers[i].id, id ) ) {
       scaler_select_scaler( i );
       return 0;
     }
@@ -159,7 +159,7 @@ scaler_select_id( const char *id )
 }
 
 void
-scaler_register_clear( void )
+scaler_register_clear(void)
 {
   scalers_registered = 0;
   memset( scaler_supported, 0, sizeof(int) * SCALER_NUM );
@@ -168,7 +168,7 @@ scaler_register_clear( void )
 void
 scaler_register( scaler_type scaler )
 {
-  if( scaler_supported[scaler] == 1 ) return;
+  if (scaler_supported[scaler] == 1 ) return;
   scalers_registered++;
   scaler_supported[scaler] = 1;
 }

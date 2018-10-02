@@ -59,16 +59,16 @@ static int normal_memory_map( int rom, int page );
 static void special_memory_map( int which );
 static void select_special_map( int page1, int page2, int page3, int page4 );
 
-static int specplus3_reset( void );
+static int specplus3_reset(void);
 
 upd_fdc *specplus3_fdc;
 static fdd_t specplus3_drives[ SPECPLUS3_NUM_DRIVES ];
 
-static int ui_drive_is_available( void );
-static const fdd_params_t *ui_drive_get_params_a( void );
-static const fdd_params_t *ui_drive_get_params_b( void );
+static int ui_drive_is_available(void);
+static const fdd_params_t *ui_drive_get_params_a(void);
+static const fdd_params_t *ui_drive_get_params_b(void);
 static int ui_drive_inserted( const ui_media_drive_info_t *drive, int new );
-static int ui_drive_autoload( void );
+static int ui_drive_autoload(void);
 
 static ui_media_drive_info_t ui_drives[ SPECPLUS3_NUM_DRIVES ] = {
   {
@@ -134,13 +134,13 @@ int specplus3_init( fuse_machine_info *machine )
 }
 
 void
-specplus3_765_update_fdd( void )
+specplus3_765_update_fdd(void)
 {
   specplus3_fdc->speedlock = settings_current.plus3_detect_speedlock ? 0 : -1;
 }
 
 void
-specplus3_765_init( void )
+specplus3_765_init(void)
 {
   int i;
 
@@ -152,8 +152,8 @@ specplus3_765_init( void )
   specplus3_fdc->drive[2] = &specplus3_drives[ 0 ];
   specplus3_fdc->drive[3] = &specplus3_drives[ 1 ];
 
-  for( i = 0; i < SPECPLUS3_NUM_DRIVES; i++ ) {
-    specplus3_drives[ i ].disk.flag = DISK_FLAG_PLUS3_CPC;
+  for (i = 0; i < SPECPLUS3_NUM_DRIVES; i++) {
+    specplus3_drives[i].disk.flag = DISK_FLAG_PLUS3_CPC;
   }
 					// builtin drive 1 head 42 track
   fdd_init( &specplus3_drives[ 0 ], FDD_SHUGART, &fdd_params[ 1 ], 0 );
@@ -165,14 +165,14 @@ specplus3_765_init( void )
 
   specplus3_765_update_fdd();
 
-  for( i = 0; i < SPECPLUS3_NUM_DRIVES; i++ ) {
-    ui_drives[ i ].fdd = &specplus3_drives[ i ];
+  for (i = 0; i < SPECPLUS3_NUM_DRIVES; i++) {
+    ui_drives[i].fdd = &specplus3_drives[ i ];
     ui_media_drive_register( &ui_drives[ i ] );
   }
 }
 
 void
-specplus3_765_reset( void )
+specplus3_765_reset(void)
 {
   const fdd_params_t *dt;
 
@@ -186,25 +186,25 @@ specplus3_765_reset( void )
 }
 
 static int
-specplus3_reset( void )
+specplus3_reset(void)
 {
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_plus3_0,
                             settings_default.rom_plus3_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_plus3_1,
                             settings_default.rom_plus3_1, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 2, settings_current.rom_plus3_2,
                             settings_default.rom_plus3_2, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 3, settings_current.rom_plus3_3,
                             settings_default.rom_plus3_3, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   error = specplus3_plus2a_common_reset();
-  if( error ) return error;
+  if (error ) return error;
 
   periph_clear();
   machines_periph_plus3();
@@ -222,7 +222,7 @@ specplus3_reset( void )
 }
 
 int
-specplus3_plus2a_common_reset( void )
+specplus3_plus2a_common_reset(void)
 {
   int error;
   size_t i;
@@ -237,14 +237,14 @@ specplus3_plus2a_common_reset( void )
   memory_screen_mask = 0xffff;
 
   // All memory comes from the home bank
-  for( i = 0; i < MEMORY_PAGES_IN_64K; i++ )
+  for (i = 0; i < MEMORY_PAGES_IN_64K; i++)
     memory_map_read[i].source = memory_map_write[i].source = memory_source_ram;
 
   // RAM pages 4, 5, 6 and 7 contended
-  for( i = 0; i < 8; i++ )
+  for (i = 0; i < 8; i++)
     memory_ram_set_16k_contention( i, i >= 4 );
 
-  error = normal_memory_map( 0, 0 ); if( error ) return error;
+  error = normal_memory_map( 0, 0 ); if (error ) return error;
 
   return 0;
 }
@@ -267,7 +267,7 @@ normal_memory_map( int rom, int page )
 static void
 special_memory_map( int which )
 {
-  switch( which ) {
+  switch (which ) {
   case 0: select_special_map( 0, 1, 2, 3 ); break;
   case 1: select_special_map( 4, 5, 6, 7 ); break;
   case 2: select_special_map( 4, 5, 6, 3 ); break;
@@ -297,7 +297,7 @@ specplus3_memoryport2_write_internal( libspectrum_word port GCC_UNUSED,
 
   /* If this was called by a machine which has a +3-style disk, set
      the state of both floppy drive motors */
-  if( machine_current->capabilities &&
+  if (machine_current->capabilities &&
       LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_DISK ) {
 
     fdd_motoron( &specplus3_drives[0], b & 0x08 );
@@ -314,13 +314,13 @@ void
 specplus3_memoryport2_write( libspectrum_word port, libspectrum_byte b )
 {
   // Do nothing else if we've locked the RAM configuration
-  if( machine_current->ram.locked ) return;
+  if (machine_current->ram.locked ) return;
 
   specplus3_memoryport2_write_internal( port, b );
 }
 
 int
-specplus3_memory_map( void )
+specplus3_memory_map(void)
 {
   int page, rom, screen;
 
@@ -332,14 +332,14 @@ specplus3_memory_map( void )
 
   /* If we changed the active screen, mark the entire display file as
      dirty so we redraw it on the next pass */
-  if( memory_current_screen != screen ) {
+  if (memory_current_screen != screen ) {
     display_update_critical( 0, 0 );
     display_refresh_main_screen();
     memory_current_screen = screen;
   }
 
   // Check whether we want a special RAM configuration
-  if( machine_current->ram.last_byte2 & 0x01 ) {
+  if (machine_current->ram.last_byte2 & 0x01 ) {
 
     // If so, select it
     machine_current->ram.special = 1;
@@ -362,7 +362,7 @@ specplus3_memory_map( void )
 }
 
 void
-specplus3_menu_items( void )
+specplus3_menu_items(void)
 {
   ui_media_drive_update_menus( &ui_drives[ SPECPLUS3_DRIVE_A ],
 			       UI_MEDIA_DRIVE_UPDATE_ALL );
@@ -398,7 +398,7 @@ int
 specplus3_disk_insert( specplus3_drive_number which, const char *filename,
 		   int autoload )
 {
-  if( which >= SPECPLUS3_NUM_DRIVES ) {
+  if (which >= SPECPLUS3_NUM_DRIVES ) {
     ui_error( UI_ERROR_ERROR, "specplus3_disk_insert: unknown drive %d",
 	      which );
     fuse_abort();
@@ -414,21 +414,21 @@ specplus3_get_fdd( specplus3_drive_number which )
 }
 
 static int
-ui_drive_is_available( void )
+ui_drive_is_available(void)
 {
   return machine_current->capabilities &
           LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_DISK;
 }
 
 static const fdd_params_t *
-ui_drive_get_params_a( void )
+ui_drive_get_params_a(void)
 {
   // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_plus3a_type() + 1 ];
 }
 
 static const fdd_params_t *
-ui_drive_get_params_b( void )
+ui_drive_get_params_b(void)
 {
   return &fdd_params[ option_enumerate_diskoptions_drive_plus3b_type() ];
 }
@@ -438,19 +438,19 @@ ui_drive_inserted( const ui_media_drive_info_t *drive, int new )
 {
   /* Did real +3 hardware also have problems formatting disks unformatted
      disks? */
-  if( new )
+  if (new )
     disk_preformat( &drive->fdd->disk ); // pre-format disk for +3 ???
   return 0;
 }
 
 int
-specplus3_shutdown( void )
+specplus3_shutdown(void)
 {
   return 0;
 }
 
 static int
-ui_drive_autoload( void )
+ui_drive_autoload(void)
 {
   machine_reset( 0 );
   phantom_typist_activate_disk();

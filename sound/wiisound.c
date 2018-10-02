@@ -41,10 +41,10 @@ u8 dmabuf[BUFSIZE<<1] ATTRIBUTE_ALIGN(32);
 int dmalen = BUFSIZE;
 
 static void
-sound_dmacallback( void )
+sound_dmacallback(void)
 {
-  if( sfifo_used( &sound_fifo ) < 128) return;
-  
+  if (sfifo_used( &sound_fifo ) < 128) return;
+
   dmalen = MIN( BUFSIZE, sfifo_used( &sound_fifo ) );
   sfifo_read( &sound_fifo, dmabuf, dmalen );
   DCFlushRange( dmabuf, dmalen );
@@ -69,7 +69,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   sfifo_init( &sound_fifo, BUFSIZE );
   *stereoptr = 1;
-  
+
   AUDIO_Init( NULL );
   AUDIO_SetDSPSampleRate( samplerate );
 
@@ -80,12 +80,12 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   DCFlushRange( dmabuf, dmalen );
   AUDIO_StartDMA();
 #endif
-  
+
   return 0;
 }
 
 void
-sound_lowlevel_end( void )
+sound_lowlevel_end(void)
 {
   sfifo_flush( &sound_fifo );
   sfifo_close( &sound_fifo );
@@ -96,14 +96,14 @@ void
 sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
   int i;
-  
+
   libspectrum_signed_byte *bytes = (libspectrum_signed_byte*)data;
   len <<= 1;
 
   while(len) {
-    if( ( i = sfifo_write( &sound_fifo, bytes, len ) ) < 0 ) 
+    if (( i = sfifo_write( &sound_fifo, bytes, len ) ) < 0 )
       break;
-    else if( !i )
+    else if (!i )
       usleep(10000);
     bytes += i;
     len -= i;

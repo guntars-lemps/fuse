@@ -48,7 +48,7 @@ static const libspectrum_byte mask[ AY_REGISTERS ] = {
 static void ay_reset( int hard_reset );
 static void ay_from_snapshot( libspectrum_snap *snap );
 static void ay_to_snapshot( libspectrum_snap *snap );
-static libspectrum_dword get_current_register( void );
+static libspectrum_dword get_current_register(void);
 static void set_current_register( libspectrum_dword value );
 
 static module_info_t ay_module_info = {
@@ -134,7 +134,7 @@ ay_init( void *context )
 }
 
 void
-ay_register_startup( void )
+ay_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -170,7 +170,7 @@ ay_registerport_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attach
      register value and the port input. So, allow for this when
      reading R14... */
 
-  if( current == 14 ) {
+  if (current == 14 ) {
     if(machine_current->ay.registers[7] & 0x40)
       return (port_input & machine_current->ay.registers[14]);
     else
@@ -179,7 +179,7 @@ ay_registerport_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attach
 
   /* R15 is simpler to do, as the 8912 lacks the second I/O port, and
      the input-mode input is always 0xff */
-  if( current == 15 && !( machine_current->ay.registers[7] & 0x80 ) )
+  if (current == 15 && !( machine_current->ay.registers[7] & 0x80 ) )
     return 0xff;
 
   // Otherwise return register value, appropriately masked
@@ -205,9 +205,9 @@ ay_dataport_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 
   machine_current->ay.registers[ current ] = b & mask[ current ];
   sound_ay_write( current, b, tstates );
-  if( psg_recording ) psg_write_register( current, b );
+  if (psg_recording ) psg_write_register( current, b );
 
-  if( current == 14 ) printer_serial_write( b );
+  if (current == 14 ) printer_serial_write( b );
 }
 
 void
@@ -218,7 +218,7 @@ ay_state_from_snapshot( libspectrum_snap *snap )
   ay_registerport_write( 0xfffd,
                          libspectrum_snap_out_ay_registerport( snap ) );
 
-  for( i = 0; i < AY_REGISTERS; i++ ) {
+  for (i = 0; i < AY_REGISTERS; i++) {
     machine_current->ay.registers[i] =
       libspectrum_snap_ay_registers( snap, i );
     sound_ay_write( i, machine_current->ay.registers[i], 0 );
@@ -228,7 +228,7 @@ ay_state_from_snapshot( libspectrum_snap *snap )
 static void
 ay_from_snapshot( libspectrum_snap *snap )
 {
-  if( machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY ) {
+  if (machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY ) {
     ay_state_from_snapshot( snap );
   }
 }
@@ -242,13 +242,13 @@ ay_to_snapshot( libspectrum_snap *snap )
     snap, machine_current->ay.current_register
   );
 
-  for( i = 0; i < AY_REGISTERS; i++ )
+  for (i = 0; i < AY_REGISTERS; i++)
     libspectrum_snap_set_ay_registers( snap, i,
 				       machine_current->ay.registers[i] );
 }
 
 static libspectrum_dword
-get_current_register( void )
+get_current_register(void)
 {
   return machine_current->ay.current_register;
 }

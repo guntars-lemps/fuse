@@ -67,7 +67,7 @@ slt_init( void *context )
 }
 
 void
-slt_register_startup( void )
+slt_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_SLT, dependencies,
@@ -80,9 +80,9 @@ slt_trap( libspectrum_word address, libspectrum_byte level )
   size_t length;
   libspectrum_byte *data;
 
-  if( !settings_current.slt_traps ) return 0;
+  if (!settings_current.slt_traps ) return 0;
 
-  if( slt_length[ level ] ) {
+  if (slt_length[ level ] ) {
 
     length = slt_length[ level ];
     data = slt[ level ];
@@ -99,11 +99,11 @@ slt_from_snapshot( libspectrum_snap *snap )
 {
   size_t i;
 
-  for( i=0; i<256; i++ ) {
+  for( i=0; i<256; i++) {
 
     slt_length[i] = libspectrum_snap_slt_length( snap, i );
 
-    if( slt_length[i] ) {
+    if (slt_length[i] ) {
 
       slt[i] = memory_pool_allocate( slt_length[i] *
 				     sizeof( libspectrum_byte ) );
@@ -113,7 +113,7 @@ slt_from_snapshot( libspectrum_snap *snap )
     }
   }
 
-  if( libspectrum_snap_slt_screen( snap ) ) {
+  if (libspectrum_snap_slt_screen( snap ) ) {
 
     slt_screen = memory_pool_allocate( 6912 * sizeof( libspectrum_byte ) );
 
@@ -128,11 +128,11 @@ slt_to_snapshot( libspectrum_snap *snap )
   size_t i;
   libspectrum_byte *buffer;
 
-  for( i=0; i<256; i++ ) {
+  for( i=0; i<256; i++) {
 
     libspectrum_snap_set_slt_length( snap, i, slt_length[i] );
 
-    if( slt_length[i] ) {
+    if (slt_length[i] ) {
 
       buffer = libspectrum_new( libspectrum_byte, slt_length[i] );
 
@@ -141,7 +141,7 @@ slt_to_snapshot( libspectrum_snap *snap )
     }
   }
 
-  if( slt_screen ) {
+  if (slt_screen ) {
 
     buffer = libspectrum_new( libspectrum_byte, 6912 );
 

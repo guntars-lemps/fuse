@@ -71,7 +71,7 @@ fuller_enabled_snapshot( libspectrum_snap *snap )
 static void
 fuller_from_snapshot( libspectrum_snap *snap )
 {
-  if( periph_is_active( PERIPH_TYPE_FULLER ) )
+  if (periph_is_active( PERIPH_TYPE_FULLER ) )
     ay_state_from_snapshot( snap );
 }
 
@@ -92,10 +92,10 @@ fuller_init( void *context )
 }
 
 void
-fuller_register_startup( void )
+fuller_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_FULLER, dependencies,
-                            ARRAY_SIZE( dependencies ), fuller_init, NULL, 
+                            ARRAY_SIZE( dependencies ), fuller_init, NULL,
                             NULL );
 }

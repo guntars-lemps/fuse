@@ -72,7 +72,7 @@ ui_verror( ui_error_level severity, const char *format, va_list ap )
   vsnprintf( message, MESSAGE_MAX_LENGTH, format, ap );
 
   // Skip the message if the same message was displayed recently
-  if( frames_since_last_message < 50 && !strcmp( message, last_message ) ) {
+  if (frames_since_last_message < 50 && !strcmp( message, last_message ) ) {
     frames_since_last_message = 0;
     return 0;
   }
@@ -111,24 +111,24 @@ print_error_to_stderr( ui_error_level severity, const char *message )
 {
   /* Print the error to stderr if it's more significant than just
      informational */
-  if( severity > UI_ERROR_INFO ) {
+  if (severity > UI_ERROR_INFO ) {
 
     /* For the fb and svgalib UIs, we don't want to write to stderr if
        it's a terminal, as it's then likely to be what we're currently
        using for graphics output, and writing text to it isn't a good
        idea. Things are OK if we're exiting though */
 #if defined( UI_FB ) || defined( UI_SVGA )
-    if( isatty( STDERR_FILENO ) && !fuse_exiting ) return 1;
+    if (isatty( STDERR_FILENO ) && !fuse_exiting ) return 1;
 #endif // #if defined( UI_FB ) || defined( UI_SVGA )
 
     fprintf( stderr, "%s: ", fuse_progname );
 
-    switch( severity ) {
+    switch (severity ) {
 
     case UI_ERROR_INFO: break; // Shouldn't happen
 
-    case UI_ERROR_WARNING: fprintf( stderr, "warning: " ); break;
-    case UI_ERROR_ERROR: fprintf( stderr, "error: " ); break;
+    case UI_ERROR_WARNING: fprintf( stderr, "warning: "); break;
+    case UI_ERROR_ERROR: fprintf( stderr, "error: "); break;
     }
 
     fprintf( stderr, "%s\n", message );
@@ -150,7 +150,7 @@ ui_libspectrum_error( libspectrum_error error GCC_UNUSED, const char *format,
 }
 
 void
-ui_error_frame( void )
+ui_error_frame(void)
 {
   frames_since_last_message++;
 }
@@ -164,18 +164,18 @@ ui_mouse_button( int button, int down )
 {
   int kempston_button = !settings_current.mouse_swap_buttons;
 
-  if( !ui_mouse_grabbed && !mouse_grab_suspended ) button = 2;
+  if (!ui_mouse_grabbed && !mouse_grab_suspended ) button = 2;
 
   // Possibly we'll end up handling _more_ than one mouse interface...
-  switch( button ) {
+  switch (button ) {
   case 1:
-    if( ui_mouse_grabbed ) kempmouse_update( 0, 0, kempston_button, down );
+    if (ui_mouse_grabbed ) kempmouse_update( 0, 0, kempston_button, down );
     break;
   case 3:
-    if( ui_mouse_grabbed ) kempmouse_update( 0, 0, !kempston_button, down );
+    if (ui_mouse_grabbed ) kempmouse_update( 0, 0, !kempston_button, down );
     break;
   case 2:
-    if( ui_mouse_present && settings_current.kempston_mouse
+    if (ui_mouse_present && settings_current.kempston_mouse
 	&& !down && !mouse_grab_suspended )
       ui_mouse_grabbed =
 	ui_mouse_grabbed ? ui_mouse_release( 1 ) : ui_mouse_grab( 0 );
@@ -186,20 +186,20 @@ ui_mouse_button( int button, int down )
 void
 ui_mouse_motion( int x, int y )
 {
-  if( ui_mouse_grabbed ) kempmouse_update( x, y, -1, 0 );
+  if (ui_mouse_grabbed ) kempmouse_update( x, y, -1, 0 );
 }
 
 void
-ui_mouse_suspend( void )
+ui_mouse_suspend(void)
 {
   mouse_grab_suspended = ui_mouse_grabbed ? 2 : 1;
   ui_mouse_grabbed = ui_mouse_release( 1 );
 }
 
 void
-ui_mouse_resume( void )
+ui_mouse_resume(void)
 {
-  if( mouse_grab_suspended == 2) ui_mouse_grabbed = ui_mouse_grab( 0 );
+  if (mouse_grab_suspended == 2) ui_mouse_grabbed = ui_mouse_grab( 0 );
   mouse_grab_suspended = 0;
 }
 
@@ -680,24 +680,24 @@ ui_menu_activate( ui_menu_item item, int active )
 
   for( ptr = menu_item_lookup; ptr->string1; ptr++ ) {
 
-    if( item == ptr->item ) {
+    if (item == ptr->item ) {
       ui_menu_item_set_active( ptr->string1, active );
-      if( ptr->string2 )
+      if (ptr->string2 )
 	ui_menu_item_set_active( ptr->string2,
 				 ptr->string2_inverted ? !active : active );
-      if( ptr->string3 )
+      if (ptr->string3 )
 	ui_menu_item_set_active( ptr->string3,
 				 ptr->string3_inverted ? !active : active );
-      if( ptr->string4 )
+      if (ptr->string4 )
 	ui_menu_item_set_active( ptr->string4,
 				 ptr->string4_inverted ? !active : active );
-      if( ptr->string5 )
+      if (ptr->string5 )
 	ui_menu_item_set_active( ptr->string5,
 				 ptr->string5_inverted ? !active : active );
-      if( ptr->string6 )
+      if (ptr->string6 )
 	ui_menu_item_set_active( ptr->string6,
 				 ptr->string6_inverted ? !active : active );
-      if( ptr->string7 )
+      if (ptr->string7 )
 	ui_menu_item_set_active( ptr->string7,
 				 ptr->string7_inverted ? !active : active );
       return 0;
@@ -710,7 +710,7 @@ ui_menu_activate( ui_menu_item item, int active )
 }
 
 void
-ui_menu_disk_update( void )
+ui_menu_disk_update(void)
 {
   int drives_avail;
 
@@ -718,7 +718,7 @@ ui_menu_disk_update( void )
 
   // Set the disk menu items and statusbar appropriately
 
-  if( drives_avail ) {
+  if (drives_avail ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_DISK, 1 );
     ui_statusbar_update( UI_STATUSBAR_ITEM_DISK, UI_STATUSBAR_STATE_INACTIVE );
   } else {
@@ -731,14 +731,14 @@ ui_menu_disk_update( void )
 }
 
 int
-ui_tape_write( void )
+ui_tape_write(void)
 {
   char *filename;
 
   fuse_emulation_pause();
 
-  filename = ui_get_save_filename( "Fuse - Write Tape" );
-  if( !filename ) { fuse_emulation_unpause(); return 1; }
+  filename = ui_get_save_filename( "Fuse - Write Tape");
+  if (!filename ) { fuse_emulation_unpause(); return 1; }
 
   tape_write( filename );
 
@@ -759,14 +759,14 @@ ui_mdr_write( int which, int saveas )
 
   snprintf( title, 80, "Fuse - Write Microdrive Cartridge %i", which + 1 );
 
-  if( saveas ) {
+  if (saveas ) {
     filename = ui_get_save_filename( title );
-    if( !filename ) { fuse_emulation_unpause(); return 1; }
+    if (!filename ) { fuse_emulation_unpause(); return 1; }
   }
 
   err = if1_mdr_write( which, filename );
 
-  if( saveas ) libspectrum_free( filename );
+  if (saveas ) libspectrum_free( filename );
 
   fuse_emulation_unpause();
 
@@ -775,25 +775,25 @@ ui_mdr_write( int which, int saveas )
 
 #ifdef USE_WIDGET
 int
-ui_widget_init( void )
+ui_widget_init(void)
 {
   return widget_init();
 }
 
 int
-ui_widget_end( void )
+ui_widget_end(void)
 {
   return widget_end();
 }
 #else
 int
-ui_widget_init( void )
+ui_widget_init(void)
 {
   return 0;
 }
 
 int
-ui_widget_end( void )
+ui_widget_end(void)
 {
   return 0;
 }

@@ -38,7 +38,7 @@
 #include "tape.h"
 #include "ui/ui.h"
 
-static int create_dialog( void );
+static int create_dialog(void);
 static void add_block_details( libspectrum_tape_block *block,
 			       void *user_data );
 static void select_row( GtkTreeView *treeview, GtkTreePath *path,
@@ -74,10 +74,10 @@ menu_media_tape_browse( GtkAction *gtk_action GCC_UNUSED,
   // Firstly, stop emulation
   fuse_emulation_pause();
 
-  if( !dialog_created )
-    if( create_dialog() ) { fuse_emulation_unpause(); return; }
+  if (!dialog_created )
+    if (create_dialog() ) { fuse_emulation_unpause(); return; }
 
-  if( ui_tape_browser_update( UI_TAPE_BROWSER_NEW_TAPE, NULL ) ) {
+  if (ui_tape_browser_update( UI_TAPE_BROWSER_NEW_TAPE, NULL ) ) {
     fuse_emulation_unpause();
     return;
   }
@@ -89,7 +89,7 @@ menu_media_tape_browse( GtkAction *gtk_action GCC_UNUSED,
 }
 
 static GtkWidget *
-create_block_list( void )
+create_block_list(void)
 {
   GtkWidget *view;
   GtkCellRenderer *renderer;
@@ -139,7 +139,7 @@ create_block_list( void )
 }
 
 static int
-create_dialog( void )
+create_dialog(void)
 {
   GtkWidget *scrolled_window, *content_area;
 
@@ -163,7 +163,7 @@ create_dialog( void )
   gtk_container_add( GTK_CONTAINER( scrolled_window ), GTK_WIDGET( blocks ) );
 
   // And the "tape modified" label
-  modified_label = gtk_label_new( "" );
+  modified_label = gtk_label_new( "");
   gtk_box_pack_start( GTK_BOX( content_area ), modified_label, FALSE, FALSE, 0 );
 
   // Create the OK button
@@ -184,7 +184,7 @@ ui_tape_browser_update( ui_tape_browser_update_type change GCC_UNUSED,
   int error, current_block;
   GtkTreeModel *model;
 
-  if( !dialog_created ) return 0;
+  if (!dialog_created ) return 0;
 
   fuse_emulation_pause();
 
@@ -192,20 +192,20 @@ ui_tape_browser_update( ui_tape_browser_update_type change GCC_UNUSED,
   gtk_list_store_clear( GTK_LIST_STORE( model ) );
 
   error = tape_foreach( add_block_details, model );
-  if( error ) {
+  if (error ) {
     fuse_emulation_unpause();
     return 1;
   }
 
   current_block = tape_get_current_block();
 
-  if( current_block != -1 )
+  if (current_block != -1 )
     mark_row( model, current_block );
 
-  if( tape_modified ) {
-    gtk_label_set_text( GTK_LABEL( modified_label ), "Tape modified" );
+  if (tape_modified ) {
+    gtk_label_set_text( GTK_LABEL( modified_label ), "Tape modified");
   } else {
-    gtk_label_set_text( GTK_LABEL( modified_label ), "Tape not modified" );
+    gtk_label_set_text( GTK_LABEL( modified_label ), "Tape not modified");
   }
 
   fuse_emulation_unpause();
@@ -247,17 +247,17 @@ select_row( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
   // Get selected row
   row = -1;
   indices = gtk_tree_path_get_indices( path );
-  if( indices ) row = indices[0];
+  if (indices ) row = indices[0];
 
   // Don't do anything if the current block was clicked on
   current_block = tape_get_current_block();
-  if( row == current_block ) return;
+  if (row == current_block ) return;
 
   // Otherwise, select the new block
   tape_select_block_no_update( row );
 
   // Mark selected block
-  if( current_block != -1 ) {
+  if (current_block != -1 ) {
     gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path );
 
     gtk_list_store_set( GTK_LIST_STORE( model ), &iter,
@@ -266,10 +266,10 @@ select_row( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
   }
 
   // Unmark former block
-  if( current_block != -1 ) {
+  if (current_block != -1 ) {
     path = gtk_tree_path_new_from_indices( current_block, -1 );
 
-    if( !gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path ) ) {
+    if (!gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path ) ) {
       gtk_tree_path_free( path );
       return;
     }
@@ -290,7 +290,7 @@ mark_row( GtkTreeModel *model, int row )
 
   path = gtk_tree_path_new_from_indices( row, -1 );
 
-  if( !gtk_tree_model_get_iter( model, &iter, path ) ) {
+  if (!gtk_tree_model_get_iter( model, &iter, path ) ) {
     gtk_tree_path_free( path );
     return;
   }

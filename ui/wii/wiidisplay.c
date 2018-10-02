@@ -67,8 +67,8 @@ static GXRModeObj *rmode = NULL;
 // The current size of the window (in units of DISPLAY_SCREEN_*)
 static int wiidisplay_current_size=2;
 
-static int init_colours( void );
-static int register_scalers( void );
+static int init_colours(void);
+static int register_scalers(void);
 
 typedef struct {
   u8 r, g, b;
@@ -136,7 +136,7 @@ u32 convert_rgb (rgb_t rgb1, rgb_t rgb2)
 
 static void put_pixel(int x, int y, int colour, int mouseputpixel)
 {
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     x <<= 1; y <<= 1;
     display_image[y  ][x  ] = colour;
     display_image[y  ][x+1] = colour;
@@ -157,11 +157,11 @@ static int get_pixel(int x, int y)
 }
 
 static int
-init_colours( void )
+init_colours(void)
 {
   size_t i;
 
-  for( i = 0; i < 16; i++ ) {
+  for (i = 0; i < 16; i++) {
 
     rgb_t colour, grey;
 
@@ -195,7 +195,7 @@ int uidisplay_init(int width, int height)
   image_width = width; image_height = height;
   image_scale = width / DISPLAY_ASPECT_WIDTH;
 
-  error = register_scalers(); if( error ) return error;
+  error = register_scalers(); if (error ) return error;
 
   display_ui_initialised = 1;
   display_refresh_all();
@@ -204,32 +204,32 @@ int uidisplay_init(int width, int height)
 }
 
 static int
-register_scalers( void )
+register_scalers(void)
 {
   scaler_register_clear();
 
-  switch( wiidisplay_current_size ) {
+  switch (wiidisplay_current_size ) {
 
   case 1:
 
-    switch( image_scale ) {
+    switch (image_scale ) {
     case 1:
       scaler_register( SCALER_NORMAL );
       scaler_register( SCALER_PALTV );
-      if( !scaler_is_supported( current_scaler ) )
+      if (!scaler_is_supported( current_scaler ) )
 	scaler_select_scaler( SCALER_NORMAL );
       return 0;
     case 2:
       scaler_register( SCALER_HALF );
       scaler_register( SCALER_HALFSKIP );
-      if( !scaler_is_supported( current_scaler ) )
+      if (!scaler_is_supported( current_scaler ) )
 	scaler_select_scaler( SCALER_HALF );
       return 0;
     }
 
   case 2:
 
-    switch( image_scale ) {
+    switch (image_scale ) {
     case 1:
       scaler_register( SCALER_DOUBLESIZE );
       scaler_register( SCALER_TV2X );
@@ -240,33 +240,33 @@ register_scalers( void )
       scaler_register( SCALER_DOTMATRIX );
       scaler_register( SCALER_PALTV2X );
       scaler_register( SCALER_HQ2X );
-      if( !scaler_is_supported( current_scaler ) )
+      if (!scaler_is_supported( current_scaler ) )
 	scaler_select_scaler( SCALER_DOUBLESIZE );
       return 0;
     case 2:
       scaler_register( SCALER_NORMAL );
       scaler_register( SCALER_TIMEXTV );
       scaler_register( SCALER_PALTV );
-      if( !scaler_is_supported( current_scaler ) )
+      if (!scaler_is_supported( current_scaler ) )
 	scaler_select_scaler( SCALER_NORMAL );
       return 0;
     }
 
   case 3:
 
-    switch( image_scale ) {
+    switch (image_scale ) {
     case 1:
       scaler_register( SCALER_TRIPLESIZE );
       scaler_register( SCALER_TV3X );
       scaler_register( SCALER_ADVMAME3X );
       scaler_register( SCALER_PALTV3X );
       scaler_register( SCALER_HQ3X );
-      if( !scaler_is_supported( current_scaler ) )
+      if (!scaler_is_supported( current_scaler ) )
 	scaler_select_scaler( SCALER_TRIPLESIZE );
       return 0;
     case 2:
       scaler_register( SCALER_TIMEX1_5X );
-      if( !scaler_is_supported( current_scaler ) )
+      if (!scaler_is_supported( current_scaler ) )
 	scaler_select_scaler( SCALER_TIMEX1_5X );
       return 0;
     }
@@ -282,7 +282,7 @@ int wiidisplay_init(void)
 {
   int error;
 
-  error = init_colours(); if( error ) return error;
+  error = init_colours(); if (error ) return error;
 
   VIDEO_Init();
 
@@ -318,13 +318,13 @@ int wiidisplay_init(void)
 }
 
 int
-uidisplay_hotswap_gfx_mode( void )
+uidisplay_hotswap_gfx_mode(void)
 {
   return 0;
 }
 
 void
-uidisplay_frame_end( void )
+uidisplay_frame_end(void)
 {
   VIDEO_WaitVSync();
   if(rmode->viTVMode & VI_NON_INTERLACE) VIDEO_WaitVSync();
@@ -336,18 +336,18 @@ void wiidisplay_showmouse( float x, float y )
 {
   int c, r;
 
-  if( !fuse_emulation_paused ) return;
+  if (!fuse_emulation_paused ) return;
 
   int mousenewx = x*(DISPLAY_SCREEN_WIDTH/2-MOUSESIZEX);
   int mousenewy = y*(DISPLAY_SCREEN_HEIGHT-MOUSESIZEY);
 
   // if we had no old mouse and have no new mouse, forget it
-  if( (mousex <= 0 || mousey <= 0) &&
+  if ((mousex <= 0 || mousey <= 0) &&
       (mousenewx <= 0 || mousenewy <= 0) ) return;
 
   /* if we had a mouse pos before, put mousecache at old position into
      picture  */
-  if( mousex > 0 && mousey > 0 ) {
+  if (mousex > 0 && mousey > 0 ) {
     for( r=0; r<MOUSESIZEY; r++ )
       for( c=0; c<MOUSESIZEX; c++ )
 	put_pixel( c+mousex, r+mousey, mousecache[r][c], 1 );
@@ -355,7 +355,7 @@ void wiidisplay_showmouse( float x, float y )
   uidisplay_area( mousex, mousey, MOUSESIZEX, MOUSESIZEY );
 
   // if we don't have a new mouse, remember that state and leave
-  if( mousenewx <= 0 || mousenewy <= 0 ) {
+  if (mousenewx <= 0 || mousenewy <= 0 ) {
     mousex = mousenewx; mousey = mousenewy;
     return;
   }
@@ -367,7 +367,7 @@ void wiidisplay_showmouse( float x, float y )
       // put picture at new position into mouse cache
       mousecache[r][c] = get_pixel( c+mousenewx, r+mousenewy );
       // put mouse cursor into picture
-      if( mousecursor[r][c] != 0xff )
+      if (mousecursor[r][c] != 0xff )
 	put_pixel( mousenewx+c, mousenewy+r, mousecursor[r][c], 1 );
     }
   mousex = mousenewx; mousey = mousenewy;
@@ -383,7 +383,7 @@ uidisplay_area( int x, int y, int w, int h )
 
   /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */
-  if( scaler_flags & SCALER_FLAGS_EXPAND )
+  if (scaler_flags & SCALER_FLAGS_EXPAND )
     scaler_expander( &x, &y, &w, &h, image_width, image_height );
 
   scaled_x = scale * x; scaled_y = scale * y;
@@ -400,7 +400,7 @@ uidisplay_area( int x, int y, int w, int h )
 
     display = &display_image[yy][x];
 
-    for( i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
+    for (i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
   }
 
   // Create scaled image
@@ -419,7 +419,7 @@ uidisplay_area( int x, int y, int w, int h )
   int ystart = ( rmode->xfbHeight - 2 * DISPLAY_SCREEN_HEIGHT ) / 4;
   u32 *dest, *next_line;
 
-  if( scaled_x%2 ) {
+  if (scaled_x%2 ) {
     scaled_x -= 1;
     w += 1;
   }
@@ -453,14 +453,14 @@ uidisplay_area( int x, int y, int w, int h )
 }
 
 int
-uidisplay_end( void )
+uidisplay_end(void)
 {
   display_ui_initialised = 0;
   return 0;
 }
 
 int
-wiidisplay_end( void )
+wiidisplay_end(void)
 {
   return 0;
 }
@@ -480,7 +480,7 @@ uidisplay_plot8( int x, int y, libspectrum_byte data,
 {
   x <<= 3;
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     int i;
 
     x <<= 1; y <<= 1;
@@ -525,13 +525,13 @@ uidisplay_plot16( int x, int y, libspectrum_word data,
 }
 
 void
-uidisplay_frame_save( void )
+uidisplay_frame_save(void)
 {
   // FIXME: implement
 }
 
 void
-uidisplay_frame_restore( void )
+uidisplay_frame_restore(void)
 {
   // FIXME: implement
 }

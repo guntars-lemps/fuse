@@ -39,7 +39,7 @@
 #include "pokefinder/pokefinder.h"
 #include "ui/ui.h"
 
-static int create_dialog( void );
+static int create_dialog(void);
 static void gtkui_pokefinder_incremented( GtkWidget *widget,
 					  gpointer user_data GCC_UNUSED );
 static void gtkui_pokefinder_decremented( GtkWidget *widget,
@@ -49,7 +49,7 @@ static void gtkui_pokefinder_reset( GtkWidget *widget, gpointer user_data );
 static void gtkui_pokefinder_close( GtkWidget *widget, gpointer user_data );
 static gboolean delete_dialog( GtkWidget *widget, GdkEvent *event,
 			       gpointer user_data );
-static void update_pokefinder( void );
+static void update_pokefinder(void);
 static void possible_click( GtkTreeView *treeview, GtkTreePath *path,
                             GtkTreeViewColumn *col, gpointer user_data );
 
@@ -83,8 +83,8 @@ menu_machine_pokefinder( GtkAction *gtk_action GCC_UNUSED,
 {
   int error;
 
-  if( !dialog_created ) {
-    error = create_dialog(); if( error ) return;
+  if (!dialog_created ) {
+    error = create_dialog(); if (error ) return;
   }
 
   gtk_widget_show_all( dialog );
@@ -92,7 +92,7 @@ menu_machine_pokefinder( GtkAction *gtk_action GCC_UNUSED,
 }
 
 static GtkWidget *
-create_location_list( void )
+create_location_list(void)
 {
   GtkWidget *view;
   GtkCellRenderer *renderer;
@@ -132,7 +132,7 @@ create_location_list( void )
 }
 
 static int
-create_dialog( void )
+create_dialog(void)
 {
   GtkWidget *hbox, *vbox, *label, *entry, *content_area;
   GtkAccelGroup *accel_group;
@@ -144,7 +144,7 @@ create_dialog( void )
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog ) );
   gtk_box_pack_start( GTK_BOX( content_area ), hbox, TRUE, TRUE, 0 );
 
-  label = gtk_label_new( "Search for:" );
+  label = gtk_label_new( "Search for:");
   gtk_box_pack_start( GTK_BOX( hbox ), label, TRUE, TRUE, 5 );
 
   entry = gtk_entry_new();
@@ -155,7 +155,7 @@ create_dialog( void )
   vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
   gtk_box_pack_start( GTK_BOX( hbox ), vbox, TRUE, TRUE, 5 );
 
-  count_label = gtk_label_new( "" );
+  count_label = gtk_label_new( "");
   gtk_box_pack_start( GTK_BOX( vbox ), count_label, TRUE, TRUE, 5 );
 
   location_list = create_location_list();
@@ -212,8 +212,8 @@ gtkui_pokefinder_search( GtkWidget *widget, gpointer user_data GCC_UNUSED )
   base = ( g_str_has_prefix( entry, "0x" ) )? 16 : 10;
   value = strtol( entry, &endptr, base );
 
-  if( errno != 0 || value < 0 || value > 255 || endptr == entry ) {
-    ui_error( UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 255" );
+  if (errno != 0 || value < 0 || value > 255 || endptr == entry ) {
+    ui_error( UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 255");
     return;
   }
 
@@ -252,7 +252,7 @@ widget_delayed_show( GtkWidget *item )
 }
 
 static void
-update_pokefinder( void )
+update_pokefinder(void)
 {
   size_t page, offset, bank, bank_offset;
   gchar buffer[256], *possible_text[2] = { &buffer[0], &buffer[128] };
@@ -260,7 +260,7 @@ update_pokefinder( void )
 
   gtk_list_store_clear( GTK_LIST_STORE( location_model ) );
 
-  if( pokefinder_count && pokefinder_count <= MAX_POSSIBLE ) {
+  if (pokefinder_count && pokefinder_count <= MAX_POSSIBLE ) {
 
     size_t which;
 
@@ -271,7 +271,7 @@ update_pokefinder( void )
       bank = mapping->page_num;
 
       for( offset = 0; offset < MEMORY_PAGE_SIZE; offset++ )
-	if( ! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) ) {
+	if (! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) ) {
 	  bank_offset = mapping->offset + offset;
 
 	  possible_page[ which ] = bank;
@@ -312,21 +312,21 @@ possible_click( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
 
   // Get selected row via double-clicks or keyboard
   indices = gtk_tree_path_get_indices( path );
-  if( !indices ) return;
+  if (!indices ) return;
   row = indices[0];
 
   error = debugger_breakpoint_add_address(
     DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[ row ],
     possible_offset[ row ], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
   );
-  if( error ) return;
+  if (error ) return;
 
   ui_debugger_update();
 }
 
 void
-gtkui_pokefinder_clear( void )
+gtkui_pokefinder_clear(void)
 {
   pokefinder_clear();
-  if( dialog_created ) update_pokefinder();
+  if (dialog_created ) update_pokefinder();
 }

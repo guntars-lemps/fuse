@@ -37,13 +37,13 @@ void divmmc_set_automap( int state );
 /* Call this after some state change other than an opcode fetch which could
    trigger DivMMC paging (such as updating the write-protect flag), to
    re-evaluate whether paging will actually happen */
-void divmmc_refresh_page_state( void );
+void divmmc_refresh_page_state(void);
 
-void divmmc_register_startup( void );
+void divmmc_register_startup(void);
 int divmmc_insert( const char *filename );
-void divmmc_commit( void );
-int divmmc_eject( void );
+void divmmc_commit(void);
+int divmmc_eject(void);
 
-int divmmc_unittest( void );
+int divmmc_unittest(void);
 
 #endif // #ifndef FUSE_DIVMMC_H

@@ -39,7 +39,7 @@ const compat_fd COMPAT_FILE_OPEN_FAILED = NULL;
 compat_fd
 compat_file_open( const char *path, int write )
 {
-  return fopen( path, write ? "wb" : "rb" );
+  return fopen( path, write ? "wb" : "rb");
 }
 
 off_t
@@ -47,7 +47,7 @@ compat_file_get_length( compat_fd fd )
 {
   struct stat file_info;
 
-  if( fstat( fileno( fd ), &file_info ) ) {
+  if (fstat( fileno( fd ), &file_info ) ) {
     ui_error( UI_ERROR_ERROR, "couldn't stat file: %s", strerror( errno ) );
     return -1;
   }
@@ -59,7 +59,7 @@ int
 compat_file_read( compat_fd fd, utils_file *file )
 {
   size_t bytes = fread( file->buffer, 1, file->length, fd );
-  if( bytes != file->length ) {
+  if (bytes != file->length ) {
     ui_error( UI_ERROR_ERROR,
               "error reading file: expected %lu bytes, but read only %lu",
               (unsigned long)file->length, (unsigned long)bytes );
@@ -73,7 +73,7 @@ int
 compat_file_write( compat_fd fd, const unsigned char *buffer, size_t length )
 {
   size_t bytes = fwrite( buffer, 1, length, fd );
-  if( bytes != length ) {
+  if (bytes != length ) {
     ui_error( UI_ERROR_ERROR,
               "error writing file: expected %lu bytes, but wrote only %lu",
               (unsigned long)length, (unsigned long)bytes );

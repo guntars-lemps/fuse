@@ -72,14 +72,14 @@ nic_w5100_reset( nic_w5100_t *self )
 {
   size_t i;
 
-  nic_w5100_debug( "w5100: reset\n" );
+  nic_w5100_debug( "w5100: reset\n");
 
   memset( self->gw, 0, sizeof( self->gw ) );
   memset( self->sub, 0, sizeof( self->sub ) );
   memset( self->sha, 0, sizeof( self->sha ) );
   memset( self->sip, 0, sizeof( self->sip ) );
 
-  for( i = 0; i < 4; i++ )
+  for (i = 0; i < 4; i++)
     nic_w5100_socket_reset( &self->socket[i] );
 }
 
@@ -101,7 +101,7 @@ w5100_io_thread( void *arg )
 
     FD_SET( selfpipe_socket, &readfds );
 
-    for( i = 0; i < 4; i++ )
+    for (i = 0; i < 4; i++)
       nic_w5100_socket_add_to_sets( &self->socket[i], &readfds, &writefds,
         &max_fd );
 
@@ -111,22 +111,22 @@ w5100_io_thread( void *arg )
        offending socket will not be added to the sets again as it's now been
        closed */
 
-    nic_w5100_debug( "w5100: io thread select\n" );
+    nic_w5100_debug( "w5100: io thread select\n");
 
     active = select( max_fd + 1, &readfds, &writefds, NULL, NULL );
 
     nic_w5100_debug( "w5100: io thread wake; %d active\n", active );
 
-    if( active != -1 ) {
-      if( FD_ISSET( selfpipe_socket, &readfds ) ) {
-        nic_w5100_debug( "w5100: discarding selfpipe data\n" );
+    if (active != -1 ) {
+      if (FD_ISSET( selfpipe_socket, &readfds ) ) {
+        nic_w5100_debug( "w5100: discarding selfpipe data\n");
         compat_socket_selfpipe_discard_data( self->selfpipe );
       }
 
-      for( i = 0; i < 4; i++ )
+      for (i = 0; i < 4; i++)
         nic_w5100_socket_process_io( &self->socket[i], readfds, writefds );
     }
-    else if( compat_socket_get_error() == compat_socket_EBADF ) {
+    else if (compat_socket_get_error() == compat_socket_EBADF ) {
       // Do nothing - just loop again
     }
     else {
@@ -140,7 +140,7 @@ w5100_io_thread( void *arg )
 }
 
 nic_w5100_t*
-nic_w5100_alloc( void )
+nic_w5100_alloc(void)
 {
   int error;
   int i;
@@ -152,7 +152,7 @@ nic_w5100_alloc( void )
 
   self->selfpipe = compat_socket_selfpipe_alloc();
 
-  for( i = 0; i < 4; i++ )
+  for (i = 0; i < 4; i++)
     nic_w5100_socket_init( &self->socket[i], i );
 
   nic_w5100_reset( self );
@@ -160,7 +160,7 @@ nic_w5100_alloc( void )
   self->stop_io_thread = 0;
 
   error = pthread_create( &self->thread, NULL, w5100_io_thread, self );
-  if( error ) {
+  if (error ) {
     ui_error( UI_ERROR_ERROR, "w5100: error %d creating thread", error );
     fuse_abort();
   }
@@ -173,13 +173,13 @@ nic_w5100_free( nic_w5100_t *self )
 {
   int i;
 
-  if( self ) {
+  if (self ) {
     self->stop_io_thread = 1;
     compat_socket_selfpipe_wake( self->selfpipe );
 
     pthread_join( self->thread, NULL );
 
-    for( i = 0; i < 4; i++ )
+    for (i = 0; i < 4; i++)
       nic_w5100_socket_end( &self->socket[i] );
 
     compat_socket_selfpipe_free( self->selfpipe );
@@ -195,8 +195,8 @@ nic_w5100_read( nic_w5100_t *self, libspectrum_word reg )
 {
   libspectrum_byte b;
 
-  if( reg < 0x030 ) {
-    switch( reg ) {
+  if (reg < 0x030 ) {
+    switch (reg ) {
       case W5100_MR:
         // We don't support any flags, so we always return zero here
         b = 0x00;
@@ -227,7 +227,7 @@ nic_w5100_read( nic_w5100_t *self, libspectrum_word reg )
       case W5100_RMSR: case W5100_TMSR:
         // We support only 2K per socket
         b = 0x55;
-        nic_w5100_debug( "w5100: reading 0x%02x from %s\n", b, reg == W5100_RMSR ? "RMSR" : "TMSR" );
+        nic_w5100_debug( "w5100: reading 0x%02x from %s\n", b, reg == W5100_RMSR ? "RMSR" : "TMSR");
         break;
       default:
         b = 0xff;
@@ -236,10 +236,10 @@ nic_w5100_read( nic_w5100_t *self, libspectrum_word reg )
         break;
     }
   }
-  else if( reg >= 0x400 && reg < 0x800 ) {
+  else if (reg >= 0x400 && reg < 0x800 ) {
     b = nic_w5100_socket_read( self, reg );
   }
-  else if( reg >= 0x6000 && reg < 0x8000 ) {
+  else if (reg >= 0x6000 && reg < 0x8000 ) {
     b = nic_w5100_socket_read_rx_buffer( self, reg );
   }
   else {
@@ -256,10 +256,10 @@ w5100_write_mr( nic_w5100_t *self, libspectrum_byte b )
 {
   nic_w5100_debug( "w5100: writing 0x%02x to MR\n", b );
 
-  if( b & 0x80 )
+  if (b & 0x80 )
     nic_w5100_reset( self );
 
-  if( b & 0x7f )
+  if (b & 0x7f )
     nic_w5100_error( UI_ERROR_WARNING,
                      "w5100: unsupported value 0x%02x written to MR\n", b );
 }
@@ -269,7 +269,7 @@ w5100_write_imr( nic_w5100_t *self, libspectrum_byte b )
 {
   nic_w5100_debug( "w5100: writing 0x%02x to IMR\n", b );
 
-  if( b != 0xef )
+  if (b != 0xef )
     nic_w5100_error( UI_ERROR_WARNING,
                      "w5100: unsupported value 0x%02x written to IMR\n", b );
 }
@@ -282,7 +282,7 @@ w5100_write__msr( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b )
 
   nic_w5100_debug( "w5100: writing 0x%02x to %s\n", b, regname );
 
-  if( b != 0x55 )
+  if (b != 0x55 )
     nic_w5100_error( UI_ERROR_WARNING,
                      "w5100: unsupported value 0x%02x written to %s\n",
                      b, regname );
@@ -291,8 +291,8 @@ w5100_write__msr( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b )
 void
 nic_w5100_write( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b )
 {
-  if( reg < 0x030 ) {
-    switch( reg ) {
+  if (reg < 0x030 ) {
+    switch (reg ) {
       case W5100_MR:
         w5100_write_mr( self, b );
         break;
@@ -325,10 +325,10 @@ nic_w5100_write( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b )
         break;
     }
   }
-  else if( reg >= 0x400 && reg < 0x800 ) {
+  else if (reg >= 0x400 && reg < 0x800 ) {
     nic_w5100_socket_write( self, reg, b );
   }
-  else if( reg >= 0x4000 && reg < 0x6000 ) {
+  else if (reg >= 0x4000 && reg < 0x6000 ) {
     nic_w5100_socket_write_tx_buffer( self, reg, b );
   }
   else
@@ -342,7 +342,7 @@ nic_w5100_from_snapshot( nic_w5100_t *self, libspectrum_byte *data )
 {
   int i;
 
-  for( i = 0; i < 0x30; i++ )
+  for (i = 0; i < 0x30; i++)
     nic_w5100_write( self, i, data[i] );
 }
 
@@ -352,7 +352,7 @@ nic_w5100_to_snapshot( nic_w5100_t *self )
   libspectrum_byte *data = libspectrum_new( libspectrum_byte, 0x30 );
   int i;
 
-  for( i = 0; i < 0x30; i++ )
+  for (i = 0; i < 0x30; i++)
     data[i] = nic_w5100_read( self, i );
 
   return data;
@@ -361,7 +361,7 @@ nic_w5100_to_snapshot( nic_w5100_t *self )
 void
 nic_w5100_debug( const char *format, ... )
 {
-  if( W5100_DEBUG ) {
+  if (W5100_DEBUG ) {
     va_list ap;
     va_start( ap, format );
     vprintf( format, ap );
@@ -372,7 +372,7 @@ nic_w5100_debug( const char *format, ... )
 void
 nic_w5100_vdebug( const char *format, va_list ap )
 {
-  if( W5100_DEBUG ) {
+  if (W5100_DEBUG ) {
     vprintf( format, ap );
   }
 }

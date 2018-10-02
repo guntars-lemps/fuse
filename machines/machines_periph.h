@@ -24,12 +24,12 @@
 #ifndef FUSE_MACHINES_PERIPH_H
 #define FUSE_MACHINES_PERIPH_H
 
-void machines_periph_register_startup( void );
+void machines_periph_register_startup(void);
 
-void machines_periph_48( void );
-void machines_periph_128( void );
-void machines_periph_plus3( void );
-void machines_periph_timex( void );
-void machines_periph_pentagon( void );
+void machines_periph_48(void);
+void machines_periph_128(void);
+void machines_periph_plus3(void);
+void machines_periph_timex(void);
+void machines_periph_pentagon(void);
 
 #endif // #ifndef FUSE_MACHINES_PERIPH_H

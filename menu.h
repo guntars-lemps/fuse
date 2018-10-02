@@ -47,7 +47,7 @@
 
 #endif // #ifdef UI_GTK
 
-#define MENU_DETAIL( name ) const char* name( void )
+#define MENU_DETAIL( name ) const char* name(void)
 
 /*
  * Things defined in menu.c
@@ -180,6 +180,6 @@ MENU_CALLBACK( menu_help_about );
 int menu_select_roms_with_title( const char *title, size_t start,
 				 size_t count, int is_peripheral );
 scaler_type menu_get_scaler( scaler_available_fn selector );
-int menu_check_media_changed( void );
+int menu_check_media_changed(void);
 
 #endif // #ifndef FUSE_MENU_H

@@ -84,16 +84,16 @@ sdlkeyboard_keypress( SDL_KeyboardEvent *keyevent )
   fuse_keysym = keysyms_remap( keyevent->keysym.sym );
 
   // Currently unicode_keysyms_map contains ASCII character keys
-  if( ( keyevent->keysym.unicode & 0xFF80 ) == 0 )
+  if (( keyevent->keysym.unicode & 0xFF80 ) == 0 )
     unicode_keysym = unicode_keysyms_remap( keyevent->keysym.unicode );
   else
     unicode_keysym = INPUT_KEY_NONE;
 
-  if( fuse_keysym == INPUT_KEY_NONE && unicode_keysym == INPUT_KEY_NONE )
+  if (fuse_keysym == INPUT_KEY_NONE && unicode_keysym == INPUT_KEY_NONE )
     return;
 
   fuse_event.type = INPUT_EVENT_KEYPRESS;
-  if( unicode_keysym == INPUT_KEY_NONE )
+  if (unicode_keysym == INPUT_KEY_NONE )
     fuse_event.types.key.native_key = fuse_keysym;
   else
     fuse_event.types.key.native_key = unicode_keysym;
@@ -110,7 +110,7 @@ sdlkeyboard_keyrelease( SDL_KeyboardEvent *keyevent )
 
   fuse_keysym = keysyms_remap( keyevent->keysym.sym );
 
-  if( fuse_keysym == INPUT_KEY_NONE ) return;
+  if (fuse_keysym == INPUT_KEY_NONE ) return;
 
   fuse_event.type = INPUT_EVENT_KEYRELEASE;
   /* SDL doesn't provide key release information for UNICODE, assuming that

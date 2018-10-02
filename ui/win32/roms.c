@@ -84,7 +84,7 @@ roms_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
   HWND hedit;
 
-  switch( uMsg ) {
+  switch (uMsg ) {
 
     case WM_INITDIALOG:
       roms_init( hwndDlg, lParam );
@@ -93,7 +93,7 @@ roms_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
       return FALSE;
 
     case WM_COMMAND:
-      switch( LOWORD( wParam ) ) {
+      switch (LOWORD( wParam ) ) {
 
         case IDOK:
           roms_done( hwndDlg, GetWindowLongPtr( ( HWND ) hwndDlg, GWLP_USERDATA ) );
@@ -105,9 +105,9 @@ roms_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
           return 0;
 
         default:
-          if( HIWORD( wParam ) == BN_CLICKED ) {
+          if (HIWORD( wParam ) == BN_CLICKED ) {
             hedit = ( HWND ) GetWindowLongPtr( ( HWND ) lParam, GWLP_USERDATA );
-            if( hedit > 0 ) {
+            if (hedit > 0 ) {
               select_new_rom( hedit );
               return 0;
             }
@@ -131,7 +131,7 @@ roms_init( HWND hwndDlg, LPARAM lParam )
 
   info = ( struct callback_info * ) lParam;
 
-  for( i = 0; i < info->n; i++ )
+  for (i = 0; i < info->n; i++)
     add_rom( hwndDlg, info->start, i, info->is_peripheral );
 
   // Move the OK and Cancel buttons
@@ -238,8 +238,8 @@ select_new_rom( HWND hedit )
 {
   TCHAR *filename;
 
-  filename = ui_get_open_filename( "Fuse - Select ROM" );
-  if( !filename ) return;
+  filename = ui_get_open_filename( "Fuse - Select ROM");
+  if (!filename ) return;
 
   SendMessage( hedit, WM_SETTEXT, 0, ( LPARAM ) filename );
 }
@@ -254,7 +254,7 @@ roms_done( HWND hwndDlg, LONG_PTR lParam )
 
   struct callback_info *info = ( struct callback_info * ) lParam;
 
-  for( i = 0; i < info->n; i++ ) {
+  for (i = 0; i < info->n; i++) {
 
     setting = settings_get_rom_setting( &settings_current, info->start + i,
 					info->is_peripheral );

@@ -38,7 +38,7 @@
 #include "spec48.h"
 #include "tc2068.h"
 
-static int tc2048_reset( void );
+static int tc2048_reset(void);
 
 int
 tc2048_port_from_ula( libspectrum_word port )
@@ -46,7 +46,7 @@ tc2048_port_from_ula( libspectrum_word port )
   // Ports F4 (HSR), FE (SCLD) and FF (DEC) supplied by ULA
   port &= 0xff;
 
-  return( port == 0xf4 || port == 0xfe || port == 0xff );
+  return (port == 0xf4 || port == 0xfe || port == 0xff );
 }
 
 int tc2048_init( fuse_machine_info *machine )
@@ -72,14 +72,14 @@ int tc2048_init( fuse_machine_info *machine )
 }
 
 static int
-tc2048_reset( void )
+tc2048_reset(void)
 {
   size_t i, j;
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_tc2048,
                             settings_default.rom_tc2048, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   // 0x0000: ROM 0
   scld_home_map_16k( 0x0000, memory_map_rom, 0 );
@@ -119,7 +119,7 @@ tc2048_reset( void )
 
   beta_builtin = 0;
 
-  for( i = 0; i < 8; i++ )
+  for (i = 0; i < 8; i++)
     for( j = 0; j < MEMORY_PAGES_IN_8K; j++ ) {
       memory_page *dock_page, *exrom_page;
 

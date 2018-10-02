@@ -59,13 +59,13 @@ static void joy_handler( int ev, int number, char value, int which );
 static int
 init_stick( int which )
 {
-  if( !joystick_init( which, JOY_CALIB_STDOUT ) ) {
+  if (!joystick_init( which, JOY_CALIB_STDOUT ) ) {
     ui_error( UI_ERROR_ERROR, "failed to initialise joystick %i: %s",
-	      which + 1, errno ? strerror (errno) : "not configured?" );
+	      which + 1, errno ? strerror (errno) : "not configured?");
     return 1;
   }
 
-  if( joystick_getnumaxes( which ) < 2    ||
+  if (joystick_getnumaxes( which ) < 2    ||
       joystick_getnumbuttons( which ) < 1    ) {
     joystick_close( which );
     ui_error( UI_ERROR_ERROR, "sorry, joystick %i is inadequate!", which + 1 );
@@ -73,26 +73,26 @@ init_stick( int which )
   }
 
   buttons[which] = joystick_getnumbuttons( which );
-  if( buttons[which] > NUM_JOY_BUTTONS ) buttons[which] = NUM_JOY_BUTTONS;
+  if (buttons[which] > NUM_JOY_BUTTONS ) buttons[which] = NUM_JOY_BUTTONS;
 
   return 0;
 }
 
 int
-ui_joystick_init( void )
+ui_joystick_init(void)
 {
   int i;
 
   // If we can't init the first, don't try the second
-  if( init_stick( 0 ) ) {
+  if (init_stick( 0 ) ) {
     sticks = 0;
-  } else if( init_stick( 1 ) ) {
+  } else if (init_stick( 1 ) ) {
     sticks = 1;
   } else {
     sticks = 2;
   }
 
-  for( i = 0; i < sticks; i++ ) {
+  for (i = 0; i < sticks; i++) {
     joystick_sethandler( i, joy_handler );
   }
 
@@ -100,7 +100,7 @@ ui_joystick_init( void )
 }
 
 void
-ui_joystick_end( void )
+ui_joystick_end(void)
 {
   joystick_close( -1 );
 }
@@ -131,14 +131,14 @@ joy_handler( int ev, int number, char value, int which )
 
   switch ( ev ) {
   case JOY_EVENTAXIS:
-    if( number == 0 )
+    if (number == 0 )
       do_axis( which, value, INPUT_JOYSTICK_LEFT, INPUT_JOYSTICK_RIGHT );
-    else if( number == 1 )
+    else if (number == 1 )
       do_axis( which, value, INPUT_JOYSTICK_UP, INPUT_JOYSTICK_DOWN );
     break;
   case JOY_EVENTBUTTONDOWN:
   case JOY_EVENTBUTTONUP:
-    if( number >= buttons[which] ) return;
+    if (number >= buttons[which] ) return;
     event.types.joystick.which = which;
     event.types.joystick.button = INPUT_JOYSTICK_FIRE_1 + number;
     event.type = ( ev == JOY_EVENTBUTTONDOWN )
@@ -152,7 +152,7 @@ joy_handler( int ev, int number, char value, int which )
 }
 
 void
-ui_joystick_poll( void )
+ui_joystick_poll(void)
 {
 }
 

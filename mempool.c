@@ -48,7 +48,7 @@ mempool_init( void *context )
 }
 
 int
-mempool_register_pool( void )
+mempool_register_pool(void)
 {
   GArray *pool = g_array_new( FALSE, FALSE, sizeof( void* ) );
 
@@ -62,12 +62,12 @@ mempool_malloc( int pool, size_t size )
 {
   void *ptr;
 
-  if( pool == MEMPOOL_UNTRACKED ) return libspectrum_malloc( size );
+  if (pool == MEMPOOL_UNTRACKED ) return libspectrum_malloc( size );
 
-  if( pool < 0 || pool >= memory_pools->len ) return NULL;
+  if (pool < 0 || pool >= memory_pools->len ) return NULL;
 
   ptr = libspectrum_malloc( size );
-  if( !ptr ) return NULL;
+  if (!ptr ) return NULL;
 
   g_array_append_val( g_array_index( memory_pools, GArray*, pool ), ptr );
 
@@ -79,12 +79,12 @@ mempool_malloc_n( int pool, size_t nmemb, size_t size )
 {
   void *ptr;
 
-  if( pool == MEMPOOL_UNTRACKED ) return libspectrum_malloc_n( nmemb, size );
+  if (pool == MEMPOOL_UNTRACKED ) return libspectrum_malloc_n( nmemb, size );
 
-  if( pool < 0 || pool >= memory_pools->len ) return NULL;
+  if (pool < 0 || pool >= memory_pools->len ) return NULL;
 
   ptr = libspectrum_malloc_n( nmemb, size );
-  if( !ptr ) return NULL;
+  if (!ptr ) return NULL;
 
   g_array_append_val( g_array_index( memory_pools, GArray*, pool ), ptr );
 
@@ -97,7 +97,7 @@ mempool_strdup( int pool, const char *string )
   size_t length = strlen( string ) + 1;
 
   char *ptr = mempool_malloc( pool, length );
-  if( !ptr ) return NULL;
+  if (!ptr ) return NULL;
 
   memcpy( ptr, string, length );
 
@@ -111,7 +111,7 @@ mempool_free( int pool )
 
   GArray *p = g_array_index( memory_pools, GArray*, pool );
 
-  for( i = 0; i < p->len; i++ )
+  for (i = 0; i < p->len; i++)
     libspectrum_free( g_array_index( p, void*, i ) );
 
   g_array_set_size( p, 0 );
@@ -119,14 +119,14 @@ mempool_free( int pool )
 
 // Tidy-up function called at end of emulation
 static void
-mempool_end( void )
+mempool_end(void)
 {
   int i;
   GArray *pool;
 
-  if( !memory_pools ) return;
+  if (!memory_pools ) return;
 
-  for( i = 0; i < memory_pools->len; i++ ) {
+  for (i = 0; i < memory_pools->len; i++) {
     pool = g_array_index( memory_pools, GArray *, i );
 
     g_array_free( pool, TRUE );
@@ -137,7 +137,7 @@ mempool_end( void )
 }
 
 void
-mempool_register_startup( void )
+mempool_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_MEMPOOL, dependencies,
@@ -148,7 +148,7 @@ mempool_register_startup( void )
 // Unit test helper routines
 
 int
-mempool_get_pools( void )
+mempool_get_pools(void)
 {
   return memory_pools->len;
 }

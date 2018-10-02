@@ -47,7 +47,7 @@ int ui_init(int *argc, char ***argv)
 {
   int error;
 
-  if( ui_widget_init() ) return 1;
+  if (ui_widget_init() ) return 1;
 
   error = svgadisplay_init();
   if(error) return error;
@@ -68,7 +68,7 @@ int ui_init(int *argc, char ***argv)
 }
 
 int
-ui_event( void )
+ui_event(void)
 {
   int x, y, b, bd;
 
@@ -83,12 +83,12 @@ ui_event( void )
   b = mouse_getbutton();
 
   bd = b ^ oldbutton;
-  if( bd & MOUSE_LEFTBUTTON ) ui_mouse_button( 1, b & MOUSE_LEFTBUTTON );
-  if( bd & MOUSE_MIDDLEBUTTON ) ui_mouse_button( 2, b & MOUSE_MIDDLEBUTTON );
-  if( bd & MOUSE_RIGHTBUTTON ) ui_mouse_button( 3, b & MOUSE_RIGHTBUTTON );
+  if (bd & MOUSE_LEFTBUTTON ) ui_mouse_button( 1, b & MOUSE_LEFTBUTTON );
+  if (bd & MOUSE_MIDDLEBUTTON ) ui_mouse_button( 2, b & MOUSE_MIDDLEBUTTON );
+  if (bd & MOUSE_RIGHTBUTTON ) ui_mouse_button( 3, b & MOUSE_RIGHTBUTTON );
   oldbutton = b;
 
-  if( x != oldx || y != oldy ) {
+  if (x != oldx || y != oldy ) {
     ui_mouse_motion( x - oldx, y - oldy );
     oldx = x; oldy = y;
   }

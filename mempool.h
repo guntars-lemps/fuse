@@ -26,8 +26,8 @@
 
 extern const int MEMPOOL_UNTRACKED;
 
-void mempool_register_startup( void );
-int mempool_register_pool( void );
+void mempool_register_startup(void);
+int mempool_register_pool(void);
 void* mempool_malloc( int pool, size_t size );
 void* mempool_malloc_n( int pool, size_t nmemb, size_t size );
 char* mempool_strdup( int pool, const char *string );
@@ -38,7 +38,7 @@ void mempool_free( int pool );
 
 // Unit test helper routines
 
-int mempool_get_pools( void );
+int mempool_get_pools(void);
 int mempool_get_pool_size( int pool );
 
 #endif // #ifndef FUSE_MEMPOOL_H

@@ -53,18 +53,18 @@ static void do_axis( int which, WORD value,
                      input_key negative, input_key positive );
 
 int
-ui_joystick_init( void )
+ui_joystick_init(void)
 {
   int retval;
   JOYINFO joyinfo;
 
   retval = joyGetNumDevs();
 
-  if( retval > 0 ) {
+  if (retval > 0 ) {
 
-    if( joyGetPos( JOYSTICKID1, &joyinfo ) == JOYERR_NOERROR ) {
-      if( joySetCapture( fuse_hWnd, JOYSTICKID1, 0, FALSE ) != JOYERR_NOERROR ) {
-        ui_error( UI_ERROR_ERROR, "Couldn't start capture for joystick 1" );
+    if (joyGetPos( JOYSTICKID1, &joyinfo ) == JOYERR_NOERROR ) {
+      if (joySetCapture( fuse_hWnd, JOYSTICKID1, 0, FALSE ) != JOYERR_NOERROR ) {
+        ui_error( UI_ERROR_ERROR, "Couldn't start capture for joystick 1");
         return 0;
       }
     } else {
@@ -73,13 +73,13 @@ ui_joystick_init( void )
 
   }
 
-  if( retval >= 2 ) {
+  if (retval >= 2 ) {
 
     retval = 2;
 
-    if( joyGetPos( JOYSTICKID2, &joyinfo ) == JOYERR_NOERROR ) {
-      if( joySetCapture( fuse_hWnd, JOYSTICKID2, 0, FALSE ) != JOYERR_NOERROR ) {
-        ui_error( UI_ERROR_ERROR, "Couldn't start capture for joystick 2" );
+    if (joyGetPos( JOYSTICKID2, &joyinfo ) == JOYERR_NOERROR ) {
+      if (joySetCapture( fuse_hWnd, JOYSTICKID2, 0, FALSE ) != JOYERR_NOERROR ) {
+        ui_error( UI_ERROR_ERROR, "Couldn't start capture for joystick 2");
         return 1;
       }
     } else {
@@ -92,7 +92,7 @@ ui_joystick_init( void )
 }
 
 void
-ui_joystick_poll( void )
+ui_joystick_poll(void)
 {
   /* No action needed; joysticks already handled by the Window messages
      sent by mmsystem */
@@ -109,10 +109,10 @@ win32joystick_buttonevent( int which_joystick, int button_down,
     We should use DirectInput. Polling with JoyGetPosEx would take
     up to 8 milliseconds in analog joysticks (digital joysticks just
     a few clock cycles) */
-  if( wParam & JOY_BUTTON1CHG ) button = INPUT_JOYSTICK_FIRE_1;
-  else if( wParam & JOY_BUTTON2CHG ) button = INPUT_JOYSTICK_FIRE_2;
-  else if( wParam & JOY_BUTTON3CHG ) button = INPUT_JOYSTICK_FIRE_3;
-  else if( wParam & JOY_BUTTON4CHG ) button = INPUT_JOYSTICK_FIRE_4;
+  if (wParam & JOY_BUTTON1CHG ) button = INPUT_JOYSTICK_FIRE_1;
+  else if (wParam & JOY_BUTTON2CHG ) button = INPUT_JOYSTICK_FIRE_2;
+  else if (wParam & JOY_BUTTON3CHG ) button = INPUT_JOYSTICK_FIRE_3;
+  else if (wParam & JOY_BUTTON4CHG ) button = INPUT_JOYSTICK_FIRE_4;
   else return; // Fuse for Windows supports up to 4 joystick buttons
 
   event.types.joystick.which = which_joystick;
@@ -143,10 +143,10 @@ do_axis( int which, WORD value, input_key negative, input_key positive )
   event2.types.joystick.button = positive;
 
   // MS Windows sends a value between 0 and 65535, hopefully those will work
-  if( value > 49152 ) {
+  if (value > 49152 ) {
     event1.type = INPUT_EVENT_JOYSTICK_RELEASE;
     event2.type = INPUT_EVENT_JOYSTICK_PRESS;
-  } else if( value < 16384 ) {
+  } else if (value < 16384 ) {
     event1.type = INPUT_EVENT_JOYSTICK_PRESS;
     event2.type = INPUT_EVENT_JOYSTICK_RELEASE;
   } else {
@@ -159,7 +159,7 @@ do_axis( int which, WORD value, input_key negative, input_key positive )
 }
 
 void
-ui_joystick_end( void )
+ui_joystick_end(void)
 {
   // Initialization and unitialization is handled by MS Windows
 }
@@ -215,7 +215,7 @@ menu_options_joysticks_select( int action )
 static INT_PTR CALLBACK
 dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-  switch( uMsg ) {
+  switch (uMsg ) {
 
     case WM_INITDIALOG:
       SetWindowLongPtr( hwndDlg, GWLP_USERDATA, lParam );
@@ -223,7 +223,7 @@ dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
       return FALSE;
 
     case WM_COMMAND:
-      switch( LOWORD( wParam ) ) {
+      switch (LOWORD( wParam ) ) {
         case IDC_JOYSTICKS_BUTTON_BUTTON1:
         case IDC_JOYSTICKS_BUTTON_BUTTON2:
         case IDC_JOYSTICKS_BUTTON_BUTTON3:
@@ -266,7 +266,7 @@ dialog_init( HWND hwndDlg, struct joystick_info *info )
   size_t i;
   create_joystick_type_selector( info, hwndDlg );
 
-  for( i = 0; i < NUM_JOY_BUTTONS; i++ ) {
+  for (i = 0; i < NUM_JOY_BUTTONS; i++) {
 
     info->button[i].label = GetDlgItem( hwndDlg,
                                        IDC_JOYSTICKS_BUTTON_BUTTON1 + i );
@@ -274,7 +274,7 @@ dialog_init( HWND hwndDlg, struct joystick_info *info )
                                        IDC_JOYSTICKS_STATIC_BUTTON1 + i );
     info->button[i].frame = GetDlgItem( hwndDlg,
                                        IDC_JOYSTICKS_GROUP_BUTTON1 + i );
-    if( info->button[i].setting ) {
+    if (info->button[i].setting ) {
       create_fire_button_selector( info->button[i].name, &( info->button[i] ),
                                    hwndDlg );
     }
@@ -297,7 +297,7 @@ setup_info( struct joystick_info *info, int action )
 {
   size_t i;
 
-  switch( action ) {
+  switch (action ) {
 
   case 1:
     info->type = &( settings_current.joystick_1_output );
@@ -316,7 +316,7 @@ setup_info( struct joystick_info *info, int action )
     info->button[12].setting = &( settings_current.joystick_1_fire_13 );
     info->button[13].setting = &( settings_current.joystick_1_fire_14 );
     info->button[14].setting = &( settings_current.joystick_1_fire_15 );
-    for( i = 0; i < NUM_JOY_BUTTONS; i++ )
+    for (i = 0; i < NUM_JOY_BUTTONS; i++)
       _sntprintf( info->button[i].name, 80, "Button %lu",
                   (unsigned long)i + 1 );
     break;
@@ -338,7 +338,7 @@ setup_info( struct joystick_info *info, int action )
     info->button[12].setting = &( settings_current.joystick_2_fire_13 );
     info->button[13].setting = &( settings_current.joystick_2_fire_14 );
     info->button[14].setting = &( settings_current.joystick_2_fire_15 );
-    for( i = 0; i < NUM_JOY_BUTTONS; i++ )
+    for (i = 0; i < NUM_JOY_BUTTONS; i++)
       _sntprintf( info->button[i].name, 80, "Button %lu",
                   (unsigned long)i + 1 );
     break;
@@ -346,16 +346,16 @@ setup_info( struct joystick_info *info, int action )
   case 3:
     info->type = &( settings_current.joystick_keyboard_output );
     info->button[0].setting = &( settings_current.joystick_keyboard_up  );
-    _sntprintf( info->button[0].name, 80, "Button for UP" );
+    _sntprintf( info->button[0].name, 80, "Button for UP");
     info->button[1].setting = &( settings_current.joystick_keyboard_down  );
-    _sntprintf( info->button[1].name, 80, "Button for DOWN" );
+    _sntprintf( info->button[1].name, 80, "Button for DOWN");
     info->button[2].setting = &( settings_current.joystick_keyboard_left  );
-    _sntprintf( info->button[2].name, 80, "Button for LEFT" );
+    _sntprintf( info->button[2].name, 80, "Button for LEFT");
     info->button[3].setting = &( settings_current.joystick_keyboard_right  );
-    _sntprintf( info->button[3].name, 80, "Button for RIGHT" );
+    _sntprintf( info->button[3].name, 80, "Button for RIGHT");
     info->button[4].setting = &( settings_current.joystick_keyboard_fire  );
-    _sntprintf( info->button[4].name, 80, "Button for FIRE" );
-    for( i = 5; i < NUM_JOY_BUTTONS; i++ ) info->button[i].setting = NULL;
+    _sntprintf( info->button[4].name, 80, "Button for FIRE");
+    for( i = 5; i < NUM_JOY_BUTTONS; i++) info->button[i].setting = NULL;
     break;
 
   }
@@ -370,7 +370,7 @@ create_joystick_type_selector( struct joystick_info *info, HWND hwndDlg )
 
   font = ( HFONT ) SendMessage( hwndDlg, WM_GETFONT, 0, 0 );
 
-  for( i = 0; i < JOYSTICK_TYPE_COUNT; i++ ) {
+  for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
     rect.left = 5; rect.top = i * 10 + 10 ;
     rect.right = 5 + 45; rect.bottom = ( i * 10 ) + 10 + 10;
@@ -384,7 +384,7 @@ create_joystick_type_selector( struct joystick_info *info, HWND hwndDlg )
                                        hwndDlg, 0, fuse_hInstance, 0 );
     SendMessage( info->radio[ i ], WM_SETFONT, ( WPARAM ) font, FALSE );
 
-    if( i == *( info->type ) )
+    if (i == *( info->type ) )
       SendMessage( info->radio[ i ], BM_SETCHECK, BST_CHECKED, 0 );
   }
 
@@ -429,13 +429,13 @@ joystick_done( LONG_PTR user_data )
 
   int i;
 
-  for( i = 0; i < NUM_JOY_BUTTONS; i++ )
-    if( info->button[i].setting )
+  for (i = 0; i < NUM_JOY_BUTTONS; i++)
+    if (info->button[i].setting )
       *info->button[i].setting = info->button[i].key;
 
-  for( i = 0; i < JOYSTICK_TYPE_COUNT; i++ ) {
+  for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
-    if( SendMessage( info->radio[ i ], BM_GETCHECK, 0, 0 ) == BST_CHECKED ) {
+    if (SendMessage( info->radio[ i ], BM_GETCHECK, 0, 0 ) == BST_CHECKED ) {
       *( info->type ) = i;
       return;
     }
@@ -461,10 +461,10 @@ show_key_selection_popoup( HWND hwndDlg, LPARAM lParam )
                             TPM_NONOTIFY | TPM_RETURNCMD |
                             TPM_RIGHTBUTTON, rect.left, rect.top, 0,
                             fuse_hWnd, NULL );
-  if( menu_id > 0 ) {
+  if (menu_id > 0 ) {
     /* KEYBOARD_NONE is 0, and TrackPopupMenu returns 0 on error,
        so menu id for KEYBOARD_NONE is 1 to distiguish the 2 results */
-    if( menu_id != 1 )
+    if (menu_id != 1 )
       info->key = menu_id;
     else
       info->key = KEYBOARD_NONE;

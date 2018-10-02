@@ -66,7 +66,7 @@ svgakeyboard_keypress( int keysym )
 
   fuse_keysym = keysyms_remap( keysym );
 
-  if( fuse_keysym == INPUT_KEY_NONE ) return 0;
+  if (fuse_keysym == INPUT_KEY_NONE ) return 0;
 
   fuse_event.type = INPUT_EVENT_KEYPRESS;
   fuse_event.types.key.native_key = fuse_keysym;
@@ -83,7 +83,7 @@ svgakeyboard_keyrelease( int keysym )
 
   fuse_keysym = keysyms_remap( keysym );
 
-  if( fuse_keysym == INPUT_KEY_NONE ) return 0;
+  if (fuse_keysym == INPUT_KEY_NONE ) return 0;
 
   fuse_event.type = INPUT_EVENT_KEYRELEASE;
   fuse_event.types.key.native_key = fuse_keysym;

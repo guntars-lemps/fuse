@@ -24,8 +24,8 @@
 #ifndef FUSE_WIIDISPLAY_H
 #define FUSE_WIIDISPLAY_H
 
-int wiidisplay_init( void );
-int wiidisplay_end( void );
+int wiidisplay_init(void);
+int wiidisplay_end(void);
 
 void wiidisplay_showmouse( float mousex, float mousey );
 

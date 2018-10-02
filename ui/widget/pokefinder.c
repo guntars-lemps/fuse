@@ -42,9 +42,9 @@ static int possible_page[ MAX_POSSIBLE ];
 static libspectrum_word possible_offset[ MAX_POSSIBLE ];
 static int selected = 0;
 
-static void update_possible( void );
-static void display_possible( void );
-static void display_value( void );
+static void update_possible(void);
+static void display_possible(void);
+static void display_value(void);
 
 static const char * const title = "Poke finder";
 
@@ -53,16 +53,16 @@ widget_pokefinder_draw( void *data )
 {
   widget_dialog_with_border( 1, 2, 30, 12 );
   widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, title );
-  widget_printstring( 16, 24, WIDGET_COLOUR_FOREGROUND, "Possible: " );
-  widget_printstring( 16, 32, WIDGET_COLOUR_FOREGROUND, "Value: " );
+  widget_printstring( 16, 24, WIDGET_COLOUR_FOREGROUND, "Possible: ");
+  widget_printstring( 16, 32, WIDGET_COLOUR_FOREGROUND, "Value: ");
 
   update_possible();
   display_possible();
   display_value();
 
   widget_printstring( 16, 88, WIDGET_COLOUR_FOREGROUND,
-		      "\x0AI\x01nc'd \x0A" "D\x01" "ec'd \x0AS\x01" "earch" );
-  widget_printstring( 16, 96, WIDGET_COLOUR_FOREGROUND, "\x0AR\x01" "eset \x0A" "C\x01lose" );
+		      "\x0AI\x01nc'd \x0A" "D\x01" "ec'd \x0AS\x01" "earch");
+  widget_printstring( 16, 96, WIDGET_COLOUR_FOREGROUND, "\x0AR\x01" "eset \x0A" "C\x01lose");
 
   widget_display_lines( 2, 12 );
 
@@ -70,13 +70,13 @@ widget_pokefinder_draw( void *data )
 }
 
 static void
-update_possible( void )
+update_possible(void)
 {
   size_t page, offset, bank, bank_offset, i = 0;
 
   selected = 0;
 
-  if( !FEW_ENOUGH() )
+  if (!FEW_ENOUGH() )
     return;
 
   for( page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; page++ ) {
@@ -84,19 +84,19 @@ update_possible( void )
     bank = mapping->page_num;
 
     for( offset = 0; offset < MEMORY_PAGE_SIZE; ++offset )
-      if( ! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) ) {
+      if (! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) ) {
 	bank_offset = mapping->offset + offset;
 
 	possible_page[i] = bank;
 	possible_offset[i] = bank_offset;
-	if( ++i == pokefinder_count )
+	if (++i == pokefinder_count )
 	  return;
       }
   }
 }
 
 static void
-display_possible( void )
+display_possible(void)
 {
   char buf[ 32 ];
 
@@ -108,15 +108,15 @@ display_possible( void )
   snprintf( buf, sizeof( buf ), "%lu", (unsigned long)pokefinder_count );
   widget_printstring( 96, 24, WIDGET_COLOUR_FOREGROUND, buf );
 
-  if( FEW_ENOUGH() ) {
+  if (FEW_ENOUGH() ) {
     size_t i;
 
-    for( i = 0; i < pokefinder_count; i++ ) {
+    for (i = 0; i < pokefinder_count; i++) {
       int x = 2 + (i / 4) * 8;
       int y = 6 + (i % 4);
       int colour;
 
-      if( i == selected ) {
+      if (i == selected ) {
 	widget_rectangle( x * 8, y * 8, 56, 8, WIDGET_COLOUR_FOREGROUND );
 	colour = WIDGET_COLOUR_BACKGROUND;
       } else {
@@ -128,14 +128,14 @@ display_possible( void )
       widget_printstring( x * 8, y * 8, colour, buf );
     }
 
-    widget_printstring( 83, 96, WIDGET_COLOUR_FOREGROUND, "\x0A" "B\x01reak" );
+    widget_printstring( 83, 96, WIDGET_COLOUR_FOREGROUND, "\x0A" "B\x01reak");
   }
 
   widget_display_lines( 3, 10 );
 }
 
 static void
-display_value( void )
+display_value(void)
 {
   char buf[16];
 
@@ -148,12 +148,12 @@ display_value( void )
 static void
 scroll( int step )
 {
-  if( !FEW_ENOUGH() ) return;
+  if (!FEW_ENOUGH() ) return;
 
   selected += step;
-  if( selected < 0 )
+  if (selected < 0 )
     selected = 0;
-  else if( selected >= pokefinder_count )
+  else if (selected >= pokefinder_count )
     selected = pokefinder_count - 1;
 
   display_possible();
@@ -186,7 +186,7 @@ widget_pokefinder_keyhandler( input_key key )
   case INPUT_KEY_Return:
   case INPUT_KEY_KP_Enter:
   case INPUT_KEY_s: // Search
-    if( value < 256 ) {
+    if (value < 256 ) {
       pokefinder_search( value );
       update_possible();
       display_possible();
@@ -200,19 +200,19 @@ widget_pokefinder_keyhandler( input_key key )
     break;
 
   case INPUT_KEY_b: // Add breakpoint
-    if( FEW_ENOUGH() )
+    if (FEW_ENOUGH() )
     {
       widget_rectangle( 128, 24, 112, 8, WIDGET_COLOUR_BACKGROUND );
-      if( debugger_breakpoint_add_address(
+      if (debugger_breakpoint_add_address(
             DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram,
             possible_page[selected], possible_offset[selected], 0,
             DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
 	  ) ) {
 	widget_printstring( 16, 80, WIDGET_COLOUR_FOREGROUND,
-			    "Breakpoint failed" );
+			    "Breakpoint failed");
       } else {
 	widget_printstring( 16, 80, WIDGET_COLOUR_FOREGROUND,
-			    "Breakpoint added" );
+			    "Breakpoint added");
       }
       widget_display_lines( 10, 1 );
     }

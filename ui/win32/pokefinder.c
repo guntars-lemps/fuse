@@ -37,12 +37,12 @@
 void menu_machine_pokefinder( int action );
 void move_button( int button, int dlg_height );
 static void possible_click( LPNMITEMACTIVATE lpnmitem );
-static void update_pokefinder( void );
-static void win32ui_pokefinder_incremented( void );
-static void win32ui_pokefinder_decremented( void );
-static void win32ui_pokefinder_search( void );
-static void win32ui_pokefinder_reset( void );
-static void win32ui_pokefinder_close( void );
+static void update_pokefinder(void);
+static void win32ui_pokefinder_incremented(void);
+static void win32ui_pokefinder_decremented(void);
+static void win32ui_pokefinder_search(void);
+static void win32ui_pokefinder_reset(void);
+static void win32ui_pokefinder_close(void);
 
 #define MAX_POSSIBLE 20
 
@@ -59,10 +59,10 @@ win32ui_pokefinder_proc( HWND hWnd GCC_UNUSED, UINT msg,
 {
   int height;
 
-  switch( msg ) {
+  switch (msg ) {
 
     case WM_COMMAND:
-      switch( LOWORD( wParam ) ) {
+      switch (LOWORD( wParam ) ) {
         case IDCLOSE:
         case IDCANCEL:
           win32ui_pokefinder_close();
@@ -123,7 +123,7 @@ move_button( int button, int dlg_height )
 }
 
 static void
-update_pokefinder( void )
+update_pokefinder(void)
 {
   size_t page, offset, bank, bank_offset;
   TCHAR buffer[256], *possible_text[2] = { &buffer[0], &buffer[128] };
@@ -138,7 +138,7 @@ update_pokefinder( void )
   LV_ITEM lvi;
   lvi.mask = LVIF_TEXT;
 
-  if( pokefinder_count && pokefinder_count <= MAX_POSSIBLE ) {
+  if (pokefinder_count && pokefinder_count <= MAX_POSSIBLE ) {
 
     size_t which = 0;
 
@@ -147,7 +147,7 @@ update_pokefinder( void )
       bank = mapping->page_num;
 
       for( offset = 0; offset < MEMORY_PAGE_SIZE; offset++ )
-	if( ! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) ) {
+	if (! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) ) {
 	  bank_offset = mapping->offset + offset;
 
 	  possible_page[ which ] = bank;
@@ -253,12 +253,12 @@ menu_machine_pokefinder( int action GCC_UNUSED )
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
     lvc.fmt = LVCFMT_LEFT;
     lvc.cx = cx;
-    lvc.pszText = (LPTSTR) TEXT( "Page" );
+    lvc.pszText = (LPTSTR) TEXT( "Page");
     SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LIST, LVM_INSERTCOLUMN, 0,
                         ( LPARAM ) &lvc );
     lvc.mask |= LVCF_SUBITEM;
     lvc.cx = cx;
-    lvc.pszText = (LPTSTR) TEXT( "Offset" );
+    lvc.pszText = (LPTSTR) TEXT( "Offset");
     SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LIST, LVM_INSERTCOLUMN, 1,
                         ( LPARAM ) &lvc );
 
@@ -272,21 +272,21 @@ menu_machine_pokefinder( int action GCC_UNUSED )
 }
 
 static void
-win32ui_pokefinder_incremented( void )
+win32ui_pokefinder_incremented(void)
 {
   pokefinder_incremented();
   update_pokefinder();
 }
 
 static void
-win32ui_pokefinder_decremented( void )
+win32ui_pokefinder_decremented(void)
 {
   pokefinder_decremented();
   update_pokefinder();
 }
 
 static void
-win32ui_pokefinder_search( void )
+win32ui_pokefinder_search(void)
 {
   long value;
   TCHAR *buffer, *endptr;
@@ -297,16 +297,16 @@ win32ui_pokefinder_search( void )
   buffer_size = SendDlgItemMessage( fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXTLENGTH,
                                    (WPARAM) 0, (LPARAM) 0 );
   buffer = malloc( ( buffer_size + 1 ) * sizeof( TCHAR ) );
-  if( buffer == NULL ) {
+  if (buffer == NULL ) {
     ui_error( UI_ERROR_ERROR, "Out of memory in %s.", __func__ );
     return;
   }
 
   // get the value in Search box first
-  if( SendDlgItemMessage( fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXT,
+  if (SendDlgItemMessage( fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXT,
                           (WPARAM) ( buffer_size + 1 ),
                           (LPARAM) buffer ) != buffer_size ) {
-    ui_error( UI_ERROR_ERROR, "Couldn't get the content of the Search text box" );
+    ui_error( UI_ERROR_ERROR, "Couldn't get the content of the Search text box");
     return;
   }
 
@@ -314,9 +314,9 @@ win32ui_pokefinder_search( void )
   base = ( !_tcsncmp( _T("0x"), buffer, strlen( _T("0x") ) ) )? 16 : 10;
   value = _tcstol( buffer, &endptr, base );
 
-  if( errno || value < 0 || value > 255 || endptr == buffer ) {
+  if (errno || value < 0 || value > 255 || endptr == buffer ) {
     free( buffer );
-    ui_error( UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 255" );
+    ui_error( UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 255");
     hwnd_control = GetDlgItem( fuse_hPFWnd, IDC_PF_EDIT );
     SendMessage( fuse_hPFWnd, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
@@ -328,14 +328,14 @@ win32ui_pokefinder_search( void )
 }
 
 static void
-win32ui_pokefinder_reset( void )
+win32ui_pokefinder_reset(void)
 {
   pokefinder_clear();
   update_pokefinder();
 }
 
 static void
-win32ui_pokefinder_close( void )
+win32ui_pokefinder_close(void)
 {
   DestroyWindow( fuse_hPFWnd );
   fuse_hPFWnd = NULL;
@@ -349,7 +349,7 @@ possible_click( LPNMITEMACTIVATE lpnmitem )
   int error;
   libspectrum_word row;
 
-  if( lpnmitem->iItem < 0 ) return;
+  if (lpnmitem->iItem < 0 ) return;
 
   row = lpnmitem->iItem;
 
@@ -357,14 +357,14 @@ possible_click( LPNMITEMACTIVATE lpnmitem )
     DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[ row ],
     possible_offset[ row ], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
   );
-  if( error ) return;
+  if (error ) return;
 
   ui_debugger_update();
 }
 
 void
-win32ui_pokefinder_clear( void )
+win32ui_pokefinder_clear(void)
 {
   pokefinder_clear();
-  if( fuse_hPFWnd != NULL ) update_pokefinder();
+  if (fuse_hPFWnd != NULL ) update_pokefinder();
 }

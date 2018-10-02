@@ -77,7 +77,7 @@ static LPCTSTR file_filter = TEXT(
 "*.mgtsnp;*.slt;*.sna;*.snapshot;*.snp;*.sp;*.szx;*.z80;*.zx-state\0"
 "Tape Files (*.tap;*.tzx;*.pzx;*.wav;*.csw;...)\0"
 "*.csw;*.ltp;*.pzx;*.raw;*.spc;*.sta;*.tzx;*.tap;*.wav\0"
-"\0" );
+"\0");
 
 static DWORD filter_index = 0;
 
@@ -104,7 +104,7 @@ run_dialog( const char *title, int is_saving )
   ofn.lpstrInitialDir = NULL;
   ofn.lpstrTitle = title;
   ofn.Flags = /* OFN_DONTADDTORECENT | */ OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-  if( is_saving ) {
+  if (is_saving ) {
     ofn.Flags |= OFN_OVERWRITEPROMPT | OFN_NOREADONLYRETURN;
   } else {
     ofn.Flags |= OFN_FILEMUSTEXIST;
@@ -115,7 +115,7 @@ run_dialog( const char *title, int is_saving )
 // ofn.pvReserved = NULL;
 // ofn.FlagsEx = 0;
 
-  if( is_saving ) {
+  if (is_saving ) {
     result = GetSaveFileName( &ofn );
   } else {
     result = GetOpenFileName( &ofn );
@@ -123,7 +123,7 @@ run_dialog( const char *title, int is_saving )
 
   filter_index = ofn.nFilterIndex;
 
-  if( !result ) {
+  if (!result ) {
     return NULL;
   } else {
     return utils_safe_strdup( ofn.lpstrFile );

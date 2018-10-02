@@ -39,7 +39,7 @@ static const char * const title = "Fuse - Confirm";
 struct widget_query_entry;
 
 // A generic click function
-typedef void (*widget_query_click_fn)( void );
+typedef void (*widget_query_click_fn)(void);
 
 // A general menu
 typedef struct widget_query_entry {
@@ -50,11 +50,11 @@ typedef struct widget_query_entry {
   widget_query_click_fn click;
 } widget_query_entry;
 
-static void widget_save_click( void );
-static void widget_dont_save_click( void );
-static void widget_cancel_click( void );
-static void widget_yes_click( void );
-static void widget_no_click( void );
+static void widget_save_click(void);
+static void widget_dont_save_click(void);
+static void widget_cancel_click(void);
+static void widget_yes_click(void);
+static void widget_no_click(void);
 static void widget_query_line_draw( int left_edge, int width,
                                     struct widget_query_entry *menu,
                                     const char *label );
@@ -73,31 +73,31 @@ static widget_query_entry query_confirm[] = {
 };
 
 static void
-widget_save_click( void )
+widget_save_click(void)
 {
   widget_query.save = UI_CONFIRM_SAVE_SAVE;
 }
 
 static void
-widget_dont_save_click( void )
+widget_dont_save_click(void)
 {
   widget_query.save = UI_CONFIRM_SAVE_DONTSAVE;
 }
 
 static void
-widget_cancel_click( void )
+widget_cancel_click(void)
 {
   widget_query.save = UI_CONFIRM_SAVE_CANCEL;
 }
 
 static void
-widget_yes_click( void )
+widget_yes_click(void)
 {
   widget_query.confirm = 1;
 }
 
 static void
-widget_no_click( void )
+widget_no_click(void)
 {
   widget_query.confirm = 0;
 }
@@ -114,7 +114,7 @@ widget_query_line_draw( int left_edge, int width, struct widget_query_entry *men
   int colour = WIDGET_COLOUR_BACKGROUND;
   int y = (menu->index + num_message_lines) * 8 + 24;
 
-  if( menu->index == highlight_line ) colour = WIDGET_COLOUR_HIGHLIGHT;
+  if (menu->index == highlight_line ) colour = WIDGET_COLOUR_HIGHLIGHT;
   widget_rectangle( left_edge*8+1, y, width*8-2, 1*8, colour );
   widget_printstring( left_edge*8+8, y, WIDGET_COLOUR_FOREGROUND,
                       menu->text );
@@ -147,7 +147,7 @@ widget_calculate_query_width( const char *title, widget_query_entry *menu,
   for( i=0; i<num_lines; i++) {
     int total_width = widget_stringwidth( lines[i] )+2*8;
 
-    if( total_width > max_width )
+    if (total_width > max_width )
       max_width = total_width;
   }
 
@@ -163,7 +163,7 @@ internal_query_draw( widget_query_entry *query, int save, const char *message )
   int menu_left_edge_x;
   int i;
 
-  if( split_message( message, &message_lines, &num_message_lines, 28 ) ) {
+  if (split_message( message, &message_lines, &num_message_lines, 28 ) ) {
     return 1;
   }
 
@@ -183,7 +183,7 @@ internal_query_draw( widget_query_entry *query, int save, const char *message )
 
   widget_printstring( menu_left_edge_x*8+2, 16, WIDGET_COLOUR_TITLE, title );
 
-  for( i=0; i<num_message_lines; i++ ) {
+  for( i=0; i<num_message_lines; i++) {
     widget_printstring( menu_left_edge_x*8+8, i*8+24,
                         WIDGET_COLOUR_FOREGROUND, message_lines[i] );
   }
@@ -224,7 +224,7 @@ widget_query_generic_keyhandler( widget_query_entry *query, int num_entries,
 						 num_message_lines );
   int menu_left_edge_x = DISPLAY_WIDTH_COLS/2-menu_width/2;
 
-  switch( key ) {
+  switch (key ) {
 
 #if 0
   case INPUT_KEY_Resize: // Fake keypress used on window resize
@@ -269,7 +269,7 @@ widget_query_generic_keyhandler( widget_query_entry *query, int num_entries,
 
   }
 
-  if( cursor_pressed ) {
+  if (cursor_pressed ) {
     int old_highlight_line = highlight_line;
     highlight_line = new_highlight_line;
     widget_query_line_draw( menu_left_edge_x, menu_width,
@@ -282,7 +282,7 @@ widget_query_generic_keyhandler( widget_query_entry *query, int num_entries,
   }
 
   for( ptr=query; ptr->text != NULL; ptr++ ) {
-    if( key == ptr->key ) {
+    if (key == ptr->key ) {
       int old_highlight_line = highlight_line;
       ptr->click();
       highlight_line = ptr->index;
@@ -316,7 +316,7 @@ int
 widget_query_finish( widget_finish_state finished )
 {
   int i;
-  for( i=0; i<num_message_lines; i++ ) {
+  for( i=0; i<num_message_lines; i++) {
     free( message_lines[i] );
   }
   free( message_lines );

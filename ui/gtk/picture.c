@@ -67,9 +67,9 @@ gtkui_picture( const char *filename, int border )
 
   GtkWidget *drawing_area, *content_area;
 
-  if( !dialog_created ) {
+  if (!dialog_created ) {
 
-    if( utils_read_screen( filename, &screen ) ) {
+    if (utils_read_screen( filename, &screen ) ) {
       return 1;
     }
 
@@ -151,7 +151,7 @@ draw_screen( libspectrum_byte *screen, int border )
 
       data = screen[ display_line_start[y]+x ];
 
-      for( i=0; i<8; i++ ) {
+      for( i=0; i<8; i++) {
 	*(libspectrum_dword*)(
 	    picture +
 	    ( y + DISPLAY_BORDER_HEIGHT ) * picture_pitch +

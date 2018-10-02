@@ -74,21 +74,21 @@ utils_open_file( const char *filename, int autoload,
   int error;
 
   error = 0;
-  if( rzx_recording ) error = rzx_stop_recording();
-  if( rzx_playback  ) error = rzx_stop_playback( 1 );
-  if( error ) return error;
+  if (rzx_recording ) error = rzx_stop_recording();
+  if (rzx_playback  ) error = rzx_stop_playback( 1 );
+  if (error ) return error;
 
   // Read the file into a buffer
-  if( utils_read_file( filename, &file ) ) return 1;
+  if (utils_read_file( filename, &file ) ) return 1;
 
   // See if we can work out what it is
-  if( libspectrum_identify_file_with_class( &type, &class, filename,
+  if (libspectrum_identify_file_with_class( &type, &class, filename,
 					    file.buffer, file.length ) ) {
     utils_close_file( &file );
     return 1;
   }
 
-  switch( class ) {
+  switch (class ) {
 
   case LIBSPECTRUM_CLASS_UNKNOWN:
     ui_error( UI_ERROR_ERROR, "utils_open_file: couldn't identify `%s'",
@@ -112,9 +112,9 @@ utils_open_file( const char *filename, int autoload,
     break;
 
   case LIBSPECTRUM_CLASS_DISK_PLUS3:
-    if( !( machine_current->capabilities &
+    if (!( machine_current->capabilities &
 	   LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_DISK ) ) {
-      error = machine_select( LIBSPECTRUM_MACHINE_PLUS3 ); if( error ) break;
+      error = machine_select( LIBSPECTRUM_MACHINE_PLUS3 ); if (error ) break;
     }
 
     error = specplus3_disk_insert( SPECPLUS3_DRIVE_A, filename, autoload );
@@ -127,7 +127,7 @@ utils_open_file( const char *filename, int autoload,
 
   case LIBSPECTRUM_CLASS_DISK_PLUSD:
 
-    if( periph_is_active( PERIPH_TYPE_DISCIPLE ) )
+    if (periph_is_active( PERIPH_TYPE_DISCIPLE ) )
       error = disciple_disk_insert( DISCIPLE_DRIVE_1, filename, autoload );
     else
       error = plusd_disk_insert( PLUSD_DRIVE_1, filename, autoload );
@@ -140,14 +140,14 @@ utils_open_file( const char *filename, int autoload,
 
   case LIBSPECTRUM_CLASS_DISK_TRDOS:
 
-    if( !( machine_current->capabilities &
+    if (!( machine_current->capabilities &
 	   LIBSPECTRUM_MACHINE_CAPABILITY_TRDOS_DISK ) &&
         !periph_is_active( PERIPH_TYPE_BETA128 ) ) {
-      error = machine_select( LIBSPECTRUM_MACHINE_SCORP ); if( error ) break;
+      error = machine_select( LIBSPECTRUM_MACHINE_SCORP ); if (error ) break;
     }
 
     // Check that we actually got a Beta capable machine to insert the disk
-    if( ( machine_current->capabilities &
+    if (( machine_current->capabilities &
           LIBSPECTRUM_MACHINE_CAPABILITY_TRDOS_DISK ) ||
         periph_is_active( PERIPH_TYPE_BETA128 ) ) {
       error = beta_disk_insert( BETA_DRIVE_A, filename, autoload );
@@ -155,20 +155,20 @@ utils_open_file( const char *filename, int autoload,
     break;
 
   case LIBSPECTRUM_CLASS_DISK_GENERIC:
-    if( machine_current->machine == LIBSPECTRUM_MACHINE_PLUS3 ||
+    if (machine_current->machine == LIBSPECTRUM_MACHINE_PLUS3 ||
         machine_current->machine == LIBSPECTRUM_MACHINE_PLUS2A )
       error = specplus3_disk_insert( SPECPLUS3_DRIVE_A, filename, autoload );
-    else if( machine_current->machine == LIBSPECTRUM_MACHINE_PENT ||
+    else if (machine_current->machine == LIBSPECTRUM_MACHINE_PENT ||
           machine_current->machine == LIBSPECTRUM_MACHINE_PENT512 ||
           machine_current->machine == LIBSPECTRUM_MACHINE_PENT1024 ||
           machine_current->machine == LIBSPECTRUM_MACHINE_SCORP )
       error = beta_disk_insert( BETA_DRIVE_A, filename, autoload );
     else
-      if( periph_is_active( PERIPH_TYPE_BETA128 ) )
+      if (periph_is_active( PERIPH_TYPE_BETA128 ) )
         error = beta_disk_insert( BETA_DRIVE_A, filename, autoload );
-      else if( periph_is_active( PERIPH_TYPE_DISCIPLE ) )
+      else if (periph_is_active( PERIPH_TYPE_DISCIPLE ) )
         error = disciple_disk_insert( DISCIPLE_DRIVE_1, filename, autoload );
-      else if( periph_is_active( PERIPH_TYPE_PLUSD ) )
+      else if (periph_is_active( PERIPH_TYPE_PLUSD ) )
         error = plusd_disk_insert( PLUSD_DRIVE_1, filename, autoload );
     break;
 
@@ -181,19 +181,19 @@ utils_open_file( const char *filename, int autoload,
     break;
 
   case LIBSPECTRUM_CLASS_CARTRIDGE_TIMEX:
-    if( !( machine_current->capabilities &
+    if (!( machine_current->capabilities &
 	   LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK ) ) {
-      error = machine_select( LIBSPECTRUM_MACHINE_TC2068 ); if( error ) break;
+      error = machine_select( LIBSPECTRUM_MACHINE_TC2068 ); if (error ) break;
     }
     // Check that we actually got a Dock capable machine to insert the cart
-    if( machine_current->capabilities &
+    if (machine_current->capabilities &
 	   LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK ) {
       error = dck_insert( filename );
     }
     break;
 
   case LIBSPECTRUM_CLASS_HARDDISK:
-    if( !settings_current.simpleide_active &&
+    if (!settings_current.simpleide_active &&
 	!settings_current.zxatasp_active   &&
 	!settings_current.divide_enabled   &&
 	!settings_current.divmmc_enabled   &&
@@ -203,25 +203,25 @@ utils_open_file( const char *filename, int autoload,
       periph_update();
     }
 
-    if( settings_current.zxcf_active ) {
+    if (settings_current.zxcf_active ) {
       error = zxcf_insert( filename );
-    } else if( settings_current.zxatasp_active ) {
+    } else if (settings_current.zxatasp_active ) {
       error = zxatasp_insert( filename, LIBSPECTRUM_IDE_MASTER );
-    } else if( settings_current.simpleide_active ) {
+    } else if (settings_current.simpleide_active ) {
       error = simpleide_insert( filename, LIBSPECTRUM_IDE_MASTER );
-    } else if( settings_current.divide_enabled ) {
+    } else if (settings_current.divide_enabled ) {
       error = divide_insert( filename, LIBSPECTRUM_IDE_MASTER );
-    } else if( settings_current.zxmmc_enabled ) {
+    } else if (settings_current.zxmmc_enabled ) {
       error = zxmmc_insert( filename );
     } else {
       error = divmmc_insert( filename );
     }
-    if( error ) return error;
+    if (error ) return error;
 
     break;
 
   case LIBSPECTRUM_CLASS_AUXILIARY:
-    if( type == LIBSPECTRUM_ID_AUX_POK ) {
+    if (type == LIBSPECTRUM_ID_AUX_POK ) {
       ui_pokemem_selector( filename );
     }
     break;
@@ -232,24 +232,24 @@ utils_open_file( const char *filename, int autoload,
     break;
   }
 
-  if( error ) { utils_close_file( &file ); return error; }
+  if (error ) { utils_close_file( &file ); return error; }
 
   utils_close_file( &file );
 
-  if( type_ptr ) *type_ptr = type;
+  if (type_ptr ) *type_ptr = type;
 
   return 0;
 }
 
 // Request a snapshot file from the user and it
 int
-utils_open_snap( void )
+utils_open_snap(void)
 {
   char *filename;
   int error;
 
-  filename = ui_get_open_filename( "Fuse - Load Snapshot" );
-  if( !filename ) return -1;
+  filename = ui_get_open_filename( "Fuse - Load Snapshot");
+  if (!filename ) return -1;
 
   error = snapshot_read( filename );
   libspectrum_free( filename );
@@ -266,17 +266,17 @@ utils_find_auxiliary_file( const char *filename, utils_aux_type type )
   char path[ PATH_MAX ];
 
   // If given an absolute path, just look there
-  if( compat_is_absolute_path( filename ) )
+  if (compat_is_absolute_path( filename ) )
     return compat_file_open( filename, 0 );
 
   // Otherwise look in some likely locations
-  if( utils_find_file_path( filename, path, type ) ) {
+  if (utils_find_file_path( filename, path, type ) ) {
     return COMPAT_FILE_OPEN_FAILED;
   }
 
   fd = compat_file_open( path, 0 );
 
-  if( fd != COMPAT_FILE_OPEN_FAILED ) return fd;
+  if (fd != COMPAT_FILE_OPEN_FAILED ) return fd;
 
   // Give up. Couldn't find this file
   return COMPAT_FILE_OPEN_FAILED;
@@ -290,7 +290,7 @@ utils_find_file_path( const char *filename, char *ret_path,
   path_context ctx;
 
   // If given an absolute path, just look there
-  if( compat_is_absolute_path( filename ) ) {
+  if (compat_is_absolute_path( filename ) ) {
     strncpy( ret_path, filename, PATH_MAX );
     ret_path[ PATH_MAX - 1 ] = '\0';
     return 0;
@@ -307,7 +307,7 @@ utils_find_file_path( const char *filename, char *ret_path,
     bytes_written = snprintf( ret_path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "%s",
         ctx.path, filename );
 #endif
-    if( bytes_written < PATH_MAX && compat_file_exists(ret_path) ) return 0;
+    if (bytes_written < PATH_MAX && compat_file_exists(ret_path) ) return 0;
   }
 
   return 1;
@@ -332,14 +332,14 @@ utils_read_file( const char *filename, utils_file *file )
   int error;
 
   fd = compat_file_open( filename, 0 );
-  if( fd == COMPAT_FILE_OPEN_FAILED ) {
+  if (fd == COMPAT_FILE_OPEN_FAILED ) {
     ui_error( UI_ERROR_ERROR, "couldn't open '%s': %s", filename,
 	      strerror( errno ) );
     return 1;
   }
 
   error = utils_read_fd( fd, filename, file );
-  if( error ) return error;
+  if (error ) return error;
 
   return 0;
 }
@@ -348,17 +348,17 @@ int
 utils_read_fd( compat_fd fd, const char *filename, utils_file *file )
 {
   file->length = compat_file_get_length( fd );
-  if( file->length == -1 ) return 1;
+  if (file->length == -1 ) return 1;
 
   file->buffer = libspectrum_new( unsigned char, file->length );
 
-  if( compat_file_read( fd, file ) ) {
+  if (compat_file_read( fd, file ) ) {
     libspectrum_free( file->buffer );
     compat_file_close( fd );
     return 1;
   }
 
-  if( compat_file_close( fd ) ) {
+  if (compat_file_close( fd ) ) {
     ui_error( UI_ERROR_ERROR, "Couldn't close '%s': %s", filename,
 	      strerror( errno ) );
     libspectrum_free( file->buffer );
@@ -380,18 +380,18 @@ int utils_write_file( const char *filename, const unsigned char *buffer,
   compat_fd fd;
 
   fd = compat_file_open( filename, 1 );
-  if( fd == COMPAT_FILE_OPEN_FAILED ) {
+  if (fd == COMPAT_FILE_OPEN_FAILED ) {
     ui_error( UI_ERROR_ERROR, "couldn't open `%s' for writing: %s\n",
     	      filename, strerror( errno ) );
     return 1;
   }
 
-  if( compat_file_write( fd, buffer, length ) ) {
+  if (compat_file_write( fd, buffer, length ) ) {
     compat_file_close( fd );
     return 1;
   }
 
-  if( compat_file_close( fd ) ) return 1;
+  if (compat_file_close( fd ) ) return 1;
 
   return 0;
 }
@@ -404,10 +404,10 @@ utils_read_auxiliary_file( const char *filename, utils_file *file,
   compat_fd fd;
 
   fd = utils_find_auxiliary_file( filename, type );
-  if( fd == COMPAT_FILE_OPEN_FAILED ) return -1;
+  if (fd == COMPAT_FILE_OPEN_FAILED ) return -1;
 
   error = utils_read_fd( fd, filename, file );
-  if( error ) return error;
+  if (error ) return error;
 
   return 0;
 }
@@ -418,15 +418,15 @@ utils_read_screen( const char *filename, utils_file *screen )
   int error;
 
   error = utils_read_auxiliary_file( filename, screen, UTILS_AUXILIARY_LIB );
-  if( error == -1 ) {
+  if (error == -1 ) {
     ui_error( UI_ERROR_ERROR, "couldn't find screen picture ('%s')",
 	      filename );
     return 1;
   }
 
-  if( error ) return error;
+  if (error ) return error;
 
-  if( screen->length != STANDARD_SCR_SIZE ) {
+  if (screen->length != STANDARD_SCR_SIZE ) {
     utils_close_file( screen );
     ui_error( UI_ERROR_ERROR, "screen picture ('%s') is not %d bytes long",
 	      filename, STANDARD_SCR_SIZE );
@@ -440,7 +440,7 @@ char*
 utils_safe_strdup( const char *src )
 {
   char *dest = NULL;
-  if( src ) {
+  if (src ) {
     size_t length = strlen( src ) + 1;
     dest = libspectrum_new( char, length );
     memcpy( dest, src, length );
@@ -458,7 +458,7 @@ utils_save_binary( libspectrum_word start, libspectrum_word length,
 
   buffer = libspectrum_new( libspectrum_byte, length );
 
-  for( i = 0; i < length; i++ )
+  for (i = 0; i < length; i++)
     buffer[ i ] = readbyte_internal( start + i );
 
   error = utils_write_file( filename, buffer, length );
@@ -469,11 +469,11 @@ utils_save_binary( libspectrum_word start, libspectrum_word length,
 }
 
 void
-utils_networking_init( void )
+utils_networking_init(void)
 {
 #ifdef HAVE_SOCKETS
 
-  if( !networking_init_count )
+  if (!networking_init_count )
     compat_socket_networking_init();
 
 #endif
@@ -482,13 +482,13 @@ utils_networking_init( void )
 }
 
 void
-utils_networking_end( void )
+utils_networking_end(void)
 {
   networking_init_count--;
 
 #ifdef HAVE_SOCKETS
 
-  if( !networking_init_count )
+  if (!networking_init_count )
     compat_socket_networking_end();
 
 #endif

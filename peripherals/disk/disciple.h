@@ -39,10 +39,10 @@ typedef enum disciple_drive_number {
 extern int disciple_available; // Is the DISCiPLE available for use?
 extern int disciple_active; // DISCiPLE enabled?
 
-void disciple_register_startup( void );
+void disciple_register_startup(void);
 
-void disciple_page( void );
-void disciple_unpage( void );
+void disciple_page(void);
+void disciple_unpage(void);
 
 int disciple_disk_insert( disciple_drive_number which, const char *filename,
                           int autoload );
@@ -53,6 +53,6 @@ int disciple_disk_flip( disciple_drive_number which, int flip );
 int disciple_disk_writeprotect( disciple_drive_number which, int wrprot );
 fdd_t *disciple_get_fdd( disciple_drive_number which );
 
-int disciple_unittest( void );
+int disciple_unittest(void);
 
 #endif // #ifndef FUSE_DISCIPLE_H

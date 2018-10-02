@@ -24,7 +24,7 @@
 #ifndef FUSE_FBDISPLAY_H
 #define FUSE_FBDISPLAY_H
 
-int fbdisplay_init( void );
-int fbdisplay_end( void );
+int fbdisplay_init(void);
+int fbdisplay_end(void);
 
 #endif // #ifndef FUSE_FBDISPLAY_H

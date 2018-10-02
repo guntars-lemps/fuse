@@ -36,10 +36,10 @@
 
 #define NUM_JOY_BUTTONS 15
 
-int ui_joystick_init( void ); // returns no. of joysticks initialised
-void ui_joystick_end( void );
+int ui_joystick_init(void); // returns no. of joysticks initialised
+void ui_joystick_end(void);
 
 // Poll the joysticks for any changes
-void ui_joystick_poll( void );
+void ui_joystick_poll(void);
 
 #endif // #ifndef FUSE_UI_UIJOYSTICK_H

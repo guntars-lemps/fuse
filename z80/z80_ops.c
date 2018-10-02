@@ -99,7 +99,7 @@ enum {
 
 #else // #ifdef __GNUC__
 
-#define CHECK( label, condition ) if( condition ) {
+#define CHECK( label, condition ) if (condition ) {
 #define END_CHECK }
 
 #endif // #ifdef __GNUC__
@@ -110,7 +110,7 @@ static libspectrum_byte opcode = 0x00;
 
 // Execute Z80 opcodes until the next event
 void
-z80_do_opcodes( void )
+z80_do_opcodes(void)
 {
 #ifdef HAVE_ENOUGH_MEMORY
   libspectrum_byte opcode = 0x00;
@@ -124,12 +124,12 @@ z80_do_opcodes( void )
 
 #undef SETUP_CHECK
 #define SETUP_CHECK( label, condition ) \
-  if( condition ) { cgoto[ next ] = &&label; next = pos_##label + 1; } \
+  if (condition ) { cgoto[ next ] = &&label; next = pos_##label + 1; } \
   check++;
 
 #undef SETUP_NEXT
 #define SETUP_NEXT( label ) \
-  if( next != check ) { cgoto[ next ] = &&label; } \
+  if (next != check ) { cgoto[ next ] = &&label; } \
   next = check;
 
   void *cgoto[ numchecks ]; size_t next = 0; size_t check = 0;
@@ -150,7 +150,7 @@ z80_do_opcodes( void )
     // If we're due an end of frame from RZX playback, generate one
     CHECK( rzx, rzx_playback )
 
-    if( R + rzx_instructions_offset >= rzx_instruction_count ) {
+    if (R + rzx_instructions_offset >= rzx_instruction_count ) {
       event_add( tstates, spectrum_frame_event );
       break;		/* And break out of the execution loop to let
 			   the interrupt happen */
@@ -161,7 +161,7 @@ z80_do_opcodes( void )
     // Check if the debugger should become active at this point
     CHECK( debugger, debugger_mode != DEBUGGER_MODE_INACTIVE )
 
-    if( debugger_check( DEBUGGER_BREAKPOINT_TYPE_EXECUTE, PC ) )
+    if (debugger_check( DEBUGGER_BREAKPOINT_TYPE_EXECUTE, PC ) )
       debugger_trap();
 
     END_CHECK
@@ -172,11 +172,11 @@ z80_do_opcodes( void )
             LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY ) || \
             machine_current->ram.current_rom )
 
-    if( beta_active ) {
-      if( NOT_128_TYPE_OR_IS_48_TYPE && PC >= 16384 ) {
+    if (beta_active ) {
+      if (NOT_128_TYPE_OR_IS_48_TYPE && PC >= 16384 ) {
 	beta_unpage();
       }
-    } else if( ( PC & beta_pc_mask ) == beta_pc_value &&
+    } else if (( PC & beta_pc_mask ) == beta_pc_value &&
                NOT_128_TYPE_OR_IS_48_TYPE ) {
       beta_page();
     }
@@ -185,7 +185,7 @@ z80_do_opcodes( void )
 
     CHECK( plusd, plusd_available )
 
-    if( PC == 0x0008 || PC == 0x003a || PC == 0x0066 || PC == 0x028e ) {
+    if (PC == 0x0008 || PC == 0x003a || PC == 0x0066 || PC == 0x028e ) {
       plusd_page();
     }
 
@@ -193,9 +193,9 @@ z80_do_opcodes( void )
 
     CHECK( didaktik80, didaktik80_available )
 
-    if( PC == 0x0000 || PC == 0x0008 ) {
+    if (PC == 0x0000 || PC == 0x0008 ) {
       didaktik80_page();
-    } else if( PC == 0x1700 ) {
+    } else if (PC == 0x1700 ) {
       didaktik80_unpage();
     }
 
@@ -203,7 +203,7 @@ z80_do_opcodes( void )
 
     CHECK( disciple, disciple_available )
 
-    if( PC == 0x0001 || PC == 0x0008 || PC == 0x0066 || PC == 0x028e ) {
+    if (PC == 0x0001 || PC == 0x0008 || PC == 0x0066 || PC == 0x028e ) {
       disciple_page();
     }
 
@@ -211,7 +211,7 @@ z80_do_opcodes( void )
 
     CHECK( usource, usource_available )
 
-    if( PC == 0x2bae ) {
+    if (PC == 0x2bae ) {
       usource_toggle();
     }
 
@@ -219,7 +219,7 @@ z80_do_opcodes( void )
 
     CHECK( multiface, multiface_activated )
 
-    if( PC == 0x0066 ) {
+    if (PC == 0x0066 ) {
       multiface_setic8();
     }
 
@@ -227,7 +227,7 @@ z80_do_opcodes( void )
 
     CHECK( if1p, if1_available )
 
-    if( PC == 0x0008 || PC == 0x1708 ) {
+    if (PC == 0x0008 || PC == 0x1708 ) {
       if1_page();
     }
 
@@ -235,7 +235,7 @@ z80_do_opcodes( void )
 
     CHECK( divide_early, settings_current.divide_enabled )
 
-    if( ( PC & 0xff00 ) == 0x3d00 ) {
+    if (( PC & 0xff00 ) == 0x3d00 ) {
       divide_set_automap( 1 );
     }
 
@@ -243,7 +243,7 @@ z80_do_opcodes( void )
 
     CHECK( divmmc_early, settings_current.divmmc_enabled )
 
-    if( ( PC & 0xff00 ) == 0x3d00 ) {
+    if (( PC & 0xff00 ) == 0x3d00 ) {
       divmmc_set_automap( 1 );
     }
 
@@ -251,10 +251,10 @@ z80_do_opcodes( void )
 
     CHECK( spectranet_page, spectranet_available && !settings_current.spectranet_disable )
 
-    if( PC == 0x0008 || ((PC & 0xfff8) == 0x3ff8) )
+    if (PC == 0x0008 || ((PC & 0xfff8) == 0x3ff8) )
       spectranet_page( 0 );
 
-    if( PC == spectranet_programmable_trap &&
+    if (PC == spectranet_programmable_trap &&
       spectranet_programmable_trap_active )
       event_add( 0, z80_nmi_event );
 
@@ -267,8 +267,8 @@ z80_do_opcodes( void )
     // Check to see if M1 cycles happen on even tstates
     CHECK( evenm1, even_m1 )
 
-    if( tstates & 1 ) {
-      if( ++tstates == event_next_event ) {
+    if (tstates & 1 ) {
+      if (++tstates == event_next_event ) {
 	break;
       }
     }
@@ -282,7 +282,7 @@ z80_do_opcodes( void )
 
     CHECK( if1u, if1_available )
 
-    if( PC == 0x0700 ) {
+    if (PC == 0x0700 ) {
       if1_unpage();
     }
 
@@ -290,9 +290,9 @@ z80_do_opcodes( void )
 
     CHECK( divide_late, settings_current.divide_enabled )
 
-    if( ( PC & 0xfff8 ) == 0x1ff8 ) {
+    if (( PC & 0xfff8 ) == 0x1ff8 ) {
       divide_set_automap( 0 );
-    } else if( (PC == 0x0000) || (PC == 0x0008) || (PC == 0x0038)
+    } else if ((PC == 0x0000) || (PC == 0x0008) || (PC == 0x0038)
       || (PC == 0x0066) || (PC == 0x04c6) || (PC == 0x0562) ) {
       divide_set_automap( 1 );
     }
@@ -301,9 +301,9 @@ z80_do_opcodes( void )
 
     CHECK( divmmc_late, settings_current.divmmc_enabled )
 
-    if( ( PC & 0xfff8 ) == 0x1ff8 ) {
+    if (( PC & 0xfff8 ) == 0x1ff8 ) {
       divmmc_set_automap( 0 );
-    } else if( (PC == 0x0000) || (PC == 0x0008) || (PC == 0x0038)
+    } else if ((PC == 0x0000) || (PC == 0x0008) || (PC == 0x0038)
       || (PC == 0x0066) || (PC == 0x04c6) || (PC == 0x0562) ) {
       divmmc_set_automap( 1 );
     }
@@ -312,11 +312,11 @@ z80_do_opcodes( void )
 
     CHECK( opus, opus_available )
 
-    if( opus_active ) {
-      if( PC == 0x1748 ) {
+    if (opus_active ) {
+      if (PC == 0x1748 ) {
         opus_unpage();
       }
-    } else if( PC == 0x0008 || PC == 0x0048 || PC == 0x1708 ) {
+    } else if (PC == 0x0008 || PC == 0x0048 || PC == 0x1708 ) {
       opus_page();
     }
 
@@ -324,7 +324,7 @@ z80_do_opcodes( void )
 
     CHECK( spectranet_unpage, spectranet_available )
 
-    if( PC == 0x007c )
+    if (PC == 0x007c )
       spectranet_unpage();
 
     END_CHECK
@@ -339,7 +339,7 @@ z80_do_opcodes( void )
 
     CHECK( didaktik80snap, didaktik80_snap )
 
-    if( PC == 0x0066 && !didaktik80_active ) {
+    if (PC == 0x0066 && !didaktik80_active ) {
       opcode = 0xc7; // RST 00
       didaktik80_snap = 0; // FIXME: this should be a time-based reset
     }

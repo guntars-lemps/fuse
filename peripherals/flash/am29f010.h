@@ -27,7 +27,7 @@
 
 typedef struct flash_am29f010_t flash_am29f010_t;
 
-flash_am29f010_t* flash_am29f010_alloc( void );
+flash_am29f010_t* flash_am29f010_alloc(void);
 void flash_am29f010_free( flash_am29f010_t *self );
 void flash_am29f010_init( flash_am29f010_t *self, libspectrum_byte *memory );
 

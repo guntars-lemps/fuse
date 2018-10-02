@@ -30,7 +30,7 @@
 #include "win32internals.h"
 
 static void
-win32mouse_reset_pointer( void )
+win32mouse_reset_pointer(void)
 {
   RECT rect;
   POINT point;
@@ -49,12 +49,12 @@ win32mouse_position( LPARAM lParam )
 {
   int x,y;
 
-  if( !ui_mouse_grabbed ) return;
+  if (!ui_mouse_grabbed ) return;
 
   x = GET_X_LPARAM( lParam );
   y = GET_Y_LPARAM( lParam );
 
-  if( x != 128 || y != 128 )
+  if (x != 128 || y != 128 )
     win32mouse_reset_pointer();
   ui_mouse_motion( x - 128, y - 128 );
   return;
@@ -71,7 +71,7 @@ win32mouse_button( int button, int down )
 int
 ui_mouse_grab( int startup )
 {
-  if( startup ) return 0;
+  if (startup ) return 0;
 
   SetCursor( NULL );
   SetCapture( fuse_hWnd );
@@ -80,7 +80,7 @@ ui_mouse_grab( int startup )
 
 // doesn't seem like SetCapture can return an error
 /*
-  ui_error( UI_ERROR_WARNING, "Mouse grab failed" );
+  ui_error( UI_ERROR_WARNING, "Mouse grab failed");
   return 0;
 */
 }

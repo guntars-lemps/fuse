@@ -43,7 +43,7 @@ compat_readdir( compat_dir directory, char *name, size_t length )
   errno = 0;
   dirent = readdir( directory );
 
-  if( dirent ) {
+  if (dirent ) {
     r = COMPAT_DIR_RESULT_OK;
     strncpy( name, dirent->d_name, length );
     name[ length - 1 ] = 0;

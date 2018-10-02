@@ -73,8 +73,8 @@ static libspectrum_byte *disciple_ram;
 static int memory_allocated = 0;
 
 static void disciple_reset( int hard_reset );
-static void disciple_memory_map( void );
-static void disciple_activate( void );
+static void disciple_memory_map(void);
+static void disciple_activate(void);
 static void disciple_enabled_snapshot( libspectrum_snap *snap );
 static void disciple_from_snapshot( libspectrum_snap *snap );
 static void disciple_to_snapshot( libspectrum_snap *snap );
@@ -120,7 +120,7 @@ static int page_event, unpage_event;
 static libspectrum_byte disciple_control_register;
 
 void
-disciple_page( void )
+disciple_page(void)
 {
   disciple_active = 1;
   machine_current->ram.romcs = 1;
@@ -129,7 +129,7 @@ disciple_page( void )
 }
 
 void
-disciple_unpage( void )
+disciple_unpage(void)
 {
   disciple_active = 0;
   machine_current->ram.romcs = 0;
@@ -138,16 +138,16 @@ disciple_unpage( void )
 }
 
 void
-disciple_memory_map( void )
+disciple_memory_map(void)
 {
   struct memory_page *rom_page, *lower_page, *upper_page;
 
-  if( !disciple_active ) return;
+  if (!disciple_active ) return;
 
   // TODO: add support for 16 KiB ROM images.
   rom_page = disciple_memory_map_romcs_rom;
 
-  if( !disciple_memswap ) {
+  if (!disciple_memswap ) {
     lower_page = rom_page;
     upper_page = disciple_memory_map_romcs_ram;
   } else {
@@ -198,7 +198,7 @@ disciple_init( void *context )
 
   disciple_fdc = wd_fdc_alloc_fdc( WD1770, 0, WD_FLAG_NONE );
 
-  for( i = 0; i < DISCIPLE_NUM_DRIVES; i++ ) {
+  for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
     d = &disciple_drives[ i ];
     fdd_init( d, FDD_SHUGART, NULL, 0 );
     d->disk.flag = DISK_FLAG_NONE;
@@ -214,16 +214,16 @@ disciple_init( void *context )
 
   module_register( &disciple_module_info );
 
-  disciple_memory_source_rom = memory_source_register( "DISCiPLE ROM" );
-  disciple_memory_source_ram = memory_source_register( "DISCiPLE RAM" );
+  disciple_memory_source_rom = memory_source_register( "DISCiPLE ROM");
+  disciple_memory_source_ram = memory_source_register( "DISCiPLE RAM");
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ ) {
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
     disciple_memory_map_romcs_rom[i].source = disciple_memory_source_rom;
     disciple_memory_map_romcs_rom[i].page_num = 0;
     disciple_memory_map_romcs_rom[i].writable = 0;
   }
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ ) {
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
     disciple_memory_map_romcs_ram[i].source = disciple_memory_source_ram;
     disciple_memory_map_romcs_ram[i].page_num = 0;
     disciple_memory_map_romcs_ram[i].writable = 1;
@@ -231,8 +231,8 @@ disciple_init( void *context )
 
   periph_register( PERIPH_TYPE_DISCIPLE, &disciple_periph );
 
-  for( i = 0; i < DISCIPLE_NUM_DRIVES; i++ ) {
-    disciple_ui_drives[ i ].fdd = &disciple_drives[ i ];
+  for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
+    disciple_ui_drives[i].fdd = &disciple_drives[ i ];
     ui_media_drive_register( &disciple_ui_drives[ i ] );
   }
 
@@ -243,14 +243,14 @@ disciple_init( void *context )
 }
 
 static void
-disciple_end( void )
+disciple_end(void)
 {
   disciple_available = 0;
   libspectrum_free( disciple_fdc );
 }
 
 void
-disciple_register_startup( void )
+disciple_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -270,12 +270,12 @@ disciple_reset( int hard_reset )
   disciple_active = 0;
   disciple_available = 0;
 
-  if( !periph_is_active( PERIPH_TYPE_DISCIPLE ) ) {
+  if (!periph_is_active( PERIPH_TYPE_DISCIPLE ) ) {
     return;
   }
 
   // TODO: add support for 16 KiB ROM images.
-  if( machine_load_rom_bank( disciple_memory_map_romcs_rom, 0,
+  if (machine_load_rom_bank( disciple_memory_map_romcs_rom, 0,
 			     settings_current.rom_disciple,
 			     settings_default.rom_disciple, ROM_SIZE ) ) {
     settings_current.disciple = 0;
@@ -283,7 +283,7 @@ disciple_reset( int hard_reset )
     return;
   }
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ ) {
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
     struct memory_page *page = &disciple_memory_map_romcs_ram[ i ];
     page->page = &disciple_ram[ i * MEMORY_PAGE_SIZE ];
     page->offset = i * MEMORY_PAGE_SIZE;
@@ -291,8 +291,8 @@ disciple_reset( int hard_reset )
 
   machine_current->ram.romcs = 1;
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
-    disciple_memory_map_romcs_ram[ i ].writable = 1;
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
+    disciple_memory_map_romcs_ram[i].writable = 1;
 
   disciple_available = 1;
   disciple_active = 1;
@@ -301,12 +301,12 @@ disciple_reset( int hard_reset )
   // TODO: add support for 16 KiB ROM images.
   // disciple_rombank = 0;
 
-  if( hard_reset )
+  if (hard_reset )
     memset( disciple_ram, 0, RAM_SIZE );
 
   wd_fdc_master_reset( disciple_fdc );
 
-  for( i = 0; i < DISCIPLE_NUM_DRIVES; i++ ) {
+  for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
     ui_media_drive_update_menus( &disciple_ui_drives[ i ],
                                  UI_MEDIA_DRIVE_UPDATE_ALL );
   }
@@ -318,7 +318,7 @@ disciple_reset( int hard_reset )
 }
 
 static void
-disciple_inhibit( void )
+disciple_inhibit(void)
 {
   // TODO: check how this affects the hardware
   disciple_inhibited = 1;
@@ -382,7 +382,7 @@ disciple_joy_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached 
   *attached = 0xff; // TODO: check this
 
   // bit 6 - printer busy
-  if( !settings_current.printer )
+  if (!settings_current.printer )
     return 0xbf; // no printer attached
 
   return 0xff; // never busy
@@ -399,14 +399,14 @@ disciple_cn_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
   drive = ( b & 0x01 ) ? 0 : 1;
   side = ( b & 0x02 ) ? 1 : 0;
 
-  for( i = 0; i < DISCIPLE_NUM_DRIVES; i++ ) {
+  for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
     fdd_set_head( &disciple_drives[ i ], side );
     fdd_select( &disciple_drives[ i ], drive == i );
   }
 
-  if( disciple_fdc->current_drive != &disciple_drives[ drive ] ) {
-    if( disciple_fdc->current_drive->motoron ) {
-      for (i = 0; i < DISCIPLE_NUM_DRIVES; i++ ) {
+  if (disciple_fdc->current_drive != &disciple_drives[ drive ] ) {
+    if (disciple_fdc->current_drive->motoron ) {
+      for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
         fdd_motoron( &disciple_drives[ i ], drive == i );
       }
     }
@@ -418,7 +418,7 @@ disciple_cn_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
   // We only support the use of an 8 KiB ROM.
   // disciple_rombank = ( b & 0x08 ) ? 1 : 0;
   machine_current->memory_map();
-  if( b & 0x10 )
+  if (b & 0x10 )
     disciple_inhibit();
 }
 
@@ -471,7 +471,7 @@ int
 disciple_disk_insert( disciple_drive_number which, const char *filename,
 		      int autoload )
 {
-  if( which >= DISCIPLE_NUM_DRIVES ) {
+  if (which >= DISCIPLE_NUM_DRIVES ) {
     ui_error( UI_ERROR_ERROR, "disciple_disk_insert: unknown drive %d",
 	      which );
     fuse_abort();
@@ -487,16 +487,16 @@ disciple_get_fdd( disciple_drive_number which )
 }
 
 static void
-disciple_activate( void )
+disciple_activate(void)
 {
-  if( !memory_allocated ) {
+  if (!memory_allocated ) {
     disciple_ram = memory_pool_allocate_persistent( RAM_SIZE, 1 );
     memory_allocated = 1;
   }
 }
 
 int
-disciple_unittest( void )
+disciple_unittest(void)
 {
   int r = 0;
   /* We only support the use of an 8 KiB ROM.  Change this to 1 if adding
@@ -549,20 +549,20 @@ disciple_unittest( void )
 }
 
 static int
-ui_drive_is_available( void )
+ui_drive_is_available(void)
 {
   return disciple_available;
 }
 
 static const fdd_params_t *
-ui_drive_get_params_1( void )
+ui_drive_get_params_1(void)
 {
   // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_disciple1_type() + 1 ];
 }
 
 static const fdd_params_t *
-ui_drive_get_params_2( void )
+ui_drive_get_params_2(void)
 {
   return &fdd_params[ option_enumerate_diskoptions_drive_disciple2_type() ];
 }
@@ -605,9 +605,9 @@ disciple_from_snapshot( libspectrum_snap *snap )
 {
   int i;
 
-  if( !libspectrum_snap_disciple_active( snap ) ) return;
+  if (!libspectrum_snap_disciple_active( snap ) ) return;
 
-  if( libspectrum_snap_disciple_custom_rom( snap ) &&
+  if (libspectrum_snap_disciple_custom_rom( snap ) &&
       libspectrum_snap_disciple_rom( snap, 0 ) &&
       machine_load_rom_bank_from_buffer(
                              disciple_memory_map_romcs_rom, 0,
@@ -616,9 +616,9 @@ disciple_from_snapshot( libspectrum_snap *snap )
                              1 ) )
     return;
 
-  if( libspectrum_snap_disciple_ram( snap, 0 ) ) {
-    for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
-      memcpy( disciple_memory_map_romcs_ram[ i ].page,
+  if (libspectrum_snap_disciple_ram( snap, 0 ) ) {
+    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
+      memcpy( disciple_memory_map_romcs_ram[i].page,
               libspectrum_snap_disciple_ram( snap, 0 ) + i * MEMORY_PAGE_SIZE,
               MEMORY_PAGE_SIZE );
   }
@@ -643,7 +643,7 @@ disciple_from_snapshot( libspectrum_snap *snap )
   /* FIXME: Set disciple_inhibited based on the value in
      libspectrum_snap_disciple_control() */
 
-  if( libspectrum_snap_disciple_paged( snap ) ) {
+  if (libspectrum_snap_disciple_paged( snap ) ) {
     disciple_page();
   } else {
     disciple_unpage();
@@ -657,7 +657,7 @@ disciple_to_snapshot( libspectrum_snap *snap )
   int drive_count = 0;
   int i;
 
-  if( !periph_is_active( PERIPH_TYPE_DISCIPLE ) ) return;
+  if (!periph_is_active( PERIPH_TYPE_DISCIPLE ) ) return;
 
   libspectrum_snap_set_disciple_active( snap, 1 );
 
@@ -668,21 +668,21 @@ disciple_to_snapshot( libspectrum_snap *snap )
 
   buffer = libspectrum_new( libspectrum_byte, ROM_SIZE );
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
     memcpy( buffer + i * MEMORY_PAGE_SIZE,
-            disciple_memory_map_romcs_rom[ i ].page, MEMORY_PAGE_SIZE );
+            disciple_memory_map_romcs_rom[i].page, MEMORY_PAGE_SIZE );
 
   libspectrum_snap_set_disciple_rom( snap, 0, buffer );
 
   buffer = libspectrum_new( libspectrum_byte, RAM_SIZE );
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
     memcpy( buffer + i * MEMORY_PAGE_SIZE,
-            disciple_memory_map_romcs_ram[ i ].page, MEMORY_PAGE_SIZE );
+            disciple_memory_map_romcs_ram[i].page, MEMORY_PAGE_SIZE );
   libspectrum_snap_set_disciple_ram( snap, 0, buffer );
 
   drive_count++; // Drive 1 is not removable
-  if( option_enumerate_diskoptions_drive_disciple2_type() > 0 ) drive_count++;
+  if (option_enumerate_diskoptions_drive_disciple2_type() > 0 ) drive_count++;
   libspectrum_snap_set_disciple_drive_count( snap, drive_count );
 
   libspectrum_snap_set_disciple_paged ( snap, disciple_active );

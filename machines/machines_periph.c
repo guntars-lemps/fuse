@@ -167,7 +167,7 @@ machines_periph_init( void *context )
 }
 
 void
-machines_periph_register_startup( void )
+machines_periph_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_MACHINES_PERIPH,
@@ -178,7 +178,7 @@ machines_periph_register_startup( void )
 /* Peripherals generally available on all machines; the Timex machines and
    Russian clones remove some items from this list */
 static void
-base_peripherals( void )
+base_peripherals(void)
 {
   periph_set_present( PERIPH_TYPE_DIVIDE, PERIPH_PRESENT_OPTIONAL );
   periph_set_present( PERIPH_TYPE_DIVMMC, PERIPH_PRESENT_OPTIONAL );
@@ -194,7 +194,7 @@ base_peripherals( void )
 
 // Peripherals available on the 48K and 128K
 static void
-base_peripherals_48_128( void )
+base_peripherals_48_128(void)
 {
   base_peripherals();
   periph_set_present( PERIPH_TYPE_BETA128, PERIPH_PRESENT_OPTIONAL );
@@ -209,7 +209,7 @@ base_peripherals_48_128( void )
 
 // The set of peripherals available on the 48K and similar machines
 void
-machines_periph_48( void )
+machines_periph_48(void)
 {
   base_peripherals_48_128();
   periph_set_present( PERIPH_TYPE_FULLER, PERIPH_PRESENT_OPTIONAL );
@@ -222,7 +222,7 @@ machines_periph_48( void )
 
 // The set of peripherals available on the 128K and similar machines
 void
-machines_periph_128( void )
+machines_periph_128(void)
 {
   base_peripherals_48_128();
   periph_set_present( PERIPH_TYPE_AY, PERIPH_PRESENT_ALWAYS );
@@ -231,7 +231,7 @@ machines_periph_128( void )
 
 // The set of peripherals available on the +3 and similar machines
 void
-machines_periph_plus3( void )
+machines_periph_plus3(void)
 {
   base_peripherals();
   periph_set_present( PERIPH_TYPE_AY_PLUS3, PERIPH_PRESENT_ALWAYS );
@@ -243,7 +243,7 @@ machines_periph_plus3( void )
 
 // The set of peripherals available on the TC2068 and TS2068
 void
-machines_periph_timex( void )
+machines_periph_timex(void)
 {
   base_peripherals();
 
@@ -264,7 +264,7 @@ machines_periph_timex( void )
 
 // The set of peripherals available on the Pentagon and Scorpion
 void
-machines_periph_pentagon( void )
+machines_periph_pentagon(void)
 {
   base_peripherals();
 

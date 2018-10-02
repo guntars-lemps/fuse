@@ -55,7 +55,7 @@ ui_media_drive_register( ui_media_drive_info_t *drive )
 }
 
 void
-ui_media_drive_end( void )
+ui_media_drive_end(void)
 {
   g_slist_free( registered_drives );
   registered_drives = NULL;
@@ -98,7 +98,7 @@ any_available( gconstpointer data, gconstpointer user_data )
 }
 
 int
-ui_media_drive_any_available( void )
+ui_media_drive_any_available(void)
 {
   GSList *item;
   item = g_slist_find_custom( registered_drives, NULL, any_available );
@@ -111,12 +111,12 @@ update_parent_menus( gpointer data, gpointer user_data )
 {
   const ui_media_drive_info_t *drive = data;
 
-  if( drive->is_available && menu_item_valid( drive->menu_item_parent ) )
+  if (drive->is_available && menu_item_valid( drive->menu_item_parent ) )
     ui_menu_activate( drive->menu_item_parent, drive->is_available() );
 }
 
 void
-ui_media_drive_update_parent_menus( void )
+ui_media_drive_update_parent_menus(void)
 {
   g_slist_foreach( registered_drives, update_parent_menus, NULL );
 }
@@ -124,7 +124,7 @@ ui_media_drive_update_parent_menus( void )
 static int
 maybe_menu_activate( int id, int activate )
 {
-  if( !menu_item_valid( id ) )
+  if (!menu_item_valid( id ) )
     return 0;
   return ui_menu_activate( id, activate );
 }
@@ -133,17 +133,17 @@ void
 ui_media_drive_update_menus( const ui_media_drive_info_t *drive,
                              unsigned flags )
 {
-  if( !drive->fdd )
+  if (!drive->fdd )
     return;
 
-  if( flags & UI_MEDIA_DRIVE_UPDATE_TOP )
+  if (flags & UI_MEDIA_DRIVE_UPDATE_TOP )
     maybe_menu_activate( drive->menu_item_top,
                          drive->fdd->type != FDD_TYPE_NONE );
-  if( flags & UI_MEDIA_DRIVE_UPDATE_EJECT )
+  if (flags & UI_MEDIA_DRIVE_UPDATE_EJECT )
     maybe_menu_activate( drive->menu_item_eject, drive->fdd->loaded );
-  if( flags & UI_MEDIA_DRIVE_UPDATE_FLIP )
+  if (flags & UI_MEDIA_DRIVE_UPDATE_FLIP )
     maybe_menu_activate( drive->menu_item_flip, !drive->fdd->upsidedown );
-  if( flags & UI_MEDIA_DRIVE_UPDATE_WP )
+  if (flags & UI_MEDIA_DRIVE_UPDATE_WP )
     maybe_menu_activate( drive->menu_item_wp, !drive->fdd->wrprot );
 }
 
@@ -154,9 +154,9 @@ ui_media_drive_flip( int controller, int which, int flip )
   ui_media_drive_info_t *drive;
 
   drive = ui_media_drive_find( controller, which );
-  if( !drive )
+  if (!drive )
     return -1;
-  if( !drive->fdd->loaded )
+  if (!drive->fdd->loaded )
     return 1;
 
   fdd_flip( drive->fdd, flip );
@@ -170,9 +170,9 @@ ui_media_drive_writeprotect( int controller, int which, int wrprot )
   ui_media_drive_info_t *drive;
 
   drive = ui_media_drive_find( controller, which );
-  if( !drive )
+  if (!drive )
     return -1;
-  if( !drive->fdd->loaded )
+  if (!drive->fdd->loaded )
     return 1;
 
   fdd_wrprot( drive->fdd, wrprot );
@@ -187,9 +187,9 @@ drive_disk_write( const ui_media_drive_info_t *drive, const char *filename )
   int error;
 
   drive->fdd->disk.type = DISK_TYPE_NONE;
-  if( filename == NULL )
+  if (filename == NULL )
     filename = drive->fdd->disk.filename; // write over original file
-  else if( compat_file_exists( filename ) ) {
+  else if (compat_file_exists( filename ) ) {
     const char *filename1 = strrchr( filename, FUSE_DIR_SEP_CHR );
     filename1 = filename1 ? filename1 + 1 : filename;
 
@@ -199,7 +199,7 @@ drive_disk_write( const ui_media_drive_info_t *drive, const char *filename )
       filename1
     );
 
-    switch( confirm ) {
+    switch (confirm ) {
 
     case UI_CONFIRM_SAVE_SAVE:
       break;
@@ -212,13 +212,13 @@ drive_disk_write( const ui_media_drive_info_t *drive, const char *filename )
 
   error = disk_write( &drive->fdd->disk, filename );
 
-  if( error != DISK_OK ) {
+  if (error != DISK_OK ) {
     ui_error( UI_ERROR_ERROR, "couldn't write '%s' file: %s", filename,
               disk_strerror( error ) );
     return 1;
   }
 
-  if( !drive->fdd->disk.filename ||
+  if (!drive->fdd->disk.filename ||
       strcmp( filename, drive->fdd->disk.filename ) ) {
     libspectrum_free( drive->fdd->disk.filename );
     drive->fdd->disk.filename = utils_safe_strdup( filename );
@@ -233,15 +233,15 @@ drive_save( const ui_media_drive_info_t *drive, int saveas )
   int err;
   char *filename = NULL, title[80];
 
-  if( drive->fdd->disk.filename == NULL )
+  if (drive->fdd->disk.filename == NULL )
     saveas = 1;
 
   fuse_emulation_pause();
 
   snprintf( title, sizeof( title ), "Fuse - Write %s", drive->name );
-  if( saveas ) {
+  if (saveas ) {
     filename = ui_get_save_filename( title );
-    if( !filename ) {
+    if (!filename ) {
       fuse_emulation_unpause();
       return 1;
     }
@@ -249,11 +249,11 @@ drive_save( const ui_media_drive_info_t *drive, int saveas )
 
   err = drive_disk_write( drive, filename );
 
-  if( saveas )
+  if (saveas )
     libspectrum_free( filename );
 
   fuse_emulation_unpause();
-  if( err )
+  if (err )
     return 1;
 
   drive->fdd->disk.dirty = 0;
@@ -266,7 +266,7 @@ ui_media_drive_save( int controller, int which, int saveas )
   ui_media_drive_info_t *drive;
 
   drive = ui_media_drive_find( controller, which );
-  if( !drive )
+  if (!drive )
     return -1;
   return drive_save( drive, saveas );
 }
@@ -274,10 +274,10 @@ ui_media_drive_save( int controller, int which, int saveas )
 static int
 drive_eject( const ui_media_drive_info_t *drive )
 {
-  if( !drive->fdd->loaded )
+  if (!drive->fdd->loaded )
     return 0;
 
-  if( drive->fdd->disk.dirty ) {
+  if (drive->fdd->disk.dirty ) {
 
     ui_confirm_save_t confirm = ui_confirm_save(
       "%s has been modified.\n"
@@ -285,10 +285,10 @@ drive_eject( const ui_media_drive_info_t *drive )
       drive->name
     );
 
-    switch( confirm ) {
+    switch (confirm ) {
 
     case UI_CONFIRM_SAVE_SAVE:
-      if( drive_save( drive, 0 ) )
+      if (drive_save( drive, 0 ) )
         return 1; // first save it...
       break;
 
@@ -310,7 +310,7 @@ ui_media_drive_eject( int controller, int which )
   ui_media_drive_info_t *drive;
 
   drive = ui_media_drive_find( controller, which );
-  if( !drive )
+  if (!drive )
     return -1;
   return drive_eject( drive );
 }
@@ -324,7 +324,7 @@ eject_all( gconstpointer data, gconstpointer user_data )
 }
 
 int
-ui_media_drive_eject_all( void )
+ui_media_drive_eject_all(void)
 {
   GSList *item;
   item = g_slist_find_custom( registered_drives, NULL, eject_all );
@@ -340,16 +340,16 @@ ui_media_drive_insert( const ui_media_drive_info_t *drive,
   const fdd_params_t *dt;
 
   // Eject any disk already in the drive
-  if( drive->fdd->loaded ) {
+  if (drive->fdd->loaded ) {
     // Abort the insert if we want to keep the current disk
-    if( drive_eject( drive ) )
+    if (drive_eject( drive ) )
       return 0;
   }
 
-  if( filename ) {
+  if (filename ) {
     error = disk_open( &drive->fdd->disk, filename, 0,
                        DISK_TRY_MERGE( drive->fdd->fdd_heads ) );
-    if( error != DISK_OK ) {
+    if (error != DISK_OK ) {
       ui_error( UI_ERROR_ERROR, "Failed to open disk image: %s",
                 disk_strerror( error ) );
       return 1;
@@ -358,15 +358,15 @@ ui_media_drive_insert( const ui_media_drive_info_t *drive,
     dt = drive->get_params();
     error = disk_new( &drive->fdd->disk, dt->heads, dt->cylinders, DISK_DENS_AUTO,
                       DISK_UDI );
-    if( error != DISK_OK ) {
+    if (error != DISK_OK ) {
       ui_error( UI_ERROR_ERROR, "Failed to create disk image: %s",
                 disk_strerror( error ) );
       return 1;
     }
   }
-  if( drive->insert_hook ) {
+  if (drive->insert_hook ) {
     error = drive->insert_hook( drive, !filename );
-    if( error )
+    if (error )
       return 1;
   }
 
@@ -375,7 +375,7 @@ ui_media_drive_insert( const ui_media_drive_info_t *drive,
   // Set the 'eject' item active
   ui_media_drive_update_menus( drive, UI_MEDIA_DRIVE_UPDATE_ALL );
 
-  if( filename && autoload && drive->autoload_hook ) {
+  if (filename && autoload && drive->autoload_hook ) {
     return drive->autoload_hook();
   }
 

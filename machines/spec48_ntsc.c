@@ -36,7 +36,7 @@
 #include "spec48.h"
 #include "spectrum.h"
 
-static int spec48_ntsc_reset( void );
+static int spec48_ntsc_reset(void);
 
 int spec48_ntsc_init( fuse_machine_info *machine )
 {
@@ -62,13 +62,13 @@ int spec48_ntsc_init( fuse_machine_info *machine )
 }
 
 static int
-spec48_ntsc_reset( void )
+spec48_ntsc_reset(void)
 {
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_48,
                             settings_default.rom_48, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   periph_clear();
   machines_periph_48();

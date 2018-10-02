@@ -61,7 +61,7 @@ update_display( GtkTreeModel *model, libspectrum_word base )
   memaddr = base;
   gtk_list_store_clear( GTK_LIST_STORE( model ) );
 
-  for( i = 0; i < 20; i++ ) {
+  for (i = 0; i < 20; i++) {
     snprintf( text[0], 8, "%04X", base );
 
     text[1][0] = '\0';
@@ -101,7 +101,7 @@ scroller( GtkAdjustment *adjustment, gpointer user_data )
 }
 
 static GtkWidget *
-create_mem_list( void )
+create_mem_list(void)
 {
   GtkWidget *view;
   GtkCellRenderer *renderer;
@@ -158,7 +158,7 @@ menu_machine_memorybrowser( GtkAction *gtk_action GCC_UNUSED,
 
   fuse_emulation_pause();
 
-  error = gtkui_get_monospaced_font( &font ); if( error ) return;
+  error = gtkui_get_monospaced_font( &font ); if (error ) return;
 
   dialog = gtkstock_dialog_new( "Fuse - Memory Browser", NULL );
 

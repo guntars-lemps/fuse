@@ -147,7 +147,7 @@ FILE *tmpf;
 int overwrite=1;
 
 if(!printer_graphics_enabled || !settings_current.printer_graphics_filename)
-  return(0);
+  return 0;
 
 // first, see if there's an existing file we can add to.
 if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
@@ -199,7 +199,7 @@ if((printer_graphics_file=fopen(settings_current.printer_graphics_filename,
   ui_error(UI_ERROR_ERROR,"Couldn't open '%s', graphics printout disabled",
 	   settings_current.printer_graphics_filename);
   printer_graphics_enabled=0;
-  return(0);
+  return 0;
   }
 
 if(overwrite)
@@ -223,14 +223,14 @@ else
     }
   }
 
-return(1);
+return 1;
 }
 
 
 static int printer_text_open_file(void)
 {
 if(!printer_text_enabled || !settings_current.printer_text_filename)
-  return(0);
+  return 0;
 
 // append to any existing file...
 if((printer_text_file=fopen(settings_current.printer_text_filename,"a"))==NULL)
@@ -238,13 +238,13 @@ if((printer_text_file=fopen(settings_current.printer_text_filename,"a"))==NULL)
   ui_error(UI_ERROR_ERROR,"Couldn't open '%s', text printout disabled",
 	   settings_current.printer_text_filename);
   printer_text_enabled=0;
-  return(0);
+  return 0;
   }
 
 // ensure users have immediate access to text file contents
 setbuf( printer_text_file, NULL );
 
-return(1);
+return 1;
 }
 
 
@@ -438,11 +438,11 @@ static libspectrum_byte printer_zxp_read(libspectrum_word port GCC_UNUSED,
 				         libspectrum_byte *attached)
 {
 if(!settings_current.printer)
-  return(0xff);
+  return 0xff;
 if(!printer_graphics_enabled)
-  return(0xff);
+  return 0xff;
 if(plusd_available)
-  return(0xff);
+  return 0xff;
 
 *attached = 0xff; // TODO: check this
 
@@ -689,13 +689,13 @@ static libspectrum_byte printer_parallel_read(libspectrum_word port GCC_UNUSED,
 				              libspectrum_byte *attached)
 {
 if(!settings_current.printer)
-  return(0xff);
+  return 0xff;
 
 *attached = 0xff; // TODO: check this
 
 // bit 0 = busy. other bits high?
 
-return(0xfe); // never busy
+return 0xfe; // never busy
 }
 
 
@@ -720,14 +720,14 @@ printer_init( void *context )
 }
 
 static void
-printer_end( void )
+printer_end(void)
 {
   printer_text_end();
   printer_zxp_end();
 }
 
 void
-printer_register_startup( void )
+printer_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_MACHINE,
@@ -740,7 +740,7 @@ printer_register_startup( void )
 
 static void zx_printer_snapshot_enabled( libspectrum_snap *snap )
 {
-  if( libspectrum_snap_zx_printer_active( snap ) )
+  if (libspectrum_snap_zx_printer_active( snap ) )
     settings_current.zxprinter = 1;
 }
 

@@ -133,7 +133,7 @@ struct nic_enc28j60_t {
 };
 
 nic_enc28j60_t*
-nic_enc28j60_alloc( void )
+nic_enc28j60_alloc(void)
 {
   nic_enc28j60_t *self = libspectrum_new( nic_enc28j60_t, 1 );
 

@@ -35,32 +35,32 @@
 #include "ui/ui.h"
 
 const char*
-compat_get_temp_path( void )
+compat_get_temp_path(void)
 {
   const char *dir;
 
   /* Something close to this algorithm specified at
      http://msdn.microsoft.com/en-us/library/windows/desktop/aa364992%28v=vs.85%29.aspx
   */
-  dir = getenv( "TMP" ); if( dir ) return dir;
-  dir = getenv( "TEMP" ); if( dir ) return dir;
+  dir = getenv( "TMP"); if (dir ) return dir;
+  dir = getenv( "TEMP"); if (dir ) return dir;
   return ".";
 }
 
 const char*
-compat_get_config_path( void )
+compat_get_config_path(void)
 {
   const char *dir;
-  dir = getenv( "USERPROFILE" ); if( dir ) return dir;
-  dir = getenv( "WINDIR" ); if( dir ) return dir;
+  dir = getenv( "USERPROFILE"); if (dir ) return dir;
+  dir = getenv( "WINDIR"); if (dir ) return dir;
   return ".";
 }
 
 int
 compat_is_absolute_path( const char *path )
 {
-  if( path[0] == '\\' ) return 1;
-  if( path[0] && path[1] == ':' ) return 1;
+  if (path[0] == '\\' ) return 1;
+  if (path[0] && path[1] == ':' ) return 1;
   return 0;
 }
 
@@ -70,7 +70,7 @@ compat_get_next_path( path_context *ctx )
   char buffer[ PATH_MAX ];
   const char *path_segment, *path2;
 
-  switch( ctx->type ) {
+  switch (ctx->type ) {
   case UTILS_AUXILIARY_LIB: path_segment = "lib"; break;
   case UTILS_AUXILIARY_ROM: path_segment = "roms"; break;
   case UTILS_AUXILIARY_WIDGET: path_segment = "ui/widget"; break;
@@ -80,17 +80,17 @@ compat_get_next_path( path_context *ctx )
     return 0;
   }
 
-  switch( (ctx->state)++ ) {
+  switch ((ctx->state)++ ) {
 
     // First look relative to the Fuse executable
   case 0:
-    if( compat_is_absolute_path( fuse_progname ) ) {
+    if (compat_is_absolute_path( fuse_progname ) ) {
       strncpy( buffer, fuse_progname, PATH_MAX );
       buffer[ PATH_MAX - 1 ] = '\0';
     } else {
       DWORD retval;
       retval = GetModuleFileName( NULL, buffer, PATH_MAX );
-      if( !retval ) return 0;
+      if (!retval ) return 0;
     }
 
     path2 = dirname( buffer );
@@ -100,8 +100,8 @@ compat_get_next_path( path_context *ctx )
 
     // Then relative to %APPDATA%/Fuse directory
   case 1:
-    path2 = getenv( "APPDATA" );
-    if( !path2 ) return 0;
+    path2 = getenv( "APPDATA");
+    if (!path2 ) return 0;
     snprintf( ctx->path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "Fuse"
               FUSE_DIR_SEP_STR "%s", path2, path_segment );
 

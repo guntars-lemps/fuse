@@ -88,7 +88,7 @@ periph_register( periph_type type, const periph_t *periph )
 {
   periph_private_t *private;
 
-  if( !peripherals )
+  if (!peripherals )
     peripherals = g_hash_table_new_full( NULL, NULL, NULL, libspectrum_free );
 
   private = libspectrum_new( periph_private_t, 1 );
@@ -114,7 +114,7 @@ void
 periph_set_present( periph_type type, periph_present present )
 {
   periph_private_t *type_data = g_hash_table_lookup( peripherals, GINT_TO_POINTER( type ) );
-  if( type_data ) type_data->present = present;
+  if (type_data ) type_data->present = present;
 }
 
 // Mark a specific peripheral as (in)active
@@ -122,13 +122,13 @@ int
 periph_activate_type( periph_type type, int active )
 {
   periph_private_t *private = g_hash_table_lookup( peripherals, GINT_TO_POINTER( type ) );
-  if( !private || private->active == active ) return 0;
+  if (!private || private->active == active ) return 0;
 
   private->active = active;
 
-  if( active ) {
+  if (active ) {
     const periph_port_t *ptr;
-    if( private->periph->activate )
+    if (private->periph->activate )
       private->periph->activate();
     for( ptr = private->periph->ports; ptr && ptr->mask != 0; ptr++ )
       port_register( type, ptr );
@@ -201,7 +201,7 @@ disable_optional( gpointer key, gpointer value, gpointer user_data )
   switch ( private->present ) {
   case PERIPH_PRESENT_NEVER:
   case PERIPH_PRESENT_OPTIONAL:
-    if( private->periph->option ) *(private->periph->option) = 0;
+    if (private->periph->option ) *(private->periph->option) = 0;
     break;
   default: break;
   }
@@ -226,14 +226,14 @@ set_type_inactive( gpointer key, gpointer value, gpointer user_data )
 
 // Mark all peripherals as being never present on this machine
 static void
-set_types_inactive( void )
+set_types_inactive(void)
 {
   g_hash_table_foreach( peripherals, set_type_inactive, NULL );
 }
 
 // Empty out the list of peripherals
 void
-periph_clear( void )
+periph_clear(void)
 {
   g_slist_foreach( ports, free_peripheral, NULL );
   g_slist_free( ports );
@@ -243,7 +243,7 @@ periph_clear( void )
 
 // Tidy-up function called at end of emulation
 void
-periph_end( void )
+periph_end(void)
 {
   g_slist_foreach( ports, free_peripheral, NULL );
   g_slist_free( ports );
@@ -278,7 +278,7 @@ readport( libspectrum_word port )
 
   /* Very ugly to put this here, but unless anything else needs this
      "writeback" mechanism, no point producing a general framework */
-  if( ( port & 0x8002 ) == 0 &&
+  if (( port & 0x8002 ) == 0 &&
       ( machine_current->machine == LIBSPECTRUM_MACHINE_128   ||
 	machine_current->machine == LIBSPECTRUM_MACHINE_PLUS2    ) )
     writeport_internal( 0x7ffd, b );
@@ -298,7 +298,7 @@ read_peripheral( gpointer data, gpointer user_data )
 
   periph_port_t *port = &( private->port );
 
-  if( port->read &&
+  if (port->read &&
       ( ( callback_info->port & port->mask ) == port->value ) ) {
     last_attached = callback_info->attached;
     callback_info->value &= (   port->read( callback_info->port,
@@ -314,17 +314,17 @@ readport_internal( libspectrum_word port )
   struct peripheral_data_t callback_info;
 
   // Trigger the debugger if wanted
-  if( debugger_mode != DEBUGGER_MODE_INACTIVE )
+  if (debugger_mode != DEBUGGER_MODE_INACTIVE )
     debugger_check( DEBUGGER_BREAKPOINT_TYPE_PORT_READ, port );
 
   // If we're doing RZX playback, get a byte from the RZX file
-  if( rzx_playback ) {
+  if (rzx_playback ) {
 
     libspectrum_error error;
     libspectrum_byte value;
 
     error = libspectrum_rzx_playback( rzx, &value );
-    if( error ) {
+    if (error ) {
       rzx_stop_playback( 1 );
 
       /* Add a null event to mean we pick up the RZX state change in
@@ -343,13 +343,13 @@ readport_internal( libspectrum_word port )
 
   g_slist_foreach( ports, read_peripheral, &callback_info );
 
-  if( callback_info.attached != 0xff )
+  if (callback_info.attached != 0xff )
     callback_info.value =
       periph_merge_floating_bus( callback_info.value, callback_info.attached,
                                  machine_current->unattached_port() );
 
   // If we're RZX recording, store this byte
-  if( rzx_recording ) rzx_store_byte( callback_info.value );
+  if (rzx_recording ) rzx_store_byte( callback_info.value );
 
   return callback_info.value;
 }
@@ -381,7 +381,7 @@ write_peripheral( gpointer data, gpointer user_data )
 
   periph_port_t *port = &( private->port );
 
-  if( port->write &&
+  if (port->write &&
       ( ( callback_info->port & port->mask ) == port->value ) )
     port->write( callback_info->port, callback_info->value );
 }
@@ -393,7 +393,7 @@ writeport_internal( libspectrum_word port, libspectrum_byte b )
   struct peripheral_data_t callback_info;
 
   // Trigger the debugger if wanted
-  if( debugger_mode != DEBUGGER_MODE_INACTIVE )
+  if (debugger_mode != DEBUGGER_MODE_INACTIVE )
     debugger_check( DEBUGGER_BREAKPOINT_TYPE_PORT_WRITE, port );
 
   callback_info.port = port;
@@ -407,7 +407,7 @@ writeport_internal( libspectrum_word port, libspectrum_byte b )
  */
 
 static void
-update_cartridge_menu( void )
+update_cartridge_menu(void)
 {
   int cartridge, dock, if2;
 
@@ -423,7 +423,7 @@ update_cartridge_menu( void )
 }
 
 static void
-update_ide_menu( void )
+update_ide_menu(void)
 {
   int ide, simpleide, zxatasp, zxcf, divide, divmmc, zxmmc;
 
@@ -446,7 +446,7 @@ update_ide_menu( void )
 }
 
 static void
-update_peripherals_status( void )
+update_peripherals_status(void)
 {
   ui_menu_activate( UI_MENU_ITEM_MEDIA_IF1,
                     periph_is_active( PERIPH_TYPE_INTERFACE1 ) );
@@ -461,9 +461,9 @@ update_peripherals_status( void )
 }
 
 void
-periph_disable_optional( void )
+periph_disable_optional(void)
 {
-  if( ui_mouse_present && ui_mouse_grabbed ) {
+  if (ui_mouse_present && ui_mouse_grabbed ) {
     ui_mouse_grabbed = ui_mouse_release( 1 );
   }
 
@@ -473,15 +473,15 @@ periph_disable_optional( void )
 }
 
 int
-periph_update( void )
+periph_update(void)
 {
   int needs_hard_reset = 0;
 
-  if( ui_mouse_present ) {
-    if( settings_current.kempston_mouse ) {
-      if( !ui_mouse_grabbed ) ui_mouse_grabbed = ui_mouse_grab( 1 );
+  if (ui_mouse_present ) {
+    if (settings_current.kempston_mouse ) {
+      if (!ui_mouse_grabbed ) ui_mouse_grabbed = ui_mouse_grab( 1 );
     } else {
-      if(  ui_mouse_grabbed ) ui_mouse_grabbed = ui_mouse_release( 1 );
+      if ( ui_mouse_grabbed ) ui_mouse_grabbed = ui_mouse_release( 1 );
     }
   }
 
@@ -494,15 +494,15 @@ periph_update( void )
 }
 
 void
-periph_posthook( void )
+periph_posthook(void)
 {
-  if( periph_update() ) {
+  if (periph_update() ) {
     machine_reset( 1 );
   }
 }
 
 int
-periph_postcheck( void )
+periph_postcheck(void)
 {
   int needs_hard_reset = 0;
 

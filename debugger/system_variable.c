@@ -49,7 +49,7 @@ typedef struct system_variable_t {
 static GArray *system_variables;
 
 void
-debugger_system_variable_init( void )
+debugger_system_variable_init(void)
 {
   system_variables = g_array_new( FALSE, FALSE, sizeof( system_variable_t ) );
 }
@@ -81,12 +81,12 @@ find_system_variable( const char *type, const char *detail, system_variable_t *o
 {
   size_t i;
 
-  for( i = 0; i < system_variables->len; i++ ) {
+  for (i = 0; i < system_variables->len; i++) {
     system_variable_t sysvar =
       g_array_index( system_variables, system_variable_t, i );
 
-    if( system_variable_matches( &sysvar, type, detail ) ) {
-      if( out != NULL ) *out = sysvar;
+    if (system_variable_matches( &sysvar, type, detail ) ) {
+      if (out != NULL ) *out = sysvar;
       return i;
     }
   }
@@ -117,7 +117,7 @@ debugger_system_variable_set( const char *type, const char *detail,
   system_variable_t sysvar;
 
   index = find_system_variable( type, detail, &sysvar );
-  if( index == -1 ) {
+  if (index == -1 ) {
     ui_error( UI_ERROR_ERROR, "Unknown system variable %s:%s", type, detail );
     return;
   }
@@ -143,14 +143,14 @@ debugger_system_variable_text( char *buffer, size_t length,
 
 // Tidy-up function called at end of emulation
 void
-debugger_system_variable_end( void )
+debugger_system_variable_end(void)
 {
   int i;
   system_variable_t sysvar;
 
-  if( !system_variables ) return;
+  if (!system_variables ) return;
 
-  for( i = 0; i < system_variables->len; i++ ) {
+  for (i = 0; i < system_variables->len; i++) {
     sysvar = g_array_index( system_variables, system_variable_t, i );
     libspectrum_free( sysvar.detail );
     libspectrum_free( sysvar.type );

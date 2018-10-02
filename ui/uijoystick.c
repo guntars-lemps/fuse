@@ -69,17 +69,17 @@ static int
 init_stick( int which, const char *const device,
 	    const char *const calibration )
 {
-  switch( JSInit( &jsd[which], device, calibration, JSFlagNonBlocking ) ) {
+  switch (JSInit( &jsd[which], device, calibration, JSFlagNonBlocking ) ) {
 
   case JSSuccess:
-    if( JSLoadCalibrationUNIX( &jsd[which] ) && errno != ENOENT ) {
+    if (JSLoadCalibrationUNIX( &jsd[which] ) && errno != ENOENT ) {
       ui_error( UI_ERROR_ERROR,
 		"failed to read calibration for joystick %i: %s", which + 1,
 		strerror( errno ) );
       break;
     }
 
-    if( jsd[which].total_axises < 2 || jsd[which].total_buttons < 1 )
+    if (jsd[which].total_axises < 2 || jsd[which].total_buttons < 1 )
     {
       ui_error( UI_ERROR_ERROR, "sorry, joystick %i (%s) is inadequate!",
 		which + 1, device );
@@ -104,7 +104,7 @@ init_stick( int which, const char *const device,
 
   case JSNoBuffers:
     ui_error( UI_ERROR_ERROR, "failed to initialise joystick %i: %s",
-	      which + 1, "not enough memory" );
+	      which + 1, "not enough memory");
     break;
 
   default:
@@ -125,28 +125,28 @@ int open_joystick( int which, const char *device, const char *calibration )
 
   /* If we were given an explicit device to use for this joystick, try
      only that */
-  if( device && device[0] ) return init_stick( which, device, calibration );
+  if (device && device[0] ) return init_stick( which, device, calibration );
 
   // Otherwise try /dev/input/js<n> and /dev/js<n>
   snprintf( path, PATH_MAX, "/dev/input/js%d", which );
-  if( !init_stick( which, path, calibration ) ) return 0;
+  if (!init_stick( which, path, calibration ) ) return 0;
 
   snprintf( path, PATH_MAX, "/dev/js%d", which );
-  if( !init_stick( which, path, calibration ) ) return 0;
+  if (!init_stick( which, path, calibration ) ) return 0;
 
   // Couldn't find this joystick
   return 1;
 }
 
 int
-ui_joystick_init( void )
+ui_joystick_init(void)
 {
   const char *cfgdir;
   char *calibration;
   int error;
   size_t i, j;
 
-  cfgdir = compat_get_config_path(); if( !cfgdir ) return 1;
+  cfgdir = compat_get_config_path(); if (!cfgdir ) return 1;
 
   // Default calibration file is ~/.joystick
   calibration = libspectrum_new( char, strlen( cfgdir ) +
@@ -154,7 +154,7 @@ ui_joystick_init( void )
 
   sprintf( calibration, "%s/%s", cfgdir, JSDefaultCalibration );
 
-  for( i = 0; i < 2; i++ ) {
+  for (i = 0; i < 2; i++) {
     for( j = 0; j < NUM_JOY_BUTTONS; j++ ) {
       js_button_states[i][j] = 0;
     }
@@ -162,13 +162,13 @@ ui_joystick_init( void )
 
   // If we can't init the first, don't try the second
   error = open_joystick( 0, settings_current.joystick_1, calibration );
-  if( error ) {
+  if (error ) {
     libspectrum_free( calibration );
     return 0;
   }
 
   error = open_joystick( 1, settings_current.joystick_2, calibration );
-  if( error ) {
+  if (error ) {
     libspectrum_free( calibration );
     return 1;
   }
@@ -179,18 +179,18 @@ ui_joystick_init( void )
 }
 
 void
-ui_joystick_end( void )
+ui_joystick_end(void)
 {
   int i;
-  for( i = 0; i < joysticks_supported; i++ ) JSClose( &jsd[i] );
+  for (i = 0; i < joysticks_supported; i++) JSClose( &jsd[i] );
 }
 
 void
-ui_joystick_poll( void )
+ui_joystick_poll(void)
 {
   int i;
 
-  for( i = 0; i < joysticks_supported; i++ ) poll_joystick( i );
+  for (i = 0; i < joysticks_supported; i++) poll_joystick( i );
 }
 
 static void
@@ -204,7 +204,7 @@ poll_joystick( int which )
 
   joystick = &jsd[which];
 
-  if( JSUpdate( joystick ) != JSGotEvent ) return;
+  if (JSUpdate( joystick ) != JSGotEvent ) return;
 
   position = JSGetAxisCoeffNZ( joystick, 0 );
   do_axis( which, position, INPUT_JOYSTICK_LEFT, INPUT_JOYSTICK_RIGHT );
@@ -215,12 +215,12 @@ poll_joystick( int which )
   event.types.joystick.which = which;
 
   buttons = joystick->total_buttons;
-  if( buttons > NUM_JOY_BUTTONS ) buttons = NUM_JOY_BUTTONS; // We support 'only' NUM_JOY_BUTTONS (15 as defined in ui/uijoystick.h) fire buttons
+  if (buttons > NUM_JOY_BUTTONS ) buttons = NUM_JOY_BUTTONS; // We support 'only' NUM_JOY_BUTTONS (15 as defined in ui/uijoystick.h) fire buttons
 
-  for( i = 0; i < buttons; i++ ) {
+  for (i = 0; i < buttons; i++) {
 
     fire = JSGetButtonState( joystick, i );
-    if( fire == JSButtonStateOn ) {
+    if (fire == JSButtonStateOn ) {
       event.type = INPUT_EVENT_JOYSTICK_PRESS;
     } else {
       event.type = INPUT_EVENT_JOYSTICK_RELEASE;
@@ -228,7 +228,7 @@ poll_joystick( int which )
 
     event.types.joystick.button = INPUT_JOYSTICK_FIRE_1 + i;
 
-    if( js_button_states[which][i] != fire ) {
+    if (js_button_states[which][i] != fire ) {
       js_button_states[which][i] = fire;
       input_event( &event );
     }
@@ -247,10 +247,10 @@ do_axis( int which, double position, input_key negative, input_key positive )
   event1.types.joystick.button = positive;
   event2.types.joystick.button = negative;
 
-  if( position == 0.0 ) {
+  if (position == 0.0 ) {
     event1.type = INPUT_EVENT_JOYSTICK_RELEASE;
     event2.type = INPUT_EVENT_JOYSTICK_RELEASE;
-  } else if( position > 0.0 ) {
+  } else if (position > 0.0 ) {
     event1.type = INPUT_EVENT_JOYSTICK_PRESS;
     event2.type = INPUT_EVENT_JOYSTICK_RELEASE;
   } else {
@@ -267,18 +267,18 @@ do_axis( int which, double position, input_key negative, input_key positive )
 // No joystick library
 
 int
-ui_joystick_init( void )
+ui_joystick_init(void)
 {
   return 0;
 }
 
 void
-ui_joystick_end( void )
+ui_joystick_end(void)
 {
 }
 
 void
-ui_joystick_poll( void )
+ui_joystick_poll(void)
 {
 }
 

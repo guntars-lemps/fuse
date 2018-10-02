@@ -50,13 +50,13 @@ menu_media_tape_browse( int action )
   // Firstly, stop emulation
   fuse_emulation_pause();
 
-  if( !dialog_created ) {
+  if (!dialog_created ) {
     dialog = CreateDialog( fuse_hInstance, MAKEINTRESOURCE( IDD_BROWSE ),
                            fuse_hWnd, dialog_proc );
-    if( dialog == NULL ) { fuse_emulation_unpause(); return; }
+    if (dialog == NULL ) { fuse_emulation_unpause(); return; }
   }
 
-  if( ui_tape_browser_update( UI_TAPE_BROWSER_NEW_TAPE, NULL ) ) {
+  if (ui_tape_browser_update( UI_TAPE_BROWSER_NEW_TAPE, NULL ) ) {
     fuse_emulation_unpause();
     return;
   }
@@ -87,8 +87,8 @@ dialog_init( HWND hwndDlg )
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
   lvc.fmt = LVCFMT_LEFT;
 
-  for( i = 0; i < 3; i++ ) {
-    if( i != 0 )
+  for (i = 0; i < 3; i++) {
+    if (i != 0 )
       lvc.mask |= LVCF_SUBITEM;
     lvc.cx = titles_widths[i];
     lvc.pszText = (LPTSTR)titles[i];
@@ -124,15 +124,15 @@ static INT_PTR CALLBACK
 dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 // FIXME: implement resizing the dialog
-  switch( uMsg ) {
+  switch (uMsg ) {
 
     case WM_INITDIALOG:
       dialog_init( hwndDlg );
       return FALSE;
 
     case WM_NOTIFY:
-      if( ( ( LPNMHDR ) lParam )->code == NM_DBLCLK ) {
-        if( ( ( LPNMHDR ) lParam )->idFrom == IDC_BROWSE_LV ) {
+      if (( ( LPNMHDR ) lParam )->code == NM_DBLCLK ) {
+        if (( ( LPNMHDR ) lParam )->idFrom == IDC_BROWSE_LV ) {
           select_row( ( LPNMITEMACTIVATE ) lParam );
           return 0;
         }
@@ -140,7 +140,7 @@ dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
       break;
 
     case WM_COMMAND:
-      if( LOWORD( wParam ) == IDCLOSE ) {
+      if (LOWORD( wParam ) == IDCLOSE ) {
         ShowWindow( dialog, SW_HIDE );
         return 0;
       }
@@ -160,20 +160,20 @@ ui_tape_browser_update( ui_tape_browser_update_type change GCC_UNUSED,
 {
   int error, current_block;
 
-  if( !dialog_created ) return 0;
+  if (!dialog_created ) return 0;
 
   fuse_emulation_pause();
 
   SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_DELETEALLITEMS, 0, 0 );
 
   error = tape_foreach( add_block_details, NULL );
-  if( error ) {
+  if (error ) {
     fuse_emulation_unpause();
     return 1;
   }
 
   current_block = tape_get_current_block();
-  if( current_block != -1 ) {
+  if (current_block != -1 ) {
     LVITEM li;
     li.mask = LVIF_IMAGE;
     li.iItem = current_block;
@@ -182,7 +182,7 @@ ui_tape_browser_update( ui_tape_browser_update_type change GCC_UNUSED,
     SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_SETITEM, 0, ( LPARAM ) &li );
   }
 
-  if( tape_modified ) {
+  if (tape_modified ) {
     SendDlgItemMessage( dialog, IDC_BROWSE_MODIFIED, WM_SETTEXT,
                         0, ( LPARAM ) TEXT( "Tape modified" ) );
   } else {
@@ -203,7 +203,7 @@ add_block_details( libspectrum_tape_block *block, void *user_data )
   LV_ITEM lvi;
   size_t i;
 
-  _tcscpy( details[0], "" );
+  _tcscpy( details[0], "");
   libspectrum_tape_block_description( details[1], 80, block );
   // FIXME: why does it give such a big number of bytes?
   tape_block_details( details[2], 80, block );
@@ -212,10 +212,10 @@ add_block_details( libspectrum_tape_block *block, void *user_data )
   lvi.iImage = -1;
   lvi.iItem = SendDlgItemMessage( dialog, IDC_BROWSE_LV,
                                   LVM_GETITEMCOUNT, 0, 0 );
-  for( i = 0; i < 3; i++ ) {
+  for (i = 0; i < 3; i++) {
     lvi.iSubItem = i;
     lvi.pszText = details[i];
-    if( i == 0 )
+    if (i == 0 )
       SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_INSERTITEM, 0,
                           ( LPARAM ) &lvi );
     else
@@ -234,7 +234,7 @@ select_row( LPNMITEMACTIVATE lpnmitem )
 
   // Don't do anything if the current block was clicked on
   current_block = tape_get_current_block();
-  if( row == current_block ) return;
+  if (row == current_block ) return;
 
   // Otherwise, select the new block
   tape_select_block_no_update( row );
@@ -247,7 +247,7 @@ select_row( LPNMITEMACTIVATE lpnmitem )
   li.mask = LVIF_IMAGE;
   li.iSubItem = 0;
 
-  for( i=0; i<count; i++ ) {
+  for( i=0; i<count; i++) {
     li.iImage = ( i==row ? 0 : -1 );
     li.iItem = i;
     SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_SETITEM, 0, ( LPARAM ) &li );

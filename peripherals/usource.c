@@ -57,7 +57,7 @@ static void usource_reset( int hard_reset );
 static void usource_enabled_snapshot( libspectrum_snap *snap );
 static void usource_from_snapshot( libspectrum_snap *snap );
 static void usource_to_snapshot( libspectrum_snap *snap );
-static void usource_memory_map( void );
+static void usource_memory_map(void);
 
 static module_info_t usource_module_info = {
 
@@ -89,8 +89,8 @@ usource_init( void *context )
 
   module_register( &usource_module_info );
 
-  usource_memory_source = memory_source_register( "uSource" );
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
+  usource_memory_source = memory_source_register( "uSource");
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
     usource_memory_map_romcs[i].source = usource_memory_source;
 
   periph_register( PERIPH_TYPE_USOURCE, &usource_periph );
@@ -99,13 +99,13 @@ usource_init( void *context )
 }
 
 static void
-usource_end( void )
+usource_end(void)
 {
   usource_available = 0;
 }
 
 void
-usource_register_startup( void )
+usource_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_MEMORY,
@@ -122,10 +122,10 @@ usource_reset( int hard_reset GCC_UNUSED )
   usource_active = 0;
   usource_available = 0;
 
-  if( !periph_is_active( PERIPH_TYPE_USOURCE ) )
+  if (!periph_is_active( PERIPH_TYPE_USOURCE ) )
     return;
 
-  if( machine_load_rom_bank( usource_memory_map_romcs, 0,
+  if (machine_load_rom_bank( usource_memory_map_romcs, 0,
 			     settings_current.rom_usource,
 			     settings_default.rom_usource, 0x2000 ) ) {
     settings_current.usource = 0;
@@ -139,7 +139,7 @@ usource_reset( int hard_reset GCC_UNUSED )
 }
 
 void
-usource_toggle( void )
+usource_toggle(void)
 {
   usource_active = !usource_active;
   machine_current->ram.romcs = usource_active;
@@ -147,9 +147,9 @@ usource_toggle( void )
 }
 
 static void
-usource_memory_map( void )
+usource_memory_map(void)
 {
-  if( !usource_active ) return;
+  if (!usource_active ) return;
 
   memory_map_romcs_8k( 0x0000, usource_memory_map_romcs );
   memory_map_romcs_8k( 0x2000, usource_memory_map_romcs );
@@ -171,7 +171,7 @@ usource_toggle_write( libspectrum_word port GCC_UNUSED, libspectrum_byte val )
 }
 
 int
-usource_unittest( void )
+usource_unittest(void)
 {
   int r = 0;
 
@@ -201,9 +201,9 @@ usource_enabled_snapshot( libspectrum_snap *snap )
 static void
 usource_from_snapshot( libspectrum_snap *snap )
 {
-  if( !libspectrum_snap_usource_active( snap ) ) return;
+  if (!libspectrum_snap_usource_active( snap ) ) return;
 
-  if( libspectrum_snap_usource_custom_rom( snap ) &&
+  if (libspectrum_snap_usource_custom_rom( snap ) &&
       libspectrum_snap_usource_rom( snap, 0 ) &&
       machine_load_rom_bank_from_buffer(
                              usource_memory_map_romcs, 0,
@@ -212,7 +212,7 @@ usource_from_snapshot( libspectrum_snap *snap )
                              1 ) )
     return;
 
-  if( libspectrum_snap_usource_paged( snap ) ) {
+  if (libspectrum_snap_usource_paged( snap ) ) {
     usource_active = 0; // Will be toggled to active next
     usource_toggle();
   }
@@ -225,12 +225,12 @@ usource_to_snapshot( libspectrum_snap *snap )
   size_t rom_length;
   int i;
 
-  if( !periph_is_active( PERIPH_TYPE_USOURCE ) ) return;
+  if (!periph_is_active( PERIPH_TYPE_USOURCE ) ) return;
 
   libspectrum_snap_set_usource_active( snap, 1 );
   libspectrum_snap_set_usource_paged ( snap, usource_active );
 
-  if( usource_memory_map_romcs[0].save_to_snapshot ) {
+  if (usource_memory_map_romcs[0].save_to_snapshot ) {
     rom_length = 0x2000;
 
     libspectrum_snap_set_usource_custom_rom( snap, 1 );
@@ -238,9 +238,9 @@ usource_to_snapshot( libspectrum_snap *snap )
 
     buffer = libspectrum_new( libspectrum_byte, rom_length );
 
-    for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
+    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
       memcpy( buffer + i * MEMORY_PAGE_SIZE,
-              usource_memory_map_romcs[ i ].page, MEMORY_PAGE_SIZE );
+              usource_memory_map_romcs[i].page, MEMORY_PAGE_SIZE );
 
     libspectrum_snap_set_usource_rom( snap, 0, buffer );
   }

@@ -39,7 +39,7 @@
 #include "tc2068.h"
 #include "ui/ui.h"
 
-static int ts2068_reset( void );
+static int ts2068_reset(void);
 
 int
 ts2068_init( fuse_machine_info *machine )
@@ -65,17 +65,17 @@ ts2068_init( fuse_machine_info *machine )
 }
 
 static int
-ts2068_reset( void )
+ts2068_reset(void)
 {
   size_t i, j;
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_ts2068_0,
                             settings_default.rom_ts2068_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_ts2068_1,
                             settings_default.rom_ts2068_1, 0x2000 );
-  if( error ) return error;
+  if (error ) return error;
 
   // 0x0000: ROM 0
   scld_home_map_16k( 0x0000, memory_map_rom, 0 );
@@ -97,7 +97,7 @@ ts2068_reset( void )
 
   periph_update();
 
-  for( i = 0; i < 8; i++ )
+  for (i = 0; i < 8; i++)
     for( j = 0; j < MEMORY_PAGES_IN_8K; j++ ) {
       memory_page *dock_page, *exrom_page;
 
@@ -114,7 +114,7 @@ ts2068_reset( void )
   tc2068_tc2048_common_reset();
 
   error = dck_reset();
-  if( error ) {
+  if (error ) {
     ui_error( UI_ERROR_INFO, "Ignoring Timex dock file '%s'",
             settings_current.dck_file );
   }

@@ -67,11 +67,11 @@ static libspectrum_byte *plusd_ram;
 static int memory_allocated = 0;
 
 static void plusd_reset( int hard_reset );
-static void plusd_memory_map( void );
+static void plusd_memory_map(void);
 static void plusd_enabled_snapshot( libspectrum_snap *snap );
 static void plusd_from_snapshot( libspectrum_snap *snap );
 static void plusd_to_snapshot( libspectrum_snap *snap );
-static void plusd_activate( void );
+static void plusd_activate(void);
 
 // WD1770 registers
 static libspectrum_byte plusd_sr_read( libspectrum_word port, libspectrum_byte *attached );
@@ -106,7 +106,7 @@ static int page_event, unpage_event;
 static libspectrum_byte plusd_control_register;
 
 void
-plusd_page( void )
+plusd_page(void)
 {
   plusd_active = 1;
   machine_current->ram.romcs = 1;
@@ -115,7 +115,7 @@ plusd_page( void )
 }
 
 void
-plusd_unpage( void )
+plusd_unpage(void)
 {
   plusd_active = 0;
   machine_current->ram.romcs = 0;
@@ -124,9 +124,9 @@ plusd_unpage( void )
 }
 
 static void
-plusd_memory_map( void )
+plusd_memory_map(void)
 {
-  if( !plusd_active ) return;
+  if (!plusd_active ) return;
 
   memory_map_romcs_8k( 0x0000, plusd_memory_map_romcs_rom );
   memory_map_romcs_8k( 0x2000, plusd_memory_map_romcs_ram );
@@ -167,7 +167,7 @@ plusd_init( void *context )
 
   plusd_fdc = wd_fdc_alloc_fdc( WD1770, 0, WD_FLAG_NONE );
 
-  for( i = 0; i < PLUSD_NUM_DRIVES; i++ ) {
+  for (i = 0; i < PLUSD_NUM_DRIVES; i++) {
     d = &plusd_drives[ i ];
     fdd_init( d, FDD_SHUGART, NULL, 0 );
     d->disk.flag = DISK_FLAG_NONE;
@@ -183,17 +183,17 @@ plusd_init( void *context )
 
   module_register( &plusd_module_info );
 
-  plusd_memory_source_rom = memory_source_register( "PlusD ROM" );
-  plusd_memory_source_ram = memory_source_register( "PlusD RAM" );
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
-    plusd_memory_map_romcs_rom[ i ].source = plusd_memory_source_rom;
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
-    plusd_memory_map_romcs_ram[ i ].source = plusd_memory_source_ram;
+  plusd_memory_source_rom = memory_source_register( "PlusD ROM");
+  plusd_memory_source_ram = memory_source_register( "PlusD RAM");
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
+    plusd_memory_map_romcs_rom[i].source = plusd_memory_source_rom;
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
+    plusd_memory_map_romcs_ram[i].source = plusd_memory_source_ram;
 
   periph_register( PERIPH_TYPE_PLUSD, &plusd_periph );
 
-  for( i = 0; i < PLUSD_NUM_DRIVES; i++ ) {
-    plusd_ui_drives[ i ].fdd = &plusd_drives[ i ];
+  for (i = 0; i < PLUSD_NUM_DRIVES; i++) {
+    plusd_ui_drives[i].fdd = &plusd_drives[ i ];
     ui_media_drive_register( &plusd_ui_drives[ i ] );
   }
 
@@ -204,14 +204,14 @@ plusd_init( void *context )
 }
 
 static void
-plusd_end( void )
+plusd_end(void)
 {
   plusd_available = 0;
   libspectrum_free( plusd_fdc );
 }
 
 void
-plusd_register_startup( void )
+plusd_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -231,11 +231,11 @@ plusd_reset( int hard_reset )
   plusd_active = 0;
   plusd_available = 0;
 
-  if( !periph_is_active( PERIPH_TYPE_PLUSD ) ) {
+  if (!periph_is_active( PERIPH_TYPE_PLUSD ) ) {
     return;
   }
 
-  if( machine_load_rom_bank( plusd_memory_map_romcs_rom, 0,
+  if (machine_load_rom_bank( plusd_memory_map_romcs_rom, 0,
 			     settings_current.rom_plusd,
 			     settings_default.rom_plusd, ROM_SIZE ) ) {
     settings_current.plusd = 0;
@@ -245,7 +245,7 @@ plusd_reset( int hard_reset )
 
   machine_current->ram.romcs = 0;
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ ) {
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
     struct memory_page *page = &plusd_memory_map_romcs_ram[ i ];
     page->page = &plusd_ram[ i * MEMORY_PAGE_SIZE ];
     page->offset = i * MEMORY_PAGE_SIZE;
@@ -255,12 +255,12 @@ plusd_reset( int hard_reset )
   plusd_available = 1;
   plusd_active = 1;
 
-  if( hard_reset )
+  if (hard_reset )
     memset( plusd_ram, 0, RAM_SIZE );
 
   wd_fdc_master_reset( plusd_fdc );
 
-  for( i = 0; i < PLUSD_NUM_DRIVES; i++ ) {
+  for (i = 0; i < PLUSD_NUM_DRIVES; i++) {
     ui_media_drive_update_menus( &plusd_ui_drives[ i ],
                                  UI_MEDIA_DRIVE_UPDATE_ALL );
   }
@@ -335,14 +335,14 @@ plusd_cn_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
   side = ( b & 0x80 ) ? 1 : 0;
 
   // TODO: set current_drive to NULL when bits 0 and 1 of b are '00' or '11'
-  for( i = 0; i < PLUSD_NUM_DRIVES; i++ ) {
+  for (i = 0; i < PLUSD_NUM_DRIVES; i++) {
     fdd_set_head( &plusd_drives[ i ], side );
   }
   fdd_select( &plusd_drives[ (!drive) ], 0 );
   fdd_select( &plusd_drives[ drive ], 1 );
 
-  if( plusd_fdc->current_drive != &plusd_drives[ drive ] ) {
-    if( plusd_fdc->current_drive->motoron ) { // swap motoron
+  if (plusd_fdc->current_drive != &plusd_drives[ drive ] ) {
+    if (plusd_fdc->current_drive->motoron ) { // swap motoron
       fdd_motoron( &plusd_drives[ (!drive) ], 0 );
       fdd_motoron( &plusd_drives[ drive ], 1 );
     }
@@ -375,9 +375,9 @@ plusd_printer_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached
   // bit 7 = busy. other bits high?
 
   if(!settings_current.printer)
-    return(0xff); // no printer attached
+    return 0xff; // no printer attached
 
-  return(0x7f); // never busy
+  return 0x7f; // never busy
 }
 
 static void
@@ -390,7 +390,7 @@ int
 plusd_disk_insert( plusd_drive_number which, const char *filename,
 		   int autoload )
 {
-  if( which >= PLUSD_NUM_DRIVES ) {
+  if (which >= PLUSD_NUM_DRIVES ) {
     ui_error( UI_ERROR_ERROR, "plusd_disk_insert: unknown drive %d",
 	      which );
     fuse_abort();
@@ -414,9 +414,9 @@ plusd_enabled_snapshot( libspectrum_snap *snap )
 static void
 plusd_from_snapshot( libspectrum_snap *snap )
 {
-  if( !libspectrum_snap_plusd_active( snap ) ) return;
+  if (!libspectrum_snap_plusd_active( snap ) ) return;
 
-  if( libspectrum_snap_plusd_custom_rom( snap ) &&
+  if (libspectrum_snap_plusd_custom_rom( snap ) &&
       libspectrum_snap_plusd_rom( snap, 0 ) &&
       machine_load_rom_bank_from_buffer(
                              plusd_memory_map_romcs_rom, 0,
@@ -424,7 +424,7 @@ plusd_from_snapshot( libspectrum_snap *snap )
                              ROM_SIZE, 1 ) )
     return;
 
-  if( libspectrum_snap_plusd_ram( snap, 0 ) ) {
+  if (libspectrum_snap_plusd_ram( snap, 0 ) ) {
     memcpy( plusd_ram,
             libspectrum_snap_plusd_ram( snap, 0 ), RAM_SIZE );
   }
@@ -442,7 +442,7 @@ plusd_from_snapshot( libspectrum_snap *snap )
   plusd_dr_write ( 0x00fb, libspectrum_snap_plusd_data   ( snap ) );
   plusd_cn_write ( 0x00ef, libspectrum_snap_plusd_control( snap ) );
 
-  if( libspectrum_snap_plusd_paged( snap ) ) {
+  if (libspectrum_snap_plusd_paged( snap ) ) {
     plusd_page();
   } else {
     plusd_unpage();
@@ -456,17 +456,17 @@ plusd_to_snapshot( libspectrum_snap *snap )
   int drive_count = 0;
   int i;
 
-  if( !periph_is_active( PERIPH_TYPE_PLUSD ) ) return;
+  if (!periph_is_active( PERIPH_TYPE_PLUSD ) ) return;
 
   libspectrum_snap_set_plusd_active( snap, 1 );
 
   buffer = libspectrum_new( libspectrum_byte, ROM_SIZE );
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
     memcpy( buffer + i * MEMORY_PAGE_SIZE,
-            plusd_memory_map_romcs_rom[ i ].page, MEMORY_PAGE_SIZE );
+            plusd_memory_map_romcs_rom[i].page, MEMORY_PAGE_SIZE );
   libspectrum_snap_set_plusd_rom( snap, 0, buffer );
 
-  if( plusd_memory_map_romcs_rom[ 0 ].save_to_snapshot )
+  if (plusd_memory_map_romcs_rom[ 0 ].save_to_snapshot )
     libspectrum_snap_set_plusd_custom_rom( snap, 1 );
 
   buffer = libspectrum_new( libspectrum_byte, RAM_SIZE );
@@ -474,7 +474,7 @@ plusd_to_snapshot( libspectrum_snap *snap )
   libspectrum_snap_set_plusd_ram( snap, 0, buffer );
 
   drive_count++; // Drive 1 is not removable
-  if( option_enumerate_diskoptions_drive_plusd2_type() > 0 ) drive_count++;
+  if (option_enumerate_diskoptions_drive_plusd2_type() > 0 ) drive_count++;
   libspectrum_snap_set_plusd_drive_count( snap, drive_count );
 
   libspectrum_snap_set_plusd_paged ( snap, plusd_active );
@@ -487,16 +487,16 @@ plusd_to_snapshot( libspectrum_snap *snap )
 }
 
 static void
-plusd_activate( void )
+plusd_activate(void)
 {
-  if( !memory_allocated ) {
+  if (!memory_allocated ) {
     plusd_ram = memory_pool_allocate_persistent( RAM_SIZE, 1 );
     memory_allocated = 1;
   }
 }
 
 int
-plusd_unittest( void )
+plusd_unittest(void)
 {
   int r = 0;
 
@@ -516,20 +516,20 @@ plusd_unittest( void )
 }
 
 static int
-ui_drive_is_available( void )
+ui_drive_is_available(void)
 {
   return plusd_available;
 }
 
 static const fdd_params_t *
-ui_drive_get_params_1( void )
+ui_drive_get_params_1(void)
 {
   // +1 => there is no `Disabled'
   return &fdd_params[ option_enumerate_diskoptions_drive_plusd1_type() + 1 ];
 }
 
 static const fdd_params_t *
-ui_drive_get_params_2( void )
+ui_drive_get_params_2(void)
 {
   return &fdd_params[ option_enumerate_diskoptions_drive_plusd2_type() ];
 }

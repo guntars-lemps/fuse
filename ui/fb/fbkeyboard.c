@@ -56,14 +56,14 @@ int fbkeyboard_init(void)
   int i = 1;
 
   // First, set up the keyboard
-  if( fstat( STDIN_FILENO, &st ) ) {
+  if (fstat( STDIN_FILENO, &st ) ) {
     fprintf( stderr, "%s: couldn't stat stdin: %s\n", fuse_progname,
 	     strerror( errno ) );
     return 1;
   }
 
   // check for character special, major 4, minor 0..63
-  if( !isatty(STDIN_FILENO) || !S_ISCHR(st.st_mode) ||
+  if (!isatty(STDIN_FILENO) || !S_ISCHR(st.st_mode) ||
       ( st.st_rdev & ~63 ) != 0x0400 ) {
     fprintf( stderr, "%s: stdin isn't a local tty\n", fuse_progname );
     return 1;
@@ -74,12 +74,12 @@ int fbkeyboard_init(void)
   got_old_ts = 1;
 
   // We need non-blocking semi-cooked keyboard input
-  if( ioctl( STDIN_FILENO, FIONBIO, &i ) ) {
+  if (ioctl( STDIN_FILENO, FIONBIO, &i ) ) {
     fprintf( stderr, "%s: can't set stdin nonblocking: %s\n", fuse_progname,
 	     strerror( errno ) );
     return 1;
   }
-  if( ioctl( STDIN_FILENO, KDSKBMODE, K_MEDIUMRAW ) ) {
+  if (ioctl( STDIN_FILENO, KDSKBMODE, K_MEDIUMRAW ) ) {
     fprintf( stderr, "%s: can't set keyboard into medium-raw mode: %s\n",
 	     fuse_progname, strerror( errno ) );
     return 1;
@@ -102,7 +102,7 @@ int fbkeyboard_end(void)
   int i = 0;
 
   ioctl( STDIN_FILENO, FIONBIO, &i );
-  if( got_old_ts ) {
+  if (got_old_ts ) {
     tcsetattr( STDIN_FILENO, TCSAFLUSH, &old_ts );
     ioctl( STDIN_FILENO, KDSKBMODE, old_kbmode );
   }
@@ -111,7 +111,7 @@ int fbkeyboard_end(void)
 }
 
 void
-keyboard_update( void )
+keyboard_update(void)
 {
   unsigned char keybuf[64];
   static int ignore = 0;
@@ -120,12 +120,12 @@ keyboard_update( void )
     ssize_t available, i;
 
     available = read( STDIN_FILENO, &keybuf, sizeof( keybuf ) );
-    if( available <= 0 ) return;
+    if (available <= 0 ) return;
 
-    for( i = 0; i < available; i++ )
-      if( ignore ) {
+    for (i = 0; i < available; i++)
+      if (ignore ) {
 	ignore--;
-      } else if( ( keybuf[i] & 0x7f ) == 0 ) {
+      } else if (( keybuf[i] & 0x7f ) == 0 ) {
 	ignore = 2; // ignore extended keysyms
       } else {
 	input_key fuse_keysym;
@@ -133,7 +133,7 @@ keyboard_update( void )
 
 	fuse_keysym = keysyms_remap( keybuf[i] & 0x7f );
 
-	if( fuse_keysym == INPUT_KEY_NONE ) continue;
+	if (fuse_keysym == INPUT_KEY_NONE ) continue;
 
 	fuse_event.type = ( keybuf[i] & 0x80 ) ?
                           INPUT_EVENT_KEYRELEASE :

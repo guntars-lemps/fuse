@@ -72,14 +72,14 @@ libspectrum_byte spectrum_contend_delay_none( libspectrum_dword time );
 libspectrum_byte spectrum_contend_delay_65432100( libspectrum_dword time );
 libspectrum_byte spectrum_contend_delay_76543210( libspectrum_dword time );
 
-libspectrum_byte spectrum_unattached_port( void );
-libspectrum_byte spectrum_unattached_port_none( void );
+libspectrum_byte spectrum_unattached_port(void);
+libspectrum_byte spectrum_unattached_port_none(void);
 
 // Miscellaneous stuff
 
 extern int spectrum_frame_event;
 
-void spectrum_register_startup( void );
-int spectrum_frame( void );
+void spectrum_register_startup(void);
+int spectrum_frame(void);
 
 #endif // #ifndef FUSE_SPECTRUM_H

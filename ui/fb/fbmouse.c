@@ -65,13 +65,13 @@ fbmouse_init(void)
 
   libgpm = dlopen( "libgpm.so", RTLD_LAZY );
 
-  if( libgpm ) {
-    typeof (Gpm_Open) *gpm_open = dlsym( libgpm, "Gpm_Open" );
+  if (libgpm ) {
+    typeof (Gpm_Open) *gpm_open = dlsym( libgpm, "Gpm_Open");
     i = 1;
-    if( gpm_open( &conn, 0 ) != -1 ) {
-      gpmfd = *( typeof( &gpm_fd ) ) dlsym( libgpm, "gpm_fd" );
-      gpmflag = ( typeof( &gpm_flag ) ) dlsym( libgpm, "gpm_flag" );
-      gpm_getevent = dlsym( libgpm, "Gpm_GetEvent" );
+    if (gpm_open( &conn, 0 ) != -1 ) {
+      gpmfd = *( typeof( &gpm_fd ) ) dlsym( libgpm, "gpm_fd");
+      gpmflag = ( typeof( &gpm_flag ) ) dlsym( libgpm, "gpm_flag");
+      gpm_getevent = dlsym( libgpm, "Gpm_GetEvent");
       ui_mouse_present = 1;
       return 0;
     }
@@ -81,10 +81,10 @@ fbmouse_init(void)
 #endif
 
   // No libgpm support, no libgpm or gpm is not running - use our own code
-  if( try_open ("/dev/input/mice") &&
+  if (try_open ("/dev/input/mice") &&
       try_open ("/dev/mouse") &&
       try_open ("/dev/psaux") ) {
-    if( errno == ENOENT || errno == ENODEV || errno == EACCES ) {
+    if (errno == ENOENT || errno == ENODEV || errno == EACCES ) {
       fprintf( stderr, "%s: warning: no mouse, or not accessible\n",
 	       fuse_progname );
       return 0;
@@ -105,14 +105,14 @@ fbmouse_init(void)
    * buttons 2 and 3, and so that the wheel is available should it be wanted
    * somewhere.
    */
-  if( !try_mouse_mode( 100, 3 ) ) {
+  if (!try_mouse_mode( 100, 3 ) ) {
     packet_size = 4;
     mouse_mode = try_mouse_mode( 200, 4 ) ? ImPS2 : ExPS2;
   }
 
   // *Now* we want non-blocking I/O...
   i = 1;
-  if( ioctl( mouse_fd, FIONBIO, &i ) )
+  if (ioctl( mouse_fd, FIONBIO, &i ) )
     return fbmouse_end(); // couldn't get it
 
   ui_mouse_present = 1;
@@ -123,12 +123,12 @@ int
 fbmouse_end(void)
 {
 #ifdef HAVE_GPM_H
-  if( *gpmflag ) {
-    typeof (Gpm_Close) *gpm_close = dlsym( libgpm, "Gpm_Close" );
+  if (*gpmflag ) {
+    typeof (Gpm_Close) *gpm_close = dlsym( libgpm, "Gpm_Close");
     gpm_close();
   }
 #endif
-  if( mouse_fd != -1 ) {
+  if (mouse_fd != -1 ) {
     close( mouse_fd );
     mouse_fd = -1;
   }
@@ -136,26 +136,26 @@ fbmouse_end(void)
 }
 
 #ifdef HAVE_GPM_H
-static void mouse_update_gpm( void );
-static void mouse_update_ps2( void );
+static void mouse_update_gpm(void);
+static void mouse_update_ps2(void);
 
 void
-mouse_update( void )
+mouse_update(void)
 {
-  if( *gpmflag )
+  if (*gpmflag )
     mouse_update_gpm();
   else
     mouse_update_ps2();
 }
 
 static void
-mouse_update_gpm( void )
+mouse_update_gpm(void)
 {
   Gpm_Event event;
   int db;
   static int oldbuttons = 0;
 
-  if( gpmfd < 0 ) {
+  if (gpmfd < 0 ) {
     static int t = 0;
     if (!t) fprintf (stderr, "gpm not there?\n");
     t = 1;
@@ -164,19 +164,19 @@ mouse_update_gpm( void )
 
   for (;;) {
     struct pollfd ufd = { gpmfd, POLLIN | POLLPRI };
-    if( poll( &ufd, 1, 0 ) < 1 ) break;
+    if (poll( &ufd, 1, 0 ) < 1 ) break;
 
     gpm_getevent( &event );
 
-    if( !ui_mouse_grabbed ) continue;
+    if (!ui_mouse_grabbed ) continue;
 
-    if( event.dx | event.dy ) ui_mouse_motion( event.dx, event.dy );
+    if (event.dx | event.dy ) ui_mouse_motion( event.dx, event.dy );
 
     db = event.buttons ^ oldbuttons;
-    if( db ) {
+    if (db ) {
       oldbuttons = event.buttons;
-      if( db & GPM_B_LEFT  ) ui_mouse_button( 1, event.buttons & GPM_B_LEFT  );
-      if( db & GPM_B_RIGHT ) ui_mouse_button( 3, event.buttons & GPM_B_RIGHT );
+      if (db & GPM_B_LEFT  ) ui_mouse_button( 1, event.buttons & GPM_B_LEFT  );
+      if (db & GPM_B_RIGHT ) ui_mouse_button( 3, event.buttons & GPM_B_RIGHT );
     }
   }
 }
@@ -188,10 +188,10 @@ mouse_update_gpm( void )
  */
 #ifdef HAVE_GPM_H
 static void
-mouse_update_ps2( void )
+mouse_update_ps2(void)
 #else
 void
-mouse_update( void )
+mouse_update(void)
 #endif
 {
   static int btn_state = 0;
@@ -199,30 +199,30 @@ mouse_update( void )
   ssize_t xoff = 0, yoff = 0;
   int btn_changed = 0, btn_new = btn_state, btn_mod = btn_state;
 
-  if( mouse_fd == -1 ) return;
+  if (mouse_fd == -1 ) return;
 
   while( 1 ) {
     ssize_t available;
     const unsigned char *i;
 
     available = read( mouse_fd, &mousebuf, sizeof( mousebuf ) );
-    if( available <= 0 ) break;
+    if (available <= 0 ) break;
 
-    if( !ui_mouse_grabbed ) continue;
+    if (!ui_mouse_grabbed ) continue;
 
     for( i = mousebuf; i < mousebuf + available; i += packet_size ) {
       btn_changed |= btn_mod ^= btn_new = i[0] & 7;
       btn_changed |= btn_mod ^= btn_new = i[0] & 7;
-      xoff += i[1]; if( i[0] & 16 ) xoff -= 256;
-      yoff += i[2]; if( i[0] & 32 ) yoff -= 256;
+      xoff += i[1]; if (i[0] & 16 ) xoff -= 256;
+      yoff += i[2]; if (i[0] & 32 ) yoff -= 256;
     }
   }
 
   btn_state = btn_new;
-  if( btn_changed & 1 ) ui_mouse_button( 1, btn_new & 1 );
-  if( btn_changed & 2 ) ui_mouse_button( 3, btn_new & 2 );
+  if (btn_changed & 1 ) ui_mouse_button( 1, btn_new & 1 );
+  if (btn_changed & 2 ) ui_mouse_button( 3, btn_new & 2 );
 
-  if( xoff || yoff ) ui_mouse_motion( xoff, -yoff );
+  if (xoff || yoff ) ui_mouse_motion( xoff, -yoff );
 }
 
 // Try to open the specified device. Return 0 on success.
@@ -230,7 +230,7 @@ static int
 try_open( const char *dev )
 {
   mouse_fd = open( dev, O_RDWR );
-  if( mouse_fd == -1 && errno == EACCES )
+  if (mouse_fd == -1 && errno == EACCES )
     mouse_fd = open( dev, O_RDONLY );
   return mouse_fd == -1;
 }
@@ -244,7 +244,7 @@ try_mouse_mode( unsigned char mode, unsigned char response )
   struct pollfd ufd = { mouse_fd, POLLIN | POLLPRI };
   int ret = 0;
   unsigned char buf[] = { 0xF3, 200, 0xF3, mode, 0xF3, 80, 0xF2 };
-  if( write( mouse_fd, buf, sizeof( buf ) ) < sizeof( buf ) )
+  if (write( mouse_fd, buf, sizeof( buf ) ) < sizeof( buf ) )
     return 1;
   while( poll( &ufd, 1, 10 ) == 1)
     ret = read( mouse_fd, buf, sizeof( buf ) );

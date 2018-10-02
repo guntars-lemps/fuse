@@ -75,7 +75,7 @@ specdrum_init( void *context )
 }
 
 void
-specdrum_register_startup( void )
+specdrum_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_SPECDRUM, dependencies,
@@ -89,7 +89,7 @@ specdrum_reset( int hard_reset GCC_UNUSED )
   machine_current->specdrum.specdrum_dac = 0;
 }
 
-static void 
+static void
 specdrum_enabled_snapshot( libspectrum_snap *snap )
 {
   settings_current.specdrum = libspectrum_snap_specdrum_active( snap );
@@ -98,10 +98,10 @@ specdrum_enabled_snapshot( libspectrum_snap *snap )
 static void
 specdrum_from_snapshot( libspectrum_snap *snap )
 {
-  if( !libspectrum_snap_specdrum_active( snap ) ) return;
+  if (!libspectrum_snap_specdrum_active( snap ) ) return;
 
   /* We just set the internal machine status to the last read specdrum_dac
-   * instead of trying to write to the sound routines, as at this stage 
+   * instead of trying to write to the sound routines, as at this stage
    * sound isn't initialised so there is no synth to write to
    */
 
@@ -110,7 +110,7 @@ specdrum_from_snapshot( libspectrum_snap *snap )
 
 static void specdrum_to_snapshot( libspectrum_snap *snap )
 {
-  if( !periph_is_active( PERIPH_TYPE_SPECDRUM ) ) return;
+  if (!periph_is_active( PERIPH_TYPE_SPECDRUM ) ) return;
 
   libspectrum_snap_set_specdrum_active( snap, 1 );
   libspectrum_snap_set_specdrum_dac( snap, machine_current->specdrum.specdrum_dac );

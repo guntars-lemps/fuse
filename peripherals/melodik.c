@@ -70,7 +70,7 @@ melodik_enabled_snapshot( libspectrum_snap *snap )
 static void
 melodik_from_snapshot( libspectrum_snap *snap )
 {
-  if( periph_is_active( PERIPH_TYPE_MELODIK ) )
+  if (periph_is_active( PERIPH_TYPE_MELODIK ) )
     ay_state_from_snapshot( snap );
 }
 
@@ -91,7 +91,7 @@ melodik_init( void *context )
 }
 
 void
-melodik_register_startup( void )
+melodik_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_MELODIK, dependencies,

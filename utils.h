@@ -37,7 +37,7 @@ typedef struct utils_file {
 
 int utils_open_file( const char *filename, int autoload,
 		     libspectrum_id_t *type );
-int utils_open_snap( void );
+int utils_open_snap(void);
 int utils_read_auxiliary_file( const char *filename, utils_file *file,
                                utils_aux_type type );
 
@@ -59,7 +59,7 @@ int
 utils_save_binary( libspectrum_word start, libspectrum_word length,
                    const char *filename );
 
-void utils_networking_init( void );
-void utils_networking_end( void );
+void utils_networking_init(void);
+void utils_networking_end(void);
 
 #endif // #ifndef FUSE_UTILS_H

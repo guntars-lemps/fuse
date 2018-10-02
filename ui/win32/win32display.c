@@ -90,12 +90,12 @@ static libspectrum_dword bw_colours[16];
 // The current size of the window (in units of DISPLAY_SCREEN_*)
 static int win32display_current_size=1;
 
-static int init_colours( void );
+static int init_colours(void);
 static void register_scalers( int force_scaler );
-static void win32display_load_gfx_mode( void );
+static void win32display_load_gfx_mode(void);
 
 void
-blit( void )
+blit(void)
 {
   PAINTSTRUCT ps;
   HDC dest_dc, src_dc;
@@ -109,7 +109,7 @@ blit( void )
   width = ps.rcPaint.right - ps.rcPaint.left;
   height = ps.rcPaint.bottom - ps.rcPaint.top;
 
-  if( width && height ) {
+  if (width && height ) {
     src_dc = CreateCompatibleDC( dest_dc );
     src_bmp = SelectObject( src_dc, fuse_BMP );
 
@@ -123,12 +123,12 @@ blit( void )
 }
 
 int
-win32display_init( void )
+win32display_init(void)
 {
   int x, y, error;
   libspectrum_dword black;
 
-  error = init_colours(); if( error ) return error;
+  error = init_colours(); if (error ) return error;
 
   black = settings_current.bw_tv ? bw_colours[0] : win32display_colours[0];
 
@@ -169,11 +169,11 @@ win32display_init( void )
 }
 
 static int
-init_colours( void )
+init_colours(void)
 {
   size_t i;
 
-  for( i = 0; i < 16; i++ ) {
+  for (i = 0; i < 16; i++) {
 
     unsigned char red, green, blue, grey;
 
@@ -207,11 +207,11 @@ win32display_drawing_area_resize( int width, int height, int force_scaler )
   int size;
 
   size = width / DISPLAY_ASPECT_WIDTH;
-  if( size > height / DISPLAY_SCREEN_HEIGHT )
+  if (size > height / DISPLAY_SCREEN_HEIGHT )
     size = height / DISPLAY_SCREEN_HEIGHT;
 
   // If we're the same size as before, no need to do anything else
-  if( size == win32display_current_size ) return 0;
+  if (size == win32display_current_size ) return 0;
 
   win32display_current_size = size;
 
@@ -254,7 +254,7 @@ register_scalers( int force_scaler )
 
   scaler_register_clear();
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     scaler_register( SCALER_HALF );
     scaler_register( SCALER_HALFSKIP );
     scaler_register( SCALER_TIMEXTV );
@@ -281,8 +281,8 @@ register_scalers( int force_scaler )
   scaler =
     scaler_is_supported( current_scaler ) ? current_scaler : SCALER_NORMAL;
 
-  if( force_scaler ) {
-    switch( win32display_current_size ) {
+  if (force_scaler ) {
+    switch (win32display_current_size ) {
     case 1: scaler = machine_current->timex ? SCALER_HALF : SCALER_NORMAL;
       break;
     case 2: scaler = machine_current->timex ? SCALER_NORMAL : SCALER_DOUBLESIZE;
@@ -297,9 +297,9 @@ register_scalers( int force_scaler )
 }
 
 void
-uidisplay_frame_end( void )
+uidisplay_frame_end(void)
 {
-  if( !IsRectEmpty( &invalidated_area ) ) {
+  if (!IsRectEmpty( &invalidated_area ) ) {
 
     InvalidateRect( fuse_hWnd, &invalidated_area, FALSE );
 
@@ -318,7 +318,7 @@ uidisplay_area( int x, int y, int w, int h )
 
   /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */
-  if( scaler_flags & SCALER_FLAGS_EXPAND )
+  if (scaler_flags & SCALER_FLAGS_EXPAND )
     scaler_expander( &x, &y, &w, &h, image_width, image_height );
 
   scaled_x = scale * x; scaled_y = scale * y;
@@ -335,7 +335,7 @@ uidisplay_area( int x, int y, int w, int h )
 
     display = &win32display_image[yy][x];
 
-    for( i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
+    for (i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
   }
 
   // Create scaled image
@@ -379,7 +379,7 @@ win32display_area(int x, int y, int width, int height)
 }
 
 int
-uidisplay_hotswap_gfx_mode( void )
+uidisplay_hotswap_gfx_mode(void)
 {
   fuse_emulation_pause();
 
@@ -392,13 +392,13 @@ uidisplay_hotswap_gfx_mode( void )
 }
 
 int
-uidisplay_end( void )
+uidisplay_end(void)
 {
   return 0;
 }
 
 int
-win32display_end( void )
+win32display_end(void)
 {
   DeleteObject( fuse_BMP );
 
@@ -409,7 +409,7 @@ win32display_end( void )
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     x <<= 1; y <<= 1;
     win32display_image[y  ][x  ] = colour;
     win32display_image[y  ][x+1] = colour;
@@ -428,7 +428,7 @@ uidisplay_plot8( int x, int y, libspectrum_byte data,
 {
   x <<= 3;
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     int i;
 
     x <<= 1; y <<= 1;
@@ -492,7 +492,7 @@ uidisplay_plot16( int x, int y, libspectrum_word data,
 }
 
 static void
-win32display_load_gfx_mode( void )
+win32display_load_gfx_mode(void)
 {
   float scale;
 
@@ -505,13 +505,13 @@ win32display_load_gfx_mode( void )
 }
 
 int
-win32display_scaled_width( void )
+win32display_scaled_width(void)
 {
   return image_width * win32display_current_size;
 }
 
 int
-win32display_scaled_height( void )
+win32display_scaled_height(void)
 {
   return image_height * win32display_current_size;
 }

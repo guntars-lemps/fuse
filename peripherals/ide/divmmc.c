@@ -46,8 +46,8 @@ static void divmmc_control_write( libspectrum_word port, libspectrum_byte data )
 static void divmmc_card_select( libspectrum_word port, libspectrum_byte data );
 static libspectrum_byte divmmc_mmc_read( libspectrum_word port, libspectrum_byte *attached );
 static void divmmc_mmc_write( libspectrum_word port, libspectrum_byte data );
-static void divmmc_activate( void );
-static libspectrum_dword get_control_register( void );
+static void divmmc_activate(void);
+static libspectrum_dword get_control_register(void);
 static void set_control_register( libspectrum_dword value );
 
 // Data
@@ -79,7 +79,7 @@ static libspectrum_mmc_card *current_card;
 #define DIVMMC_PAGE_LENGTH 0x2000
 
 static void divmmc_reset( int hard_reset );
-static void divmmc_memory_map( void );
+static void divmmc_memory_map(void);
 static void divmmc_enabled_snapshot( libspectrum_snap *snap );
 static void divmmc_from_snapshot( libspectrum_snap *snap );
 static void divmmc_to_snapshot( libspectrum_snap *snap );
@@ -113,15 +113,15 @@ divmmc_init( void *context )
 
   ui_menu_activate( eject_menu_item, 0 );
 
-  if( settings_current.divmmc_file ) {
+  if (settings_current.divmmc_file ) {
     int error;
 
     error =
       libspectrum_mmc_insert( card, settings_current.divmmc_file );
-    if( error ) return error;
+    if (error ) return error;
 
     error = ui_menu_activate( eject_menu_item, 1 );
-    if( error ) return error;
+    if (error ) return error;
   }
 
   module_register( &divmmc_module_info );
@@ -140,14 +140,14 @@ divmmc_init( void *context )
 }
 
 static void
-divmmc_end( void )
+divmmc_end(void)
 {
   divxxx_free( divmmc_state );
   libspectrum_mmc_free( card );
 }
 
 void
-divmmc_register_startup( void )
+divmmc_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -204,25 +204,25 @@ divmmc_insert( const char *filename )
 
   /* Remove any currently inserted card; abort if we want to keep the current
      card */
-  if( settings_current.divmmc_file )
-    if( mmc_eject( card ) )
+  if (settings_current.divmmc_file )
+    if (mmc_eject( card ) )
       return 0;
 
   settings_set_string( &settings_current.divmmc_file, filename );
 
   error = libspectrum_mmc_insert( card, filename );
-  if( error ) return error;
+  if (error ) return error;
   return ui_menu_activate( eject_menu_item, 1 );
 }
 
 void
-divmmc_commit( void )
+divmmc_commit(void)
 {
   libspectrum_mmc_commit( card );
 }
 
 int
-divmmc_eject( void )
+divmmc_eject(void)
 {
   return mmc_eject( card );
 }
@@ -242,7 +242,7 @@ divmmc_card_select( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 
   /* D0 = MMC0, D1 = MMC1, active LOW
      somehow logic prevents enabling both cards at the same time */
-  switch( data & 0x03 ) {
+  switch (data & 0x03 ) {
     case 0x02:
       current_card = card;
       break;
@@ -267,7 +267,7 @@ divmmc_mmc_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 static void
 divmmc_mmc_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 {
-  if( current_card ) libspectrum_mmc_write( card, data );
+  if (current_card ) libspectrum_mmc_write( card, data );
 }
 
 void
@@ -277,13 +277,13 @@ divmmc_set_automap( int state )
 }
 
 void
-divmmc_refresh_page_state( void )
+divmmc_refresh_page_state(void)
 {
   divxxx_refresh_page_state( divmmc_state );
 }
 
 void
-divmmc_memory_map( void )
+divmmc_memory_map(void)
 {
   divxxx_memory_map( divmmc_state );
 }
@@ -291,7 +291,7 @@ divmmc_memory_map( void )
 static void
 divmmc_enabled_snapshot( libspectrum_snap *snap )
 {
-  if( libspectrum_snap_divmmc_active( snap ) )
+  if (libspectrum_snap_divmmc_active( snap ) )
     settings_current.divmmc_enabled = 1;
 }
 
@@ -300,24 +300,24 @@ divmmc_from_snapshot( libspectrum_snap *snap )
 {
   size_t i;
 
-  if( !libspectrum_snap_divmmc_active( snap ) ) return;
+  if (!libspectrum_snap_divmmc_active( snap ) ) return;
 
   settings_current.divmmc_wp =
     libspectrum_snap_divmmc_eprom_writeprotect( snap );
   divxxx_control_write_internal( divmmc_state, libspectrum_snap_divmmc_control( snap ) );
 
-  if( libspectrum_snap_divmmc_eprom( snap, 0 ) ) {
+  if (libspectrum_snap_divmmc_eprom( snap, 0 ) ) {
     memcpy( divxxx_get_eprom( divmmc_state ),
 	    libspectrum_snap_divmmc_eprom( snap, 0 ), DIVMMC_PAGE_LENGTH );
   }
 
-  for( i = 0; i < libspectrum_snap_divmmc_pages( snap ); i++ )
-    if( libspectrum_snap_divmmc_ram( snap, i ) ) {
+  for (i = 0; i < libspectrum_snap_divmmc_pages( snap ); i++)
+    if (libspectrum_snap_divmmc_ram( snap, i ) ) {
       libspectrum_byte *ram = divxxx_get_ram( divmmc_state, i );
       memcpy( ram, libspectrum_snap_divmmc_ram( snap, i ), DIVMMC_PAGE_LENGTH );
     }
 
-  if( libspectrum_snap_divmmc_paged( snap ) ) {
+  if (libspectrum_snap_divmmc_paged( snap ) ) {
     divxxx_page( divmmc_state );
   } else {
     divxxx_unpage( divmmc_state );
@@ -330,7 +330,7 @@ divmmc_to_snapshot( libspectrum_snap *snap )
   size_t i;
   libspectrum_byte *buffer;
 
-  if( !settings_current.divmmc_enabled ) return;
+  if (!settings_current.divmmc_enabled ) return;
 
   libspectrum_snap_set_divmmc_active( snap, 1 );
   libspectrum_snap_set_divmmc_eprom_writeprotect( snap,
@@ -345,7 +345,7 @@ divmmc_to_snapshot( libspectrum_snap *snap )
 
   libspectrum_snap_set_divmmc_pages( snap, DIVMMC_PAGES );
 
-  for( i = 0; i < DIVMMC_PAGES; i++ ) {
+  for (i = 0; i < DIVMMC_PAGES; i++) {
 
     buffer = libspectrum_new( libspectrum_byte, DIVMMC_PAGE_LENGTH );
 
@@ -355,13 +355,13 @@ divmmc_to_snapshot( libspectrum_snap *snap )
 }
 
 static void
-divmmc_activate( void )
+divmmc_activate(void)
 {
   divxxx_activate( divmmc_state );
 }
 
 static libspectrum_dword
-get_control_register( void )
+get_control_register(void)
 {
   return divxxx_get_control( divmmc_state );
 }
@@ -373,7 +373,7 @@ set_control_register( libspectrum_dword value )
 }
 
 int
-divmmc_unittest( void )
+divmmc_unittest(void)
 {
   int r = 0;
   int eprom_memory_source = divxxx_get_eprom_memory_source( divmmc_state );

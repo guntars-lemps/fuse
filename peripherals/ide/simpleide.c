@@ -83,7 +83,7 @@ simpleide_init( void *context )
 		    UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_MASTER_EJECT,
 		    settings_current.simpleide_slave_file,
 		    UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT );
-  if( error ) return error;
+  if (error ) return error;
 
   module_register( &simpleide_module_info );
   periph_register( PERIPH_TYPE_SIMPLEIDE, &simpleide_periph );
@@ -92,13 +92,13 @@ simpleide_init( void *context )
 }
 
 static void
-simpleide_end( void )
+simpleide_end(void)
 {
   libspectrum_ide_free( simpleide_idechn );
 }
 
 void
-simpleide_register_startup( void )
+simpleide_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DISPLAY,
@@ -174,14 +174,14 @@ simpleide_write( libspectrum_word port, libspectrum_byte data )
 static void
 simpleide_snapshot_enabled( libspectrum_snap *snap )
 {
-  if( libspectrum_snap_simpleide_active( snap ) )
+  if (libspectrum_snap_simpleide_active( snap ) )
     settings_current.simpleide_active = 1;
 }
 
 static void
 simpleide_to_snapshot( libspectrum_snap *snap )
 {
-  if( !settings_current.simpleide_active ) return;
+  if (!settings_current.simpleide_active ) return;
 
   libspectrum_snap_set_simpleide_active( snap, 1 );
 }

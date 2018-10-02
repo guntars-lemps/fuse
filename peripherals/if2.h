@@ -31,10 +31,10 @@
 // IF2 cart inserted?
 extern int if2_active;
 
-void if2_register_startup( void );
+void if2_register_startup(void);
 int if2_insert( const char *filename );
-void if2_eject( void );
+void if2_eject(void);
 
-int if2_unittest( void );
+int if2_unittest(void);
 
 #endif // #ifndef FUSE_IF2_H

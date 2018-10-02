@@ -52,15 +52,15 @@ select_row( GtkButton *button GCC_UNUSED, gpointer user_data )
 
   // Get selected row
   gtk_tree_view_get_cursor( GTK_TREE_VIEW( view ), &path, &focus_column );
-  if( path ) {
+  if (path ) {
     int *indices = gtk_tree_path_get_indices( path );
-    if( indices ) current_block = indices[0];
+    if (indices ) current_block = indices[0];
     gtk_tree_path_free( path );
   }
 }
 
 static GtkWidget *
-create_rollback_list( void )
+create_rollback_list(void)
 {
   GtkWidget *view;
   GtkCellRenderer *renderer;
@@ -89,7 +89,7 @@ create_rollback_list( void )
 }
 
 static int
-create_dialog( void )
+create_dialog(void)
 {
   GtkWidget *content_area;
 
@@ -138,10 +138,10 @@ ui_get_rollback_point( GSList *points )
 {
   fuse_emulation_pause();
 
-  if( !dialog_created )
-    if( create_dialog() ) { fuse_emulation_unpause(); return -1; }
+  if (!dialog_created )
+    if (create_dialog() ) { fuse_emulation_unpause(); return -1; }
 
-  if( update_list( points ) ) { fuse_emulation_unpause(); return -1; }
+  if (update_list( points ) ) { fuse_emulation_unpause(); return -1; }
 
   current_block = -1;
 

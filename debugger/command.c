@@ -41,16 +41,16 @@ static char *command_buffer = NULL;
 // And a pointer as to how much we've parsed
 static char *command_ptr;
 
-int yyparse( void );
-int yywrap( void );
+int yyparse(void);
+int yywrap(void);
 
 // Evaluate the debugger command given in 'command'
 void
 debugger_command_evaluate( const char *command )
 {
-  if( !command ) return;
+  if (!command ) return;
 
-  if( command_buffer ) libspectrum_free( command_buffer );
+  if (command_buffer ) libspectrum_free( command_buffer );
 
   command_buffer = utils_safe_strdup( command );
 
@@ -69,7 +69,7 @@ debugger_command_evaluate( const char *command )
 // Utility functions called from the flex scanner
 
 int
-yywrap( void )
+yywrap(void)
 {
   return 1;
 }
@@ -80,9 +80,9 @@ debugger_command_input( char *buf, int *result, int max_size )
 {
   size_t length = strlen( command_ptr );
 
-  if( !length ) {
+  if (!length ) {
     return 0;
-  } else if( length < (size_t)max_size ) {
+  } else if (length < (size_t)max_size ) {
     memcpy( buf, command_ptr, length );
     *result = length; command_ptr += length;
     return 1;

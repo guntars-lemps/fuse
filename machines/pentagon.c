@@ -54,7 +54,7 @@ static module_info_t pentagon_module_info = {
 
 };
 
-static int pentagon_reset( void );
+static int pentagon_reset(void);
 
 libspectrum_byte
 pentagon_select_1f_read( libspectrum_word port, libspectrum_byte *attached )
@@ -65,10 +65,10 @@ pentagon_select_1f_read( libspectrum_word port, libspectrum_byte *attached )
   // TODO: fine-grained attachment handling
 
   data = beta_sr_read( port, &tmpattached );
-  if( !tmpattached && settings_current.joy_kempston )
+  if (!tmpattached && settings_current.joy_kempston )
     data = joystick_kempston_read( port, &tmpattached );
 
-  if( tmpattached ) {
+  if (tmpattached ) {
     *attached = 0xff; // TODO: check this
     return data;
   }
@@ -85,7 +85,7 @@ pentagon_select_ff_read( libspectrum_word port, libspectrum_byte *attached )
   // TODO: fine-grained attachment handling
 
   data = beta_sp_read( port, &tmpattached );
-  if( !tmpattached )
+  if (!tmpattached )
     data = spectrum_unattached_port();
 
   *attached = 0xff; // TODO: check this
@@ -131,17 +131,17 @@ pentagon_reset(void)
 
   error = machine_load_rom( 0, settings_current.rom_pentagon_0,
                             settings_default.rom_pentagon_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_pentagon_1,
                             settings_default.rom_pentagon_1, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom_bank( beta_memory_map_romcs, 0,
                                  settings_current.rom_pentagon_2,
                                  settings_default.rom_pentagon_2, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   error = spec128_common_reset( 0 );
-  if( error ) return error;
+  if (error ) return error;
 
   periph_clear();
   machines_periph_pentagon();
@@ -170,9 +170,9 @@ pentagon_from_snapshot( libspectrum_snap *snap )
   /* During init we set beta_active to true unconditionally to bootstrap into
      the TR-DOS ROM, but during snapshot loading we should repect the paging
      setting from the snapshot itself */
-  if( periph_is_active( PERIPH_TYPE_BETA128_PENTAGON ) ||
+  if (periph_is_active( PERIPH_TYPE_BETA128_PENTAGON ) ||
       periph_is_active( PERIPH_TYPE_BETA128_PENTAGON_LATE ) ) {
-    if( libspectrum_snap_beta_paged( snap ) ) {
+    if (libspectrum_snap_beta_paged( snap ) ) {
       beta_page();
     } else {
       beta_unpage();

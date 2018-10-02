@@ -39,12 +39,12 @@ widget_about_draw( void *data GCC_UNUSED )
   line = 0;
 
   widget_dialog_with_border( 1, 2, dialog_cols, 7+2 );
-  widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "About Fuse" );
+  widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "About Fuse");
 
-  string_width = widget_stringwidth( "the Free Unix Spectrum Emulator (Fuse)" );
+  string_width = widget_stringwidth( "the Free Unix Spectrum Emulator (Fuse)");
   x = margin - 8 + ( dialog_cols * 8 - string_width ) / 2;
   widget_printstring( x, ++line * 8 + 24, WIDGET_COLOUR_FOREGROUND,
-                      "the Free Unix Spectrum Emulator (Fuse)" );
+                      "the Free Unix Spectrum Emulator (Fuse)");
 
   snprintf( buffer, 80, "Version %s", VERSION );
   string_width = widget_stringwidth( buffer );
@@ -72,7 +72,7 @@ widget_about_draw( void *data GCC_UNUSED )
 void
 widget_about_keyhandler( input_key key )
 {
-  switch( key ) {
+  switch (key ) {
 
   case INPUT_KEY_Escape:
   case INPUT_JOYSTICK_FIRE_2:

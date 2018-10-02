@@ -79,7 +79,7 @@ win32ui_picture( const char *filename, int border )
     picture_BMP = CreateDIBSection( dc, &picture_BMI, DIB_RGB_COLORS, &picture,
                                     NULL, 0 );
 
-    if( utils_read_screen( filename, &screen ) ) {
+    if (utils_read_screen( filename, &screen ) ) {
       return 1;
     }
 
@@ -98,7 +98,7 @@ win32ui_picture( const char *filename, int border )
 static LRESULT WINAPI
 picture_wnd_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-  switch( msg ) {
+  switch (msg ) {
     case WM_PAINT:
     {
       PAINTSTRUCT ps;
@@ -117,7 +117,7 @@ picture_wnd_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     }
 
     case WM_COMMAND:
-      switch( LOWORD( wParam ) ) {
+      switch (LOWORD( wParam ) ) {
         case IDCLOSE:
         {
           hDialogPicture = NULL;
@@ -177,7 +177,7 @@ draw_screen( libspectrum_byte *screen, int border )
 
       data = screen[ display_line_start[y]+x ];
 
-      for( i=0; i<8; i++ ) {
+      for( i=0; i<8; i++) {
         libspectrum_dword pix =
           win32display_colours[ ( data & 0x80 ) ? ink : paper ];
 

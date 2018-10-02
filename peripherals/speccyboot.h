@@ -36,8 +36,8 @@
 #ifndef FUSE_SPECCYBOOT_H
 #define FUSE_SPECCYBOOT_H
 
-void speccyboot_register_startup( void );
+void speccyboot_register_startup(void);
 
-int speccyboot_unittest( void );
+int speccyboot_unittest(void);
 
 #endif // #ifndef FUSE_SPECCYBOOT_H

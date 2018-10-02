@@ -111,15 +111,15 @@ static struct speaker_type_tag speaker_type[] =
 static double
 sound_get_volume( int volume )
 {
-  if( volume < 0 ) volume = 0;
-  else if( volume > 100 ) volume = 100;
+  if (volume < 0 ) volume = 0;
+  else if (volume > 100 ) volume = 100;
 
   return volume / 100.0;
 }
 
 // Returns the emulation speed adjusted processor speed
 libspectrum_dword
-sound_get_effective_processor_speed( void )
+sound_get_effective_processor_speed(void)
 {
   return machine_current->timings.processor_speed / 100 *
            settings_current.emulation_speed;
@@ -151,7 +151,7 @@ sound_init_blip( Blip_Buffer **buf, Blip_Synth **synth )
 }
 
 static void
-sound_ay_init( void )
+sound_ay_init(void)
 {
   /* AY output doesn't match the claimed levels; these levels are based
    * on the measurements posted to comp.sys.sinclair in Dec 2001 by
@@ -190,7 +190,7 @@ sound_ay_init( void )
 #endif // #ifndef UI_WIN32
 
 static int
-is_in_sound_enabled_range( void )
+is_in_sound_enabled_range(void)
 {
   return settings_current.emulation_speed >= MIN_SPEED_PERCENTAGE &&
     settings_current.emulation_speed <= MAX_SPEED_PERCENTAGE;
@@ -210,20 +210,20 @@ sound_init( const char *device )
      (less than that and a single Speccy frame generates more
      than a seconds worth of sound which is bigger than the
      maximum Blip_Buffer of 1 second) */
-  if( !( !sound_enabled && settings_current.sound &&
+  if (!( !sound_enabled && settings_current.sound &&
          is_in_sound_enabled_range() ) )
     return;
 
   // only try for stereo if we need it
   sound_stereo_ay = option_enumerate_sound_stereo_ay();
 
-  if( settings_current.sound &&
+  if (settings_current.sound &&
       sound_lowlevel_init( device, &settings_current.sound_freq,
                            &sound_stereo_ay ) )
     return;
 
-  if( !sound_init_blip(&left_buf, &left_beeper_synth) ) return;
-  if( sound_stereo_ay != SOUND_STEREO_AY_NONE &&
+  if (!sound_init_blip(&left_buf, &left_beeper_synth) ) return;
+  if (sound_stereo_ay != SOUND_STEREO_AY_NONE &&
       !sound_init_blip(&right_buf, &right_beeper_synth) )
     return;
 
@@ -266,10 +266,10 @@ sound_init( const char *device )
   ay_b_synth_r = NULL;
   ay_c_synth_r = NULL;
 
-  if( sound_stereo_ay != SOUND_STEREO_AY_NONE ) {
+  if (sound_stereo_ay != SOUND_STEREO_AY_NONE ) {
     /* Attach the Blip_Synth's we've already created as appropriate, and
      * create one more Blip_Synth for the middle channel's right buffer. */
-    if( sound_stereo_ay == SOUND_STEREO_AY_ACB ) {
+    if (sound_stereo_ay == SOUND_STEREO_AY_ACB ) {
       ay_left_synth = &ay_a_synth;
       ay_mid_synth = &ay_c_synth;
       ay_mid_synth_r = &ay_c_synth_r;
@@ -332,26 +332,26 @@ sound_init( const char *device )
 }
 
 void
-sound_pause( void )
+sound_pause(void)
 {
-  if( sound_enabled )
+  if (sound_enabled )
     sound_end();
 }
 
 void
-sound_unpause( void )
+sound_unpause(void)
 {
   // No sound if fastloading in progress
-  if( settings_current.fastload && timer_fastloading_active() )
+  if (settings_current.fastload && timer_fastloading_active() )
     return;
 
   sound_init( settings_current.sound_device );
 }
 
 void
-sound_end( void )
+sound_end(void)
 {
-  if( sound_enabled ) {
+  if (sound_enabled ) {
     delete_Blip_Synth( &left_beeper_synth );
     delete_Blip_Synth( &right_beeper_synth );
 
@@ -371,7 +371,7 @@ sound_end( void )
     delete_Blip_Buffer( &left_buf );
     delete_Blip_Buffer( &right_buf );
 
-    if( settings_current.sound )
+    if (settings_current.sound )
       sound_lowlevel_end();
     libspectrum_free( samples );
     sound_enabled = 0;
@@ -379,7 +379,7 @@ sound_end( void )
 }
 
 void
-sound_register_startup( void )
+sound_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_SOUND, dependencies,
@@ -393,13 +393,13 @@ ay_do_tone( int level, unsigned int tone_count, int *var, int chan )
 
   ay_tone_tick[ chan ] += tone_count;
 
-  if( ay_tone_tick[ chan ] >= ay_tone_period[ chan ] ) {
+  if (ay_tone_tick[ chan ] >= ay_tone_period[ chan ] ) {
     ay_tone_tick[ chan ] -= ay_tone_period[ chan ];
     ay_tone_high[ chan ] = !ay_tone_high[ chan ];
   }
 
-  if( level ) {
-    if( ay_tone_high[ chan ] )
+  if (level ) {
+    if (ay_tone_high[ chan ] )
       *var = level;
     else {
       *var = 0;
@@ -421,7 +421,7 @@ ay_do_tone( int level, unsigned int tone_count, int *var, int chan )
 #define AY_CLOCK_RATIO 2
 
 static void
-sound_ay_overlay( void )
+sound_ay_overlay(void)
 {
   static int rng = 1;
   static int noise_toggle = 0;
@@ -438,7 +438,7 @@ sound_ay_overlay( void )
   unsigned int tone_count, noise_count;
 
   // If no AY chip, don't produce any AY sound (!)
-  if( !( periph_is_active( PERIPH_TYPE_FULLER) ||
+  if (!( periph_is_active( PERIPH_TYPE_FULLER) ||
          periph_is_active( PERIPH_TYPE_MELODIK ) ||
          machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY ) )
     return;
@@ -458,13 +458,13 @@ sound_ay_overlay( void )
         // a zero-len period is the same as 1
         ay_tone_period[r] = ( sound_ay_registers[ reg & ~1 ] |
                               ( sound_ay_registers[ reg | 1 ] & 15 ) << 8 );
-        if( !ay_tone_period[r] )
+        if (!ay_tone_period[r] )
           ay_tone_period[r]++;
 
         /* important to get this right, otherwise e.g. Ghouls 'n' Ghosts
          * has really scratchy, horrible-sounding vibrato.
          */
-        if( ay_tone_tick[r] >= ay_tone_period[r] * 2 )
+        if (ay_tone_tick[r] >= ay_tone_period[r] * 2 )
           ay_tone_tick[r] %= ay_tone_period[r] * 2;
         break;
       case 6:
@@ -493,7 +493,7 @@ sound_ay_overlay( void )
     level = ay_tone_levels[ env_counter ];
 
     for( g = 0; g < 3; g++ )
-      if( sound_ay_registers[ 8 + g ] & 16 )
+      if (sound_ay_registers[ 8 + g ] & 16 )
         tone_level[g] = level;
 
     // envelope output counter gets incr'd every 16 AY cycles.
@@ -507,15 +507,15 @@ sound_ay_overlay( void )
         ay_env_tick -= ay_env_period;
 
         // do a 1/16th-of-period incr/decr if needed
-        if( env_first ||
+        if (env_first ||
             ( ( envshape & AY_ENV_CONT ) && !( envshape & AY_ENV_HOLD ) ) ) {
-          if( env_rev )
+          if (env_rev )
             env_counter -= ( envshape & AY_ENV_ATTACK ) ? 1 : -1;
           else
             env_counter += ( envshape & AY_ENV_ATTACK ) ? 1 : -1;
-          if( env_counter < 0 )
+          if (env_counter < 0 )
             env_counter = 0;
-          if( env_counter > 15 )
+          if (env_counter > 15 )
             env_counter = 15;
         }
 
@@ -524,15 +524,15 @@ sound_ay_overlay( void )
           ay_env_internal_tick -= 16;
 
           // end of cycle
-          if( !( envshape & AY_ENV_CONT ) )
+          if (!( envshape & AY_ENV_CONT ) )
             env_counter = 0;
           else {
-            if( envshape & AY_ENV_HOLD ) {
-              if( env_first && ( envshape & AY_ENV_ALT ) )
+            if (envshape & AY_ENV_HOLD ) {
+              if (env_first && ( envshape & AY_ENV_ALT ) )
                 env_counter = ( env_counter ? 0 : 15 );
             } else {
               // non-hold
-              if( envshape & AY_ENV_ALT )
+              if (envshape & AY_ENV_ALT )
                 env_rev = !env_rev;
               else
                 env_counter = ( envshape & AY_ENV_ATTACK ) ? 0 : 15;
@@ -543,7 +543,7 @@ sound_ay_overlay( void )
         }
 
         // don't keep trying if period is zero
-        if( !ay_env_period )
+        if (!ay_env_period )
           break;
       }
     }
@@ -562,40 +562,40 @@ sound_ay_overlay( void )
     tone_count = ay_tone_cycles >> 3;
     ay_tone_cycles &= 7;
 
-    if( ( mixer & 1 ) == 0 ) {
+    if (( mixer & 1 ) == 0 ) {
       level = chan1;
       ay_do_tone( level, tone_count, &chan1, 0 );
     }
-    if( ( mixer & 0x08 ) == 0 && noise_toggle )
+    if (( mixer & 0x08 ) == 0 && noise_toggle )
       chan1 = 0;
 
-    if( ( mixer & 2 ) == 0 ) {
+    if (( mixer & 2 ) == 0 ) {
       level = chan2;
       ay_do_tone( level, tone_count, &chan2, 1 );
     }
-    if( ( mixer & 0x10 ) == 0 && noise_toggle )
+    if (( mixer & 0x10 ) == 0 && noise_toggle )
       chan2 = 0;
 
-    if( ( mixer & 4 ) == 0 ) {
+    if (( mixer & 4 ) == 0 ) {
       level = chan3;
       ay_do_tone( level, tone_count, &chan3, 2 );
     }
-    if( ( mixer & 0x20 ) == 0 && noise_toggle )
+    if (( mixer & 0x20 ) == 0 && noise_toggle )
       chan3 = 0;
 
-    if( last_chan1 != chan1 ) {
+    if (last_chan1 != chan1 ) {
       blip_synth_update( ay_a_synth, f, chan1 );
-      if( ay_a_synth_r ) blip_synth_update( ay_a_synth_r, f, chan1 );
+      if (ay_a_synth_r ) blip_synth_update( ay_a_synth_r, f, chan1 );
       last_chan1 = chan1;
     }
-    if( last_chan2 != chan2 ) {
+    if (last_chan2 != chan2 ) {
       blip_synth_update( ay_b_synth, f, chan2 );
-      if( ay_b_synth_r ) blip_synth_update( ay_b_synth_r, f, chan2 );
+      if (ay_b_synth_r ) blip_synth_update( ay_b_synth_r, f, chan2 );
       last_chan2 = chan2;
     }
-    if( last_chan3 != chan3 ) {
+    if (last_chan3 != chan3 ) {
       blip_synth_update( ay_c_synth, f, chan3 );
-      if( ay_c_synth_r ) blip_synth_update( ay_c_synth_r, f, chan3 );
+      if (ay_c_synth_r ) blip_synth_update( ay_c_synth_r, f, chan3 );
       last_chan3 = chan3;
     }
 
@@ -604,19 +604,19 @@ sound_ay_overlay( void )
     while( ay_noise_tick >= ay_noise_period ) {
       ay_noise_tick -= ay_noise_period;
 
-      if( ( rng & 1 ) ^ ( ( rng & 2 ) ? 1 : 0 ) )
+      if (( rng & 1 ) ^ ( ( rng & 2 ) ? 1 : 0 ) )
         noise_toggle = !noise_toggle;
 
       /* rng is 17-bit shift reg, bit 0 is output.
        * input is bit 0 xor bit 3.
        */
-      if( rng & 1 ) {
+      if (rng & 1 ) {
         rng ^= 0x24000;
       }
       rng >>= 1;
 
       // don't keep trying if period is zero
-      if( !ay_noise_period )
+      if (!ay_noise_period )
         break;
     }
   }
@@ -628,7 +628,7 @@ sound_ay_overlay( void )
 void
 sound_ay_write( int reg, int val, libspectrum_dword now )
 {
-  if( ay_change_count < AY_CHANGE_MAX ) {
+  if (ay_change_count < AY_CHANGE_MAX ) {
     ay_change[ ay_change_count ].tstates = now;
     ay_change[ ay_change_count ].reg = ( reg & 15 );
     ay_change[ ay_change_count ].val = val;
@@ -640,7 +640,7 @@ sound_ay_write( int reg, int val, libspectrum_dword now )
  * on reset otherwise.
  */
 void
-sound_ay_reset( void )
+sound_ay_reset(void)
 {
   int f;
 
@@ -662,9 +662,9 @@ sound_ay_reset( void )
 void
 sound_specdrum_write( libspectrum_word port GCC_UNUSED, libspectrum_byte val )
 {
-  if( periph_is_active( PERIPH_TYPE_SPECDRUM ) ) {
+  if (periph_is_active( PERIPH_TYPE_SPECDRUM ) ) {
     blip_synth_update( left_specdrum_synth, tstates, ( val - 128) * 128);
-    if( right_specdrum_synth ) {
+    if (right_specdrum_synth ) {
       blip_synth_update( right_specdrum_synth, tstates, ( val - 128) * 128);
     }
     machine_current->specdrum.specdrum_dac = val - 128;
@@ -678,10 +678,10 @@ sound_specdrum_write( libspectrum_word port GCC_UNUSED, libspectrum_byte val )
 void
 sound_covox_write( libspectrum_word port GCC_UNUSED, libspectrum_byte val )
 {
-  if( periph_is_active( PERIPH_TYPE_COVOX_FB ) ||
+  if (periph_is_active( PERIPH_TYPE_COVOX_FB ) ||
       periph_is_active( PERIPH_TYPE_COVOX_DD ) ) {
     blip_synth_update( left_covox_synth, tstates, val * 128);
-    if( right_covox_synth ) {
+    if (right_covox_synth ) {
       blip_synth_update( right_covox_synth, tstates, val * 128);
     }
     machine_current->covox.covox_dac = val;
@@ -689,11 +689,11 @@ sound_covox_write( libspectrum_word port GCC_UNUSED, libspectrum_byte val )
 }
 
 void
-sound_frame( void )
+sound_frame(void)
 {
   long count;
 
-  if( !sound_enabled )
+  if (!sound_enabled )
     return;
 
   // overlay AY sound
@@ -701,7 +701,7 @@ sound_frame( void )
 
   blip_buffer_end_frame( left_buf, machine_current->timings.tstates_per_frame );
 
-  if( sound_stereo_ay != SOUND_STEREO_AY_NONE ) {
+  if (sound_stereo_ay != SOUND_STEREO_AY_NONE ) {
     blip_buffer_end_frame( right_buf, machine_current->timings.tstates_per_frame );
 
     /* Read left channel into even samples, right channel into odd samples:
@@ -713,10 +713,10 @@ sound_frame( void )
     count = blip_buffer_read_samples( left_buf, samples, sound_framesiz, BLIP_BUFFER_DEF_STEREO );
   }
 
-  if( settings_current.sound )
+  if (settings_current.sound )
     sound_lowlevel_frame( samples, count );
 
-  if( movie_recording )
+  if (movie_recording )
       movie_add_sound( samples, count );
   ay_change_count = 0;
 }
@@ -728,20 +728,20 @@ sound_beeper( libspectrum_dword at_tstates, int on )
                                AMPL_BEEPER+AMPL_TAPE };
   int val;
 
-  if( !sound_enabled ) return;
+  if (!sound_enabled ) return;
 
-  if( tape_is_playing() ) {
+  if (tape_is_playing() ) {
     // Timex machines have no loading noise
-    if( !settings_current.sound_load || machine_current->timex ) on = on & 0x02;
+    if (!settings_current.sound_load || machine_current->timex ) on = on & 0x02;
   } else {
     /* ULA book says that MIC only isn't enough to drive the speaker as output
        voltage is below the 1.4v threshold */
-    if( on == 1 ) on = 0;
+    if (on == 1 ) on = 0;
   }
 
   val = beeper_ampl[on];
 
   blip_synth_update( left_beeper_synth, at_tstates, val );
-  if( sound_stereo_ay != SOUND_STEREO_AY_NONE )
+  if (sound_stereo_ay != SOUND_STEREO_AY_NONE )
     blip_synth_update( right_beeper_synth, at_tstates, val );
 }

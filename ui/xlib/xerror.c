@@ -46,7 +46,7 @@ xerror_handler( Display *display, XErrorEvent *error )
 {
   /* If we were expecting an error to occur, just set a flag. Otherwise,
      exit in a fairly spectacular fashion */
-  if( xerror_expecting ) {
+  if (xerror_expecting ) {
     xerror_error = error->error_code;
   } else {
 

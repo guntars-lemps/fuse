@@ -107,8 +107,8 @@ enum {
   EVENTS_COLUMN_COUNT
 };
 
-static int create_dialog( void );
-static int hide_hidden_panes( void );
+static int create_dialog(void);
+static int hide_hidden_panes(void);
 static GtkCheckMenuItem* get_pane_menu_item( debugger_pane pane );
 static GtkWidget* get_pane( debugger_pane pane );
 static int create_menu_bar( GtkBox *parent, GtkAccelGroup **accel_group );
@@ -134,13 +134,13 @@ static void events_activate( GtkTreeView *tree_view, GtkTreePath *path,
 static int create_command_entry( GtkBox *parent, GtkAccelGroup *accel_group );
 static int create_buttons( GtkDialog *parent, GtkAccelGroup *accel_group );
 
-static int activate_debugger( void );
-static void update_memory_map( void );
-static void update_breakpoints( void );
-static void update_disassembly( void );
-static void update_events( void );
+static int activate_debugger(void);
+static void update_memory_map(void);
+static void update_breakpoints(void);
+static void update_disassembly(void);
+static void update_events(void);
 static void add_event( gpointer data, gpointer user_data );
-static int deactivate_debugger( void );
+static int deactivate_debugger(void);
 
 static gboolean
 disassembly_key_press( GtkTreeView *list, GdkEventKey *event,
@@ -225,56 +225,56 @@ static GtkToggleActionEntry menu_toggles[] = {
 };
 
 static const char*
-format_8_bit( void )
+format_8_bit(void)
 {
   return debugger_output_base == 10 ? "%3d" : "0x%02X";
 }
 
 static const char*
-format_16_bit( void )
+format_16_bit(void)
 {
   return debugger_output_base == 10 ? "%5d" : "0x%04X";
 }
 
 int
-ui_debugger_activate( void )
+ui_debugger_activate(void)
 {
   int error;
 
   fuse_emulation_pause();
 
   // Create the dialog box if it doesn't already exist
-  if( !dialog_created ) if( create_dialog() ) return 1;
+  if (!dialog_created ) if (create_dialog() ) return 1;
 
   gtk_widget_show_all( dialog );
-  error = hide_hidden_panes(); if( error ) return error;
+  error = hide_hidden_panes(); if (error ) return error;
 
   gtk_widget_set_sensitive( continue_button, 1 );
   gtk_widget_set_sensitive( break_button, 0 );
-  if( !debugger_active ) activate_debugger();
+  if (!debugger_active ) activate_debugger();
 
   return 0;
 }
 
 void
-ui_breakpoints_updated( void )
+ui_breakpoints_updated(void)
 {
   // TODO: Refresh debugger list here
 }
 
 static int
-hide_hidden_panes( void )
+hide_hidden_panes(void)
 {
   debugger_pane i;
   GtkCheckMenuItem *checkitem; GtkWidget *pane;
 
-  for( i = DEBUGGER_PANE_BEGIN; i < DEBUGGER_PANE_END; i++ ) {
+  for( i = DEBUGGER_PANE_BEGIN; i < DEBUGGER_PANE_END; i++) {
 
-    checkitem = get_pane_menu_item( i ); if( !checkitem ) return 1;
+    checkitem = get_pane_menu_item( i ); if (!checkitem ) return 1;
 
-    if( gtk_check_menu_item_get_active( checkitem ) ) continue;
+    if (gtk_check_menu_item_get_active( checkitem ) ) continue;
 
-    pane = get_pane( i ); if( !pane ) return 1;
+    pane = get_pane( i ); if (!pane ) return 1;
 
     gtk_widget_hide( pane );
   }
@@ -290,7 +290,7 @@ get_pane_menu_item( debugger_pane pane )
 
   path = NULL;
 
-  switch( pane ) {
+  switch (pane ) {
   case DEBUGGER_PANE_REGISTERS: path = "/View/Registers"; break;
   case DEBUGGER_PANE_MEMORYMAP: path = "/View/Memory Map"; break;
   case DEBUGGER_PANE_BREAKPOINTS: path = "/View/Breakpoints"; break;
@@ -301,7 +301,7 @@ get_pane_menu_item( debugger_pane pane )
   case DEBUGGER_PANE_END: break;
   }
 
-  if( !path ) {
+  if (!path ) {
     ui_error( UI_ERROR_ERROR, "unknown debugger pane %u", pane );
     return NULL;
   }
@@ -310,7 +310,7 @@ get_pane_menu_item( debugger_pane pane )
   menu_item = gtk_ui_manager_get_widget( ui_manager_debugger, full_path );
   g_free( full_path );
 
-  if( !menu_item ) {
+  if (!menu_item ) {
     ui_error( UI_ERROR_ERROR, "couldn't get menu item '%s'",
 	      path );
     return NULL;
@@ -322,7 +322,7 @@ get_pane_menu_item( debugger_pane pane )
 static GtkWidget*
 get_pane( debugger_pane pane )
 {
-  switch( pane ) {
+  switch (pane ) {
   case DEBUGGER_PANE_REGISTERS: return register_display;
   case DEBUGGER_PANE_MEMORYMAP: return memory_map;
   case DEBUGGER_PANE_BREAKPOINTS: return breakpoints;
@@ -340,9 +340,9 @@ get_pane( debugger_pane pane )
 int
 ui_debugger_deactivate( int interruptable )
 {
-  if( debugger_active ) deactivate_debugger();
+  if (debugger_active ) deactivate_debugger();
 
-  if( dialog_created ) {
+  if (dialog_created ) {
     gtk_widget_set_sensitive( continue_button, !interruptable );
     gtk_widget_set_sensitive( break_button,     interruptable );
   }
@@ -351,7 +351,7 @@ ui_debugger_deactivate( int interruptable )
 }
 
 static int
-create_dialog( void )
+create_dialog(void)
 {
   int error;
   GtkWidget *hbox, *vbox, *hbox2, *content_area;
@@ -359,7 +359,7 @@ create_dialog( void )
 
   gtkui_font font;
 
-  error = gtkui_get_monospaced_font( &font ); if( error ) return error;
+  error = gtkui_get_monospaced_font( &font ); if (error ) return error;
 
   dialog = gtkstock_dialog_new( "Fuse - Debugger",
 				G_CALLBACK( delete_dialog ) );
@@ -367,7 +367,7 @@ create_dialog( void )
 
   // The menu bar
   error = create_menu_bar( GTK_BOX( content_area ), &accel_group );
-  if( error ) return error;
+  if (error ) return error;
 
   // Keyboard shortcuts
   gtk_window_add_accel_group( GTK_WINDOW( dialog ), accel_group );
@@ -384,9 +384,9 @@ create_dialog( void )
 
   // The main display areas
   error = create_register_display( GTK_BOX( hbox2 ), font );
-  if( error ) return error;
+  if (error ) return error;
 
-  error = create_memory_map( GTK_BOX( hbox2 ) ); if( error ) return error;
+  error = create_memory_map( GTK_BOX( hbox2 ) ); if (error ) return error;
 
   create_breakpoints( GTK_BOX( vbox ) );
   create_disassembly( GTK_BOX( hbox ), font );
@@ -394,12 +394,12 @@ create_dialog( void )
   create_events( GTK_BOX( hbox ) );
 
   error = create_command_entry( GTK_BOX( content_area ), accel_group );
-  if( error ) return error;
+  if (error ) return error;
 
   // The action buttons
 
   error = create_buttons( GTK_DIALOG( dialog ), accel_group );
-  if( error ) return error;
+  if (error ) return error;
 
   gtkui_free_font( font );
 
@@ -420,7 +420,7 @@ create_menu_bar( GtkBox *parent, GtkAccelGroup **accel_group )
   ui_manager_debugger = gtk_ui_manager_new();
 
   // Load actions
-  menu_action_group = gtk_action_group_new( "DebuggerActionGroup" );
+  menu_action_group = gtk_action_group_new( "DebuggerActionGroup");
   gtk_action_group_add_actions( menu_action_group, menu_data,
 				ARRAY_SIZE( menu_data ), NULL );
   gtk_action_group_add_toggle_actions( menu_action_group, menu_toggles,
@@ -434,15 +434,15 @@ create_menu_bar( GtkBox *parent, GtkAccelGroup **accel_group )
                                                   debugger_menu,
                                                   sizeof( debugger_menu ),
                                                   &error );
-  if( error ) {
+  if (error ) {
     g_error_free( error );
     return 1;
   }
-  else if( !ui_menu_id ) return 1;
+  else if (!ui_menu_id ) return 1;
 
   *accel_group = gtk_ui_manager_get_accel_group( ui_manager_debugger );
 
-  menu_bar = gtk_ui_manager_get_widget( ui_manager_debugger, "/DebuggerMenu" );
+  menu_bar = gtk_ui_manager_get_widget( ui_manager_debugger, "/DebuggerMenu");
 
   gtk_box_pack_start( parent, menu_bar, FALSE, FALSE, 0 );
 
@@ -454,9 +454,9 @@ toggle_display( GtkToggleAction* action, debugger_pane pane_id )
 {
   GtkWidget *pane;
 
-  pane = get_pane( pane_id ); if( !pane ) return;
+  pane = get_pane( pane_id ); if (!pane ) return;
 
-  if( gtk_toggle_action_get_active( action ) ) {
+  if (gtk_toggle_action_get_active( action ) ) {
     gtk_widget_show_all( pane );
   } else {
     gtk_widget_hide( pane );
@@ -518,8 +518,8 @@ create_register_display( GtkBox *parent, gtkui_font font )
 
   gtk_box_pack_start( parent, register_display, FALSE, FALSE, 0 );
 
-  for( i = 0; i < 18; i++ ) {
-    registers[i] = gtk_label_new( "" );
+  for (i = 0; i < 18; i++) {
+    registers[i] = gtk_label_new( "");
     gtkui_set_font( registers[i], font );
 
 #if GTK_CHECK_VERSION( 3, 0, 0 )
@@ -540,12 +540,12 @@ create_memory_map( GtkBox *parent )
 {
   GtkWidget *label_address, *label_source, *label_writable, *label_contended;
 
-  label_address   = gtk_label_new( "Address" );
-  label_source    = gtk_label_new( "Source" );
-  label_writable  = gtk_label_new( "W?" );
-  label_contended = gtk_label_new( "C?" );
+  label_address   = gtk_label_new( "Address");
+  label_source    = gtk_label_new( "Source");
+  label_writable  = gtk_label_new( "W?");
+  label_contended = gtk_label_new( "C?");
 
-  memory_map = gtk_frame_new( "Memory Map" );
+  memory_map = gtk_frame_new( "Memory Map");
   gtk_box_pack_start( parent, memory_map, FALSE, FALSE, 0 );
 
 #if GTK_CHECK_VERSION( 3, 0, 0 )
@@ -591,7 +591,7 @@ create_breakpoints( GtkBox *parent )
   breakpoints_model = gtk_list_store_new( BREAKPOINTS_COLUMN_COUNT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING );
 
   breakpoints = gtk_tree_view_new_with_model( GTK_TREE_MODEL( breakpoints_model ) );
-  for( i = 0; i < BREAKPOINTS_COLUMN_COUNT; i++ ) {
+  for (i = 0; i < BREAKPOINTS_COLUMN_COUNT; i++) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes( titles[i], renderer, "text", i, NULL );
     gtk_tree_view_append_column( GTK_TREE_VIEW( breakpoints ), column );
@@ -618,7 +618,7 @@ create_disassembly( GtkBox *parent, gtkui_font font )
     gtk_list_store_new( DISASSEMBLY_COLUMN_COUNT, G_TYPE_STRING, G_TYPE_STRING );
 
   disassembly = gtk_tree_view_new_with_model( GTK_TREE_MODEL( disassembly_model ) );
-  for( i = 0; i < DISASSEMBLY_COLUMN_COUNT; i++ ) {
+  for (i = 0; i < DISASSEMBLY_COLUMN_COUNT; i++) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes( titles[i], renderer, "text", i, NULL );
     g_object_set( G_OBJECT( renderer ), "font-desc", font, "height", 18, NULL );
@@ -660,7 +660,7 @@ create_stack_display( GtkBox *parent, gtkui_font font )
 
   stack = gtk_tree_view_new_with_model( GTK_TREE_MODEL( stack_model ) );
 
-  for( i = 0; i < 2; i++ ) {
+  for (i = 0; i < 2; i++) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes( titles[i], renderer, "text", i, NULL );
     g_object_set( G_OBJECT( renderer ), "font-desc", font, "height", 18, NULL );
@@ -680,7 +680,7 @@ stack_activate( GtkTreeView *tree_view, GtkTreePath *path,
   GtkTreeIter it;
   GtkTreeModel *model = gtk_tree_view_get_model( tree_view );
 
-  if( model && gtk_tree_model_get_iter( model, &it, path ) ) {
+  if (model && gtk_tree_model_get_iter( model, &it, path ) ) {
     gint address;
     int error;
 
@@ -690,7 +690,7 @@ stack_activate( GtkTreeView *tree_view, GtkTreePath *path,
       DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, address, 0,
       DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
     );
-    if( error ) return;
+    if (error ) return;
 
     debugger_run();
   }
@@ -707,7 +707,7 @@ create_events( GtkBox *parent )
 
   events = gtk_tree_view_new_with_model( GTK_TREE_MODEL( events_model ) );
 
-  for( i = 0; i < EVENTS_COLUMN_COUNT; i++ ) {
+  for (i = 0; i < EVENTS_COLUMN_COUNT; i++) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes( titles[i], renderer, "text", i, NULL );
     gtk_tree_view_append_column( GTK_TREE_VIEW( events ), column );
@@ -726,7 +726,7 @@ events_activate( GtkTreeView *tree_view, GtkTreePath *path,
   GtkTreeIter it;
   GtkTreeModel *model = gtk_tree_view_get_model( tree_view );
 
-  if( model && gtk_tree_model_get_iter( model, &it, path ) ) {
+  if (model && gtk_tree_model_get_iter( model, &it, path ) ) {
     libspectrum_dword event_tstates;
     int error;
 
@@ -736,7 +736,7 @@ events_activate( GtkTreeView *tree_view, GtkTreePath *path,
       DEBUGGER_BREAKPOINT_TYPE_TIME, event_tstates, 0,
       DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
     );
-    if( error ) return;
+    if (error ) return;
 
     debugger_run();
   }
@@ -758,7 +758,7 @@ create_command_entry( GtkBox *parent, GtkAccelGroup *accel_group )
   gtk_box_pack_start( GTK_BOX( hbox ), entry, TRUE, TRUE, 0 );
 
   // The 'command evaluate' button
-  eval_button = gtk_button_new_with_label( "Evaluate" );
+  eval_button = gtk_button_new_with_label( "Evaluate");
   g_signal_connect_swapped( G_OBJECT( eval_button ), "clicked",
 			    G_CALLBACK( evaluate_command ),
 			    G_OBJECT( entry ) );
@@ -792,7 +792,7 @@ create_buttons( GtkDialog *parent, GtkAccelGroup *accel_group )
 }
 
 static int
-activate_debugger( void )
+activate_debugger(void)
 {
   debugger_active = 1;
 
@@ -805,7 +805,7 @@ activate_debugger( void )
 
 // Update the debugger's display
 int
-ui_debugger_update( void )
+ui_debugger_update(void)
 {
   size_t i;
   char buffer[1024], format_string[1024];
@@ -826,17 +826,17 @@ ui_debugger_update( void )
 				    &HL, &HL_, &IX, &IY,
 				  };
 
-  if( !dialog_created ) return 0;
+  if (!dialog_created ) return 0;
 
-  for( i = 0; i < 12; i++ ) {
+  for (i = 0; i < 12; i++) {
     snprintf( buffer, 5, "%3s ", register_name[i] );
     snprintf( &buffer[4], 76, format_16_bit(), *value_ptr[i] );
     gtk_label_set_text( GTK_LABEL( registers[i] ), buffer );
   }
 
-  strcpy( buffer, "  I   " ); snprintf( &buffer[6], 76, format_8_bit(), I );
+  strcpy( buffer, "  I   "); snprintf( &buffer[6], 76, format_8_bit(), I );
   gtk_label_set_text( GTK_LABEL( registers[12] ), buffer );
-  strcpy( buffer, "  R   " );
+  strcpy( buffer, "  R   ");
   snprintf( &buffer[6], 80, format_8_bit(), ( R & 0x7f ) | ( R7 & 0x80 ) );
   gtk_label_set_text( GTK_LABEL( registers[13] ), buffer );
 
@@ -845,8 +845,8 @@ ui_debugger_update( void )
   snprintf( buffer, 80, "  IM %d\nIFF1 %d\nIFF2 %d", IM, IFF1, IFF2 );
   gtk_label_set_text( GTK_LABEL( registers[15] ), buffer );
 
-  strcpy( buffer, "SZ5H3PNC\n" );
-  for( i = 0; i < 8; i++ ) buffer[i+9] = ( F & ( 0x80 >> i ) ) ? '1' : '0';
+  strcpy( buffer, "SZ5H3PNC\n");
+  for (i = 0; i < 8; i++) buffer[i+9] = ( F & ( 0x80 >> i ) ) ? '1' : '0';
   buffer[17] = '\0';
   gtk_label_set_text( GTK_LABEL( registers[16] ), buffer );
 
@@ -855,28 +855,28 @@ ui_debugger_update( void )
   sprintf( format_string, "   ULA %s", format_8_bit() );
   snprintf( buffer, 1024, format_string, ula_last_byte() );
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY ) {
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY ) {
     sprintf( format_string, "\n    AY %s", format_8_bit() );
     length = strlen( buffer );
     snprintf( &buffer[length], 1024-length, format_string,
 	      machine_current->ay.current_register );
   }
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY ) {
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY ) {
     sprintf( format_string, "\n128Mem %s", format_8_bit() );
     length = strlen( buffer );
     snprintf( &buffer[length], 1024-length, format_string,
 	      machine_current->ram.last_byte );
   }
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_MEMORY ) {
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_MEMORY ) {
     sprintf( format_string, "\n+3 Mem %s", format_8_bit() );
     length = strlen( buffer );
     snprintf( &buffer[length], 1024-length, format_string,
 	      machine_current->ram.last_byte2 );
   }
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_VIDEO  ||
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_VIDEO  ||
       capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_MEMORY ||
       capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_SE_MEMORY       ) {
     sprintf( format_string, "\nTmxDec %s", format_8_bit() );
@@ -885,14 +885,14 @@ ui_debugger_update( void )
 	      scld_last_dec.byte );
   }
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_MEMORY ||
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_MEMORY ||
       capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_SE_MEMORY       ) {
     sprintf( format_string, "\nTmxHsr %s", format_8_bit() );
     length = strlen( buffer );
     snprintf( &buffer[length], 1024-length, format_string, scld_last_hsr );
   }
 
-  if( settings_current.zxcf_active ) {
+  if (settings_current.zxcf_active ) {
     sprintf( format_string, "\n  ZXCF %s", format_8_bit() );
     length = strlen( buffer );
     snprintf( &buffer[length], 1024-length, format_string,
@@ -929,14 +929,14 @@ ui_debugger_update( void )
 }
 
 static void
-update_memory_map( void )
+update_memory_map(void)
 {
   int source, page_num, writable, contended;
   libspectrum_word offset;
   size_t i, j, block, row;
 
-  for( i = 0; i < MEMORY_PAGES_IN_64K; i++ ) {
-    if( map_label[i][0] ) {
+  for (i = 0; i < MEMORY_PAGES_IN_64K; i++) {
+    if (map_label[i][0] ) {
       for( j = 0; j < 4; j++ ) {
         gtk_container_remove( GTK_CONTAINER( memory_map_table ), map_label[i][j] );
         map_label[i][j] = NULL;
@@ -951,7 +951,7 @@ update_memory_map( void )
   for( block = 0; block < MEMORY_PAGES_IN_64K; block++ ) {
     memory_page *page = &memory_map_read[block];
 
-    if( page->source != source ||
+    if (page->source != source ||
       page->page_num != page_num ||
       page->offset != offset ||
       page->writable != writable ||
@@ -968,10 +968,10 @@ update_memory_map( void )
         memory_source_description( page->source ), page->page_num );
       row_labels[1] = gtk_label_new( buffer );
 
-      row_labels[2] = gtk_label_new( page->writable ? "Y" : "N" );
-      row_labels[3] = gtk_label_new( page->contended ? "Y" : "N" );
+      row_labels[2] = gtk_label_new( page->writable ? "Y" : "N");
+      row_labels[3] = gtk_label_new( page->contended ? "Y" : "N");
 
-      for( i = 0; i < 4; i++ ) {
+      for (i = 0; i < 4; i++) {
 
 #if GTK_CHECK_VERSION( 3, 0, 0 )
         gtk_grid_attach( GTK_GRID( memory_map_table ), row_labels[i],
@@ -1000,7 +1000,7 @@ update_memory_map( void )
 }
 
 static void
-update_breakpoints( void )
+update_breakpoints(void)
 {
   GSList *ptr;
 
@@ -1012,12 +1012,12 @@ update_breakpoints( void )
     GtkTreeIter it;
     gchar buffer[40], format_string[40];
 
-    switch( bp->type ) {
+    switch (bp->type ) {
 
     case DEBUGGER_BREAKPOINT_TYPE_EXECUTE:
     case DEBUGGER_BREAKPOINT_TYPE_READ:
     case DEBUGGER_BREAKPOINT_TYPE_WRITE:
-      if( bp->value.address.source == memory_source_any ) {
+      if (bp->value.address.source == memory_source_any ) {
 	snprintf( buffer, sizeof( buffer ), format_16_bit(),
 		  bp->value.address.offset );
       } else {
@@ -1059,7 +1059,7 @@ update_breakpoints( void )
       -1
     );
 
-    if( bp->condition ) {
+    if (bp->condition ) {
       gchar buffer2[80];
       debugger_expression_deparse( buffer2, sizeof( buffer2 ), bp->condition );
       gtk_list_store_set( breakpoints_model, &it, BREAKPOINTS_COLUMN_CONDITION, buffer2, -1 );
@@ -1069,14 +1069,14 @@ update_breakpoints( void )
 }
 
 static void
-update_disassembly( void )
+update_disassembly(void)
 {
   size_t i; libspectrum_word address;
   GtkTreeIter it;
 
   gtk_list_store_clear( disassembly_model );
 
-  for( i = 0, address = disassembly_top; i < 20; i++ ) {
+  for( i = 0, address = disassembly_top; i < 20; i++) {
     size_t l, length;
     char buffer1[40], buffer2[40];
 
@@ -1098,7 +1098,7 @@ update_disassembly( void )
 }
 
 static void
-update_events( void )
+update_events(void)
 {
   gtk_list_store_clear( events_model );
   event_foreach( add_event, NULL );
@@ -1110,14 +1110,14 @@ add_event( gpointer data, gpointer user_data GCC_UNUSED )
   event_t *ptr = data;
   GtkTreeIter it;
 
-  if( ptr->type != event_type_null ) {
+  if (ptr->type != event_type_null ) {
     gtk_list_store_append( events_model, &it );
     gtk_list_store_set( events_model, &it, EVENTS_COLUMN_TIME, ptr->tstates, EVENTS_COLUMN_TYPE, event_name( ptr->type ), -1 );
   }
 }
 
 static int
-deactivate_debugger( void )
+deactivate_debugger(void)
 {
   gtk_main_quit();
   debugger_active = 0;
@@ -1144,7 +1144,7 @@ ui_debugger_disassemble( libspectrum_word address )
                                      G_CALLBACK( move_disassembly ),  NULL );
 
   // And update the disassembly if the debugger is active
-  if( debugger_active ) {
+  if (debugger_active ) {
     update_disassembly();
   }
 
@@ -1166,7 +1166,7 @@ move_disassembly( GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED )
 
   /* disassembly_top < value <= disassembly_top + 1 => 'down' button pressed
      Move the disassembly on by one instruction */
-  if( value > disassembly_top && value - disassembly_top <= 1 ) {
+  if (value > disassembly_top && value - disassembly_top <= 1 ) {
 
     addresss = debugger_search_instruction( disassembly_top, 1 );
     ui_debugger_disassemble( addresss );
@@ -1192,13 +1192,13 @@ move_disassembly( GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED )
      second. In this case, just move back a byte.
 
   */
-  } else if( value < disassembly_top && disassembly_top - value <= 1 ) {
+  } else if (value < disassembly_top && disassembly_top - value <= 1 ) {
 
     addresss = debugger_search_instruction( disassembly_top, -1 );
     ui_debugger_disassemble( addresss );
 
   // Anything else, just set disassembly_top to that value
-  } else if( value != disassembly_top ) {
+  } else if (value != disassembly_top ) {
 
     ui_debugger_disassemble( value );
 
@@ -1224,17 +1224,17 @@ disassembly_key_press( GtkTreeView *list, GdkEventKey *event,
   // Get selected row
   cursor_row = gtkui_list_get_cursor( list );
 
-  switch( event->keyval ) {
+  switch (event->keyval ) {
 
   case GDK_KEY_Down:
-    if( cursor_row == page_size - 1 ) {
+    if (cursor_row == page_size - 1 ) {
       addresss = debugger_search_instruction( disassembly_top, 1 );
       ui_debugger_disassemble( addresss );
     }
     break;
 
   case GDK_KEY_Up:
-    if( cursor_row == 0 ) {
+    if (cursor_row == 0 ) {
       addresss = debugger_search_instruction( disassembly_top, -1 );
       ui_debugger_disassemble( addresss );
     }
@@ -1264,7 +1264,7 @@ disassembly_key_press( GtkTreeView *list, GdkEventKey *event,
     return FALSE;
   }
 
-  if( initial_top != disassembly_top ) {
+  if (initial_top != disassembly_top ) {
     update_disassembly();
 
     // Mark selected row
@@ -1288,7 +1288,7 @@ disassembly_wheel_scroll( GtkTreeView *list GCC_UNUSED, GdkEvent *event,
   // Get selected row
   cursor_row = gtkui_list_get_cursor( list );
 
-  switch( event->scroll.direction ) {
+  switch (event->scroll.direction ) {
   case GDK_SCROLL_UP:
     addresss = debugger_search_instruction( disassembly_top, -1 );
     ui_debugger_disassemble( addresss );
@@ -1308,14 +1308,14 @@ disassembly_wheel_scroll( GtkTreeView *list GCC_UNUSED, GdkEvent *event,
       gdouble dx, dy, page_size;
       int delta;
 
-      if( gdk_event_get_scroll_deltas( event, &dx, &dy ) ) {
+      if (gdk_event_get_scroll_deltas( event, &dx, &dy ) ) {
         // Calculate number of instructions to jump
         total_dy += dy;
         page_size = gtk_adjustment_get_page_size( adjustment );
         delta = total_dy * pow( page_size, 2.0 / 3.0 );
 
         // Is movement significative?
-        if( delta ) {
+        if (delta ) {
           addresss = debugger_search_instruction( disassembly_top, delta );
           ui_debugger_disassemble( addresss );
           total_dy = 0;
@@ -1330,7 +1330,7 @@ disassembly_wheel_scroll( GtkTreeView *list GCC_UNUSED, GdkEvent *event,
     return FALSE;
   }
 
-  if( initial_top != disassembly_top ) {
+  if (initial_top != disassembly_top ) {
     // Mark selected row
     gtkui_list_set_cursor( list, cursor_row );
     return TRUE;

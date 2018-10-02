@@ -34,13 +34,13 @@
 extern int clock_gettime(struct timespec *tp);
 
 double
-compat_timer_get_time( void )
+compat_timer_get_time(void)
 {
   int error;
   struct timespec tp;
 
   error = clock_gettime(&tp);
-  if( error ) {
+  if (error ) {
     ui_error( UI_ERROR_ERROR, "%s: error getting time: %s", __func__, strerror( errno ) );
     return -1;
   }

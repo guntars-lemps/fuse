@@ -36,7 +36,7 @@ ide_insert_file( libspectrum_ide_channel *channel, libspectrum_ide_unit unit,
   int error;
 
   error = libspectrum_ide_insert( channel, unit, filename );
-  if( error ) return error;
+  if (error ) return error;
   return ui_menu_activate( menu_item, 1 );
 }
 
@@ -50,16 +50,16 @@ ide_init( libspectrum_ide_channel *channel,
   ui_menu_activate( master_menu_item, 0 );
   ui_menu_activate( slave_menu_item, 0 );
 
-  if( master_setting ) {
+  if (master_setting ) {
     error = ide_insert_file( channel, LIBSPECTRUM_IDE_MASTER, master_setting,
 		             master_menu_item );
-    if( error ) return error;
+    if (error ) return error;
   }
 
-  if( slave_setting ) {
+  if (slave_setting ) {
     error = ide_insert_file( channel, LIBSPECTRUM_IDE_SLAVE, slave_setting,
                              slave_menu_item );
-    if( error ) return error;
+    if (error ) return error;
   }
 
   return 0;
@@ -75,7 +75,7 @@ ide_master_slave_insert(
   char **setting;
   ui_menu_item item;
 
-  switch( unit ) {
+  switch (unit ) {
 
   case LIBSPECTRUM_IDE_MASTER:
     setting = master_setting;
@@ -101,14 +101,14 @@ ide_insert( const char *filename, libspectrum_ide_channel *chn,
 
   /* Remove any currently inserted disk; abort if we want to keep the current
      disk */
-  if( *setting )
-    if( ide_eject( chn, unit, setting, item ) )
+  if (*setting )
+    if (ide_eject( chn, unit, setting, item ) )
       return 0;
 
   settings_set_string( setting, filename );
 
   error = ide_insert_file( chn, unit, filename, item );
-  if( error ) return error;
+  if (error ) return error;
 
   return 0;
 }
@@ -122,7 +122,7 @@ ide_master_slave_eject(
   char **setting;
   ui_menu_item item;
 
-  switch( unit ) {
+  switch (unit ) {
   case LIBSPECTRUM_IDE_MASTER:
     setting = master_setting;
     item = master_menu_item;
@@ -148,14 +148,14 @@ ide_eject_mass_storage(
 {
   int error;
 
-  if( is_dirty_fn( context ) ) {
-    
+  if (is_dirty_fn( context ) ) {
+
     ui_confirm_save_t confirm = ui_confirm_save( "%s", message );
-  
-    switch( confirm ) {
+
+    switch (confirm ) {
 
     case UI_CONFIRM_SAVE_SAVE:
-      error = commit_fn( context ); if( error ) return error;
+      error = commit_fn( context ); if (error ) return error;
       break;
 
     case UI_CONFIRM_SAVE_DONTSAVE: break;
@@ -165,12 +165,12 @@ ide_eject_mass_storage(
   }
 
   libspectrum_free( *setting ); *setting = NULL;
-  
+
   error = eject_fn( context );
-  if( error ) return error;
+  if (error ) return error;
 
   error = ui_menu_activate( item, 0 );
-  if( error ) return error;
+  if (error ) return error;
 
   return 0;
 }

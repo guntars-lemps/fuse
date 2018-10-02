@@ -78,7 +78,7 @@ static const char * const iff2_detail_string = "iff2";
 static const char * const q_detail_string = "q";
 
 #define DEBUGGER_CALLBACKS(reg) static libspectrum_dword \
-get_##reg( void ) \
+get_##reg(void) \
 { \
   return reg; \
 } \
@@ -127,7 +127,7 @@ DEBUGGER_CALLBACKS(I)
 DEBUGGER_CALLBACKS(Q)
 
 static libspectrum_dword
-get_R( void )
+get_R(void)
 {
   return ( R7 & 0x80 ) | ( R & 0x7f );
 }
@@ -139,7 +139,7 @@ set_R( libspectrum_dword value )
 }
 
 static libspectrum_dword
-get_memptr( void )
+get_memptr(void)
 {
   return z80.memptr.w;
 }
@@ -151,7 +151,7 @@ set_memptr( libspectrum_dword value )
 }
 
 static libspectrum_dword
-get_IM( void )
+get_IM(void)
 {
   return IM;
 }
@@ -159,11 +159,11 @@ get_IM( void )
 static void
 set_IM( libspectrum_dword value )
 {
-  if( value <= 2 ) IM = value;
+  if (value <= 2 ) IM = value;
 }
 
 static libspectrum_dword
-get_IFF1( void )
+get_IFF1(void)
 {
   return IFF1;
 }
@@ -175,7 +175,7 @@ set_IFF1( libspectrum_dword value )
 }
 
 static libspectrum_dword
-get_IFF2( void )
+get_IFF2(void)
 {
   return IFF2;
 }
@@ -187,7 +187,7 @@ set_IFF2( libspectrum_dword value )
 }
 
 void
-z80_debugger_variables_init( void )
+z80_debugger_variables_init(void)
 {
   debugger_system_variable_register( debugger_type_string, a_detail_string,
                                      get_A, set_A );

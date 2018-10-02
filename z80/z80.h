@@ -61,16 +61,16 @@ typedef struct {
 
 } processor;
 
-void z80_register_startup( void );
+void z80_register_startup(void);
 int z80_init( void *context );
 void z80_reset( int hard_reset );
 
-int z80_interrupt( void );
-void z80_retn( void );
+int z80_interrupt(void);
+void z80_retn(void);
 
 void z80_do_opcodes(void);
 
-void z80_enable_interrupts( void );
+void z80_enable_interrupts(void);
 
 extern processor z80;
 extern const libspectrum_byte halfcarry_add_table[];

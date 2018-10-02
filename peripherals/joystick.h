@@ -31,7 +31,7 @@
 // Number of joysticks known about & initialised
 extern int joysticks_supported;
 
-void joystick_register_startup( void );
+void joystick_register_startup(void);
 
 // A constant to identify the joystick emulated via the keyboard
 #define JOYSTICK_KEYBOARD 2

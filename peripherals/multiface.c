@@ -108,7 +108,7 @@ static int multiface_init( void *context );
 static void multiface_page( int idx );
 static void multiface_unpage( int idx );
 static void multiface_reset( int hard_reset );
-static void multiface_memory_map( void );
+static void multiface_memory_map(void);
 
 static libspectrum_byte multiface_port_in1( libspectrum_word port,
                                             libspectrum_byte *attached );
@@ -180,7 +180,7 @@ static const periph_t multiface_periph_3 = {
 };
 
 void
-multiface_register_startup( void )
+multiface_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -202,12 +202,12 @@ multiface_init( void *context GCC_UNUSED )
   multiface_available = 0;
 
   module_register( &multiface_module_info );
-  multiface_rom_memory_source = memory_source_register( "Multiface ROM" );
-  multiface_ram_memory_source = memory_source_register( "Multiface RAM" );
+  multiface_rom_memory_source = memory_source_register( "Multiface ROM");
+  multiface_ram_memory_source = memory_source_register( "Multiface RAM");
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
     multiface_memory_map_romcs_rom[i].source = multiface_rom_memory_source;
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
     multiface_memory_map_romcs_ram[i].source = multiface_ram_memory_source;
 
   mf[MF_1].type = PERIPH_TYPE_MULTIFACE_1;
@@ -242,14 +242,14 @@ multiface_reset_real( int idx, int hard_reset )
   SET( multiface_activated, idx, 0 );
   SET( multiface_available, idx, 0 );
 
-  if( hard_reset ) memset( mf[idx].ram, 0, 8192 );
-  if( !periph_is_active( mf[idx].type ) ) return;
+  if (hard_reset ) memset( mf[idx].ram, 0, 8192 );
+  if (!periph_is_active( mf[idx].type ) ) return;
 
   mf[idx].IC8a_Q = 1;
   mf[idx].IC8b_Q = 1;
   mf[idx].J1 = 0; // Joystick always disabled :-(
 
-  if( mf[idx].type == PERIPH_TYPE_MULTIFACE_1 )
+  if (mf[idx].type == PERIPH_TYPE_MULTIFACE_1 )
     mf[idx].J2 = settings_current.multiface1_stealth ? 0 : 1;
   else
     mf[idx].J2 = 0;
@@ -259,7 +259,7 @@ multiface_reset_real( int idx, int hard_reset )
   *mf[idx].c_settings = 0;
   periph_activate_type( mf[idx].type, 0 );
 
-  if( machine_load_rom_bank( multiface_memory_map_romcs_rom, 0,
+  if (machine_load_rom_bank( multiface_memory_map_romcs_rom, 0,
                              *mf[idx].c_rom, *mf[idx].d_rom, 0x2000 ) )
     return;
 
@@ -269,7 +269,7 @@ multiface_reset_real( int idx, int hard_reset )
    BTW: not too critical, because if only one selected
         than have to works this stuff properly...
 */
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ ) {
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
     struct memory_page *page = &multiface_memory_map_romcs_ram[ i ];
     page->page = &mf[idx].ram[ i * MEMORY_PAGE_SIZE ];
     page->offset = i * MEMORY_PAGE_SIZE;
@@ -293,19 +293,19 @@ multiface_reset( int hard_reset )
 }
 
 void
-multiface_status_update( void )
+multiface_status_update(void)
 {
   int i;
 
   ui_menu_activate( UI_MENU_ITEM_MACHINE_MULTIFACE, 0 );
 
-  for( i = MF_1; i <= MF_3; i++ )
+  for( i = MF_1; i <= MF_3; i++)
     SET( multiface_available, i, periph_is_active( mf[i].type ) );
 
-  if( !multiface_available ) return;
+  if (!multiface_available ) return;
 
   ui_menu_activate( UI_MENU_ITEM_MACHINE_MULTIFACE, 1 );
-  if( IS( multiface_available, MF_1 ) &&
+  if (IS( multiface_available, MF_1 ) &&
       mf[MF_1].J2 == settings_current.multiface1_stealth ) {
     mf[MF_1].J2 = settings_current.multiface1_stealth ? 0 : 1;
   }
@@ -314,20 +314,20 @@ multiface_status_update( void )
 static void
 multiface_page( int idx )
 {
-  if( IS( multiface_active, idx ) ) return;
+  if (IS( multiface_active, idx ) ) return;
   SET( multiface_active, idx, 1 );
   romcs = machine_current->ram.romcs;
   machine_current->ram.romcs = 1;
   machine_current->memory_map();
   debugger_event( page_event );
-  if( mf[idx].type != PERIPH_TYPE_MULTIFACE_1 )
+  if (mf[idx].type != PERIPH_TYPE_MULTIFACE_1 )
     mf[idx].J2 = 1;
 }
 
 static void
 multiface_unpage( int idx )
 {
-  if( !IS( multiface_active, idx ) ) return;
+  if (!IS( multiface_active, idx ) ) return;
   SET( multiface_active, idx, 0 );
   machine_current->ram.romcs = romcs;
   machine_current->memory_map();
@@ -335,9 +335,9 @@ multiface_unpage( int idx )
 }
 
 static void
-multiface_memory_map( void )
+multiface_memory_map(void)
 {
-  if( !multiface_active )
+  if (!multiface_active )
     return;
 
   memory_map_romcs_8k( 0x0000, multiface_memory_map_romcs_rom );
@@ -350,7 +350,7 @@ multiface_port_in1( libspectrum_word port, libspectrum_byte *attached )
   libspectrum_byte ret = 0xff;
   int a7;
 
-  if( !IS( multiface_available, MF_1 ) ) return ret;
+  if (!IS( multiface_available, MF_1 ) ) return ret;
 
   // TODO: check if this value should be set to 0xff
   *attached = 0xff;
@@ -364,12 +364,12 @@ multiface_port_in1( libspectrum_word port, libspectrum_byte *attached )
 
   // TODO: read joystick
   /*
-  if( mf[MF_1].J1 ) {
+  if (mf[MF_1].J1 ) {
   }
   */
 
-  if( a7 ) {
-    if( mf[MF_1].J2 ) {
+  if (a7 ) {
+    if (mf[MF_1].J2 ) {
       multiface_page( MF_1 );
       mf[MF_1].IC8a_Q = 0;
     }
@@ -388,7 +388,7 @@ multiface_port_in128( libspectrum_word port, libspectrum_byte *attached )
   libspectrum_byte ret = 0xff;
   int a7;
 
-  if( !IS( multiface_available, MF_128 ) ) return ret;
+  if (!IS( multiface_available, MF_128 ) ) return ret;
 
   // TODO: check if this value should be set to 0xff
   *attached = 0xff;
@@ -404,8 +404,8 @@ multiface_port_in128( libspectrum_word port, libspectrum_byte *attached )
   // xxxxxxxx 0011111x and may have some other don't care bit, but how know?
 
   a7 = port & 0x0080;
-  if( a7 ) {
-    if( mf[MF_128].J2 ) {
+  if (a7 ) {
+    if (mf[MF_128].J2 ) {
       multiface_page( MF_128 );
       ret = machine_current->ram.last_byte & 0x08 ? 0xff : 0x7f;
       mf[MF_128].IC8a_Q = 0;
@@ -423,7 +423,7 @@ multiface_port_in3( libspectrum_word port, libspectrum_byte *attached )
   libspectrum_byte ret = 0xff;
   int a7;
 
-  if( !IS( multiface_available, MF_3 ) ) return ret;
+  if (!IS( multiface_available, MF_3 ) ) return ret;
 
   // TODO: check if this value should be set to 0xff
   *attached = 0xff;
@@ -436,16 +436,16 @@ multiface_port_in3( libspectrum_word port, libspectrum_byte *attached )
   // IN A, (63) -> page in, and IN A, (191) page out
 
   a7 = port & 0x0080;
-  if( a7 ) { // a7 == 1
+  if (a7 ) { // a7 == 1
     multiface_unpage( MF_3 );
     mf[MF_3].IC8a_Q = 0;
-  } else if( mf[MF_3].J2 ) {
+  } else if (mf[MF_3].J2 ) {
     multiface_page( MF_3 ); // a7 == 0
     mf[MF_3].IC8a_Q = 1;
   }
 
   // Return last data written to port 0x1ffd, 0x3ffd, 0x5ffd or 0x7ffd
-  if( mf[MF_3].J2 )
+  if (mf[MF_3].J2 )
     ret = mf[MF_3].xfdd_reg[ ( port & 0x6000 ) >> 13 ] | 0xf0;
 
   return ret;
@@ -455,7 +455,7 @@ static void
 multiface_port_out1( libspectrum_word port GCC_UNUSED,
                      libspectrum_byte val GCC_UNUSED )
 {
-  if( !IS( multiface_available, MF_1 ) ) return;
+  if (!IS( multiface_available, MF_1 ) ) return;
 
   // MF one: out ()
   // xxxxxxxx x001xx1x page out
@@ -465,9 +465,9 @@ multiface_port_out1( libspectrum_word port GCC_UNUSED,
 static void
 multiface_port_out128_3( int idx, libspectrum_word port )
 {
-  if( !IS( multiface_available, idx ) ) return;
+  if (!IS( multiface_available, idx ) ) return;
 
-  if( IS( multiface_active, idx ) ) {
+  if (IS( multiface_active, idx ) ) {
     mf[idx].J2 = port & 0x0080 ? 1 : 0; // A7 == 1
   }
   mf[idx].IC8b_Q = 1;
@@ -492,14 +492,14 @@ multiface_port_xffd_write( libspectrum_word port, libspectrum_byte val )
 }
 
 void
-multiface_red_button( void )
+multiface_red_button(void)
 {
   int i;
 /*
   One RED button for all ;-)
 */
   for( i = MF_3; i >= MF_1; i-- ) {
-    if( !IS( multiface_available, i ) || mf[i].IC8b_Q == 0 ) continue;
+    if (!IS( multiface_available, i ) || mf[i].IC8b_Q == 0 ) continue;
 
     /* Note: AFAIK the Multiface One schematics show that the physical switch
        (J2) disables paging in OFF state and has no effect on NMI generation.
@@ -507,7 +507,7 @@ multiface_red_button( void )
        Until better understanding, NMI generation is disabled to avoid a freeze
        in the spectrum machine.
     */
-    if( i == MF_1 && !mf[MF_1].J2 ) continue;
+    if (i == MF_1 && !mf[MF_1].J2 ) continue;
 
     mf[i].IC8b_Q = 0;
     SET( multiface_activated, i, 1 );
@@ -517,14 +517,14 @@ multiface_red_button( void )
 }
 
 void
-multiface_setic8( void )
+multiface_setic8(void)
 {
   int i;
 /*
   activate all at once...
 */
   for( i = MF_3; i >= MF_1; i-- ) {
-    if( !IS( multiface_available, i ) || mf[i].IC8b_Q == 1 ) continue;
+    if (!IS( multiface_available, i ) || mf[i].IC8b_Q == 1 ) continue;
 
     mf[i].IC8a_Q = 0;
     SET( multiface_activated, i, 0 );
@@ -534,7 +534,7 @@ multiface_setic8( void )
 }
 
 int
-multiface_unittest( void )
+multiface_unittest(void)
 {
   int r = 0;
 
@@ -560,13 +560,13 @@ multiface_enabled_snapshot( libspectrum_snap *snap )
   settings_current.multiface128 = 0;
   settings_current.multiface3 = 0;
 
-  if( !libspectrum_snap_multiface_active( snap ) ) return;
+  if (!libspectrum_snap_multiface_active( snap ) ) return;
 
-  if( libspectrum_snap_multiface_model_one( snap ) )
+  if (libspectrum_snap_multiface_model_one( snap ) )
     settings_current.multiface1 = 1;
-  else if( libspectrum_snap_multiface_model_128( snap ) )
+  else if (libspectrum_snap_multiface_model_128( snap ) )
     settings_current.multiface128 = 1;
-  else if( libspectrum_snap_multiface_model_3( snap ) )
+  else if (libspectrum_snap_multiface_model_3( snap ) )
     settings_current.multiface3 = 1;
 }
 
@@ -575,31 +575,31 @@ multiface_from_snapshot( libspectrum_snap *snap )
 {
   int idx;
 
-  if( !libspectrum_snap_multiface_active( snap ) ) return;
+  if (!libspectrum_snap_multiface_active( snap ) ) return;
 
-  if( libspectrum_snap_multiface_model_one( snap ) )
+  if (libspectrum_snap_multiface_model_one( snap ) )
     idx = MF_1;
-  else if( libspectrum_snap_multiface_model_128( snap ) )
+  else if (libspectrum_snap_multiface_model_128( snap ) )
     idx = MF_128;
-  else if( libspectrum_snap_multiface_model_3( snap ) )
+  else if (libspectrum_snap_multiface_model_3( snap ) )
     idx = MF_3;
   else
     return;
 
-  if( !IS( multiface_available, idx ) ) return;
+  if (!IS( multiface_available, idx ) ) return;
 
   // Multiface with 16 Kb RAM not supported
-  if( libspectrum_snap_multiface_ram_length( snap, 0 ) != MULTIFACE_RAM_SIZE ) {
-    ui_error( UI_ERROR_ERROR, "Only supported Multiface with 8 Kb RAM" );
+  if (libspectrum_snap_multiface_ram_length( snap, 0 ) != MULTIFACE_RAM_SIZE ) {
+    ui_error( UI_ERROR_ERROR, "Only supported Multiface with 8 Kb RAM");
     return;
   }
 
-  if( libspectrum_snap_multiface_ram( snap, 0 ) ) {
+  if (libspectrum_snap_multiface_ram( snap, 0 ) ) {
     memcpy( mf[idx].ram,
             libspectrum_snap_multiface_ram( snap, 0 ), MULTIFACE_RAM_SIZE );
   }
 
-  if( libspectrum_snap_multiface_paged( snap ) ) {
+  if (libspectrum_snap_multiface_paged( snap ) ) {
     multiface_page( idx );
     mf[idx].IC8a_Q = ( idx == MF_3 )? 1 : 0;
   } else {
@@ -607,7 +607,7 @@ multiface_from_snapshot( libspectrum_snap *snap )
   }
 
   // Restore status of software lockout (128/3) or physical switch (One)
-  switch( idx ) {
+  switch (idx ) {
   case MF_1:
     mf[MF_1].J2 = !libspectrum_snap_multiface_disabled( snap );
     settings_current.multiface1_stealth = !mf[MF_1].J2;
@@ -619,12 +619,12 @@ multiface_from_snapshot( libspectrum_snap *snap )
   }
 
   // Red button status
-  if( libspectrum_snap_multiface_red_button_disabled( snap ) ) {
+  if (libspectrum_snap_multiface_red_button_disabled( snap ) ) {
     mf[idx].IC8b_Q = 0;
   }
 
   // Multiface 3 - 4x4 bit register
-  if( idx == MF_3 ) {
+  if (idx == MF_3 ) {
     mf[MF_3].xfdd_reg[ 0 ] =
       libspectrum_snap_out_plus3_memoryport( snap ) & 0x0f;
     mf[MF_3].xfdd_reg[ 3 ] =
@@ -638,13 +638,13 @@ multiface_to_snapshot( libspectrum_snap *snap )
   libspectrum_byte *buffer;
   int idx, i;
 
-  if( periph_is_active( PERIPH_TYPE_MULTIFACE_1 ) ) {
+  if (periph_is_active( PERIPH_TYPE_MULTIFACE_1 ) ) {
     libspectrum_snap_set_multiface_model_one( snap, 1 );
     idx = MF_1;
-  } else if( periph_is_active( PERIPH_TYPE_MULTIFACE_128 ) ) {
+  } else if (periph_is_active( PERIPH_TYPE_MULTIFACE_128 ) ) {
     libspectrum_snap_set_multiface_model_128( snap, 1 );
     idx = MF_128;
-  } else if( periph_is_active( PERIPH_TYPE_MULTIFACE_3 ) ) {
+  } else if (periph_is_active( PERIPH_TYPE_MULTIFACE_3 ) ) {
     libspectrum_snap_set_multiface_model_3( snap, 1 );
     idx = MF_3;
   } else {
@@ -655,7 +655,7 @@ multiface_to_snapshot( libspectrum_snap *snap )
   libspectrum_snap_set_multiface_paged( snap, IS( multiface_active, idx ) );
 
   // Store status of software lockout (128/3) or physical switch (One)
-  switch( idx ) {
+  switch (idx ) {
   case MF_1:
     libspectrum_snap_set_multiface_disabled( snap, !mf[MF_1].J2 );
     break;
@@ -666,12 +666,12 @@ multiface_to_snapshot( libspectrum_snap *snap )
   }
 
   // Store red button status
-  if( !mf[idx].IC8b_Q ) {
+  if (!mf[idx].IC8b_Q ) {
     libspectrum_snap_set_multiface_red_button_disabled( snap, 1 );
   }
 
   buffer = libspectrum_new( libspectrum_byte, MULTIFACE_RAM_SIZE );
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ )
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
     memcpy( buffer + i * MEMORY_PAGE_SIZE,
             multiface_memory_map_romcs_ram[i].page, MEMORY_PAGE_SIZE );
 

@@ -30,8 +30,8 @@
 #include "ui/ui.h"
 
 // Code called at start and end of emulation
-int widget_init( void );
-int widget_end( void );
+int widget_init(void);
+int widget_end(void);
 
 // The various widgets which are available
 typedef enum widget_type {
@@ -66,7 +66,7 @@ typedef enum widget_type {
 int widget_do( widget_type which, void *data );
 
 // Finish with widgets for now
-void widget_finish( void );
+void widget_finish(void);
 
 // A function to handle keypresses
 typedef void (*widget_keyhandler_fn)( input_key key );
@@ -82,7 +82,7 @@ extern widget_keyhandler_fn widget_keyhandler;
 typedef void (*widget_menu_callback_fn)( int action );
 
 // A generic menu detail callback function
-typedef const char* (*widget_menu_detail_callback_fn)( void );
+typedef const char* (*widget_menu_detail_callback_fn)(void);
 
 // A general menu
 typedef struct widget_menu_entry {
@@ -136,7 +136,7 @@ static inline int widget_do_fileselector_save( widget_filesel_data *data )
 }
 
 // General options
-static inline int widget_do_general( void )
+static inline int widget_do_general(void)
 {
   return widget_do( WIDGET_TYPE_GENERAL, NULL );
 }
@@ -148,7 +148,7 @@ static inline int widget_do_picture( widget_picture_data *data )
 }
 
 // About fuse widget
-static inline int widget_do_about( void )
+static inline int widget_do_about(void)
 {
   return widget_do( WIDGET_TYPE_ABOUT, NULL );
 }
@@ -166,13 +166,13 @@ static inline int widget_do_select( widget_select_t *data )
 }
 
 // Media options
-static inline int widget_do_media( void )
+static inline int widget_do_media(void)
 {
   return widget_do( WIDGET_TYPE_MEDIA, NULL );
 }
 
 // Sound options
-static inline int widget_do_sound( void )
+static inline int widget_do_sound(void)
 {
   return widget_do( WIDGET_TYPE_SOUND, NULL );
 }
@@ -184,19 +184,19 @@ static inline int widget_do_error( widget_error_t *data )
 }
 
 // RZX options
-static inline int widget_do_rzx( void )
+static inline int widget_do_rzx(void)
 {
   return widget_do( WIDGET_TYPE_RZX, NULL );
 }
 
 // Movie options
-static inline int widget_do_movie( void )
+static inline int widget_do_movie(void)
 {
   return widget_do( WIDGET_TYPE_MOVIE, NULL );
 }
 
 // Browse tape
-static inline int widget_do_browse( void )
+static inline int widget_do_browse(void)
 {
   return widget_do( WIDGET_TYPE_BROWSE, NULL );
 }
@@ -208,25 +208,25 @@ static inline int widget_do_text( widget_text_t *data )
 }
 
 // Debugger widget
-static inline int widget_do_debugger( void )
+static inline int widget_do_debugger(void)
 {
   return widget_do( WIDGET_TYPE_DEBUGGER, NULL );
 }
 
 // Poke finder widget
-static inline int widget_do_pokefinder( void )
+static inline int widget_do_pokefinder(void)
 {
   return widget_do( WIDGET_TYPE_POKEFINDER, NULL );
 }
 
 // Poke memory widget
-static inline int widget_do_pokemem( void )
+static inline int widget_do_pokemem(void)
 {
   return widget_do( WIDGET_TYPE_POKEMEM, NULL );
 }
 
 // Memory browser widget
-static inline int widget_do_memorybrowser( void )
+static inline int widget_do_memorybrowser(void)
 {
   return widget_do( WIDGET_TYPE_MEMORYBROWSER, NULL );
 }
@@ -238,13 +238,13 @@ static inline int widget_do_rom( widget_roms_info *data )
 }
 
 // General peripherals options
-static inline int widget_do_peripherals_general( void )
+static inline int widget_do_peripherals_general(void)
 {
   return widget_do( WIDGET_TYPE_PERIPHERALS_GENERAL, NULL );
 }
 
 // Disk peripherals options
-static inline int widget_do_peripherals_disk( void )
+static inline int widget_do_peripherals_disk(void)
 {
   return widget_do( WIDGET_TYPE_PERIPHERALS_DISK, NULL );
 }
@@ -262,7 +262,7 @@ static inline int widget_do_query_save( const char *message )
 }
 
 // Disk options widget
-static inline int widget_do_diskoptions( void )
+static inline int widget_do_diskoptions(void)
 {
   return widget_do( WIDGET_TYPE_DISKOPTIONS, NULL );
 }

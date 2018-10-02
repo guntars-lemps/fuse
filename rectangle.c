@@ -52,9 +52,9 @@ rectangle_add( int y, int x, int w )
   /* Check through all 'active' rectangles (those which were modified
      on the previous line) and see if we can use this new rectangle
      to extend them */
-  for( i = 0; i < rectangle_active_count; i++ ) {
+  for (i = 0; i < rectangle_active_count; i++) {
 
-    if( rectangle_active[i].x == x &&
+    if (rectangle_active[i].x == x &&
 	rectangle_active[i].w == w    ) {
       rectangle_active[i].h++;
       return;
@@ -62,7 +62,7 @@ rectangle_add( int y, int x, int w )
   }
 
   // We couldn't find a rectangle to extend, so create a new one
-  if( ++rectangle_active_count > rectangle_active_allocated ) {
+  if (++rectangle_active_count > rectangle_active_allocated ) {
 
     size_t new_alloc;
 
@@ -95,13 +95,13 @@ compare_and_merge_rectangles( struct rectangle *source )
      list.  These occur when frame skip is on and the same lines are
      covered more than once... */
   for( z = 0; z < rectangle_inactive_count; z++ ) {
-    if( rectangle_inactive[z].x == source->x &&
+    if (rectangle_inactive[z].x == source->x &&
           rectangle_inactive[z].w == source->w ) {
-      if( rectangle_inactive[z].y == source->y &&
+      if (rectangle_inactive[z].y == source->y &&
             rectangle_inactive[z].h == source->h )
         return 1;
 
-      if( ( rectangle_inactive[z].y < source->y &&
+      if (( rectangle_inactive[z].y < source->y &&
           ( source->y < ( rectangle_inactive[z].y +
             rectangle_inactive[z].h + 1 ) ) ) ||
           ( source->y < rectangle_inactive[z].y &&
@@ -116,10 +116,10 @@ compare_and_merge_rectangles( struct rectangle *source )
         return 1;
       }
     }
-    if( rectangle_inactive[z].y == source->y &&
+    if (rectangle_inactive[z].y == source->y &&
           rectangle_inactive[z].h == source->h ) {
 
-      if( (rectangle_inactive[z].x < source->x &&
+      if ((rectangle_inactive[z].x < source->x &&
           ( source->x < ( rectangle_inactive[z].x +
             rectangle_inactive[z].w + 1 ) ) ) ||
           ( source->x < rectangle_inactive[z].x &&
@@ -145,10 +145,10 @@ rectangle_end_line( int y )
   size_t i;
   struct rectangle *ptr;
 
-  for( i = 0; i < rectangle_active_count; i++ ) {
+  for (i = 0; i < rectangle_active_count; i++) {
 
     // Skip if this rectangle was updated this line
-    if( rectangle_active[i].y + rectangle_active[i].h == y + 1 ) continue;
+    if (rectangle_active[i].y + rectangle_active[i].h == y + 1 ) continue;
 
     if ( settings_current.frame_rate > 1 &&
 	 compare_and_merge_rectangles( &rectangle_active[i] ) ) {
@@ -159,7 +159,7 @@ rectangle_end_line( int y )
     }
 
     // We couldn't find a rectangle to extend, so create a new one
-    if( ++rectangle_inactive_count > rectangle_inactive_allocated ) {
+    if (++rectangle_inactive_count > rectangle_inactive_allocated ) {
 
       size_t new_alloc;
 
@@ -180,8 +180,8 @@ rectangle_end_line( int y )
   }
 
   // Compress the list of active rectangles
-  for( i = 0, ptr = rectangle_active; i < rectangle_active_count; i++ ) {
-    if( rectangle_active[i].h == 0 ) continue;
+  for( i = 0, ptr = rectangle_active; i < rectangle_active_count; i++) {
+    if (rectangle_active[i].h == 0 ) continue;
     *ptr = rectangle_active[i]; ptr++;
   }
 

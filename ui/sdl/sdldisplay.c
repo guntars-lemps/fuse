@@ -100,14 +100,14 @@ static int image_height;
 
 static int timex;
 
-static void init_scalers( void );
+static void init_scalers(void);
 static int sdldisplay_allocate_colours( int numColours, Uint32 *colour_values,
                                         Uint32 *bw_values );
 
-static int sdldisplay_load_gfx_mode( void );
+static int sdldisplay_load_gfx_mode(void);
 
 static void
-init_scalers( void )
+init_scalers(void)
 {
   scaler_register_clear();
 
@@ -122,7 +122,7 @@ init_scalers( void )
   scaler_register( SCALER_DOTMATRIX );
   scaler_register( SCALER_PALTV );
   scaler_register( SCALER_HQ2X );
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     scaler_register( SCALER_HALF );
     scaler_register( SCALER_HALFSKIP );
     scaler_register( SCALER_TIMEXTV );
@@ -135,7 +135,7 @@ init_scalers( void )
     scaler_register( SCALER_HQ3X );
   }
 
-  if( scaler_is_supported( current_scaler ) ) {
+  if (scaler_is_supported( current_scaler ) ) {
     scaler_select_scaler( current_scaler );
   } else {
     scaler_select_scaler( SCALER_NORMAL );
@@ -152,7 +152,7 @@ sdl_convert_icon( SDL_Surface *source, SDL_Surface **icon, int red )
 
   copy = SDL_ConvertSurface( source, source->format, SDL_SWSURFACE );
 
-  for( i = 0; i < copy->format->palette->ncolors; i++ ) {
+  for (i = 0; i < copy->format->palette->ncolors; i++) {
     colors[i].r = red ? copy->format->palette->colors[i].r : 0;
     colors[i].g = red ? 0 : copy->format->palette->colors[i].g;
     colors[i].b = 0;
@@ -189,7 +189,7 @@ sdl_load_status_icon( const char*filename, SDL_Surface **red, SDL_Surface **gree
   char path[ PATH_MAX ];
   SDL_Surface *temp; // Copy of image as loaded
 
-  if( utils_find_file_path( filename, path, UTILS_AUXILIARY_LIB ) ) {
+  if (utils_find_file_path( filename, path, UTILS_AUXILIARY_LIB ) ) {
     fprintf( stderr, "%s: Error getting path for icons\n", fuse_progname );
     return -1;
   }
@@ -225,7 +225,7 @@ uidisplay_init( int width, int height )
 
   no_modes = ( modes == (SDL_Rect **) 0 || modes == (SDL_Rect **) -1 ) ? 1 : 0;
 
-  if( settings_current.sdl_fullscreen_mode &&
+  if (settings_current.sdl_fullscreen_mode &&
       strcmp( settings_current.sdl_fullscreen_mode, "list" ) == 0 ) {
 
     fprintf( stderr,
@@ -235,11 +235,11 @@ uidisplay_init( int width, int height )
     "  No. width height\n"
     "---------------------------------------------------------------------\n"
     );
-    if( no_modes ) {
+    if (no_modes ) {
       fprintf( stderr, "  ** The modes list is empty%s...\n",
-                       no_modes == 2 ? ", all resolution allowed" : "" );
+                       no_modes == 2 ? ", all resolution allowed" : "");
     } else {
-      for( i = 0; modes[i]; i++ ) {
+      for (i = 0; modes[i]; i++) {
         fprintf( stderr, "% 3d  % 5d % 5d\n", i + 1, modes[i]->w, modes[i]->h );
       }
     }
@@ -250,9 +250,9 @@ uidisplay_init( int width, int height )
   }
 
   for( i=0; modes[i]; ++i ); // count modes
-  if( settings_current.sdl_fullscreen_mode ) {
-    if( sscanf( settings_current.sdl_fullscreen_mode, " %dx%d", &mw, &mh ) != 2 ) {
-      if( sscanf( settings_current.sdl_fullscreen_mode, " %d", &mn ) == 1 && mn <= i ) {
+  if (settings_current.sdl_fullscreen_mode ) {
+    if (sscanf( settings_current.sdl_fullscreen_mode, " %dx%d", &mw, &mh ) != 2 ) {
+      if (sscanf( settings_current.sdl_fullscreen_mode, " %d", &mn ) == 1 && mn <= i ) {
         mw = modes[mn - 1]->w; mh = modes[mn - 1]->h;
       }
     }
@@ -260,11 +260,11 @@ uidisplay_init( int width, int height )
 
   /* Check if there are any modes available, or if our resolution is restricted
      at all */
-  if( no_modes ){
+  if (no_modes ){
     // Just try whatever we have and see what happens
     max_fullscreen_height = 480;
     min_fullscreen_height = 240;
-  } else if( mh > 0 ) {
+  } else if (mh > 0 ) {
     // set from command line
     max_fullscreen_height = min_fullscreen_height = mh;
     fullscreen_width = mw;
@@ -288,9 +288,9 @@ uidisplay_init( int width, int height )
   if ( scaler_select_scaler( current_scaler ) )
     scaler_select_scaler( SCALER_NORMAL );
 
-  if( sdldisplay_load_gfx_mode() ) return 1;
+  if (sdldisplay_load_gfx_mode() ) return 1;
 
-  SDL_WM_SetCaption( "Fuse", "Fuse" );
+  SDL_WM_SetCaption( "Fuse", "Fuse");
 
   // We can now output error messages to our output device
   display_ui_initialised = 1;
@@ -309,7 +309,7 @@ sdldisplay_allocate_colours( int numColours, Uint32 *colour_values,
   int i;
   Uint8 red, green, blue, grey;
 
-  for( i = 0; i < numColours; i++ ) {
+  for (i = 0; i < numColours; i++) {
 
       red = colour_palette[i].r;
     green = colour_palette[i].g;
@@ -326,7 +326,7 @@ sdldisplay_allocate_colours( int numColours, Uint32 *colour_values,
 }
 
 static void
-sdldisplay_find_best_fullscreen_scaler( void )
+sdldisplay_find_best_fullscreen_scaler(void)
 {
   static int windowed_scaler = -1;
   static int searching_fullscreen_scaler = 0;
@@ -334,21 +334,21 @@ sdldisplay_find_best_fullscreen_scaler( void )
   /* Make sure we have at least more than half of the screen covered in
      fullscreen to avoid the "postage stamp" on machines that don't support
      320x240 anymore e.g. Mac notebooks */
-  if( settings_current.full_screen ) {
+  if (settings_current.full_screen ) {
     int i = 0;
 
-    if( searching_fullscreen_scaler ) return;
+    if (searching_fullscreen_scaler ) return;
     searching_fullscreen_scaler = 1;
     while( i < SCALER_NUM &&
            ( image_height*sdldisplay_current_size <= min_fullscreen_height/2 ||
              image_height*sdldisplay_current_size > max_fullscreen_height ) ) {
-      if( windowed_scaler == -1) windowed_scaler = current_scaler;
+      if (windowed_scaler == -1) windowed_scaler = current_scaler;
       while( !scaler_is_supported(i) ) i++;
       scaler_select_scaler( i++ );
       sdldisplay_current_size = scaler_get_scaling_factor( current_scaler );
       /* if we failed to find a suitable size scaler, just use normal (what the
          user had originally may be too big) */
-      if( image_height * sdldisplay_current_size <= min_fullscreen_height/2 ||
+      if (image_height * sdldisplay_current_size <= min_fullscreen_height/2 ||
           image_height * sdldisplay_current_size > max_fullscreen_height ) {
         scaler_select_scaler( SCALER_NORMAL );
         sdldisplay_current_size = scaler_get_scaling_factor( current_scaler );
@@ -356,7 +356,7 @@ sdldisplay_find_best_fullscreen_scaler( void )
     }
     searching_fullscreen_scaler = 0;
   } else {
-    if( windowed_scaler != -1 ) {
+    if (windowed_scaler != -1 ) {
       scaler_select_scaler( windowed_scaler );
       windowed_scaler = -1;
       sdldisplay_current_size = scaler_get_scaling_factor( current_scaler );
@@ -365,14 +365,14 @@ sdldisplay_find_best_fullscreen_scaler( void )
 }
 
 static int
-sdldisplay_load_gfx_mode( void )
+sdldisplay_load_gfx_mode(void)
 {
   Uint16 *tmp_screen_pixels;
 
   sdldisplay_force_full_refresh = 1;
 
   // Free the old surface
-  if( tmp_screen ) {
+  if (tmp_screen ) {
     free( tmp_screen->pixels );
     SDL_FreeSurface( tmp_screen );
     tmp_screen = NULL;
@@ -394,7 +394,7 @@ sdldisplay_load_gfx_mode( void )
     settings_current.full_screen ? (SDL_FULLSCREEN|SDL_SWSURFACE)
                                  : SDL_SWSURFACE
   );
-  if( !sdldisplay_gc ) {
+  if (!sdldisplay_gc ) {
     fprintf( stderr, "%s: couldn't create SDL graphics context\n", fuse_progname );
     fuse_abort();
   }
@@ -404,7 +404,7 @@ sdldisplay_load_gfx_mode( void )
   sdldisplay_is_full_screen = settings_current.full_screen;
 
   // Distinguish 555 and 565 mode
-  if( sdldisplay_gc->format->Gmask >> sdldisplay_gc->format->Gshift == 0x1f )
+  if (sdldisplay_gc->format->Gmask >> sdldisplay_gc->format->Gshift == 0x1f )
     scaler_select_bitformat( 555 );
   else
     scaler_select_bitformat( 565 );
@@ -422,7 +422,7 @@ sdldisplay_load_gfx_mode( void )
                                         sdldisplay_gc->format->Bmask,
                                         sdldisplay_gc->format->Amask );
 
-  if( !tmp_screen ) {
+  if (!tmp_screen ) {
     fprintf( stderr, "%s: couldn't create tmp_screen\n", fuse_progname );
     fuse_abort();
   }
@@ -441,18 +441,18 @@ sdldisplay_load_gfx_mode( void )
 }
 
 int
-uidisplay_hotswap_gfx_mode( void )
+uidisplay_hotswap_gfx_mode(void)
 {
   fuse_emulation_pause();
 
   // Free the old surface
-  if( tmp_screen ) {
+  if (tmp_screen ) {
     free( tmp_screen->pixels );
     SDL_FreeSurface( tmp_screen ); tmp_screen = NULL;
   }
 
   // Setup the new GFX mode
-  if( sdldisplay_load_gfx_mode() ) return 1;
+  if (sdldisplay_load_gfx_mode() ) return 1;
 
   // reset palette
   SDL_SetColors( sdldisplay_gc, colour_palette, 0, 16 );
@@ -474,9 +474,9 @@ uidisplay_hotswap_gfx_mode( void )
 SDL_Surface *saved = NULL;
 
 void
-uidisplay_frame_save( void )
+uidisplay_frame_save(void)
 {
-  if( saved ) {
+  if (saved ) {
     SDL_FreeSurface( saved );
     saved = NULL;
   }
@@ -486,9 +486,9 @@ uidisplay_frame_save( void )
 }
 
 void
-uidisplay_frame_restore( void )
+uidisplay_frame_restore(void)
 {
-  if( saved ) {
+  if (saved ) {
     SDL_BlitSurface( saved, NULL, tmp_screen, NULL );
     sdldisplay_force_full_refresh = 1;
   }
@@ -501,7 +501,7 @@ sdl_blit_icon( SDL_Surface **icon,
 {
   int x, y, w, h, dst_x, dst_y, dst_h;
 
-  if( timex ) {
+  if (timex ) {
     r->x<<=1;
     r->y<<=1;
     r->w<<=1;
@@ -515,11 +515,11 @@ sdl_blit_icon( SDL_Surface **icon,
   r->x++;
   r->y++;
 
-  if( SDL_BlitSurface( icon[timex], NULL, tmp_screen, r ) ) return;
+  if (SDL_BlitSurface( icon[timex], NULL, tmp_screen, r ) ) return;
 
   /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */
-  if( scaler_flags & SCALER_FLAGS_EXPAND )
+  if (scaler_flags & SCALER_FLAGS_EXPAND )
     scaler_expander( &x, &y, &w, &h, image_width, image_height );
 
   dst_y = y * sdldisplay_current_size + fullscreen_y_off;
@@ -537,7 +537,7 @@ sdl_blit_icon( SDL_Surface **icon,
 	dstPitch, w, dst_h
   );
 
-  if( num_rects == MAX_UPDATE_RECT ) {
+  if (num_rects == MAX_UPDATE_RECT ) {
     sdldisplay_force_full_refresh = 1;
     return;
   }
@@ -556,7 +556,7 @@ sdl_icon_overlay( Uint32 tmp_screen_pitch, Uint32 dstPitch )
 {
   SDL_Rect r = { 243, 218, red_disk[0]->w, red_disk[0]->h };
 
-  switch( sdl_disk_state ) {
+  switch (sdl_disk_state ) {
   case UI_STATUSBAR_STATE_ACTIVE:
     sdl_blit_icon( green_disk, &r, tmp_screen_pitch, dstPitch );
     break;
@@ -572,7 +572,7 @@ sdl_icon_overlay( Uint32 tmp_screen_pitch, Uint32 dstPitch )
   r.w = red_mdr[0]->w;
   r.h = red_mdr[0]->h;
 
-  switch( sdl_mdr_state ) {
+  switch (sdl_mdr_state ) {
   case UI_STATUSBAR_STATE_ACTIVE:
     sdl_blit_icon( green_mdr, &r, tmp_screen_pitch, dstPitch );
     break;
@@ -588,7 +588,7 @@ sdl_icon_overlay( Uint32 tmp_screen_pitch, Uint32 dstPitch )
   r.w = red_cassette[0]->w;
   r.h = red_cassette[0]->h;
 
-  switch( sdl_tape_state ) {
+  switch (sdl_tape_state ) {
   case UI_STATUSBAR_STATE_ACTIVE:
     sdl_blit_icon( green_cassette, &r, tmp_screen_pitch, dstPitch );
     break;
@@ -611,7 +611,7 @@ uidisplay_putpixel( int x, int y, int colour )
 
   Uint32 palette_colour = palette_values[ colour ];
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     x <<= 1; y <<= 1;
     dest_base = dest =
       (libspectrum_word*)( (libspectrum_byte*)tmp_screen->pixels +
@@ -647,7 +647,7 @@ uidisplay_plot8( int x, int y, libspectrum_byte data,
   Uint32 palette_ink = palette_values[ ink ];
   Uint32 palette_paper = palette_values[ paper ];
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     int i;
     libspectrum_word *dest_base;
 
@@ -658,7 +658,7 @@ uidisplay_plot8( int x, int y, libspectrum_byte data,
                            (x+1) * tmp_screen->format->BytesPerPixel +
                            (y+1) * tmp_screen->pitch);
 
-    for( i=0; i<2; i++ ) {
+    for( i=0; i<2; i++) {
       dest = dest_base;
 
       *(dest++) = ( data & 0x80 ) ? palette_ink : palette_paper;
@@ -719,7 +719,7 @@ uidisplay_plot16( int x, int y, libspectrum_word data,
                          (x+1) * tmp_screen->format->BytesPerPixel +
                          (y+1) * tmp_screen->pitch);
 
-  for( i=0; i<2; i++ ) {
+  for( i=0; i<2; i++) {
     dest = dest_base;
 
     *(dest++) = ( data & 0x8000 ) ? palette_ink : palette_paper;
@@ -745,7 +745,7 @@ uidisplay_plot16( int x, int y, libspectrum_word data,
 }
 
 void
-uidisplay_frame_end( void )
+uidisplay_frame_end(void)
 {
   SDL_Rect *r;
   Uint32 tmp_screen_pitch, dstPitch;
@@ -754,7 +754,7 @@ uidisplay_frame_end( void )
   /* We check for a switch to fullscreen here to give systems with a
      windowed-only UI a chance to free menu etc. resources before
      the switch to fullscreen (e.g. Mac OS X) */
-  if( sdldisplay_is_full_screen != settings_current.full_screen &&
+  if (sdldisplay_is_full_screen != settings_current.full_screen &&
       uidisplay_hotswap_gfx_mode() ) {
     fprintf( stderr, "%s: Error switching to fullscreen\n", fuse_progname );
     fuse_abort();
@@ -773,7 +773,7 @@ uidisplay_frame_end( void )
   if ( !(ui_widget_level >= 0) && num_rects == 0 && !sdl_status_updated )
     return;
 
-  if( SDL_MUSTLOCK( sdldisplay_gc ) ) SDL_LockSurface( sdldisplay_gc );
+  if (SDL_MUSTLOCK( sdldisplay_gc ) ) SDL_LockSurface( sdldisplay_gc );
 
   tmp_screen_pitch = tmp_screen->pitch;
 
@@ -808,7 +808,7 @@ uidisplay_frame_end( void )
   if ( settings_current.statusbar )
     sdl_icon_overlay( tmp_screen_pitch, dstPitch );
 
-  if( SDL_MUSTLOCK( sdldisplay_gc ) ) SDL_UnlockSurface( sdldisplay_gc );
+  if (SDL_MUSTLOCK( sdldisplay_gc ) ) SDL_UnlockSurface( sdldisplay_gc );
 
   // Finally, blit all our changes to the screen
   SDL_UpdateRects( sdldisplay_gc, num_rects, updated_rects );
@@ -823,14 +823,14 @@ uidisplay_area( int x, int y, int width, int height )
   if ( sdldisplay_force_full_refresh )
     return;
 
-  if( num_rects == MAX_UPDATE_RECT ) {
+  if (num_rects == MAX_UPDATE_RECT ) {
     sdldisplay_force_full_refresh = 1;
     return;
   }
 
   /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */
-  if( scaler_flags & SCALER_FLAGS_EXPAND )
+  if (scaler_flags & SCALER_FLAGS_EXPAND )
     scaler_expander( &x, &y, &width, &height, image_width, image_height );
 
   updated_rects[num_rects].x = x;
@@ -842,7 +842,7 @@ uidisplay_area( int x, int y, int width, int height )
 }
 
 int
-uidisplay_end( void )
+uidisplay_end(void)
 {
   int i;
 
@@ -853,11 +853,11 @@ uidisplay_end( void )
     SDL_FreeSurface( tmp_screen ); tmp_screen = NULL;
   }
 
-  if( saved ) {
+  if (saved ) {
     SDL_FreeSurface( saved ); saved = NULL;
   }
 
-  for( i=0; i<2; i++ ) {
+  for( i=0; i<2; i++) {
     if ( red_cassette[i] ) {
       SDL_FreeSurface( red_cassette[i] ); red_cassette[i] = NULL;
     }
@@ -885,7 +885,7 @@ uidisplay_end( void )
 int
 ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
 {
-  switch( item ) {
+  switch (item ) {
 
   case UI_STATUSBAR_ITEM_DISK:
     sdl_disk_state = state;

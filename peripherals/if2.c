@@ -48,7 +48,7 @@ int if2_active = 0;
 static int if2_memory_source;
 
 static void if2_reset( int hard_reset );
-static void if2_memory_map( void );
+static void if2_memory_map(void);
 static void if2_from_snapshot( libspectrum_snap *snap );
 static void if2_to_snapshot( libspectrum_snap *snap );
 
@@ -77,8 +77,8 @@ if2_init( void *context )
 
   module_register( &if2_module_info );
 
-  if2_source = memory_source_register( "If2" );
-  for( i = 0; i < MEMORY_PAGES_IN_16K; i++ )
+  if2_source = memory_source_register( "If2");
+  for (i = 0; i < MEMORY_PAGES_IN_16K; i++)
     if2_memory_map_romcs[i].source = if2_source;
 
   periph_register( PERIPH_TYPE_INTERFACE2, &if2_periph );
@@ -87,7 +87,7 @@ if2_init( void *context )
 }
 
 void
-if2_register_startup( void )
+if2_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_MEMORY,
@@ -102,7 +102,7 @@ if2_insert( const char *filename )
 {
   if ( !periph_is_active( PERIPH_TYPE_INTERFACE2 ) ) {
     ui_error( UI_ERROR_ERROR,
-	      "This machine does not support the Interface 2" );
+	      "This machine does not support the Interface 2");
     return 1;
   }
 
@@ -114,15 +114,15 @@ if2_insert( const char *filename )
 }
 
 void
-if2_eject( void )
+if2_eject(void)
 {
   if ( !periph_is_active( PERIPH_TYPE_INTERFACE2 ) ) {
     ui_error( UI_ERROR_ERROR,
-	      "This machine does not support the Interface 2" );
+	      "This machine does not support the Interface 2");
     return;
   }
 
-  if( settings_current.if2_file ) libspectrum_free( settings_current.if2_file );
+  if (settings_current.if2_file ) libspectrum_free( settings_current.if2_file );
   settings_current.if2_file = NULL;
 
   machine_current->ram.romcs = 0;
@@ -137,7 +137,7 @@ if2_reset( int hard_reset GCC_UNUSED )
 {
   if2_active = 0;
 
-  if( !settings_current.if2_file ) {
+  if (!settings_current.if2_file ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_CARTRIDGE_IF2_EJECT, 0 );
     return;
   }
@@ -158,9 +158,9 @@ if2_reset( int hard_reset GCC_UNUSED )
 }
 
 static void
-if2_memory_map( void )
+if2_memory_map(void)
 {
-  if( !if2_active ) return;
+  if (!if2_active ) return;
 
   memory_map_romcs_full( if2_memory_map_romcs );
 }
@@ -168,12 +168,12 @@ if2_memory_map( void )
 static void
 if2_from_snapshot( libspectrum_snap *snap )
 {
-  if( !libspectrum_snap_interface2_active( snap ) ) return;
+  if (!libspectrum_snap_interface2_active( snap ) ) return;
 
   if2_active = 1;
   machine_current->ram.romcs = 1;
 
-  if( libspectrum_snap_interface2_rom( snap, 0 ) &&
+  if (libspectrum_snap_interface2_rom( snap, 0 ) &&
       machine_load_rom_bank_from_buffer(
                              if2_memory_map_romcs, 0,
                              libspectrum_snap_interface2_rom( snap, 0 ),
@@ -192,20 +192,20 @@ if2_to_snapshot( libspectrum_snap *snap )
   libspectrum_byte *buffer;
   int i;
 
-  if( !if2_active ) return;
+  if (!if2_active ) return;
 
   libspectrum_snap_set_interface2_active( snap, 1 );
 
   buffer = libspectrum_new( libspectrum_byte, 0x4000 );
 
-  for( i = 0; i < MEMORY_PAGES_IN_16K; i++ )
+  for (i = 0; i < MEMORY_PAGES_IN_16K; i++)
     memcpy( buffer + i * MEMORY_PAGE_SIZE,
-            if2_memory_map_romcs[ i ].page, MEMORY_PAGE_SIZE );
+            if2_memory_map_romcs[i].page, MEMORY_PAGE_SIZE );
   libspectrum_snap_set_interface2_rom( snap, 0, buffer );
 }
 
 int
-if2_unittest( void )
+if2_unittest(void)
 {
   int r = 0;
 

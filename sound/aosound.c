@@ -42,28 +42,28 @@ static const char * const default_filename = "fuse-sound.ao";
 static int first_init = 1;
 
 static void
-driver_error( void )
+driver_error(void)
 {
-  switch( errno ) {
+  switch (errno ) {
   case AO_ENODRIVER:
     ui_error( UI_ERROR_ERROR,
-	      "ao: no driver corresponds to driver_id." );
+	      "ao: no driver corresponds to driver_id.");
     break;
   case AO_ENOTLIVE:
     ui_error( UI_ERROR_ERROR,
-	      "ao: driver is not a live output device." );
+	      "ao: driver is not a live output device.");
     break;
   case AO_ENOTFILE:
     ui_error( UI_ERROR_ERROR,
-	      "ao: driver is not a file output driver." );
+	      "ao: driver is not a file output driver.");
     break;
   case AO_EBADOPTION:
     ui_error( UI_ERROR_ERROR,
-	      "ao: a valid option key has an invalid value." );
+	      "ao: a valid option key has an invalid value.");
     break;
   case AO_EOPENDEVICE:
     ui_error( UI_ERROR_ERROR,
-	      "ao: cannot open output device." );
+	      "ao: cannot open output device.");
     break;
   case AO_EOPENFILE:
     ui_error( UI_ERROR_ERROR,
@@ -74,7 +74,7 @@ driver_error( void )
 	      filename );
     break;
   case AO_EFAIL:
-    ui_error( UI_ERROR_ERROR, "ao: unspecified error." );
+    ui_error( UI_ERROR_ERROR, "ao: unspecified error.");
   }
 }
 
@@ -84,16 +84,16 @@ parse_driver_options( const char *device, int *driver_id, ao_option **options )
   char *mutable, *option, *key, *value;
 
   // Get a copy of the device string we can modify
-  if( !device || *device == '\0' )
+  if (!device || *device == '\0' )
     return 1;
 
   mutable = utils_safe_strdup( device );
 
   // First, find the device name
   option = strchr( mutable, ':' );
-  if( option ) *option++ = '\0';
+  if (option ) *option++ = '\0';
 
-  if( *mutable ) // ! \0
+  if (*mutable ) // ! \0
     *driver_id = ao_driver_id( mutable );
 
   // Now parse any further options
@@ -102,18 +102,18 @@ parse_driver_options( const char *device, int *driver_id, ao_option **options )
     key = option;
 
     option = strchr( option, ',' );
-    if( option ) *option++ = '\0';
+    if (option ) *option++ = '\0';
 
     value = strchr( key, '=' );
-    if( value ) *value++ = '\0';
+    if (value ) *value++ = '\0';
 
-    if( strcmp( key, "file" ) == 0 ) {
+    if (strcmp( key, "file" ) == 0 ) {
       filename = utils_safe_strdup( value );
-    } else if( key && value) {
+    } else if (key && value) {
       ao_append_option( options, key, value );
     } else if ( first_init ) {
 	ui_error( UI_ERROR_ERROR, "ignoring badly formed libao option (%s%s)",
-		key ? key : "", value ? value : "" );
+		key ? key : "", value ? value : "");
     }
 
   }
@@ -135,23 +135,23 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   int error;
 
-  if( sound_lowlevel_init_in_progress ) return 0;
+  if (sound_lowlevel_init_in_progress ) return 0;
 
   sound_lowlevel_init_in_progress = 1;
 
   ao_initialize();
 
   error = parse_driver_options( device, &driver_id, &options );
-  if( error ) {
+  if (error ) {
     settings_current.sound = 0;
     sound_lowlevel_init_in_progress = 0;
     return error;
   }
 
-  if( driver_id == -1 )
+  if (driver_id == -1 )
     driver_id = ao_default_driver_id();
 
-  if( driver_id == -1 ) {
+  if (driver_id == -1 ) {
     ui_error( UI_ERROR_ERROR, "ao: driver '%s' unknown",
               device );
     settings_current.sound = 0;
@@ -161,7 +161,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   driver_info = ao_driver_info( driver_id );
 
-  if( driver_info->type == AO_TYPE_FILE &&
+  if (driver_info->type == AO_TYPE_FILE &&
       format.bits != 0 ) { // OK. We not want to trunc the file :-)
     ui_error( UI_ERROR_WARNING, "ao: must truncate audio file '%s'",
 	      filename );
@@ -173,18 +173,18 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   format.byte_format = AO_FMT_LITTLE;
   sixteenbit = settings_current.sound_force_8bit ? 0 : 1;
 
-  if( driver_info->type == AO_TYPE_LIVE ) {
+  if (driver_info->type == AO_TYPE_LIVE ) {
 
     dev_for_ao = ao_open_live( driver_id, &format, options);
 
   } else {
 
-    if( !filename ) filename = (char *)default_filename;
+    if (!filename ) filename = (char *)default_filename;
     dev_for_ao = ao_open_file( driver_id, filename, 1, &format, options);
 
   }
 
-  if( !dev_for_ao ) {
+  if (!dev_for_ao ) {
     driver_error();
     settings_current.sound = 0;
     sound_lowlevel_init_in_progress = 0;
@@ -200,9 +200,9 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 }
 
 void
-sound_lowlevel_end( void )
+sound_lowlevel_end(void)
 {
-  if( filename != default_filename ) libspectrum_free( filename );
+  if (filename != default_filename ) libspectrum_free( filename );
   ao_close(dev_for_ao);
   ao_shutdown();
 }
@@ -215,7 +215,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 
   len <<= 1; // now in bytes
 
-  if( !sixteenbit ) {
+  if (!sixteenbit ) {
     libspectrum_signed_word *src;
     signed char *dst;
     int f;

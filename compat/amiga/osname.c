@@ -38,14 +38,14 @@ int compat_osname( char *buffer, size_t length )
 {
   STRPTR machine;
 
-  if( ExpansionBase = IExec->OpenLibrary( "expansion.library", 52 ) ) {
-    if( IExpansion = ( struct ExpansionIFace * ) IExec->GetInterface( ExpansionBase,"main",1,NULL ) ) {
+  if (ExpansionBase = IExec->OpenLibrary( "expansion.library", 52 ) ) {
+    if (IExpansion = ( struct ExpansionIFace * ) IExec->GetInterface( ExpansionBase,"main",1,NULL ) ) {
 
       IExpansion->GetMachineInfoTags( GMIT_MachineString, &machine,
                                       TAG_DONE );
 
-      snprintf( buffer, length, "%s %s %s", "AmigaOS", machine, "4.0" );
-      
+      snprintf( buffer, length, "%s %s %s", "AmigaOS", machine, "4.0");
+
       IExec->DropInterface( ( struct Interface * )IExpansion );
     }
     IExec->CloseLibrary( ExpansionBase );

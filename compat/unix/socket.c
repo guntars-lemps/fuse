@@ -40,13 +40,13 @@ struct compat_socket_selfpipe_t {
 };
 
 void
-compat_socket_networking_init( void )
+compat_socket_networking_init(void)
 {
   // No action necessary
 }
 
 void
-compat_socket_networking_end( void )
+compat_socket_networking_end(void)
 {
   // No action necessary
 }
@@ -57,18 +57,18 @@ compat_socket_close( compat_socket_t fd )
   return close( fd );
 }
 
-int compat_socket_get_error( void )
+int compat_socket_get_error(void)
 {
   return errno;
 }
 
 const char *
-compat_socket_get_strerror( void )
+compat_socket_get_strerror(void)
 {
   return strerror( errno );
 }
 
-compat_socket_selfpipe_t* compat_socket_selfpipe_alloc( void )
+compat_socket_selfpipe_t* compat_socket_selfpipe_alloc(void)
 {
   int error;
   int pipefd[2];
@@ -77,7 +77,7 @@ compat_socket_selfpipe_t* compat_socket_selfpipe_alloc( void )
     libspectrum_new( compat_socket_selfpipe_t, 1 );
 
   error = pipe( pipefd );
-  if( error ) {
+  if (error ) {
     ui_error( UI_ERROR_ERROR, "%s: %d: error %d creating pipe", __FILE__, __LINE__, error );
     fuse_abort();
   }
@@ -113,7 +113,7 @@ void compat_socket_selfpipe_discard_data( compat_socket_selfpipe_t *self )
 
   do {
     bytes_read = read( self->read_fd, &bitbucket, 1 );
-    if( bytes_read == -1 && errno != EINTR ) {
+    if (bytes_read == -1 && errno != EINTR ) {
       ui_error( UI_ERROR_ERROR,
                 "%s: %d: unexpected error %d (%s) reading from pipe", __FILE__,
                 __LINE__, errno, strerror(errno) );

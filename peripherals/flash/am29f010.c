@@ -47,7 +47,7 @@ struct flash_am29f010_t {
 };
 
 flash_am29f010_t*
-flash_am29f010_alloc( void )
+flash_am29f010_alloc(void)
 {
   return libspectrum_new( flash_am29f010_t, 1 );
 }
@@ -93,34 +93,34 @@ flash_am29f010_write( flash_am29f010_t *self, libspectrum_byte page, libspectrum
      commands for now */
   switch (self->flash_state) {
     case FLASH_STATE_RESET:
-      if( flash_address == 0x555 && b == 0xaa )
+      if (flash_address == 0x555 && b == 0xaa )
         self->flash_state = FLASH_STATE_CYCLE2;
       break;
     case FLASH_STATE_CYCLE2:
-      if( flash_address == 0x2aa && b == 0x55 )
+      if (flash_address == 0x2aa && b == 0x55 )
         self->flash_state = FLASH_STATE_CYCLE3;
       break;
     case FLASH_STATE_CYCLE3:
-      if( flash_address == 0x555 ) {
-        if( b == 0xa0 )
+      if (flash_address == 0x555 ) {
+        if (b == 0xa0 )
           self->flash_state = FLASH_STATE_PROGRAM;
-        else if( b == 0x80 )
+        else if (b == 0x80 )
           self->flash_state = FLASH_STATE_CYCLE4;
       }
       break;
     case FLASH_STATE_CYCLE4:
-      if( flash_address == 0x555 && b == 0xaa )
+      if (flash_address == 0x555 && b == 0xaa )
         self->flash_state = FLASH_STATE_CYCLE5;
       break;
     case FLASH_STATE_CYCLE5:
-      if( flash_address == 0x2aa && b == 0x55 )
+      if (flash_address == 0x2aa && b == 0x55 )
         self->flash_state = FLASH_STATE_CYCLE6;
       break;
     case FLASH_STATE_CYCLE6:
-      if( flash_address == 0x555 && b == 0x10 ) {
+      if (flash_address == 0x555 && b == 0x10 ) {
         flash_am29f010_chip_erase( self );
         self->flash_state = FLASH_STATE_RESET;
-      } else if( b == 0x30 ) {
+      } else if (b == 0x30 ) {
         flash_am29f010_sector_erase( self, page );
         self->flash_state = FLASH_STATE_RESET;
       }
@@ -131,6 +131,6 @@ flash_am29f010_write( flash_am29f010_t *self, libspectrum_byte page, libspectrum
       break;
   }
 
-  if( b == 0x0f )
+  if (b == 0x0f )
     self->flash_state = FLASH_STATE_RESET;
 }

@@ -79,7 +79,7 @@ static void
 w5100_socket_acquire_lock( nic_w5100_socket_t *socket )
 {
   int error = pthread_mutex_lock( &socket->lock );
-  if( error ) {
+  if (error ) {
     nic_w5100_error( UI_ERROR_ERROR,
                      "%s:%d: error %d locking mutex for socket %d\n",
                      __FILE__, __LINE__, error, socket->id );
@@ -91,7 +91,7 @@ static void
 w5100_socket_release_lock( nic_w5100_socket_t *socket )
 {
   int error = pthread_mutex_unlock( &socket->lock );
-  if( error ) {
+  if (error ) {
     nic_w5100_debug( "%s:%d: error %d unlocking mutex for socket %d\n", __FILE__, __LINE__, error, socket->id );
     fuse_abort();
   }
@@ -111,7 +111,7 @@ w5100_socket_clean( nic_w5100_socket_t *socket )
   socket->last_send = 0;
   socket->datagram_count = 0;
 
-  if( socket->fd != compat_socket_invalid ) {
+  if (socket->fd != compat_socket_invalid ) {
     compat_socket_close( socket->fd );
     w5100_socket_init_common( socket );
   }
@@ -139,19 +139,19 @@ w5100_write_socket_mr( nic_w5100_socket_t *socket, libspectrum_byte b )
 
   nic_w5100_debug( "w5100: writing 0x%02x to S%d_MR\n", b, socket->id );
 
-  switch( mode ) {
+  switch (mode ) {
     case W5100_SOCKET_MODE_CLOSED:
       break;
     case W5100_SOCKET_MODE_TCP:
       // We support only "disable no delayed ACK"
-      if( flags != 0x20 ) {
+      if (flags != 0x20 ) {
         ui_error( UI_ERROR_WARNING, "w5100: unsupported flags 0x%02x set for TCP mode on socket %d\n", b & 0xf0, socket->id );
         flags = 0x20;
       }
       break;
     case W5100_SOCKET_MODE_UDP:
       // We don't support multicast
-      if( flags != 0x00 ) {
+      if (flags != 0x00 ) {
         ui_error( UI_ERROR_WARNING, "w5100: unsupported flags 0x%02x set for UDP mode on socket %d\n", b & 0xf0, socket->id );
         flags = 0;
       }
@@ -172,7 +172,7 @@ w5100_write_socket_mr( nic_w5100_socket_t *socket, libspectrum_byte b )
 static void
 w5100_socket_open( nic_w5100_socket_t *socket_obj )
 {
-  if( ( socket_obj->mode == W5100_SOCKET_MODE_UDP ||
+  if (( socket_obj->mode == W5100_SOCKET_MODE_UDP ||
       socket_obj->mode == W5100_SOCKET_MODE_TCP ) &&
     socket_obj->state == W5100_SOCKET_STATE_CLOSED ) {
 
@@ -188,7 +188,7 @@ w5100_socket_open( nic_w5100_socket_t *socket_obj )
     w5100_socket_clean( socket_obj );
 
     socket_obj->fd = socket( AF_INET, type, protocol );
-    if( socket_obj->fd == compat_socket_invalid ) {
+    if (socket_obj->fd == compat_socket_invalid ) {
       nic_w5100_error( UI_ERROR_ERROR,
         "w5100: failed to open %s socket for socket %d; errno %d: %s\n",
         description, socket_obj->id, compat_socket_get_error(),
@@ -196,7 +196,7 @@ w5100_socket_open( nic_w5100_socket_t *socket_obj )
       return;
     }
 
-    if( setsockopt( socket_obj->fd, SOL_SOCKET, SO_REUSEADDR, &one,
+    if (setsockopt( socket_obj->fd, SOL_SOCKET, SO_REUSEADDR, &one,
       sizeof(one) ) == -1 ) {
       nic_w5100_error( UI_ERROR_ERROR,
         "w5100: failed to set SO_REUSEADDR on socket %d; errno %d: %s\n",
@@ -222,7 +222,7 @@ w5100_socket_bind_port( nic_w5100_t *self, nic_w5100_socket_t *socket )
   memcpy( &sa.sin_addr.s_addr, self->sip, 4 );
 
   nic_w5100_debug( "w5100: attempting to bind socket %d to %s:%d\n", socket->id, inet_ntoa(sa.sin_addr), ntohs(sa.sin_port) );
-  if( bind( socket->fd, (struct sockaddr*)&sa, sizeof(sa) ) == -1 ) {
+  if (bind( socket->fd, (struct sockaddr*)&sa, sizeof(sa) ) == -1 ) {
     nic_w5100_error( UI_ERROR_ERROR,
                      "w5100: failed to bind socket %d; errno %d: %s\n",
                      socket->id, compat_socket_get_error(),
@@ -242,13 +242,13 @@ w5100_socket_bind_port( nic_w5100_t *self, nic_w5100_socket_t *socket )
 static void
 w5100_socket_listen( nic_w5100_t *self, nic_w5100_socket_t *socket )
 {
-  if( socket->state == W5100_SOCKET_STATE_INIT ) {
+  if (socket->state == W5100_SOCKET_STATE_INIT ) {
 
-    if( !socket->socket_bound )
-      if( w5100_socket_bind_port( self, socket ) )
+    if (!socket->socket_bound )
+      if (w5100_socket_bind_port( self, socket ) )
         return;
 
-    if( listen( socket->fd, 1 ) == -1 ) {
+    if (listen( socket->fd, 1 ) == -1 ) {
       nic_w5100_error( UI_ERROR_ERROR,
                        "w5100: failed to listen on socket %d; errno %d: %s\n",
                        socket->id, compat_socket_get_error(),
@@ -267,11 +267,11 @@ w5100_socket_listen( nic_w5100_t *self, nic_w5100_socket_t *socket )
 static void
 w5100_socket_connect( nic_w5100_t *self, nic_w5100_socket_t *socket )
 {
-  if( socket->state == W5100_SOCKET_STATE_INIT ) {
+  if (socket->state == W5100_SOCKET_STATE_INIT ) {
     struct sockaddr_in sa;
 
-    if( !socket->socket_bound )
-      if( w5100_socket_bind_port( self, socket ) )
+    if (!socket->socket_bound )
+      if (w5100_socket_bind_port( self, socket ) )
         return;
 
     memset( &sa, 0, sizeof(sa) );
@@ -279,7 +279,7 @@ w5100_socket_connect( nic_w5100_t *self, nic_w5100_socket_t *socket )
     memcpy( &sa.sin_port, socket->dport, 2 );
     memcpy( &sa.sin_addr.s_addr, socket->dip, 4 );
 
-    if( connect( socket->fd, (struct sockaddr*)&sa, sizeof(sa) ) == -1 ) {
+    if (connect( socket->fd, (struct sockaddr*)&sa, sizeof(sa) ) == -1 ) {
       nic_w5100_error( UI_ERROR_ERROR,
         "w5100: failed to connect socket %d to 0x%08x:0x%04x; errno %d: %s\n",
         socket->id, ntohl(sa.sin_addr.s_addr), ntohs(sa.sin_port),
@@ -298,7 +298,7 @@ w5100_socket_connect( nic_w5100_t *self, nic_w5100_socket_t *socket )
 static void
 w5100_socket_discon( nic_w5100_t *self, nic_w5100_socket_t *socket )
 {
-  if( socket->state == W5100_SOCKET_STATE_ESTABLISHED ||
+  if (socket->state == W5100_SOCKET_STATE_ESTABLISHED ||
     socket->state == W5100_SOCKET_STATE_CLOSE_WAIT ) {
     socket->ir |= 1 << 1;
     socket->state = W5100_SOCKET_STATE_CLOSED;
@@ -311,7 +311,7 @@ w5100_socket_discon( nic_w5100_t *self, nic_w5100_socket_t *socket )
 static void
 w5100_socket_close( nic_w5100_t *self, nic_w5100_socket_t *socket )
 {
-  if( socket->fd != compat_socket_invalid ) {
+  if (socket->fd != compat_socket_invalid ) {
     compat_socket_close( socket->fd );
     socket->fd = compat_socket_invalid;
     socket->socket_bound = 0;
@@ -325,10 +325,10 @@ w5100_socket_close( nic_w5100_t *self, nic_w5100_socket_t *socket )
 static void
 w5100_socket_send( nic_w5100_t *self, nic_w5100_socket_t *socket )
 {
-  if( socket->state == W5100_SOCKET_STATE_UDP ) {
+  if (socket->state == W5100_SOCKET_STATE_UDP ) {
 
-    if( !socket->socket_bound )
-      if( w5100_socket_bind_port( self, socket ) )
+    if (!socket->socket_bound )
+      if (w5100_socket_bind_port( self, socket ) )
         return;
 
     socket->datagram_lengths[socket->datagram_count++] =
@@ -337,7 +337,7 @@ w5100_socket_send( nic_w5100_t *self, nic_w5100_socket_t *socket )
     socket->write_pending = 1;
     compat_socket_selfpipe_wake( self->selfpipe );
   }
-  else if( socket->state == W5100_SOCKET_STATE_ESTABLISHED ) {
+  else if (socket->state == W5100_SOCKET_STATE_ESTABLISHED ) {
     socket->write_pending = 1;
     compat_socket_selfpipe_wake( self->selfpipe );
   }
@@ -346,11 +346,11 @@ w5100_socket_send( nic_w5100_t *self, nic_w5100_socket_t *socket )
 static void
 w5100_socket_recv( nic_w5100_t *self, nic_w5100_socket_t *socket )
 {
-  if( socket->state == W5100_SOCKET_STATE_UDP ||
+  if (socket->state == W5100_SOCKET_STATE_UDP ||
     socket->state == W5100_SOCKET_STATE_ESTABLISHED ) {
     socket->rx_rsr -= socket->rx_rd - socket->old_rx_rd;
     socket->old_rx_rd = socket->rx_rd;
-    if( socket->rx_rsr != 0 )
+    if (socket->rx_rsr != 0 )
       socket->ir |= 1 << 2;
     compat_socket_selfpipe_wake( self->selfpipe );
   }
@@ -361,7 +361,7 @@ w5100_write_socket_cr( nic_w5100_t *self, nic_w5100_socket_t *socket, libspectru
 {
   nic_w5100_debug( "w5100: writing 0x%02x to S%d_CR\n", b, socket->id );
 
-  switch( b ) {
+  switch (b ) {
     case W5100_SOCKET_COMMAND_OPEN:
       w5100_socket_open( socket );
       break;
@@ -394,9 +394,9 @@ w5100_write_socket_port( nic_w5100_t *self, nic_w5100_socket_t *socket, int whic
 {
   nic_w5100_debug( "w5100: writing 0x%02x to S%d_PORT%d\n", b, socket->id, which );
   socket->port[which] = b;
-  if( ++socket->bind_count == 2 ) {
-    if( socket->state == W5100_SOCKET_STATE_UDP && !socket->socket_bound ) {
-      if( w5100_socket_bind_port( self, socket ) ) {
+  if (++socket->bind_count == 2 ) {
+    if (socket->state == W5100_SOCKET_STATE_UDP && !socket->socket_bound ) {
+      if (w5100_socket_bind_port( self, socket ) ) {
         socket->bind_count = 0;
         return;
       }
@@ -417,7 +417,7 @@ nic_w5100_socket_read( nic_w5100_t *self, libspectrum_word reg )
 
   w5100_socket_acquire_lock( socket );
 
-  switch( socket_reg ) {
+  switch (socket_reg ) {
     case W5100_SOCKET_MR:
       b = socket->mode;
       nic_w5100_debug( "w5100: reading 0x%02x from S%d_MR\n", b, socket->id );
@@ -479,7 +479,7 @@ nic_w5100_socket_write( nic_w5100_t *self, libspectrum_word reg, libspectrum_byt
 
   w5100_socket_acquire_lock( socket );
 
-  switch( socket_reg ) {
+  switch (socket_reg ) {
     case W5100_SOCKET_MR:
       w5100_write_socket_mr( socket, b );
       break;
@@ -522,7 +522,7 @@ nic_w5100_socket_write( nic_w5100_t *self, libspectrum_word reg, libspectrum_byt
       break;
   }
 
-  if( socket_reg != W5100_SOCKET_PORT0 && socket_reg != W5100_SOCKET_PORT1 )
+  if (socket_reg != W5100_SOCKET_PORT0 && socket_reg != W5100_SOCKET_PORT1 )
     socket->bind_count = 0;
 
   w5100_socket_release_lock( socket );
@@ -553,7 +553,7 @@ nic_w5100_socket_add_to_sets( nic_w5100_socket_t *socket, fd_set *readfds,
 {
   w5100_socket_acquire_lock( socket );
 
-  if( socket->fd != compat_socket_invalid ) {
+  if (socket->fd != compat_socket_invalid ) {
     /* We can process a UDP read if we're in a UDP state and there are at least
        9 bytes free in our buffer (8 byte UDP header and 1 byte of actual
        data). */
@@ -568,16 +568,16 @@ nic_w5100_socket_add_to_sets( nic_w5100_socket_t *socket, fd_set *readfds,
 
     socket->ok_for_io = 1;
 
-    if( udp_read || tcp_read || tcp_listen ) {
+    if (udp_read || tcp_read || tcp_listen ) {
       FD_SET( socket->fd, readfds );
-      if( socket->fd > *max_fd )
+      if (socket->fd > *max_fd )
         *max_fd = socket->fd;
       nic_w5100_debug( "w5100: checking for read on socket %d with fd %d; max fd %d\n", socket->id, socket->fd, *max_fd );
     }
 
-    if( socket->write_pending ) {
+    if (socket->write_pending ) {
       FD_SET( socket->fd, writefds );
-      if( socket->fd > *max_fd )
+      if (socket->fd > *max_fd )
         *max_fd = socket->fd;
       nic_w5100_debug( "w5100: write pending on socket %d with fd %d; max fd %d\n", socket->id, socket->fd, *max_fd );
     }
@@ -596,7 +596,7 @@ w5100_socket_process_accept( nic_w5100_socket_t *socket )
   memset( &sa, 0, sizeof(sa) );
 
   new_fd = accept( socket->fd, (struct sockaddr*)&sa, &sa_length );
-  if( new_fd == compat_socket_invalid ) {
+  if (new_fd == compat_socket_invalid ) {
     nic_w5100_debug( "w5100: error from accept on socket %d; errno %d: %s\n",
                      socket->id, compat_socket_get_error(),
                      compat_socket_get_strerror() );
@@ -605,7 +605,7 @@ w5100_socket_process_accept( nic_w5100_socket_t *socket )
 
   nic_w5100_debug( "w5100: accepted connection from %s:%d on socket %d\n", inet_ntoa(sa.sin_addr), ntohs(sa.sin_port), socket->id );
 
-  if( compat_socket_close( socket->fd ) == -1 )
+  if (compat_socket_close( socket->fd ) == -1 )
     nic_w5100_debug( "w5100: error attempting to close fd %d for socket %d\n", socket->fd, socket->id );
 
   socket->fd = new_fd;
@@ -625,7 +625,7 @@ w5100_socket_process_read( nic_w5100_socket_t *socket )
 
   nic_w5100_debug( "w5100: reading from socket %d\n", socket->id );
 
-  if( udp ) {
+  if (udp ) {
     socklen_t sa_length = sizeof(sa);
     bytes_read = recvfrom( socket->fd, (char*)buffer + 8, bytes_free - 8, 0,
       (struct sockaddr*)&sa, &sa_length );
@@ -635,11 +635,11 @@ w5100_socket_process_read( nic_w5100_socket_t *socket )
 
   nic_w5100_debug( "w5100: read 0x%03x bytes from %s socket %d\n", (int)bytes_read, description, socket->id );
 
-  if( bytes_read > 0 || (udp && bytes_read == 0) ) {
+  if (bytes_read > 0 || (udp && bytes_read == 0) ) {
     int offset = (socket->old_rx_rd + socket->rx_rsr) & 0x7ff;
     libspectrum_byte *dest = &socket->rx_buffer[offset];
 
-    if( udp ) {
+    if (udp ) {
       // Add the W5100's UDP header
       memcpy( buffer, &sa.sin_addr.s_addr, 4 );
       memcpy( buffer + 4, &sa.sin_port, 2 );
@@ -651,7 +651,7 @@ w5100_socket_process_read( nic_w5100_socket_t *socket )
     socket->rx_rsr += bytes_read;
     socket->ir |= 1 << 2;
 
-    if( offset + bytes_read <= 0x800 ) {
+    if (offset + bytes_read <= 0x800 ) {
       memcpy( dest, buffer, bytes_read );
     }
     else {
@@ -660,7 +660,7 @@ w5100_socket_process_read( nic_w5100_socket_t *socket )
       memcpy( socket->rx_buffer, buffer + first_chunk, bytes_read - first_chunk );
     }
   }
-  else if( bytes_read == 0 ) { // TCP
+  else if (bytes_read == 0 ) { // TCP
     socket->state = W5100_SOCKET_STATE_CLOSE_WAIT;
     nic_w5100_debug( "w5100: EOF on %s socket %d; errno %d: %s\n",
                      description, socket->id, compat_socket_get_error(),
@@ -687,7 +687,7 @@ w5100_socket_process_udp_write( nic_w5100_socket_t *socket )
 
   /* If the data wraps round the write buffer, we need to coalesce it into
      one chunk for the call to sendto() */
-  if( offset + length > 0x800 ) {
+  if (offset + length > 0x800 ) {
     int first_chunk = 0x800 - offset;
     memcpy( buffer, data, first_chunk );
     memcpy( buffer + first_chunk, socket->tx_buffer, length - first_chunk );
@@ -703,18 +703,18 @@ w5100_socket_process_udp_write( nic_w5100_socket_t *socket )
   nic_w5100_debug( "w5100: sent 0x%03x bytes of 0x%03x to UDP socket %d\n",
                    (int)bytes_sent, length, socket->id );
 
-  if( bytes_sent == length ) {
-    if( --socket->datagram_count )
+  if (bytes_sent == length ) {
+    if (--socket->datagram_count )
       memmove( socket->datagram_lengths, &socket->datagram_lengths[1],
         0x1f * sizeof(int) );
 
     socket->tx_rr += bytes_sent;
-    if( socket->datagram_count == 0 ) {
+    if (socket->datagram_count == 0 ) {
       socket->write_pending = 0;
       socket->ir |= 1 << 4;
     }
   }
-  else if( bytes_sent != -1 )
+  else if (bytes_sent != -1 )
     nic_w5100_debug( "w5100: didn't manage to send full datagram to UDP socket %d?\n", socket->id );
   else
     nic_w5100_debug( "w5100: error %d writing to UDP socket %d: %s\n",
@@ -733,16 +733,16 @@ w5100_socket_process_tcp_write( nic_w5100_socket_t *socket )
   nic_w5100_debug( "w5100: writing to TCP socket %d\n", socket->id );
 
   // If the data wraps round the write buffer, write it in two chunks
-  if( offset + length > 0x800 )
+  if (offset + length > 0x800 )
     length = 0x800 - offset;
 
   bytes_sent = send( socket->fd, (const char*)data, length, 0 );
   nic_w5100_debug( "w5100: sent 0x%03x bytes of 0x%03x to TCP socket %d\n",
                    (int)bytes_sent, length, socket->id );
 
-  if( bytes_sent != -1 ) {
+  if (bytes_sent != -1 ) {
     socket->tx_rr += bytes_sent;
-    if( socket->tx_rr == socket->tx_wr ) {
+    if (socket->tx_rr == socket->tx_wr ) {
       socket->write_pending = 0;
       socket->ir |= 1 << 4;
     }
@@ -761,19 +761,19 @@ nic_w5100_socket_process_io( nic_w5100_socket_t *socket, fd_set readfds,
 
   /* Process only if we're an open socket, and we haven't been closed and
      re-opened since the select() started */
-  if( socket->fd != compat_socket_invalid && socket->ok_for_io ) {
-    if( FD_ISSET( socket->fd, &readfds ) ) {
-      if( socket->state == W5100_SOCKET_STATE_LISTEN )
+  if (socket->fd != compat_socket_invalid && socket->ok_for_io ) {
+    if (FD_ISSET( socket->fd, &readfds ) ) {
+      if (socket->state == W5100_SOCKET_STATE_LISTEN )
         w5100_socket_process_accept( socket );
       else
         w5100_socket_process_read( socket );
     }
 
-    if( FD_ISSET( socket->fd, &writefds ) ) {
-      if( socket->state == W5100_SOCKET_STATE_UDP ) {
+    if (FD_ISSET( socket->fd, &writefds ) ) {
+      if (socket->state == W5100_SOCKET_STATE_UDP ) {
         w5100_socket_process_udp_write( socket );
       }
-      else if( socket->state == W5100_SOCKET_STATE_ESTABLISHED ) {
+      else if (socket->state == W5100_SOCKET_STATE_ESTABLISHED ) {
         w5100_socket_process_tcp_write( socket );
       }
     }

@@ -34,14 +34,14 @@
 int specplus3_port_from_ula( libspectrum_word port );
 
 int specplus3_init( fuse_machine_info *machine );
-void specplus3_765_update_fdd( void );
-void specplus3_765_init( void );
-void specplus3_765_reset( void );
+void specplus3_765_update_fdd(void);
+void specplus3_765_init(void);
+void specplus3_765_reset(void);
 
-int specplus3_plus2a_common_reset( void );
-void specplus3_fdc_reset( void );
-void specplus3_menu_items( void );
-int specplus3_shutdown( void );
+int specplus3_plus2a_common_reset(void);
+void specplus3_fdc_reset(void);
+void specplus3_menu_items(void);
+int specplus3_shutdown(void);
 
 void specplus3_memoryport_write( libspectrum_word port, libspectrum_byte b );
 void specplus3_memoryport2_write( libspectrum_word port, libspectrum_byte b );
@@ -52,7 +52,7 @@ libspectrum_byte specplus3_fdc_status( libspectrum_word port, libspectrum_byte *
 libspectrum_byte specplus3_fdc_read( libspectrum_word port, libspectrum_byte *attached );
 void specplus3_fdc_write( libspectrum_word port, libspectrum_byte data );
 
-int specplus3_memory_map( void );
+int specplus3_memory_map(void);
 
 typedef enum specplus3_drive_number {
   SPECPLUS3_DRIVE_A = 0, // First drive must be number zero

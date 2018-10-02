@@ -26,21 +26,21 @@
 
 #include <libspectrum.h>
 
-int timer_estimate_reset( void );
-int timer_estimate_speed( void );
+int timer_estimate_reset(void);
+int timer_estimate_speed(void);
 
-void timer_register_startup( void );
+void timer_register_startup(void);
 
 extern float current_speed;
 extern int timer_event;
 
-void timer_start_fastloading( void );
-void timer_stop_fastloading( void );
-int timer_fastloading_active( void );
+void timer_start_fastloading(void);
+void timer_stop_fastloading(void);
+int timer_fastloading_active(void);
 
 // Internal routines
 
-double timer_get_time( void );
+double timer_get_time(void);
 void timer_sleep( int ms );
 
 #endif // #ifndef FUSE_TIMER_H

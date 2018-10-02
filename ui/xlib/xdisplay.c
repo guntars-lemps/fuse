@@ -126,7 +126,7 @@ static libspectrum_byte xdisplay_force_full_refresh = 1;
 static XShmSegmentInfo shm_info;
 int shm_eventtype;
 
-static int try_shm( void );
+static int try_shm(void);
 static int get_shm_id( const int size );
 #endif // #ifdef X_USE_SHM
 
@@ -138,14 +138,14 @@ static xdisplay_update_rect_t *xdisplay_update_rect;
 static xdisplay_update_rect_t xdisplay_update_rect_noscale;
 static xdisplay_update_rect_t xdisplay_update_rect_scale;
 
-static int xdisplay_find_visual( void );
-static int xdisplay_allocate_colours4( void );
-static int xdisplay_allocate_colours8( void );
+static int xdisplay_find_visual(void);
+static int xdisplay_allocate_colours4(void);
+static int xdisplay_allocate_colours8(void);
 static int xdisplay_allocate_gc( Window window, GC *new_gc );
 
-static int xdisplay_allocate_image( void );
-static void register_scalers( void );
-static void xdisplay_destroy_image( void );
+static int xdisplay_allocate_image(void);
+static void register_scalers(void);
+static void xdisplay_destroy_image(void);
 static void xdisplay_catch_signal( int sig );
 
 typedef void xdisplay_putpixel_t( int x, int y, libspectrum_word *color );
@@ -159,7 +159,7 @@ static xdisplay_putpixel_t xdisplay_putpixel_16;
 static xdisplay_putpixel_t xdisplay_putpixel_24;
 
 #include "ui/xlib/xpixmaps.c"
-void xstatusbar_overlay( void );
+void xstatusbar_overlay(void);
 
 static libspectrum_word pal_colour[16] = {
   0x0000, 0x0017, 0xb800, 0xb817, 0x05e0, 0x05f7, 0xbde0, 0xbdf7,
@@ -191,20 +191,20 @@ static  int rgb_for_4[] = {
 };
 
 int
-xdisplay_init( void )
+xdisplay_init(void)
 {
-  if( xdisplay_find_visual() ) return 1;
-  if( xdisplay_depth == 4 && xdisplay_allocate_colours4() ) return 1;
-  if( xdisplay_depth == 8 && xdisplay_allocate_colours8() ) return 1;
-  if( xdisplay_allocate_gc( xui_mainWindow,&gc ) ) return 1;
-  if( xdisplay_allocate_image() ) return 1;
+  if (xdisplay_find_visual() ) return 1;
+  if (xdisplay_depth == 4 && xdisplay_allocate_colours4() ) return 1;
+  if (xdisplay_depth == 8 && xdisplay_allocate_colours8() ) return 1;
+  if (xdisplay_allocate_gc( xui_mainWindow,&gc ) ) return 1;
+  if (xdisplay_allocate_image() ) return 1;
   ui_statusbar_update( UI_STATUSBAR_ITEM_TAPE, UI_STATUSBAR_STATE_INACTIVE );
 
   return 0;
 }
 
 static int
-xdisplay_find_visual( void )
+xdisplay_find_visual(void)
 {
   XVisualInfo visual_tmpl;
   XVisualInfo *vis;
@@ -217,14 +217,14 @@ xdisplay_find_visual( void )
   vis = XGetVisualInfo( display,
                              VisualScreenMask,
                              &visual_tmpl, &nvis );
-  if( vis != NULL ) {
-    for( i = 0; i < nvis; i++ ) {
+  if (vis != NULL ) {
+    for (i = 0; i < nvis; i++) {
             /*
              * Save the visual index and its depth, if this is the first
              * truecolor visual, or a visual that is 'preferred' over the
              * previous 'best' visual.
              */
-      if( ( sel_v_depth == -1 && vis[i].depth >= 4 ) || // depth >= 4
+      if (( sel_v_depth == -1 && vis[i].depth >= 4 ) || // depth >= 4
     	  ( vis[i].depth > sel_v_depth &&
 		vis[i].depth <= 16 ) || // depth up to 16
     	  ( vis[i].depth <= 8 && vis[i].depth == sel_v_depth &&
@@ -296,12 +296,12 @@ static int
 xdisplay_alloc_colour( Colormap *map, XColor *colour )
 {
   for(;;) {
-    if( XAllocColor( display, *map, colour ) )
+    if (XAllocColor( display, *map, colour ) )
       return 0;
 
     fprintf(stderr,"%s: XAllocColor failed (%04x %04x %04x)\n", fuse_progname,
 				colour->red, colour->green, colour->blue );
-    if( *map == DefaultColormap( display, xui_screenNum ) ) {
+    if (*map == DefaultColormap( display, xui_screenNum ) ) {
       fprintf( stderr,"%s: switching to private colour map\n", fuse_progname );
       *map = XCopyColormapAndFree( display, *map );
       XSetWindowColormap( display, xui_mainWindow, *map );
@@ -314,33 +314,33 @@ xdisplay_alloc_colour( Colormap *map, XColor *colour )
 }
 
 static int
-xdisplay_allocate_colours4( void )
+xdisplay_allocate_colours4(void)
 {
   XColor c;
   int i;
 
   currentMap = DefaultColormap( display, xui_screenNum );
 
-  if( colours_allocated ) { // free it
+  if (colours_allocated ) { // free it
     XFreeColors( display, currentMap, colours, 16, 0x00 );
     colours_allocated = 0;
   }
-  if( settings_current.bw_tv ) {
-    for( i=0; i<16; i++ ) { // grey
+  if (settings_current.bw_tv ) {
+    for( i=0; i<16; i++) { // grey
       c.red = c.green = c.blue =
 	    rgb_for_4[i * 3    ] * 19595 / 255 +
 	    rgb_for_4[i * 3 + 1] * 38469 / 255 +
 	    rgb_for_4[i * 3 + 2] *  7471 / 255;
-      if( xdisplay_alloc_colour( &currentMap, &c ) )
+      if (xdisplay_alloc_colour( &currentMap, &c ) )
     	    return 1;
       colours[i] = pal_grey[i] = c.pixel;
     }
   } else {
-    for( i=0; i<16; i++ ) { // rgb
+    for( i=0; i<16; i++) { // rgb
       c.red   = rgb_for_4[i * 3    ] * 65535 / 255;
       c.green = rgb_for_4[i * 3 + 1] * 65535 / 255;
       c.blue  = rgb_for_4[i * 3 + 2] * 65535 / 255;
-      if( xdisplay_alloc_colour( &currentMap, &c ) )
+      if (xdisplay_alloc_colour( &currentMap, &c ) )
         return 1;
       colours[i] = pal_colour[i] = c.pixel;
     }
@@ -351,14 +351,14 @@ xdisplay_allocate_colours4( void )
 }
 
 static int
-xdisplay_allocate_colours8( void )
+xdisplay_allocate_colours8(void)
 {
   XColor c;
   int i, r, g, b;
 
   currentMap = DefaultColormap( display, xui_screenNum );
 
-  if( colours_allocated ) { // free it
+  if (colours_allocated ) { // free it
     XFreeColors( display, currentMap, colours, 128, 0x00 );
     colours_allocated = 0;
   }
@@ -366,7 +366,7 @@ xdisplay_allocate_colours8( void )
   for( r=0; r<4; r++ ) // rgb232 => 128
     for( g=0; g<8; g++ )
       for( b=0; b<4; b++ ) {
-        if( settings_current.bw_tv ) {
+        if (settings_current.bw_tv ) {
           c.red = c.green = c.blue = r * 19595 / 3 +
 				     g * 38469 / 7 +
 				     b *  7471 / 3;
@@ -375,7 +375,7 @@ xdisplay_allocate_colours8( void )
 	  c.green = g * 65535 / 7;
           c.blue = b * 65535 / 3;
 	}
-	if( xdisplay_alloc_colour( &currentMap, &c ) )
+	if (xdisplay_alloc_colour( &currentMap, &c ) )
     	    return 1;
 	colours[i++] = c.pixel;
       }
@@ -396,7 +396,7 @@ xdisplay_allocate_gc( Window window, GC *new_gc )
 }
 
 static int
-xdisplay_allocate_image( void )
+xdisplay_allocate_image(void)
 {
   struct sigaction handler;
 
@@ -411,7 +411,7 @@ xdisplay_allocate_image( void )
 
   /* If SHM isn't available, or we're not using it for some reason,
      just get a normal image */
-  if( !shm_used ) {
+  if (!shm_used ) {
     image = XCreateImage( display, xdisplay_visual,
 		       xdisplay_depth, ZPixmap, 0, NULL,
 		       3 * DISPLAY_ASPECT_WIDTH,
@@ -425,14 +425,14 @@ xdisplay_allocate_image( void )
       return 1;
     }
 
-    if( ( image->data = malloc( image->bytes_per_line *
+    if (( image->data = malloc( image->bytes_per_line *
 						 image->height ) ) == NULL ) {
       fprintf(stderr, "%s: out of memory for image data\n", fuse_progname);
       return 1;
     }
   }
-  if( image ) {
-    switch( image->red_mask ) {
+  if (image ) {
+    switch (image->red_mask ) {
     case 0xff0000: // 24bit/32bit 0RGB
       rShift = 16, gShift = 8, bShift = 0;
       break;
@@ -460,12 +460,12 @@ xdisplay_allocate_image( void )
 
 #ifdef X_USE_SHM
 static int
-try_shm( void )
+try_shm(void)
 {
   int id;
   int error;
 
-  if( !XShmQueryExtension( display ) ) return 0;
+  if (!XShmQueryExtension( display ) ) return 0;
 
   shm_eventtype = XShmGetEventBase( display ) + ShmCompletion;
   image = XShmCreateImage( display, xdisplay_visual,
@@ -477,18 +477,18 @@ try_shm( void )
    we allocate extra space after the screen for status bar icons
    status bar icons total width always smaller than 3xDISPLAY_ASPECT_WIDTH
 */
-  if( !image ) return 0;
+  if (!image ) return 0;
 
   // Get an SHM to work with
   id = get_shm_id( image->bytes_per_line * image->height );
-  if( id == -1 ) return 0;
+  if (id == -1 ) return 0;
 
   // Attempt to attach to the shared memory
   shm_info.shmid = id;
   image->data = shm_info.shmaddr = shmat( id, 0, 0 );
 
   // If we couldn't attach, remove the chunk and give up
-  if( image->data == (void*)-1 ) {
+  if (image->data == (void*)-1 ) {
     shmctl( id, IPC_RMID, NULL );
     image->data = NULL;
     return 0;
@@ -503,7 +503,7 @@ try_shm( void )
   xerror_expecting = 0;
 
   // If we caught an error, don't use SHM
-  if( error || xerror_error ) {
+  if (error || xerror_error ) {
     shmctl( id, IPC_RMID, NULL );
     shmdt( image->data ); image->data = NULL;
     return 0;
@@ -533,22 +533,22 @@ get_shm_id( const int size )
 
     /* If the chunk didn't already exist, try and create one for our
        use */
-    if( id == -1 ) {
+    if (id == -1 ) {
       id = shmget( key, size, IPC_CREAT | 0777 );
       continue; // And then jump to the end of the loop
     }
 
     // If the chunk already exists, try and get information about it
-    if( shmctl( id, IPC_STAT, &shm ) != -1 ) {
+    if (shmctl( id, IPC_STAT, &shm ) != -1 ) {
 
       // If something's actively using this chunk, try another key
-      if( shm.shm_nattch ) {
+      if (shm.shm_nattch ) {
 	key++;
       } else { // Otherwise, attempt to remove the chunk
 
 	/* If we couldn't remove that chunk, try another key. If we
 	   could, just try again */
-	if( shmctl( id, IPC_RMID, NULL ) != 0 ) key++;
+	if (shmctl( id, IPC_RMID, NULL ) != 0 ) key++;
       }
     } else { // Couldn't get info on the chunk, so try next key
       key++;
@@ -567,8 +567,8 @@ uidisplay_init( int width, int height )
 {
   image_width  = width;
   image_height = height;
-  if( !scaler_is_supported( current_scaler ) ) {
-    if( machine_current->timex )
+  if (!scaler_is_supported( current_scaler ) ) {
+    if (machine_current->timex )
       scaler_select_scaler( SCALER_HALFSKIP );
     else
       scaler_select_scaler( SCALER_NORMAL );
@@ -584,23 +584,23 @@ uidisplay_init( int width, int height )
 static void
 resize_window( int w, int h )
 {
-    if( xdisplay_current_size != w / DISPLAY_ASPECT_WIDTH ) {
+    if (xdisplay_current_size != w / DISPLAY_ASPECT_WIDTH ) {
       XResizeWindow( display, xui_mainWindow, w, h );
       xdisplay_current_size = w / DISPLAY_ASPECT_WIDTH;
     }
 }
 
 static void
-register_scalers( void )
+register_scalers(void)
 {
   int f = -1;
 
   scaler_register_clear();
   scaler_select_bitformat( 565 ); // 16bit always
 
-    if( xdisplay_depth == 4 ) {
+    if (xdisplay_depth == 4 ) {
       scaler_register( SCALER_NORMAL );
-      if( machine_current->timex ) {
+      if (machine_current->timex ) {
         scaler_register( SCALER_HALFSKIP );
         scaler_register( SCALER_TIMEX1_5X );
       } else {
@@ -613,7 +613,7 @@ register_scalers( void )
     } else {
       scaler_register( SCALER_NORMAL );
       scaler_register( SCALER_PALTV );
-      if( machine_current->timex ) {
+      if (machine_current->timex ) {
         scaler_register( SCALER_HALF );
         scaler_register( SCALER_HALFSKIP );
         scaler_register( SCALER_TIMEXTV );
@@ -636,14 +636,14 @@ register_scalers( void )
         scaler_register( SCALER_HQ3X );
       }
     }
-  if( current_scaler != SCALER_NUM )
+  if (current_scaler != SCALER_NUM )
     f = 4.0 * scaler_get_scaling_factor( current_scaler ) *
 	    ( machine_current->timex ? 2 : 1 );
-  if( scaler_is_supported( current_scaler ) &&
+  if (scaler_is_supported( current_scaler ) &&
 	( xdisplay_current_size * 4 == f ) ) {
     uidisplay_hotswap_gfx_mode();
   } else {
-    switch( xdisplay_current_size ) {
+    switch (xdisplay_current_size ) {
     case 1:
       scaler_select_scaler( machine_current->timex ? SCALER_HALF : SCALER_NORMAL );
       break;
@@ -664,8 +664,8 @@ xdisplay_configure_notify( int width, int height )
 
   // If we're the same size as before, nothing special needed
   size = width / DISPLAY_ASPECT_WIDTH;
-  if( size != height / DISPLAY_SCREEN_HEIGHT ) { // out of aspect
-    if( size > height / DISPLAY_SCREEN_HEIGHT ) {
+  if (size != height / DISPLAY_SCREEN_HEIGHT ) { // out of aspect
+    if (size > height / DISPLAY_SCREEN_HEIGHT ) {
       size = height / DISPLAY_SCREEN_HEIGHT;
       width = size * DISPLAY_ASPECT_WIDTH;
     } else {
@@ -673,7 +673,7 @@ xdisplay_configure_notify( int width, int height )
     }
     xdisplay_current_size = 0; // force resize
     resize_window( width, height );
-  } else if( size == xdisplay_current_size ) {
+  } else if (size == xdisplay_current_size ) {
     return 0;
   }
 
@@ -726,7 +726,7 @@ xdisplay_update_rect_scale( int x, int y, int w, int h )
 }
 
 void
-uidisplay_frame_end( void )
+uidisplay_frame_end(void)
 {
   X_Rect *r, *last_rect;
 
@@ -753,13 +753,13 @@ uidisplay_frame_end( void )
 }
 
 void
-uidisplay_frame_save( void )
+uidisplay_frame_save(void)
 {
   memcpy( rgb_image_backup, rgb_image, sizeof( rgb_image ) );
 }
 
 void
-uidisplay_frame_restore( void )
+uidisplay_frame_restore(void)
 {
   memcpy( rgb_image, rgb_image_backup, sizeof( rgb_image ) );
   xdisplay_update_rect( 0, 0, image_width, image_height );
@@ -771,14 +771,14 @@ uidisplay_area( int x, int y, int w, int h )
   if ( xdisplay_force_full_refresh )
     return;
 
-  if( num_rects == MAX_UPDATE_RECT ) {
+  if (num_rects == MAX_UPDATE_RECT ) {
     xdisplay_force_full_refresh = 1;
     return;
   }
 
   /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */
-  if( scaler_flags & SCALER_FLAGS_EXPAND )
+  if (scaler_flags & SCALER_FLAGS_EXPAND )
     scaler_expander( &x, &y, &w, &h, image_width, image_height );
 
   updated_rects[num_rects].x = x;
@@ -792,13 +792,13 @@ void
 xdisplay_area( int x, int y, int w, int h )
 {
 // e.g. dwm first expose with too big w and h
-  if( x + w > 3 * DISPLAY_ASPECT_WIDTH )
+  if (x + w > 3 * DISPLAY_ASPECT_WIDTH )
     w = 3 * DISPLAY_ASPECT_WIDTH - x;
 
-  if( y + h > 3 * DISPLAY_SCREEN_HEIGHT )
+  if (y + h > 3 * DISPLAY_SCREEN_HEIGHT )
     h = 3 * DISPLAY_SCREEN_HEIGHT - y;
 
-  if( shm_used ) {
+  if (shm_used ) {
 #ifdef X_USE_SHM
     XShmPutImage( display, xui_mainWindow, gc, image, x, y, x, y, w, h, True );
     // FIXME: should wait for an ShmCompletion event here
@@ -814,20 +814,20 @@ xdisplay_destroy_image(void)
   /* Free the XImage used to store screen data; also frees the malloc'd
      data */
 #ifdef X_USE_SHM
-  if( shm_used ) {
+  if (shm_used ) {
     XShmDetach( display, &shm_info );
     shmdt( shm_info.shmaddr );
     image->data = NULL;
     shm_used = 0;
   }
 #endif
-  if( image ) XDestroyImage( image ); image = NULL;
+  if (image ) XDestroyImage( image ); image = NULL;
 }
 
 static void
-xdisplay_setup_rgb_putpixel( void )
+xdisplay_setup_rgb_putpixel(void)
 {
-  switch( xdisplay_depth ) {
+  switch (xdisplay_depth ) {
   case 4:
     xdisplay_putpixel = xdisplay_putpixel_4;
     break;
@@ -849,23 +849,23 @@ xdisplay_setup_rgb_putpixel( void )
 }
 
 int
-uidisplay_hotswap_gfx_mode( void )
+uidisplay_hotswap_gfx_mode(void)
 {
   image_scale = 4.0 * scaler_get_scaling_factor( current_scaler );
   scaled_image_w = image_width  * image_scale >> 2;
   scaled_image_h = image_height * image_scale >> 2;
-  if( current_scaler == SCALER_NORMAL )
+  if (current_scaler == SCALER_NORMAL )
     xdisplay_update_rect = xdisplay_update_rect_noscale;
   else
     xdisplay_update_rect = xdisplay_update_rect_scale;
 
   xdisplay_force_full_refresh = 1;
 
-  if( settings_current.bw_tv != xdisplay_bw ) {
+  if (settings_current.bw_tv != xdisplay_bw ) {
     xdisplay_bw = settings_current.bw_tv;
-    if( xdisplay_depth == 4 )
+    if (xdisplay_depth == 4 )
       xdisplay_allocate_colours4();
-    else if( xdisplay_depth == 8 )
+    else if (xdisplay_depth == 8 )
       xdisplay_allocate_colours8();
   }
   xdisplay_setup_rgb_putpixel();
@@ -875,7 +875,7 @@ uidisplay_hotswap_gfx_mode( void )
 }
 
 int
-uidisplay_end( void )
+uidisplay_end(void)
 {
   display_ui_initialised = 0;
   return 0;
@@ -890,11 +890,11 @@ xdisplay_catch_signal( int sig )
 }
 
 int
-xdisplay_end( void )
+xdisplay_end(void)
 {
   xdisplay_destroy_image();
   // Free the allocated GC
-  if( gc ) {
+  if (gc ) {
     XFreeGC( display, gc );
     gc = 0;
   }
@@ -909,7 +909,7 @@ uidisplay_putpixel( int x, int y, int colour )
   libspectrum_word pc = settings_current.bw_tv ? pal_grey[ colour ] :
                         	pal_colour[ colour ];
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     x <<= 1; y <<= 1;
     rgb_image[y + 2][x + 1] = pc;
     rgb_image[y + 2][x + 2] = pc;
@@ -932,7 +932,7 @@ uidisplay_plot8( int x, int y, libspectrum_byte data,
   libspectrum_word pp = settings_current.bw_tv ? pal_grey[ paper ] :
                         	pal_colour[ paper ];
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
 
     x <<= 4; y <<= 1;
 
@@ -1005,7 +1005,7 @@ uidisplay_plot16( int x, int y, libspectrum_word data,
 int
 ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
 {
-  switch( item ) {
+  switch (item ) {
 
   case UI_STATUSBAR_ITEM_DISK:
     pixmap_disk_state = state;

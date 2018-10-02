@@ -42,10 +42,10 @@ extern memory_page beta_memory_map_romcs[MEMORY_PAGES_IN_16K];
 extern libspectrum_word beta_pc_mask; // Bits to mask in PC for enable check
 extern libspectrum_word beta_pc_value; // Value to compare masked PC against
 
-void beta_register_startup( void );
+void beta_register_startup(void);
 
-void beta_page( void );
-void beta_unpage( void );
+void beta_page(void);
+void beta_unpage(void);
 
 void beta_cr_write( libspectrum_word port, libspectrum_byte b );
 
@@ -80,6 +80,6 @@ int beta_disk_writeprotect( beta_drive_number which, int wrprot );
 int beta_disk_write( beta_drive_number which, const char *filename );
 fdd_t *beta_get_fdd( beta_drive_number which );
 
-int beta_unittest( void );
+int beta_unittest(void);
 
 #endif // #ifndef FUSE_BETA_H

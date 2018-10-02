@@ -88,7 +88,7 @@ kempmouse_init( void *context )
 }
 
 void
-kempmouse_register_startup( void )
+kempmouse_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_KEMPMOUSE, dependencies,
@@ -101,8 +101,8 @@ kempmouse_update( int dx, int dy, int btn, int down )
 {
   kempmouse.pos.x += dx;
   kempmouse.pos.y -= dy;
-  if( btn != -1 ) {
-    if( down )
+  if (btn != -1 ) {
+    if (down )
       kempmouse.buttons &= ~(1 << btn);
     else
       kempmouse.buttons |= 1 << btn;
@@ -112,7 +112,7 @@ kempmouse_update( int dx, int dy, int btn, int down )
 static void
 kempmouse_snapshot_enabled( libspectrum_snap *snap )
 {
-  if( libspectrum_snap_kempston_mouse_active( snap ) )
+  if (libspectrum_snap_kempston_mouse_active( snap ) )
     settings_current.kempston_mouse = 1;
 }
 

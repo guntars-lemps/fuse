@@ -34,7 +34,7 @@
 #include "ui/ui.h"
 #include "ui/uidisplay.h"
 
-static void wii_end( void );
+static void wii_end(void);
 
 int
 ui_init( int *argc, char ***argv )
@@ -42,27 +42,27 @@ ui_init( int *argc, char ***argv )
   int error;
 
 #ifdef USE_WIDGET
-  if( ui_widget_init() ) return 1;
+  if (ui_widget_init() ) return 1;
 #endif // #ifdef USE_WIDGET
 
   error = atexit( wii_end );
-  if( error ) {
+  if (error ) {
     ui_error( UI_ERROR_ERROR, "%s: couldn't set atexit function", __func__ );
     return 1;
   }
 
   error = wiidisplay_init();
-  if( error ) return error;
+  if (error ) return error;
   error = wiikeyboard_init();
-  if( error ) return error;
+  if (error ) return error;
   error = wiimouse_init();
-  if( error ) return error;
+  if (error ) return error;
 
   return 0;
 }
 
 int
-ui_event( void )
+ui_event(void)
 {
   keyboard_update();
   mouse_update();
@@ -74,8 +74,8 @@ int ui_end(void)
   // Cleanup handled by atexit function
   int error;
 
-  error = wiikeyboard_end(); if( error ) return error;
-  error = wiidisplay_end(); if( error ) return error;
+  error = wiikeyboard_end(); if (error ) return error;
+  error = wiidisplay_end(); if (error ) return error;
 
 #ifdef USE_WIDGET
   ui_widget_end();
@@ -85,7 +85,7 @@ int ui_end(void)
 }
 
 static void
-wii_end( void )
+wii_end(void)
 {
   wiikeyboard_end();
   uidisplay_end();

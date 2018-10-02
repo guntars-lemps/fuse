@@ -26,7 +26,7 @@
 
 #include <libspectrum.h>
 
-void slt_register_startup( void );
+void slt_register_startup(void);
 
 int slt_trap( libspectrum_word address, libspectrum_byte level );
 

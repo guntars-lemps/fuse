@@ -39,7 +39,7 @@
 #include "menu.h"
 
 static void
-atexit_proc( void )
+atexit_proc(void)
 {
   SDL_ShowCursor( SDL_ENABLE );
   SDL_Quit();
@@ -50,7 +50,7 @@ ui_init( int *argc, char ***argv )
 {
   int error;
 
-  if( ui_widget_init() ) return 1;
+  if (ui_widget_init() ) return 1;
 
 /* Comment out to Work around a bug in OS X 10.1 related to OpenGL in windowed
    mode */
@@ -72,7 +72,7 @@ ui_init( int *argc, char ***argv )
 }
 
 int
-ui_event( void )
+ui_event(void)
 {
   SDL_Event event;
 
@@ -92,9 +92,9 @@ ui_event( void )
       ui_mouse_button( event.button.button, 0 );
       break;
     case SDL_MOUSEMOTION:
-      if( ui_mouse_grabbed ) {
+      if (ui_mouse_grabbed ) {
         ui_mouse_motion( event.motion.x - 128, event.motion.y - 128 );
-        if( event.motion.x != 128 || event.motion.y != 128 )
+        if (event.motion.x != 128 || event.motion.y != 128 )
           SDL_WarpMouse( 128, 128 );
       }
       break;
@@ -125,8 +125,8 @@ ui_event( void )
       display_refresh_all();
       break;
     case SDL_ACTIVEEVENT:
-      if( event.active.state & SDL_APPINPUTFOCUS ) {
-	if( event.active.gain ) ui_mouse_resume(); else ui_mouse_suspend();
+      if (event.active.state & SDL_APPINPUTFOCUS ) {
+	if (event.active.gain ) ui_mouse_resume(); else ui_mouse_suspend();
       }
       break;
     default:
@@ -138,7 +138,7 @@ ui_event( void )
 }
 
 int
-ui_end( void )
+ui_end(void)
 {
   int error;
 
@@ -172,20 +172,20 @@ ui_statusbar_update_speed( float speed )
 int
 ui_mouse_grab( int startup )
 {
-  if( settings_current.full_screen ) {
+  if (settings_current.full_screen ) {
     SDL_WarpMouse( 128, 128 );
     return 1;
   }
-  if( startup ) return 0;
+  if (startup ) return 0;
 
-  switch( SDL_WM_GrabInput( SDL_GRAB_ON ) ) {
+  switch (SDL_WM_GrabInput( SDL_GRAB_ON ) ) {
   case SDL_GRAB_ON:
   case SDL_GRAB_FULLSCREEN:
     SDL_ShowCursor( SDL_DISABLE );
     SDL_WarpMouse( 128, 128 );
     return 1;
   default:
-    ui_error( UI_ERROR_WARNING, "Mouse grab failed" );
+    ui_error( UI_ERROR_WARNING, "Mouse grab failed");
     return 0;
   }
 }
@@ -193,7 +193,7 @@ ui_mouse_grab( int startup )
 int
 ui_mouse_release( int suspend )
 {
-  if( settings_current.full_screen ) return !suspend;
+  if (settings_current.full_screen ) return !suspend;
 
   SDL_WM_GrabInput( SDL_GRAB_OFF );
   SDL_ShowCursor( SDL_ENABLE );

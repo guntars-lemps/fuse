@@ -166,7 +166,7 @@ ui_init( int *argc, char ***argv )
 
   settings = gtk_widget_get_settings( GTK_WIDGET( gtkui_window ) );
   g_object_set( settings, "gtk-menu-bar-accel", "F1", NULL );
-  gtk_window_set_title( GTK_WINDOW(gtkui_window), "Fuse" );
+  gtk_window_set_title( GTK_WINDOW(gtkui_window), "Fuse");
 
   g_signal_connect(G_OBJECT(gtkui_window), "delete-event",
 		   G_CALLBACK(gtkui_delete), NULL);
@@ -196,7 +196,7 @@ ui_init( int *argc, char ***argv )
   box = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
   gtk_container_add(GTK_CONTAINER(gtkui_window), box);
 
-  if( gtkui_make_menu( &accel_group, &menu_bar, gtkui_menu_data,
+  if (gtkui_make_menu( &accel_group, &menu_bar, gtkui_menu_data,
                        gtkui_menu_data_size ) ) {
     fprintf(stderr,"%s: couldn't make menus %s:%d\n",
 	    fuse_progname,__FILE__,__LINE__);
@@ -260,14 +260,14 @@ gtkui_make_menu(GtkAccelGroup **accel_group,
   ui_manager_menu = gtk_ui_manager_new();
 
   // Load actions
-  GtkActionGroup *menu_action_group = gtk_action_group_new( "MenuActionGroup" );
+  GtkActionGroup *menu_action_group = gtk_action_group_new( "MenuActionGroup");
   gtk_action_group_add_actions( menu_action_group, menu_data, menu_data_size,
                                 NULL );
   gtk_ui_manager_insert_action_group( ui_manager_menu, menu_action_group, 0 );
   g_object_unref( menu_action_group );
 
   // Load the UI
-  if( utils_find_file_path( "menu_data.ui", ui_file, UTILS_AUXILIARY_GTK ) ) {
+  if (utils_find_file_path( "menu_data.ui", ui_file, UTILS_AUXILIARY_GTK ) ) {
     fprintf( stderr, "%s: Error getting path for menu_data.ui\n",
                      fuse_progname );
     return TRUE;
@@ -275,15 +275,15 @@ gtkui_make_menu(GtkAccelGroup **accel_group,
 
   guint ui_menu_id = gtk_ui_manager_add_ui_from_file( ui_manager_menu, ui_file,
                                                       &error );
-  if( error ) {
+  if (error ) {
     g_error_free( error );
     return TRUE;
   }
-  else if( !ui_menu_id ) return TRUE;
+  else if (!ui_menu_id ) return TRUE;
 
   *accel_group = gtk_ui_manager_get_accel_group( ui_manager_menu );
 
-  *menu_bar = gtk_ui_manager_get_widget( ui_manager_menu, "/MainMenu" );
+  *menu_bar = gtk_ui_manager_get_widget( ui_manager_menu, "/MainMenu");
   g_signal_connect( G_OBJECT( *menu_bar ), "deactivate",
 		    G_CALLBACK( gtkui_menu_deactivate ), NULL );
 
@@ -327,10 +327,10 @@ ui_error_specific( ui_error_level severity, const char *message )
   const gchar *title;
 
   // If we don't have a UI yet, we can't output widgets
-  if( !display_ui_initialised ) return 0;
+  if (!display_ui_initialised ) return 0;
 
   // Set the appropriate title
-  switch( severity ) {
+  switch (severity ) {
   case UI_ERROR_INFO:	 title = "Fuse - Info"; break;
   case UI_ERROR_WARNING: title = "Fuse - Warning"; break;
   case UI_ERROR_ERROR:	 title = "Fuse - Error"; break;
@@ -393,15 +393,15 @@ gtkui_delete( GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED,
 void
 menu_file_exit( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
 {
-  if( gtkui_confirm( "Exit Fuse?" ) ) {
+  if (gtkui_confirm( "Exit Fuse?" ) ) {
 
-    if( menu_check_media_changed() ) return;
+    if (menu_check_media_changed() ) return;
 
     fuse_exiting = 1;
 
     /* Stop the paused state to allow us to exit (occurs from main
        emulation loop) */
-    if( paused ) menu_machine_pause( NULL, NULL );
+    if (paused ) menu_machine_pause( NULL, NULL );
 
     /* Ensure we break out of the main Z80 loop, there could be active
        breakpoints before the next event */
@@ -430,7 +430,7 @@ menu_get_scaler( scaler_available_fn selector )
 
   // Some space to store the radio buttons in
   dialog.buttons = malloc( SCALER_NUM * sizeof(GtkWidget* ) );
-  if( dialog.buttons == NULL ) {
+  if (dialog.buttons == NULL ) {
     ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
     return SCALER_NUM;
   }
@@ -443,7 +443,7 @@ menu_get_scaler( scaler_available_fn selector )
 
   for( scaler = 0; scaler < SCALER_NUM; scaler++ ) {
 
-    if( !selector( scaler ) ) continue;
+    if (!selector( scaler ) ) continue;
 
     dialog.buttons[ count ] =
       gtk_radio_button_new_with_label( button_group, scaler_name( scaler ) );
@@ -484,11 +484,11 @@ menu_options_filter_done( GtkWidget *widget GCC_UNUSED, gpointer user_data )
 
   count = 0;
 
-  for( i = 0; i < SCALER_NUM; i++ ) {
+  for (i = 0; i < SCALER_NUM; i++) {
 
-    if( !ptr->selector( i ) ) continue;
+    if (!ptr->selector( i ) ) continue;
 
-    if( gtk_toggle_button_get_active(
+    if (gtk_toggle_button_get_active(
 	  GTK_TOGGLE_BUTTON( ptr->buttons[ count ] )
 	)
       ) {
@@ -515,7 +515,7 @@ menu_machine_pause( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
 {
   int error;
 
-  if( paused ) {
+  if (paused ) {
     paused = 0;
     ui_statusbar_update( UI_STATUSBAR_ITEM_PAUSED,
 			 UI_STATUSBAR_STATE_INACTIVE );
@@ -524,9 +524,9 @@ menu_machine_pause( GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED )
   } else {
 
     // Stop recording any competition mode RZX file
-    if( rzx_recording && rzx_competition_mode ) {
-      ui_error( UI_ERROR_INFO, "Stopping competition mode RZX recording" );
-      error = rzx_stop_recording(); if( error ) return;
+    if (rzx_recording && rzx_competition_mode ) {
+      ui_error( UI_ERROR_INFO, "Stopping competition mode RZX recording");
+      error = rzx_stop_recording(); if (error ) return;
     }
 
     paused = 1;
@@ -545,18 +545,18 @@ menu_machine_reset( GtkAction *gtk_action GCC_UNUSED, guint action )
   int hard_reset = action;
   const char *message = "Reset?";
 
-  if( hard_reset )
+  if (hard_reset )
     message = "Hard reset?";
 
-  if( !gtkui_confirm( message ) )
+  if (!gtkui_confirm( message ) )
     return;
 
   // Stop any ongoing RZX
   rzx_stop_recording();
   rzx_stop_playback( 1 );
 
-  if( machine_reset( hard_reset ) ) {
-    ui_error( UI_ERROR_ERROR, "couldn't reset machine: giving up!" );
+  if (machine_reset( hard_reset ) ) {
+    ui_error( UI_ERROR_ERROR, "couldn't reset machine: giving up!");
 
     // FIXME: abort() seems a bit extreme here, but it'll do for now
     fuse_abort();
@@ -575,7 +575,7 @@ menu_machine_select( GtkAction *gtk_action GCC_UNUSED,
 
   // Some space to store the radio buttons in
   dialog.buttons = malloc( machine_count * sizeof(GtkWidget* ) );
-  if( dialog.buttons == NULL ) {
+  if (dialog.buttons == NULL ) {
     ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
     return;
   }
@@ -592,7 +592,7 @@ menu_machine_select( GtkAction *gtk_action GCC_UNUSED,
       NULL, libspectrum_machine_name( machine_types[0]->machine )
     );
 
-  for( i=1; i<machine_count; i++ ) {
+  for( i=1; i<machine_count; i++) {
     dialog.buttons[i] =
       gtk_radio_button_new_with_label(
         gtk_radio_button_get_group( GTK_RADIO_BUTTON( dialog.buttons[i-1] ) ),
@@ -600,7 +600,7 @@ menu_machine_select( GtkAction *gtk_action GCC_UNUSED,
       );
   }
 
-  for( i=0; i<machine_count; i++ ) {
+  for( i=0; i<machine_count; i++) {
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( dialog.buttons[i] ),
 				  machine_current == machine_types[i] );
     gtk_container_add( GTK_CONTAINER( content_area ), dialog.buttons[i] );
@@ -631,8 +631,8 @@ menu_machine_select_done( GtkWidget *widget GCC_UNUSED, gpointer user_data )
   int i;
   gtkui_select_info *ptr = user_data;
 
-  for( i=0; i<machine_count; i++ ) {
-    if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(ptr->buttons[i]) ) &&
+  for( i=0; i<machine_count; i++) {
+    if (gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(ptr->buttons[i]) ) &&
         machine_current != machine_types[i]
       )
     {
@@ -649,12 +649,12 @@ menu_machine_debugger( GtkAction *gtk_action GCC_UNUSED,
                        gpointer data GCC_UNUSED )
 {
   debugger_mode = DEBUGGER_MODE_HALTED;
-  if( paused ) ui_debugger_activate();
+  if (paused ) ui_debugger_activate();
 }
 
 // Called on machine selection
 int
-ui_widgets_reset( void )
+ui_widgets_reset(void)
 {
   gtkui_pokefinder_clear();
   return 0;
@@ -701,7 +701,7 @@ ui_menu_item_set_active( const char *path, int active )
   menu_item = gtk_ui_manager_get_widget( ui_manager_menu, full_path );
   g_free( full_path );
 
-  if( !menu_item ) {
+  if (!menu_item ) {
     ui_error( UI_ERROR_ERROR, "couldn't get menu item '%s' from menu_factory",
 	      path );
     return 1;
@@ -717,11 +717,11 @@ confirm_joystick_done( GtkWidget *widget GCC_UNUSED, gpointer user_data )
   int i;
   gtkui_select_info *ptr = user_data;
 
-  for( i = 0; i < JOYSTICK_CONN_COUNT; i++ ) {
+  for (i = 0; i < JOYSTICK_CONN_COUNT; i++) {
 
     GtkToggleButton *button = GTK_TOGGLE_BUTTON( ptr->buttons[ i ] );
 
-    if( gtk_toggle_button_get_active( button ) ) {
+    if (gtk_toggle_button_get_active( button ) ) {
       ptr->joystick = i;
       break;
     }
@@ -741,12 +741,12 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type,
   int i;
   GSList *group = NULL;
 
-  if( !settings_current.joy_prompt ) return UI_CONFIRM_JOYSTICK_NONE;
+  if (!settings_current.joy_prompt ) return UI_CONFIRM_JOYSTICK_NONE;
 
   // Some space to store the radio buttons in
   dialog.buttons =
     malloc( JOYSTICK_CONN_COUNT * sizeof( *dialog.buttons ) );
-  if( !dialog.buttons ) {
+  if (!dialog.buttons ) {
     ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
     return UI_CONFIRM_JOYSTICK_NONE;
   }
@@ -760,7 +760,7 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type,
   dialog.dialog = gtkstock_dialog_new( title, NULL );
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog.dialog ) );
 
-  for( i = 0; i < JOYSTICK_CONN_COUNT; i++ ) {
+  for (i = 0; i < JOYSTICK_CONN_COUNT; i++) {
 
     GtkWidget **button = &( dialog.buttons[ i ] );
 
@@ -800,9 +800,9 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type,
 int
 gtkui_get_monospaced_font( gtkui_font *font )
 {
-  *font = pango_font_description_from_string( "Monospace 10" );
-  if( !(*font) ) {
-    ui_error( UI_ERROR_ERROR, "couldn't find a monospaced font" );
+  *font = pango_font_description_from_string( "Monospace 10");
+  if (!(*font) ) {
+    ui_error( UI_ERROR_ERROR, "couldn't find a monospaced font");
     return 1;
   }
 
@@ -826,7 +826,7 @@ gtkui_list_set_cursor( GtkTreeView *list, int row )
 {
   GtkTreePath *path;
 
-  if( row >= 0 ) {
+  if (row >= 0 ) {
     path = gtk_tree_path_new_from_indices( row, -1 );
     gtk_tree_view_set_cursor( list, path, NULL, FALSE );
     gtk_tree_path_free( path );
@@ -843,9 +843,9 @@ gtkui_list_get_cursor( GtkTreeView *list )
 
   // Get selected row
   gtk_tree_view_get_cursor( list, &path, &focus_column );
-  if( path ) {
+  if (path ) {
     indices = gtk_tree_path_get_indices( path );
-    if( indices ) row = indices[0];
+    if (indices ) row = indices[0];
     gtk_tree_path_free( path );
   }
 
@@ -869,15 +869,15 @@ key_press( GtkTreeView *list, GdkEventKey *event, gpointer user_data )
   // Get selected row
   cursor_row = gtkui_list_get_cursor( list );
 
-  switch( event->keyval )
+  switch (event->keyval )
   {
   case GDK_KEY_Up:
-    if( cursor_row == 0 )
+    if (cursor_row == 0 )
       base -= step_increment;
     break;
 
   case GDK_KEY_Down:
-    if( cursor_row == num_rows - 1 )
+    if (cursor_row == num_rows - 1 )
       base += step_increment;
     break;
 
@@ -903,14 +903,14 @@ key_press( GtkTreeView *list, GdkEventKey *event, gpointer user_data )
     return FALSE;
   }
 
-  if( base < 0 ) {
+  if (base < 0 ) {
     base = 0;
   } else {
     base_limit = gtk_adjustment_get_upper( adjustment ) - page_size;
-    if( base > base_limit ) base = base_limit;
+    if (base > base_limit ) base = base_limit;
   }
 
-  if( base != oldbase ) {
+  if (base != oldbase ) {
     gtk_adjustment_set_value( adjustment, base );
 
     // Mark selected row
@@ -930,7 +930,7 @@ wheel_scroll_event( GtkTreeView *list, GdkEvent *event, gpointer user_data )
 
   base = oldbase = gtk_adjustment_get_value( adjustment );
 
-  switch( event->scroll.direction )
+  switch (event->scroll.direction )
   {
   case GDK_SCROLL_UP:
     base -= gtk_adjustment_get_page_increment( adjustment ) / 2;
@@ -946,13 +946,13 @@ wheel_scroll_event( GtkTreeView *list, GdkEvent *event, gpointer user_data )
       gdouble dx, dy, page_size;
       int delta;
 
-      if( gdk_event_get_scroll_deltas( event, &dx, &dy ) ) {
+      if (gdk_event_get_scroll_deltas( event, &dx, &dy ) ) {
         total_dy += dy;
         page_size = gtk_adjustment_get_page_size( adjustment );
         delta = total_dy * pow( page_size, 2.0 / 3.0 );
 
         // Is movement significative?
-        if( delta ) {
+        if (delta ) {
           base += delta;
           total_dy = 0;
         }
@@ -965,15 +965,15 @@ wheel_scroll_event( GtkTreeView *list, GdkEvent *event, gpointer user_data )
     return FALSE;
   }
 
-  if( base < 0 ) {
+  if (base < 0 ) {
     base = 0;
   } else {
     base_limit = gtk_adjustment_get_upper( adjustment ) -
                  gtk_adjustment_get_page_size( adjustment );
-    if( base > base_limit ) base = base_limit;
+    if (base > base_limit ) base = base_limit;
   }
 
-  if( base != oldbase ) {
+  if (base != oldbase ) {
     cursor_row = gtkui_list_get_cursor( list );
     gtk_adjustment_set_value( adjustment, base );
     gtkui_list_set_cursor( list, cursor_row );
@@ -992,7 +992,7 @@ gtkui_scroll_connect( GtkTreeView *list, GtkAdjustment *adj )
 }
 
 int
-gtkui_menubar_get_height( void )
+gtkui_menubar_get_height(void)
 {
   GtkAllocation alloc;
 

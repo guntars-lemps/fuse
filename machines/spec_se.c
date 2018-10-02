@@ -44,9 +44,9 @@
 #include "tc2068.h"
 #include "ui/ui.h"
 
-static void dock_exrom_reset( void );
-static int spec_se_reset( void );
-static int spec_se_memory_map( void );
+static void dock_exrom_reset(void);
+static int spec_se_reset(void);
+static int spec_se_memory_map(void);
 
 int
 spec_se_init( fuse_machine_info *machine )
@@ -72,14 +72,14 @@ spec_se_init( fuse_machine_info *machine )
 }
 
 static void
-dock_exrom_reset( void )
+dock_exrom_reset(void)
 {
   // The dock is always active on the SE
   dck_active = 1;
 }
 
 int
-spec_se_reset( void )
+spec_se_reset(void)
 {
   int error;
   size_t i, j;
@@ -88,10 +88,10 @@ spec_se_reset( void )
 
   error = machine_load_rom( 0, settings_current.rom_spec_se_0,
                             settings_default.rom_spec_se_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_spec_se_1,
                             settings_default.rom_spec_se_1, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   scld_home_map_16k( 0x0000, memory_map_rom, 0 );
   scld_home_map_16k( 0x4000, memory_map_ram, 5 );
@@ -99,7 +99,7 @@ spec_se_reset( void )
   scld_home_map_16k( 0xc000, memory_map_ram, 0 );
 
   // RAM pages 1, 3, 5 and 7 contended
-  for( i = 0; i < 8; i++ )
+  for (i = 0; i < 8; i++)
     memory_ram_set_16k_contention( i, i & 1 );
 
   periph_clear();
@@ -127,7 +127,7 @@ spec_se_reset( void )
   periph_set_present( PERIPH_TYPE_ZXPRINTER_FULL_DECODE,
                       PERIPH_PRESENT_OPTIONAL );
 
-  for( i = 0; i < 8; i++ ) {
+  for (i = 0; i < 8; i++) {
 
     libspectrum_byte *dock_ram = memory_pool_allocate( 0x2000 );
     libspectrum_byte *exrom_ram = memory_pool_allocate( 0x2000 );
@@ -158,7 +158,7 @@ spec_se_reset( void )
 
   /* The dock and exrom aren't cleared by the reset routine, so do
      so manually (only really necessary to keep snapshot sizes down) */
-  for( i = 0; i < MEMORY_PAGES_IN_64K; i++ ) {
+  for (i = 0; i < MEMORY_PAGES_IN_64K; i++) {
     memset( timex_dock[i].page,  0, MEMORY_PAGE_SIZE );
     memset( timex_exrom[i].page, 0, MEMORY_PAGE_SIZE );
   }
@@ -186,7 +186,7 @@ spec_se_reset( void )
 }
 
 static int
-spec_se_memory_map( void )
+spec_se_memory_map(void)
 {
   memory_page *exrom_dock;
 
@@ -198,17 +198,17 @@ spec_se_memory_map( void )
   scld_memory_map();
 
   // Exceptions apply if an odd bank is paged in via 0x7ffd
-  if( machine_current->ram.current_page & 0x01 ) {
+  if (machine_current->ram.current_page & 0x01 ) {
 
   /* If so, bits 2 and 3 of 0xf4 also control whether the DOCK/EXROM
      is paged in at 0xc000 and 0xe000 respectively */
     exrom_dock =
       scld_last_dec.name.altmembank ? timex_exrom : timex_dock;
 
-    if( scld_last_hsr & ( 1 << 2 ) )
+    if (scld_last_hsr & ( 1 << 2 ) )
       memory_map_8k( 0xc000, exrom_dock, 6 );
 
-    if( scld_last_hsr & ( 1 << 3 ) )
+    if (scld_last_hsr & ( 1 << 3 ) )
       memory_map_8k( 0xe000, exrom_dock, 7 );
   }
 

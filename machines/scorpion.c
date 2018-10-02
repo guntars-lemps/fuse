@@ -42,8 +42,8 @@
 #include "specplus3.h"
 #include "spectrum.h"
 
-static int scorpion_reset( void );
-static int scorpion_memory_map( void );
+static int scorpion_reset(void);
+static int scorpion_memory_map(void);
 
 int
 scorpion_init( fuse_machine_info *machine )
@@ -75,20 +75,20 @@ scorpion_reset(void)
 
   error = machine_load_rom( 0, settings_current.rom_scorpion_0,
                             settings_default.rom_scorpion_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_scorpion_1,
                             settings_default.rom_scorpion_1, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 2, settings_current.rom_scorpion_2,
                             settings_default.rom_scorpion_2, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom_bank( beta_memory_map_romcs, 0,
                                  settings_current.rom_scorpion_3,
                                  settings_default.rom_scorpion_3, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   error = spec128_common_reset( 0 );
-  if( error ) return error;
+  if (error ) return error;
 
   machine_current->ram.last_byte2 = 0;
   machine_current->ram.special = 0;
@@ -116,25 +116,25 @@ scorpion_reset(void)
 }
 
 static int
-scorpion_memory_map( void )
+scorpion_memory_map(void)
 {
   int rom, page, screen;
 
   screen = ( machine_current->ram.last_byte & 0x08 ) ? 7 : 5;
-  if( memory_current_screen != screen ) {
+  if (memory_current_screen != screen ) {
     display_update_critical( 0, 0 );
     display_refresh_main_screen();
     memory_current_screen = screen;
   }
 
-  if( machine_current->ram.last_byte2 & 0x02 ) {
+  if (machine_current->ram.last_byte2 & 0x02 ) {
     rom = 2;
   } else {
     rom = ( machine_current->ram.last_byte & 0x10 ) >> 4;
   }
   machine_current->ram.current_rom = rom;
 
-  if( machine_current->ram.last_byte2 & 0x01 ) {
+  if (machine_current->ram.last_byte2 & 0x01 ) {
     memory_map_16k( 0x0000, memory_map_ram, 0 );
     machine_current->ram.special = 1;
   } else {

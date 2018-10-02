@@ -112,7 +112,7 @@ static int extra_height = 0;
 static int init_colours( colour_format_t format );
 static void gtkdisplay_area(int x, int y, int width, int height);
 static void register_scalers( int force_scaler );
-static void gtkdisplay_load_gfx_mode( void );
+static void gtkdisplay_load_gfx_mode(void);
 
 // Callbacks
 
@@ -132,7 +132,7 @@ init_colours( colour_format_t format )
 {
   size_t i;
 
-  for( i = 0; i < 16; i++ ) {
+  for (i = 0; i < 16; i++) {
 
 
     guchar red, green, blue, grey;
@@ -146,7 +146,7 @@ init_colours( colour_format_t format )
 
 #ifdef WORDS_BIGENDIAN
 
-    switch( format ) {
+    switch (format ) {
     case FORMAT_x8b8g8r8:
       gtkdisplay_colours[i] =  red << 24 | green << 16 | blue << 8;
       break;
@@ -159,7 +159,7 @@ init_colours( colour_format_t format )
 
 #else // #ifdef WORDS_BIGENDIAN
 
-    switch( format ) {
+    switch (format ) {
     case FORMAT_x8b8g8r8:
       gtkdisplay_colours[i] =  red | green << 8 | blue << 16;
       break;
@@ -207,7 +207,7 @@ uidisplay_init( int width, int height )
 
 #endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
-  error = init_colours( colour_format ); if( error ) return error;
+  error = init_colours( colour_format ); if (error ) return error;
 
   black = settings_current.bw_tv ? bw_colours[0] : gtkdisplay_colours[0];
 
@@ -241,11 +241,11 @@ drawing_area_resize( int width, int height, int force_scaler )
   int size;
 
   size = width / DISPLAY_ASPECT_WIDTH;
-  if( size > height / DISPLAY_SCREEN_HEIGHT )
+  if (size > height / DISPLAY_SCREEN_HEIGHT )
     size = height / DISPLAY_SCREEN_HEIGHT;
 
   // If we're the same size as before, no need to do anything else
-  if( size == gtkdisplay_current_size ) return 0;
+  if (size == gtkdisplay_current_size ) return 0;
 
   gtkdisplay_current_size = size;
 
@@ -257,7 +257,7 @@ drawing_area_resize( int width, int height, int force_scaler )
 
   // Create a bigger surface for the new display size
   float scale = (float)gtkdisplay_current_size / image_scale;
-  if( surface ) cairo_surface_destroy( surface );
+  if (surface ) cairo_surface_destroy( surface );
 
   surface =
       cairo_image_surface_create_for_data( scaled_image,
@@ -281,7 +281,7 @@ register_scalers( int force_scaler )
 
   scaler_register_clear();
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     scaler_register( SCALER_HALF );
     scaler_register( SCALER_HALFSKIP );
     scaler_register( SCALER_TIMEXTV );
@@ -312,9 +312,9 @@ register_scalers( int force_scaler )
   scaling_factor = scaler_get_scaling_factor( current_scaler );
 
   // Override scaler if the image doesn't fit well in the drawing area
-  if( force_scaler && drawing_area_scale != scaling_factor ) {
+  if (force_scaler && drawing_area_scale != scaling_factor ) {
 
-    switch( gtkdisplay_current_size ) {
+    switch (gtkdisplay_current_size ) {
     case 1: scaler = machine_current->timex ? SCALER_HALF : SCALER_NORMAL;
       break;
     case 2: scaler = machine_current->timex ? SCALER_NORMAL : SCALER_DOUBLESIZE;
@@ -329,10 +329,10 @@ register_scalers( int force_scaler )
 }
 
 void
-uidisplay_frame_end( void )
+uidisplay_frame_end(void)
 {
 #if GTK_CHECK_VERSION( 3, 0, 0 )
-  if( display_updated ) {
+  if (display_updated ) {
     gdk_window_process_updates( gtk_widget_get_window( gtkui_drawing_area ),
                                 FALSE );
     display_updated = 0;
@@ -351,7 +351,7 @@ uidisplay_area( int x, int y, int w, int h )
 
   /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */
-  if( scaler_flags & SCALER_FLAGS_EXPAND )
+  if (scaler_flags & SCALER_FLAGS_EXPAND )
     scaler_expander( &x, &y, &w, &h, image_width, image_height );
 
   scaled_x = scale * x; scaled_y = scale * y;
@@ -368,7 +368,7 @@ uidisplay_area( int x, int y, int w, int h )
 
     display = &gtkdisplay_image[yy][x];
 
-    for( i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
+    for (i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
   }
 
   // Create scaled image
@@ -402,7 +402,7 @@ static void gtkdisplay_area(int x, int y, int width, int height)
 }
 
 int
-uidisplay_hotswap_gfx_mode( void )
+uidisplay_hotswap_gfx_mode(void)
 {
   fuse_emulation_pause();
 
@@ -415,7 +415,7 @@ uidisplay_hotswap_gfx_mode( void )
 }
 
 int
-uidisplay_end( void )
+uidisplay_end(void)
 {
   return 0;
 }
@@ -424,7 +424,7 @@ uidisplay_end( void )
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     x <<= 1; y <<= 1;
     gtkdisplay_image[y  ][x  ] = colour;
     gtkdisplay_image[y  ][x+1] = colour;
@@ -443,7 +443,7 @@ uidisplay_plot8( int x, int y, libspectrum_byte data,
 {
   x <<= 3;
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     int i;
 
     x <<= 1; y <<= 1;
@@ -538,7 +538,7 @@ static gboolean
 gtkdisplay_draw( GtkWidget *widget, cairo_t *cr, gpointer user_data )
 {
   // Create a new surface for this gfx mode
-  if( !surface ) {
+  if (!surface ) {
     float scale = (float)gtkdisplay_current_size / image_scale;
 
     surface =
@@ -572,14 +572,14 @@ drawing_area_resize_callback( GtkWidget *widget GCC_UNUSED, GdkEvent *event,
 #endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
 void
-gtkdisplay_update_geometry( void )
+gtkdisplay_update_geometry(void)
 {
   GdkGeometry geometry;
   GdkWindowHints hints;
   GtkWidget *geometry_widget;
   float scale;
 
-  if( !scalers_registered ) return;
+  if (!scalers_registered ) return;
 
   scale = scaler_get_scaling_factor( current_scaler );
 
@@ -593,7 +593,7 @@ gtkdisplay_update_geometry( void )
   extra_height = gtkui_menubar_get_height();
 
   // Add extra space for status bar + padding
-  if( settings_current.statusbar ) {
+  if (settings_current.statusbar ) {
     extra_height += gtkstatusbar_get_height();
   }
 
@@ -615,14 +615,14 @@ gtkdisplay_update_geometry( void )
   geometry.width_inc = DISPLAY_ASPECT_WIDTH;
   geometry.height_inc = DISPLAY_SCREEN_HEIGHT;
 
-  if( settings_current.aspect_hint ) {
+  if (settings_current.aspect_hint ) {
     hints |= GDK_HINT_ASPECT;
 
     geometry.min_aspect = geometry.max_aspect =
       ( scale * DISPLAY_ASPECT_WIDTH ) /
       ( scale * DISPLAY_SCREEN_HEIGHT + extra_height );
 
-    if( !settings_current.strict_aspect_hint ) {
+    if (!settings_current.strict_aspect_hint ) {
       geometry.min_aspect *= 0.9;
       geometry.max_aspect *= 1.125;
     }
@@ -634,7 +634,7 @@ gtkdisplay_update_geometry( void )
 }
 
 static void
-gtkdisplay_load_gfx_mode( void )
+gtkdisplay_load_gfx_mode(void)
 {
   float scale;
 

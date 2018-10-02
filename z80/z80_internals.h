@@ -24,6 +24,6 @@
 #ifndef FUSE_Z80_INTERNALS_H
 #define FUSE_Z80_INTERNALS_H
 
-void z80_debugger_variables_init( void );
+void z80_debugger_variables_init(void);
 
 #endif // #ifndef FUSE_Z80_INTERNALS

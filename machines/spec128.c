@@ -38,7 +38,7 @@
 #include "spec48.h"
 #include "specplus3.h"
 
-static int spec128_reset( void );
+static int spec128_reset(void);
 
 int spec128_init( fuse_machine_info *machine )
 {
@@ -63,19 +63,19 @@ int spec128_init( fuse_machine_info *machine )
 }
 
 static int
-spec128_reset( void )
+spec128_reset(void)
 {
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_128_0,
                             settings_default.rom_128_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_128_1,
                             settings_default.rom_128_1, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   error = spec128_common_reset( 1 );
-  if( error ) return error;
+  if (error ) return error;
 
   periph_clear();
   machines_periph_128();
@@ -104,7 +104,7 @@ spec128_common_reset( int contention )
 
   /* Odd pages contended on the 128K/+2; the loop is up to 16 to
      ensure all of the Scorpion's 256Kb RAM is not contended */
-  for( i = 0; i < 16; i++ )
+  for (i = 0; i < 16; i++)
     memory_ram_set_16k_contention( i, i & 1 ? contention : 0 );
 
   // 0x0000: ROM 0
@@ -123,7 +123,7 @@ void
 spec128_memoryport_write( libspectrum_word port GCC_UNUSED,
 			  libspectrum_byte b )
 {
-  if( machine_current->ram.locked ) return;
+  if (machine_current->ram.locked ) return;
 
   machine_current->ram.last_byte = b;
 
@@ -147,7 +147,7 @@ spec128_select_page( int page )
 }
 
 int
-spec128_memory_map( void )
+spec128_memory_map(void)
 {
   int page, screen, rom;
 
@@ -157,7 +157,7 @@ spec128_memory_map( void )
 
   /* If we changed the active screen, mark the entire display file as
      dirty so we redraw it on the next pass */
-  if( memory_current_screen != screen ) {
+  if (memory_current_screen != screen ) {
     display_update_critical( 0, 0 );
     display_refresh_main_screen();
     memory_current_screen = screen;

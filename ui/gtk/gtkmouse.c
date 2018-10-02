@@ -37,7 +37,7 @@
 static GdkCursor *nullpointer = NULL;
 
 static void
-gtkmouse_reset_pointer( void )
+gtkmouse_reset_pointer(void)
 {
   /* Ugh. GDK doesn't have its own move-pointer function :-|
    * Framebuffer users and win32 users will have to make their own
@@ -56,9 +56,9 @@ gboolean
 gtkmouse_position( GtkWidget *widget GCC_UNUSED,
                    GdkEventMotion *event, gpointer data GCC_UNUSED )
 {
-  if( !ui_mouse_grabbed ) return TRUE;
+  if (!ui_mouse_grabbed ) return TRUE;
 
-  if( event->x != 128 || event->y != 128 )
+  if (event->x != 128 || event->y != 128 )
     gtkmouse_reset_pointer();
   ui_mouse_motion( event->x - 128, event->y - 128 );
   return TRUE;
@@ -68,7 +68,7 @@ gboolean
 gtkmouse_button( GtkWidget *widget GCC_UNUSED, GdkEventButton *event,
 		 gpointer data GCC_UNUSED )
 {
-  if( event->type == GDK_BUTTON_PRESS || event->type == GDK_2BUTTON_PRESS
+  if (event->type == GDK_BUTTON_PRESS || event->type == GDK_2BUTTON_PRESS
       || event->type == GDK_3BUTTON_PRESS )
     ui_mouse_button( event->button, 1 );
   else
@@ -82,13 +82,13 @@ ui_mouse_grab( int startup )
   GdkWindow *window;
   GdkGrabStatus status;
 
-  if( startup ) return 0;
+  if (startup ) return 0;
 
   window = gtk_widget_get_window( gtkui_drawing_area );
 
 #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
-  if( !nullpointer ) {
+  if (!nullpointer ) {
     nullpointer = gdk_cursor_new( GDK_BLANK_CURSOR );
   }
 
@@ -105,7 +105,7 @@ ui_mouse_grab( int startup )
 
   display = gdk_window_get_display( window );
 
-  if( !nullpointer ) {
+  if (!nullpointer ) {
     nullpointer = gdk_cursor_new_for_display( display, GDK_BLANK_CURSOR );
   }
 
@@ -119,13 +119,13 @@ ui_mouse_grab( int startup )
 
 #endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
-  if( status == GDK_GRAB_SUCCESS ) {
+  if (status == GDK_GRAB_SUCCESS ) {
     gtkmouse_reset_pointer();
     ui_statusbar_update( UI_STATUSBAR_ITEM_MOUSE, UI_STATUSBAR_STATE_ACTIVE );
     return 1;
   }
 
-  ui_error( UI_ERROR_WARNING, "Mouse grab failed" );
+  ui_error( UI_ERROR_WARNING, "Mouse grab failed");
   return 0;
 }
 

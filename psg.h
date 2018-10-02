@@ -29,12 +29,12 @@
 // Are we currently recording a .psg file?
 extern int psg_recording;
 
-void psg_register_startup( void );
+void psg_register_startup(void);
 
 int psg_start_recording( const char *filename );
-int psg_stop_recording( void );
+int psg_stop_recording(void);
 
-int psg_frame( void );
+int psg_frame(void);
 
 int psg_write_register( libspectrum_byte reg, libspectrum_byte value );
 

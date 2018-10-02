@@ -66,7 +66,7 @@ int image_width, image_height;
 // Are we in a Timex display mode?
 static int hires;
 
-static void register_scalers( void );
+static void register_scalers(void);
 
 // probably 0rrrrrgggggbbbbb
 static short rgbs[16], greys[16];
@@ -132,7 +132,7 @@ static const fuse_fb_mode_t fb_modes_doublescan_alt[] = {
 static unsigned short red16[256], green16[256], blue16[256], transp16[256];
 static struct fb_cmap orig_cmap = {0, 256, red16, green16, blue16, transp16};
 
-static int fb_set_mode( void );
+static int fb_set_mode(void);
 
 int uidisplay_init( int width, int height )
 {
@@ -151,7 +151,7 @@ int uidisplay_init( int width, int height )
 }
 
 static void
-register_scalers( void )
+register_scalers(void)
 {
   scaler_register_clear();
   scaler_select_bitformat( 565 ); // 16bit always
@@ -187,15 +187,15 @@ int fbdisplay_init(void)
   };
 
   dev = getenv( DEVICE_VARIABLE );
-  if( !dev || !*dev ) dev = DEFAULT_DEVICE;
+  if (!dev || !*dev ) dev = DEFAULT_DEVICE;
 
   fb_fd = open( dev, O_RDWR | O_EXCL );
-  if( fb_fd == -1 ) {
+  if (fb_fd == -1 ) {
     fprintf( stderr, "%s: couldn't open framebuffer device '%s'\n",
 	     fuse_progname, dev );
     return 1;
   }
-  if( ioctl( fb_fd, FBIOGET_FSCREENINFO, &fixed )        ||
+  if (ioctl( fb_fd, FBIOGET_FSCREENINFO, &fixed )        ||
       ioctl( fb_fd, FBIOGET_VSCREENINFO, &orig_display )    ) {
     fprintf( stderr, "%s: couldn't read info from framebuffer device '%s'\n",
 	     fuse_progname, dev );
@@ -203,21 +203,21 @@ int fbdisplay_init(void)
   }
   got_orig_display = 1;
 
-  if( fb_set_mode() ) return 1;
+  if (fb_set_mode() ) return 1;
 
   fputs( "\x1B[H\x1B[J", stdout ); // clear tty
   memset( gm, 0, display.xres_virtual * display.yres_virtual * 2 );
 
 
   display.activate = FB_ACTIVATE_NOW;
-  if( ioctl( fb_fd, FBIOPUT_VSCREENINFO, &display ) ) {
+  if (ioctl( fb_fd, FBIOPUT_VSCREENINFO, &display ) ) {
     fprintf( stderr, "%s: couldn't set mode for framebuffer device '%s'\n",
 	     fuse_progname, dev );
     return 1;
   }
 
   ioctl( fb_fd, FBIOGET_VSCREENINFO, &display);
-  for( i = 0; i < 16; i++ ) {
+  for (i = 0; i < 16; i++) {
     int v = ( i & 8 ) ? 0xff : 0xbf;
     int c;
      rgbs[i] = ( ( i & 1 ) ? (v >> (8 - display.blue.length)) << display.blue.offset  : 0 )
@@ -268,7 +268,7 @@ fb_select_mode( const fuse_fb_mode_t *fb_mode )
   display.vsync_len = fb_mode->vsync_len;
   display.sync = fb_mode->sync;
   display.vmode &= ~FB_VMODE_MASK;
-  if( fb_mode->doublescan ) display.vmode |= FB_VMODE_DOUBLE;
+  if (fb_mode->doublescan ) display.vmode |= FB_VMODE_DOUBLE;
   display.vmode |= FB_VMODE_CONUPDATE;
 
   display.bits_per_pixel = 16;
@@ -279,14 +279,14 @@ fb_select_mode( const fuse_fb_mode_t *fb_mode )
   display.blue.offset = 10;
 
   gm = mmap( 0, fixed.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, fb_fd, 0 );
-  if( gm == (void*)-1 ) {
+  if (gm == (void*)-1 ) {
     fprintf (stderr, "%s: couldn't mmap for framebuffer: %s\n",
 	     fuse_progname, strerror( errno ) );
     return 1;
   }
 
   display.activate = FB_ACTIVATE_TEST;
-  if( ioctl( fb_fd, FBIOPUT_VSCREENINFO, &display ) ) {
+  if (ioctl( fb_fd, FBIOPUT_VSCREENINFO, &display ) ) {
     munmap( gm, fixed.smem_len );
     return 1;
   }
@@ -296,7 +296,7 @@ fb_select_mode( const fuse_fb_mode_t *fb_mode )
 }
 
 static int
-fb_set_mode( void )
+fb_set_mode(void)
 {
   size_t i;
 
@@ -306,14 +306,14 @@ fb_set_mode( void )
 					      fb_modes_doublescan_alt;
 
   // First, try to use our preferred mode
-  for( i=0; fb_modes[i].xres; i++ )
-    if( fb_modes[i].xres == settings_current.fb_mode )
-      if( !fb_select_mode( fb_modes + i ) )
+  for( i=0; fb_modes[i].xres; i++)
+    if (fb_modes[i].xres == settings_current.fb_mode )
+      if (!fb_select_mode( fb_modes + i ) )
 	return 0;
 
   // If that failed, try to use the first available mode
-  for( i=0; fb_modes[i].xres; i++ )
-    if( !fb_select_mode( fb_modes + i ) )
+  for( i=0; fb_modes[i].xres; i++)
+    if (!fb_select_mode( fb_modes + i ) )
       return 0;
 
   // If that failed, we can't continue :-(
@@ -323,13 +323,13 @@ fb_set_mode( void )
 }
 
 int
-uidisplay_hotswap_gfx_mode( void )
+uidisplay_hotswap_gfx_mode(void)
 {
   return 0;
 }
 
 void
-uidisplay_frame_end( void )
+uidisplay_frame_end(void)
 {
   return;
 }
@@ -340,14 +340,14 @@ uidisplay_area( int x, int start, int width, int height)
   int y;
   const short *colours = settings_current.bw_tv ? greys : rgbs;
 
-  switch( fb_resolution ) {
+  switch (fb_resolution ) {
   case FB_RES( 640, 480 ):
     for( y = start; y < start + height; y++ )
     {
       int i;
       libspectrum_word *point;
 
-      if( hires ) {
+      if (hires ) {
 
 	for( i = 0, point = gm + y * display.xres_virtual + x;
 	     i < width;
@@ -368,13 +368,13 @@ uidisplay_area( int x, int start, int width, int height)
     break;
 
   case FB_RES( 640, 240 ):
-    if( hires ) { start >>= 1; height >>= 1; }
+    if (hires ) { start >>= 1; height >>= 1; }
     for( y = start; y < start + height; y++ )
     {
       int i;
       libspectrum_word *point;
 
-      if( hires ) {
+      if (hires ) {
 
 	for ( i = 0, point = gm + y * display.xres_virtual + x;
 	      i < width;
@@ -393,13 +393,13 @@ uidisplay_area( int x, int start, int width, int height)
     break;
 
   case FB_RES( 320, 240 ):
-    if( hires ) { start >>= 1; height >>= 1; x >>= 1; width >>= 1; }
+    if (hires ) { start >>= 1; height >>= 1; x >>= 1; width >>= 1; }
     for( y = start; y < start + height; y++ )
     {
       int i;
       libspectrum_word *point;
 
-      if( hires ) {
+      if (hires ) {
 
 	// Drop every second pixel
 	for ( i = 0, point = gm + y * display.xres_virtual + x;
@@ -424,16 +424,16 @@ uidisplay_area( int x, int start, int width, int height)
 }
 
 int
-uidisplay_end( void )
+uidisplay_end(void)
 {
   return 0;
 }
 
 int
-fbdisplay_end( void )
+fbdisplay_end(void)
 {
-  if( fb_fd != -1 ) {
-    if( got_orig_display ) {
+  if (fb_fd != -1 ) {
+    if (got_orig_display ) {
       ioctl( fb_fd, FBIOPUT_VSCREENINFO, &orig_display );
       if (changed_palette) {
         ioctl( fb_fd, FBIOPUTCMAP, &orig_cmap);
@@ -452,7 +452,7 @@ fbdisplay_end( void )
 void
 uidisplay_putpixel( int x, int y, int colour )
 {
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     x <<= 1; y <<= 1;
     fbdisplay_image[y  ][x  ] = colour;
     fbdisplay_image[y  ][x+1] = colour;
@@ -471,7 +471,7 @@ uidisplay_plot8( int x, int y, libspectrum_byte data,
 {
   x <<= 3;
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
     int i;
 
     x <<= 1; y <<= 1;
@@ -535,14 +535,14 @@ uidisplay_plot16( int x, int y, libspectrum_word data,
 }
 
 void
-uidisplay_frame_save( void )
+uidisplay_frame_save(void)
 {
   /* FIXME: Save current framebuffer state as the widget UI wants to scribble
      in here */
 }
 
 void
-uidisplay_frame_restore( void )
+uidisplay_frame_restore(void)
 {
   /* FIXME: Restore saved framebuffer state as the widget UI wants to draw a
      new menu */

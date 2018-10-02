@@ -52,7 +52,7 @@ dialog_init( HWND hwndDlg )
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
   lvc.fmt = LVCFMT_LEFT;
   lvc.cx = 100; // FIXME: preferably calculate the whole length
-  lvc.pszText = (LPTSTR) TEXT( "Seconds" );
+  lvc.pszText = (LPTSTR) TEXT( "Seconds");
   SendDlgItemMessage( hwndDlg, IDC_ROLLBACK_LV, LVM_INSERTCOLUMN, 0,
                         ( LPARAM ) &lvc );
 }
@@ -88,7 +88,7 @@ update_list( HWND hwndDlg, GSList *points )
 static INT_PTR CALLBACK
 dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-  switch( uMsg ) {
+  switch (uMsg ) {
 
     case WM_INITDIALOG:
       dialog_init( hwndDlg );
@@ -96,7 +96,7 @@ dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
       return FALSE;
 
     case WM_COMMAND:
-      switch( LOWORD( wParam ) ) {
+      switch (LOWORD( wParam ) ) {
         case IDOK:
           EndDialog( hwndDlg, SendDlgItemMessage( hwndDlg, IDC_ROLLBACK_LV,
                      LVM_GETSELECTIONMARK, 0, 0 ) );

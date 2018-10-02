@@ -38,15 +38,15 @@ extern int didaktik80_available; // Is the D80/40 available for use?
 extern int didaktik80_active; // D80/D40 enabled?
 extern int didaktik80_snap; // SNAPshot pressed
 
-void didaktik80_register_startup( void );
+void didaktik80_register_startup(void);
 
-void didaktik80_page( void );
-void didaktik80_unpage( void );
+void didaktik80_page(void);
+void didaktik80_unpage(void);
 
 int didaktik80_disk_insert( didaktik80_drive_number which, const char *filename,
 		       int autoload );
 fdd_t *didaktik80_get_fdd( didaktik80_drive_number which );
 
-int didaktik80_unittest( void );
+int didaktik80_unittest(void);
 
 #endif // #ifndef FUSE_DIDAKTIK80_H

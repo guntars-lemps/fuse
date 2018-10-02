@@ -34,7 +34,7 @@ void
 get_relative_directory( char *buffer, size_t bufsize )
 {
   size_t len = bufsize - strlen( fuse_progname ) - strlen( FUSE_DIR_SEP_STR );
-  if( !getcwd( buffer, len ) ) {
+  if (!getcwd( buffer, len ) ) {
     ui_error( UI_ERROR_ERROR, "error getting current working directory: %s",
               strerror( -errno ) );
     fuse_abort();

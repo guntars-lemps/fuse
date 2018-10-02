@@ -31,7 +31,7 @@
 extern int dck_active;
 
 int dck_insert( const char *filename );
-void dck_eject( void );
-int dck_reset( void );
+void dck_eject(void);
+int dck_reset(void);
 
 #endif

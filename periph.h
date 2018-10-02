@@ -112,7 +112,7 @@ typedef struct periph_port_t {
 
 } periph_port_t;
 
-typedef void (*periph_activate_function)( void );
+typedef void (*periph_activate_function)(void);
 
 // Information about a peripheral
 typedef struct periph_t {
@@ -140,10 +140,10 @@ int periph_activate_type( periph_type type, int active );
 int periph_is_active( periph_type type );
 
 // Empty out the list of peripherals
-void periph_clear( void );
+void periph_clear(void);
 
 // Free up peripherals
-void periph_end( void );
+void periph_end(void);
 
 /*
  * The actual routines to read and write a port
@@ -159,13 +159,13 @@ void writeport_internal( libspectrum_word port, libspectrum_byte b );
  * The more Fuse-specific peripheral handling routines
  */
 
-int periph_update( void );
+int periph_update(void);
 
-void periph_posthook( void );
+void periph_posthook(void);
 
-int periph_postcheck( void );
+int periph_postcheck(void);
 
-void periph_disable_optional( void );
+void periph_disable_optional(void);
 
 // Register debugger page/unpage events for a peripheral
 void periph_register_paging_events( const char *type_string, int *page_event,

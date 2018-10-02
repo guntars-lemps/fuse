@@ -32,7 +32,7 @@ typedef struct covox_info {
   libspectrum_byte covox_dac; // Current byte in the Covox 8bit DAC
 } covox_info;
 
-void covox_register_startup( void );
+void covox_register_startup(void);
 void covox_write( libspectrum_word port, libspectrum_byte val );
 
 #endif // #ifndef FUSE_COVOX_H

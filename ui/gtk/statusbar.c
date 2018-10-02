@@ -83,7 +83,7 @@ gtkstatusbar_create( GtkBox *parent )
   pixbuf_mouse_active =
     gdk_pixbuf_new_from_xpm_data( gtkpixmap_mouse_active );
 
-  speed_status = gtk_label_new( "100%" );
+  speed_status = gtk_label_new( "100%");
   gtk_label_set_width_chars( GTK_LABEL( speed_status ), 8 );
   gtk_box_pack_end( GTK_BOX( status_bar ), speed_status, FALSE, FALSE, 0 );
 
@@ -116,7 +116,7 @@ gtkstatusbar_create( GtkBox *parent )
 }
 
 int
-gtkstatusbar_get_height( void )
+gtkstatusbar_get_height(void)
 {
   GtkAllocation alloc;
 
@@ -130,7 +130,7 @@ gtkstatusbar_set_visibility( int visible )
 {
   gtkdisplay_update_geometry();
 
-  if( visible ) {
+  if (visible ) {
     gtk_widget_show( status_bar );
   } else {
     gtk_widget_hide( status_bar );
@@ -150,10 +150,10 @@ ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
 {
   GdkPixbuf *which;
 
-  switch( item ) {
+  switch (item ) {
 
   case UI_STATUSBAR_ITEM_DISK:
-    switch( state ) {
+    switch (state ) {
     case UI_STATUSBAR_STATE_NOT_AVAILABLE:
       gtk_widget_hide( disk_status ); break;
     case UI_STATUSBAR_STATE_ACTIVE:
@@ -181,7 +181,7 @@ ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
     return 0;
 
   case UI_STATUSBAR_ITEM_MICRODRIVE:
-    switch( state ) {
+    switch (state ) {
     case UI_STATUSBAR_STATE_NOT_AVAILABLE:
       gtk_widget_hide( microdrive_status ); break;
     case UI_STATUSBAR_STATE_ACTIVE:

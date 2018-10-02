@@ -96,25 +96,25 @@ static int widget_read_font( const char *filename )
   int i;
 
   error = utils_read_auxiliary_file( filename, &file, UTILS_AUXILIARY_WIDGET );
-  if( error == -1 ) {
+  if (error == -1 ) {
     ui_error( UI_ERROR_ERROR, "couldn't find font file '%s'", filename );
     return 1;
   }
-  if( error ) return error;
+  if (error ) return error;
 
   i = 0;
   while( i < file.length ) {
     int code, page, left, width;
 
-    if( i + 3 > file.length ) {
-      ui_error( UI_ERROR_ERROR, "font contains invalid character" );
+    if (i + 3 > file.length ) {
+      ui_error( UI_ERROR_ERROR, "font contains invalid character");
       utils_close_file( &file );
       return 1;
     }
 
     code = file.buffer[i];
     page = file.buffer[i+1];
-    if( page == 0 && ( code == 0xA3 || ( code < 0x7F && code != 0x60 ) ) ) {
+    if (page == 0 && ( code == 0xA3 || ( code < 0x7F && code != 0x60 ) ) ) {
       left = file.buffer[i+2] & 7;
     } else {
       left = -1;
@@ -122,20 +122,20 @@ static int widget_read_font( const char *filename )
     width = file.buffer[i+2] >> 4 & 15;
 
     // weed out invalid character codes and misdefined characters
-    if( page != 0 // we don't currently have more than page 0
+    if (page != 0 // we don't currently have more than page 0
 	|| i + 3 + width > file.length || (left >= 0 && left + width > 8) )
     {
-      ui_error( UI_ERROR_ERROR, "font contains invalid character" );
+      ui_error( UI_ERROR_ERROR, "font contains invalid character");
       utils_close_file( &file );
       return 1;
     }
 
-    if( !widget_font[page] )
+    if (!widget_font[page] )
     {
       widget_font[page] = calloc( 256, sizeof( widget_font_character ) );
-      if( !widget_font[page] )
+      if (!widget_font[page] )
       {
-        ui_error( UI_ERROR_ERROR, "out of memory" );
+        ui_error( UI_ERROR_ERROR, "out of memory");
         utils_close_file( &file );
         return 1;
       }
@@ -157,8 +157,8 @@ static int widget_read_font( const char *filename )
 static const widget_font_character *
 widget_char( int pp )
 {
-  if( pp < 0 || pp >= 256 ) return &default_invalid;
-  if( !widget_font[pp >> 8] || !widget_font[pp >> 8][pp & 255].defined )
+  if (pp < 0 || pp >= 256 ) return &default_invalid;
+  if (!widget_font[pp >> 8] || !widget_font[pp >> 8][pp & 255].defined )
     return &default_unknown;
   return &widget_font[ pp >> 8 ][ pp & 255 ];
 }
@@ -172,7 +172,7 @@ printchar( int x, int y, int col, int ch )
   for( mx = 0; mx < bitmap->width; mx++ ) {
     int b = bitmap->bitmap[mx];
     for( my = 0; my < 8; my++ )
-      if( b & 128 >> my ) widget_putpixel( x + mx, y + my, col );
+      if (b & 128 >> my ) widget_putpixel( x + mx, y + my, col );
   }
 
   return x + bitmap->width + 1;
@@ -183,17 +183,17 @@ widget_printstring( int x, int y, int col, const char *s )
 {
   int c;
   int shadow = 0;
-  if( !s ) return x;
+  if (!s ) return x;
 
   while( x < 256 + DISPLAY_BORDER_ASPECT_WIDTH
 	 && ( c = *(libspectrum_byte *)s++ ) != 0 ) {
-    if( col == WIDGET_COLOUR_DISABLED && c < 26 ) continue;
-    if( col != WIDGET_COLOUR_DISABLED ) {
-      if( c && c < 17 ) { col = c - 1; continue; }
-      if( c < 26 ) { shadow = c - 17; continue; }
+    if (col == WIDGET_COLOUR_DISABLED && c < 26 ) continue;
+    if (col != WIDGET_COLOUR_DISABLED ) {
+      if (c && c < 17 ) { col = c - 1; continue; }
+      if (c < 26 ) { shadow = c - 17; continue; }
     }
 
-    if( shadow && col ) {
+    if (shadow && col ) {
       printchar( x - 1, y,     shadow - 1, c );
       printchar( x + 1, y,     shadow - 1, c );
       printchar( x,     y - 1, shadow - 1, c );
@@ -211,7 +211,7 @@ widget_printstring_fixed( int x, int y, int col, const char *s )
 {
   int c;
 
-  if( !s ) return x;
+  if (!s ) return x;
 
   while( x < 256 + DISPLAY_BORDER_ASPECT_WIDTH
 	 && ( c = *(libspectrum_byte *)s++ ) != 0 ) {
@@ -230,15 +230,15 @@ widget_printchar_fixed( int x, int y, int col, int c )
 
   x *= 8; y *= 8;
 
-  if( c < 128 )
+  if (c < 128 )
     bitmap = widget_char( c );
-  else if( c < 144 ) {
-    if( c & 1 ) widget_rectangle( x + 4, y    , 4, 4, col );
-    if( c & 2 ) widget_rectangle( x    , y    , 4, 4, col );
-    if( c & 4 ) widget_rectangle( x + 4, y + 4, 4, 4, col );
-    if( c & 8 ) widget_rectangle( x    , y + 4, 4, 4, col );
+  else if (c < 144 ) {
+    if (c & 1 ) widget_rectangle( x + 4, y    , 4, 4, col );
+    if (c & 2 ) widget_rectangle( x    , y    , 4, 4, col );
+    if (c & 4 ) widget_rectangle( x + 4, y + 4, 4, 4, col );
+    if (c & 8 ) widget_rectangle( x    , y + 4, 4, 4, col );
     return;
-  } else if( c < 165 ) {
+  } else if (c < 165 ) {
     inverse = 1;
     bitmap = widget_char( c - 144 + 'A' );
   } else {
@@ -248,9 +248,9 @@ widget_printchar_fixed( int x, int y, int col, int c )
   x += bitmap->left;
   for( mx = 0; mx < bitmap->width; mx++ ) {
     int b = bitmap->bitmap[mx];
-    if( inverse ) b = ~b;
+    if (inverse ) b = ~b;
     for( my = 0; my < 8; my++ )
-      if( b & 128 >> my ) widget_putpixel( x + mx, y + my, col );
+      if (b & 128 >> my ) widget_putpixel( x + mx, y + my, col );
   }
 }
 
@@ -275,10 +275,10 @@ size_t widget_substringwidth( const char *s, size_t count )
 {
   size_t width = 0;
   int c;
-  if( !s )
+  if (!s )
     return 0;
   while( count-- && (c = *(libspectrum_byte *)s++) != 0 ) {
-    if( c < 18 )
+    if (c < 18 )
       continue;
     width += widget_char( c )->width + 1;
   }
@@ -333,21 +333,21 @@ widget_draw_rectangle_solid( int x, int y, int w, int h, int colour )
 {
   int v, p;
 
-  if( y < 0 ) {
+  if (y < 0 ) {
     h = y + h;
     y = 0;
   }
 
-  if( x < 0 ) {
+  if (x < 0 ) {
     w = x + w;
     x = 0;
   }
 
   // clip rectangle to screen edges
-  if( x + w > DISPLAY_SCREEN_WIDTH - 1 )
+  if (x + w > DISPLAY_SCREEN_WIDTH - 1 )
     w = DISPLAY_SCREEN_WIDTH - x;
 
-  if( y + h > DISPLAY_SCREEN_HEIGHT - 1 )
+  if (y + h > DISPLAY_SCREEN_HEIGHT - 1 )
     h = DISPLAY_SCREEN_HEIGHT - y;
 
   for (v=0; v<h; v++) {
@@ -389,7 +389,7 @@ void widget_print_checkbox( int x, int y, int colour, int value )
     widget_rectangle( x, y - 1, 3, 3, colour );
     widget_rectangle( x - 5, y, 5, 5, 0 );
     widget_rectangle( x - 4, y + 1, 3, 3, colour );
-    if( value ) { // checked
+    if (value ) { // checked
       for( z = -1; z < 3; z++ ) {
         widget_putpixel( x - z, y + z, CHECK_COLOR );
         widget_putpixel( x - z + 1, y + z, CHECK_COLOR );
@@ -443,12 +443,12 @@ widget_display_rasters( int y, int h )
 
 // Global initialisation/end routines
 
-int widget_init( void )
+int widget_init(void)
 {
   int error;
 
-  error = widget_read_font( "fuse.font" );
-  if( error ) return error;
+  error = widget_read_font( "fuse.font");
+  if (error ) return error;
 
   widget_filenames = NULL;
   widget_numfiles = 0;
@@ -465,11 +465,11 @@ int widget_init( void )
   return 0;
 }
 
-int widget_end( void )
+int widget_end(void)
 {
   size_t i;
 
-  if( widget_filenames ) {
+  if (widget_filenames ) {
     for( i=0; i<widget_numfiles; i++) {
       free( widget_filenames[i]->name );
       free( widget_filenames[i] );
@@ -488,14 +488,14 @@ int widget_end( void )
 int widget_do( widget_type which, void *data )
 {
   // If we don't have a UI yet, we can't output widgets
-  if( !display_ui_initialised ) return 1;
+  if (!display_ui_initialised ) return 1;
 
-  if( which == WIDGET_TYPE_QUERY && !settings_current.confirm_actions ) {
+  if (which == WIDGET_TYPE_QUERY && !settings_current.confirm_actions ) {
     widget_query.confirm = 1;
     return 0;
   }
 
-  if( ui_widget_level == -1 ) uidisplay_frame_save();
+  if (ui_widget_level == -1 ) uidisplay_frame_save();
 
   // We're now one widget level deeper
   ui_widget_level++;
@@ -524,7 +524,7 @@ int widget_do( widget_type which, void *data )
   }
 
   // Do any post-widget processing if it exists
-  if( widget_data[which].finish ) {
+  if (widget_data[which].finish ) {
     widget_data[which].finish( widget_return[ui_widget_level].finished );
   }
 
@@ -533,11 +533,11 @@ int widget_do( widget_type which, void *data )
   // Now return to the previous widget level
   ui_widget_level--;
 
-  if( ui_widget_level >= 0 ) {
+  if (ui_widget_level >= 0 ) {
 
     /* If we're going back to another widget, set up its keyhandler and
        draw it again, unless it's already finished */
-    if( ! widget_return[ui_widget_level].finished ) {
+    if (! widget_return[ui_widget_level].finished ) {
       widget_keyhandler =
 	widget_data[ widget_return[ui_widget_level].type ].keyhandler;
       widget_data[ widget_return[ui_widget_level].type ].draw(
@@ -568,14 +568,14 @@ int widget_end_all( widget_finish_state state )
 {
   int i;
 
-  for( i=0; i<=ui_widget_level; i++ )
+  for( i=0; i<=ui_widget_level; i++)
     widget_return[i].finished = state;
 
   return 0;
 }
 
 void
-widget_finish( void )
+widget_finish(void)
 {
   widget_end_all( WIDGET_FINISHED_OK );
 }
@@ -618,12 +618,12 @@ widget_calculate_menu_width(widget_menu_entry *menu)
   for( ptr = &menu[1]; ptr->text; ptr++ ) {
     int total_width = widget_stringwidth(ptr->text)+8;
 
-    if( ptr->submenu ) {
+    if (ptr->submenu ) {
       total_width += 3*8;
     }
 
     // If this has extra details, leave room for the extra text
-    if( ptr->detail ) total_width += widget_stringwidth( ptr->detail() )+2*8;
+    if (ptr->detail ) total_width += widget_stringwidth( ptr->detail() )+2*8;
 
     if (total_width > max_width)
       max_width = total_width;
@@ -719,9 +719,9 @@ ui_tape_browser_update( ui_tape_browser_update_type change,
 ui_confirm_save_t
 ui_confirm_save_specific( const char *message )
 {
-  if( !settings_current.confirm_actions ) return UI_CONFIRM_SAVE_DONTSAVE;
+  if (!settings_current.confirm_actions ) return UI_CONFIRM_SAVE_DONTSAVE;
 
-  if( widget_do_query_save( message ) )
+  if (widget_do_query_save( message ) )
     return UI_CONFIRM_SAVE_CANCEL;
   return widget_query.confirm;
 }
@@ -747,7 +747,7 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type, int inputs )
   int error;
   char title[80];
 
-  if( !settings_current.joy_prompt ) return UI_CONFIRM_JOYSTICK_NONE;
+  if (!settings_current.joy_prompt ) return UI_CONFIRM_JOYSTICK_NONE;
 
   snprintf( title, sizeof( title ), "Configure %s joystick",
 	    libspectrum_joystick_name( libspectrum_type ) );
@@ -759,13 +759,13 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type, int inputs )
   info.finish_all = 1;
 
   error = widget_do_select( &info );
-  if( error ) return UI_CONFIRM_JOYSTICK_NONE;
+  if (error ) return UI_CONFIRM_JOYSTICK_NONE;
 
   return (ui_confirm_joystick_t)info.result;
 }
 
 int
-ui_widgets_reset( void )
+ui_widgets_reset(void)
 {
   pokefinder_clear();
   return 0;
@@ -774,7 +774,7 @@ ui_widgets_reset( void )
 void
 ui_popup_menu( int native_key )
 {
-  switch( native_key ) {
+  switch (native_key ) {
   case INPUT_KEY_F1:
     fuse_emulation_pause();
     widget_do_menu( widget_menu );

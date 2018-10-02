@@ -70,7 +70,7 @@ typedef struct Blip_Buffer_s {
   int length_;
 } Blip_Buffer;
 
-Blip_Buffer *new_Blip_Buffer( void );
+Blip_Buffer *new_Blip_Buffer(void);
 
 void delete_Blip_Buffer( Blip_Buffer ** buff );
 
@@ -200,7 +200,7 @@ void blip_synth_update( Blip_Synth * synth, blip_time_t time,
 void blip_synth_offset_resampled( Blip_Synth * synth,
                                  blip_resampled_time_t, int delta,
                                  Blip_Buffer * buff );
-Blip_Synth *new_Blip_Synth( void );
+Blip_Synth *new_Blip_Synth(void);
 
 void delete_Blip_Synth( Blip_Synth ** synth );
 

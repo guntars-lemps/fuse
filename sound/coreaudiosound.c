@@ -117,8 +117,8 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
   float hz;
   int sound_framesiz;
 
-  if( get_default_output_device(&device) ) return 1;
-  if( get_default_sample_rate( device, &deviceFormat.mSampleRate ) ) return 1;
+  if (get_default_output_device(&device) ) return 1;
+  if (get_default_sample_rate( device, &deviceFormat.mSampleRate ) ) return 1;
 
   *freqptr = deviceFormat.mSampleRate;
 
@@ -143,13 +143,13 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
   desc.componentFlagsMask = 0;
 
   AudioComponent comp = AudioComponentFindNext( NULL, &desc );
-  if( comp == NULL ) {
-    ui_error( UI_ERROR_ERROR, "AudioComponentFindNext" );
+  if (comp == NULL ) {
+    ui_error( UI_ERROR_ERROR, "AudioComponentFindNext");
     return 1;
   }
 
   err = AudioComponentInstanceNew( comp, &gOutputUnit );
-  if( comp == NULL ) {
+  if (comp == NULL ) {
     ui_error( UI_ERROR_ERROR, "AudioComponentInstanceNew=%ld", (long)err );
     return 1;
   }
@@ -165,7 +165,7 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
                               0,
                               &input,
                               sizeof( input ) );
-  if( err ) {
+  if (err ) {
     ui_error( UI_ERROR_ERROR, "AudioUnitSetProperty-CB=%ld", (long)err );
     return 1;
   }
@@ -176,14 +176,14 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
                               0,
                               &deviceFormat,
                               sizeof( AudioStreamBasicDescription ) );
-  if( err ) {
+  if (err ) {
     ui_error( UI_ERROR_ERROR, "AudioUnitSetProperty-SF=%4.4s, %ld", (char*)&err,
               (long)err );
     return 1;
   }
 
   err = AudioUnitInitialize( gOutputUnit );
-  if( err ) {
+  if (err ) {
     ui_error( UI_ERROR_ERROR, "AudioUnitInitialize=%ld", (long)err );
     return 1;
   }
@@ -197,10 +197,10 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
      Not much point having more than 100Hz playback, we probably get
      downgraded by the OS as being a hog too (unlimited Hz limits playback
      speed to about 2000% on my Mac, 100Hz allows up to 5000% for me) */
-  if( hz > 100.0 ) hz = 100.0;
+  if (hz > 100.0 ) hz = 100.0;
   sound_framesiz = deviceFormat.mSampleRate / hz;
 
-  if( ( error = sfifo_init( &sound_fifo, NUM_FRAMES
+  if (( error = sfifo_init( &sound_fifo, NUM_FRAMES
                                          * deviceFormat.mBytesPerFrame
                                          * deviceFormat.mChannelsPerFrame
                                          * sound_framesiz + 1 ) ) ) {
@@ -221,20 +221,20 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
 #endif
 
 void
-sound_lowlevel_end( void )
+sound_lowlevel_end(void)
 {
   OSStatus err;
 
-  if( audio_output_started )
+  if (audio_output_started )
     __Verify_noErr( AudioOutputUnitStop( gOutputUnit ) );
 
   err = AudioUnitUninitialize( gOutputUnit );
-  if( err ) {
+  if (err ) {
     ui_error( UI_ERROR_ERROR, "AudioUnitUninitialize=%ld", (long)err );
   }
 
   err = AudioComponentInstanceDispose( gOutputUnit );
-  if( err ) {
+  if (err ) {
     ui_error( UI_ERROR_ERROR, "AudioComponentInstanceDispose=%ld", (long)err );
   }
 
@@ -253,25 +253,25 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   len <<= 1;
 
   while( len ) {
-    if( ( i = sfifo_write( &sound_fifo, bytes, len ) ) < 0 ) {
+    if (( i = sfifo_write( &sound_fifo, bytes, len ) ) < 0 ) {
       break;
-    } else if( !i ) {
+    } else if (!i ) {
       usleep( 10000 );
     }
     bytes += i;
     len -= i;
   }
-  if( i < 0 ) {
+  if (i < 0 ) {
     ui_error( UI_ERROR_ERROR, "Couldn't write sound fifo: %s",
               strerror( i ) );
   }
 
-  if( !audio_output_started ) {
+  if (!audio_output_started ) {
     /* Start the rendering
        The DefaultOutputUnit will do any format conversions to the format of the
        default device */
     OSStatus err = AudioOutputUnitStart( gOutputUnit );
-    if( err ) {
+    if (err ) {
       ui_error( UI_ERROR_ERROR, "AudioOutputUnitStart=%ld", (long)err );
       return;
     }
@@ -307,7 +307,7 @@ OSStatus coreaudiowrite( void *inRefCon,
   }
 
   // If we ran out of sound, make do with silence :(
-  if( f < 0 ) {
+  if (f < 0 ) {
     for( f=0; f<len; f++ ) {
       *out++ = 0;
     }

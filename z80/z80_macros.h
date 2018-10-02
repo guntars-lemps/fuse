@@ -107,17 +107,17 @@
 #ifndef CORETEST
 
 #define contend_read(address,time) \
-  if( memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
+  if (memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
     tstates += ula_contention[ tstates ]; \
   tstates += (time);
 
 #define contend_read_no_mreq(address,time) \
-  if( memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
+  if (memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
     tstates += ula_contention_no_mreq[ tstates ]; \
   tstates += (time);
 
 #define contend_write_no_mreq(address,time) \
-  if( memory_map_write[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
+  if (memory_map_write[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
     tstates += ula_contention_no_mreq[ tstates ]; \
   tstates += (time);
 
@@ -199,16 +199,16 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
 #define BIT( bit, value ) \
 { \
   F = ( F & FLAG_C ) | FLAG_H | ( value & ( FLAG_3 | FLAG_5 ) ); \
-  if( ! ( (value) & ( 0x01 << (bit) ) ) ) F |= FLAG_P | FLAG_Z; \
-  if( (bit) == 7 && (value) & 0x80 ) F |= FLAG_S; \
+  if (! ( (value) & ( 0x01 << (bit) ) ) ) F |= FLAG_P | FLAG_Z; \
+  if ((bit) == 7 && (value) & 0x80 ) F |= FLAG_S; \
   Q = F;\
 }
 
 #define BIT_MEMPTR( bit, value ) \
 { \
   F = ( F & FLAG_C ) | FLAG_H | ( z80.memptr.b.h & ( FLAG_3 | FLAG_5 ) ); \
-  if( ! ( (value) & ( 0x01 << (bit) ) ) ) F |= FLAG_P | FLAG_Z; \
-  if( (bit) == 7 && (value) & 0x80 ) F |= FLAG_S; \
+  if (! ( (value) & ( 0x01 << (bit) ) ) ) F |= FLAG_P | FLAG_Z; \
+  if ((bit) == 7 && (value) & 0x80 ) F |= FLAG_S; \
   Q = F;\
 }
 

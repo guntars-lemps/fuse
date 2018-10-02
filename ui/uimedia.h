@@ -30,11 +30,11 @@ struct fdd_params_t;
 struct disk_t;
 struct ui_media_drive_info_t;
 
-typedef int (*ui_media_drive_is_available_fn)( void );
-typedef const struct fdd_params_t* (*ui_media_drive_get_params_fn) ( void );
+typedef int (*ui_media_drive_is_available_fn)(void);
+typedef const struct fdd_params_t* (*ui_media_drive_get_params_fn) (void);
 typedef int (*ui_media_drive_insert_hook_fn)(
   const struct ui_media_drive_info_t *drive, int new );
-typedef int (*ui_media_drive_autoload_hook_fn)( void );
+typedef int (*ui_media_drive_autoload_hook_fn)(void);
 
 typedef struct ui_media_drive_info_t
 {
@@ -54,7 +54,7 @@ typedef struct ui_media_drive_info_t
 } ui_media_drive_info_t;
 
 int ui_media_drive_register( ui_media_drive_info_t *drive );
-void ui_media_drive_end( void );
+void ui_media_drive_end(void);
 ui_media_drive_info_t *ui_media_drive_find( int controller, int drive );
 
 #define UI_MEDIA_DRIVE_UPDATE_ALL	(~0)
@@ -63,11 +63,11 @@ ui_media_drive_info_t *ui_media_drive_find( int controller, int drive );
 #define UI_MEDIA_DRIVE_UPDATE_FLIP	(1 << 2)
 #define UI_MEDIA_DRIVE_UPDATE_WP	(1 << 3)
 
-int ui_media_drive_any_available( void );
-void ui_media_drive_update_parent_menus( void );
+int ui_media_drive_any_available(void);
+void ui_media_drive_update_parent_menus(void);
 void ui_media_drive_update_menus( const ui_media_drive_info_t *drive,
                                   unsigned flags );
-int ui_media_drive_eject_all( void );
+int ui_media_drive_eject_all(void);
 
 int ui_media_drive_insert( const ui_media_drive_info_t *drive,
                            const char *filename, int autoload );

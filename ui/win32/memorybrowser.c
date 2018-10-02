@@ -75,7 +75,7 @@ update_display( HWND hwndDlg, libspectrum_word base )
   LV_ITEM lvi;
   lvi.mask = LVIF_TEXT;
 
-  for( i = 0; i < memorysb_page_rows; i++ ) {
+  for (i = 0; i < memorysb_page_rows; i++) {
     _sntprintf( text[0], 8, TEXT( "%04X" ), base );
 
     text[1][0] = '\0';
@@ -123,7 +123,7 @@ scroller( HWND hwndDlg, WPARAM scroll_command )
   int selected = 0;
 
   // in Windows we have to read the command and scroll the scrollbar manually
-  switch( LOWORD( scroll_command ) ) {
+  switch (LOWORD( scroll_command ) ) {
     case SB_BOTTOM:
       value = memorysb_max;
       selected = memorysb_page_rows - 1;
@@ -153,14 +153,14 @@ scroller( HWND hwndDlg, WPARAM scroll_command )
       return 1;
   }
 
-  if( value > memorysb_max - memorysb_page_size )
+  if (value > memorysb_max - memorysb_page_size )
     value = memorysb_max - memorysb_page_size;
-  if( value < memorysb_min ) value = memorysb_min;
+  if (value < memorysb_min ) value = memorysb_min;
 
   // Drop the low bits before displaying anything
   base = value; base &= 0xfff0;
 
-  if( base != memaddr ) {
+  if (base != memaddr ) {
     // set the new scrollbar position
     memset( &si, 0, sizeof(si) );
     si.cbSize = sizeof(si);
@@ -194,14 +194,14 @@ static INT_PTR CALLBACK
 memorybrowser_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam,
                     LPARAM lParam GCC_UNUSED )
 {
-  switch( uMsg )
+  switch (uMsg )
   {
     case WM_INITDIALOG:
       memorybrowser_init( hwndDlg );
       return TRUE;
 
     case WM_COMMAND:
-      if( LOWORD( wParam ) == IDCLOSE ||
+      if (LOWORD( wParam ) == IDCLOSE ||
           LOWORD( wParam ) == IDCANCEL ) {
         EndDialog( hwndDlg, 0 );
         return TRUE;
@@ -230,9 +230,9 @@ memorybrowser_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam,
       // convert delta displacement to memory displacement
       short delta = (short) HIWORD( wParam ) / WHEEL_DELTA;
       int value = si.nPos - delta * memorysb_step;
-      if( value > memorysb_max - memorysb_page_size )
+      if (value > memorysb_max - memorysb_page_size )
         value = memorysb_max - memorysb_page_size;
-      if( value < memorysb_min ) value = memorysb_min;
+      if (value < memorysb_min ) value = memorysb_min;
 
       // scroll to new position
       scroller( hwndDlg, MAKEWPARAM( SB_THUMBPOSITION, value ) );
@@ -246,13 +246,13 @@ memorybrowser_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam,
 static LRESULT CALLBACK
 memory_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-  switch( msg ) {
+  switch (msg ) {
 
     case WM_DESTROY:
     {
-      WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc" );
+      WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc");
       SetWindowLongPtr( hWnd, GWLP_WNDPROC, (LONG_PTR) orig_proc );
-      RemoveProp( hWnd, "original_proc" );
+      RemoveProp( hWnd, "original_proc");
       break;
     }
 
@@ -260,7 +260,7 @@ memory_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     {
       WORD scroll_notify = 0xffff;
 
-      switch( wParam )
+      switch (wParam )
       {
         case VK_UP:
             scroll_notify = SB_LINEUP;
@@ -288,7 +288,7 @@ memory_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
       }
 
       // Inform parent window about key scrolling
-      if( scroll_notify != 0xffff ) {
+      if (scroll_notify != 0xffff ) {
         SendMessage( GetParent( hWnd ), WM_VSCROLL,
                      MAKEWPARAM( scroll_notify, 0 ), (LPARAM) NULL );
         return 0;
@@ -306,7 +306,7 @@ memory_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
   }
 
-  WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc" );
+  WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc");
   return CallWindowProc( orig_proc, hWnd, msg, wParam, lParam );
 }
 
@@ -320,7 +320,7 @@ memorybrowser_init( HWND hwndDlg )
   const TCHAR *titles[] = { "Address", "Hex", "Data" };
   int column_widths[] = { 62, 348, 124 };
 
-  error = win32ui_get_monospaced_font( &font ); if( error ) return;
+  error = win32ui_get_monospaced_font( &font ); if (error ) return;
 
   // subclass listview to catch keydown and mousewheel messages
   HWND hwnd_list = GetDlgItem( hwndDlg, IDC_MEM_LV );
@@ -343,8 +343,8 @@ memorybrowser_init( HWND hwndDlg )
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
   lvc.fmt = LVCFMT_LEFT;
 
-  for( i = 0; i < 3; i++ ) {
-    if( i != 0 )
+  for (i = 0; i < 3; i++) {
+    if (i != 0 )
       lvc.mask |= LVCF_SUBITEM;
     lvc.cx = column_widths[i];
     lvc.pszText = (TCHAR *)titles[i];

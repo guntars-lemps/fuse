@@ -37,7 +37,7 @@
 #include "spec48.h"
 #include "spectrum.h"
 
-static int spec48_reset( void );
+static int spec48_reset(void);
 
 int
 spec48_port_from_ula( libspectrum_word port )
@@ -69,13 +69,13 @@ int spec48_init( fuse_machine_info *machine )
 }
 
 static int
-spec48_reset( void )
+spec48_reset(void)
 {
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_48,
                             settings_default.rom_48, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   periph_clear();
   machines_periph_48();
@@ -92,7 +92,7 @@ spec48_reset( void )
 }
 
 void
-spec48_common_display_setup( void )
+spec48_common_display_setup(void)
 {
   display_dirty = display_dirty_sinclair;
   display_write_if_dirty = display_write_if_dirty_sinclair;
@@ -102,7 +102,7 @@ spec48_common_display_setup( void )
 }
 
 int
-spec48_common_reset( void )
+spec48_common_reset(void)
 {
   // 0x0000: ROM 0
   memory_map_16k( 0x0000, memory_map_rom, 0 );
@@ -120,7 +120,7 @@ spec48_common_reset( void )
 }
 
 int
-spec48_memory_map( void )
+spec48_memory_map(void)
 {
   memory_map_16k( 0x0000, memory_map_rom, 0 );
   memory_romcs_map();

@@ -67,10 +67,10 @@ HWND fuse_hABOWnd;
 // The colour palette in use
 extern libspectrum_dword win32display_colours[16];
 
-int win32display_init( void );
-int win32display_end( void );
-int win32display_scaled_height( void );
-int win32display_scaled_width( void );
+int win32display_init(void);
+int win32display_end(void);
+int win32display_scaled_height(void);
+int win32display_scaled_width(void);
 
 
 /* Below variables and functions are shared
@@ -79,14 +79,14 @@ int win32display_scaled_width( void );
 void win32display_area(int x, int y, int width, int height);
 int win32display_drawing_area_resize( int width, int height, int force_scaler );
 
-void blit( void );
+void blit(void);
 
 /*
  * Keyboard routines (win32keyboard.c)
  */
 
-void win32keyboard_init( void );
-void win32keyboard_end( void );
+void win32keyboard_init(void);
+void win32keyboard_end(void);
 void win32keyboard_keypress( WPARAM wParam, LPARAM lParam );
 void win32keyboard_keyrelease( WPARAM wParam, LPARAM lParam );
 
@@ -132,6 +132,6 @@ void win32statusbar_update_machine( const char *name );
  * Dialog box reset
  */
 
-void win32ui_pokefinder_clear( void );
+void win32ui_pokefinder_clear(void);
 
 #endif // #ifndef FUSE_WIN32INTERNALS_H

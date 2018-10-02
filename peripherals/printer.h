@@ -26,10 +26,10 @@
 
 #include <libspectrum.h>
 
-void printer_frame( void );
+void printer_frame(void);
 void printer_serial_write( libspectrum_byte b );
 void printer_parallel_strobe_write( int on );
 void printer_parallel_write( libspectrum_word port, libspectrum_byte b );
-void printer_register_startup( void );
+void printer_register_startup(void);
 
 #endif // #ifndef FUSE_PRINTER_H

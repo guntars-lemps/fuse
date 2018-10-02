@@ -46,20 +46,20 @@ static void
 add_click( GtkWidget *btn, const gtkstock_button *button, GtkAccelGroup *accel,
 	   guint key1, GdkModifierType mod1, guint key2, GdkModifierType mod2 )
 {
-  if( button->shortcut ) {
-    if( button->shortcut != GDK_KEY_VoidSymbol )
+  if (button->shortcut ) {
+    if (button->shortcut != GDK_KEY_VoidSymbol )
       gtk_widget_add_accelerator( btn, "clicked", accel, button->shortcut,
 				  button->modifier, 0 );
-  } else if( key1 ) {
+  } else if (key1 ) {
     gtk_widget_add_accelerator( btn, "clicked", accel, key1, mod1, 0 );
   }
 
-  if( button->shortcut_alt ) {
-    if( button->shortcut_alt != GDK_KEY_VoidSymbol )
+  if (button->shortcut_alt ) {
+    if (button->shortcut_alt != GDK_KEY_VoidSymbol )
       gtk_widget_add_accelerator( btn, "clicked", accel, button->shortcut_alt,
 				  button->modifier_alt, 0 );
   }
-  else if( key2 ) {
+  else if (key2 ) {
     gtk_widget_add_accelerator( btn, "clicked", accel, key2, mod2, 0 );
   }
 
@@ -73,9 +73,9 @@ gtkstock_create_button( GtkWidget *widget, GtkAccelGroup *accel,
   gboolean link_object = ( button->label[0] == '!' );
   const gchar *button_label = button->label + link_object;
 
-  if( !accel ) accel = gtkstock_add_accel_group (widget);
+  if (!accel ) accel = gtkstock_add_accel_group (widget);
 
-  if( GTK_IS_DIALOG( widget ) ) {
+  if (GTK_IS_DIALOG( widget ) ) {
     btn = gtk_dialog_add_button( GTK_DIALOG( widget ), button_label,
                                  button->response_id );
   } else {
@@ -83,8 +83,8 @@ gtkstock_create_button( GtkWidget *widget, GtkAccelGroup *accel,
     gtk_container_add( GTK_CONTAINER( widget ), btn );
   }
 
-  if( button->action ) {
-    if( link_object ) {
+  if (button->action ) {
+    if (link_object ) {
       g_signal_connect_swapped( G_OBJECT( btn ), "clicked",
 				button->action,
 				G_OBJECT( button->actiondata ) );
@@ -94,35 +94,35 @@ gtkstock_create_button( GtkWidget *widget, GtkAccelGroup *accel,
     }
   }
 
-  if( button->destroy )
+  if (button->destroy )
     g_signal_connect_swapped( G_OBJECT( btn ), "clicked", button->destroy,
 			      G_OBJECT( widget ) );
 
   GtkWidget *icon = NULL;
-  if( !strcmp( button->label, "_Close" ) )
+  if (!strcmp( button->label, "_Close" ) )
     icon = gtk_image_new_from_icon_name( "window-close", GTK_ICON_SIZE_BUTTON );
-  else if( !strcmp( button->label, "_Open" ) )
+  else if (!strcmp( button->label, "_Open" ) )
     icon = gtk_image_new_from_icon_name( "document-open",GTK_ICON_SIZE_BUTTON );
-  else if( !strcmp( button->label, "_Save" ) )
+  else if (!strcmp( button->label, "_Save" ) )
     icon = gtk_image_new_from_icon_name( "document-save",GTK_ICON_SIZE_BUTTON );
-  else if( !strcmp( button->label, "_Add" ) )
+  else if (!strcmp( button->label, "_Add" ) )
     icon = gtk_image_new_from_icon_name( "list-add", GTK_ICON_SIZE_BUTTON );
 
 #if !GTK_CHECK_VERSION( 3, 0, 0 )
   /* Note: ok/cancel/yes/no icons are not covered by freedesktop's Icon Naming
      Specification 0.8.90 */
-  else if( !strcmp( button->label, "_OK" ) )
+  else if (!strcmp( button->label, "_OK" ) )
     icon = gtk_image_new_from_icon_name( GTK_STOCK_OK, GTK_ICON_SIZE_BUTTON );
-  else if( !strcmp( button->label, "_Cancel" ) )
+  else if (!strcmp( button->label, "_Cancel" ) )
     icon = gtk_image_new_from_icon_name( GTK_STOCK_CANCEL,
                                          GTK_ICON_SIZE_BUTTON );
-  else if( !strcmp( button->label, "_Yes" ) )
+  else if (!strcmp( button->label, "_Yes" ) )
     icon = gtk_image_new_from_icon_name( GTK_STOCK_YES, GTK_ICON_SIZE_BUTTON );
-  else if( !strcmp( button->label, "_No" ) )
+  else if (!strcmp( button->label, "_No" ) )
     icon = gtk_image_new_from_icon_name( GTK_STOCK_NO, GTK_ICON_SIZE_BUTTON );
 #endif
 
-  if( icon ) gtk_button_set_image( GTK_BUTTON( btn ), icon );
+  if (icon ) gtk_button_set_image( GTK_BUTTON( btn ), icon );
 
   add_click( btn, button, accel, 0, 0, 0, 0 );
 
@@ -133,7 +133,7 @@ GtkAccelGroup*
 gtkstock_create_buttons( GtkWidget *widget, GtkAccelGroup *accel,
 			 const gtkstock_button *buttons, size_t count )
 {
-  if( !accel ) accel = gtkstock_add_accel_group( widget );
+  if (!accel ) accel = gtkstock_add_accel_group( widget );
 
   for( ; count; buttons++, count-- )
     gtkstock_create_button( widget, accel, buttons );
@@ -175,11 +175,11 @@ GtkWidget*
 gtkstock_dialog_new( const gchar *title, GCallback destroy )
 {
   GtkWidget *dialog = gtk_dialog_new();
-  if( title ) gtk_window_set_title( GTK_WINDOW( dialog ), title );
+  if (title ) gtk_window_set_title( GTK_WINDOW( dialog ), title );
   // TODO: allow to keep the dialog after closing for gtk_dialog_run()
   g_signal_connect( G_OBJECT( dialog ), "delete-event",
 		    destroy ? destroy : DEFAULT_DESTROY, NULL );
-  if( destroy == NULL ) gtk_window_set_modal( GTK_WINDOW( dialog ), TRUE );
+  if (destroy == NULL ) gtk_window_set_modal( GTK_WINDOW( dialog ), TRUE );
   gtk_window_set_transient_for( GTK_WINDOW( dialog ),
                                 GTK_WINDOW( gtkui_window ) );
 

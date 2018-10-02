@@ -51,7 +51,7 @@ dck_insert( const char *filename )
 {
   if ( !( libspectrum_machine_capabilities( machine_current->machine ) &
 	  LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK ) ) {
-    ui_error( UI_ERROR_ERROR, "This machine does not support the dock" );
+    ui_error( UI_ERROR_ERROR, "This machine does not support the dock");
     return 1;
   }
 
@@ -63,15 +63,15 @@ dck_insert( const char *filename )
 }
 
 void
-dck_eject( void )
+dck_eject(void)
 {
   if ( !( libspectrum_machine_capabilities( machine_current->machine ) &
 	  LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK ) ) {
-    ui_error( UI_ERROR_ERROR, "This machine does not support the dock" );
+    ui_error( UI_ERROR_ERROR, "This machine does not support the dock");
     return;
   }
 
-  if( settings_current.dck_file ) libspectrum_free( settings_current.dck_file );
+  if (settings_current.dck_file ) libspectrum_free( settings_current.dck_file );
   settings_current.dck_file = NULL;
 
   dck_active = 0;
@@ -84,7 +84,7 @@ dck_eject( void )
 static memory_page *
 dck_get_memory_page( libspectrum_dck_bank bank, size_t index )
 {
-    switch( bank ) {
+    switch (bank ) {
     case LIBSPECTRUM_DCK_BANK_HOME:
       return timex_home[ index ];
     case LIBSPECTRUM_DCK_BANK_DOCK:
@@ -97,7 +97,7 @@ dck_get_memory_page( libspectrum_dck_bank bank, size_t index )
 }
 
 int
-dck_reset( void )
+dck_reset(void)
 {
   utils_file file;
   size_t num_block = 0;
@@ -106,7 +106,7 @@ dck_reset( void )
 
   dck_active = 0;
 
-  if( !settings_current.dck_file ) {
+  if (!settings_current.dck_file ) {
     ui_menu_activate( UI_MENU_ITEM_MEDIA_CARTRIDGE_DOCK_EJECT, 0 );
     return 0;
   }
@@ -114,11 +114,11 @@ dck_reset( void )
   dck = libspectrum_dck_alloc();
 
   error = utils_read_file( settings_current.dck_file, &file );
-  if( error ) { libspectrum_dck_free( dck, 0 ); return error; }
+  if (error ) { libspectrum_dck_free( dck, 0 ); return error; }
 
   error = libspectrum_dck_read2( dck, file.buffer, file.length,
                                  settings_current.dck_file );
-  if( error ) {
+  if (error ) {
     utils_close_file( &file ); libspectrum_dck_free( dck, 0 ); return error;
   }
 
@@ -129,7 +129,7 @@ dck_reset( void )
     int i;
     libspectrum_dck_bank dck_bank = dck->dck[num_block]->bank;
 
-    if( dck_bank != LIBSPECTRUM_DCK_BANK_HOME &&
+    if (dck_bank != LIBSPECTRUM_DCK_BANK_HOME &&
         dck_bank != LIBSPECTRUM_DCK_BANK_DOCK &&
         dck_bank != LIBSPECTRUM_DCK_BANK_EXROM ) {
       ui_error( UI_ERROR_INFO, "Sorry, bank ID %i is unsupported",
@@ -138,12 +138,12 @@ dck_reset( void )
       return 1;
     }
 
-    for( i = 0; i < 8; i++ ) {
+    for (i = 0; i < 8; i++) {
 
       libspectrum_byte *data;
       int j;
 
-      switch( dck->dck[num_block]->access[i] ) {
+      switch (dck->dck[num_block]->access[i] ) {
 
       case LIBSPECTRUM_DCK_PAGE_NULL:
         break;
@@ -167,10 +167,10 @@ dck_reset( void )
 	   blocks from the HOME bank into the appropriate page; in
 	   other cases, we allocate ourselves a new page to store the
 	   contents in */
-        if( dck_bank == LIBSPECTRUM_DCK_BANK_HOME && i>1 ) {
+        if (dck_bank == LIBSPECTRUM_DCK_BANK_HOME && i>1 ) {
           for( j = 0; j < MEMORY_PAGES_IN_8K; j++ ) {
             page = dck_get_memory_page( dck_bank, i * MEMORY_PAGES_IN_8K + j);
-            if( dck->dck[num_block]->access[i] == LIBSPECTRUM_DCK_PAGE_RAM ) {
+            if (dck->dck[num_block]->access[i] == LIBSPECTRUM_DCK_PAGE_RAM ) {
               memcpy( page->page,
                 dck->dck[num_block]->pages[i] + j * MEMORY_PAGE_SIZE,
                 MEMORY_PAGE_SIZE );
@@ -180,7 +180,7 @@ dck_reset( void )
           }
         } else {
           data = memory_pool_allocate( 0x2000 );
-          if( dck->dck[num_block]->access[i] == LIBSPECTRUM_DCK_PAGE_RAM ) {
+          if (dck->dck[num_block]->access[i] == LIBSPECTRUM_DCK_PAGE_RAM ) {
             memcpy( data, dck->dck[num_block]->pages[i], 0x2000 );
           } else {
             memset( data, 0, 0x2000 );

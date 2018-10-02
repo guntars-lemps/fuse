@@ -24,13 +24,13 @@
 #ifndef FUSE_WIIKEYBOARD_H
 #define FUSE_WIIKEYBOARD_H
 
-int wiikeyboard_init( void );
+int wiikeyboard_init(void);
 
 int wiikeyboard_keypress( int keysym );
 void wiikeyboard_keyrelease( int keysym );
 
-int wiikeyboard_end( void );
+int wiikeyboard_end(void);
 
-void keyboard_update( void );
+void keyboard_update(void);
 
 #endif // #ifndef FUSE_WIIKEYBOARD_H

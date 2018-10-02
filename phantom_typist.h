@@ -25,7 +25,7 @@
 #define FUSE_PHANTOM_TYPIST_H
 
 void
-phantom_typist_register_startup( void );
+phantom_typist_register_startup(void);
 
 /* Activate the phantom typist for a given machine, and optionally
    for a tape that needs LOAD ""CODE rather than just LOAD "" */
@@ -34,11 +34,11 @@ phantom_typist_activate( libspectrum_machine machine, int needs_code );
 
 // Activate the phantom typist to load a +3 disk
 void
-phantom_typist_activate_disk( void );
+phantom_typist_activate_disk(void);
 
 // Deactivate the phantom typist
 void
-phantom_typist_deactivate( void );
+phantom_typist_deactivate(void);
 
 // Get the result of any keys pressed by the phantom typist
 libspectrum_byte
@@ -46,10 +46,10 @@ phantom_typist_ula_read( libspectrum_word port );
 
 // Returns non-zero if the phantom typist is active
 int
-phantom_typist_is_active( void );
+phantom_typist_is_active(void);
 
 // Called each frame to update the phantom typist state
 void
-phantom_typist_frame( void );
+phantom_typist_frame(void);
 
 #endif // #ifndef FUSE_PHANTOM_TYPIST_H

@@ -102,13 +102,13 @@ static const char * const mem1ffd_detail_string = "mem1ffd";
 
 // Adapter just to get the return type to be what the debugger is expecting
 static libspectrum_dword
-get_last_byte( void )
+get_last_byte(void)
 {
   return ula_last_byte();
 }
 
 static libspectrum_dword
-get_tstates( void )
+get_tstates(void)
 {
   return tstates;
 }
@@ -120,7 +120,7 @@ set_tstates( libspectrum_dword value )
 }
 
 static libspectrum_dword
-get_7ffd( void )
+get_7ffd(void)
 {
   return machine_current->ram.last_byte;
 }
@@ -132,7 +132,7 @@ set_7ffd( libspectrum_dword value )
 }
 
 static libspectrum_dword
-get_1ffd( void )
+get_1ffd(void)
 {
   return machine_current->ram.last_byte2;
 }
@@ -166,7 +166,7 @@ ula_init( void *context )
 }
 
 void
-ula_register_startup( void )
+ula_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -189,7 +189,7 @@ ula_read( libspectrum_word port, libspectrum_byte *attached )
   r &= phantom_typist_ula_read( port );
 
   r &= keyboard_read( port >> 8 );
-  if( tape_microphone ) r ^= 0x40;
+  if (tape_microphone ) r ^= 0x40;
 
   return r;
 }
@@ -206,15 +206,15 @@ ula_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 
   // FIXME: shouldn't really be using the memory capabilities here
 
-  if( machine_current->timex ) {
+  if (machine_current->timex ) {
 
     ula_default_value = 0x5f;
 
-  } else if( machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_MEMORY ) {
+  } else if (machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_MEMORY ) {
 
     ula_default_value = 0xbf;
 
-  } else if( machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY || !settings_current.issue2 ) {
+  } else if (machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY || !settings_current.issue2 ) {
 
     // 128K always acts like an Issue 3
     ula_default_value = b & 0x10 ? 0xff : 0xbf;
@@ -229,13 +229,13 @@ ula_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 }
 
 libspectrum_byte
-ula_last_byte( void )
+ula_last_byte(void)
 {
   return last_byte;
 }
 
 libspectrum_byte
-ula_tape_level( void )
+ula_tape_level(void)
 {
   return last_byte & 0x8;
 }
@@ -259,7 +259,7 @@ ula_to_snapshot( libspectrum_snap *snap )
 void
 ula_contend_port_early( libspectrum_word port )
 {
-  if( memory_map_read[ port >> MEMORY_PAGE_SIZE_LOGARITHM ].contended )
+  if (memory_map_read[ port >> MEMORY_PAGE_SIZE_LOGARITHM ].contended )
     tstates += ula_contention_no_mreq[ tstates ];
 
   tstates++;
@@ -268,13 +268,13 @@ ula_contend_port_early( libspectrum_word port )
 void
 ula_contend_port_late( libspectrum_word port )
 {
-  if( machine_current->ram.port_from_ula( port ) ) {
+  if (machine_current->ram.port_from_ula( port ) ) {
 
     tstates += ula_contention_no_mreq[ tstates ]; tstates += 2;
 
   } else {
 
-    if( memory_map_read[ port >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) {
+    if (memory_map_read[ port >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) {
       tstates += ula_contention_no_mreq[ tstates ]; tstates++;
       tstates += ula_contention_no_mreq[ tstates ]; tstates++;
       tstates += ula_contention_no_mreq[ tstates ];

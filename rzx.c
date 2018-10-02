@@ -108,9 +108,9 @@ int end_event;
 
 static int start_playback( libspectrum_rzx *from_rzx );
 static void start_recording( libspectrum_rzx *to_rzx, int competition_mode );
-static int recording_frame( void );
-static int playback_frame( void );
-static int counter_reset( void );
+static int recording_frame(void);
+static int playback_frame(void);
+static int counter_reset(void);
 static void rzx_sentinel( libspectrum_dword ts, int type,
 			  void *user_data );
 
@@ -125,7 +125,7 @@ rzx_init( void *context )
   rzx_in_allocated = 0;
 
   sentinel_warning = 0;
-  sentinel_event = event_register( rzx_sentinel, "RZX sentinel" );
+  sentinel_event = event_register( rzx_sentinel, "RZX sentinel");
 
   end_event = debugger_event_register( event_type_string, end_event_detail_string );
 
@@ -139,13 +139,13 @@ rzx_add_snap( libspectrum_rzx *to_rzx, int automatic )
   libspectrum_snap *snap = libspectrum_snap_alloc();
 
   error = snapshot_copy_to( snap );
-  if( error ) {
+  if (error ) {
     libspectrum_snap_free( snap );
     return error;
   }
 
   error = libspectrum_rzx_add_snap( to_rzx, snap, automatic );
-  if( error ) {
+  if (error ) {
     libspectrum_snap_free( snap );
     return error;
   }
@@ -157,7 +157,7 @@ int rzx_start_recording( const char *filename, int embed_snapshot )
 {
   int error;
 
-  if( rzx_playback ) return 1;
+  if (rzx_playback ) return 1;
 
   rzx = libspectrum_rzx_alloc();
 
@@ -165,10 +165,10 @@ int rzx_start_recording( const char *filename, int embed_snapshot )
   rzx_filename = utils_safe_strdup( filename );
 
   // If we're embedding a snapshot, create it now
-  if( embed_snapshot ) {
+  if (embed_snapshot ) {
     error = rzx_add_snap( rzx, 0 );
 
-    if( error ) {
+    if (error ) {
       libspectrum_free( rzx_filename );
       libspectrum_rzx_free( rzx );
       return error;
@@ -180,19 +180,19 @@ int rzx_start_recording( const char *filename, int embed_snapshot )
   return 0;
 }
 
-int rzx_stop_recording( void )
+int rzx_stop_recording(void)
 {
   libspectrum_byte *buffer; size_t length;
   libspectrum_error libspec_error; int error;
 
-  if( !rzx_recording ) return 0;
+  if (!rzx_recording ) return 0;
 
   // Stop recording data
   rzx_recording = 0;
-  if( settings_current.movie_stop_after_rzx ) movie_stop();
+  if (settings_current.movie_stop_after_rzx ) movie_stop();
 
   // Embed final snapshot
-  if( !rzx_competition_mode ) rzx_add_snap( rzx, 0 );
+  if (!rzx_competition_mode ) rzx_add_snap( rzx, 0 );
 
   libspectrum_free( rzx_in_bytes );
   rzx_in_bytes = NULL;
@@ -211,7 +211,7 @@ int rzx_stop_recording( void )
     &buffer, &length, rzx, LIBSPECTRUM_ID_SNAPSHOT_SZX, fuse_creator,
     settings_current.rzx_compression, rzx_competition_mode ? &rzx_key : NULL
   );
-  if( libspec_error != LIBSPECTRUM_ERROR_NONE ) {
+  if (libspec_error != LIBSPECTRUM_ERROR_NONE ) {
     libspectrum_free( rzx_filename );
     libspectrum_rzx_free( rzx );
     return libspec_error;
@@ -219,7 +219,7 @@ int rzx_stop_recording( void )
 
   error = utils_write_file( rzx_filename, buffer, length );
   libspectrum_free( rzx_filename );
-  if( error ) {
+  if (error ) {
     libspectrum_free( buffer );
     libspectrum_rzx_free( rzx );
     return error;
@@ -228,13 +228,13 @@ int rzx_stop_recording( void )
   libspectrum_free( buffer );
 
   libspec_error = libspectrum_rzx_free( rzx );
-  if( libspec_error != LIBSPECTRUM_ERROR_NONE ) return libspec_error;
+  if (libspec_error != LIBSPECTRUM_ERROR_NONE ) return libspec_error;
 
   return 0;
 }
 
 static libspectrum_snap*
-rzx_get_initial_snapshot( void )
+rzx_get_initial_snapshot(void)
 {
   libspectrum_rzx_iterator it;
 
@@ -244,7 +244,7 @@ rzx_get_initial_snapshot( void )
 
     libspectrum_rzx_block_id id = libspectrum_rzx_iterator_get_type( it );
 
-    switch( id ) {
+    switch (id ) {
 
     case LIBSPECTRUM_RZX_INPUT_BLOCK:
       /* If we get this then there can't have been an initial snap to start
@@ -271,15 +271,15 @@ int rzx_start_playback( const char *filename, int check_snapshot )
   libspectrum_error libspec_error; int error;
   libspectrum_snap* snap;
 
-  if( rzx_recording ) return 1;
+  if (rzx_recording ) return 1;
 
   rzx = libspectrum_rzx_alloc();
 
   error = utils_read_file( filename, &file );
-  if( error ) return error;
+  if (error ) return error;
 
   libspec_error = libspectrum_rzx_read( rzx, file.buffer, file.length );
-  if( libspec_error != LIBSPECTRUM_ERROR_NONE ) {
+  if (libspec_error != LIBSPECTRUM_ERROR_NONE ) {
     utils_close_file( &file );
     return libspec_error;
   }
@@ -287,15 +287,15 @@ int rzx_start_playback( const char *filename, int check_snapshot )
   utils_close_file( &file );
 
   snap = rzx_get_initial_snapshot();
-  if( !snap && check_snapshot ) {
+  if (!snap && check_snapshot ) {
     /* We need to load an external snapshot. Could be skipped if the snapshot
        is preloaded from command line */
     error = utils_open_snap();
-    if( error ) return error;
+    if (error ) return error;
   }
 
   error = start_playback( rzx );
-  if( error ) {
+  if (error ) {
     libspectrum_rzx_free( rzx );
     return error;
   }
@@ -309,24 +309,24 @@ rzx_start_playback_from_buffer( const unsigned char *buffer, size_t length )
   int error;
   libspectrum_snap* snap;
 
-  if( rzx_recording ) return 0;
+  if (rzx_recording ) return 0;
 
   rzx = libspectrum_rzx_alloc();
 
   error = libspectrum_rzx_read( rzx, buffer, length );
-  if( error ) return error;
+  if (error ) return error;
 
   snap = rzx_get_initial_snapshot();
-  if( !snap ) {
+  if (!snap ) {
     error = utils_open_snap();
-    if( error ) {
+    if (error ) {
       libspectrum_rzx_free( rzx );
       return error;
     }
   }
 
   error = start_playback( rzx );
-  if( error ) {
+  if (error ) {
     libspectrum_rzx_free( rzx );
     return error;
   }
@@ -341,11 +341,11 @@ start_playback( libspectrum_rzx *from_rzx )
   libspectrum_snap *snap;
 
   error = libspectrum_rzx_start_playback( from_rzx, 0, &snap );
-  if( error ) return error;
+  if (error ) return error;
 
-  if( snap ) {
+  if (snap ) {
     error = snapshot_copy_from( snap );
-    if( error ) return error;
+    if (error ) return error;
   }
 
   // End of frame will now be generated by the RZX code
@@ -370,10 +370,10 @@ int rzx_stop_playback( int add_interrupt )
 {
   libspectrum_error libspec_error;
 
-  if( !rzx_playback ) return 0;
+  if (!rzx_playback ) return 0;
 
   rzx_playback = 0;
-  if( settings_current.movie_stop_after_rzx ) movie_stop();
+  if (settings_current.movie_stop_after_rzx ) movie_stop();
 
   ui_menu_activate( UI_MENU_ITEM_RECORDING, 0 );
   ui_menu_activate( UI_MENU_ITEM_RECORDING_ROLLBACK, 0 );
@@ -384,14 +384,14 @@ int rzx_stop_playback( int add_interrupt )
      event if we've been requested to do so; we don't if we just run
      out of frames, as this occurs just before a normal end of frame
      and everything works normally as rzx_playback is now zero again */
-  if( add_interrupt ) {
+  if (add_interrupt ) {
 
     event_add( machine_current->timings.tstates_per_frame,
                spectrum_frame_event );
 
     /* We're no longer doing RZX playback, so tstates now be <= the
        normal frame count */
-    if( tstates > machine_current->timings.tstates_per_frame )
+    if (tstates > machine_current->timings.tstates_per_frame )
       tstates = machine_current->timings.tstates_per_frame;
 
   } else {
@@ -403,7 +403,7 @@ int rzx_stop_playback( int add_interrupt )
   }
 
   libspec_error = libspectrum_rzx_free( rzx );
-  if( libspec_error != LIBSPECTRUM_ERROR_NONE ) return libspec_error;
+  if (libspec_error != LIBSPECTRUM_ERROR_NONE ) return libspec_error;
 
   debugger_event( end_event );
 
@@ -423,11 +423,11 @@ start_recording( libspectrum_rzx *to_rzx, int competition_mode )
 
   ui_menu_activate( UI_MENU_ITEM_RECORDING, 1 );
 
-  if( competition_mode ) {
+  if (competition_mode ) {
 
-    if( !libspectrum_gcrypt_version() )
+    if (!libspectrum_gcrypt_version() )
       ui_error( UI_ERROR_WARNING,
-                "gcrypt not available: recording will NOT be signed" );
+                "gcrypt not available: recording will NOT be signed");
 
     settings_current.emulation_speed = 100;
     rzx_competition_mode = 1;
@@ -448,18 +448,18 @@ rzx_continue_recording( const char *filename )
   libspectrum_snap* snap = NULL;
   libspectrum_rzx_iterator last_it = NULL;
 
-  if( rzx_recording || rzx_playback ) return 1;
+  if (rzx_recording || rzx_playback ) return 1;
 
   // Store the filename
   rzx_filename = utils_safe_strdup( filename );
 
   error = utils_read_file( filename, &file );
-  if( error ) return error;
+  if (error ) return error;
 
   rzx = libspectrum_rzx_alloc();
 
   libspec_error = libspectrum_rzx_read( rzx, file.buffer, file.length );
-  if( libspec_error != LIBSPECTRUM_ERROR_NONE ) {
+  if (libspec_error != LIBSPECTRUM_ERROR_NONE ) {
     utils_close_file( &file );
     return libspec_error;
   }
@@ -468,11 +468,11 @@ rzx_continue_recording( const char *filename )
 
   // Get final snapshot
   last_it = libspectrum_rzx_iterator_last( rzx );
-  if( last_it ) snap = libspectrum_rzx_iterator_get_snap( last_it );
+  if (last_it ) snap = libspectrum_rzx_iterator_get_snap( last_it );
 
-  if( snap ) {
+  if (snap ) {
     error = snapshot_copy_from( snap );
-    if( error ) return error;
+    if (error ) return error;
   } else {
     libspectrum_free( rzx_filename );
     libspectrum_rzx_free( rzx );
@@ -491,15 +491,15 @@ rzx_finalise_recording( const char *filename )
   libspectrum_error libspec_error; int error;
   utils_file file;
 
-  if( rzx_recording || rzx_playback ) return 1;
+  if (rzx_recording || rzx_playback ) return 1;
 
   error = utils_read_file( filename, &file );
-  if( error ) return error;
+  if (error ) return error;
 
   rzx = libspectrum_rzx_alloc();
 
   libspec_error = libspectrum_rzx_read( rzx, file.buffer, file.length );
-  if( libspec_error != LIBSPECTRUM_ERROR_NONE ) {
+  if (libspec_error != LIBSPECTRUM_ERROR_NONE ) {
     utils_close_file( &file );
     libspectrum_rzx_free( rzx );
     return libspec_error;
@@ -508,7 +508,7 @@ rzx_finalise_recording( const char *filename )
   utils_close_file( &file );
 
   libspec_error = libspectrum_rzx_finalise( rzx );
-  if( libspec_error != LIBSPECTRUM_ERROR_NONE ) {
+  if (libspec_error != LIBSPECTRUM_ERROR_NONE ) {
     libspectrum_rzx_free( rzx );
     return libspec_error;
   }
@@ -520,13 +520,13 @@ rzx_finalise_recording( const char *filename )
     &buffer, &length, rzx, LIBSPECTRUM_ID_SNAPSHOT_SZX, fuse_creator,
     settings_current.rzx_compression, rzx_competition_mode ? &rzx_key : NULL
   );
-  if( libspec_error != LIBSPECTRUM_ERROR_NONE ) {
+  if (libspec_error != LIBSPECTRUM_ERROR_NONE ) {
     libspectrum_rzx_free( rzx );
     return libspec_error;
   }
 
   error = utils_write_file( filename, buffer, length );
-  if( error ) {
+  if (error ) {
     libspectrum_free( buffer );
     libspectrum_rzx_free( rzx );
     return error;
@@ -538,10 +538,10 @@ rzx_finalise_recording( const char *filename )
   return 0;
 }
 
-int rzx_frame( void )
+int rzx_frame(void)
 {
-  if( rzx_recording ) return recording_frame();
-  if( rzx_playback  ) return playback_frame();
+  if (rzx_recording ) return recording_frame();
+  if (rzx_playback  ) return playback_frame();
   return 0;
 }
 
@@ -551,7 +551,7 @@ typedef struct prune_info_t {
 } prune_info_t;
 
 static void
-autosave_prune( void )
+autosave_prune(void)
 {
   GArray *autosaves = g_array_new( FALSE, FALSE, sizeof( prune_info_t ) );
   libspectrum_rzx_iterator it;
@@ -563,13 +563,13 @@ autosave_prune( void )
 
     libspectrum_rzx_block_id id = libspectrum_rzx_iterator_get_type( it );
 
-    switch( id ) {
+    switch (id ) {
 
     case LIBSPECTRUM_RZX_INPUT_BLOCK:
       frames += libspectrum_rzx_iterator_get_frames( it ); break;
 
     case LIBSPECTRUM_RZX_SNAPSHOT_BLOCK:
-      if( libspectrum_rzx_iterator_snap_is_automatic( it ) ) {
+      if (libspectrum_rzx_iterator_snap_is_automatic( it ) ) {
         prune_info_t info = { it, frames };
 	g_array_append_val( autosaves, info );
       }
@@ -581,7 +581,7 @@ autosave_prune( void )
   }
 
   // Convert 'time from start' into 'time before now'
-  for( i = 0; i < autosaves->len; i++ ) {
+  for (i = 0; i < autosaves->len; i++) {
     prune_info_t *info = &( g_array_index( autosaves, prune_info_t, i ) );
     info->frames = frames - info->frames;
   }
@@ -590,7 +590,7 @@ autosave_prune( void )
     prune_info_t save1 = g_array_index( autosaves, prune_info_t, i ),
       save2 = g_array_index( autosaves, prune_info_t, i - 1 );
 
-    if( ( save1.frames == 15 * 50 ||
+    if (( save1.frames == 15 * 50 ||
           save1.frames == 60 * 50 ||
 	  save1.frames == 300 * 50   ) &&
 	save2.frames < 2 * save1.frames
@@ -603,9 +603,9 @@ autosave_prune( void )
 }
 
 static void
-autosave_frame( void )
+autosave_frame(void)
 {
-  if( ++autosave_frame_count % AUTOSAVE_INTERVAL ) return;
+  if (++autosave_frame_count % AUTOSAVE_INTERVAL ) return;
 
   rzx_add_snap( rzx, 1 );
 
@@ -615,7 +615,7 @@ autosave_frame( void )
 }
 
 static void
-autosave_reset( void )
+autosave_reset(void)
 {
   libspectrum_rzx_iterator it;
   size_t frames = 0;
@@ -626,14 +626,14 @@ autosave_reset( void )
 
     libspectrum_rzx_block_id id = libspectrum_rzx_iterator_get_type( it );
 
-    switch( id ) {
+    switch (id ) {
 
     case LIBSPECTRUM_RZX_INPUT_BLOCK:
       frames += libspectrum_rzx_iterator_get_frames( it );
       break;
 
     case LIBSPECTRUM_RZX_SNAPSHOT_BLOCK:
-      if( libspectrum_rzx_iterator_snap_is_automatic( it ) ) {
+      if (libspectrum_rzx_iterator_snap_is_automatic( it ) ) {
         frames = 0;
       }
       break;
@@ -647,13 +647,13 @@ autosave_reset( void )
   autosave_frame_count = frames % AUTOSAVE_INTERVAL;
 }
 
-static int recording_frame( void )
+static int recording_frame(void)
 {
   libspectrum_error error;
 
   error = libspectrum_rzx_store_frame( rzx, R + rzx_instructions_offset,
 				       rzx_in_count, rzx_in_bytes );
-  if( error ) {
+  if (error ) {
     rzx_stop_recording();
     return error;
   }
@@ -663,7 +663,7 @@ static int recording_frame( void )
 
   /* If we're in competition mode, check we're running at close to 100%
      speed */
-  if( rzx_competition_mode &&
+  if (rzx_competition_mode &&
       fabs( current_speed - 100.0 ) > SPEED_TOLERANCE ) {
 
     rzx_stop_recording();
@@ -676,22 +676,22 @@ static int recording_frame( void )
 
   }
 
-  if( !rzx_competition_mode && settings_current.rzx_autosaves )
+  if (!rzx_competition_mode && settings_current.rzx_autosaves )
     autosave_frame();
 
   return 0;
 }
 
-static int playback_frame( void )
+static int playback_frame(void)
 {
   int error, finished;
   libspectrum_snap *snap;
 
   error = libspectrum_rzx_playback_frame( rzx, &finished, &snap );
-  if( error ) return rzx_stop_playback( 0 );
+  if (error ) return rzx_stop_playback( 0 );
 
-  if( finished ) {
-    ui_error( UI_ERROR_INFO, "Finished RZX playback" );
+  if (finished ) {
+    ui_error( UI_ERROR_INFO, "Finished RZX playback");
     return rzx_stop_playback( 0 );
   }
 
@@ -701,9 +701,9 @@ static int playback_frame( void )
   event_remove_type( sentinel_event );
   event_add( RZX_SENTINEL_TIME + tstates, sentinel_event );
 
-  if( snap ) {
+  if (snap ) {
     error = snapshot_copy_from( snap );
-    if( error ) return rzx_stop_playback( 0 );
+    if (error ) return rzx_stop_playback( 0 );
   }
 
   /* If we've got another frame to do, fetch the new instruction count and
@@ -716,7 +716,7 @@ static int playback_frame( void )
 
 /* Reset the RZX counter; also, take this opportunity to normalise the
    R register */
-static int counter_reset( void )
+static int counter_reset(void)
 {
   R &= 0x7f; // Clear all but the 7 lowest bits of the R register
   rzx_instructions_offset = -R; // Gives us a zero count
@@ -728,7 +728,7 @@ int rzx_store_byte( libspectrum_byte value )
 {
   /* Get more space if we need it; allocate twice as much as we currently
      have, with a minimum of 50 */
-  if( rzx_in_count == rzx_in_allocated ) {
+  if (rzx_in_count == rzx_in_allocated ) {
 
     libspectrum_byte *ptr; size_t new_allocated;
 
@@ -745,14 +745,14 @@ int rzx_store_byte( libspectrum_byte value )
 }
 
 static void
-rzx_end( void )
+rzx_end(void)
 {
-  if( rzx_recording ) rzx_stop_recording();
-  if( rzx_playback  ) rzx_stop_playback( 0 );
+  if (rzx_recording ) rzx_stop_recording();
+  if (rzx_playback  ) rzx_stop_playback( 0 );
 }
 
 void
-rzx_register_startup( void )
+rzx_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -779,7 +779,7 @@ get_rollback_list( libspectrum_rzx *from_rzx )
   while( it ) {
     libspectrum_rzx_block_id id = libspectrum_rzx_iterator_get_type( it );
 
-    switch( id ) {
+    switch (id ) {
 
     case LIBSPECTRUM_RZX_INPUT_BLOCK:
       frames += libspectrum_rzx_iterator_get_frames( it ); break;
@@ -797,7 +797,7 @@ get_rollback_list( libspectrum_rzx *from_rzx )
   }
 
   // Add the final IRB in, if any
-  if( frames )
+  if (frames )
     rollback_points = g_slist_append( rollback_points,
 				      GINT_TO_POINTER( frames ) );
 
@@ -810,36 +810,36 @@ start_after_rollback( libspectrum_snap *snap )
   int error;
 
   error = snapshot_copy_from( snap );
-  if( error ) return error;
+  if (error ) return error;
 
   libspectrum_rzx_start_input( rzx, tstates );
 
   error = counter_reset();
-  if( error ) return error;
+  if (error ) return error;
 
-  if( settings_current.rzx_autosaves )
+  if (settings_current.rzx_autosaves )
     autosave_reset();
 
   return 0;
 }
 
 int
-rzx_rollback( void )
+rzx_rollback(void)
 {
   libspectrum_snap *snap;
   int error;
 
   error = libspectrum_rzx_rollback( rzx, &snap );
-  if( error ) return error;
+  if (error ) return error;
 
   error = start_after_rollback( snap );
-  if( error ) return error;
+  if (error ) return error;
 
   return 0;
 }
 
 int
-rzx_rollback_to( void )
+rzx_rollback_to(void)
 {
   GSList *rollback_points;
   libspectrum_snap *snap;
@@ -849,13 +849,13 @@ rzx_rollback_to( void )
 
   which = ui_get_rollback_point( rollback_points );
 
-  if( which == -1 ) return 1;
+  if (which == -1 ) return 1;
 
   error = libspectrum_rzx_rollback_to( rzx, &snap, which );
-  if( error ) return error;
+  if (error ) return error;
 
   error = start_after_rollback( snap );
-  if( error ) return error;
+  if (error ) return error;
 
   return 0;
 }
@@ -864,7 +864,7 @@ static void
 rzx_sentinel( libspectrum_dword ts GCC_UNUSED, int type GCC_UNUSED,
               void *user_data GCC_UNUSED )
 {
-  if( !sentinel_warning ) {
+  if (!sentinel_warning ) {
     // This message could pop up very often. Limited to once per playback
     ui_error( UI_ERROR_WARNING, "RZX frame is longer than %u tstates",
               RZX_SENTINEL_TIME );

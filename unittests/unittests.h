@@ -24,7 +24,7 @@
 #ifndef FUSE_UNITTESTS_H
 #define FUSE_UNITTESTS_H
 
-int unittests_run( void );
+int unittests_run(void);
 
 int unittests_assert_2k_page( libspectrum_word base, int source, int page );
 int unittests_assert_4k_page( libspectrum_word base, int source, int page );

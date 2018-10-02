@@ -48,13 +48,13 @@ widget_roms_draw( void *data )
   char buffer[32];
   char key[] = "\x0A ";
 
-  if( data ) info = data;
+  if (data ) info = data;
 
   // Get a copy of the current settings
-  if( !info->initialised ) {
+  if (!info->initialised ) {
 
     widget_settings = malloc( sizeof( settings_info ) );
-    if( !widget_settings ) {
+    if (!widget_settings ) {
       ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
       return 1;
     }
@@ -75,7 +75,7 @@ widget_roms_draw( void *data )
   widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, info->title );
   widget_display_lines( 2, rom_count + 2 );
 
-  for( i=0; i < info->count; i++ ) {
+  for( i=0; i < info->count; i++) {
 
     snprintf( buffer, sizeof( buffer ), "ROM %d:", i );
     key[1] = 'A' + i;
@@ -108,7 +108,7 @@ print_rom( int which )
 void
 widget_roms_keyhandler( input_key key )
 {
-  switch( key ) {
+  switch (key ) {
 
 #if 0
   case INPUT_KEY_Resize: // Fake keypress used on window resize
@@ -130,7 +130,7 @@ widget_roms_keyhandler( input_key key )
 
   }
 
-  if( key >= INPUT_KEY_a && key <= INPUT_KEY_z &&
+  if (key >= INPUT_KEY_a && key <= INPUT_KEY_z &&
       key - INPUT_KEY_a < (ptrdiff_t)rom_count ) {
 
     char **setting;
@@ -144,7 +144,7 @@ widget_roms_keyhandler( input_key key )
     data.exit_all_widgets = 0;
     data.title = buf;
     widget_do_fileselector( &data );
-    if( !widget_filesel_name ) return;
+    if (!widget_filesel_name ) return;
 
     setting = settings_get_rom_setting( widget_settings, key + first_rom,
 					is_peripheral );
@@ -157,7 +157,7 @@ widget_roms_keyhandler( input_key key )
 int
 widget_roms_finish( widget_finish_state finished )
 {
-  if( finished == WIDGET_FINISHED_OK ) {
+  if (finished == WIDGET_FINISHED_OK ) {
     settings_copy( &settings_current, widget_settings );
   }
 

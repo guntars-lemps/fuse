@@ -62,7 +62,7 @@ profile_init( void *context )
 }
 
 void
-profile_register_startup( void )
+profile_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
   startup_manager_register( STARTUP_MANAGER_MODULE_PROFILE, dependencies,
@@ -71,14 +71,14 @@ profile_register_startup( void )
 }
 
 static void
-init_profiling_counters( void )
+init_profiling_counters(void)
 {
   profile_last_pc = z80.pc.w;
   profile_last_tstates = tstates;
 }
 
 void
-profile_start( void )
+profile_start(void)
 {
   memset( total_tstates, 0, sizeof( total_tstates ) );
 
@@ -122,16 +122,16 @@ profile_finish( const char *filename )
   FILE *f;
   size_t i;
 
-  f = fopen( filename, "w" );
-  if( !f ) {
+  f = fopen( filename, "w");
+  if (!f ) {
     ui_error( UI_ERROR_ERROR, "unable to open profile map '%s' for writing",
 	      filename );
     return;
   }
 
-  for( i = 0; i < 0x10000; i++ ) {
+  for (i = 0; i < 0x10000; i++) {
 
-    if( !total_tstates[ i ] ) continue;
+    if (!total_tstates[ i ] ) continue;
 
     fprintf( f, "0x%04lx,%d\n", (unsigned long)i, total_tstates[ i ] );
 

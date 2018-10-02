@@ -29,10 +29,10 @@
 extern int usource_active;
 extern int usource_available;
 
-void usource_register_startup( void );
+void usource_register_startup(void);
 
-void usource_toggle( void );
+void usource_toggle(void);
 
-int usource_unittest( void );
+int usource_unittest(void);
 
 #endif // #ifndef FUSE_USOURCE_H

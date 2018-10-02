@@ -106,7 +106,7 @@ static int is_non_associative( int operation );
 static enum precedence_t
 unaryop_precedence( int operation )
 {
-  switch( operation ) {
+  switch (operation ) {
 
   case '!': case '~': case '-': return PRECEDENCE_NEGATE;
 
@@ -122,7 +122,7 @@ unaryop_precedence( int operation )
 static enum precedence_t
 binaryop_precedence( int operation )
 {
-  switch( operation ) {
+  switch (operation ) {
 
   case DEBUGGER_TOKEN_LOGICAL_OR: return PRECEDENCE_LOGICAL_OR;
   case DEBUGGER_TOKEN_LOGICAL_AND: return PRECEDENCE_LOGICAL_AND;
@@ -204,7 +204,7 @@ debugger_expression_new_system_variable( const char *type, const char *detail,
   int system_variable;
 
   system_variable = debugger_system_variable_find( type, detail );
-  if( system_variable == -1 ) {
+  if (system_variable == -1 ) {
     ui_error( UI_ERROR_WARNING, "System variable %s:%s not known", type,
               detail );
     return NULL;
@@ -236,7 +236,7 @@ debugger_expression_new_variable( const char *name, int pool )
 void
 debugger_expression_delete( debugger_expression *exp )
 {
-  switch( exp->type ) {
+  switch (exp->type ) {
 
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
   case DEBUGGER_EXPRESSION_TYPE_SYSVAR:
@@ -265,12 +265,12 @@ debugger_expression_copy( debugger_expression *src )
   debugger_expression *dest;
 
   dest = libspectrum_new( debugger_expression, 1 );
-  if( !dest ) return NULL;
+  if (!dest ) return NULL;
 
   dest->type = src->type;
   dest->precedence = src->precedence;
 
-  switch( dest->type ) {
+  switch (dest->type ) {
 
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
     dest->types.integer = src->types.integer;
@@ -279,7 +279,7 @@ debugger_expression_copy( debugger_expression *src )
   case DEBUGGER_EXPRESSION_TYPE_UNARYOP:
     dest->types.unaryop.operation = src->types.unaryop.operation;
     dest->types.unaryop.op = debugger_expression_copy( src->types.unaryop.op );
-    if( !dest->types.unaryop.op ) {
+    if (!dest->types.unaryop.op ) {
       libspectrum_free( dest );
       return NULL;
     }
@@ -289,13 +289,13 @@ debugger_expression_copy( debugger_expression *src )
     dest->types.binaryop.operation = src->types.binaryop.operation;
     dest->types.binaryop.op1 =
       debugger_expression_copy( src->types.binaryop.op1 );
-    if( !dest->types.binaryop.op1 ) {
+    if (!dest->types.binaryop.op1 ) {
       libspectrum_free( dest );
       return NULL;
     }
     dest->types.binaryop.op2 =
       debugger_expression_copy( src->types.binaryop.op2 );
-    if( !dest->types.binaryop.op2 ) {
+    if (!dest->types.binaryop.op2 ) {
       debugger_expression_delete( dest->types.binaryop.op1 );
       libspectrum_free( dest );
       return NULL;
@@ -317,7 +317,7 @@ debugger_expression_copy( debugger_expression *src )
 libspectrum_dword
 debugger_expression_evaluate( debugger_expression *exp )
 {
-  switch( exp->type ) {
+  switch (exp->type ) {
 
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
     return exp->types.integer;
@@ -343,7 +343,7 @@ debugger_expression_evaluate( debugger_expression *exp )
 static libspectrum_dword
 evaluate_unaryop( struct unaryop_type *unary )
 {
-  switch( unary->operation ) {
+  switch (unary->operation ) {
 
   case '!': return !debugger_expression_evaluate( unary->op );
   case '~': return ~debugger_expression_evaluate( unary->op );
@@ -361,7 +361,7 @@ evaluate_unaryop( struct unaryop_type *unary )
 static libspectrum_dword
 evaluate_binaryop( struct binaryop_type *binary )
 {
-  switch( binary->operation ) {
+  switch (binary->operation ) {
 
   case '+': return debugger_expression_evaluate( binary->op1 ) +
 		   debugger_expression_evaluate( binary->op2 );
@@ -374,8 +374,8 @@ evaluate_binaryop( struct binaryop_type *binary )
 
   case '/': {
       libspectrum_dword op2 = debugger_expression_evaluate( binary->op2 );
-      if( op2 == 0 ) {
-        ui_error( UI_ERROR_ERROR, "divide by 0" );
+      if (op2 == 0 ) {
+        ui_error( UI_ERROR_ERROR, "divide by 0");
         return 0;
       }
       return debugger_expression_evaluate( binary->op1 ) / op2;
@@ -430,10 +430,10 @@ int
 debugger_expression_deparse( char *buffer, size_t length,
 			     const debugger_expression *exp )
 {
-  switch( exp->type ) {
+  switch (exp->type ) {
 
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
-    if( debugger_output_base == 10 ) {
+    if (debugger_output_base == 10 ) {
       snprintf( buffer, length, "%d", exp->types.integer );
     } else {
       snprintf( buffer, length, "0x%x", exp->types.integer );
@@ -474,9 +474,9 @@ deparse_unaryop( char *buffer, size_t length,
   operand_buffer = libspectrum_new( char, length );
 
   error = debugger_expression_deparse( operand_buffer, length, unaryop->op );
-  if( error ) { libspectrum_free( operand_buffer ); return error; }
+  if (error ) { libspectrum_free( operand_buffer ); return error; }
 
-  switch( unaryop->operation ) {
+  switch (unaryop->operation ) {
   case '!': operation_string = "!"; break;
   case '~': operation_string = "~"; break;
   case '-': operation_string = "-"; break;
@@ -492,7 +492,7 @@ deparse_unaryop( char *buffer, size_t length,
     fuse_abort();
   }
 
-  if( brackets_possible )
+  if (brackets_possible )
     brackets = ( unaryop->op->precedence                  <
                  unaryop_precedence( unaryop->operation )   );
 
@@ -519,13 +519,13 @@ deparse_binaryop( char *buffer, size_t length,
 
   error = debugger_expression_deparse( operand1_buffer, length,
 				       binaryop->op1 );
-  if( error ) { libspectrum_free( operand1_buffer ); return error; }
+  if (error ) { libspectrum_free( operand1_buffer ); return error; }
 
   error = debugger_expression_deparse( operand2_buffer, length,
 				       binaryop->op2 );
-  if( error ) { libspectrum_free( operand1_buffer ); return error; }
+  if (error ) { libspectrum_free( operand1_buffer ); return error; }
 
-  switch( binaryop->operation ) {
+  switch (binaryop->operation ) {
   case    '+': operation_string = "+";  break;
   case    '-': operation_string = "-";  break;
   case    '*': operation_string = "*";  break;
@@ -558,7 +558,7 @@ deparse_binaryop( char *buffer, size_t length,
 	    brackets_necessary1 ? " )" : "",
 	    operation_string,
 	    brackets_necessary2 ? "( " : "", operand2_buffer,
-	    brackets_necessary2 ? " )" : "" );
+	    brackets_necessary2 ? " )" : "");
 
   libspectrum_free( operand1_buffer );
 
@@ -577,7 +577,7 @@ brackets_necessary( int top_operation, debugger_expression *operand )
 
   /* If the top level operation has a higher precedence than the
      bottom level operation, we always need brackets */
-  if( top_precedence > bottom_precedence ) return 1;
+  if (top_precedence > bottom_precedence ) return 1;
 
   /* If the two operations are of equal precedence, we need brackets
      i) if the top level operation is non-associative, or
@@ -591,14 +591,14 @@ brackets_necessary( int top_operation, debugger_expression *operand )
      left-right associativity; I think things are clearer with
      brackets in.
   */
-  if( top_precedence == bottom_precedence ) {
+  if (top_precedence == bottom_precedence ) {
 
-    if( is_non_associative( top_operation ) ) return 1;
+    if (is_non_associative( top_operation ) ) return 1;
 
     // Sanity check
-    if( operand->type != DEBUGGER_EXPRESSION_TYPE_BINARYOP ) {
+    if (operand->type != DEBUGGER_EXPRESSION_TYPE_BINARYOP ) {
       ui_error( UI_ERROR_ERROR,
-		"binary operator has same precedence as non-binary operator" );
+		"binary operator has same precedence as non-binary operator");
       fuse_abort();
     }
 
@@ -615,7 +615,7 @@ brackets_necessary( int top_operation, debugger_expression *operand )
 static int
 is_non_associative( int operation )
 {
-  switch( operation ) {
+  switch (operation ) {
 
   // Simple cases
   case '+': case '*': return 0;

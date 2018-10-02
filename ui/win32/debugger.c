@@ -72,39 +72,39 @@ typedef enum debugger_pane {
   DEBUGGER_PANE_END // End marker
 } debugger_pane;
 
-static int create_dialog( void );
-static int hide_hidden_panes( void );
+static int create_dialog(void);
+static int hide_hidden_panes(void);
 static UINT get_pane_menu_item( debugger_pane pane );
 static BOOL show_hide_pane( debugger_pane pane, int show );
-// static int create_menu_bar( void ); this function is handled by rc
+// static int create_menu_bar(void); this function is handled by rc
 static void toggle_display( debugger_pane pane, UINT menu_item_id );
 static int create_register_display( HFONT font );
-// int create_memory_map( void ); this function is handled by rc
-static int create_breakpoints( void );
+// int create_memory_map(void); this function is handled by rc
+static int create_breakpoints(void);
 static int create_disassembly( HFONT font );
 static int create_stack_display( HFONT font );
 static void stack_click( LPNMITEMACTIVATE lpnmitem );
-static int create_events( void );
+static int create_events(void);
 static void events_click( LPNMITEMACTIVATE lpnmitem );
-// int create_command_entry( void ); this function is handled by rc
-// int create_buttons( void ); this function is handled by rc
+// int create_command_entry(void); this function is handled by rc
+// int create_buttons(void); this function is handled by rc
 
-static int activate_debugger( void );
-static void update_memory_map( void );
-static void update_breakpoints( void );
-static void update_disassembly( void );
-static void update_events( void );
+static int activate_debugger(void);
+static void update_memory_map(void);
+static void update_breakpoints(void);
+static void update_disassembly(void);
+static void update_events(void);
 static void add_event( gpointer data, gpointer user_data GCC_UNUSED );
-static int deactivate_debugger( void );
+static int deactivate_debugger(void);
 
 static int move_disassembly( WPARAM scroll_command );
 
-static void evaluate_command( void );
-static void win32ui_debugger_done_step( void );
-static void win32ui_debugger_done_continue( void );
-static void win32ui_debugger_break( void );
-static void delete_dialog( void );
-static void win32ui_debugger_done_close( void );
+static void evaluate_command(void);
+static void win32ui_debugger_done_step(void);
+static void win32ui_debugger_done_continue(void);
+static void win32ui_debugger_break(void);
+static void delete_dialog(void);
+static void win32ui_debugger_done_close(void);
 static INT_PTR CALLBACK win32ui_debugger_proc( HWND hWnd, UINT msg,
                                                WPARAM wParam, LPARAM lParam );
 
@@ -132,62 +132,62 @@ static int debugger_active;
 #define STUB do { printf("STUB: %s()\n", __func__); fflush(stdout); } while(0)
 
 static const TCHAR*
-format_8_bit( void )
+format_8_bit(void)
 {
-  return debugger_output_base == 10 ? TEXT( "%3d" ) : TEXT( "0x%02X" );
+  return debugger_output_base == 10 ? TEXT( "%3d" ) : TEXT( "0x%02X");
 }
 
 static const TCHAR*
-format_16_bit( void )
+format_16_bit(void)
 {
-  return debugger_output_base == 10 ? TEXT( "%5d" ) : TEXT( "0x%04X" );
+  return debugger_output_base == 10 ? TEXT( "%5d" ) : TEXT( "0x%04X");
 }
 
 int
-ui_debugger_activate( void )
+ui_debugger_activate(void)
 {
   int error;
 
   fuse_emulation_pause();
 
   // create_dialog will create the dialog or activate if it exists
-  if( !dialog_created ) if( create_dialog() ) return 1;
+  if (!dialog_created ) if (create_dialog() ) return 1;
 
   ShowWindow( fuse_hDBGWnd, SW_SHOW );
-  error = hide_hidden_panes(); if( error ) return error;
+  error = hide_hidden_panes(); if (error ) return error;
 
   EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_CONT ), TRUE);
   EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_BREAK ), FALSE );
-  if( !debugger_active ) activate_debugger();
+  if (!debugger_active ) activate_debugger();
 
   return 0;
 }
 
 void
-ui_breakpoints_updated( void )
+ui_breakpoints_updated(void)
 {
   // TODO: Refresh debugger list here
 }
 
 static int
-hide_hidden_panes( void )
+hide_hidden_panes(void)
 {
   debugger_pane i;
   UINT checkitem;
   MENUITEMINFO mii;
 
-  for( i = DEBUGGER_PANE_BEGIN; i < DEBUGGER_PANE_END; i++ ) {
+  for( i = DEBUGGER_PANE_BEGIN; i < DEBUGGER_PANE_END; i++) {
 
-    checkitem = get_pane_menu_item( i ); if( !checkitem ) return 1;
+    checkitem = get_pane_menu_item( i ); if (!checkitem ) return 1;
 
     mii.fMask = MIIM_STATE;
     mii.cbSize = sizeof( MENUITEMINFO );
-    if( ! GetMenuItemInfo( GetMenu( fuse_hDBGWnd ), checkitem, FALSE, &mii ) )
+    if (! GetMenuItemInfo( GetMenu( fuse_hDBGWnd ), checkitem, FALSE, &mii ) )
       return 1;
 
-    if( mii.fState && MFS_CHECKED ) continue;
+    if (mii.fState && MFS_CHECKED ) continue;
 
-    if( ! show_hide_pane( i, SW_HIDE ) ) return 1;
+    if (! show_hide_pane( i, SW_HIDE ) ) return 1;
   }
 
   return 0;
@@ -200,7 +200,7 @@ get_pane_menu_item( debugger_pane pane )
 
   menu_item_id = 0;
 
-  switch( pane ) {
+  switch (pane ) {
   case DEBUGGER_PANE_REGISTERS: menu_item_id = IDM_DBG_REG; break;
   case DEBUGGER_PANE_MEMORYMAP: menu_item_id = IDM_DBG_MEMMAP; break;
   case DEBUGGER_PANE_BREAKPOINTS: menu_item_id = IDM_DBG_BPS; break;
@@ -211,7 +211,7 @@ get_pane_menu_item( debugger_pane pane )
   case DEBUGGER_PANE_END: break;
   }
 
-  if( !menu_item_id ) {
+  if (!menu_item_id ) {
     ui_error( UI_ERROR_ERROR, "unknown debugger pane %u", pane );
     return 0;
   }
@@ -232,15 +232,15 @@ show_hide_pane( debugger_pane pane, int show )
   // FIXME: window needs to resize/collapse as panel are being hidden
   int i;
 
-  switch( pane ) {
+  switch (pane ) {
     case DEBUGGER_PANE_REGISTERS:
-      for( i = IDC_DBG_REG_PC; i <= IDC_DBG_REG_IM; i++ ) {
+      for( i = IDC_DBG_REG_PC; i <= IDC_DBG_REG_IM; i++) {
         ShowWindow( GetDlgItem( fuse_hDBGWnd, i ), show );
       }
       return TRUE;
 
     case DEBUGGER_PANE_MEMORYMAP:
-      for( i = IDC_DBG_MAP11; i <= IDC_DBG_TEXT_CONTENDED; i++ ) {
+      for( i = IDC_DBG_MAP11; i <= IDC_DBG_TEXT_CONTENDED; i++) {
         ShowWindow( GetDlgItem( fuse_hDBGWnd, i ), show );
       }
       ShowWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_GRP_MEMMAP ), show );
@@ -273,9 +273,9 @@ show_hide_pane( debugger_pane pane, int show )
 int
 ui_debugger_deactivate( int interruptable )
 {
-  if( debugger_active ) deactivate_debugger();
+  if (debugger_active ) deactivate_debugger();
 
-  if( dialog_created ) {
+  if (dialog_created ) {
     EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_CONT ),
                   !interruptable ? TRUE : FALSE );
     EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_BREAK ),
@@ -286,7 +286,7 @@ ui_debugger_deactivate( int interruptable )
 }
 
 static int
-create_dialog( void )
+create_dialog(void)
 {
   int error;
   debugger_pane i;
@@ -294,29 +294,29 @@ create_dialog( void )
 
   HFONT font;
 
-  error = win32ui_get_monospaced_font( &font ); if( error ) return error;
+  error = win32ui_get_monospaced_font( &font ); if (error ) return error;
 
   fuse_hDBGWnd = CreateDialog( fuse_hInstance, MAKEINTRESOURCE( IDD_DBG ),
                                fuse_hWnd, win32ui_debugger_proc );
 
   // The main display areas
   error = create_register_display( font );
-  if( error ) return error;
+  if (error ) return error;
 
-  error = create_breakpoints(); if( error ) return error;
+  error = create_breakpoints(); if (error ) return error;
 
-  error = create_disassembly( font ); if( error ) return error;
+  error = create_disassembly( font ); if (error ) return error;
 
-  error = create_stack_display( font ); if( error ) return error;
+  error = create_stack_display( font ); if (error ) return error;
 
-  error = create_events(); if( error ) return error;
+  error = create_events(); if (error ) return error;
 
   // Initially, have all the panes visible
-  for( i = DEBUGGER_PANE_BEGIN; i < DEBUGGER_PANE_END; i++ ) {
+  for( i = DEBUGGER_PANE_BEGIN; i < DEBUGGER_PANE_END; i++) {
 
     UINT check_item;
 
-    check_item = get_pane_menu_item( i ); if( !check_item ) break;
+    check_item = get_pane_menu_item( i ); if (!check_item ) break;
 
     mii.fMask = MIIM_STATE;
     mii.fState = MFS_CHECKED;
@@ -340,7 +340,7 @@ toggle_display( debugger_pane pane, UINT menu_item_id )
 
   /* Windows doesn't automatically checks/unchecks
      the menus when they're clicked */
-  if( mii.fState && MFS_CHECKED ) {
+  if (mii.fState && MFS_CHECKED ) {
     show_hide_pane( pane, SW_HIDE );
     mii.fState = MFS_UNCHECKED;
     SetMenuItemInfo( GetMenu( fuse_hDBGWnd ), menu_item_id, FALSE, &mii );
@@ -357,7 +357,7 @@ create_register_display( HFONT font )
   // this display is created in rc, just set the monospaced font
   size_t i;
 
-  for( i = 0; i < NUM_DBG_REGS; i++ ) {
+  for (i = 0; i < NUM_DBG_REGS; i++) {
     win32ui_set_font( fuse_hDBGWnd, IDC_DBG_REG_PC + i, font );
   }
 
@@ -365,7 +365,7 @@ create_register_display( HFONT font )
 }
 
 static int
-create_breakpoints( void )
+create_breakpoints(void)
 {
   size_t i;
 
@@ -385,8 +385,8 @@ create_breakpoints( void )
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
   lvc.fmt = LVCFMT_LEFT;
 
-  for( i = 0; i < 6; i++ ) {
-    if( i != 0 )
+  for (i = 0; i < 6; i++) {
+    if (i != 0 )
       lvc.mask |= LVCF_SUBITEM;
     lvc.cx = _tcslen( breakpoint_titles[i] ) * 8 + 10;
     lvc.pszText = (LPTSTR)breakpoint_titles[i];
@@ -429,8 +429,8 @@ create_disassembly( HFONT font )
   lvc.mask = LVCF_FMT | LVCF_TEXT;
   lvc.fmt = LVCFMT_LEFT;
 
-  for( i = 0; i < 2; i++ ) {
-    if( i != 0 ) lvc.mask |= LVCF_SUBITEM;
+  for (i = 0; i < 2; i++) {
+    if (i != 0 ) lvc.mask |= LVCF_SUBITEM;
     lvc.pszText = (LPTSTR)disassembly_titles[i];
     SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_PC, LVM_INSERTCOLUMN, i,
                         ( LPARAM ) &lvc );
@@ -480,8 +480,8 @@ create_stack_display( HFONT font )
   lvc.mask = LVCF_FMT | LVCF_TEXT;
   lvc.fmt = LVCFMT_LEFT;
 
-  for( i = 0; i < 2; i++ ) {
-    if( i != 0 ) lvc.mask |= LVCF_SUBITEM;
+  for (i = 0; i < 2; i++) {
+    if (i != 0 ) lvc.mask |= LVCF_SUBITEM;
     lvc.pszText = (LPTSTR)stack_titles[i];
     SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_STACK, LVM_INSERTCOLUMN, i,
                         ( LPARAM ) &lvc );
@@ -505,14 +505,14 @@ stack_click( LPNMITEMACTIVATE lpnmitem )
   LVITEM li;
 
   row = lpnmitem->iItem;
-  if( row < 0 ) return;
+  if (row < 0 ) return;
 
   li.iSubItem = 1;
   li.pszText = buffer;
   li.cchTextMax = 255;
   retval = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_STACK,
                                  LVM_GETITEMTEXT, row, ( LPARAM ) &li );
-  if( !retval ) {
+  if (!retval ) {
     ui_error( UI_ERROR_ERROR, "couldn't get text for row %d", row );
     return;
   }
@@ -523,13 +523,13 @@ stack_click( LPNMITEMACTIVATE lpnmitem )
     DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, destination, 0,
     DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
   );
-  if( error ) return;
+  if (error ) return;
 
   debugger_run();
 }
 
 static int
-create_events( void )
+create_events(void)
 {
   size_t i;
   LPCTSTR titles[] = { _T( "Time" ), _T( "Type" ) };
@@ -547,8 +547,8 @@ create_events( void )
   lvc.mask = LVCF_FMT | LVCF_TEXT;
   lvc.fmt = LVCFMT_LEFT;
 
-  for( i = 0; i < 2; i++ ) {
-    if( i != 0 ) lvc.mask |= LVCF_SUBITEM;
+  for (i = 0; i < 2; i++) {
+    if (i != 0 ) lvc.mask |= LVCF_SUBITEM;
     lvc.pszText = (LPTSTR)titles[i];
     SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS, LVM_INSERTCOLUMN, i,
                         ( LPARAM ) &lvc );
@@ -571,14 +571,14 @@ events_click( LPNMITEMACTIVATE lpnmitem )
   libspectrum_dword tstates;
 
   row = lpnmitem->iItem;
-  if( row < 0 ) return;
+  if (row < 0 ) return;
 
   li.iSubItem = 0;
   li.pszText = buffer;
   li.cchTextMax = 255;
   got_text = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
                                  LVM_GETITEMTEXT, row, ( LPARAM ) &li );
-  if( !got_text ) {
+  if (!got_text ) {
     ui_error( UI_ERROR_ERROR, "couldn't get text for row %d", row );
     return;
   }
@@ -588,13 +588,13 @@ events_click( LPNMITEMACTIVATE lpnmitem )
     DEBUGGER_BREAKPOINT_TYPE_TIME, tstates, 0,
     DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
   );
-  if( error ) return;
+  if (error ) return;
 
   debugger_run();
 }
 
 static int
-activate_debugger( void )
+activate_debugger(void)
 {
   debugger_active = 1;
 
@@ -607,7 +607,7 @@ activate_debugger( void )
 
 // Update the debugger's display
 int
-ui_debugger_update( void )
+ui_debugger_update(void)
 {
   size_t i;
   TCHAR buffer[1024], format_string[1024];
@@ -628,10 +628,10 @@ ui_debugger_update( void )
 				    &HL, &HL_, &IX, &IY,
 				  };
 
-  if( !dialog_created ) return 0;
+  if (!dialog_created ) return 0;
 
   // FIXME: verify all functions below are unicode compliant
-  for( i = 0; i < 12; i++ ) {
+  for (i = 0; i < 12; i++) {
     _sntprintf( buffer, 5, "%3s ", register_name[i] );
     _sntprintf( &buffer[4], 76, format_16_bit(), *value_ptr[i] );
     SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_REG_PC + i,
@@ -660,7 +660,7 @@ ui_debugger_update( void )
                       WM_SETTEXT, (WPARAM) 0, (LPARAM) buffer );
 
   _tcscpy( buffer, TEXT( "SZ5H3PNC\r\n" ) );
-  for( i = 0; i < 8; i++ ) buffer[i+10] = ( F & ( 0x80 >> i ) ) ? '1' : '0';
+  for (i = 0; i < 8; i++) buffer[i+10] = ( F & ( 0x80 >> i ) ) ? '1' : '0';
   buffer[18] = '\0';
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_REG_FLAGS,
                       WM_SETTEXT, (WPARAM) 0, (LPARAM) buffer );
@@ -670,28 +670,28 @@ ui_debugger_update( void )
   _stprintf( format_string, "   ULA %s", format_8_bit() );
   _sntprintf( buffer, 1024, format_string, ula_last_byte() );
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY ) {
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY ) {
     _stprintf( format_string, "\r\n    AY %s", format_8_bit() );
     length = _tcslen( buffer );
     _sntprintf( &buffer[length], 1024-length, format_string,
 	        machine_current->ay.current_register );
   }
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY ) {
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY ) {
     _stprintf( format_string, "\r\n128Mem %s", format_8_bit() );
     length = _tcslen( buffer );
     _sntprintf( &buffer[length], 1024-length, format_string,
 	        machine_current->ram.last_byte );
   }
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_MEMORY ) {
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_PLUS3_MEMORY ) {
     _stprintf( format_string, "\r\n+3 Mem %s", format_8_bit() );
     length = _tcslen( buffer );
     _sntprintf( &buffer[length], 1024-length, format_string,
 	        machine_current->ram.last_byte2 );
   }
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_VIDEO  ||
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_VIDEO  ||
       capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_MEMORY ||
       capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_SE_MEMORY       ) {
     _stprintf( format_string, "\r\nTmxDec %s", format_8_bit() );
@@ -700,14 +700,14 @@ ui_debugger_update( void )
 	        scld_last_dec.byte );
   }
 
-  if( capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_MEMORY ||
+  if (capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_MEMORY ||
       capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_SE_MEMORY       ) {
     _stprintf( format_string, "\r\nTmxHsr %s", format_8_bit() );
     length = _tcslen( buffer );
     _sntprintf( &buffer[length], 1024-length, format_string, scld_last_hsr );
   }
 
-  if( settings_current.zxcf_active ) {
+  if (settings_current.zxcf_active ) {
     _stprintf( format_string, "\r\n  ZXCF %s", format_8_bit() );
     length = _tcslen( buffer );
     _sntprintf( &buffer[length], 1024-length, format_string,
@@ -755,7 +755,7 @@ ui_debugger_update( void )
 }
 
 static void
-update_memory_map( void )
+update_memory_map(void)
 {
   TCHAR buffer[ 40 ];
   int source, page_num, writable, contended;
@@ -769,7 +769,7 @@ update_memory_map( void )
   for( block = 0; block < MEMORY_PAGES_IN_64K && row < 8; block++ ) {
     memory_page *page = &memory_map_read[block];
 
-    if( page->source != source ||
+    if (page->source != source ||
       page->page_num != page_num ||
       page->offset != offset ||
       page->writable != writable ||
@@ -810,7 +810,7 @@ update_memory_map( void )
   }
 
   // Hide unused rows
-  for( i = row; i < 8; i++ ) {
+  for( i = row; i < 8; i++) {
     for( j = 0; j < 4; j++ ) {
       SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_MAP11 + ( i * 4 ) + j,
                           WM_SETTEXT, (WPARAM) 0, (LPARAM) NULL );
@@ -820,7 +820,7 @@ update_memory_map( void )
 }
 
 static void
-update_breakpoints( void )
+update_breakpoints(void)
 {
   // FIXME: review this function for unicode compatibility
   TCHAR buffer[ 1024 ],
@@ -845,12 +845,12 @@ update_breakpoints( void )
     _sntprintf( breakpoint_text[1], 40, "%s",
 	       debugger_breakpoint_type_text[ bp->type ] );
 
-    switch( bp->type ) {
+    switch (bp->type ) {
 
     case DEBUGGER_BREAKPOINT_TYPE_EXECUTE:
     case DEBUGGER_BREAKPOINT_TYPE_READ:
     case DEBUGGER_BREAKPOINT_TYPE_WRITE:
-      if( bp->value.address.source == memory_source_any ) {
+      if (bp->value.address.source == memory_source_any ) {
         _sntprintf( breakpoint_text[2], 40, format_16_bit(),
         bp->value.address.offset );
       } else {
@@ -882,10 +882,10 @@ update_breakpoints( void )
     _sntprintf( breakpoint_text[3], 40, "%lu", (unsigned long)bp->ignore );
     _sntprintf( breakpoint_text[4], 40, "%s",
 	        debugger_breakpoint_life_text[ bp->life ] );
-    if( bp->condition ) {
+    if (bp->condition ) {
       debugger_expression_deparse( breakpoint_text[5], 80, bp->condition );
     } else {
-      _tcscpy( breakpoint_text[5], "" );
+      _tcscpy( breakpoint_text[5], "");
     }
 
     // get the count of items to insert as last element
@@ -893,10 +893,10 @@ update_breakpoints( void )
                                     LVM_GETITEMCOUNT, 0, 0 );
 
     // append the breakpoint items
-    for( i = 0; i < 6; i++ ) {
+    for (i = 0; i < 6; i++) {
       lvi.iSubItem = i;
       lvi.pszText = breakpoint_text[i];
-      if( i == 0 )
+      if (i == 0 )
         SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_BPS, LVM_INSERTITEM, 0,
                             ( LPARAM ) &lvi );
       else
@@ -907,7 +907,7 @@ update_breakpoints( void )
 }
 
 static void
-update_disassembly( void )
+update_disassembly(void)
 {
   size_t i, length; libspectrum_word address;
   TCHAR buffer[80];
@@ -919,7 +919,7 @@ update_disassembly( void )
   LV_ITEM lvi;
   lvi.mask = LVIF_TEXT;
 
-  for( i = 0, address = disassembly_top; i < disassembly_page; i++ ) {
+  for( i = 0, address = disassembly_top; i < disassembly_page; i++) {
     int l;
     _sntprintf( disassembly_text[0], 40, format_16_bit(), address );
     debugger_disassemble( disassembly_text[1], 40, &length, address );
@@ -947,7 +947,7 @@ update_disassembly( void )
 }
 
 static void
-update_events( void )
+update_events(void)
 {
   // clear the listview
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
@@ -968,7 +968,7 @@ add_event( gpointer data, gpointer user_data GCC_UNUSED )
   lvi.mask = LVIF_TEXT;
 
   // Skip events which have been removed
-  if( ptr->type == event_type_null ) return;
+  if (ptr->type == event_type_null ) return;
 
   _sntprintf( event_text[0], 40, "%d", ptr->tstates );
   // FIXME: event_name() is not unicode compliant
@@ -988,7 +988,7 @@ add_event( gpointer data, gpointer user_data GCC_UNUSED )
 }
 
 static int
-deactivate_debugger( void )
+deactivate_debugger(void)
 {
   PostMessage( fuse_hWnd, WM_USER_EXIT_PROCESS_MESSAGES, 0, 0 );
   debugger_active = 0;
@@ -1010,7 +1010,7 @@ ui_debugger_disassemble( libspectrum_word address )
                  SB_CTL, &si, TRUE );
 
   // And update the disassembly if the debugger is active
-  if( debugger_active ) update_disassembly();
+  if (debugger_active ) update_disassembly();
 
   return 0;
 }
@@ -1023,22 +1023,22 @@ move_disassembly( WPARAM scroll_command )
   int cursor_row;
 
   // in Windows we have to read the command and scroll the scrollbar manually
-  switch( LOWORD( scroll_command ) ) {
+  switch (LOWORD( scroll_command ) ) {
     case SB_BOTTOM:
-      if( disassembly_bottom == disassembly_min ) return 0;
+      if (disassembly_bottom == disassembly_min ) return 0;
       address = debugger_search_instruction( disassembly_min,
                                              -disassembly_page );
       break;
     case SB_TOP:
-      if( disassembly_top == disassembly_min ) return 0;
+      if (disassembly_top == disassembly_min ) return 0;
       address = disassembly_min;
       break;
     case SB_LINEDOWN:
-      if( disassembly_bottom == disassembly_min ) return 0;
+      if (disassembly_bottom == disassembly_min ) return 0;
       address = debugger_search_instruction( disassembly_top, 1 );
       break;
     case SB_LINEUP:
-      if( disassembly_top == disassembly_min ) return 0;
+      if (disassembly_top == disassembly_min ) return 0;
       address = debugger_search_instruction( disassembly_top, -1);
       break;
     case SB_PAGEUP:
@@ -1055,7 +1055,7 @@ move_disassembly( WPARAM scroll_command )
       address = HIWORD( scroll_command );
 
       // The scrollbar should constrain to min/max values
-      if( address > disassembly_max - disassembly_page )
+      if (address > disassembly_max - disassembly_page )
         address = debugger_search_instruction( disassembly_min,
                                                -disassembly_page );
       break;
@@ -1071,7 +1071,7 @@ move_disassembly( WPARAM scroll_command )
   ui_debugger_disassemble( address );
 
   // Mark selected row
-  if( cursor_row >= 0 ) {
+  if (cursor_row >= 0 ) {
     ListView_SetItemState( GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_PC ),
                            cursor_row, LVIS_FOCUSED|LVIS_SELECTED,
                            LVIS_FOCUSED|LVIS_SELECTED );
@@ -1082,7 +1082,7 @@ move_disassembly( WPARAM scroll_command )
 
 // Evaluate the command currently in the entry box
 static void
-evaluate_command( void )
+evaluate_command(void)
 {
   TCHAR *buffer;
   int buffer_size;
@@ -1091,17 +1091,17 @@ evaluate_command( void )
   buffer_size = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_ED_EVAL, WM_GETTEXTLENGTH,
                                    (WPARAM) 0, (LPARAM) 0 );
   buffer = malloc( ( buffer_size + 1 ) * sizeof( TCHAR ) );
-  if( buffer == NULL ) {
+  if (buffer == NULL ) {
     ui_error( UI_ERROR_ERROR, "Out of memory in %s.", __func__ );
     return;
   }
 
   // get the value in Evaluate text box first
-  if( SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_ED_EVAL, WM_GETTEXT,
+  if (SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_ED_EVAL, WM_GETTEXT,
                           (WPARAM) ( buffer_size + 1 ),
                           (LPARAM) buffer ) != buffer_size ) {
     ui_error( UI_ERROR_ERROR,
-              "Couldn't get the content of the Evaluate text box" );
+              "Couldn't get the content of the Evaluate text box");
     return;
   }
 
@@ -1112,19 +1112,19 @@ evaluate_command( void )
 }
 
 static void
-win32ui_debugger_done_step( void )
+win32ui_debugger_done_step(void)
 {
   debugger_step();
 }
 
 static void
-win32ui_debugger_done_continue( void )
+win32ui_debugger_done_continue(void)
 {
   debugger_run();
 }
 
 static void
-win32ui_debugger_break( void )
+win32ui_debugger_break(void)
 {
   debugger_mode = DEBUGGER_MODE_HALTED;
 
@@ -1133,13 +1133,13 @@ win32ui_debugger_break( void )
 }
 
 static void
-delete_dialog( void )
+delete_dialog(void)
 {
   win32ui_debugger_done_close();
 }
 
 static void
-win32ui_debugger_done_close( void )
+win32ui_debugger_done_close(void)
 {
   ShowWindow( fuse_hDBGWnd, SW_HIDE );
   win32ui_debugger_done_continue();
@@ -1149,9 +1149,9 @@ static INT_PTR CALLBACK
 win32ui_debugger_proc( HWND hWnd GCC_UNUSED, UINT msg,
                        WPARAM wParam, LPARAM lParam )
 {
-  switch( msg ) {
+  switch (msg ) {
     case WM_COMMAND:
-      switch( LOWORD( wParam ) ) {
+      switch (LOWORD( wParam ) ) {
         case IDCLOSE:
         case IDCANCEL:
           win32ui_debugger_done_close();
@@ -1199,7 +1199,7 @@ win32ui_debugger_proc( HWND hWnd GCC_UNUSED, UINT msg,
       switch ( ( ( LPNMHDR ) lParam )->code ) {
 
         case NM_DBLCLK:
-          switch( ( ( LPNMHDR ) lParam)->idFrom ) {
+          switch (( ( LPNMHDR ) lParam)->idFrom ) {
 
             case IDC_DBG_LV_EVENTS:
               events_click( ( LPNMITEMACTIVATE ) lParam );
@@ -1212,8 +1212,8 @@ win32ui_debugger_proc( HWND hWnd GCC_UNUSED, UINT msg,
       break;
 
     case WM_VSCROLL:
-      if( ( HWND ) lParam != NULL )
-        if( ! move_disassembly( wParam ) )
+      if (( HWND ) lParam != NULL )
+        if (! move_disassembly( wParam ) )
           return 0;
       break;
   }
@@ -1231,16 +1231,16 @@ disassembly_key_press( HWND hWnd, WPARAM wParam )
   // Get selected row
   cursor_row = ListView_GetNextItem( hWnd, -1, LVNI_SELECTED );
 
-  switch( wParam ) {
+  switch (wParam ) {
   case VK_DOWN:
-    if( cursor_row == disassembly_page - 1 ) {
+    if (cursor_row == disassembly_page - 1 ) {
       address = debugger_search_instruction( disassembly_top, 1 );
       ui_debugger_disassemble( address );
     }
     break;
 
   case VK_UP:
-    if( cursor_row == 0 ) {
+    if (cursor_row == 0 ) {
       address = debugger_search_instruction( disassembly_top, -1 );
       ui_debugger_disassemble( address );
     }
@@ -1269,9 +1269,9 @@ disassembly_key_press( HWND hWnd, WPARAM wParam )
     break;
   }
 
-  if( initial_top != disassembly_top ) {
+  if (initial_top != disassembly_top ) {
     // Mark selected row
-    if( cursor_row >= 0 ) {
+    if (cursor_row >= 0 ) {
       ListView_SetItemState( hWnd, cursor_row, LVIS_FOCUSED|LVIS_SELECTED,
                              LVIS_FOCUSED|LVIS_SELECTED );
     }
@@ -1299,7 +1299,7 @@ disassembly_wheel_scroll( HWND hWnd, WPARAM wParam )
   ui_debugger_disassemble( address );
 
   // Mark selected row
-  if( cursor_row >= 0 ) {
+  if (cursor_row >= 0 ) {
     ListView_SetItemState( hWnd, cursor_row, LVIS_FOCUSED|LVIS_SELECTED,
                            LVIS_FOCUSED|LVIS_SELECTED );
   }
@@ -1312,15 +1312,15 @@ disassembly_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
   WNDPROC orig_proc;
 
-  switch( msg ) {
+  switch (msg ) {
   case WM_DESTROY:
-    orig_proc = (WNDPROC) GetProp( hWnd, "original_proc" );
+    orig_proc = (WNDPROC) GetProp( hWnd, "original_proc");
     SetWindowLongPtr( hWnd, GWLP_WNDPROC, (LONG_PTR) orig_proc );
-    RemoveProp( hWnd, "original_proc" );
+    RemoveProp( hWnd, "original_proc");
     break;
 
   case WM_KEYDOWN:
-    if( disassembly_key_press( hWnd, wParam ) ) return 0;
+    if (disassembly_key_press( hWnd, wParam ) ) return 0;
     break;
 
   case WM_MOUSEWHEEL:
@@ -1328,6 +1328,6 @@ disassembly_listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     return 0;
   }
 
-  orig_proc = (WNDPROC) GetProp( hWnd, "original_proc" );
+  orig_proc = (WNDPROC) GetProp( hWnd, "original_proc");
   return CallWindowProc( orig_proc, hWnd, msg, wParam, lParam );
 }

@@ -24,7 +24,7 @@
 #ifndef FUSE_SVGADISPLAY_H
 #define FUSE_SVGADISPLAY_H
 
-int svgadisplay_init( void );
-int svgadisplay_end( void );
+int svgadisplay_init(void);
+int svgadisplay_end(void);
 
 #endif // #ifndef FUSE_SVGADISPLAY_H

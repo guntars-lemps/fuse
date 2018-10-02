@@ -42,7 +42,7 @@
 #include "tc2068.h"
 #include "ui/ui.h"
 
-static int tc2068_reset( void );
+static int tc2068_reset(void);
 
 memory_page tc2068_empty_mapping[MEMORY_PAGES_IN_8K];
 static int empty_mapping_allocated = 0;
@@ -50,7 +50,7 @@ static int empty_mapping_allocated = 0;
 libspectrum_byte
 tc2068_ay_registerport_read( libspectrum_word port, libspectrum_byte *attached )
 {
-  if( machine_current->ay.current_register == 14 ) return 0xff;
+  if (machine_current->ay.current_register == 14 ) return 0xff;
 
   return ay_registerport_read( port, attached );
 }
@@ -74,25 +74,25 @@ tc2068_ay_dataport_read( libspectrum_word port, libspectrum_byte *attached )
 	  ? machine_current->ay.registers[14]
 	  : 0xff;
 
-    if( port & 0x0100 ) ret &= ~joystick_timex_read( port, 0 );
-    if( port & 0x0200 ) ret &= ~joystick_timex_read( port, 1 );
+    if (port & 0x0100 ) ret &= ~joystick_timex_read( port, 0 );
+    if (port & 0x0200 ) ret &= ~joystick_timex_read( port, 1 );
 
     return ret;
   }
 }
 
 static void
-ensure_empty_mapping( void )
+ensure_empty_mapping(void)
 {
   int i;
   libspectrum_byte *empty_chunk;
 
-  if( empty_mapping_allocated ) return;
+  if (empty_mapping_allocated ) return;
 
   empty_chunk = memory_pool_allocate_persistent( 0x2000, 1 );
   memset( empty_chunk, 0xff, 0x2000 );
 
-  for( i = 0; i < MEMORY_PAGES_IN_8K; i++ ) {
+  for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
     memory_page *page = &tc2068_empty_mapping[i];
     page->page = empty_chunk + i * MEMORY_PAGE_SIZE;
     page->offset = i * MEMORY_PAGE_SIZE;
@@ -130,17 +130,17 @@ tc2068_init( fuse_machine_info *machine )
 }
 
 static int
-tc2068_reset( void )
+tc2068_reset(void)
 {
   size_t i, j;
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_tc2068_0,
                             settings_default.rom_tc2068_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_tc2068_1,
                             settings_default.rom_tc2068_1, 0x2000 );
-  if( error ) return error;
+  if (error ) return error;
 
   // 0x0000: ROM 0
   scld_home_map_16k( 0x0000, memory_map_rom, 0 );
@@ -158,7 +158,7 @@ tc2068_reset( void )
   machines_periph_timex();
   periph_update();
 
-  for( i = 0; i < 8; i++ )
+  for (i = 0; i < 8; i++)
     for( j = 0; j < MEMORY_PAGES_IN_8K; j++ ) {
       memory_page *dock_page, *exrom_page;
 
@@ -175,7 +175,7 @@ tc2068_reset( void )
   tc2068_tc2048_common_reset();
 
   error = dck_reset();
-  if( error ) {
+  if (error ) {
     ui_error( UI_ERROR_INFO, "Ignoring Timex dock file '%s'",
             settings_current.dck_file );
   }
@@ -184,7 +184,7 @@ tc2068_reset( void )
 }
 
 void
-tc2068_tc2048_common_reset( void )
+tc2068_tc2048_common_reset(void)
 {
   scld_set_exrom_dock_contention();
 
@@ -198,7 +198,7 @@ tc2068_tc2048_common_reset( void )
 }
 
 int
-tc2068_memory_map( void )
+tc2068_memory_map(void)
 {
   // Start by mapping in the default configuration
   scld_memory_map_home();
@@ -213,7 +213,7 @@ tc2068_memory_map( void )
 }
 
 void
-tc2068_tc2048_common_display_setup( void )
+tc2068_tc2048_common_display_setup(void)
 {
   display_dirty = display_dirty_timex;
   display_write_if_dirty = display_write_if_dirty_timex;

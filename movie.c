@@ -138,13 +138,13 @@ static unsigned char zbuf_o[ ZBUF_SIZE ];
 
 static unsigned char alaw_table[2048 + 1] = { ALAW_ENC_TAB };
 
-void movie_start_frame( void );
+void movie_start_frame(void);
 void movie_init_sound( int f, int s );
 
 static char
-get_timing( void )
+get_timing(void)
 {
-  switch( machine_current->machine ) {
+  switch (machine_current->machine ) {
   case LIBSPECTRUM_MACHINE_16:
   case LIBSPECTRUM_MACHINE_48:
   case LIBSPECTRUM_MACHINE_TC2048:
@@ -173,12 +173,12 @@ get_timing( void )
 }
 
 static char
-get_screentype( void )
+get_screentype(void)
 {
-  if( machine_current->timex ) { // ALTDFILE and default
-    if( scld_last_dec.name.hires )
+  if (machine_current->timex ) { // ALTDFILE and default
+    if (scld_last_dec.name.hires )
       return 'R'; // HIRES screen
-    else if( scld_last_dec.name.b1 )
+    else if (scld_last_dec.name.b1 )
       return 'C'; // HICOLOR screen
     else
       return 'X'; // STANDARD screen on timex machine
@@ -190,7 +190,7 @@ get_screentype( void )
 static void
 fwrite_compr( const void *b, size_t n, size_t m, FILE *f )
 {
-  if( fmf_compr == 0 ) {
+  if (fmf_compr == 0 ) {
     fwrite( b, n, m, f );
   } else {
     zstream.avail_in = n * m;
@@ -228,14 +228,14 @@ movie_compress_area( int x, int y, int w, int h, int s )
     dpoint = dline;
     for( w0 = w; w0 > 0; w0--, dpoint++) {
       d = ( *dpoint >> s ) & 0xff; // bitmask1
-      if( d != d1 ) {
-        if( l > -1 ) { // save running length 0-255
+      if (d != d1 ) {
+        if (l > -1 ) { // save running length 0-255
 	  *b++ = l;
 	  l = -1; // reset l
 	}
         *b++ = d1 = d;
-      } else if( l >= 0 ) {
-	if( l == 255 ) { // close run, and may start a new?
+      } else if (l >= 0 ) {
+	if (l == 255 ) { // close run, and may start a new?
 	  *b++ = l; *b++ = d; l = -1;
 	} else {
 	  l++;
@@ -246,15 +246,15 @@ movie_compress_area( int x, int y, int w, int h, int s )
       }
 // d1 = d;
     }
-    if( b - buff > 960 - 128 ) { // worst case 40*1.5 per line
+    if (b - buff > 960 - 128 ) { // worst case 40*1.5 per line
       fwrite_compr( buff, b - buff, 1, of );
       b = buff;
     }
   }
-  if( l > -1 ) { // save running length 0-255
+  if (l > -1 ) { // save running length 0-255
     *b++ = l;
   }
-  if( b != buff ) { // dump remain
+  if (b != buff ) { // dump remain
     fwrite_compr( buff, b - buff, 1, of );
   }
 }
@@ -270,7 +270,7 @@ movie_compress_area( int x, int y, int w, int h, int s )
 void
 movie_add_area( int x, int y, int w, int h )
 {
-  if( movie_paused ) {
+  if (movie_paused ) {
     movie_start_frame();
     return;
   }
@@ -284,7 +284,7 @@ movie_add_area( int x, int y, int w, int h )
   fwrite_compr( head, 7, 1, of );
   movie_compress_area( x, y, w, h, 0 ); // Bitmap1
   movie_compress_area( x, y, w, h, 8 ); // Attrib/B2
-  if( fmf_screen == 'R' ) {
+  if (fmf_screen == 'R' ) {
     movie_compress_area( x, y, w, h, 16 ); // HiRes attrib
   }
   slice_no++;
@@ -293,7 +293,7 @@ movie_add_area( int x, int y, int w, int h )
 static void
 movie_start_fmf( const char *name )
 {
-  if( ( of = fopen(name, "wb") ) == NULL ) { // trunc old file ? or append ?
+  if (( of = fopen(name, "wb") ) == NULL ) { // trunc old file ? or append ?
     ui_error( UI_ERROR_ERROR, "error opening movie file '%s': %s", name,
               strerror( errno ) );
     return;
@@ -304,14 +304,14 @@ movie_start_fmf( const char *name )
   fwrite( "FMF_V1e", 7, 1, of ); // write magic header Fuse Movie File
 #endif // WORDS_BIGENDIAN
 #ifdef HAVE_ZLIB_H
-  if( option_enumerate_movie_movie_compr() == 0 ) {
+  if (option_enumerate_movie_movie_compr() == 0 ) {
     fmf_compr = 0;
     fwrite( "U", 1, 1, of ); // not compressed
   } else {
     fmf_compr = Z_DEFAULT_COMPRESSION;
     fwrite( "Z", 1, 1, of ); // compressed
   }
-  if( fmf_compr != 0 ) {
+  if (fmf_compr != 0 ) {
     zstream.zalloc = Z_NULL;
     zstream.zfree = Z_NULL;
     zstream.opaque = Z_NULL;
@@ -340,7 +340,7 @@ void
 movie_start( const char *name ) // some init, open file (name)
 {
   frame_no = slice_no = 0;
-  if( name == NULL || *name == '\0' )
+  if (name == NULL || *name == '\0' )
     name = "fuse.fmf"; // fuse movie file
 
   movie_start_fmf( name );
@@ -350,20 +350,20 @@ movie_start( const char *name ) // some init, open file (name)
 }
 
 void
-movie_stop( void )
+movie_stop(void)
 {
-  if( !movie_paused && !movie_recording ) return;
+  if (!movie_paused && !movie_recording ) return;
 
   fwrite_compr( "X", 1, 1, of ); // End of Recording!
 #ifdef HAVE_ZLIB_H
   {
-    if( fmf_compr != 0 ) { // close zlib
+    if (fmf_compr != 0 ) { // close zlib
       zstream.avail_in = 0;
       do {
         zstream.avail_out = ZBUF_SIZE;
         zstream.next_out = zbuf_o;
         deflate( &zstream, Z_SYNC_FLUSH );
-        if( zstream.avail_out != ZBUF_SIZE )
+        if (zstream.avail_out != ZBUF_SIZE )
           fwrite( zbuf_o, ZBUF_SIZE - zstream.avail_out, 1, of );
       } while ( zstream.avail_out != ZBUF_SIZE );
       deflateEnd( &zstream );
@@ -372,7 +372,7 @@ movie_stop( void )
   }
 #endif // HAVE_ZLIB_H
   format = '?';
-  if( of ) {
+  if (of ) {
     fclose( of );
     of = NULL;
   }
@@ -385,11 +385,11 @@ movie_stop( void )
 }
 
 void
-movie_pause( void )
+movie_pause(void)
 {
-  if( !movie_paused && !movie_recording ) return;
+  if (!movie_paused && !movie_recording ) return;
 
-  if( movie_recording ) {
+  if (movie_recording ) {
     movie_recording = 0;
     movie_paused = 1;
     ui_menu_activate( UI_MENU_ITEM_FILE_MOVIE_PAUSE, 0 );
@@ -415,17 +415,17 @@ write_alaw( libspectrum_signed_word *buff, int len )
 {
   int i = 0;
   while( len-- ) {
-    if( *buff >= 0)
+    if (*buff >= 0)
       sbuff[i++] = alaw_table[*buff >> 4];
     else
       sbuff[i++] = 0x7f & alaw_table [- *buff >> 4];
     buff++;
-    if( i == 4096 ) {
+    if (i == 4096 ) {
       i = 0;
       fwrite_compr( sbuff, 4096, 1, of ); // write frame
     }
   }
-  if( i )
+  if (i )
     fwrite_compr( sbuff, i, 1, of ); // write remaind
 }
 
@@ -442,9 +442,9 @@ add_sound( libspectrum_signed_word *buff, int len )
   head[6] = len >> 8;
   len++; // len :-)
   fwrite_compr( head, 7, 1, of ); // Sound frame
-  if( format == 'P' )
+  if (format == 'P' )
     fwrite_compr( buff, len * framesiz , 1, of ); // write frame
-  else if( format == 'A' )
+  else if (format == 'A' )
     write_alaw( buff, len * framesiz );
 }
 
@@ -452,7 +452,7 @@ void
 movie_add_sound( libspectrum_signed_word *buff, int len )
 {
   while( len ) {
-    if( stereo == 'S' ) {
+    if (stereo == 'S' ) {
       add_sound( buff, len > 131072 ? 65536 : len >> 1 );
       buff += len > 131072 ? 131072 : len;
       len -= len > 131072 ? 131072 : len;
@@ -465,7 +465,7 @@ movie_add_sound( libspectrum_signed_word *buff, int len )
 }
 
 void
-movie_start_frame( void )
+movie_start_frame(void)
 {
   // $ - ZX$, T - TX$, C - HiCol, R - HiRes
   head[0] = 'N';
@@ -474,16 +474,16 @@ movie_start_frame( void )
   head[3] = get_timing();
   fwrite_compr( head, 4, 1, of ); // New frame!
   frame_no++;
-  if( movie_paused ) {
+  if (movie_paused ) {
     movie_paused = 0;
     movie_add_area( 0, 0, 40, 240 );
   }
 }
 
 void
-movie_init( void )
+movie_init(void)
 {
   // start movie recording if user requested...
-  if( settings_current.movie_start )
+  if (settings_current.movie_start )
     movie_start( settings_current.movie_start );
 }

@@ -44,13 +44,13 @@ compat_socket_close( compat_socket_t fd )
   return closesocket( fd );
 }
 
-int compat_socket_get_error( void )
+int compat_socket_get_error(void)
 {
   return WSAGetLastError();
 }
 
 const char *
-compat_socket_get_strerror( void )
+compat_socket_get_strerror(void)
 {
   static TCHAR buffer[256];
   TCHAR *ptr;
@@ -63,11 +63,11 @@ compat_socket_get_strerror( void )
                MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
                buffer, ARRAY_SIZE( buffer ), NULL );
 
-  if( !msg_size ) return NULL;
+  if (!msg_size ) return NULL;
 
   // skip 'new line' like chars
   for( ptr = buffer; *ptr; ptr++ ) {
-    if( ( *ptr == '\r' ) || ( *ptr == '\n' ) ) {
+    if (( *ptr == '\r' ) || ( *ptr == '\n' ) ) {
       *ptr = '\0';
       break;
     }
@@ -90,12 +90,12 @@ selfpipe_test( compat_socket_selfpipe_t *self )
   FD_ZERO( &readfds );
   FD_SET( self->self_socket, &readfds );
   active = select( 0, &readfds, NULL, NULL, &tv );
-  if( active == 0 || active == compat_socket_invalid ) {
+  if (active == 0 || active == compat_socket_invalid ) {
     return -1;
   }
 
   // Discard testing packet
-  if( FD_ISSET( self->self_socket, &readfds ) ) {
+  if (FD_ISSET( self->self_socket, &readfds ) ) {
     compat_socket_selfpipe_discard_data( self );
   }
 
@@ -103,7 +103,7 @@ selfpipe_test( compat_socket_selfpipe_t *self )
 }
 
 compat_socket_selfpipe_t *
-compat_socket_selfpipe_alloc( void )
+compat_socket_selfpipe_alloc(void)
 {
   unsigned long mode = 1;
   struct sockaddr_in sa;
@@ -113,7 +113,7 @@ compat_socket_selfpipe_alloc( void )
     libspectrum_new( compat_socket_selfpipe_t, 1 );
 
   self->self_socket = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
-  if( self->self_socket == compat_socket_invalid ) {
+  if (self->self_socket == compat_socket_invalid ) {
     ui_error( UI_ERROR_ERROR,
               "%s: %d: failed to open socket; errno %d: %s\n",
               __FILE__, __LINE__, compat_socket_get_error(),
@@ -122,7 +122,7 @@ compat_socket_selfpipe_alloc( void )
   }
 
   // Set nonblocking mode
-  if( ioctlsocket( self->self_socket, FIONBIO, &mode ) == -1 ) {
+  if (ioctlsocket( self->self_socket, FIONBIO, &mode ) == -1 ) {
     ui_error( UI_ERROR_ERROR,
               "%s: %d: failed to set socket nonblocking; errno %d: %s\n",
               __FILE__, __LINE__, compat_socket_get_error(),
@@ -134,7 +134,7 @@ compat_socket_selfpipe_alloc( void )
   sa.sin_family = AF_INET;
   sa.sin_addr.s_addr = htonl( INADDR_LOOPBACK );
 
-  if( bind( self->self_socket, (struct sockaddr*)&sa, sizeof(sa) ) == -1 ) {
+  if (bind( self->self_socket, (struct sockaddr*)&sa, sizeof(sa) ) == -1 ) {
     ui_error( UI_ERROR_ERROR,
               "%s: %d: failed to bind socket; errno %d: %s\n",
               __FILE__, __LINE__, compat_socket_get_error(),
@@ -143,7 +143,7 @@ compat_socket_selfpipe_alloc( void )
   }
 
   // Get ephemeral port number
-  if( getsockname( self->self_socket, (struct sockaddr *)&sa, &sa_len ) == -1 ) {
+  if (getsockname( self->self_socket, (struct sockaddr *)&sa, &sa_len ) == -1 ) {
     ui_error( UI_ERROR_ERROR,
               "%s: %d: failed to get socket name; errno %d: %s\n",
               __FILE__, __LINE__, compat_socket_get_error(),
@@ -154,9 +154,9 @@ compat_socket_selfpipe_alloc( void )
   self->port = ntohs( sa.sin_port );
 
   // Test communications in order to detect blocking firewalls
-  if( selfpipe_test( self ) == -1 ) {
+  if (selfpipe_test( self ) == -1 ) {
     ui_error( UI_ERROR_ERROR,
-              "Networking: failed to test internal communications" );
+              "Networking: failed to test internal communications");
     fuse_abort();
   }
 
@@ -206,7 +206,7 @@ compat_socket_selfpipe_discard_data( compat_socket_selfpipe_t *self )
 
 
 void
-compat_socket_networking_init( void )
+compat_socket_networking_init(void)
 {
   WORD wVersionRequested;
   WSADATA wsaData;
@@ -214,13 +214,13 @@ compat_socket_networking_init( void )
 
   wVersionRequested = MAKEWORD( 2, 2 );
   error = WSAStartup( wVersionRequested, &wsaData );
-  if( error ) {
+  if (error ) {
     ui_error( UI_ERROR_ERROR, "%s:%d: error %d from WSAStartup()", __FILE__,
               __LINE__, error );
     fuse_abort();
   }
 
-  if( LOBYTE( wsaData.wVersion ) != 2 || HIBYTE( wsaData.wVersion ) != 2 ) {
+  if (LOBYTE( wsaData.wVersion ) != 2 || HIBYTE( wsaData.wVersion ) != 2 ) {
     ui_error( UI_ERROR_ERROR,
               "%s:%d: unexpected version 0x%02x from WSAStartup()",
               __FILE__, __LINE__, wsaData.wVersion );
@@ -229,7 +229,7 @@ compat_socket_networking_init( void )
 }
 
 void
-compat_socket_networking_end( void )
+compat_socket_networking_end(void)
 {
   WSACleanup();
 }

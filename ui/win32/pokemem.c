@@ -37,9 +37,9 @@ void initialize_dialog( HWND hwnd_dialog );
 void create_custom_edit( HWND parent, int item, int subitem );
 void move_custom_edit( HWND hwnd_c_edit, HWND hwnd_parent );
 void trainer_add( gpointer data, gpointer user_data );
-void pokemem_update_list( void );
+void pokemem_update_list(void);
 void pokemem_update_trainer( int index );
-void pokemem_add_custom_poke( void );
+void pokemem_add_custom_poke(void);
 INT_PTR CALLBACK win32ui_pokemem_proc( HWND hWnd, UINT msg, WPARAM wParam,
                                        LPARAM lParam );
 LRESULT CALLBACK listview_proc( HWND hWnd, UINT msg, WPARAM wParam,
@@ -81,13 +81,13 @@ ui_pokemem_selector( const char *filename )
 INT_PTR CALLBACK
 win32ui_pokemem_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-  switch( msg ) {
+  switch (msg ) {
     case WM_INITDIALOG:
       initialize_dialog( hWnd );
       return TRUE;
 
     case WM_COMMAND:
-      switch( LOWORD( wParam ) ) {
+      switch (LOWORD( wParam ) ) {
         case IDOK:
           pokemem_update_list();
           EndDialog( hWnd, wParam );
@@ -107,23 +107,23 @@ win32ui_pokemem_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
       return 0;
 
     case WM_NOTIFY:
-      if( LOWORD( wParam ) == IDC_PM_LIST ) {
+      if (LOWORD( wParam ) == IDC_PM_LIST ) {
         NMHDR *nmhdr = (NMHDR *) lParam;
         LPNMLISTVIEW lpnmitem;
 
-        switch( nmhdr->code ) {
+        switch (nmhdr->code ) {
 
           case LVN_ITEMCHANGING:
           {
             lpnmitem = (LPNMLISTVIEW) lParam;
-            if( lpnmitem->uChanged & LVIF_STATE ) {
+            if (lpnmitem->uChanged & LVIF_STATE ) {
               unsigned int new_state, old_state;
               new_state = ( lpnmitem->uNewState & LVIS_STATEIMAGEMASK ) >> 12;
               old_state = ( lpnmitem->uOldState & LVIS_STATEIMAGEMASK ) >> 12;
               trainer_t *trainer = (trainer_t *)lpnmitem->lParam;
 
               // Prevent the check of disabled trainers
-              if( new_state != old_state && trainer->disabled )
+              if (new_state != old_state && trainer->disabled )
               {
                 SetWindowLongPtr( hWnd, DWLP_MSGRESULT, TRUE );
                 return TRUE;
@@ -136,14 +136,14 @@ win32ui_pokemem_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
           {
             lpnmitem = (LPNMLISTVIEW) lParam;
 
-            if( lpnmitem->uChanged & LVIF_STATE && lpnmitem->iItem >= 0 ) {
+            if (lpnmitem->uChanged & LVIF_STATE && lpnmitem->iItem >= 0 ) {
               unsigned int new_state, old_state;
               new_state = ( lpnmitem->uNewState & LVIS_STATEIMAGEMASK ) >> 12;
               old_state = ( lpnmitem->uOldState & LVIS_STATEIMAGEMASK ) >> 12;
               trainer_t *trainer = (trainer_t *)lpnmitem->lParam;
 
               // Trainer checked, ask for custom value if needed
-              if( new_state != old_state && new_state == 2 && !trainer->active
+              if (new_state != old_state && new_state == 2 && !trainer->active
                   && trainer->ask_value ) {
                 ListView_SetItemState( nmhdr->hwndFrom, lpnmitem->iItem,
                                        LVIS_SELECTED, LVIS_SELECTED );
@@ -164,26 +164,26 @@ win32ui_pokemem_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 LRESULT CALLBACK
 listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-  switch( msg ) {
+  switch (msg ) {
 
     case WM_DESTROY:
     {
-      WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc" );
+      WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc");
       SetWindowLongPtr( hWnd, GWLP_WNDPROC, (LONG_PTR) orig_proc );
-      RemoveProp( hWnd, "original_proc" );
+      RemoveProp( hWnd, "original_proc");
       break;
     }
 
     case WM_VSCROLL:
       // do scroll and move edit
-      if( hwnd_edit ) {
+      if (hwnd_edit ) {
         PostMessage( hWnd, WM_USER, (WPARAM) hwnd_edit, (LPARAM) hWnd );
       }
       break;
 
     case WM_HSCROLL:
       // do scroll and move edit
-      if( hwnd_edit ) {
+      if (hwnd_edit ) {
         PostMessage( hWnd, WM_USER, (WPARAM) hwnd_edit, (LPARAM) hWnd );
       }
       break;
@@ -194,7 +194,7 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
     case WM_LBUTTONDOWN:
     {
-      if( hwnd_edit ) SendMessage( hwnd_edit, WM_KILLFOCUS,0,0 );
+      if (hwnd_edit ) SendMessage( hwnd_edit, WM_KILLFOCUS,0,0 );
 
       LVHITTESTINFO itemclicked;
       itemclicked.pt.x = (long) LOWORD( lParam );
@@ -203,7 +203,7 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
       int result = ListView_SubItemHitTest( hWnd, &itemclicked );
 
       // Clicked on Value column?
-      if( result >= 0 && itemclicked.iSubItem ) {
+      if (result >= 0 && itemclicked.iSubItem ) {
 
         // Get trainer
         LV_ITEM lvi;
@@ -214,7 +214,7 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
         trainer_t *trainer = (trainer_t *)lvi.lParam;
 
         // Ask for custom value
-        if( !trainer->active && trainer->ask_value  ) {
+        if (!trainer->active && trainer->ask_value  ) {
           ListView_SetItemState( hWnd, itemclicked.iItem, LVIS_SELECTED,
                                  LVIS_SELECTED );
           create_custom_edit( hWnd, itemclicked.iItem, 1 );
@@ -229,7 +229,7 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     {
       NMHDR *nmhdr = (NMHDR *) lParam;
 
-      switch( nmhdr->code ) {
+      switch (nmhdr->code ) {
 
         case LVN_ENDLABELEDIT:
         {
@@ -238,19 +238,19 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
           long val;
 
           // Edit cancelled?
-          if( !dispinfo->item.pszText ) return TRUE;
+          if (!dispinfo->item.pszText ) return TRUE;
 
           memset( &lvi, 0, sizeof( lvi ) );
           lvi.iItem = dispinfo->item.iItem;
           lvi.iSubItem = dispinfo->item.iSubItem;
           lvi.pszText = ( dispinfo->item.cchTextMax > 1 )?
-                        dispinfo->item.pszText : (LPTSTR) TEXT( "0" );
+                        dispinfo->item.pszText : (LPTSTR) TEXT( "0");
 
           // Validate value
           val = _ttol( lvi.pszText );
-          if( val > 256 ) {
+          if (val > 256 ) {
             val = 0;
-            lvi.pszText = (LPTSTR) TEXT( "0" );
+            lvi.pszText = (LPTSTR) TEXT( "0");
           }
 
           // Update listview
@@ -271,20 +271,20 @@ listview_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     }
   }
 
-  WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc" );
+  WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc");
   return CallWindowProc( orig_proc, hWnd, msg, wParam, lParam );
 }
 
 LRESULT CALLBACK
 edit_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-  switch( msg ) {
+  switch (msg ) {
 
     case WM_DESTROY:
     {
-      WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc" );
+      WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc");
       SetWindowLongPtr( hWnd, GWLP_WNDPROC, (LONG_PTR) orig_proc );
-      RemoveProp( hWnd, "original_proc" );
+      RemoveProp( hWnd, "original_proc");
       hwnd_edit = NULL;
       break;
     }
@@ -293,14 +293,14 @@ edit_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     {
       // Allow ESC and Return keystroke capture
       MSG *m = (MSG *)lParam;
-      if( m && ( m->wParam == VK_RETURN || m->wParam == VK_ESCAPE ) )
+      if (m && ( m->wParam == VK_RETURN || m->wParam == VK_ESCAPE ) )
         return DLGC_WANTALLKEYS;
       break;
     }
 
     case WM_KEYDOWN:
     {
-      if( wParam == VK_RETURN ) {
+      if (wParam == VK_RETURN ) {
         // Lost focus to confirm value
         SetFocus( GetParent( hWnd ) );
         return TRUE;
@@ -327,7 +327,7 @@ edit_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
       lvDispinfo.item.iSubItem = subitem_edit;
       lvDispinfo.item.pszText = NULL;
 
-      if( !cancel_edit ) {
+      if (!cancel_edit ) {
         TCHAR szEditText[4];
         GetWindowText( hWnd, szEditText, 4 );
         lvDispinfo.item.pszText = szEditText;
@@ -341,7 +341,7 @@ edit_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     }
   }
 
-  WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc" );
+  WNDPROC orig_proc = (WNDPROC) GetProp( hWnd, "original_proc");
   return CallWindowProc( orig_proc, hWnd, msg, wParam, lParam );
 }
 
@@ -385,17 +385,17 @@ initialize_dialog( HWND hwnd_dialog )
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
   lvc.fmt = LVCFMT_LEFT;
   lvc.cx = cx - ( cx >> 2 );
-  lvc.pszText = (LPTSTR) TEXT( "Trainer" );
+  lvc.pszText = (LPTSTR) TEXT( "Trainer");
   SendMessage( hwnd_list, LVM_INSERTCOLUMN, 0, (LPARAM) &lvc );
 
   // Create value column
   lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
   lvc.cx = cx >> 2;
-  lvc.pszText = (LPTSTR) TEXT( "Value" );
+  lvc.pszText = (LPTSTR) TEXT( "Value");
   SendMessage( hwnd_list, LVM_INSERTCOLUMN, 1, (LPARAM) &lvc );
 
   // Fill listview with data
-  if( trainer_list ) {
+  if (trainer_list ) {
     // Allocate memory
     guint length = g_slist_length( trainer_list );
     SendMessage( hwnd_list, LVM_SETITEMCOUNT, length, 0 );
@@ -414,7 +414,7 @@ trainer_add( gpointer data, gpointer user_data )
   int i, state;
   LV_ITEM lvi;
 
-  if( !trainer ) return;
+  if (!trainer ) return;
 
   // Get count of items
   i = SendMessage( hwnd_list, LVM_GETITEMCOUNT, 0, 0 );
@@ -431,7 +431,7 @@ trainer_add( gpointer data, gpointer user_data )
   SendMessage( hwnd_list, LVM_INSERTITEM, 0, (LPARAM) &lvi );
 
   // add value
-  if( trainer->ask_value ) {
+  if (trainer->ask_value ) {
     _sntprintf( buffer, 80, "%d", trainer->value );
     memset( &lvi, 0, sizeof( lvi ) );
     lvi.mask = LVIF_TEXT;
@@ -442,7 +442,7 @@ trainer_add( gpointer data, gpointer user_data )
   }
 
   // mark trainer checked or disabled
-  if( trainer->disabled )
+  if (trainer->disabled )
     state = 0;
   else
     state = ( trainer->active )? 2 : 1;
@@ -473,7 +473,7 @@ create_custom_edit( HWND parent, int item, int subitem )
                               subitemrect.left, subitemrect.top, width, height,
                               parent, (HMENU) IDC_PM_LIST_EDIT,
                               GetModuleHandle( NULL ), NULL );
-  if( !hwnd_edit ) return;
+  if (!hwnd_edit ) return;
 
   // Replace message handler
   WNDPROC orig_proc = (WNDPROC) GetWindowLongPtr( hwnd_edit, GWLP_WNDPROC );
@@ -517,7 +517,7 @@ move_custom_edit( HWND hwnd_c_edit, HWND hwnd_parent )
   MapWindowPoints( HWND_DESKTOP, hwnd_parent, (LPPOINT) &header_rect, 2 );
 
   // Move Edit along with item
-  if( item_rect.top >= header_rect.bottom ) {
+  if (item_rect.top >= header_rect.bottom ) {
     width = item_rect.right - item_rect.left;
     height = item_rect.bottom - item_rect.top;
     InvalidateRect( hwnd_parent, &item_rect, FALSE );
@@ -532,7 +532,7 @@ move_custom_edit( HWND hwnd_c_edit, HWND hwnd_parent )
 }
 
 void
-pokemem_update_list( void )
+pokemem_update_list(void)
 {
   int i, items;
 
@@ -540,7 +540,7 @@ pokemem_update_list( void )
   items = SendDlgItemMessage( fuse_hPMWnd, IDC_PM_LIST, LVM_GETITEMCOUNT,
                               0, 0 );
 
-  for( i = 0; i < items; i++ ) {
+  for (i = 0; i < items; i++) {
     pokemem_update_trainer( i );
   }
 }
@@ -561,7 +561,7 @@ pokemem_update_trainer( int index )
   trainer = (trainer_t *) lvi.lParam;
   selected = ( ( lvi.state >> 12 ) == 2 );
 
-  if( selected ) {
+  if (selected ) {
     pokemem_trainer_activate( trainer );
   } else {
     pokemem_trainer_deactivate( trainer );
@@ -569,7 +569,7 @@ pokemem_update_trainer( int index )
 }
 
 void
-pokemem_add_custom_poke( void )
+pokemem_add_custom_poke(void)
 {
   long b, a, v;
   TCHAR buffer[8];
@@ -583,8 +583,8 @@ pokemem_add_custom_poke( void )
 
   b = ( length )? _ttol( buffer ) : 8;
 
-  if( b < 0 || b > 8 ) {
-    ui_error( UI_ERROR_ERROR, "Invalid bank: use a number from 0 to 8" );
+  if (b < 0 || b > 8 ) {
+    ui_error( UI_ERROR_ERROR, "Invalid bank: use a number from 0 to 8");
     hwnd_control = GetDlgItem( fuse_hPMWnd, IDC_PM_BANK_EDIT );
     SendMessage( fuse_hPMWnd, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
@@ -597,9 +597,9 @@ pokemem_add_custom_poke( void )
   // TODO: accept hex address
   a = ( length )? _ttol( buffer ) : 0;
 
-  if( !length || a < 0 || a > 65535  ) {
+  if (!length || a < 0 || a > 65535  ) {
     ui_error( UI_ERROR_ERROR,
-              "Invalid address: use a number from 0 to 65535" );
+              "Invalid address: use a number from 0 to 65535");
     hwnd_control = GetDlgItem( fuse_hPMWnd, IDC_PM_ADDR_EDIT );
     SendMessage( fuse_hPMWnd, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
@@ -611,8 +611,8 @@ pokemem_add_custom_poke( void )
 
   v = ( length )? _ttol( buffer ) : 0;
 
-  if( !length || v < 0 || v > 256 ) {
-    ui_error( UI_ERROR_ERROR, "Invalid value: use a number from 0 to 256" );
+  if (!length || v < 0 || v > 256 ) {
+    ui_error( UI_ERROR_ERROR, "Invalid value: use a number from 0 to 256");
     hwnd_control = GetDlgItem( fuse_hPMWnd, IDC_PM_VALUE_EDIT );
     SendMessage( fuse_hPMWnd, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE );
     return;
@@ -620,8 +620,8 @@ pokemem_add_custom_poke( void )
 
   // Updadate model and view
   trainer = pokemem_trainer_list_add( b, a, v );
-  if( !trainer ) {
-    ui_error( UI_ERROR_ERROR, "Cannot add trainer" );
+  if (!trainer ) {
+    ui_error( UI_ERROR_ERROR, "Cannot add trainer");
     return;
   }
 
@@ -629,7 +629,7 @@ pokemem_add_custom_poke( void )
   trainer_add( trainer, hwnd_control );
 
   // Mark custom trainer for activate
-  if( !trainer->active && !trainer->disabled ) {
+  if (!trainer->active && !trainer->disabled ) {
     LV_ITEM lvi;
     int index;
 

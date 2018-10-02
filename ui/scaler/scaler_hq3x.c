@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
-      switch( pattern ) {
+      switch (pattern ) {
       case 0:
       case 1:
       case 4:
@@ -244,7 +244,7 @@
       case 50:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_1M;
 	    *qN2 = HQ_PIXEL12_C;
@@ -269,7 +269,7 @@
 	  *qN = HQ_PIXEL10_1;
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_1M;
@@ -288,7 +288,7 @@
 	  *q2 = HQ_PIXEL02_2;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_1M;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -303,7 +303,7 @@
       case 10:
       case 138:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -410,7 +410,7 @@
       case 54:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -435,7 +435,7 @@
 	  *qN = HQ_PIXEL10_1;
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -454,7 +454,7 @@
 	  *q2 = HQ_PIXEL02_2;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -469,7 +469,7 @@
       case 11:
       case 139:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -489,7 +489,7 @@
       case 19:
       case 51:
 	{
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q = HQ_PIXEL00_1L;
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_1M;
@@ -510,7 +510,7 @@
       case 146:
       case 178:
 	{
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_1M;
 	    *qN2 = HQ_PIXEL12_C;
@@ -531,7 +531,7 @@
       case 84:
       case 85:
 	{
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *q2 = HQ_PIXEL02_1U;
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -552,7 +552,7 @@
       case 112:
       case 113:
 	{
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN = HQ_PIXEL20_1L;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -573,7 +573,7 @@
       case 200:
       case 204:
 	{
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_1M;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -594,7 +594,7 @@
       case 73:
       case 77:
 	{
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *q = HQ_PIXEL00_1U;
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_1M;
@@ -615,7 +615,7 @@
       case 42:
       case 170:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -636,7 +636,7 @@
       case 14:
       case 142:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_1R;
@@ -761,7 +761,7 @@
       case 26:
       case 31:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *qN = HQ_PIXEL10_C;
 	  } else {
@@ -769,7 +769,7 @@
 	    *qN = HQ_PIXEL10_3;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
 	  } else {
@@ -786,7 +786,7 @@
       case 214:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
@@ -797,7 +797,7 @@
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
@@ -813,7 +813,7 @@
 	  *q1 = HQ_PIXEL01_1;
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
@@ -821,7 +821,7 @@
 	    *qNN = HQ_PIXEL20_4;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
@@ -833,7 +833,7 @@
       case 74:
       case 107:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	  } else {
@@ -844,7 +844,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	  } else {
@@ -856,7 +856,7 @@
 	}
       case 27:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -876,7 +876,7 @@
       case 86:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -900,7 +900,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -918,7 +918,7 @@
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -933,7 +933,7 @@
       case 30:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -957,7 +957,7 @@
 	  *qN = HQ_PIXEL10_1;
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -975,7 +975,7 @@
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -989,7 +989,7 @@
 	}
       case 75:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -1164,13 +1164,13 @@
 	}
       case 58:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -1187,7 +1187,7 @@
 	{
 	  *q = HQ_PIXEL00_1L;
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -1197,7 +1197,7 @@
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1M;
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -1212,13 +1212,13 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -1227,7 +1227,7 @@
 	}
       case 202:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
@@ -1237,7 +1237,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
@@ -1248,7 +1248,7 @@
 	}
       case 78:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
@@ -1258,7 +1258,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
@@ -1269,13 +1269,13 @@
 	}
       case 154:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -1292,7 +1292,7 @@
 	{
 	  *q = HQ_PIXEL00_1M;
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -1302,7 +1302,7 @@
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1L;
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -1317,13 +1317,13 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -1332,13 +1332,13 @@
 	}
       case 90:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -1346,13 +1346,13 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -1362,7 +1362,7 @@
       case 55:
       case 23:
 	{
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q = HQ_PIXEL00_1L;
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
@@ -1383,7 +1383,7 @@
       case 182:
       case 150:
 	{
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -1404,7 +1404,7 @@
       case 213:
       case 212:
 	{
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *q2 = HQ_PIXEL02_1U;
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -1425,7 +1425,7 @@
       case 241:
       case 240:
 	{
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN = HQ_PIXEL20_1L;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -1446,7 +1446,7 @@
       case 236:
       case 232:
 	{
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -1467,7 +1467,7 @@
       case 109:
       case 105:
 	{
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *q = HQ_PIXEL00_1U;
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
@@ -1488,7 +1488,7 @@
       case 171:
       case 43:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -1509,7 +1509,7 @@
       case 143:
       case 15:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_1R;
@@ -1534,7 +1534,7 @@
 	  *q2 = HQ_PIXEL02_1U;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -1548,7 +1548,7 @@
 	}
       case 203:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -1568,7 +1568,7 @@
       case 62:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -1592,7 +1592,7 @@
 	  *qN = HQ_PIXEL10_1;
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -1606,7 +1606,7 @@
       case 118:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -1630,7 +1630,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -1648,7 +1648,7 @@
 	  *q2 = HQ_PIXEL02_1R;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -1662,7 +1662,7 @@
 	}
       case 155:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -1790,12 +1790,12 @@
 	  *q2 = HQ_PIXEL02_1U;
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -1808,12 +1808,12 @@
 	}
       case 158:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -1831,7 +1831,7 @@
 	}
       case 234:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
@@ -1840,7 +1840,7 @@
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -1856,7 +1856,7 @@
 	{
 	  *q = HQ_PIXEL00_1M;
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -1864,7 +1864,7 @@
 	  *qN = HQ_PIXEL10_1;
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1L;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -1877,7 +1877,7 @@
 	}
       case 59:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -1886,7 +1886,7 @@
 	    *q1 = HQ_PIXEL01_3;
 	    *qN = HQ_PIXEL10_3;
 	  }
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -1905,7 +1905,7 @@
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -1914,7 +1914,7 @@
 	    *qNN = HQ_PIXEL20_4;
 	    *qNN1 = HQ_PIXEL21_3;
 	  }
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -1924,7 +1924,7 @@
       case 87:
 	{
 	  *q = HQ_PIXEL00_1L;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -1937,7 +1937,7 @@
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -1946,7 +1946,7 @@
 	}
       case 79:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -1958,7 +1958,7 @@
 	  *q2 = HQ_PIXEL02_1R;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
@@ -1969,20 +1969,20 @@
 	}
       case 122:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
 	  }
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -1991,7 +1991,7 @@
 	    *qNN = HQ_PIXEL20_4;
 	    *qNN1 = HQ_PIXEL21_3;
 	  }
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2000,12 +2000,12 @@
 	}
       case 94:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -2016,13 +2016,13 @@
 	  }
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2031,25 +2031,25 @@
 	}
       case 218:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
 	  }
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -2062,7 +2062,7 @@
 	}
       case 91:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -2071,20 +2071,20 @@
 	    *q1 = HQ_PIXEL01_3;
 	    *qN = HQ_PIXEL10_3;
 	  }
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
 	  }
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2145,13 +2145,13 @@
 	}
       case 186:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -2168,7 +2168,7 @@
 	{
 	  *q = HQ_PIXEL00_1L;
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -2178,7 +2178,7 @@
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1L;
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2193,13 +2193,13 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2208,7 +2208,7 @@
 	}
       case 206:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
@@ -2218,7 +2218,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
@@ -2236,7 +2236,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_1M;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
@@ -2248,7 +2248,7 @@
       case 174:
       case 46:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_1M;
 	  } else {
 	    *q = HQ_PIXEL00_2;
@@ -2268,7 +2268,7 @@
 	{
 	  *q = HQ_PIXEL00_1L;
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_1M;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -2292,7 +2292,7 @@
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1L;
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_1M;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2328,7 +2328,7 @@
       case 126:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -2338,7 +2338,7 @@
 	    *qN2 = HQ_PIXEL12_3;
 	  }
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -2352,7 +2352,7 @@
 	}
       case 219:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -2364,7 +2364,7 @@
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -2377,7 +2377,7 @@
 	}
       case 125:
 	{
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *q = HQ_PIXEL00_1U;
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
@@ -2397,7 +2397,7 @@
 	}
       case 221:
 	{
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *q2 = HQ_PIXEL02_1U;
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -2417,7 +2417,7 @@
 	}
       case 207:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_1R;
@@ -2437,7 +2437,7 @@
 	}
       case 238:
 	{
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -2457,7 +2457,7 @@
 	}
       case 190:
 	{
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -2477,7 +2477,7 @@
 	}
       case 187:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -2497,7 +2497,7 @@
 	}
       case 243:
 	{
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN = HQ_PIXEL20_1L;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -2517,7 +2517,7 @@
 	}
       case 119:
 	{
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q = HQ_PIXEL00_1L;
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
@@ -2544,7 +2544,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
@@ -2556,7 +2556,7 @@
       case 175:
       case 47:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	  } else {
 	    *q = HQ_PIXEL00_2;
@@ -2576,7 +2576,7 @@
 	{
 	  *q = HQ_PIXEL00_1L;
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -2600,7 +2600,7 @@
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1L;
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2613,7 +2613,7 @@
 	  *q1 = HQ_PIXEL01_C;
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
@@ -2621,7 +2621,7 @@
 	    *qNN = HQ_PIXEL20_4;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
@@ -2632,7 +2632,7 @@
 	}
       case 123:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	  } else {
@@ -2643,7 +2643,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	  } else {
@@ -2655,7 +2655,7 @@
 	}
       case 95:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *qN = HQ_PIXEL10_C;
 	  } else {
@@ -2663,7 +2663,7 @@
 	    *qN = HQ_PIXEL10_3;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
 	  } else {
@@ -2679,7 +2679,7 @@
       case 222:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
@@ -2690,7 +2690,7 @@
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
@@ -2706,7 +2706,7 @@
 	  *q2 = HQ_PIXEL02_1U;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
@@ -2714,7 +2714,7 @@
 	    *qNN = HQ_PIXEL20_4;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2728,13 +2728,13 @@
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
@@ -2745,7 +2745,7 @@
 	}
       case 235:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	  } else {
@@ -2756,7 +2756,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
@@ -2767,7 +2767,7 @@
 	}
       case 111:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	  } else {
 	    *q = HQ_PIXEL00_2;
@@ -2777,7 +2777,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	  } else {
@@ -2789,13 +2789,13 @@
 	}
       case 63:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
 	  } else {
@@ -2811,7 +2811,7 @@
 	}
       case 159:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *qN = HQ_PIXEL10_C;
 	  } else {
@@ -2819,7 +2819,7 @@
 	    *qN = HQ_PIXEL10_3;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -2835,7 +2835,7 @@
 	{
 	  *q = HQ_PIXEL00_1L;
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -2844,7 +2844,7 @@
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
@@ -2856,7 +2856,7 @@
       case 246:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
@@ -2868,7 +2868,7 @@
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1L;
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2878,7 +2878,7 @@
       case 254:
 	{
 	  *q = HQ_PIXEL00_1M;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
@@ -2886,14 +2886,14 @@
 	    *q2 = HQ_PIXEL02_4;
 	  }
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
 	    *qN = HQ_PIXEL10_3;
 	    *qNN = HQ_PIXEL20_4;
 	  }
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
@@ -2912,13 +2912,13 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -2927,7 +2927,7 @@
 	}
       case 251:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	  } else {
@@ -2936,7 +2936,7 @@
 	  }
 	  *q2 = HQ_PIXEL02_1M;
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qN = HQ_PIXEL10_C;
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
@@ -2945,7 +2945,7 @@
 	    *qNN = HQ_PIXEL20_2;
 	    *qNN1 = HQ_PIXEL21_3;
 	  }
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qN2 = HQ_PIXEL12_C;
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
@@ -2956,7 +2956,7 @@
 	}
       case 239:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	  } else {
 	    *q = HQ_PIXEL00_2;
@@ -2966,7 +2966,7 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_1;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
@@ -2977,7 +2977,7 @@
 	}
       case 127:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *q1 = HQ_PIXEL01_C;
 	    *qN = HQ_PIXEL10_C;
@@ -2986,7 +2986,7 @@
 	    *q1 = HQ_PIXEL01_3;
 	    *qN = HQ_PIXEL10_3;
 	  }
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
 	  } else {
@@ -2994,7 +2994,7 @@
 	    *qN2 = HQ_PIXEL12_3;
 	  }
 	  *qN1 = HQ_PIXEL11;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	    *qNN1 = HQ_PIXEL21_C;
 	  } else {
@@ -3006,13 +3006,13 @@
 	}
       case 191:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -3027,14 +3027,14 @@
 	}
       case 223:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	    *qN = HQ_PIXEL10_C;
 	  } else {
 	    *q = HQ_PIXEL00_4;
 	    *qN = HQ_PIXEL10_3;
 	  }
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q1 = HQ_PIXEL01_C;
 	    *q2 = HQ_PIXEL02_C;
 	    *qN2 = HQ_PIXEL12_C;
@@ -3045,7 +3045,7 @@
 	  }
 	  *qN1 = HQ_PIXEL11;
 	  *qNN = HQ_PIXEL20_1M;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN1 = HQ_PIXEL21_C;
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
@@ -3058,7 +3058,7 @@
 	{
 	  *q = HQ_PIXEL00_1L;
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -3068,7 +3068,7 @@
 	  *qN2 = HQ_PIXEL12_C;
 	  *qNN = HQ_PIXEL20_1L;
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;
@@ -3077,13 +3077,13 @@
 	}
       case 255:
 	{
-	  if( HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
+	  if (HQ_YUVDIFF( y[4], u[4], v[4], y[2], u[2], v[2] ) ) {
 	    *q = HQ_PIXEL00_C;
 	  } else {
 	    *q = HQ_PIXEL00_2;
 	  }
 	  *q1 = HQ_PIXEL01_C;
-	  if( HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
+	  if (HQ_YUVDIFF( y[2], u[2], v[2], y[6], u[6], v[6] ) ) {
 	    *q2 = HQ_PIXEL02_C;
 	  } else {
 	    *q2 = HQ_PIXEL02_2;
@@ -3091,13 +3091,13 @@
 	  *qN = HQ_PIXEL10_C;
 	  *qN1 = HQ_PIXEL11;
 	  *qN2 = HQ_PIXEL12_C;
-	  if( HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
+	  if (HQ_YUVDIFF( y[8], u[8], v[8], y[4], u[4], v[4] ) ) {
 	    *qNN = HQ_PIXEL20_C;
 	  } else {
 	    *qNN = HQ_PIXEL20_2;
 	  }
 	  *qNN1 = HQ_PIXEL21_C;
-	  if( HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
+	  if (HQ_YUVDIFF( y[6], u[6], v[6], y[8], u[8], v[8] ) ) {
 	    *qNN2 = HQ_PIXEL22_C;
 	  } else {
 	    *qNN2 = HQ_PIXEL22_2;

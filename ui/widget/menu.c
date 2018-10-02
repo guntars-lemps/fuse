@@ -64,7 +64,7 @@ set_key_for_button_ ## which ( int action ) \
 } \
 \
 static const char* \
-get_key_name_for_button_ ## which ( void ) \
+get_key_name_for_button_ ## which (void) \
 { \
   return keyboard_key_text( *current_settings[ which ] ); \
 }
@@ -240,7 +240,7 @@ SUBMENU_DEVICE_SELECTIONS( joystick )
 SUBMENU_DEVICE_SELECTIONS( keyboard )
 
 static void
-print_items( void )
+print_items(void)
 {
   int i;
   char buffer[128];
@@ -248,16 +248,16 @@ print_items( void )
   int width = widget_calculate_menu_width(menu);
   int menu_left_edge_x = (DISPLAY_WIDTH_COLS/2-width/2)*8+1;
 
-  for( i = 0; i < count; i++ ) {
+  for (i = 0; i < count; i++) {
     int colour;
-    if( !menu[i+1].text[0] ) { height += 4; continue; }
+    if (!menu[i+1].text[0] ) { height += 4; continue; }
 
     snprintf( buffer, sizeof (buffer), "%s", menu[i+1].text );
     colour = menu[i+1].inactive ?
 	     WIDGET_COLOUR_DISABLED :
 	     WIDGET_COLOUR_FOREGROUND;
 
-    if( i == highlight_line ) {
+    if (i == highlight_line ) {
       widget_rectangle( menu_left_edge_x, height, width*8-2, 1*8,
                         WIDGET_COLOUR_HIGHLIGHT );
     } else {
@@ -267,12 +267,12 @@ print_items( void )
 
     widget_printstring( menu_left_edge_x+8, height, colour, buffer );
 
-    if( menu[i+1].submenu ) {
+    if (menu[i+1].submenu ) {
       widget_draw_submenu_arrow(DISPLAY_BORDER_ASPECT_WIDTH+menu_left_edge_x+
                                 width*8-9, i*8+49, colour);
     }
 
-    if( menu[i+1].detail ) {
+    if (menu[i+1].detail ) {
       size_t detail_width = widget_stringwidth( menu[i+1].detail() );
       int x = menu_left_edge_x + (width-1)*8 - detail_width - 2;
       widget_printstring( x, height, WIDGET_COLOUR_DISABLED, menu[i+1].detail() );
@@ -317,7 +317,7 @@ widget_menu_keyhandler( input_key key )
   int new_highlight_line = 0;
   int cursor_pressed = 0;
 
-  switch( key ) {
+  switch (key ) {
 
 #if 0
   case INPUT_KEY_Resize: // Fake keypress used on window resize
@@ -335,7 +335,7 @@ widget_menu_keyhandler( input_key key )
   case INPUT_JOYSTICK_FIRE_1:
     ptr=&menu[1 + highlight_line];
     if(!ptr->inactive) {
-      if( ptr->submenu ) {
+      if (ptr->submenu ) {
         widget_do_menu( ptr->submenu );
       } else {
         ptr->callback( ptr->action );
@@ -366,16 +366,16 @@ widget_menu_keyhandler( input_key key )
 
   }
 
-  if( cursor_pressed ) {
+  if (cursor_pressed ) {
     highlight_line = new_highlight_line;
     print_items();
     return;
   }
 
   for( ptr=&menu[1]; ptr->text; ptr++ ) {
-    if( !ptr->inactive && key == ptr->key ) {
+    if (!ptr->inactive && key == ptr->key ) {
 
-      if( ptr->submenu ) {
+      if (ptr->submenu ) {
         widget_do_menu( ptr->submenu );
       } else {
         ptr->callback( ptr->action );
@@ -398,9 +398,9 @@ menu_get_scaler( scaler_available_fn selector )
 
   count = 0; info.current = 0;
 
-  for( i = 0; i < SCALER_NUM; i++ )
-    if( selector( i ) ) {
-      if( current_scaler == i ) info.current = count;
+  for (i = 0; i < SCALER_NUM; i++)
+    if (selector( i ) ) {
+      if (current_scaler == i ) info.current = count;
       options[ count++ ] = scaler_name( i );
     }
 
@@ -410,14 +410,14 @@ menu_get_scaler( scaler_available_fn selector )
   info.finish_all = 1;
 
   error = widget_do_select( &info );
-  if( error ) return SCALER_NUM;
+  if (error ) return SCALER_NUM;
 
-  if( info.result == -1 ) return SCALER_NUM;
+  if (info.result == -1 ) return SCALER_NUM;
 
-  for( i = 0; i < SCALER_NUM; i++ )
-    if( selector( i ) && !info.result-- ) return i;
+  for (i = 0; i < SCALER_NUM; i++)
+    if (selector( i ) && !info.result-- ) return i;
 
-  ui_error( UI_ERROR_ERROR, "widget_select_scaler: ran out of scalers" );
+  ui_error( UI_ERROR_ERROR, "widget_select_scaler: ran out of scalers");
   fuse_abort();
 }
 
@@ -426,15 +426,15 @@ menu_file_exit( int action )
 {
   static int menu_exit_open = 0;
 
-  if( menu_exit_open ) return;
+  if (menu_exit_open ) return;
 
   menu_exit_open = 1;
-  if( widget_do_query( "Exit Fuse?" ) || !widget_query.confirm ) {
+  if (widget_do_query( "Exit Fuse?" ) || !widget_query.confirm ) {
     menu_exit_open = 0;
     return;
   }
 
-  if( menu_check_media_changed() ) {
+  if (menu_check_media_changed() ) {
     menu_exit_open = 0;
     return;
   }
@@ -499,7 +499,7 @@ menu_options_joysticks_select( int action )
   int error = 0;
   int i;
 
-  switch( action - 1 ) {
+  switch (action - 1 ) {
 
 #ifdef USE_JOYSTICK
   case 0:
@@ -554,11 +554,11 @@ menu_options_joysticks_select( int action )
   }
 
   // Populate joystick names
-  if( JOYSTICK_TYPE_COUNT > MAX_JOYSTICK_TYPES )
-    ui_error( UI_ERROR_ERROR, "Not all joystick types are displayed" );
+  if (JOYSTICK_TYPE_COUNT > MAX_JOYSTICK_TYPES )
+    ui_error( UI_ERROR_ERROR, "Not all joystick types are displayed");
 
   submenu_types[ 0 ].text = "Select joystick type";
-  for( i = 0; ( i < JOYSTICK_TYPE_COUNT ) && ( i < MAX_JOYSTICK_TYPES ); i++ ) {
+  for (i = 0; ( i < JOYSTICK_TYPE_COUNT ) && ( i < MAX_JOYSTICK_TYPES ); i++) {
     char shortcut[ 2 ] = { 'A' + i, '\0' };
     snprintf( ( char * ) joystick_names[ i ], 100, "\012%s\011 %s", shortcut,
               joystick_name[ i ] );
@@ -569,7 +569,7 @@ menu_options_joysticks_select( int action )
   }
   submenu_types[ i + 1 ].text = NULL;
 
-  if( action - 1 == JOYSTICK_KEYBOARD )
+  if (action - 1 == JOYSTICK_KEYBOARD )
     error = widget_do_menu( submenu_type_and_mapping_for_keyboard );
 
 #ifdef USE_JOYSTICK
@@ -577,7 +577,7 @@ menu_options_joysticks_select( int action )
     error = widget_do_menu( submenu_type_and_mapping_for_joystick );
 #endif // #ifdef USE_JOYSTICK
 
-  if( error ) return;
+  if (error ) return;
 }
 
 void
@@ -609,10 +609,10 @@ menu_machine_reset( int action )
   int hard_reset = action;
   const char *message = "Reset?";
 
-  if( hard_reset )
+  if (hard_reset )
     message = "Hard reset?";
 
-  if( widget_do_query( message ) ||
+  if (widget_do_query( message ) ||
       !widget_query.confirm )
     return;
 
@@ -635,23 +635,23 @@ menu_machine_select( int action )
   libspectrum_machine new_machine;
 
   options = malloc( machine_count * sizeof( const char * ) );
-  if( !options ) {
+  if (!options ) {
     ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
     return;
   }
 
   buffer = malloc( 40 * machine_count );
-  if( !buffer ) {
+  if (!buffer ) {
     ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
     free( options );
     return;
   }
 
-  for( i = 0; i < machine_count; i++ ) {
+  for (i = 0; i < machine_count; i++) {
     options[i] = &buffer[ i * 40 ];
     snprintf( options[i], 40, "%s",
               libspectrum_machine_name( machine_types[i]->machine ) );
-    if( machine_current->machine == machine_types[i]->machine )
+    if (machine_current->machine == machine_types[i]->machine )
       info.current = i;
   }
 
@@ -662,13 +662,13 @@ menu_machine_select( int action )
 
   error = widget_do_select( &info );
   free( buffer ); free( options );
-  if( error ) return;
+  if (error ) return;
 
-  if( info.result == -1 ) return;
+  if (info.result == -1 ) return;
 
   new_machine = machine_types[ info.result ]->machine;
 
-  if( machine_current->machine != new_machine ) machine_select( new_machine );
+  if (machine_current->machine != new_machine ) machine_select( new_machine );
 }
 
 void
@@ -710,7 +710,7 @@ menu_help_keyboard( int action )
 
   static const char * const filename = "keyboard.scr";
 
-  if( utils_read_screen( filename, &screen ) ) {
+  if (utils_read_screen( filename, &screen ) ) {
     return;
   }
 
@@ -732,7 +732,7 @@ menu_help_about( int action )
 static int
 set_active( struct widget_menu_entry *menu, const char *path, int active )
 {
-  if( *path == '/' ) path++;
+  if (*path == '/' ) path++;
 
   // Skip the menu title
   menu++;
@@ -743,15 +743,15 @@ set_active( struct widget_menu_entry *menu, const char *path, int active )
 
     // Compare the two strings, but skip hotkey-delimiter characters
     do {
-      if( *p == 9 || *p == 10 ) p++;
+      if (*p == 9 || *p == 10 ) p++;
     } while( *p && *p++ == *q++ );
 
-    if( *p ) continue; // not matched
+    if (*p ) continue; // not matched
 
     // match, but with a submenu
-    if( *q == '/' ) return set_active( menu->submenu, q, active );
+    if (*q == '/' ) return set_active( menu->submenu, q, active );
 
-    if( *q ) continue; // not matched
+    if (*q ) continue; // not matched
 
     // we have a match
     menu->inactive = !active;

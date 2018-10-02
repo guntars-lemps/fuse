@@ -43,7 +43,7 @@
 static GArray *registered_events;
 
 void
-debugger_event_init( void )
+debugger_event_init(void)
 {
   registered_events = g_array_new( FALSE, FALSE, sizeof( debugger_event_t ) );
 }
@@ -64,9 +64,9 @@ debugger_event_register( const char *type, const char *detail )
 static int
 event_matches( debugger_event_t *event, const char *type, const char *detail )
 {
-  if( strcasecmp( type, event->type ) ) return 0;
-  if( strcmp( detail, "*" ) == 0 ) return 1;
-  if( strcmp( event->detail, "*" ) == 0 ) return 1;
+  if (strcasecmp( type, event->type ) ) return 0;
+  if (strcmp( detail, "*" ) == 0 ) return 1;
+  if (strcmp( event->detail, "*" ) == 0 ) return 1;
   return strcasecmp( detail, event->detail ) == 0;
 }
 
@@ -75,11 +75,11 @@ debugger_event_is_registered( const char *type, const char *detail )
 {
   size_t i;
 
-  for( i = 0; i < registered_events->len; i++ ) {
+  for (i = 0; i < registered_events->len; i++) {
     debugger_event_t event =
       g_array_index( registered_events, debugger_event_t, i );
 
-    if( event_matches( &event, type, detail ) ) return 1;
+    if (event_matches( &event, type, detail ) ) return 1;
   }
 
   return 0;
@@ -94,7 +94,7 @@ debugger_event( int event_code )
 
   int signal_breakpoints_updated = 0;
 
-  if( event_code >= registered_events->len ) {
+  if (event_code >= registered_events->len ) {
     ui_error( UI_ERROR_ERROR, "internal error: invalid debugger event %d",
 	      event_code );
     fuse_abort();
@@ -107,14 +107,14 @@ debugger_event( int event_code )
     bp = ptr->data;
     ptr_next = ptr->next;
 
-    if( bp->type != DEBUGGER_BREAKPOINT_TYPE_EVENT ) continue;
+    if (bp->type != DEBUGGER_BREAKPOINT_TYPE_EVENT ) continue;
 
-    if( event_matches( &bp->value.event, event.type, event.detail ) &&
+    if (event_matches( &bp->value.event, event.type, event.detail ) &&
         debugger_breakpoint_trigger( bp ) ) {
       debugger_mode = DEBUGGER_MODE_HALTED;
       debugger_command_evaluate( bp->commands );
 
-      if( bp->life == DEBUGGER_BREAKPOINT_LIFE_ONESHOT ) {
+      if (bp->life == DEBUGGER_BREAKPOINT_LIFE_ONESHOT ) {
         debugger_breakpoints = g_slist_remove( debugger_breakpoints, bp );
         libspectrum_free( bp );
         signal_breakpoints_updated = 1;
@@ -122,20 +122,20 @@ debugger_event( int event_code )
     }
   }
 
-  if( signal_breakpoints_updated )
+  if (signal_breakpoints_updated )
       ui_breakpoints_updated();
 }
 
 // Tidy-up function called at end of emulation
 void
-debugger_event_end( void )
+debugger_event_end(void)
 {
   int i;
   debugger_event_t event;
 
-  if( !registered_events ) return;
+  if (!registered_events ) return;
 
-  for( i = 0; i < registered_events->len; i++ ) {
+  for (i = 0; i < registered_events->len; i++) {
     event = g_array_index( registered_events, debugger_event_t, i );
     libspectrum_free( event.detail );
     libspectrum_free( event.type );

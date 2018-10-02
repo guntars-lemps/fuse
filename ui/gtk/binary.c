@@ -68,24 +68,24 @@ create_binary_dialog( struct binary_info *info, const char *title )
 
   content_area = gtk_dialog_get_content_area( GTK_DIALOG( info->dialog ) );
 
-  label_filename = gtk_label_new( "Filename" );
+  label_filename = gtk_label_new( "Filename");
 
   info->filename_widget = gtk_label_new( info->filename );
 
-  button = gtk_button_new_with_label( "Browse..." );
+  button = gtk_button_new_with_label( "Browse...");
   g_signal_connect( G_OBJECT( button ), "clicked", info->change_filename,
                     info );
 
-  label_start = gtk_label_new( "Start" );
+  label_start = gtk_label_new( "Start");
 
   info->start_widget = gtk_entry_new();
   g_signal_connect( G_OBJECT( info->start_widget ), "activate",
                     info->activate_data, info );
 
-  label_length = gtk_label_new( "Length" );
+  label_length = gtk_label_new( "Length");
 
   info->length_widget = gtk_entry_new();
-  if( info->load ) {
+  if (info->load ) {
     snprintf( buffer, 80, "%lu", (unsigned long)info->file.length );
     gtk_entry_set_text( GTK_ENTRY( info->length_widget ), buffer );
   }
@@ -158,18 +158,18 @@ menu_file_loadbinarydata( GtkAction *gtk_action GCC_UNUSED,
 
   fuse_emulation_pause();
 
-  info.filename = ui_get_open_filename( "Fuse - Load Binary Data" );
-  if( !info.filename ) { fuse_emulation_unpause(); return; }
+  info.filename = ui_get_open_filename( "Fuse - Load Binary Data");
+  if (!info.filename ) { fuse_emulation_unpause(); return; }
 
   error = utils_read_file( info.filename, &info.file );
-  if( error ) { free( info.filename ); fuse_emulation_unpause(); return; }
+  if (error ) { free( info.filename ); fuse_emulation_unpause(); return; }
 
   // Information display
   info.load = 1;
   info.activate_data = G_CALLBACK( load_data );
   info.change_filename = G_CALLBACK( change_load_filename );
 
-  create_binary_dialog( &info, "Fuse - Load Binary Data" );
+  create_binary_dialog( &info, "Fuse - Load Binary Data");
 
   // Process the dialog
   gtk_widget_show_all( info.dialog );
@@ -192,11 +192,11 @@ change_load_filename( GtkButton *button GCC_UNUSED, gpointer user_data )
   char buffer[80];
   int error;
 
-  new_filename = ui_get_open_filename( "Fuse - Load Binary Data" );
-  if( !new_filename ) return;
+  new_filename = ui_get_open_filename( "Fuse - Load Binary Data");
+  if (!new_filename ) return;
 
   error = utils_read_file( new_filename, &new_file );
-  if( error ) { free( new_filename ); return; }
+  if (error ) { free( new_filename ); return; }
 
   // Remove the data for the old file
   utils_close_file( &info->file );
@@ -228,12 +228,12 @@ load_data( GtkEntry *entry GCC_UNUSED, gpointer user_data )
   base = ( g_str_has_prefix( nptr, "0x" ) )? 16 : 10;
   length = strtol( nptr, &endptr, base );
 
-  if( errno || length < 1 || length > 0x10000 || endptr == nptr ) {
-    ui_error( UI_ERROR_ERROR, "Length must be between 1 and 65536" );
+  if (errno || length < 1 || length > 0x10000 || endptr == nptr ) {
+    ui_error( UI_ERROR_ERROR, "Length must be between 1 and 65536");
     return;
   }
 
-  if( length > info->file.length ) {
+  if (length > info->file.length ) {
     ui_error( UI_ERROR_ERROR,
 	      "'%s' contains only %lu bytes",
 	      info->filename, (unsigned long)info->file.length );
@@ -245,17 +245,17 @@ load_data( GtkEntry *entry GCC_UNUSED, gpointer user_data )
   base = ( g_str_has_prefix( nptr, "0x" ) )? 16 : 10;
   start = strtol( nptr, &endptr, base );
 
-  if( errno || start < 0 || start > 0xffff || endptr == nptr ) {
-    ui_error( UI_ERROR_ERROR, "Start must be between 0 and 65535" );
+  if (errno || start < 0 || start > 0xffff || endptr == nptr ) {
+    ui_error( UI_ERROR_ERROR, "Start must be between 0 and 65535");
     return;
   }
 
-  if( start + length > 0x10000 ) {
-    ui_error( UI_ERROR_ERROR, "Block ends after address 65535" );
+  if (start + length > 0x10000 ) {
+    ui_error( UI_ERROR_ERROR, "Block ends after address 65535");
     return;
   }
 
-  for( i = 0; i < length; i++ )
+  for (i = 0; i < length; i++)
     writebyte_internal( start + i, info->file.buffer[ i ] );
 
   gtkui_destroy_widget_and_quit( info->dialog, NULL );
@@ -269,14 +269,14 @@ menu_file_savebinarydata( GtkAction *gtk_action GCC_UNUSED,
 
   fuse_emulation_pause();
 
-  info.filename = ui_get_save_filename( "Fuse - Save Binary Data" );
-  if( !info.filename ) { fuse_emulation_unpause(); return; }
+  info.filename = ui_get_save_filename( "Fuse - Save Binary Data");
+  if (!info.filename ) { fuse_emulation_unpause(); return; }
 
   info.activate_data = G_CALLBACK( save_data );
   info.change_filename = G_CALLBACK( change_save_filename );
   info.load = 0;
 
-  create_binary_dialog( &info, "Fuse - Save Binary Data" );
+  create_binary_dialog( &info, "Fuse - Save Binary Data");
 
   // Process the dialog
   gtk_widget_show_all( info.dialog );
@@ -293,8 +293,8 @@ change_save_filename( GtkButton *button GCC_UNUSED, gpointer user_data )
   struct binary_info *info = user_data;
   char *new_filename;
 
-  new_filename = ui_get_save_filename( "Fuse - Save Binary Data" );
-  if( !new_filename ) return;
+  new_filename = ui_get_save_filename( "Fuse - Save Binary Data");
+  if (!new_filename ) return;
 
   free( info->filename );
 
@@ -320,8 +320,8 @@ save_data( GtkEntry *entry GCC_UNUSED, gpointer user_data )
   base = ( g_str_has_prefix( nptr, "0x" ) )? 16 : 10;
   length = strtol( nptr, &endptr, base );
 
-  if( errno || length < 1 || length > 0x10000 || endptr == nptr ) {
-    ui_error( UI_ERROR_ERROR, "Length must be between 1 and 65536" );
+  if (errno || length < 1 || length > 0x10000 || endptr == nptr ) {
+    ui_error( UI_ERROR_ERROR, "Length must be between 1 and 65536");
     return;
   }
 
@@ -330,18 +330,18 @@ save_data( GtkEntry *entry GCC_UNUSED, gpointer user_data )
   base = ( g_str_has_prefix( nptr, "0x" ) )? 16 : 10;
   start = strtol( nptr, &endptr, base );
 
-  if( errno || start < 0 || start > 0xffff || endptr == nptr ) {
-    ui_error( UI_ERROR_ERROR, "Start must be between 0 and 65535" );
+  if (errno || start < 0 || start > 0xffff || endptr == nptr ) {
+    ui_error( UI_ERROR_ERROR, "Start must be between 0 and 65535");
     return;
   }
 
-  if( start + length > 0x10000 ) {
-    ui_error( UI_ERROR_ERROR, "Block ends after address 65535" );
+  if (start + length > 0x10000 ) {
+    ui_error( UI_ERROR_ERROR, "Block ends after address 65535");
     return;
   }
 
   error = utils_save_binary( start, length, info->filename );
-  if( error ) return;
+  if (error ) return;
 
   gtkui_destroy_widget_and_quit( info->dialog, NULL );
 }

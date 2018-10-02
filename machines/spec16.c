@@ -37,7 +37,7 @@
 #include "settings.h"
 #include "spec48.h"
 
-static int spec16_reset( void );
+static int spec16_reset(void);
 
 static memory_page empty_mapping[MEMORY_PAGES_IN_16K];
 static int empty_mapping_allocated = 0;
@@ -65,17 +65,17 @@ int spec16_init( fuse_machine_info *machine )
 }
 
 static void
-ensure_empty_mapping( void )
+ensure_empty_mapping(void)
 {
   int i;
   libspectrum_byte *empty_chunk;
 
-  if( empty_mapping_allocated ) return;
+  if (empty_mapping_allocated ) return;
 
   empty_chunk = memory_pool_allocate_persistent( 0x4000, 1 );
   memset( empty_chunk, 0xff, 0x4000 );
 
-  for( i = 0; i < MEMORY_PAGES_IN_16K; i++ ) {
+  for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
     memory_page *page = &empty_mapping[i];
     page->page = empty_chunk + i * MEMORY_PAGE_SIZE;
     page->writable = 0;
@@ -87,13 +87,13 @@ ensure_empty_mapping( void )
 }
 
 static int
-spec16_reset( void )
+spec16_reset(void)
 {
   int error;
 
   error = machine_load_rom( 0, settings_current.rom_16,
                             settings_default.rom_16, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   ensure_empty_mapping();
 

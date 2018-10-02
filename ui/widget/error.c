@@ -38,7 +38,7 @@ ui_error_specific( ui_error_level severity, const char *message )
 {
   widget_error_t error_info;
   // Can't output widgets if we don't have a display yet
-  if( !display_ui_initialised ) return 0;
+  if (!display_ui_initialised ) return 0;
 
 
   error_info.severity = severity;
@@ -57,26 +57,26 @@ int widget_error_draw( void *data )
   size_t i;
 
   error_info = (widget_error_t*)data;
-  if( split_message( error_info->message, &lines, &count, 28 ) ) return 1;
+  if (split_message( error_info->message, &lines, &count, 28 ) ) return 1;
 
   widget_dialog_with_border( 1, 2, 30, count+2 );
 
-  switch( error_info->severity ) {
+  switch (error_info->severity ) {
   case UI_ERROR_INFO:
-    widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "Info" );
+    widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "Info");
     break;
   case UI_ERROR_WARNING:
-    widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "Warning" );
+    widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "Warning");
     break;
   case UI_ERROR_ERROR:
-    widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "Error" );
+    widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "Error");
     break;
   default:
-    widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "(Unknown message)" );
+    widget_printstring( 10, 16, WIDGET_COLOUR_TITLE, "(Unknown message)");
     break;
   }
 
-  for( i=0; i<count; i++ ) {
+  for( i=0; i<count; i++) {
     widget_printstring( 17, i*8+24, WIDGET_COLOUR_FOREGROUND, lines[i] );
     free( lines[i] );
   }
@@ -117,25 +117,25 @@ split_message( const char *message, char ***lines, size_t *count,
       message++;
 
     // Check we've got room for the word, plus some prefixing space
-    if( position + widget_substringwidth( message, ptr - message ) + 4
+    if (position + widget_substringwidth( message, ptr - message ) + 4
  	>= line_length ) {
 
       char **new_lines; size_t i;
 
       // If we've filled the screen, stop
-      if( *count == 18 ) return 0;
+      if (*count == 18 ) return 0;
 
       new_lines = realloc( (*lines), (*count + 1) * sizeof( char* ) );
-      if( new_lines == NULL ) {
-	for( i=0; i<*count; i++ ) free( (*lines)[i] );
+      if (new_lines == NULL ) {
+	for( i=0; i<*count; i++) free( (*lines)[i] );
 	if(*lines) free( (*lines) );
 	return 1;
       }
       (*lines) = new_lines;
 
       (*lines)[*count] = malloc( (line_length+1) );
-      if( (*lines)[*count] == NULL ) {
-	for( i=0; i<*count; i++ ) free( (*lines)[i] );
+      if ((*lines)[*count] == NULL ) {
+	for( i=0; i<*count; i++) free( (*lines)[i] );
 	free( (*lines) );
 	return 1;
       }
@@ -148,7 +148,7 @@ split_message( const char *message, char ***lines, size_t *count,
 
     } else { // Enough room on this line
 
-      strcat( (*lines)[*count-1], " " );
+      strcat( (*lines)[*count-1], " ");
       (*lines)[*count-1][strlen( (*lines)[*count-1] ) + ptr - message] = '\0';
       strncat( (*lines)[*count-1], message, ptr - message );
       position += widget_substringwidth( message, ptr - message ) + 4;
@@ -163,7 +163,7 @@ split_message( const char *message, char ***lines, size_t *count,
 void
 widget_error_keyhandler( input_key key )
 {
-  switch( key ) {
+  switch (key ) {
 
   case INPUT_KEY_Escape:
     widget_end_widget( WIDGET_FINISHED_CANCEL );

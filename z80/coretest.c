@@ -56,7 +56,7 @@
 static const char *progname; // argv[0]
 static const char *testsfile; // argv[1]
 
-static int init_dummies( void );
+static int init_dummies(void);
 
 libspectrum_dword tstates;
 libspectrum_dword event_next_event;
@@ -73,8 +73,8 @@ void writebyte_internal( libspectrum_word address, libspectrum_byte b );
 static int run_test( FILE *f );
 static int read_test( FILE *f, libspectrum_dword *end_tstates );
 
-static void dump_z80_state( void );
-static void dump_memory_state( void );
+static void dump_z80_state(void);
+static void dump_memory_state(void);
 
 int
 main( int argc, char **argv )
@@ -83,20 +83,20 @@ main( int argc, char **argv )
 
   progname = argv[0];
 
-  if( argc < 2 ) {
+  if (argc < 2 ) {
     fprintf( stderr, "Usage: %s <testsfile>\n", progname );
     return 1;
   }
 
   testsfile = argv[1];
 
-  if( init_dummies() ) return 1;
+  if (init_dummies() ) return 1;
 
   // Initialise the tables used by the Z80 core
   z80_init( NULL );
 
-  f = fopen( testsfile, "r" );
-  if( !f ) {
+  f = fopen( testsfile, "r");
+  if (!f ) {
     fprintf( stderr, "%s: couldn't open tests file `%s': %s\n", progname,
 	     testsfile, strerror( errno ) );
     return 1;
@@ -106,7 +106,7 @@ main( int argc, char **argv )
     // Do nothing
   }
 
-  if( fclose( f ) ) {
+  if (fclose( f ) ) {
     fprintf( stderr, "%s: couldn't close `%s': %s\n", progname, testsfile,
 	     strerror( errno ) );
     return 1;
@@ -168,7 +168,7 @@ contend_write_no_mreq( libspectrum_word address, libspectrum_dword time )
 static void
 contend_port_preio( libspectrum_word port )
 {
-  if( ( port & 0xc000 ) == 0x4000 ) {
+  if (( port & 0xc000 ) == 0x4000 ) {
     printf( "%5d PC %04x\n", tstates, port );
   }
 
@@ -178,9 +178,9 @@ contend_port_preio( libspectrum_word port )
 static void
 contend_port_postio( libspectrum_word port )
 {
-  if( port & 0x0001 ) {
+  if (port & 0x0001 ) {
 
-    if( ( port & 0xc000 ) == 0x4000 ) {
+    if (( port & 0xc000 ) == 0x4000 ) {
       printf( "%5d PC %04x\n", tstates, port ); tstates++;
       printf( "%5d PC %04x\n", tstates, port ); tstates++;
       printf( "%5d PC %04x\n", tstates, port ); tstates++;
@@ -226,12 +226,12 @@ run_test( FILE *f )
 
   // Get ourselves into a known state
   z80_reset( 1 ); tstates = 0;
-  for( i = 0; i < 0x10000; i += 4 ) {
+  for (i = 0; i < 0x10000; i += 4 ) {
     memory[ i     ] = 0xde; memory[ i + 1 ] = 0xad;
     memory[ i + 2 ] = 0xbe; memory[ i + 3 ] = 0xef;
   }
 
-  if( read_test( f, &event_next_event ) ) return 0;
+  if (read_test( f, &event_next_event ) ) return 0;
 
   // Grab a copy of the memory for comparison at the end
   memcpy( initial_memory, memory, 0x10000 );
@@ -242,7 +242,7 @@ run_test( FILE *f )
   dump_z80_state();
   dump_memory_state();
 
-  printf( "\n" );
+  printf( "\n");
 
   return 1;
 }
@@ -258,9 +258,9 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
 
   do {
 
-    if( !fgets( test_name, sizeof( test_name ), f ) ) {
+    if (!fgets( test_name, sizeof( test_name ), f ) ) {
 
-      if( feof( f ) ) return 1;
+      if (feof( f ) ) return 1;
 
       fprintf( stderr, "%s: error reading test description from `%s': %s\n",
 	       progname, testsfile, strerror( errno ) );
@@ -270,7 +270,7 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
   } while( test_name[0] == '\n' );
 
   // FIXME: how should we read/write our data types?
-  if( fscanf( f, "%x %x %x %x %x %x %x %x %x %x %x %x %x", &af, &bc,
+  if (fscanf( f, "%x %x %x %x %x %x %x %x %x %x %x %x %x", &af, &bc,
 	      &de, &hl, &af_, &bc_, &de_, &hl_, &ix, &iy, &sp, &pc,
 	      &memptr ) != 13 ) {
     fprintf( stderr, "%s: first registers line in `%s' corrupt\n", progname,
@@ -283,7 +283,7 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
   IX  = ix;  IY  = iy;  SP  = sp;  PC  = pc;
   z80.memptr.w = memptr;
 
-  if( fscanf( f, "%x %x %u %u %u %d %d", &i, &r, &iff1, &iff2, &im,
+  if (fscanf( f, "%x %x %u %u %u %d %d", &i, &r, &iff1, &iff2, &im,
 	      &z80.halted, &end_tstates2 ) != 7 ) {
     fprintf( stderr, "%s: second registers line in `%s' corrupt\n", progname,
 	     testsfile );
@@ -295,24 +295,24 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
 
   while( 1 ) {
 
-    if( fscanf( f, "%x", &address ) != 1 ) {
+    if (fscanf( f, "%x", &address ) != 1 ) {
       fprintf( stderr, "%s: no address found in `%s'\n", progname, testsfile );
       return 1;
     }
 
-    if( address >= 0x10000 ) break;
+    if (address >= 0x10000 ) break;
 
     while( 1 ) {
 
       unsigned byte;
 
-      if( fscanf( f, "%x", &byte ) != 1 ) {
+      if (fscanf( f, "%x", &byte ) != 1 ) {
 	fprintf( stderr, "%s: no data byte found in `%s'\n", progname,
 		 testsfile );
 	return 1;
       }
 
-      if( byte >= 0x100 ) break;
+      if (byte >= 0x100 ) break;
 
       memory[ address++ ] = byte;
 
@@ -325,7 +325,7 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
 }
 
 static void
-dump_z80_state( void )
+dump_z80_state(void)
 {
   printf( "%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x\n",
 	  AF, BC, DE, HL, AF_, BC_, DE_, HL_, IX, IY, SP, PC, z80.memptr.w );
@@ -334,27 +334,27 @@ dump_z80_state( void )
 }
 
 static void
-dump_memory_state( void )
+dump_memory_state(void)
 {
   size_t i;
 
-  for( i = 0; i < 0x10000; i++ ) {
+  for (i = 0; i < 0x10000; i++) {
 
-    if( memory[ i ] == initial_memory[ i ] ) continue;
+    if (memory[ i ] == initial_memory[ i ] ) continue;
 
     printf( "%04x ", (unsigned)i );
 
     while( i < 0x10000 && memory[ i ] != initial_memory[ i ] )
       printf( "%02x ", memory[ i++ ] );
 
-    printf( "-1\n" );
+    printf( "-1\n");
   }
 }
 
 // Error 'handing': dump core as these should never be called
 
 void
-fuse_abort( void )
+fuse_abort(void)
 {
   abort();
 }
@@ -385,14 +385,14 @@ libspectrum_byte *slt[256];
 size_t slt_length[256];
 
 int
-tape_load_trap( void )
+tape_load_trap(void)
 {
   // Should never be called
   abort();
 }
 
 int
-tape_save_trap( void )
+tape_save_trap(void)
 {
   // Should never be called
   abort();
@@ -434,7 +434,7 @@ void debugger_system_variable_register(
 }
 
 int
-debugger_trap( void )
+debugger_trap(void)
 {
   abort();
 }
@@ -450,13 +450,13 @@ int beta_active = 0;
 int if1_available = 0;
 
 void
-beta_page( void )
+beta_page(void)
 {
   abort();
 }
 
 void
-beta_unpage( void )
+beta_unpage(void)
 {
   abort();
 }
@@ -473,13 +473,13 @@ int opus_available = 0;
 int opus_active = 0;
 
 void
-opus_page( void )
+opus_page(void)
 {
   abort();
 }
 
 void
-opus_unpage( void )
+opus_unpage(void)
 {
   abort();
 }
@@ -488,7 +488,7 @@ int plusd_available = 0;
 int plusd_active = 0;
 
 void
-plusd_page( void )
+plusd_page(void)
 {
   abort();
 }
@@ -497,7 +497,7 @@ int disciple_available = 0;
 int disciple_active = 0;
 
 void
-disciple_page( void )
+disciple_page(void)
 {
   abort();
 }
@@ -507,13 +507,13 @@ int didaktik80_active = 0;
 int didaktik80_snap = 0;
 
 void
-didaktik80_page( void )
+didaktik80_page(void)
 {
   abort();
 }
 
 void
-didaktik80_unpage( void )
+didaktik80_unpage(void)
 {
   abort();
 }
@@ -522,19 +522,19 @@ int usource_available = 0;
 int usource_active = 0;
 
 void
-usource_toggle( void )
+usource_toggle(void)
 {
   abort();
 }
 
 void
-if1_page( void )
+if1_page(void)
 {
   abort();
 }
 
 void
-if1_unpage( void )
+if1_unpage(void)
 {
   abort();
 }
@@ -542,7 +542,7 @@ if1_unpage( void )
 int multiface_activated = 0;
 
 void
-multiface_setic8( void )
+multiface_setic8(void)
 {
   abort();
 }
@@ -568,24 +568,24 @@ spectranet_page( int via_io GCC_UNUSED )
 }
 
 void
-spectranet_nmi( void )
+spectranet_nmi(void)
 {
   abort();
 }
 
 void
-spectranet_unpage( void )
+spectranet_unpage(void)
 {
   abort();
 }
 
 void
-spectranet_retn( void )
+spectranet_retn(void)
 {
 }
 
 int
-spectranet_nmi_flipflop( void )
+spectranet_nmi_flipflop(void)
 {
   return 0;
 }
@@ -601,13 +601,13 @@ startup_manager_register( startup_manager_module module,
 int svg_capture_active = 0; // SVG capture enabled?
 
 void
-svg_capture( void )
+svg_capture(void)
 {
   abort();
 }
 
 int
-rzx_frame( void )
+rzx_frame(void)
 {
   abort();
 }
@@ -632,7 +632,7 @@ module_register( module_info_t *module GCC_UNUSED )
 }
 
 void
-z80_debugger_variables_init( void )
+z80_debugger_variables_init(void)
 {
 }
 
@@ -650,11 +650,11 @@ libspectrum_word spectranet_programmable_trap;
 /* Initialise the dummy variables such that we're running on a clean a
    machine as possible */
 static int
-init_dummies( void )
+init_dummies(void)
 {
   size_t i;
 
-  for( i = 0; i < 8; i++ ) {
+  for (i = 0; i < 8; i++) {
     memory_map[i].page = &memory[ i * MEMORY_PAGE_SIZE ];
   }
 

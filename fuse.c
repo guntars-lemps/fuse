@@ -559,7 +559,7 @@ static void fuse_show_help(void)
            "\n"
            "For help, please mail <fuse-emulator-devel@lists.sf.net> or use\n"
            "the forums at <http://sourceforge.net/p/fuse-emulator/discussion/>.\n"
-           "For complete documentation, see the manual page of Fuse.\n\n" );
+           "For complete documentation, see the manual page of Fuse.\n\n");
 }
 
 

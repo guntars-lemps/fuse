@@ -32,11 +32,11 @@ extern libspectrum_byte ula_contention[ ULA_CONTENTION_SIZE ];
 // And how much when it is inactive
 extern libspectrum_byte ula_contention_no_mreq[ ULA_CONTENTION_SIZE ];
 
-void ula_register_startup( void );
+void ula_register_startup(void);
 
-libspectrum_byte ula_last_byte( void );
+libspectrum_byte ula_last_byte(void);
 
-libspectrum_byte ula_tape_level( void );
+libspectrum_byte ula_tape_level(void);
 
 void ula_contend_port_early( libspectrum_word port );
 void ula_contend_port_late( libspectrum_word port );

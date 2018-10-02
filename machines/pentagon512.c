@@ -42,8 +42,8 @@
 #include "spec128.h"
 #include "spec48.h"
 
-static int pentagon_reset( void );
-static int pentagon_memory_map( void );
+static int pentagon_reset(void);
+static int pentagon_memory_map(void);
 
 int
 pentagon512_init( fuse_machine_info *machine )
@@ -75,20 +75,20 @@ pentagon_reset(void)
 
   error = machine_load_rom( 0, settings_current.rom_pentagon512_0,
                             settings_default.rom_pentagon512_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_pentagon512_1,
                             settings_default.rom_pentagon512_1, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 2, settings_current.rom_pentagon512_3,
                             settings_default.rom_pentagon512_3, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom_bank( beta_memory_map_romcs, 0,
                                  settings_current.rom_pentagon512_2,
                                  settings_default.rom_pentagon512_2, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   error = spec128_common_reset( 0 );
-  if( error ) return error;
+  if (error ) return error;
 
   periph_clear();
   machines_periph_pentagon();
@@ -112,18 +112,18 @@ pentagon_reset(void)
 }
 
 static int
-pentagon_memory_map( void )
+pentagon_memory_map(void)
 {
   int rom, page, screen;
 
   screen = ( machine_current->ram.last_byte & 0x08 ) ? 7 : 5;
-  if( memory_current_screen != screen ) {
+  if (memory_current_screen != screen ) {
     display_update_critical( 0, 0 );
     display_refresh_main_screen();
     memory_current_screen = screen;
   }
 
-  if( beta_active && !( machine_current->ram.last_byte & 0x10 ) ) {
+  if (beta_active && !( machine_current->ram.last_byte & 0x10 ) ) {
     rom = 2;
   } else {
     rom = ( machine_current->ram.last_byte & 0x10 ) >> 4;

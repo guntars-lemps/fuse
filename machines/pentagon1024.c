@@ -38,8 +38,8 @@
 #include "spec128.h"
 #include "spec48.h"
 
-static int pentagon1024_reset( void );
-static int pentagon1024_memory_map( void );
+static int pentagon1024_reset(void);
+static int pentagon1024_memory_map(void);
 
 int
 pentagon1024_init( fuse_machine_info *machine )
@@ -71,20 +71,20 @@ pentagon1024_reset(void)
 
   error = machine_load_rom( 0, settings_current.rom_pentagon1024_0,
                             settings_default.rom_pentagon1024_0, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 1, settings_current.rom_pentagon1024_1,
                             settings_default.rom_pentagon1024_1, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom( 2, settings_current.rom_pentagon1024_3,
                             settings_default.rom_pentagon1024_3, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
   error = machine_load_rom_bank( beta_memory_map_romcs, 0,
                                  settings_current.rom_pentagon1024_2,
                                  settings_default.rom_pentagon1024_2, 0x4000 );
-  if( error ) return error;
+  if (error ) return error;
 
   error = spec128_common_reset( 0 );
-  if( error ) return error;
+  if (error ) return error;
 
   machine_current->ram.last_byte2 = 0;
   machine_current->ram.special = 0;
@@ -115,12 +115,12 @@ void
 pentagon1024_memoryport_write( libspectrum_word port GCC_UNUSED,
 			       libspectrum_byte b )
 {
-  if( machine_current->ram.locked ) return;
+  if (machine_current->ram.locked ) return;
 
   machine_current->ram.last_byte = b;
   machine_current->memory_map();
 
-  if( machine_current->ram.last_byte2 & 0x04 ) // v2.2
+  if (machine_current->ram.last_byte2 & 0x04 ) // v2.2
     machine_current->ram.locked = b & 0x20;
 }
 
@@ -128,10 +128,10 @@ void
 pentagon1024_v22_memoryport_write( libspectrum_word port GCC_UNUSED,
 				   libspectrum_byte b)
 {
-  if( machine_current->ram.locked ) return;
+  if (machine_current->ram.locked ) return;
 
   machine_current->ram.last_byte2 = b;
-  if( b & 0x01 ) {
+  if (b & 0x01 ) {
     display_dirty = display_dirty_pentagon_16_col;
     display_write_if_dirty = display_write_if_dirty_pentagon_16_col;
     display_dirty_flashing = display_dirty_flashing_pentagon_16_col;
@@ -142,18 +142,18 @@ pentagon1024_v22_memoryport_write( libspectrum_word port GCC_UNUSED,
   machine_current->memory_map();
 }
 
-static int pentagon1024_memory_map( void )
+static int pentagon1024_memory_map(void)
 {
   int rom, page, screen;
 
   screen = ( machine_current->ram.last_byte & 0x08 ) ? 7 : 5;
-  if( memory_current_screen != screen ) {
+  if (memory_current_screen != screen ) {
     display_update_critical( 0, 0 );
     display_refresh_main_screen();
     memory_current_screen = screen;
   }
 
-  if( beta_active && !( machine_current->ram.last_byte & 0x10 ) ) {
+  if (beta_active && !( machine_current->ram.last_byte & 0x10 ) ) {
     rom = 2;
   } else {
     rom = ( machine_current->ram.last_byte & 0x10 ) >> 4;
@@ -161,7 +161,7 @@ static int pentagon1024_memory_map( void )
 
   machine_current->ram.current_rom = rom;
 
-  if( machine_current->ram.last_byte2 & 0x08 ) {
+  if (machine_current->ram.last_byte2 & 0x08 ) {
     memory_map_16k( 0x0000, memory_map_ram, 0 ); // v2.2
     machine_current->ram.special = 1; // v2.2
   } else {
@@ -170,7 +170,7 @@ static int pentagon1024_memory_map( void )
 
   page = ( machine_current->ram.last_byte & 0x07 );
 
-  if( !( machine_current->ram.last_byte2 & 0x04 ) ) {
+  if (!( machine_current->ram.last_byte2 & 0x04 ) ) {
     page += ( ( machine_current->ram.last_byte & 0xC0 ) >> 3 ) +
 	    ( machine_current->ram.last_byte & 0x20 );
   }

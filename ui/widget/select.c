@@ -43,7 +43,7 @@ static void print_item (int left_edge, int width, int index, int colour)
   key[1] = 'A' + index;
   left_edge = ( left_edge + 1 ) * 8 + 1;
   left_edge = widget_printstring( left_edge, index * 8 + 24, colour, key );
-  left_edge = widget_printstring( left_edge + 1, index * 8 + 24, colour, ": " );
+  left_edge = widget_printstring( left_edge + 1, index * 8 + 24, colour, ": ");
   widget_printstring( left_edge + 1, index * 8 + 24, colour, options[index] );
 }
 
@@ -55,11 +55,11 @@ widget_calculate_select_width( const char* title )
   int i;
   int max_width = widget_stringwidth( title )+5*8;
   // Leave room for the option labels we'll be adding
-  int label_width = widget_stringwidth( "A: " );
+  int label_width = widget_stringwidth( "A: ");
 
-  for( i = 0; i < count; i++ ) {
+  for (i = 0; i < count; i++) {
     int total_width = label_width + widget_stringwidth( options[i] ) + 3 * 8;
-    if( total_width > max_width )
+    if (total_width > max_width )
       max_width = total_width;
   }
 
@@ -73,7 +73,7 @@ widget_select_draw( void *data )
   size_t width;
   int menu_left_edge_x;
 
-  if( data ) {
+  if (data ) {
 
     widget_select_t *ptr = data;
 
@@ -95,8 +95,8 @@ widget_select_draw( void *data )
 
   widget_printstring( menu_left_edge_x*8+2, 16, WIDGET_COLOUR_TITLE, title );
 
-  for( i = 0; i < count; i++ ) {
-    if( i == highlight_line ) {
+  for (i = 0; i < count; i++) {
+    if (i == highlight_line ) {
       widget_rectangle( menu_left_edge_x*8+1, i*8+24, width*8-2, 1*8, WIDGET_COLOUR_HIGHLIGHT );
     }
     print_item( menu_left_edge_x, width, i, WIDGET_COLOUR_FOREGROUND );
@@ -115,7 +115,7 @@ widget_select_keyhandler( input_key key )
   size_t width = widget_calculate_select_width( title );
   int menu_left_edge_x = DISPLAY_WIDTH_COLS/2-width/2;
 
-  switch( key ) {
+  switch (key ) {
 
 #if 0
   case INPUT_KEY_Resize: // Fake keypress used on window resize
@@ -171,7 +171,7 @@ widget_select_keyhandler( input_key key )
 
   }
 
-  if( cursor_pressed                                  ||
+  if (cursor_pressed                                  ||
       ( key >= INPUT_KEY_a && key <= INPUT_KEY_z &&
 	key - INPUT_KEY_a < (ptrdiff_t)count        )
     ) {
@@ -183,7 +183,7 @@ widget_select_keyhandler( input_key key )
                 WIDGET_COLOUR_FOREGROUND );
 
     // draw the new one
-    if( cursor_pressed ) {
+    if (cursor_pressed ) {
       highlight_line = new_highlight_line;
     } else {
       highlight_line = key - INPUT_KEY_a;
@@ -199,9 +199,9 @@ widget_select_keyhandler( input_key key )
 
 int widget_select_finish( widget_finish_state finished )
 {
-  if( finished == WIDGET_FINISHED_OK ) {
+  if (finished == WIDGET_FINISHED_OK ) {
     *result = highlight_line;
-    if( finish_all )
+    if (finish_all )
       widget_end_all( WIDGET_FINISHED_OK );
   } else {
     *result = -1;

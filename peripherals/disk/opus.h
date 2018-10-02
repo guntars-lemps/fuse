@@ -39,10 +39,10 @@ typedef enum opus_drive_number {
 extern int opus_available; // Is the Opus available for use?
 extern int opus_active; // Opus enabled?
 
-void opus_register_startup( void );
+void opus_register_startup(void);
 
-void opus_page( void );
-void opus_unpage( void );
+void opus_page(void);
+void opus_unpage(void);
 
 libspectrum_byte opus_read( libspectrum_word address );
 void opus_write( libspectrum_word address, libspectrum_byte b );
@@ -56,6 +56,6 @@ int opus_disk_flip( opus_drive_number which, int flip );
 int opus_disk_writeprotect( opus_drive_number which, int wrprot );
 fdd_t *opus_get_fdd( opus_drive_number which );
 
-int opus_unittest( void );
+int opus_unittest(void);
 
 #endif // #ifndef FUSE_OPUS_H

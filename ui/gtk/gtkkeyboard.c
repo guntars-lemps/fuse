@@ -46,12 +46,12 @@ unshift_keysym( guint keycode, gint group )
   gdk_keymap_get_entries_for_keycode( gdk_keymap_get_default(), keycode,
                                       &maps, &keyvals, &count );
 
-  for( i = 0; i < count; i++ ) {
-    if( maps[i].group == group && maps[i].level == 0 ) {
+  for (i = 0; i < count; i++) {
+    if (maps[i].group == group && maps[i].level == 0 ) {
       r = keyvals[i];
       break;
     }
-    if( maps[i].group == 0 && maps[i].level == 0 ) {
+    if (maps[i].group == 0 && maps[i].level == 0 ) {
       r2 = keyvals[i];
     }
   }
@@ -82,7 +82,7 @@ gtkkeyboard_keypress( GtkWidget *widget GCC_UNUSED, GdkEvent *event,
 {
   input_event_t fuse_event;
 
-  if( event->key.keyval == GDK_KEY_F1 && event->key.state == 0 )
+  if (event->key.keyval == GDK_KEY_F1 && event->key.state == 0 )
     ui_mouse_suspend();
 
   fuse_event.type = INPUT_EVENT_KEYPRESS;

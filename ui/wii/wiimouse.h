@@ -24,10 +24,10 @@
 #ifndef FUSE_WIIMOUSE_H
 #define FUSE_WIIMOUSE_H
 
-int wiimouse_init( void );
-int wiimouse_end( void );
+int wiimouse_init(void);
+int wiimouse_end(void);
 void wiimouse_get_position( int *x, int *y );
 
-void mouse_update( void );
+void mouse_update(void);
 
 #endif // FUSE_WIIMOUSE_H

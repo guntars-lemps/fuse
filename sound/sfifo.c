@@ -70,7 +70,7 @@ int sfifo_init(sfifo_t *f, int size)
 		;
 
 	// Get buffer
-	if( 0 == (f->buffer = malloc(f->size)) )
+	if (0 == (f->buffer = malloc(f->size)) )
 		return -ENOMEM;
 
 	return 0;

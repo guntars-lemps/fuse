@@ -35,9 +35,9 @@ extern int debugger_breakpoint_event;
 void debugger_breakpoint_time_fn( libspectrum_dword tstates, int type, void *user_data );
 
 int debugger_breakpoint_remove( size_t id );
-int debugger_breakpoint_remove_all( void );
+int debugger_breakpoint_remove_all(void);
 int debugger_breakpoint_clear( libspectrum_word address );
-int debugger_breakpoint_exit( void );
+int debugger_breakpoint_exit(void);
 int debugger_breakpoint_ignore( size_t id, size_t ignore );
 int debugger_breakpoint_set_condition( size_t id,
 				       debugger_expression *condition );
@@ -50,7 +50,7 @@ int debugger_port_write( libspectrum_word address, libspectrum_byte value );
 // Utility functions called by the flex scanner
 
 int debugger_command_input( char *buf, int *result, int max_size );
-int yylex( void );
+int yylex(void);
 void yyerror( const char *s );
 
 // The semantic values of some tokens
@@ -95,14 +95,14 @@ debugger_expression_evaluate( debugger_expression* expression );
 
 // Event handling
 
-void debugger_event_init( void );
+void debugger_event_init(void);
 int debugger_event_is_registered( const char *type, const char *detail );
-void debugger_event_end( void );
+void debugger_event_end(void);
 
 // System variables handling
 
-void debugger_system_variable_init( void );
-void debugger_system_variable_end( void );
+void debugger_system_variable_init(void);
+void debugger_system_variable_end(void);
 int debugger_system_variable_find( const char *type, const char *detail );
 libspectrum_dword debugger_system_variable_get( int system_variable );
 void debugger_system_variable_set( const char *type, const char *detail,
@@ -112,8 +112,8 @@ void debugger_system_variable_text( char *buffer, size_t length,
 
 // Variables handling
 
-void debugger_variable_init( void );
-void debugger_variable_end( void );
+void debugger_variable_init(void);
+void debugger_variable_end(void);
 void debugger_variable_set( const char *name, libspectrum_dword value );
 libspectrum_dword debugger_variable_get( const char *name );
 

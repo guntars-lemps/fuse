@@ -163,7 +163,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 }
 
 void
-sound_lowlevel_end( void )
+sound_lowlevel_end(void)
 {
 #ifdef solaris
 	ioctl(soundfd, I_FLUSH, FLUSHW);

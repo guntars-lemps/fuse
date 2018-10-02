@@ -29,12 +29,12 @@ extern int multiface_activated; // RED BUTTON PUSHED
 extern int multiface_active;
 extern int multiface_available;
 
-void multiface_register_startup( void );
+void multiface_register_startup(void);
 
-void multiface_status_update( void );
+void multiface_status_update(void);
 
-void multiface_red_button( void );
-void multiface_setic8( void );
-int multiface_unittest( void );
+void multiface_red_button(void);
+void multiface_setic8(void);
+int multiface_unittest(void);
 
 #endif // #ifndef FUSE_MULTIFACE_H

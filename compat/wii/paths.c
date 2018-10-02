@@ -36,13 +36,13 @@
 #include "ui/ui.h"
 
 const char*
-compat_get_temp_path( void )
+compat_get_temp_path(void)
 {
   return "/tmp";
 }
 
 const char*
-compat_get_config_path( void )
+compat_get_config_path(void)
 {
   return "sd:/apps/fuse";
 }
@@ -67,7 +67,7 @@ compat_get_next_path( path_context *ctx )
   char buffer[ PATH_MAX ];
   const char *path_segment, *path2;
 
-  switch( (ctx->state)++ ) {
+  switch ((ctx->state)++ ) {
 
     // First look relative to the current directory
   case 0:
@@ -77,7 +77,7 @@ compat_get_next_path( path_context *ctx )
     // Then relative to the Fuse executable
   case 1:
 
-    switch( ctx->type ) {
+    switch (ctx->type ) {
     case UTILS_AUXILIARY_LIB: path_segment = "lib"; break;
     case UTILS_AUXILIARY_ROM: path_segment = "roms"; break;
     case UTILS_AUXILIARY_WIDGET: path_segment = "ui/widget"; break;
@@ -87,13 +87,13 @@ compat_get_next_path( path_context *ctx )
       return 0;
     }
 
-    if( compat_is_absolute_path( fuse_progname ) ) {
+    if (compat_is_absolute_path( fuse_progname ) ) {
       strncpy( buffer, fuse_progname, PATH_MAX );
       buffer[ PATH_MAX - 1 ] = '\0';
     } else {
       size_t len;
       len = PATH_MAX - strlen( fuse_progname ) - strlen( FUSE_DIR_SEP_STR );
-      if( !getcwd( buffer, len ) ) {
+      if (!getcwd( buffer, len ) ) {
         ui_error( UI_ERROR_ERROR, "error getting current working directory: %s",
 	          strerror( errno ) );
         return 0;

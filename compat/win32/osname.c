@@ -36,12 +36,12 @@ int compat_osname( char *osname, size_t length )
 
   buf.dwOSVersionInfoSize = sizeof( buf );
   error = GetVersionEx( &buf );
-  if( error == 0 ) {
-    ui_error( UI_ERROR_ERROR, "error getting system information." );
+  if (error == 0 ) {
+    ui_error( UI_ERROR_ERROR, "error getting system information.");
     return 1;
   }
 
-  switch( buf.dwPlatformId ) {
+  switch (buf.dwPlatformId ) {
   case VER_PLATFORM_WIN32_NT:	   windows_name = "NT";      break;
   case VER_PLATFORM_WIN32_WINDOWS: windows_name = "95/98";   break;
   case VER_PLATFORM_WIN32s:	   windows_name = "3.1";     break;

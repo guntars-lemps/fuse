@@ -42,7 +42,7 @@ int widget_picture_draw( void* data )
 void
 widget_picture_keyhandler( input_key key )
 {
-  switch( key ) {
+  switch (key ) {
 
 #if 0
   case INPUT_KEY_Resize: // Fake keypress used on widget resize

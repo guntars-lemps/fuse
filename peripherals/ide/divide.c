@@ -46,7 +46,7 @@ static libspectrum_byte divide_ide_read( libspectrum_word port, libspectrum_byte
 static void divide_ide_write( libspectrum_word port, libspectrum_byte data );
 static void divide_control_write( libspectrum_word port, libspectrum_byte data );
 static libspectrum_ide_register port_to_ide_register( libspectrum_byte port );
-static void divide_activate( void );
+static void divide_activate(void);
 
 // Data
 
@@ -73,7 +73,7 @@ static libspectrum_ide_channel *divide_idechn1;
 #define DIVIDE_PAGE_LENGTH 0x2000
 
 static void divide_reset( int hard_reset );
-static void divide_memory_map( void );
+static void divide_memory_map(void);
 static void divide_enabled_snapshot( libspectrum_snap *snap );
 static void divide_from_snapshot( libspectrum_snap *snap );
 static void divide_to_snapshot( libspectrum_snap *snap );
@@ -106,7 +106,7 @@ divide_init( void *context )
 		    UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
 		    settings_current.divide_slave_file,
 		    UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT );
-  if( error ) return error;
+  if (error ) return error;
 
   module_register( &divide_module_info );
 
@@ -120,7 +120,7 @@ divide_init( void *context )
 }
 
 static void
-divide_end( void )
+divide_end(void)
 {
   divxxx_free( divide_state );
   libspectrum_ide_free( divide_idechn0 );
@@ -128,7 +128,7 @@ divide_end( void )
 }
 
 void
-divide_register_startup( void )
+divide_register_startup(void)
 {
   startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -190,7 +190,7 @@ divide_eject( libspectrum_ide_unit unit )
 static libspectrum_ide_register
 port_to_ide_register( libspectrum_byte port )
 {
-  switch( port & 0xff ) {
+  switch (port & 0xff ) {
     case 0xa3:
       return LIBSPECTRUM_IDE_REGISTER_DATA;
     case 0xa7:
@@ -244,13 +244,13 @@ divide_set_automap( int state )
 }
 
 void
-divide_refresh_page_state( void )
+divide_refresh_page_state(void)
 {
   divxxx_refresh_page_state( divide_state );
 }
 
 void
-divide_memory_map( void )
+divide_memory_map(void)
 {
   divxxx_memory_map( divide_state );
 }
@@ -266,24 +266,24 @@ divide_from_snapshot( libspectrum_snap *snap )
 {
   size_t i;
 
-  if( !libspectrum_snap_divide_active( snap ) ) return;
+  if (!libspectrum_snap_divide_active( snap ) ) return;
 
   settings_current.divide_wp =
     libspectrum_snap_divide_eprom_writeprotect( snap );
   divxxx_control_write_internal( divide_state, libspectrum_snap_divide_control( snap ) );
 
-  if( libspectrum_snap_divide_eprom( snap, 0 ) ) {
+  if (libspectrum_snap_divide_eprom( snap, 0 ) ) {
     memcpy( divxxx_get_eprom( divide_state ),
 	    libspectrum_snap_divide_eprom( snap, 0 ), DIVIDE_PAGE_LENGTH );
   }
 
-  for( i = 0; i < libspectrum_snap_divide_pages( snap ); i++ )
-    if( libspectrum_snap_divide_ram( snap, i ) ) {
+  for (i = 0; i < libspectrum_snap_divide_pages( snap ); i++)
+    if (libspectrum_snap_divide_ram( snap, i ) ) {
       libspectrum_byte *ram = divxxx_get_ram( divide_state, i );
       memcpy( ram, libspectrum_snap_divide_ram( snap, i ), DIVIDE_PAGE_LENGTH );
     }
 
-  if( libspectrum_snap_divide_paged( snap ) ) {
+  if (libspectrum_snap_divide_paged( snap ) ) {
     divxxx_page( divide_state );
   } else {
     divxxx_unpage( divide_state );
@@ -296,7 +296,7 @@ divide_to_snapshot( libspectrum_snap *snap )
   size_t i;
   libspectrum_byte *buffer;
 
-  if( !settings_current.divide_enabled ) return;
+  if (!settings_current.divide_enabled ) return;
 
   libspectrum_snap_set_divide_active( snap, 1 );
   libspectrum_snap_set_divide_eprom_writeprotect( snap,
@@ -311,7 +311,7 @@ divide_to_snapshot( libspectrum_snap *snap )
 
   libspectrum_snap_set_divide_pages( snap, DIVIDE_PAGES );
 
-  for( i = 0; i < DIVIDE_PAGES; i++ ) {
+  for (i = 0; i < DIVIDE_PAGES; i++) {
 
     buffer = libspectrum_new( libspectrum_byte, DIVIDE_PAGE_LENGTH );
 
@@ -321,13 +321,13 @@ divide_to_snapshot( libspectrum_snap *snap )
 }
 
 static void
-divide_activate( void )
+divide_activate(void)
 {
   divxxx_activate( divide_state );
 }
 
 int
-divide_unittest( void )
+divide_unittest(void)
 {
   int r = 0;
   int eprom_memory_source = divxxx_get_eprom_memory_source( divide_state );

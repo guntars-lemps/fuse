@@ -36,20 +36,20 @@
 void get_relative_directory( char *buffer, size_t bufsize );
 
 const char*
-compat_get_temp_path( void )
+compat_get_temp_path(void)
 {
   const char *dir;
 
   // Use TMPDIR if specified, if not /tmp
-  dir = getenv( "TMPDIR" ); if( dir ) return dir;
+  dir = getenv( "TMPDIR"); if (dir ) return dir;
   return "/tmp";
 }
 
 const char*
-compat_get_config_path( void )
+compat_get_config_path(void)
 {
   const char *dir;
-  dir = getenv( "HOME" ); if( dir ) return dir;
+  dir = getenv( "HOME"); if (dir ) return dir;
   return ".";
 }
 
@@ -65,7 +65,7 @@ compat_get_next_path( path_context *ctx )
   char buffer[ PATH_MAX ];
   const char *path_segment, *path2;
 
-  switch( (ctx->state)++ ) {
+  switch ((ctx->state)++ ) {
 
     // First look relative to the current directory
   case 0:
@@ -75,7 +75,7 @@ compat_get_next_path( path_context *ctx )
     // Then relative to the Fuse executable
   case 1:
 
-    switch( ctx->type ) {
+    switch (ctx->type ) {
     case UTILS_AUXILIARY_LIB: path_segment = "lib"; break;
     case UTILS_AUXILIARY_ROM: path_segment = "roms"; break;
     case UTILS_AUXILIARY_WIDGET: path_segment = "ui/widget"; break;
@@ -85,7 +85,7 @@ compat_get_next_path( path_context *ctx )
       return 0;
     }
 
-    if( compat_is_absolute_path( fuse_progname ) ) {
+    if (compat_is_absolute_path( fuse_progname ) ) {
       strncpy( buffer, fuse_progname, PATH_MAX );
       buffer[ PATH_MAX - 1 ] = '\0';
     } else {

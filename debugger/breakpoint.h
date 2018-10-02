@@ -146,6 +146,6 @@ debugger_breakpoint_add_event(
 
 /* Add events corresponding to all the time breakpoints to happen
    during this frame */
-int debugger_add_time_events( void );
+int debugger_add_time_events(void);
 
 #endif // #ifndef FUSE_DEBUGGER_BREAKPOINT_H
