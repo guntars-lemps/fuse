@@ -25,6 +25,6 @@
 #define FUSE_KEMPMOUSE_H
 
 void kempmouse_register_startup(void);
-void kempmouse_update( int dx, int dy, int button, int down );
+void kempmouse_update(int dx, int dy, int button, int down);
 
 #endif

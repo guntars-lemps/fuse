@@ -37,7 +37,7 @@
 static int specplus2a_reset(void);
 
 int
-specplus2a_init( fuse_machine_info *machine )
+specplus2a_init(fuse_machine_info *machine)
 {
   machine->machine = LIBSPECTRUM_MACHINE_PLUS2A;
   machine->id = "plus2a";
@@ -64,21 +64,21 @@ specplus2a_reset(void)
 {
   int error;
 
-  error = machine_load_rom( 0, settings_current.rom_plus2a_0,
-                            settings_default.rom_plus2a_0, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom( 1, settings_current.rom_plus2a_1,
-                            settings_default.rom_plus2a_1, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom( 2, settings_current.rom_plus2a_2,
-                            settings_default.rom_plus2a_2, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom( 3, settings_current.rom_plus2a_3,
-                            settings_default.rom_plus2a_3, 0x4000 );
-  if (error ) return error;
+  error = machine_load_rom(0, settings_current.rom_plus2a_0,
+                            settings_default.rom_plus2a_0, 0x4000);
+  if (error) return error;
+  error = machine_load_rom(1, settings_current.rom_plus2a_1,
+                            settings_default.rom_plus2a_1, 0x4000);
+  if (error) return error;
+  error = machine_load_rom(2, settings_current.rom_plus2a_2,
+                            settings_default.rom_plus2a_2, 0x4000);
+  if (error) return error;
+  error = machine_load_rom(3, settings_current.rom_plus2a_3,
+                            settings_default.rom_plus2a_3, 0x4000);
+  if (error) return error;
 
   error = specplus3_plus2a_common_reset();
-  if (error ) return error;
+  if (error) return error;
 
   periph_clear();
   machines_periph_plus3();

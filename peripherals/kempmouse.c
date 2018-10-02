@@ -34,8 +34,8 @@
 #include "settings.h"
 #include "ui/ui.h"
 
-static void kempmouse_snapshot_enabled( libspectrum_snap *snap );
-static void kempmouse_to_snapshot( libspectrum_snap *snap );
+static void kempmouse_snapshot_enabled(libspectrum_snap *snap);
+static void kempmouse_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t kempmouse_module_info = {
 
@@ -54,15 +54,15 @@ static struct {
 
 #define READ(name,item) \
   static libspectrum_byte \
-  read_##name( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached ) \
+  read_##name(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached) \
   { \
     *attached = 0xff; /* TODO: check this */ \
     return kempmouse.item; \
   }
 
-READ( buttons, buttons );
-READ( x_pos, pos.x );
-READ( y_pos, pos.y );
+READ(buttons, buttons);
+READ(x_pos, pos.x);
+READ(y_pos, pos.y);
 
 static const periph_port_t kempmouse_ports[] = {
   // _we_ require b0 set
@@ -79,10 +79,10 @@ static const periph_t kempmouse_periph = {
 };
 
 static int
-kempmouse_init( void *context )
+kempmouse_init(void *context)
 {
-  module_register( &kempmouse_module_info );
-  periph_register( PERIPH_TYPE_KEMPSTON_MOUSE, &kempmouse_periph );
+  module_register(&kempmouse_module_info);
+  periph_register(PERIPH_TYPE_KEMPSTON_MOUSE, &kempmouse_periph);
 
   return 0;
 }
@@ -91,18 +91,18 @@ void
 kempmouse_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register( STARTUP_MANAGER_MODULE_KEMPMOUSE, dependencies,
-                            ARRAY_SIZE( dependencies ), kempmouse_init, NULL,
-                            NULL );
+  startup_manager_register(STARTUP_MANAGER_MODULE_KEMPMOUSE, dependencies,
+                            ARRAY_SIZE(dependencies), kempmouse_init, NULL,
+                            NULL);
 }
 
 void
-kempmouse_update( int dx, int dy, int btn, int down )
+kempmouse_update(int dx, int dy, int btn, int down)
 {
   kempmouse.pos.x += dx;
   kempmouse.pos.y -= dy;
-  if (btn != -1 ) {
-    if (down )
+  if (btn != -1) {
+    if (down)
       kempmouse.buttons &= ~(1 << btn);
     else
       kempmouse.buttons |= 1 << btn;
@@ -110,15 +110,15 @@ kempmouse_update( int dx, int dy, int btn, int down )
 }
 
 static void
-kempmouse_snapshot_enabled( libspectrum_snap *snap )
+kempmouse_snapshot_enabled(libspectrum_snap *snap)
 {
-  if (libspectrum_snap_kempston_mouse_active( snap ) )
+  if (libspectrum_snap_kempston_mouse_active(snap))
     settings_current.kempston_mouse = 1;
 }
 
 static void
-kempmouse_to_snapshot( libspectrum_snap *snap )
+kempmouse_to_snapshot(libspectrum_snap *snap)
 {
-  libspectrum_snap_set_kempston_mouse_active( snap,
-                                              settings_current.kempston_mouse );
+  libspectrum_snap_set_kempston_mouse_active(snap,
+                                              settings_current.kempston_mouse);
 }

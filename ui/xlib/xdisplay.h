@@ -37,6 +37,6 @@ extern int xerror_expecting;
 extern int xerror_error;
 
 // The X error handler
-int xerror_handler( Display *display, XErrorEvent *error );
+int xerror_handler(Display *display, XErrorEvent *error);
 
 #endif // #ifndef FUSE_XDISPLAY_H

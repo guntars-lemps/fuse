@@ -30,30 +30,30 @@
 
 #ifndef GTK_TYPE_COMBO_BOX_TEXT
 
-#define GTK_COMBO_BOX_TEXT( X ) GTK_COMBO_BOX( X )
+#define GTK_COMBO_BOX_TEXT(X) GTK_COMBO_BOX(X)
 #define gtk_combo_box_text_new() gtk_combo_box_new_text()
-#define gtk_combo_box_text_append_text( X, Y ) gtk_combo_box_append_text( X, Y )
+#define gtk_combo_box_text_append_text(X, Y) gtk_combo_box_append_text(X, Y)
 
 #endif // #ifndef GTK_TYPE_COMBO_BOX_TEXT
 
 
-#if !GTK_CHECK_VERSION( 3, 0, 0 )
+#if !GTK_CHECK_VERSION(3, 0, 0)
 
 GtkWidget *
-gtk_box_new( GtkOrientation orientation, gint spacing );
+gtk_box_new(GtkOrientation orientation, gint spacing);
 
 GtkWidget *
-gtk_separator_new( GtkOrientation orientation );
+gtk_separator_new(GtkOrientation orientation);
 
 GtkWidget *
-gtk_scrollbar_new( GtkOrientation orientation, GtkAdjustment *adjustment );
+gtk_scrollbar_new(GtkOrientation orientation, GtkAdjustment *adjustment);
 
-#define gtk_widget_override_font( X, Y ) gtk_widget_modify_font( X, Y )
+#define gtk_widget_override_font(X, Y) gtk_widget_modify_font(X, Y)
 
 #endif
 
 
-#if !GTK_CHECK_VERSION( 2, 22, 0 )
+#if !GTK_CHECK_VERSION(2, 22, 0)
 
 #define GDK_KEY_VoidSymbol      GDK_VoidSymbol
 #define GDK_KEY_Tab             GDK_Tab
@@ -193,6 +193,6 @@ gtk_scrollbar_new( GtkOrientation orientation, GtkAdjustment *adjustment );
 #define GDK_KEY_Hyper_R         GDK_Hyper_R
 #define GDK_KEY_Mode_switch     GDK_Mode_switch
 
-#endif // #if !GTK_CHECK_VERSION( 2, 22, 0 )
+#endif // #if !GTK_CHECK_VERSION(2, 22, 0)
 
 #endif // #ifndef FUSE_GTKCOMPAT_H

@@ -26,9 +26,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int compat_osname( char *buffer, size_t length )
+int compat_osname(char *buffer, size_t length)
 {
-  snprintf( buffer, length, "%s %s %s", "MorphOS", "Pegasos", "1.4.4");
+  snprintf(buffer, length, "%s %s %s", "MorphOS", "Pegasos", "1.4.4");
 
   return 0;
 }

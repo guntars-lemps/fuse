@@ -35,13 +35,13 @@
 #ifdef __GNUC__
 
 #define GCC_UNUSED __attribute__ ((unused))
-#define GCC_PRINTF( fmtstring, args ) __attribute__ ((format( printf, fmtstring, args )))
+#define GCC_PRINTF(fmtstring, args) __attribute__ ((format(printf, fmtstring, args)))
 #define GCC_NORETURN __attribute__ ((noreturn))
 
 #else // #ifdef __GNUC__
 
 #define GCC_UNUSED
-#define GCC_PRINTF( fmtstring, args )
+#define GCC_PRINTF(fmtstring, args)
 #define GCC_NORETURN
 
 #endif // #ifdef __GNUC__
@@ -58,7 +58,7 @@
 #define BUILD_BUG_ON_ZERO(e) \
   (sizeof(struct { int:-!!(e) * 1234; }))
 
-#if !GNUC_PREREQ(3, 1) || defined( __STRICT_ANSI__ )
+#if !GNUC_PREREQ(3, 1) || defined(__STRICT_ANSI__)
   #define MUST_BE_ARRAY(a) \
     BUILD_BUG_ON_ZERO(sizeof(a) % sizeof(*a))
 #else
@@ -68,7 +68,7 @@
     BUILD_BUG_ON_ZERO(SAME_TYPE((a), &(*a)))
 #endif
 
-#define ARRAY_SIZE(a) ( \
+#define ARRAY_SIZE(a) (\
   (sizeof(a) / sizeof(*a)) \
    + MUST_BE_ARRAY(a))
 

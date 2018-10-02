@@ -49,43 +49,43 @@ struct flash_am29f010_t {
 flash_am29f010_t*
 flash_am29f010_alloc(void)
 {
-  return libspectrum_new( flash_am29f010_t, 1 );
+  return libspectrum_new(flash_am29f010_t, 1);
 }
 
 void
-flash_am29f010_free( flash_am29f010_t *self )
+flash_am29f010_free(flash_am29f010_t *self)
 {
-  libspectrum_free( self );
+  libspectrum_free(self);
 }
 
 void
-flash_am29f010_init( flash_am29f010_t *self, libspectrum_byte *memory )
+flash_am29f010_init(flash_am29f010_t *self, libspectrum_byte *memory)
 {
   self->flash_state = FLASH_STATE_RESET;
   self->memory = memory;
 }
 
 static void
-flash_am29f010_chip_erase( flash_am29f010_t *self )
+flash_am29f010_chip_erase(flash_am29f010_t *self)
 {
-  memset( self->memory, 0xff, SIZE_OF_FLASH_ROM );
+  memset(self->memory, 0xff, SIZE_OF_FLASH_ROM);
 }
 
 static void
-flash_am29f010_sector_erase( flash_am29f010_t *self, libspectrum_byte page )
+flash_am29f010_sector_erase(flash_am29f010_t *self, libspectrum_byte page)
 {
-  memset( self->memory + ( page * SIZE_OF_FLASH_PAGE ), 0xff, SIZE_OF_FLASH_PAGE );
+  memset(self->memory + (page * SIZE_OF_FLASH_PAGE), 0xff, SIZE_OF_FLASH_PAGE);
 }
 
 static void
-flash_am29f010_program( flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b )
+flash_am29f010_program(flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b)
 {
   libspectrum_dword flash_offset = page * SIZE_OF_FLASH_PAGE + address;
   self->memory[ flash_offset ] = b;
 }
 
 void
-flash_am29f010_write( flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b )
+flash_am29f010_write(flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b)
 {
   libspectrum_word flash_address = address & 0xfff;
 
@@ -93,44 +93,44 @@ flash_am29f010_write( flash_am29f010_t *self, libspectrum_byte page, libspectrum
      commands for now */
   switch (self->flash_state) {
     case FLASH_STATE_RESET:
-      if (flash_address == 0x555 && b == 0xaa )
+      if (flash_address == 0x555 && b == 0xaa)
         self->flash_state = FLASH_STATE_CYCLE2;
       break;
     case FLASH_STATE_CYCLE2:
-      if (flash_address == 0x2aa && b == 0x55 )
+      if (flash_address == 0x2aa && b == 0x55)
         self->flash_state = FLASH_STATE_CYCLE3;
       break;
     case FLASH_STATE_CYCLE3:
-      if (flash_address == 0x555 ) {
-        if (b == 0xa0 )
+      if (flash_address == 0x555) {
+        if (b == 0xa0)
           self->flash_state = FLASH_STATE_PROGRAM;
-        else if (b == 0x80 )
+        else if (b == 0x80)
           self->flash_state = FLASH_STATE_CYCLE4;
       }
       break;
     case FLASH_STATE_CYCLE4:
-      if (flash_address == 0x555 && b == 0xaa )
+      if (flash_address == 0x555 && b == 0xaa)
         self->flash_state = FLASH_STATE_CYCLE5;
       break;
     case FLASH_STATE_CYCLE5:
-      if (flash_address == 0x2aa && b == 0x55 )
+      if (flash_address == 0x2aa && b == 0x55)
         self->flash_state = FLASH_STATE_CYCLE6;
       break;
     case FLASH_STATE_CYCLE6:
-      if (flash_address == 0x555 && b == 0x10 ) {
-        flash_am29f010_chip_erase( self );
+      if (flash_address == 0x555 && b == 0x10) {
+        flash_am29f010_chip_erase(self);
         self->flash_state = FLASH_STATE_RESET;
-      } else if (b == 0x30 ) {
-        flash_am29f010_sector_erase( self, page );
+      } else if (b == 0x30) {
+        flash_am29f010_sector_erase(self, page);
         self->flash_state = FLASH_STATE_RESET;
       }
       break;
     case FLASH_STATE_PROGRAM:
-      flash_am29f010_program( self, page, address, b );
+      flash_am29f010_program(self, page, address, b);
       self->flash_state = FLASH_STATE_RESET;
       break;
   }
 
-  if (b == 0x0f )
+  if (b == 0x0f)
     self->flash_state = FLASH_STATE_RESET;
 }

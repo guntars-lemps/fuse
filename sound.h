@@ -29,16 +29,16 @@
 
 void sound_register_startup(void);
 
-void sound_init( const char *device );
+void sound_init(const char *device);
 void sound_pause(void);
 void sound_unpause(void);
 void sound_end(void);
-void sound_ay_write( int reg, int val, libspectrum_dword now );
+void sound_ay_write(int reg, int val, libspectrum_dword now);
 void sound_ay_reset(void);
-void sound_specdrum_write( libspectrum_word port, libspectrum_byte val );
-void sound_covox_write( libspectrum_word port, libspectrum_byte val );
+void sound_specdrum_write(libspectrum_word port, libspectrum_byte val);
+void sound_covox_write(libspectrum_word port, libspectrum_byte val);
 void sound_frame(void);
-void sound_beeper( libspectrum_dword at_tstates, int on );
+void sound_beeper(libspectrum_dword at_tstates, int on);
 libspectrum_dword sound_get_effective_processor_speed(void);
 
 extern int sound_enabled;
@@ -60,8 +60,8 @@ extern int sound_stereo_ay;
 
 // The low-level sound interface
 
-int sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr );
+int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr);
 void sound_lowlevel_end(void);
-void sound_lowlevel_frame( libspectrum_signed_word *data, int len );
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len);
 
 #endif // #ifndef FUSE_SOUND_H

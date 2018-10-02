@@ -426,7 +426,7 @@ static int keypress(const input_event_key_t *event)
     if (settings_current.recreated_spectrum) {
         recreated_keypress(event->spectrum_key);
     } else {
-        send_keyboard_press( event->spectrum_key);
+        send_keyboard_press(event->spectrum_key);
     }
 
     ui_popup_menu(event->native_key);

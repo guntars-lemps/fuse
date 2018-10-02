@@ -52,16 +52,16 @@ typedef struct poke_t {
 
 void pokemem_clear(void);
 void pokemem_end(void);
-int pokemem_set_pokfile( const char *filename );
-int pokemem_find_pokfile( const char *filename );
+int pokemem_set_pokfile(const char *filename);
+int pokemem_find_pokfile(const char *filename);
 int pokemem_autoload_pokfile(void);
-int pokemem_read_from_file( const char *filename );
+int pokemem_read_from_file(const char *filename);
 
-trainer_t *pokemem_trainer_list_add( libspectrum_byte bank,
+trainer_t *pokemem_trainer_list_add(libspectrum_byte bank,
                                      libspectrum_word address,
-                                     libspectrum_word value );
+                                     libspectrum_word value);
 
-int pokemem_trainer_activate( trainer_t *trainer );
-int pokemem_trainer_deactivate( trainer_t *trainer );
+int pokemem_trainer_activate(trainer_t *trainer);
+int pokemem_trainer_deactivate(trainer_t *trainer);
 
 #endif

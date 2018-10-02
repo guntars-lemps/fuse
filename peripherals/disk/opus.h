@@ -44,17 +44,17 @@ void opus_register_startup(void);
 void opus_page(void);
 void opus_unpage(void);
 
-libspectrum_byte opus_read( libspectrum_word address );
-void opus_write( libspectrum_word address, libspectrum_byte b );
+libspectrum_byte opus_read(libspectrum_word address);
+void opus_write(libspectrum_word address, libspectrum_byte b);
 
-int opus_disk_insert( opus_drive_number which, const char *filename,
-		       int autoload );
-int opus_disk_eject( opus_drive_number which );
-int opus_disk_save( opus_drive_number which, int saveas );
-int opus_disk_write( opus_drive_number which, const char *filename );
-int opus_disk_flip( opus_drive_number which, int flip );
-int opus_disk_writeprotect( opus_drive_number which, int wrprot );
-fdd_t *opus_get_fdd( opus_drive_number which );
+int opus_disk_insert(opus_drive_number which, const char *filename,
+		       int autoload);
+int opus_disk_eject(opus_drive_number which);
+int opus_disk_save(opus_drive_number which, int saveas);
+int opus_disk_write(opus_drive_number which, const char *filename);
+int opus_disk_flip(opus_drive_number which, int flip);
+int opus_disk_writeprotect(opus_drive_number which, int wrprot);
+fdd_t *opus_get_fdd(opus_drive_number which);
 
 int opus_unittest(void);
 

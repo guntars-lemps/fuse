@@ -29,14 +29,14 @@
 
 #include "machine.h"
 
-libspectrum_byte pentagon_select_1f_read( libspectrum_word port,
-					  libspectrum_byte *attached );
-libspectrum_byte pentagon_select_ff_read( libspectrum_word port,
-					  libspectrum_byte *attached );
-int pentagon_port_from_ula( libspectrum_word port );
-int pentagon_port_contended( libspectrum_word port );
+libspectrum_byte pentagon_select_1f_read(libspectrum_word port,
+					  libspectrum_byte *attached);
+libspectrum_byte pentagon_select_ff_read(libspectrum_word port,
+					  libspectrum_byte *attached);
+int pentagon_port_from_ula(libspectrum_word port);
+int pentagon_port_contended(libspectrum_word port);
 
-void pentagon1024_memoryport_write( libspectrum_word port, libspectrum_byte b );
-void pentagon1024_v22_memoryport_write( libspectrum_word port, libspectrum_byte b );
+void pentagon1024_memoryport_write(libspectrum_word port, libspectrum_byte b);
+void pentagon1024_v22_memoryport_write(libspectrum_word port, libspectrum_byte b);
 
 #endif // #ifndef FUSE_PENTAGON_H

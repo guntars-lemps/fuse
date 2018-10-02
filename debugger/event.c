@@ -45,48 +45,48 @@ static GArray *registered_events;
 void
 debugger_event_init(void)
 {
-  registered_events = g_array_new( FALSE, FALSE, sizeof( debugger_event_t ) );
+  registered_events = g_array_new(FALSE, FALSE, sizeof(debugger_event_t));
 }
 
 int
-debugger_event_register( const char *type, const char *detail )
+debugger_event_register(const char *type, const char *detail)
 {
   debugger_event_t event;
 
-  event.type = utils_safe_strdup( type );
-  event.detail = utils_safe_strdup( detail );
+  event.type = utils_safe_strdup(type);
+  event.detail = utils_safe_strdup(detail);
 
-  g_array_append_val( registered_events, event );
+  g_array_append_val(registered_events, event);
 
   return registered_events->len - 1;
 }
 
 static int
-event_matches( debugger_event_t *event, const char *type, const char *detail )
+event_matches(debugger_event_t *event, const char *type, const char *detail)
 {
-  if (strcasecmp( type, event->type ) ) return 0;
-  if (strcmp( detail, "*" ) == 0 ) return 1;
-  if (strcmp( event->detail, "*" ) == 0 ) return 1;
-  return strcasecmp( detail, event->detail ) == 0;
+  if (strcasecmp(type, event->type)) return 0;
+  if (strcmp(detail, "*") == 0) return 1;
+  if (strcmp(event->detail, "*") == 0) return 1;
+  return strcasecmp(detail, event->detail) == 0;
 }
 
 int
-debugger_event_is_registered( const char *type, const char *detail )
+debugger_event_is_registered(const char *type, const char *detail)
 {
   size_t i;
 
   for (i = 0; i < registered_events->len; i++) {
     debugger_event_t event =
-      g_array_index( registered_events, debugger_event_t, i );
+      g_array_index(registered_events, debugger_event_t, i);
 
-    if (event_matches( &event, type, detail ) ) return 1;
+    if (event_matches(&event, type, detail)) return 1;
   }
 
   return 0;
 }
 
 void
-debugger_event( int event_code )
+debugger_event(int event_code)
 {
   debugger_event_t event;
   debugger_breakpoint *bp;
@@ -94,35 +94,35 @@ debugger_event( int event_code )
 
   int signal_breakpoints_updated = 0;
 
-  if (event_code >= registered_events->len ) {
-    ui_error( UI_ERROR_ERROR, "internal error: invalid debugger event %d",
-	      event_code );
+  if (event_code >= registered_events->len) {
+    ui_error(UI_ERROR_ERROR, "internal error: invalid debugger event %d",
+	      event_code);
     fuse_abort();
   }
 
-  event = g_array_index( registered_events, debugger_event_t, event_code );
+  event = g_array_index(registered_events, debugger_event_t, event_code);
 
-  for( ptr = debugger_breakpoints; ptr; ptr = ptr_next ) {
+  for (ptr = debugger_breakpoints; ptr; ptr = ptr_next) {
 
     bp = ptr->data;
     ptr_next = ptr->next;
 
-    if (bp->type != DEBUGGER_BREAKPOINT_TYPE_EVENT ) continue;
+    if (bp->type != DEBUGGER_BREAKPOINT_TYPE_EVENT) continue;
 
-    if (event_matches( &bp->value.event, event.type, event.detail ) &&
-        debugger_breakpoint_trigger( bp ) ) {
+    if (event_matches(&bp->value.event, event.type, event.detail) &&
+        debugger_breakpoint_trigger(bp)) {
       debugger_mode = DEBUGGER_MODE_HALTED;
-      debugger_command_evaluate( bp->commands );
+      debugger_command_evaluate(bp->commands);
 
-      if (bp->life == DEBUGGER_BREAKPOINT_LIFE_ONESHOT ) {
-        debugger_breakpoints = g_slist_remove( debugger_breakpoints, bp );
-        libspectrum_free( bp );
+      if (bp->life == DEBUGGER_BREAKPOINT_LIFE_ONESHOT) {
+        debugger_breakpoints = g_slist_remove(debugger_breakpoints, bp);
+        libspectrum_free(bp);
         signal_breakpoints_updated = 1;
       }
     }
   }
 
-  if (signal_breakpoints_updated )
+  if (signal_breakpoints_updated)
       ui_breakpoints_updated();
 }
 
@@ -133,14 +133,14 @@ debugger_event_end(void)
   int i;
   debugger_event_t event;
 
-  if (!registered_events ) return;
+  if (!registered_events) return;
 
   for (i = 0; i < registered_events->len; i++) {
-    event = g_array_index( registered_events, debugger_event_t, i );
-    libspectrum_free( event.detail );
-    libspectrum_free( event.type );
+    event = g_array_index(registered_events, debugger_event_t, i);
+    libspectrum_free(event.detail);
+    libspectrum_free(event.type);
   }
 
-  g_array_free( registered_events, TRUE );
+  g_array_free(registered_events, TRUE);
   registered_events = NULL;
 }

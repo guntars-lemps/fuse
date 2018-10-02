@@ -47,20 +47,20 @@ int ui_init(int *argc, char ***argv)
 {
   int error;
 
-  if (ui_widget_init() ) return 1;
+  if (ui_widget_init()) return 1;
 
   error = svgadisplay_init();
-  if(error) return error;
+  if (error) return error;
 
   error = svgakeyboard_init();
-  if(error) return error;
+  if (error) return error;
 
-  vga_setmousesupport( 1 );
-  mouse_setxrange( 0, 255);
-  mouse_setyrange( 0, 255);
-  mouse_setscale( 64 );
-  mouse_setwrap( MOUSE_WRAPX | MOUSE_WRAPY );
-  mouse_setposition( 128, 128 );
+  vga_setmousesupport(1);
+  mouse_setxrange(0, 255);
+  mouse_setyrange(0, 255);
+  mouse_setscale(64);
+  mouse_setwrap(MOUSE_WRAPX | MOUSE_WRAPY);
+  mouse_setposition(128, 128);
 
   ui_mouse_present = 1;
 
@@ -83,13 +83,13 @@ ui_event(void)
   b = mouse_getbutton();
 
   bd = b ^ oldbutton;
-  if (bd & MOUSE_LEFTBUTTON ) ui_mouse_button( 1, b & MOUSE_LEFTBUTTON );
-  if (bd & MOUSE_MIDDLEBUTTON ) ui_mouse_button( 2, b & MOUSE_MIDDLEBUTTON );
-  if (bd & MOUSE_RIGHTBUTTON ) ui_mouse_button( 3, b & MOUSE_RIGHTBUTTON );
+  if (bd & MOUSE_LEFTBUTTON) ui_mouse_button(1, b & MOUSE_LEFTBUTTON);
+  if (bd & MOUSE_MIDDLEBUTTON) ui_mouse_button(2, b & MOUSE_MIDDLEBUTTON);
+  if (bd & MOUSE_RIGHTBUTTON) ui_mouse_button(3, b & MOUSE_RIGHTBUTTON);
   oldbutton = b;
 
-  if (x != oldx || y != oldy ) {
-    ui_mouse_motion( x - oldx, y - oldy );
+  if (x != oldx || y != oldy) {
+    ui_mouse_motion(x - oldx, y - oldy);
     oldx = x; oldy = y;
   }
 
@@ -101,10 +101,10 @@ int ui_end(void)
   int error;
 
   error = svgakeyboard_end();
-  if(error) return error;
+  if (error) return error;
 
   error = svgadisplay_end();
-  if(error) return error;
+  if (error) return error;
 
   ui_widget_end();
 
@@ -112,13 +112,13 @@ int ui_end(void)
 }
 
 int
-ui_mouse_grab( int startup GCC_UNUSED )
+ui_mouse_grab(int startup GCC_UNUSED)
 {
   return 1;
 }
 
 int
-ui_mouse_release( int suspend )
+ui_mouse_release(int suspend)
 {
   return !suspend;
 }

@@ -37,9 +37,9 @@
 // bootstrapping by redefining main. As we now allow SDL joystick code to be
 // used in the GTK+ and Xlib UIs we need to also do the magic when that code is
 // in use, feel free to look away for the next line
-#if defined UI_SDL || (defined USE_JOYSTICK && !defined HAVE_JSW_H && (defined UI_X || defined UI_GTK) )
+#if defined UI_SDL || (defined USE_JOYSTICK && !defined HAVE_JSW_H && (defined UI_X || defined UI_GTK))
 #include <SDL.h> // Needed on MacOS X and Windows
-#endif // #if defined UI_SDL || (defined USE_JOYSTICK && !defined HAVE_JSW_H && (defined UI_X || defined UI_GTK) )
+#endif // #if defined UI_SDL || (defined USE_JOYSTICK && !defined HAVE_JSW_H && (defined UI_X || defined UI_GTK))
 
 #ifdef GEKKO
 #include <fat.h>
@@ -242,7 +242,7 @@ static void libxml2_register_startup(void)
     startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_LIBXML2,
                              dependencies,
-                             ARRAY_SIZE( dependencies ),
+                             ARRAY_SIZE(dependencies),
                              libxml2_init,
                              NULL,
                              NULL);
@@ -786,7 +786,7 @@ static int parse_nonoption_args(int argc, char **argv, int first_arg, start_file
                 break;
 
             case LIBSPECTRUM_CLASS_UNKNOWN:
-                ui_error(UI_ERROR_WARNING, "couldn't identify '%s'; ignoring it", filename );
+                ui_error(UI_ERROR_WARNING, "couldn't identify '%s'; ignoring it", filename);
                 break;
 
             default:

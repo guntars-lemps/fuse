@@ -48,15 +48,15 @@ typedef enum nic_enc28j60_spi_state {
 typedef struct nic_enc28j60_t nic_enc28j60_t;
 
 nic_enc28j60_t* nic_enc28j60_alloc(void);
-void nic_enc28j60_init( nic_enc28j60_t *self );
-void nic_enc28j60_free( nic_enc28j60_t *self );
+void nic_enc28j60_init(nic_enc28j60_t *self);
+void nic_enc28j60_free(nic_enc28j60_t *self);
 
-void nic_enc28j60_set_tap_fd( nic_enc28j60_t *self, int tap_fd );
+void nic_enc28j60_set_tap_fd(nic_enc28j60_t *self, int tap_fd);
 
-void nic_enc28j60_poll( nic_enc28j60_t *self );
-void nic_enc28j60_reset( nic_enc28j60_t *self );
-void nic_enc28j60_set_spi_state( nic_enc28j60_t *self, nic_enc28j60_spi_state new_state );
-int nic_enc28j60_spi_produce_bit( nic_enc28j60_t *self );
-void nic_enc28j60_spi_consume_bit( nic_enc28j60_t *self, int bit );
+void nic_enc28j60_poll(nic_enc28j60_t *self);
+void nic_enc28j60_reset(nic_enc28j60_t *self);
+void nic_enc28j60_set_spi_state(nic_enc28j60_t *self, nic_enc28j60_spi_state new_state);
+int nic_enc28j60_spi_produce_bit(nic_enc28j60_t *self);
+void nic_enc28j60_spi_consume_bit(nic_enc28j60_t *self, int bit);
 
 #endif // #ifndef FUSE_ENC28J60_H

@@ -143,32 +143,32 @@ struct nic_w5100_t {
   compat_socket_selfpipe_t *selfpipe; // Device for waking I/O thread
 };
 
-void nic_w5100_socket_init( nic_w5100_socket_t *socket, int which );
-void nic_w5100_socket_end( nic_w5100_socket_t *socket );
+void nic_w5100_socket_init(nic_w5100_socket_t *socket, int which);
+void nic_w5100_socket_end(nic_w5100_socket_t *socket);
 
-void nic_w5100_socket_reset( nic_w5100_socket_t *socket );
+void nic_w5100_socket_reset(nic_w5100_socket_t *socket);
 
-libspectrum_byte nic_w5100_socket_read( nic_w5100_t *self, libspectrum_word reg );
-void nic_w5100_socket_write( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b );
+libspectrum_byte nic_w5100_socket_read(nic_w5100_t *self, libspectrum_word reg);
+void nic_w5100_socket_write(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b);
 
-libspectrum_byte nic_w5100_socket_read_rx_buffer( nic_w5100_t *self, libspectrum_word reg );
-void nic_w5100_socket_write_tx_buffer( nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b );
+libspectrum_byte nic_w5100_socket_read_rx_buffer(nic_w5100_t *self, libspectrum_word reg);
+void nic_w5100_socket_write_tx_buffer(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b);
 
-void nic_w5100_socket_add_to_sets( nic_w5100_socket_t *socket, fd_set *readfds,
-  fd_set *writefds, int *max_fd );
-void nic_w5100_socket_process_io( nic_w5100_socket_t *socket, fd_set readfds,
-  fd_set writefds );
+void nic_w5100_socket_add_to_sets(nic_w5100_socket_t *socket, fd_set *readfds,
+  fd_set *writefds, int *max_fd);
+void nic_w5100_socket_process_io(nic_w5100_socket_t *socket, fd_set readfds,
+  fd_set writefds);
 
 // Debug routines
 
 // Define this to spew debugging info to stdout
 #define W5100_DEBUG 0
 
-void nic_w5100_debug( const char *format, ... )
-     GCC_PRINTF( 1, 2 );
-void nic_w5100_vdebug( const char *format, va_list ap )
-     GCC_PRINTF( 1, 0 );
-void nic_w5100_error( int severity, const char *format, ... )
-     GCC_PRINTF( 2, 3 );
+void nic_w5100_debug(const char *format, ...)
+     GCC_PRINTF(1, 2);
+void nic_w5100_vdebug(const char *format, va_list ap)
+     GCC_PRINTF(1, 0);
+void nic_w5100_error(int severity, const char *format, ...)
+     GCC_PRINTF(2, 3);
 
 #endif // #ifndef FUSE_W5100_H

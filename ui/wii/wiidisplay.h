@@ -27,6 +27,6 @@
 int wiidisplay_init(void);
 int wiidisplay_end(void);
 
-void wiidisplay_showmouse( float mousex, float mousey );
+void wiidisplay_showmouse(float mousex, float mousey);
 
 #endif // #ifndef FUSE_WIIDISPLAY_H

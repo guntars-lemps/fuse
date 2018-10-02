@@ -33,7 +33,7 @@
 
 // An RGB image of the keyboard picture
 /* the memory will be allocated by Windows
-   ( DISPLAY_SCREEN_HEIGHT * DISPLAY_ASPECT_WIDTH * 4 bytes ) */
+   (DISPLAY_SCREEN_HEIGHT * DISPLAY_ASPECT_WIDTH * 4 bytes) */
 static void *picture;
 static const int picture_pitch = DISPLAY_ASPECT_WIDTH * 4;
 
@@ -41,25 +41,25 @@ static HWND hDialogPicture = NULL;
 static utils_file screen;
 static HBITMAP picture_BMP;
 
-static void draw_screen( libspectrum_byte *screen, int border );
+static void draw_screen(libspectrum_byte *screen, int border);
 
-static LRESULT WINAPI picture_wnd_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
+static LRESULT WINAPI picture_wnd_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int
-win32ui_picture( const char *filename, int border )
+win32ui_picture(const char *filename, int border)
 {
   if (!hDialogPicture) {
-    hDialogPicture = CreateDialog( fuse_hInstance,
-                                   MAKEINTRESOURCE( IDD_PICTURE ),
+    hDialogPicture = CreateDialog(fuse_hInstance,
+                                   MAKEINTRESOURCE(IDD_PICTURE),
                                    fuse_hWnd, (DLGPROC)picture_wnd_proc);
 
     BITMAPINFO picture_BMI;
 
     // create the picture buffer
 
-    memset( &picture_BMI, 0, sizeof( picture_BMI ) );
-    picture_BMI.bmiHeader.biSize = sizeof( picture_BMI.bmiHeader );
-    picture_BMI.bmiHeader.biWidth = (size_t)( DISPLAY_ASPECT_WIDTH );
+    memset(&picture_BMI, 0, sizeof(picture_BMI));
+    picture_BMI.bmiHeader.biSize = sizeof(picture_BMI.bmiHeader);
+    picture_BMI.bmiHeader.biWidth = (size_t)(DISPLAY_ASPECT_WIDTH);
     // negative to avoid "shep-mode":
     picture_BMI.bmiHeader.biHeight = -DISPLAY_SCREEN_HEIGHT;
     picture_BMI.bmiHeader.biPlanes = 1;
@@ -75,53 +75,53 @@ win32ui_picture( const char *filename, int border )
     picture_BMI.bmiColors[0].rgbBlue = 0;
     picture_BMI.bmiColors[0].rgbReserved = 0;
 
-    HDC dc = GetDC( hDialogPicture );
-    picture_BMP = CreateDIBSection( dc, &picture_BMI, DIB_RGB_COLORS, &picture,
-                                    NULL, 0 );
+    HDC dc = GetDC(hDialogPicture);
+    picture_BMP = CreateDIBSection(dc, &picture_BMI, DIB_RGB_COLORS, &picture,
+                                    NULL, 0);
 
-    if (utils_read_screen( filename, &screen ) ) {
+    if (utils_read_screen(filename, &screen)) {
       return 1;
     }
 
-    draw_screen( screen.buffer, border );
+    draw_screen(screen.buffer, border);
 
-    utils_close_file( &screen );
+    utils_close_file(&screen);
 
-    ReleaseDC( hDialogPicture, dc );
+    ReleaseDC(hDialogPicture, dc);
 
-    ShowWindow( hDialogPicture, SW_SHOW );
+    ShowWindow(hDialogPicture, SW_SHOW);
   }
 
   return 0;
 }
 
 static LRESULT WINAPI
-picture_wnd_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
+picture_wnd_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-  switch (msg ) {
+  switch (msg) {
     case WM_PAINT:
     {
       PAINTSTRUCT ps;
       HBITMAP old_bmp;
-      HDC dest_dc = BeginPaint( hWnd, &ps );
-      HDC pic_dc = CreateCompatibleDC( dest_dc );
+      HDC dest_dc = BeginPaint(hWnd, &ps);
+      HDC pic_dc = CreateCompatibleDC(dest_dc);
 
-      old_bmp = SelectObject( pic_dc, picture_BMP );
-      BitBlt( dest_dc, 0, 0, DISPLAY_ASPECT_WIDTH,
-              DISPLAY_SCREEN_HEIGHT, pic_dc, 0, 0, SRCCOPY );
+      old_bmp = SelectObject(pic_dc, picture_BMP);
+      BitBlt(dest_dc, 0, 0, DISPLAY_ASPECT_WIDTH,
+              DISPLAY_SCREEN_HEIGHT, pic_dc, 0, 0, SRCCOPY);
 
-      EndPaint( hWnd, &ps );
-      SelectObject( pic_dc, old_bmp );
-      DeleteDC( pic_dc );
+      EndPaint(hWnd, &ps);
+      SelectObject(pic_dc, old_bmp);
+      DeleteDC(pic_dc);
       return 0;
     }
 
     case WM_COMMAND:
-      switch (LOWORD( wParam ) ) {
+      switch (LOWORD(wParam)) {
         case IDCLOSE:
         {
           hDialogPicture = NULL;
-          DestroyWindow( hWnd );
+          DestroyWindow(hWnd);
           return 0;
         }
       }
@@ -130,7 +130,7 @@ picture_wnd_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     case WM_CLOSE:
     {
       hDialogPicture = NULL;
-      DestroyWindow( hWnd );
+      DestroyWindow(hWnd);
       return 0;
     }
   }
@@ -138,59 +138,59 @@ picture_wnd_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 }
 
 static void
-draw_screen( libspectrum_byte *screen, int border )
+draw_screen(libspectrum_byte *screen, int border)
 {
   int i, x, y, ink, paper;
   libspectrum_byte attr, data;
 
-  for( y=0; y < DISPLAY_BORDER_HEIGHT; y++ ) {
-    for( x=0; x < DISPLAY_ASPECT_WIDTH; x++ ) {
-      *(libspectrum_dword*)( picture + y * picture_pitch + 4 * x ) =
+  for (y=0; y < DISPLAY_BORDER_HEIGHT; y++) {
+    for (x=0; x < DISPLAY_ASPECT_WIDTH; x++) {
+      *(libspectrum_dword*)(picture + y * picture_pitch + 4 * x) =
         win32display_colours[border];
       *(libspectrum_dword*)(
           picture +
-          ( y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT ) * picture_pitch +
+          (y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT) * picture_pitch +
           4 * x
-        ) = win32display_colours[ border ];
+) = win32display_colours[ border ];
     }
   }
 
-  for( y=0; y<DISPLAY_HEIGHT; y++ ) {
+  for (y=0; y<DISPLAY_HEIGHT; y++) {
 
-    for( x=0; x < DISPLAY_BORDER_ASPECT_WIDTH; x++ ) {
+    for (x=0; x < DISPLAY_BORDER_ASPECT_WIDTH; x++) {
       *(libspectrum_dword*)
-        (picture + ( y + DISPLAY_BORDER_HEIGHT) * picture_pitch + 4 * x) =
+        (picture + (y + DISPLAY_BORDER_HEIGHT) * picture_pitch + 4 * x) =
         win32display_colours[ border ];
       *(libspectrum_dword*)(
           picture +
-          ( y + DISPLAY_BORDER_HEIGHT ) * picture_pitch +
-          4 * ( x+DISPLAY_ASPECT_WIDTH-DISPLAY_BORDER_ASPECT_WIDTH )
-        ) = win32display_colours[ border ];
+          (y + DISPLAY_BORDER_HEIGHT) * picture_pitch +
+          4 * (x+DISPLAY_ASPECT_WIDTH-DISPLAY_BORDER_ASPECT_WIDTH)
+) = win32display_colours[ border ];
     }
 
-    for( x=0; x < DISPLAY_WIDTH_COLS; x++ ) {
+    for (x=0; x < DISPLAY_WIDTH_COLS; x++) {
 
       attr = screen[ display_attr_start[y] + x ];
 
-      ink = ( attr & 0x07 ) + ( ( attr & 0x40 ) >> 3 );
-      paper = ( attr & ( 0x0f << 3 ) ) >> 3;
+      ink = (attr & 0x07) + ((attr & 0x40) >> 3);
+      paper = (attr & (0x0f << 3)) >> 3;
 
       data = screen[ display_line_start[y]+x ];
 
-      for( i=0; i<8; i++) {
+      for (i=0; i<8; i++) {
         libspectrum_dword pix =
-          win32display_colours[ ( data & 0x80 ) ? ink : paper ];
+          win32display_colours[ (data & 0x80) ? ink : paper ];
 
         // rearrange pixel components
-        pix = ( pix & 0x0000ff00 ) |
-              ( ( pix & 0x000000ff ) << 16 ) |
-              ( ( pix & 0x00ff0000 ) >> 16 );
+        pix = (pix & 0x0000ff00) |
+              ((pix & 0x000000ff) << 16) |
+              ((pix & 0x00ff0000) >> 16);
 
         *(libspectrum_dword*)(
             picture +
-            ( y + DISPLAY_BORDER_HEIGHT ) * picture_pitch +
-            4 * ( 8 * x + DISPLAY_BORDER_ASPECT_WIDTH + i )
-          ) = pix;
+            (y + DISPLAY_BORDER_HEIGHT) * picture_pitch +
+            4 * (8 * x + DISPLAY_BORDER_ASPECT_WIDTH + i)
+) = pix;
         data <<= 1;
       }
     }

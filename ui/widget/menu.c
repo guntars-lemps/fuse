@@ -54,42 +54,42 @@ static size_t highlight_line = 0;
 static size_t count;
 static int *current_settings[ 16 ];
 
-#define GET_SET_KEY_FUNCTIONS( which ) \
+#define GET_SET_KEY_FUNCTIONS(which) \
 \
 static void \
-set_key_for_button_ ## which ( int action ) \
+set_key_for_button_ ## which (int action) \
 { \
   *current_settings[ which ] = action; \
-  widget_end_all( WIDGET_FINISHED_OK ); \
+  widget_end_all(WIDGET_FINISHED_OK); \
 } \
 \
 static const char* \
 get_key_name_for_button_ ## which (void) \
 { \
-  return keyboard_key_text( *current_settings[ which ] ); \
+  return keyboard_key_text(*current_settings[ which ]); \
 }
 
-GET_SET_KEY_FUNCTIONS( 1 )
-GET_SET_KEY_FUNCTIONS( 2 )
-GET_SET_KEY_FUNCTIONS( 3 )
-GET_SET_KEY_FUNCTIONS( 4 )
-GET_SET_KEY_FUNCTIONS( 5 )
+GET_SET_KEY_FUNCTIONS(1)
+GET_SET_KEY_FUNCTIONS(2)
+GET_SET_KEY_FUNCTIONS(3)
+GET_SET_KEY_FUNCTIONS(4)
+GET_SET_KEY_FUNCTIONS(5)
 #ifdef USE_JOYSTICK
-GET_SET_KEY_FUNCTIONS( 6 )
-GET_SET_KEY_FUNCTIONS( 7 )
-GET_SET_KEY_FUNCTIONS( 8 )
+GET_SET_KEY_FUNCTIONS(6)
+GET_SET_KEY_FUNCTIONS(7)
+GET_SET_KEY_FUNCTIONS(8)
 #ifndef GEKKO
-GET_SET_KEY_FUNCTIONS( 9 )
-GET_SET_KEY_FUNCTIONS( 10 )
-GET_SET_KEY_FUNCTIONS( 11 )
-GET_SET_KEY_FUNCTIONS( 12 )
-GET_SET_KEY_FUNCTIONS( 13 )
-GET_SET_KEY_FUNCTIONS( 14 )
-GET_SET_KEY_FUNCTIONS( 15 )
+GET_SET_KEY_FUNCTIONS(9)
+GET_SET_KEY_FUNCTIONS(10)
+GET_SET_KEY_FUNCTIONS(11)
+GET_SET_KEY_FUNCTIONS(12)
+GET_SET_KEY_FUNCTIONS(13)
+GET_SET_KEY_FUNCTIONS(14)
+GET_SET_KEY_FUNCTIONS(15)
 #endif // #ifndef GEKKO
 #endif // #ifdef USE_JOYSTICK
 
-#define SUBMENU_KEY_SELECTIONS( which ) \
+#define SUBMENU_KEY_SELECTIONS(which) \
 \
 static widget_menu_entry submenu_select_number_for_button_ ## which [] = { \
   { "Select a key" }, \
@@ -156,23 +156,23 @@ static widget_menu_entry submenu_select_key_for_button_ ## which [] = { \
   { NULL } \
 };
 
-SUBMENU_KEY_SELECTIONS( 1 )
-SUBMENU_KEY_SELECTIONS( 2 )
-SUBMENU_KEY_SELECTIONS( 3 )
-SUBMENU_KEY_SELECTIONS( 4 )
-SUBMENU_KEY_SELECTIONS( 5 )
+SUBMENU_KEY_SELECTIONS(1)
+SUBMENU_KEY_SELECTIONS(2)
+SUBMENU_KEY_SELECTIONS(3)
+SUBMENU_KEY_SELECTIONS(4)
+SUBMENU_KEY_SELECTIONS(5)
 #ifdef USE_JOYSTICK
-SUBMENU_KEY_SELECTIONS( 6 )
-SUBMENU_KEY_SELECTIONS( 7 )
-SUBMENU_KEY_SELECTIONS( 8 )
+SUBMENU_KEY_SELECTIONS(6)
+SUBMENU_KEY_SELECTIONS(7)
+SUBMENU_KEY_SELECTIONS(8)
 #ifndef GEKKO
-SUBMENU_KEY_SELECTIONS( 9 )
-SUBMENU_KEY_SELECTIONS( 10 )
-SUBMENU_KEY_SELECTIONS( 11 )
-SUBMENU_KEY_SELECTIONS( 12 )
-SUBMENU_KEY_SELECTIONS( 13 )
-SUBMENU_KEY_SELECTIONS( 14 )
-SUBMENU_KEY_SELECTIONS( 15 )
+SUBMENU_KEY_SELECTIONS(9)
+SUBMENU_KEY_SELECTIONS(10)
+SUBMENU_KEY_SELECTIONS(11)
+SUBMENU_KEY_SELECTIONS(12)
+SUBMENU_KEY_SELECTIONS(13)
+SUBMENU_KEY_SELECTIONS(14)
+SUBMENU_KEY_SELECTIONS(15)
 #endif // #ifndef GEKKO
 #endif // #ifdef USE_JOYSTICK
 
@@ -223,9 +223,9 @@ static widget_menu_entry submenu_keyboard_buttons[] = {
 // joystick types + title of the window + NULL
 static widget_menu_entry submenu_types[ MAX_JOYSTICK_TYPES + 2 ];
 static char joystick_names[ MAX_JOYSTICK_TYPES ][ 100 ];
-void set_joystick_type( int action );
+void set_joystick_type(int action);
 
-#define SUBMENU_DEVICE_SELECTIONS( device ) \
+#define SUBMENU_DEVICE_SELECTIONS(device) \
 \
 static widget_menu_entry submenu_type_and_mapping_for_ ## device [] = { \
   { "Select type or map buttons" }, \
@@ -235,9 +235,9 @@ static widget_menu_entry submenu_type_and_mapping_for_ ## device [] = { \
 };
 
 #ifdef USE_JOYSTICK
-SUBMENU_DEVICE_SELECTIONS( joystick )
+SUBMENU_DEVICE_SELECTIONS(joystick)
 #endif // #ifdef USE_JOYSTICK
-SUBMENU_DEVICE_SELECTIONS( keyboard )
+SUBMENU_DEVICE_SELECTIONS(keyboard)
 
 static void
 print_items(void)
@@ -250,41 +250,41 @@ print_items(void)
 
   for (i = 0; i < count; i++) {
     int colour;
-    if (!menu[i+1].text[0] ) { height += 4; continue; }
+    if (!menu[i+1].text[0]) { height += 4; continue; }
 
-    snprintf( buffer, sizeof (buffer), "%s", menu[i+1].text );
+    snprintf(buffer, sizeof (buffer), "%s", menu[i+1].text);
     colour = menu[i+1].inactive ?
 	     WIDGET_COLOUR_DISABLED :
 	     WIDGET_COLOUR_FOREGROUND;
 
-    if (i == highlight_line ) {
-      widget_rectangle( menu_left_edge_x, height, width*8-2, 1*8,
-                        WIDGET_COLOUR_HIGHLIGHT );
+    if (i == highlight_line) {
+      widget_rectangle(menu_left_edge_x, height, width*8-2, 1*8,
+                        WIDGET_COLOUR_HIGHLIGHT);
     } else {
-      widget_rectangle( menu_left_edge_x, height, width*8-2, 1*8,
-                        WIDGET_COLOUR_BACKGROUND );
+      widget_rectangle(menu_left_edge_x, height, width*8-2, 1*8,
+                        WIDGET_COLOUR_BACKGROUND);
     }
 
-    widget_printstring( menu_left_edge_x+8, height, colour, buffer );
+    widget_printstring(menu_left_edge_x+8, height, colour, buffer);
 
-    if (menu[i+1].submenu ) {
+    if (menu[i+1].submenu) {
       widget_draw_submenu_arrow(DISPLAY_BORDER_ASPECT_WIDTH+menu_left_edge_x+
                                 width*8-9, i*8+49, colour);
     }
 
-    if (menu[i+1].detail ) {
-      size_t detail_width = widget_stringwidth( menu[i+1].detail() );
+    if (menu[i+1].detail) {
+      size_t detail_width = widget_stringwidth(menu[i+1].detail());
       int x = menu_left_edge_x + (width-1)*8 - detail_width - 2;
-      widget_printstring( x, height, WIDGET_COLOUR_DISABLED, menu[i+1].detail() );
+      widget_printstring(x, height, WIDGET_COLOUR_DISABLED, menu[i+1].detail());
     }
 
     height += 8;
   }
 
-  widget_display_lines( 2, count + 2 );
+  widget_display_lines(2, count + 2);
 }
 
-int widget_menu_draw( void *data )
+int widget_menu_draw(void *data)
 {
   widget_menu_entry *ptr;
   size_t menu_entries, width, height = 0;
@@ -295,50 +295,50 @@ int widget_menu_draw( void *data )
   menu = (widget_menu_entry*)data;
 
   // How many menu items do we have?
-  for( ptr = &menu[1]; ptr->text; ptr++ )
+  for (ptr = &menu[1]; ptr->text; ptr++)
     height += ptr->text[0] ? 2 : 1;
   menu_entries = ptr - &menu[1];
   count = menu_entries;
   width = widget_calculate_menu_width(menu);
   menu_left_edge_x = DISPLAY_WIDTH_COLS/2-width/2;
-  widget_dialog_with_border( menu_left_edge_x, 2, width, 2 + height / 2 );
+  widget_dialog_with_border(menu_left_edge_x, 2, width, 2 + height / 2);
 
-  snprintf( buffer, sizeof( buffer ), "%s", menu->text );
-  widget_printstring( menu_left_edge_x*8+2, 16, WIDGET_COLOUR_TITLE, buffer );
+  snprintf(buffer, sizeof(buffer), "%s", menu->text);
+  widget_printstring(menu_left_edge_x*8+2, 16, WIDGET_COLOUR_TITLE, buffer);
 
   print_items();
   return 0;
 }
 
 void
-widget_menu_keyhandler( input_key key )
+widget_menu_keyhandler(input_key key)
 {
   widget_menu_entry *ptr;
   int new_highlight_line = 0;
   int cursor_pressed = 0;
 
-  switch (key ) {
+  switch (key) {
 
 #if 0
   case INPUT_KEY_Resize: // Fake keypress used on window resize
-    widget_menu_draw( menu );
+    widget_menu_draw(menu);
     break;
 #endif
 
   case INPUT_KEY_Escape:
   case INPUT_JOYSTICK_FIRE_2:
-    widget_end_widget( WIDGET_FINISHED_CANCEL );
+    widget_end_widget(WIDGET_FINISHED_CANCEL);
     return;
 
   case INPUT_KEY_Return:
   case INPUT_KEY_KP_Enter:
   case INPUT_JOYSTICK_FIRE_1:
     ptr=&menu[1 + highlight_line];
-    if(!ptr->inactive) {
-      if (ptr->submenu ) {
-        widget_do_menu( ptr->submenu );
+    if (!ptr->inactive) {
+      if (ptr->submenu) {
+        widget_do_menu(ptr->submenu);
       } else {
-        ptr->callback( ptr->action );
+        ptr->callback(ptr->action);
       }
     }
     return;
@@ -346,7 +346,7 @@ widget_menu_keyhandler( input_key key )
   case INPUT_KEY_Up:
   case INPUT_KEY_7:
   case INPUT_JOYSTICK_UP:
-    if ( highlight_line ) {
+    if (highlight_line) {
       new_highlight_line = highlight_line - 1;
       cursor_pressed = 1;
     }
@@ -355,7 +355,7 @@ widget_menu_keyhandler( input_key key )
   case INPUT_KEY_Down:
   case INPUT_KEY_6:
   case INPUT_JOYSTICK_DOWN:
-    if ( highlight_line + 1 < (ptrdiff_t)count ) {
+    if (highlight_line + 1 < (ptrdiff_t)count) {
       new_highlight_line = highlight_line + 1;
       cursor_pressed = 1;
     }
@@ -366,19 +366,19 @@ widget_menu_keyhandler( input_key key )
 
   }
 
-  if (cursor_pressed ) {
+  if (cursor_pressed) {
     highlight_line = new_highlight_line;
     print_items();
     return;
   }
 
-  for( ptr=&menu[1]; ptr->text; ptr++ ) {
-    if (!ptr->inactive && key == ptr->key ) {
+  for (ptr=&menu[1]; ptr->text; ptr++) {
+    if (!ptr->inactive && key == ptr->key) {
 
-      if (ptr->submenu ) {
-        widget_do_menu( ptr->submenu );
+      if (ptr->submenu) {
+        widget_do_menu(ptr->submenu);
       } else {
-        ptr->callback( ptr->action );
+        ptr->callback(ptr->action);
       }
 
       break;
@@ -389,7 +389,7 @@ widget_menu_keyhandler( input_key key )
 // General callbacks
 
 scaler_type
-menu_get_scaler( scaler_available_fn selector )
+menu_get_scaler(scaler_available_fn selector)
 {
   size_t count, i;
   const char *options[ SCALER_NUM ];
@@ -399,9 +399,9 @@ menu_get_scaler( scaler_available_fn selector )
   count = 0; info.current = 0;
 
   for (i = 0; i < SCALER_NUM; i++)
-    if (selector( i ) ) {
-      if (current_scaler == i ) info.current = count;
-      options[ count++ ] = scaler_name( i );
+    if (selector(i)) {
+      if (current_scaler == i) info.current = count;
+      options[ count++ ] = scaler_name(i);
     }
 
   info.title = "Select scaler";
@@ -409,32 +409,32 @@ menu_get_scaler( scaler_available_fn selector )
   info.count = count;
   info.finish_all = 1;
 
-  error = widget_do_select( &info );
-  if (error ) return SCALER_NUM;
+  error = widget_do_select(&info);
+  if (error) return SCALER_NUM;
 
-  if (info.result == -1 ) return SCALER_NUM;
+  if (info.result == -1) return SCALER_NUM;
 
   for (i = 0; i < SCALER_NUM; i++)
-    if (selector( i ) && !info.result-- ) return i;
+    if (selector(i) && !info.result--) return i;
 
-  ui_error( UI_ERROR_ERROR, "widget_select_scaler: ran out of scalers");
+  ui_error(UI_ERROR_ERROR, "widget_select_scaler: ran out of scalers");
   fuse_abort();
 }
 
 void
-menu_file_exit( int action )
+menu_file_exit(int action)
 {
   static int menu_exit_open = 0;
 
-  if (menu_exit_open ) return;
+  if (menu_exit_open) return;
 
   menu_exit_open = 1;
-  if (widget_do_query( "Exit Fuse?" ) || !widget_query.confirm ) {
+  if (widget_do_query("Exit Fuse?") || !widget_query.confirm) {
     menu_exit_open = 0;
     return;
   }
 
-  if (menu_check_media_changed() ) {
+  if (menu_check_media_changed()) {
     menu_exit_open = 0;
     return;
   }
@@ -442,126 +442,126 @@ menu_file_exit( int action )
   fuse_exiting = 1;
   menu_exit_open = 0;
 
-  widget_end_all( WIDGET_FINISHED_OK );
+  widget_end_all(WIDGET_FINISHED_OK);
 }
 
 void
-menu_options_general( int action )
+menu_options_general(int action)
 {
   widget_do_general();
 }
 
 void
-menu_options_media( int action )
+menu_options_media(int action)
 {
   widget_do_media();
 }
 
 void
-menu_options_peripherals_general( int action )
+menu_options_peripherals_general(int action)
 {
   widget_do_peripherals_general();
 }
 
 void
-menu_options_peripherals_disk( int action )
+menu_options_peripherals_disk(int action)
 {
   widget_do_peripherals_disk();
 }
 
 void
-menu_options_sound( int action )
+menu_options_sound(int action)
 {
   widget_do_sound();
 }
 
 void
-menu_options_rzx( int action )
+menu_options_rzx(int action)
 {
   widget_do_rzx();
 }
 
 void
-menu_options_movie( int action )
+menu_options_movie(int action)
 {
   widget_do_movie();
 }
 
 void
-menu_options_diskoptions( int action )
+menu_options_diskoptions(int action)
 {
   widget_do_diskoptions();
 }
 
 void
-menu_options_joysticks_select( int action )
+menu_options_joysticks_select(int action)
 {
   int error = 0;
   int i;
 
-  switch (action - 1 ) {
+  switch (action - 1) {
 
 #ifdef USE_JOYSTICK
   case 0:
-    current_settings[ 0 ] = &( settings_current.joystick_1_output );
-    current_settings[ 1 ] = &( settings_current.joystick_1_fire_1 );
-    current_settings[ 2 ] = &( settings_current.joystick_1_fire_2 );
-    current_settings[ 3 ] = &( settings_current.joystick_1_fire_3 );
-    current_settings[ 4 ] = &( settings_current.joystick_1_fire_4 );
-    current_settings[ 5 ] = &( settings_current.joystick_1_fire_5 );
-    current_settings[ 6 ] = &( settings_current.joystick_1_fire_6 );
-    current_settings[ 7 ] = &( settings_current.joystick_1_fire_7 );
-    current_settings[ 8 ] = &( settings_current.joystick_1_fire_8 );
-    current_settings[ 9 ] = &( settings_current.joystick_1_fire_9 );
-    current_settings[ 10 ] = &( settings_current.joystick_1_fire_10 );
-    current_settings[ 11 ] = &( settings_current.joystick_1_fire_11 );
-    current_settings[ 12 ] = &( settings_current.joystick_1_fire_12 );
-    current_settings[ 13 ] = &( settings_current.joystick_1_fire_13 );
-    current_settings[ 14 ] = &( settings_current.joystick_1_fire_14 );
-    current_settings[ 15 ] = &( settings_current.joystick_1_fire_15 );
+    current_settings[ 0 ] = &(settings_current.joystick_1_output);
+    current_settings[ 1 ] = &(settings_current.joystick_1_fire_1);
+    current_settings[ 2 ] = &(settings_current.joystick_1_fire_2);
+    current_settings[ 3 ] = &(settings_current.joystick_1_fire_3);
+    current_settings[ 4 ] = &(settings_current.joystick_1_fire_4);
+    current_settings[ 5 ] = &(settings_current.joystick_1_fire_5);
+    current_settings[ 6 ] = &(settings_current.joystick_1_fire_6);
+    current_settings[ 7 ] = &(settings_current.joystick_1_fire_7);
+    current_settings[ 8 ] = &(settings_current.joystick_1_fire_8);
+    current_settings[ 9 ] = &(settings_current.joystick_1_fire_9);
+    current_settings[ 10 ] = &(settings_current.joystick_1_fire_10);
+    current_settings[ 11 ] = &(settings_current.joystick_1_fire_11);
+    current_settings[ 12 ] = &(settings_current.joystick_1_fire_12);
+    current_settings[ 13 ] = &(settings_current.joystick_1_fire_13);
+    current_settings[ 14 ] = &(settings_current.joystick_1_fire_14);
+    current_settings[ 15 ] = &(settings_current.joystick_1_fire_15);
     submenu_type_and_mapping_for_joystick[ 1 ].detail = menu_joystick_1_detail;
     break;
   case 1:
-    current_settings[ 0 ] = &( settings_current.joystick_2_output );
-    current_settings[ 1 ] = &( settings_current.joystick_2_fire_1 );
-    current_settings[ 2 ] = &( settings_current.joystick_2_fire_2 );
-    current_settings[ 3 ] = &( settings_current.joystick_2_fire_3 );
-    current_settings[ 4 ] = &( settings_current.joystick_2_fire_4 );
-    current_settings[ 5 ] = &( settings_current.joystick_2_fire_5 );
-    current_settings[ 6 ] = &( settings_current.joystick_2_fire_6 );
-    current_settings[ 7 ] = &( settings_current.joystick_2_fire_7 );
-    current_settings[ 8 ] = &( settings_current.joystick_2_fire_8 );
-    current_settings[ 9 ] = &( settings_current.joystick_2_fire_9 );
-    current_settings[ 10 ] = &( settings_current.joystick_2_fire_10 );
-    current_settings[ 11 ] = &( settings_current.joystick_2_fire_11 );
-    current_settings[ 12 ] = &( settings_current.joystick_2_fire_12 );
-    current_settings[ 13 ] = &( settings_current.joystick_2_fire_13 );
-    current_settings[ 14 ] = &( settings_current.joystick_2_fire_14 );
-    current_settings[ 15 ] = &( settings_current.joystick_2_fire_15 );
+    current_settings[ 0 ] = &(settings_current.joystick_2_output);
+    current_settings[ 1 ] = &(settings_current.joystick_2_fire_1);
+    current_settings[ 2 ] = &(settings_current.joystick_2_fire_2);
+    current_settings[ 3 ] = &(settings_current.joystick_2_fire_3);
+    current_settings[ 4 ] = &(settings_current.joystick_2_fire_4);
+    current_settings[ 5 ] = &(settings_current.joystick_2_fire_5);
+    current_settings[ 6 ] = &(settings_current.joystick_2_fire_6);
+    current_settings[ 7 ] = &(settings_current.joystick_2_fire_7);
+    current_settings[ 8 ] = &(settings_current.joystick_2_fire_8);
+    current_settings[ 9 ] = &(settings_current.joystick_2_fire_9);
+    current_settings[ 10 ] = &(settings_current.joystick_2_fire_10);
+    current_settings[ 11 ] = &(settings_current.joystick_2_fire_11);
+    current_settings[ 12 ] = &(settings_current.joystick_2_fire_12);
+    current_settings[ 13 ] = &(settings_current.joystick_2_fire_13);
+    current_settings[ 14 ] = &(settings_current.joystick_2_fire_14);
+    current_settings[ 15 ] = &(settings_current.joystick_2_fire_15);
     submenu_type_and_mapping_for_joystick[ 1 ].detail = menu_joystick_2_detail;
     break;
 #endif // #ifdef USE_JOYSTICK
 
   case JOYSTICK_KEYBOARD:
-    current_settings[ 0 ] = &( settings_current.joystick_keyboard_output );
-    current_settings[ 1 ] = &( settings_current.joystick_keyboard_up );
-    current_settings[ 2 ] = &( settings_current.joystick_keyboard_down );
-    current_settings[ 3 ] = &( settings_current.joystick_keyboard_left );
-    current_settings[ 4 ] = &( settings_current.joystick_keyboard_right );
-    current_settings[ 5 ] = &( settings_current.joystick_keyboard_fire );
+    current_settings[ 0 ] = &(settings_current.joystick_keyboard_output);
+    current_settings[ 1 ] = &(settings_current.joystick_keyboard_up);
+    current_settings[ 2 ] = &(settings_current.joystick_keyboard_down);
+    current_settings[ 3 ] = &(settings_current.joystick_keyboard_left);
+    current_settings[ 4 ] = &(settings_current.joystick_keyboard_right);
+    current_settings[ 5 ] = &(settings_current.joystick_keyboard_fire);
     submenu_type_and_mapping_for_keyboard[ 1 ].detail = menu_keyboard_joystick_detail;
     break;
   }
 
   // Populate joystick names
-  if (JOYSTICK_TYPE_COUNT > MAX_JOYSTICK_TYPES )
-    ui_error( UI_ERROR_ERROR, "Not all joystick types are displayed");
+  if (JOYSTICK_TYPE_COUNT > MAX_JOYSTICK_TYPES)
+    ui_error(UI_ERROR_ERROR, "Not all joystick types are displayed");
 
   submenu_types[ 0 ].text = "Select joystick type";
-  for (i = 0; ( i < JOYSTICK_TYPE_COUNT ) && ( i < MAX_JOYSTICK_TYPES ); i++) {
+  for (i = 0; (i < JOYSTICK_TYPE_COUNT) && (i < MAX_JOYSTICK_TYPES); i++) {
     char shortcut[ 2 ] = { 'A' + i, '\0' };
-    snprintf( ( char * ) joystick_names[ i ], 100, "\012%s\011 %s", shortcut,
-              joystick_name[ i ] );
+    snprintf((char *) joystick_names[ i ], 100, "\012%s\011 %s", shortcut,
+              joystick_name[ i ]);
     submenu_types[ i + 1 ].text = joystick_names[ i ];
     submenu_types[ i + 1 ].key = INPUT_KEY_a + i;
     submenu_types[ i + 1 ].callback = set_joystick_type;
@@ -569,28 +569,28 @@ menu_options_joysticks_select( int action )
   }
   submenu_types[ i + 1 ].text = NULL;
 
-  if (action - 1 == JOYSTICK_KEYBOARD )
-    error = widget_do_menu( submenu_type_and_mapping_for_keyboard );
+  if (action - 1 == JOYSTICK_KEYBOARD)
+    error = widget_do_menu(submenu_type_and_mapping_for_keyboard);
 
 #ifdef USE_JOYSTICK
   else
-    error = widget_do_menu( submenu_type_and_mapping_for_joystick );
+    error = widget_do_menu(submenu_type_and_mapping_for_joystick);
 #endif // #ifdef USE_JOYSTICK
 
-  if (error ) return;
+  if (error) return;
 }
 
 void
-set_joystick_type( int action )
+set_joystick_type(int action)
 {
   *current_settings[ 0 ] = action;
-  widget_end_all( WIDGET_FINISHED_OK );
+  widget_end_all(WIDGET_FINISHED_OK);
 }
 
 // Options/Select ROMs/<type>
 int
-menu_select_roms_with_title( const char *title, size_t start, size_t count,
-			     int is_peripheral )
+menu_select_roms_with_title(const char *title, size_t start, size_t count,
+			     int is_peripheral)
 {
   widget_roms_info info;
 
@@ -600,33 +600,33 @@ menu_select_roms_with_title( const char *title, size_t start, size_t count,
   info.is_peripheral = is_peripheral;
   info.initialised = 0;
 
-  return widget_do_rom( &info );
+  return widget_do_rom(&info);
 }
 
 void
-menu_machine_reset( int action )
+menu_machine_reset(int action)
 {
   int hard_reset = action;
   const char *message = "Reset?";
 
-  if (hard_reset )
+  if (hard_reset)
     message = "Hard reset?";
 
-  if (widget_do_query( message ) ||
-      !widget_query.confirm )
+  if (widget_do_query(message) ||
+      !widget_query.confirm)
     return;
 
-  widget_end_all( WIDGET_FINISHED_OK );
+  widget_end_all(WIDGET_FINISHED_OK);
 
   // Stop any ongoing RZX
   rzx_stop_recording();
-  rzx_stop_playback( 1 );
+  rzx_stop_playback(1);
 
-  machine_reset( hard_reset );
+  machine_reset(hard_reset);
 }
 
 void
-menu_machine_select( int action )
+menu_machine_select(int action)
 {
   widget_select_t info;
   char **options, *buffer;
@@ -634,24 +634,24 @@ menu_machine_select( int action )
   int error;
   libspectrum_machine new_machine;
 
-  options = malloc( machine_count * sizeof( const char * ) );
-  if (!options ) {
-    ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
+  options = malloc(machine_count * sizeof(const char *));
+  if (!options) {
+    ui_error(UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__);
     return;
   }
 
-  buffer = malloc( 40 * machine_count );
-  if (!buffer ) {
-    ui_error( UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__ );
-    free( options );
+  buffer = malloc(40 * machine_count);
+  if (!buffer) {
+    ui_error(UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__);
+    free(options);
     return;
   }
 
   for (i = 0; i < machine_count; i++) {
     options[i] = &buffer[ i * 40 ];
-    snprintf( options[i], 40, "%s",
-              libspectrum_machine_name( machine_types[i]->machine ) );
-    if (machine_current->machine == machine_types[i]->machine )
+    snprintf(options[i], 40, "%s",
+              libspectrum_machine_name(machine_types[i]->machine));
+    if (machine_current->machine == machine_types[i]->machine)
       info.current = i;
   }
 
@@ -660,57 +660,57 @@ menu_machine_select( int action )
   info.count = machine_count;
   info.finish_all = 1;
 
-  error = widget_do_select( &info );
-  free( buffer ); free( options );
-  if (error ) return;
+  error = widget_do_select(&info);
+  free(buffer); free(options);
+  if (error) return;
 
-  if (info.result == -1 ) return;
+  if (info.result == -1) return;
 
   new_machine = machine_types[ info.result ]->machine;
 
-  if (machine_current->machine != new_machine ) machine_select( new_machine );
+  if (machine_current->machine != new_machine) machine_select(new_machine);
 }
 
 void
-menu_machine_debugger( int action )
+menu_machine_debugger(int action)
 {
   debugger_mode = DEBUGGER_MODE_HALTED;
   widget_do_debugger();
 }
 
 void
-menu_machine_pokememory( int action )
+menu_machine_pokememory(int action)
 {
   widget_do_pokemem();
 }
 
 void
-menu_machine_pokefinder( int action )
+menu_machine_pokefinder(int action)
 {
   widget_do_pokefinder();
 }
 
 void
-menu_machine_memorybrowser( int action )
+menu_machine_memorybrowser(int action)
 {
   widget_do_memorybrowser();
 }
 
 void
-menu_media_tape_browse( int action )
+menu_media_tape_browse(int action)
 {
   widget_do_browse();
 }
 
 void
-menu_help_keyboard( int action )
+menu_help_keyboard(int action)
 {
   utils_file screen;
   widget_picture_data info;
 
   static const char * const filename = "keyboard.scr";
 
-  if (utils_read_screen( filename, &screen ) ) {
+  if (utils_read_screen(filename, &screen)) {
     return;
   }
 
@@ -718,40 +718,40 @@ menu_help_keyboard( int action )
   info.screen = screen.buffer;
   info.border = 0;
 
-  widget_do_picture( &info );
+  widget_do_picture(&info);
 
-  utils_close_file( &screen );
+  utils_close_file(&screen);
 }
 
 void
-menu_help_about( int action )
+menu_help_about(int action)
 {
   widget_do_about();
 }
 
 static int
-set_active( struct widget_menu_entry *menu, const char *path, int active )
+set_active(struct widget_menu_entry *menu, const char *path, int active)
 {
-  if (*path == '/' ) path++;
+  if (*path == '/') path++;
 
   // Skip the menu title
   menu++;
 
-  for( ; menu->text; menu++ ) {
+  for (; menu->text; menu++) {
 
     const char *p = menu->text, *q = path;
 
     // Compare the two strings, but skip hotkey-delimiter characters
     do {
-      if (*p == 9 || *p == 10 ) p++;
-    } while( *p && *p++ == *q++ );
+      if (*p == 9 || *p == 10) p++;
+    } while (*p && *p++ == *q++);
 
-    if (*p ) continue; // not matched
+    if (*p) continue; // not matched
 
     // match, but with a submenu
-    if (*q == '/' ) return set_active( menu->submenu, q, active );
+    if (*q == '/') return set_active(menu->submenu, q, active);
 
-    if (*q ) continue; // not matched
+    if (*q) continue; // not matched
 
     // we have a match
     menu->inactive = !active;
@@ -762,7 +762,7 @@ set_active( struct widget_menu_entry *menu, const char *path, int active )
 }
 
 int
-ui_menu_item_set_active( const char *path, int active )
+ui_menu_item_set_active(const char *path, int active)
 {
-  return set_active( widget_menu, path, active );
+  return set_active(widget_menu, path, active);
 }

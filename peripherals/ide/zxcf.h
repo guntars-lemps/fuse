@@ -28,7 +28,7 @@
 #include <libspectrum.h>
 
 void zxcf_register_startup(void);
-int zxcf_insert( const char *filename );
+int zxcf_insert(const char *filename);
 int zxcf_commit(void);
 int zxcf_eject(void);
 libspectrum_byte zxcf_last_memctl(void);

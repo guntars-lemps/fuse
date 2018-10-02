@@ -72,12 +72,12 @@ struct divxxx_t {
 };
 
 divxxx_t*
-divxxx_alloc( const char *eprom_source_name, size_t ram_page_count,
+divxxx_alloc(const char *eprom_source_name, size_t ram_page_count,
     const char *ram_source_name, const char *event_type_string,
-    const int *enabled, const int *write_protect )
+    const int *enabled, const int *write_protect)
 {
   size_t i, j;
-  divxxx_t *divxxx = libspectrum_new( divxxx_t, 1 );
+  divxxx_t *divxxx = libspectrum_new(divxxx_t, 1);
 
   divxxx->control = 0;
   divxxx->active = 0;
@@ -85,7 +85,7 @@ divxxx_alloc( const char *eprom_source_name, size_t ram_page_count,
 
   divxxx->memory_allocated = 0;
 
-  divxxx->eprom_memory_source = memory_source_register( eprom_source_name );
+  divxxx->eprom_memory_source = memory_source_register(eprom_source_name);
   for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
     memory_page *page = &divxxx->memory_map_eprom[i];
     page->source = divxxx->eprom_memory_source;
@@ -95,13 +95,13 @@ divxxx_alloc( const char *eprom_source_name, size_t ram_page_count,
   divxxx->eprom = NULL;
 
   divxxx->ram_page_count = ram_page_count;
-  divxxx->ram_memory_source = memory_source_register( ram_source_name );
+  divxxx->ram_memory_source = memory_source_register(ram_source_name);
   divxxx->memory_map_ram =
-    libspectrum_new( memory_page*, divxxx->ram_page_count );
+    libspectrum_new(memory_page*, divxxx->ram_page_count);
   for (i = 0; i < divxxx->ram_page_count; i++) {
     divxxx->memory_map_ram[i] =
-      libspectrum_new( memory_page, MEMORY_PAGES_IN_8K );
-    for( j = 0; j < MEMORY_PAGES_IN_8K; j++ ) {
+      libspectrum_new(memory_page, MEMORY_PAGES_IN_8K);
+    for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
       memory_page *page = &divxxx->memory_map_ram[i][j];
       page->source = divxxx->ram_memory_source;
       page->contended = 0;
@@ -110,8 +110,8 @@ divxxx_alloc( const char *eprom_source_name, size_t ram_page_count,
   }
   divxxx->ram = NULL;
 
-  periph_register_paging_events( event_type_string, &divxxx->page_event,
-                                 &divxxx->unpage_event );
+  periph_register_paging_events(event_type_string, &divxxx->page_event,
+                                 &divxxx->unpage_event);
 
   divxxx->enabled = enabled;
   divxxx->write_protect = write_protect;
@@ -120,56 +120,56 @@ divxxx_alloc( const char *eprom_source_name, size_t ram_page_count,
 }
 
 void
-divxxx_free( divxxx_t *divxxx )
+divxxx_free(divxxx_t *divxxx)
 {
   size_t i;
 
   for (i = 0; i < divxxx->ram_page_count; i++)
-    libspectrum_free( divxxx->memory_map_ram[i] );
-  libspectrum_free( divxxx->memory_map_ram );
-  libspectrum_free( divxxx->ram );
+    libspectrum_free(divxxx->memory_map_ram[i]);
+  libspectrum_free(divxxx->memory_map_ram);
+  libspectrum_free(divxxx->ram);
 
-  libspectrum_free( divxxx );
+  libspectrum_free(divxxx);
 }
 
 libspectrum_byte
-divxxx_get_control( divxxx_t *divxxx )
+divxxx_get_control(divxxx_t *divxxx)
 {
   return divxxx->control;
 }
 
 int
-divxxx_get_active( divxxx_t *divxxx )
+divxxx_get_active(divxxx_t *divxxx)
 {
   return divxxx->active;
 }
 
 int
-divxxx_get_eprom_memory_source( divxxx_t *divxxx )
+divxxx_get_eprom_memory_source(divxxx_t *divxxx)
 {
   return divxxx->eprom_memory_source;
 }
 
 memory_page*
-divxxx_get_eprom_page( divxxx_t *divxxx, size_t which )
+divxxx_get_eprom_page(divxxx_t *divxxx, size_t which)
 {
   return &divxxx->memory_map_eprom[ which ];
 }
 
 libspectrum_byte*
-divxxx_get_eprom( divxxx_t *divxxx )
+divxxx_get_eprom(divxxx_t *divxxx)
 {
   return divxxx->eprom;
 }
 
 int
-divxxx_get_ram_memory_source( divxxx_t *divxxx )
+divxxx_get_ram_memory_source(divxxx_t *divxxx)
 {
   return divxxx->ram_memory_source;
 }
 
 libspectrum_byte*
-divxxx_get_ram( divxxx_t *divxxx, size_t which )
+divxxx_get_ram(divxxx_t *divxxx, size_t which)
 {
   return divxxx->ram[ which ];
 }
@@ -178,51 +178,51 @@ divxxx_get_ram( divxxx_t *divxxx, size_t which )
    trapping PC instead); however, it needs to perform housekeeping tasks upon
    reset */
 void
-divxxx_reset( divxxx_t *divxxx, int hard_reset )
+divxxx_reset(divxxx_t *divxxx, int hard_reset)
 {
   int i;
 
   divxxx->active = 0;
 
-  if (!*divxxx->enabled ) return;
+  if (!*divxxx->enabled) return;
 
-  if (hard_reset ) {
+  if (hard_reset) {
     divxxx->control = 0;
 
-    if (divxxx->ram ) {
+    if (divxxx->ram) {
       for (i = 0; i < divxxx->ram_page_count; i++)
-        memset( divxxx->ram[i], 0, DIVXXX_PAGE_LENGTH );
+        memset(divxxx->ram[i], 0, DIVXXX_PAGE_LENGTH);
     }
   } else {
     divxxx->control &= DIVXXX_CONTROL_MAPRAM;
   }
   divxxx->automap = 0;
-  divxxx_refresh_page_state( divxxx );
+  divxxx_refresh_page_state(divxxx);
 }
 
 void
-divxxx_activate( divxxx_t *divxxx )
+divxxx_activate(divxxx_t *divxxx)
 {
-  if (!divxxx->memory_allocated ) {
+  if (!divxxx->memory_allocated) {
     int i, j;
     libspectrum_byte *memory =
-      memory_pool_allocate_persistent( divxxx->ram_page_count * DIVXXX_PAGE_LENGTH, 1 );
+      memory_pool_allocate_persistent(divxxx->ram_page_count * DIVXXX_PAGE_LENGTH, 1);
 
-    divxxx->ram = libspectrum_new( libspectrum_byte*, divxxx->ram_page_count );
+    divxxx->ram = libspectrum_new(libspectrum_byte*, divxxx->ram_page_count);
 
     for (i = 0; i < divxxx->ram_page_count; i++) {
       divxxx->ram[i] = memory + i * DIVXXX_PAGE_LENGTH;
-      for( j = 0; j < MEMORY_PAGES_IN_8K; j++ ) {
+      for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
         memory_page *page = &divxxx->memory_map_ram[i][j];
         page->page = divxxx->ram[i] + j * MEMORY_PAGE_SIZE;
         page->offset = j * MEMORY_PAGE_SIZE;
       }
     }
 
-    divxxx->eprom = memory_pool_allocate_persistent( DIVXXX_PAGE_LENGTH, 1 );
-    memset( divxxx->eprom, 0xff, DIVXXX_PAGE_LENGTH );
+    divxxx->eprom = memory_pool_allocate_persistent(DIVXXX_PAGE_LENGTH, 1);
+    memset(divxxx->eprom, 0xff, DIVXXX_PAGE_LENGTH);
     for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
-      memory_page *page = divxxx_get_eprom_page( divxxx, i );
+      memory_page *page = divxxx_get_eprom_page(divxxx, i);
       page->page = divxxx->eprom + i * MEMORY_PAGE_SIZE;
       page->offset = i * MEMORY_PAGE_SIZE;
     }
@@ -232,71 +232,71 @@ divxxx_activate( divxxx_t *divxxx )
 }
 
 void
-divxxx_control_write( divxxx_t *divxxx, libspectrum_byte data )
+divxxx_control_write(divxxx_t *divxxx, libspectrum_byte data)
 {
   int old_mapram;
 
   // MAPRAM bit cannot be reset, only set
   old_mapram = divxxx->control & DIVXXX_CONTROL_MAPRAM;
-  divxxx_control_write_internal( divxxx, data | old_mapram );
+  divxxx_control_write_internal(divxxx, data | old_mapram);
 }
 
 void
-divxxx_control_write_internal( divxxx_t *divxxx, libspectrum_byte data )
+divxxx_control_write_internal(divxxx_t *divxxx, libspectrum_byte data)
 {
   divxxx->control = data;
-  divxxx_refresh_page_state( divxxx );
+  divxxx_refresh_page_state(divxxx);
 }
 
 void
-divxxx_set_automap( divxxx_t *divxxx, int automap )
+divxxx_set_automap(divxxx_t *divxxx, int automap)
 {
   divxxx->automap = automap;
-  divxxx_refresh_page_state( divxxx );
+  divxxx_refresh_page_state(divxxx);
 }
 
 void
-divxxx_refresh_page_state( divxxx_t *divxxx )
+divxxx_refresh_page_state(divxxx_t *divxxx)
 {
-  if (divxxx->control & DIVXXX_CONTROL_CONMEM ) {
+  if (divxxx->control & DIVXXX_CONTROL_CONMEM) {
     // always paged in if conmem enabled
-    divxxx_page( divxxx );
+    divxxx_page(divxxx);
   } else if (*divxxx->write_protect
-    || ( divxxx->control & DIVXXX_CONTROL_MAPRAM ) ) {
+    || (divxxx->control & DIVXXX_CONTROL_MAPRAM)) {
     // automap in effect
-    if (divxxx->automap ) {
-      divxxx_page( divxxx );
+    if (divxxx->automap) {
+      divxxx_page(divxxx);
     } else {
-      divxxx_unpage( divxxx );
+      divxxx_unpage(divxxx);
     }
   } else {
-    divxxx_unpage( divxxx );
+    divxxx_unpage(divxxx);
   }
 }
 
 void
-divxxx_memory_map( divxxx_t *divxxx )
+divxxx_memory_map(divxxx_t *divxxx)
 {
   int i;
   int upper_ram_page;
   int lower_page_writable, upper_page_writable;
   memory_page *lower_page, *upper_page;
 
-  if (!divxxx->active ) return;
+  if (!divxxx->active) return;
 
   upper_ram_page = divxxx->control & (divxxx->ram_page_count - 1);
 
-  if (divxxx->control & DIVXXX_CONTROL_CONMEM ) {
+  if (divxxx->control & DIVXXX_CONTROL_CONMEM) {
     lower_page = divxxx->memory_map_eprom;
     lower_page_writable = !*divxxx->write_protect;
     upper_page = divxxx->memory_map_ram[ upper_ram_page ];
     upper_page_writable = 1;
   } else {
-    if (divxxx->control & DIVXXX_CONTROL_MAPRAM ) {
+    if (divxxx->control & DIVXXX_CONTROL_MAPRAM) {
       lower_page = divxxx->memory_map_ram[3];
       lower_page_writable = 0;
       upper_page = divxxx->memory_map_ram[ upper_ram_page ];
-      upper_page_writable = ( upper_ram_page != 3 );
+      upper_page_writable = (upper_ram_page != 3);
     } else {
       lower_page = divxxx->memory_map_eprom;
       lower_page_writable = 0;
@@ -310,26 +310,26 @@ divxxx_memory_map( divxxx_t *divxxx )
     upper_page[i].writable = upper_page_writable;
   }
 
-  memory_map_romcs_8k( 0x0000, lower_page );
-  memory_map_romcs_8k( 0x2000, upper_page );
+  memory_map_romcs_8k(0x0000, lower_page);
+  memory_map_romcs_8k(0x2000, upper_page);
 }
 
 void
-divxxx_page( divxxx_t *divxxx )
+divxxx_page(divxxx_t *divxxx)
 {
   divxxx->active = 1;
   machine_current->ram.romcs = 1;
   machine_current->memory_map();
 
-  debugger_event( divxxx->page_event );
+  debugger_event(divxxx->page_event);
 }
 
 void
-divxxx_unpage( divxxx_t *divxxx )
+divxxx_unpage(divxxx_t *divxxx)
 {
   divxxx->active = 0;
   machine_current->ram.romcs = 0;
   machine_current->memory_map();
 
-  debugger_event( divxxx->unpage_event );
+  debugger_event(divxxx->unpage_event);
 }

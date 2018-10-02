@@ -49,102 +49,102 @@ static char last_message[ MESSAGE_MAX_LENGTH ] = "";
 static size_t frames_since_last_message = 0;
 
 static int
-print_error_to_stderr( ui_error_level severity, const char *message );
+print_error_to_stderr(ui_error_level severity, const char *message);
 
 int
-ui_error( ui_error_level severity, const char *format, ... )
+ui_error(ui_error_level severity, const char *format, ...)
 {
   int error;
   va_list ap;
 
-  va_start( ap, format );
-  error = ui_verror( severity, format, ap );
-  va_end( ap );
+  va_start(ap, format);
+  error = ui_verror(severity, format, ap);
+  va_end(ap);
 
   return error;
 }
 
 int
-ui_verror( ui_error_level severity, const char *format, va_list ap )
+ui_verror(ui_error_level severity, const char *format, va_list ap)
 {
   char message[ MESSAGE_MAX_LENGTH ];
 
-  vsnprintf( message, MESSAGE_MAX_LENGTH, format, ap );
+  vsnprintf(message, MESSAGE_MAX_LENGTH, format, ap);
 
   // Skip the message if the same message was displayed recently
-  if (frames_since_last_message < 50 && !strcmp( message, last_message ) ) {
+  if (frames_since_last_message < 50 && !strcmp(message, last_message)) {
     frames_since_last_message = 0;
     return 0;
   }
 
   // And store the 'last message'
-  strncpy( last_message, message, MESSAGE_MAX_LENGTH );
+  strncpy(last_message, message, MESSAGE_MAX_LENGTH);
   last_message[ MESSAGE_MAX_LENGTH - 1 ] = '\0';
 
-  print_error_to_stderr( severity, message );
+  print_error_to_stderr(severity, message);
 
   // Do any UI-specific bits as well
-  ui_error_specific( severity, message );
+  ui_error_specific(severity, message);
 
   return 0;
 }
 
 ui_confirm_save_t
-ui_confirm_save( const char *format, ... )
+ui_confirm_save(const char *format, ...)
 {
   va_list ap;
   char message[ MESSAGE_MAX_LENGTH ];
   ui_confirm_save_t confirm;
 
-  va_start( ap, format );
+  va_start(ap, format);
 
-  vsnprintf( message, MESSAGE_MAX_LENGTH, format, ap );
-  confirm = ui_confirm_save_specific( message );
+  vsnprintf(message, MESSAGE_MAX_LENGTH, format, ap);
+  confirm = ui_confirm_save_specific(message);
 
-  va_end( ap );
+  va_end(ap);
 
   return confirm;
 }
 
 static int
-print_error_to_stderr( ui_error_level severity, const char *message )
+print_error_to_stderr(ui_error_level severity, const char *message)
 {
   /* Print the error to stderr if it's more significant than just
      informational */
-  if (severity > UI_ERROR_INFO ) {
+  if (severity > UI_ERROR_INFO) {
 
     /* For the fb and svgalib UIs, we don't want to write to stderr if
        it's a terminal, as it's then likely to be what we're currently
        using for graphics output, and writing text to it isn't a good
        idea. Things are OK if we're exiting though */
-#if defined( UI_FB ) || defined( UI_SVGA )
-    if (isatty( STDERR_FILENO ) && !fuse_exiting ) return 1;
-#endif // #if defined( UI_FB ) || defined( UI_SVGA )
+#if defined(UI_FB) || defined(UI_SVGA)
+    if (isatty(STDERR_FILENO) && !fuse_exiting) return 1;
+#endif // #if defined(UI_FB) || defined(UI_SVGA)
 
-    fprintf( stderr, "%s: ", fuse_progname );
+    fprintf(stderr, "%s: ", fuse_progname);
 
-    switch (severity ) {
+    switch (severity) {
 
     case UI_ERROR_INFO: break; // Shouldn't happen
 
-    case UI_ERROR_WARNING: fprintf( stderr, "warning: "); break;
-    case UI_ERROR_ERROR: fprintf( stderr, "error: "); break;
+    case UI_ERROR_WARNING: fprintf(stderr, "warning: "); break;
+    case UI_ERROR_ERROR: fprintf(stderr, "error: "); break;
     }
 
-    fprintf( stderr, "%s\n", message );
+    fprintf(stderr, "%s\n", message);
   }
 
   return 0;
 }
 
 libspectrum_error
-ui_libspectrum_error( libspectrum_error error GCC_UNUSED, const char *format,
-		      va_list ap )
+ui_libspectrum_error(libspectrum_error error GCC_UNUSED, const char *format,
+		      va_list ap)
 {
   char new_format[ 257 ];
-  snprintf( new_format, 256, "libspectrum: %s", format );
+  snprintf(new_format, 256, "libspectrum: %s", format);
 
-  ui_verror( UI_ERROR_ERROR, new_format, ap );
+  ui_verror(UI_ERROR_ERROR, new_format, ap);
 
   return LIBSPECTRUM_ERROR_NONE;
 }
@@ -160,46 +160,46 @@ int ui_mouse_grabbed = 0;
 static int mouse_grab_suspended = 0;
 
 void
-ui_mouse_button( int button, int down )
+ui_mouse_button(int button, int down)
 {
   int kempston_button = !settings_current.mouse_swap_buttons;
 
-  if (!ui_mouse_grabbed && !mouse_grab_suspended ) button = 2;
+  if (!ui_mouse_grabbed && !mouse_grab_suspended) button = 2;
 
   // Possibly we'll end up handling _more_ than one mouse interface...
-  switch (button ) {
+  switch (button) {
   case 1:
-    if (ui_mouse_grabbed ) kempmouse_update( 0, 0, kempston_button, down );
+    if (ui_mouse_grabbed) kempmouse_update(0, 0, kempston_button, down);
     break;
   case 3:
-    if (ui_mouse_grabbed ) kempmouse_update( 0, 0, !kempston_button, down );
+    if (ui_mouse_grabbed) kempmouse_update(0, 0, !kempston_button, down);
     break;
   case 2:
     if (ui_mouse_present && settings_current.kempston_mouse
-	&& !down && !mouse_grab_suspended )
+	&& !down && !mouse_grab_suspended)
       ui_mouse_grabbed =
-	ui_mouse_grabbed ? ui_mouse_release( 1 ) : ui_mouse_grab( 0 );
+	ui_mouse_grabbed ? ui_mouse_release(1) : ui_mouse_grab(0);
     break;
   }
 }
 
 void
-ui_mouse_motion( int x, int y )
+ui_mouse_motion(int x, int y)
 {
-  if (ui_mouse_grabbed ) kempmouse_update( x, y, -1, 0 );
+  if (ui_mouse_grabbed) kempmouse_update(x, y, -1, 0);
 }
 
 void
 ui_mouse_suspend(void)
 {
   mouse_grab_suspended = ui_mouse_grabbed ? 2 : 1;
-  ui_mouse_grabbed = ui_mouse_release( 1 );
+  ui_mouse_grabbed = ui_mouse_release(1);
 }
 
 void
 ui_mouse_resume(void)
 {
-  if (mouse_grab_suspended == 2) ui_mouse_grabbed = ui_mouse_grab( 0 );
+  if (mouse_grab_suspended == 2) ui_mouse_grabbed = ui_mouse_grab(0);
   mouse_grab_suspended = 0;
 }
 
@@ -674,38 +674,38 @@ static const struct menu_item_entries menu_item_lookup[] = {
 };
 
 int
-ui_menu_activate( ui_menu_item item, int active )
+ui_menu_activate(ui_menu_item item, int active)
 {
   const struct menu_item_entries *ptr;
 
-  for( ptr = menu_item_lookup; ptr->string1; ptr++ ) {
+  for (ptr = menu_item_lookup; ptr->string1; ptr++) {
 
-    if (item == ptr->item ) {
-      ui_menu_item_set_active( ptr->string1, active );
-      if (ptr->string2 )
-	ui_menu_item_set_active( ptr->string2,
-				 ptr->string2_inverted ? !active : active );
-      if (ptr->string3 )
-	ui_menu_item_set_active( ptr->string3,
-				 ptr->string3_inverted ? !active : active );
-      if (ptr->string4 )
-	ui_menu_item_set_active( ptr->string4,
-				 ptr->string4_inverted ? !active : active );
-      if (ptr->string5 )
-	ui_menu_item_set_active( ptr->string5,
-				 ptr->string5_inverted ? !active : active );
-      if (ptr->string6 )
-	ui_menu_item_set_active( ptr->string6,
-				 ptr->string6_inverted ? !active : active );
-      if (ptr->string7 )
-	ui_menu_item_set_active( ptr->string7,
-				 ptr->string7_inverted ? !active : active );
+    if (item == ptr->item) {
+      ui_menu_item_set_active(ptr->string1, active);
+      if (ptr->string2)
+	ui_menu_item_set_active(ptr->string2,
+				 ptr->string2_inverted ? !active : active);
+      if (ptr->string3)
+	ui_menu_item_set_active(ptr->string3,
+				 ptr->string3_inverted ? !active : active);
+      if (ptr->string4)
+	ui_menu_item_set_active(ptr->string4,
+				 ptr->string4_inverted ? !active : active);
+      if (ptr->string5)
+	ui_menu_item_set_active(ptr->string5,
+				 ptr->string5_inverted ? !active : active);
+      if (ptr->string6)
+	ui_menu_item_set_active(ptr->string6,
+				 ptr->string6_inverted ? !active : active);
+      if (ptr->string7)
+	ui_menu_item_set_active(ptr->string7,
+				 ptr->string7_inverted ? !active : active);
       return 0;
     }
 
   }
 
-  ui_error( UI_ERROR_ERROR, "ui_menu_activate: unknown item %d", item );
+  ui_error(UI_ERROR_ERROR, "ui_menu_activate: unknown item %d", item);
   return 1;
 }
 
@@ -718,13 +718,13 @@ ui_menu_disk_update(void)
 
   // Set the disk menu items and statusbar appropriately
 
-  if (drives_avail ) {
-    ui_menu_activate( UI_MENU_ITEM_MEDIA_DISK, 1 );
-    ui_statusbar_update( UI_STATUSBAR_ITEM_DISK, UI_STATUSBAR_STATE_INACTIVE );
+  if (drives_avail) {
+    ui_menu_activate(UI_MENU_ITEM_MEDIA_DISK, 1);
+    ui_statusbar_update(UI_STATUSBAR_ITEM_DISK, UI_STATUSBAR_STATE_INACTIVE);
   } else {
-    ui_menu_activate( UI_MENU_ITEM_MEDIA_DISK, 0 );
-    ui_statusbar_update( UI_STATUSBAR_ITEM_DISK,
-                         UI_STATUSBAR_STATE_NOT_AVAILABLE );
+    ui_menu_activate(UI_MENU_ITEM_MEDIA_DISK, 0);
+    ui_statusbar_update(UI_STATUSBAR_ITEM_DISK,
+                         UI_STATUSBAR_STATE_NOT_AVAILABLE);
   }
 
   ui_media_drive_update_parent_menus();
@@ -737,12 +737,12 @@ ui_tape_write(void)
 
   fuse_emulation_pause();
 
-  filename = ui_get_save_filename( "Fuse - Write Tape");
-  if (!filename ) { fuse_emulation_unpause(); return 1; }
+  filename = ui_get_save_filename("Fuse - Write Tape");
+  if (!filename) { fuse_emulation_unpause(); return 1; }
 
-  tape_write( filename );
+  tape_write(filename);
 
-  libspectrum_free( filename );
+  libspectrum_free(filename);
 
   fuse_emulation_unpause();
 
@@ -750,23 +750,23 @@ ui_tape_write(void)
 }
 
 int
-ui_mdr_write( int which, int saveas )
+ui_mdr_write(int which, int saveas)
 {
   int err;
   char *filename = NULL, title[80];
 
   fuse_emulation_pause();
 
-  snprintf( title, 80, "Fuse - Write Microdrive Cartridge %i", which + 1 );
+  snprintf(title, 80, "Fuse - Write Microdrive Cartridge %i", which + 1);
 
-  if (saveas ) {
-    filename = ui_get_save_filename( title );
-    if (!filename ) { fuse_emulation_unpause(); return 1; }
+  if (saveas) {
+    filename = ui_get_save_filename(title);
+    if (!filename) { fuse_emulation_unpause(); return 1; }
   }
 
-  err = if1_mdr_write( which, filename );
+  err = if1_mdr_write(which, filename);
 
-  if (saveas ) libspectrum_free( filename );
+  if (saveas) libspectrum_free(filename);
 
   fuse_emulation_unpause();
 
@@ -799,12 +799,12 @@ ui_widget_end(void)
 }
 
 void
-ui_popup_menu( int native_key )
+ui_popup_menu(int native_key)
 {
 }
 
 void
-ui_widget_keyhandler( int native_key )
+ui_widget_keyhandler(int native_key)
 {
 }
 #endif // #ifndef USE_WIDGET

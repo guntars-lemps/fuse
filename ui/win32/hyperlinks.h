@@ -22,7 +22,7 @@
 #ifndef FUSE_HYPERLINKS_H
 #define FUSE_HYPERLINKS_H
 
-BOOL ConvertStaticToHyperlink( HWND hwndCtl );
-BOOL ConvertCtlStaticToHyperlink( HWND hwndParent, UINT uiCtlId );
+BOOL ConvertStaticToHyperlink(HWND hwndCtl);
+BOOL ConvertCtlStaticToHyperlink(HWND hwndParent, UINT uiCtlId);
 
 #endif // #ifndef FUSE_HYPERLINKS_H

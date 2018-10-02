@@ -28,12 +28,12 @@
 
 #include "machine.h"
 
-int spec128_init( fuse_machine_info *machine );
-int spec128_common_reset( int contention );
+int spec128_init(fuse_machine_info *machine);
+int spec128_common_reset(int contention);
 
-void spec128_memoryport_write( libspectrum_word port, libspectrum_byte b );
-void spec128_select_rom( int rom );
-void spec128_select_page( int page );
+void spec128_memoryport_write(libspectrum_word port, libspectrum_byte b);
+void spec128_select_rom(int rom);
+void spec128_select_page(int page);
 
 int spec128_memory_map(void);
 

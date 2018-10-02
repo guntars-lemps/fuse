@@ -32,7 +32,7 @@
 extern int if2_active;
 
 void if2_register_startup(void);
-int if2_insert( const char *filename );
+int if2_insert(const char *filename);
 void if2_eject(void);
 
 int if2_unittest(void);

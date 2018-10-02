@@ -33,8 +33,8 @@ timer_get_time(void)
 }
 
 void
-timer_sleep( int ms )
+timer_sleep(int ms)
 {
-  compat_timer_sleep( ms );
+  compat_timer_sleep(ms);
 }
 

@@ -34,9 +34,9 @@
 #include "periph.h"
 #include "settings.h"
 
-static void melodik_enabled_snapshot( libspectrum_snap *snap );
-static void melodik_from_snapshot( libspectrum_snap *snap );
-static void melodik_to_snapshot( libspectrum_snap *snap );
+static void melodik_enabled_snapshot(libspectrum_snap *snap);
+static void melodik_from_snapshot(libspectrum_snap *snap);
+static void melodik_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t melodik_module_info = {
 
@@ -62,30 +62,30 @@ static const periph_t melodik_periph = {
 };
 
 static void
-melodik_enabled_snapshot( libspectrum_snap *snap )
+melodik_enabled_snapshot(libspectrum_snap *snap)
 {
-  settings_current.melodik = libspectrum_snap_melodik_active( snap );
+  settings_current.melodik = libspectrum_snap_melodik_active(snap);
 }
 
 static void
-melodik_from_snapshot( libspectrum_snap *snap )
+melodik_from_snapshot(libspectrum_snap *snap)
 {
-  if (periph_is_active( PERIPH_TYPE_MELODIK ) )
-    ay_state_from_snapshot( snap );
+  if (periph_is_active(PERIPH_TYPE_MELODIK))
+    ay_state_from_snapshot(snap);
 }
 
 static void
-melodik_to_snapshot( libspectrum_snap *snap )
+melodik_to_snapshot(libspectrum_snap *snap)
 {
-  int active = periph_is_active( PERIPH_TYPE_MELODIK );
-  libspectrum_snap_set_melodik_active( snap, active );
+  int active = periph_is_active(PERIPH_TYPE_MELODIK);
+  libspectrum_snap_set_melodik_active(snap, active);
 }
 
 static int
-melodik_init( void *context )
+melodik_init(void *context)
 {
-  module_register( &melodik_module_info );
-  periph_register( PERIPH_TYPE_MELODIK, &melodik_periph );
+  module_register(&melodik_module_info);
+  periph_register(PERIPH_TYPE_MELODIK, &melodik_periph);
 
   return 0;
 }
@@ -94,7 +94,7 @@ void
 melodik_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register( STARTUP_MANAGER_MODULE_MELODIK, dependencies,
-                            ARRAY_SIZE( dependencies ), melodik_init, NULL,
-                            NULL );
+  startup_manager_register(STARTUP_MANAGER_MODULE_MELODIK, dependencies,
+                            ARRAY_SIZE(dependencies), melodik_init, NULL,
+                            NULL);
 }

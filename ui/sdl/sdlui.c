@@ -41,27 +41,27 @@
 static void
 atexit_proc(void)
 {
-  SDL_ShowCursor( SDL_ENABLE );
+  SDL_ShowCursor(SDL_ENABLE);
   SDL_Quit();
 }
 
 int
-ui_init( int *argc, char ***argv )
+ui_init(int *argc, char ***argv)
 {
   int error;
 
-  if (ui_widget_init() ) return 1;
+  if (ui_widget_init()) return 1;
 
 /* Comment out to Work around a bug in OS X 10.1 related to OpenGL in windowed
    mode */
   atexit(atexit_proc);
 
-  error = SDL_Init( SDL_INIT_VIDEO );
-  if ( error )
+  error = SDL_Init(SDL_INIT_VIDEO);
+  if (error)
     return error;
 
 #ifndef __MORPHOS__
-  SDL_EnableUNICODE( 1 );
+  SDL_EnableUNICODE(1);
 #endif // #ifndef __MORPHOS__
 
   sdlkeyboard_init();
@@ -76,42 +76,42 @@ ui_event(void)
 {
   SDL_Event event;
 
-  while ( SDL_PollEvent( &event ) ) {
-    switch ( event.type ) {
+  while (SDL_PollEvent(&event)) {
+    switch (event.type) {
     case SDL_KEYDOWN:
-      sdlkeyboard_keypress( &(event.key) );
+      sdlkeyboard_keypress(&(event.key));
       break;
     case SDL_KEYUP:
-      sdlkeyboard_keyrelease( &(event.key) );
+      sdlkeyboard_keyrelease(&(event.key));
       break;
 
     case SDL_MOUSEBUTTONDOWN:
-      ui_mouse_button( event.button.button, 1 );
+      ui_mouse_button(event.button.button, 1);
       break;
     case SDL_MOUSEBUTTONUP:
-      ui_mouse_button( event.button.button, 0 );
+      ui_mouse_button(event.button.button, 0);
       break;
     case SDL_MOUSEMOTION:
-      if (ui_mouse_grabbed ) {
-        ui_mouse_motion( event.motion.x - 128, event.motion.y - 128 );
-        if (event.motion.x != 128 || event.motion.y != 128 )
-          SDL_WarpMouse( 128, 128 );
+      if (ui_mouse_grabbed) {
+        ui_mouse_motion(event.motion.x - 128, event.motion.y - 128);
+        if (event.motion.x != 128 || event.motion.y != 128)
+          SDL_WarpMouse(128, 128);
       }
       break;
 
 #if defined USE_JOYSTICK && !defined HAVE_JSW_H
 
     case SDL_JOYBUTTONDOWN:
-      sdljoystick_buttonpress( &(event.jbutton) );
+      sdljoystick_buttonpress(&(event.jbutton));
       break;
     case SDL_JOYBUTTONUP:
-      sdljoystick_buttonrelease( &(event.jbutton) );
+      sdljoystick_buttonrelease(&(event.jbutton));
       break;
     case SDL_JOYAXISMOTION:
-      sdljoystick_axismove( &(event.jaxis) );
+      sdljoystick_axismove(&(event.jaxis));
       break;
     case SDL_JOYHATMOTION:
-      sdljoystick_hatmove( &(event.jhat) );
+      sdljoystick_hatmove(&(event.jhat));
       break;
 
 #endif // if defined USE_JOYSTICK && !defined HAVE_JSW_H
@@ -125,8 +125,8 @@ ui_event(void)
       display_refresh_all();
       break;
     case SDL_ACTIVEEVENT:
-      if (event.active.state & SDL_APPINPUTFOCUS ) {
-	if (event.active.gain ) ui_mouse_resume(); else ui_mouse_suspend();
+      if (event.active.state & SDL_APPINPUTFOCUS) {
+	if (event.active.gain) ui_mouse_resume(); else ui_mouse_suspend();
       }
       break;
     default:
@@ -143,7 +143,7 @@ ui_end(void)
   int error;
 
   error = uidisplay_end();
-  if ( error )
+  if (error)
     return error;
 
   sdlkeyboard_end();
@@ -156,46 +156,46 @@ ui_end(void)
 }
 
 int
-ui_statusbar_update_speed( float speed )
+ui_statusbar_update_speed(float speed)
 {
   char buffer[15];
   const char fuse[] = "Fuse";
 
-  snprintf( buffer, 15, "%s - %3.0f%%", fuse, speed );
+  snprintf(buffer, 15, "%s - %3.0f%%", fuse, speed);
 
   // FIXME: Icon caption should be snapshot name?
-  SDL_WM_SetCaption( buffer, fuse );
+  SDL_WM_SetCaption(buffer, fuse);
 
   return 0;
 }
 
 int
-ui_mouse_grab( int startup )
+ui_mouse_grab(int startup)
 {
-  if (settings_current.full_screen ) {
-    SDL_WarpMouse( 128, 128 );
+  if (settings_current.full_screen) {
+    SDL_WarpMouse(128, 128);
     return 1;
   }
-  if (startup ) return 0;
+  if (startup) return 0;
 
-  switch (SDL_WM_GrabInput( SDL_GRAB_ON ) ) {
+  switch (SDL_WM_GrabInput(SDL_GRAB_ON)) {
   case SDL_GRAB_ON:
   case SDL_GRAB_FULLSCREEN:
-    SDL_ShowCursor( SDL_DISABLE );
-    SDL_WarpMouse( 128, 128 );
+    SDL_ShowCursor(SDL_DISABLE);
+    SDL_WarpMouse(128, 128);
     return 1;
   default:
-    ui_error( UI_ERROR_WARNING, "Mouse grab failed");
+    ui_error(UI_ERROR_WARNING, "Mouse grab failed");
     return 0;
   }
 }
 
 int
-ui_mouse_release( int suspend )
+ui_mouse_release(int suspend)
 {
-  if (settings_current.full_screen ) return !suspend;
+  if (settings_current.full_screen) return !suspend;
 
-  SDL_WM_GrabInput( SDL_GRAB_OFF );
-  SDL_ShowCursor( SDL_ENABLE );
+  SDL_WM_GrabInput(SDL_GRAB_OFF);
+  SDL_ShowCursor(SDL_ENABLE);
   return 0;
 }

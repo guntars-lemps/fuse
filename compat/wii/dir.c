@@ -26,23 +26,23 @@
 #include "compat.h"
 
 compat_dir
-compat_opendir( const char *path )
+compat_opendir(const char *path)
 {
-  return diropen( path );
+  return diropen(path);
 }
 
 compat_dir_result_t
-compat_readdir( compat_dir directory, char *path, size_t length )
+compat_readdir(compat_dir directory, char *path, size_t length)
 {
   struct stat fstat;
 
-  int done = dirnext( directory, path, &fstat );
+  int done = dirnext(directory, path, &fstat);
 
   return done ? COMPAT_DIR_RESULT_END : COMPAT_DIR_RESULT_OK;
 }
 
 int
-compat_closedir( compat_dir directory )
+compat_closedir(compat_dir directory)
 {
-  return dirclose( directory );
+  return dirclose(directory);
 }

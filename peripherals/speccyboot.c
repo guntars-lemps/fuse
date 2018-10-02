@@ -62,17 +62,17 @@ static libspectrum_byte out_register_state;
 static libspectrum_byte in_register_state;
 
 static void
-speccyboot_reset( int hard_reset GCC_UNUSED );
+speccyboot_reset(int hard_reset GCC_UNUSED);
 
 static void
 speccyboot_memory_map(void);
 
 static libspectrum_byte
-speccyboot_register_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached );
+speccyboot_register_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached);
 
 static void
-speccyboot_register_write( libspectrum_word port GCC_UNUSED,
-                           libspectrum_byte val );
+speccyboot_register_write(libspectrum_word port GCC_UNUSED,
+                           libspectrum_byte val);
 
 static module_info_t speccyboot_module_info = {
 
@@ -114,7 +114,7 @@ speccyboot_page(void)
   speccyboot_rom_active = 1;
   machine_current->ram.romcs = 1;
   machine_current->memory_map();
-  debugger_event( page_event );
+  debugger_event(page_event);
 }
 
 static void
@@ -123,35 +123,35 @@ speccyboot_unpage(void)
   speccyboot_rom_active = 0;
   machine_current->ram.romcs = 0;
   machine_current->memory_map();
-  debugger_event( unpage_event );
+  debugger_event(unpage_event);
 }
 
 static void
 speccyboot_memory_map(void)
 {
-  if (!speccyboot_rom_active ) return;
+  if (!speccyboot_rom_active) return;
 
-  memory_map_romcs_8k( 0x0000, speccyboot_memory_map_romcs );
+  memory_map_romcs_8k(0x0000, speccyboot_memory_map_romcs);
 }
 
 static void
-speccyboot_reset( int hard_reset GCC_UNUSED )
+speccyboot_reset(int hard_reset GCC_UNUSED)
 {
   static int tap_opened = 0;
 
   speccyboot_rom_active = 0;
 
-  if (!periph_is_active( PERIPH_TYPE_SPECCYBOOT ) )
+  if (!periph_is_active(PERIPH_TYPE_SPECCYBOOT))
     return;
 
-  if (machine_load_rom_bank( speccyboot_memory_map_romcs, 0,
+  if (machine_load_rom_bank(speccyboot_memory_map_romcs, 0,
                              settings_current.rom_speccyboot,
-                             settings_default.rom_speccyboot, 0x2000 ) )
+                             settings_default.rom_speccyboot, 0x2000))
     return;
 
   out_register_state = 0xff; // force transitions to low
 
-  speccyboot_register_write( 0, 0 );
+  speccyboot_register_write(0, 0);
 
   /*
    * Open TAP. If this fails, SpeccyBoot emulation won't work.
@@ -160,32 +160,32 @@ speccyboot_reset( int hard_reset GCC_UNUSED )
    * error messages are only displayed if SpeccyBoot emulation is
    * actually requested.
    */
-  if (!tap_opened ) {
-    nic_enc28j60_init( nic );
+  if (!tap_opened) {
+    nic_enc28j60_init(nic);
     tap_opened = 1;
   }
 }
 
 static libspectrum_byte
-speccyboot_register_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
+speccyboot_register_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
   *attached = 0xff; // TODO: check this
   return in_register_state;
 }
 
 static void
-speccyboot_register_write( libspectrum_word port GCC_UNUSED,
-                           libspectrum_byte val )
+speccyboot_register_write(libspectrum_word port GCC_UNUSED,
+                           libspectrum_byte val)
 {
-  nic_enc28j60_poll( nic );
+  nic_enc28j60_poll(nic);
 
-  if (GONE_LO( out_register_state, val, OUT_BIT_ETH_RST ) )
-    nic_enc28j60_reset( nic );
+  if (GONE_LO(out_register_state, val, OUT_BIT_ETH_RST))
+    nic_enc28j60_reset(nic);
 
-  if (!(val & OUT_BIT_ETH_CS) ) {
+  if (!(val & OUT_BIT_ETH_CS)) {
 
-    if (GONE_LO( out_register_state, val, OUT_BIT_ETH_CS ) )
-      nic_enc28j60_set_spi_state( nic, SPI_CMD );
+    if (GONE_LO(out_register_state, val, OUT_BIT_ETH_CS))
+      nic_enc28j60_set_spi_state(nic, SPI_CMD);
 
     /*
      * NOTE: the ENC28J60 data sheet (figure 4-2) specifies that MISO
@@ -201,16 +201,16 @@ speccyboot_register_write( libspectrum_word port GCC_UNUSED,
      * The SpeccyBoot stack reads MISO just after setting SCK high, so
      * it works fine with this simplification.
      */
-    if (GONE_HI( out_register_state, val, OUT_BIT_SPI_SCK ) ) {
-      in_register_state = 0xfe | nic_enc28j60_spi_produce_bit( nic );
-      nic_enc28j60_spi_consume_bit( nic, (out_register_state & OUT_BIT_SPI_MOSI) ? 1 : 0 );
+    if (GONE_HI(out_register_state, val, OUT_BIT_SPI_SCK)) {
+      in_register_state = 0xfe | nic_enc28j60_spi_produce_bit(nic);
+      nic_enc28j60_spi_consume_bit(nic, (out_register_state & OUT_BIT_SPI_MOSI) ? 1 : 0);
     }
   }
 
   // Update ROM paging status when the ROM_CS bit is cleared or set
-  if (GONE_LO( out_register_state, val, OUT_BIT_ROM_CS ) ) {
+  if (GONE_LO(out_register_state, val, OUT_BIT_ROM_CS)) {
     speccyboot_page();
-  } else if (GONE_HI( out_register_state, val, OUT_BIT_ROM_CS ) ) {
+  } else if (GONE_HI(out_register_state, val, OUT_BIT_ROM_CS)) {
     speccyboot_unpage();
   }
 
@@ -218,22 +218,22 @@ speccyboot_register_write( libspectrum_word port GCC_UNUSED,
 }
 
 static int
-speccyboot_init( void *context )
+speccyboot_init(void *context)
 {
   int i;
 
   nic = nic_enc28j60_alloc();
 
-  module_register( &speccyboot_module_info );
+  module_register(&speccyboot_module_info);
 
-  speccyboot_memory_source = memory_source_register( "SpeccyBoot");
+  speccyboot_memory_source = memory_source_register("SpeccyBoot");
   for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
     speccyboot_memory_map_romcs[i].source = speccyboot_memory_source;
 
-  periph_register( PERIPH_TYPE_SPECCYBOOT, &speccyboot_periph );
+  periph_register(PERIPH_TYPE_SPECCYBOOT, &speccyboot_periph);
 
-  periph_register_paging_events( event_type_string, &page_event,
-                                 &unpage_event );
+  periph_register_paging_events(event_type_string, &page_event,
+                                 &unpage_event);
 
   return 0;
 }
@@ -241,7 +241,7 @@ speccyboot_init( void *context )
 static void
 speccyboot_end(void)
 {
-  nic_enc28j60_free( nic );
+  nic_enc28j60_free(nic);
 }
 
 void
@@ -252,9 +252,9 @@ speccyboot_register_startup(void)
     STARTUP_MANAGER_MODULE_MEMORY,
     STARTUP_MANAGER_MODULE_SETUID,
   };
-  startup_manager_register( STARTUP_MANAGER_MODULE_SPECCYBOOT, dependencies,
-                            ARRAY_SIZE( dependencies ), speccyboot_init, NULL,
-                            speccyboot_end );
+  startup_manager_register(STARTUP_MANAGER_MODULE_SPECCYBOOT, dependencies,
+                            ARRAY_SIZE(dependencies), speccyboot_init, NULL,
+                            speccyboot_end);
 }
 
 int
@@ -264,15 +264,15 @@ speccyboot_unittest(void)
 
   speccyboot_page();
 
-  r += unittests_assert_8k_page( 0x0000, speccyboot_memory_source, 0 );
-  r += unittests_assert_8k_page( 0x2000, memory_source_rom, 0 );
-  r += unittests_assert_16k_ram_page( 0x4000, 5 );
-  r += unittests_assert_16k_ram_page( 0x8000, 2 );
-  r += unittests_assert_16k_ram_page( 0xc000, 0 );
+  r += unittests_assert_8k_page(0x0000, speccyboot_memory_source, 0);
+  r += unittests_assert_8k_page(0x2000, memory_source_rom, 0);
+  r += unittests_assert_16k_ram_page(0x4000, 5);
+  r += unittests_assert_16k_ram_page(0x8000, 2);
+  r += unittests_assert_16k_ram_page(0xc000, 0);
 
   speccyboot_unpage();
 
-  r += unittests_paging_test_48( 2 );
+  r += unittests_paging_test_48(2);
 
   return r;
 }

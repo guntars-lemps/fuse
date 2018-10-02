@@ -25,16 +25,16 @@
 #define FUSE_SPECTRANET_H
 
 void spectranet_register_startup(void);
-void spectranet_page( int via_io );
+void spectranet_page(int via_io);
 void spectranet_nmi(void);
 void spectranet_unpage(void);
 void spectranet_retn(void);
 
 int spectranet_nmi_flipflop(void);
 
-libspectrum_byte spectranet_w5100_read( memory_page *page, libspectrum_word address );
-void spectranet_w5100_write( memory_page *page, libspectrum_word address, libspectrum_byte b );
-void spectranet_flash_rom_write( libspectrum_word address, libspectrum_byte b );
+libspectrum_byte spectranet_w5100_read(memory_page *page, libspectrum_word address);
+void spectranet_w5100_write(memory_page *page, libspectrum_word address, libspectrum_byte b);
+void spectranet_flash_rom_write(libspectrum_word address, libspectrum_byte b);
 
 extern int spectranet_available;
 extern int spectranet_paged;

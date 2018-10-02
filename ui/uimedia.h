@@ -33,7 +33,7 @@ struct ui_media_drive_info_t;
 typedef int (*ui_media_drive_is_available_fn)(void);
 typedef const struct fdd_params_t* (*ui_media_drive_get_params_fn) (void);
 typedef int (*ui_media_drive_insert_hook_fn)(
-  const struct ui_media_drive_info_t *drive, int new );
+  const struct ui_media_drive_info_t *drive, int new);
 typedef int (*ui_media_drive_autoload_hook_fn)(void);
 
 typedef struct ui_media_drive_info_t
@@ -53,9 +53,9 @@ typedef struct ui_media_drive_info_t
   struct fdd_t *fdd;
 } ui_media_drive_info_t;
 
-int ui_media_drive_register( ui_media_drive_info_t *drive );
+int ui_media_drive_register(ui_media_drive_info_t *drive);
 void ui_media_drive_end(void);
-ui_media_drive_info_t *ui_media_drive_find( int controller, int drive );
+ui_media_drive_info_t *ui_media_drive_find(int controller, int drive);
 
 #define UI_MEDIA_DRIVE_UPDATE_ALL	(~0)
 #define UI_MEDIA_DRIVE_UPDATE_TOP	(1 << 0)
@@ -65,16 +65,16 @@ ui_media_drive_info_t *ui_media_drive_find( int controller, int drive );
 
 int ui_media_drive_any_available(void);
 void ui_media_drive_update_parent_menus(void);
-void ui_media_drive_update_menus( const ui_media_drive_info_t *drive,
-                                  unsigned flags );
+void ui_media_drive_update_menus(const ui_media_drive_info_t *drive,
+                                  unsigned flags);
 int ui_media_drive_eject_all(void);
 
-int ui_media_drive_insert( const ui_media_drive_info_t *drive,
-                           const char *filename, int autoload );
-int ui_media_drive_save( int controller, int which, int saveas );
-int ui_media_drive_eject( int controller, int which );
-int ui_media_drive_flip( int controller, int which, int flip );
-int ui_media_drive_writeprotect( int controller, int which, int wrprot );
+int ui_media_drive_insert(const ui_media_drive_info_t *drive,
+                           const char *filename, int autoload);
+int ui_media_drive_save(int controller, int which, int saveas);
+int ui_media_drive_eject(int controller, int which);
+int ui_media_drive_flip(int controller, int which, int flip);
+int ui_media_drive_writeprotect(int controller, int which, int wrprot);
 
 // These are (also) used in media menu items
 typedef enum ui_media_controller {

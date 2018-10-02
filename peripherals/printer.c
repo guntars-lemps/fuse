@@ -69,13 +69,13 @@ static unsigned char parallel_data=0;
 #define PARALLEL_STROBE_MAX_CYCLES	10000
 
 static void printer_zxp_reset(int hard_reset);
-static libspectrum_byte printer_zxp_read( libspectrum_word port, libspectrum_byte *attached );
-static void printer_zxp_write( libspectrum_word port, libspectrum_byte b );
+static libspectrum_byte printer_zxp_read(libspectrum_word port, libspectrum_byte *attached);
+static void printer_zxp_write(libspectrum_word port, libspectrum_byte b);
 static libspectrum_byte printer_parallel_read(libspectrum_word port GCC_UNUSED,
 				              libspectrum_byte *attached);
 
-static void zx_printer_snapshot_enabled( libspectrum_snap *snap );
-static void zx_printer_to_snapshot( libspectrum_snap *snap );
+static void zx_printer_snapshot_enabled(libspectrum_snap *snap);
+static void zx_printer_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t printer_zxp_module_info = {
 
@@ -146,16 +146,16 @@ static const char * const pbmstart="P4\n256 ";
 FILE *tmpf;
 int overwrite=1;
 
-if(!printer_graphics_enabled || !settings_current.printer_graphics_filename)
+if (!printer_graphics_enabled || !settings_current.printer_graphics_filename)
   return 0;
 
 // first, see if there's an existing file we can add to.
-if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
+if ((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
   {
   char buf[7+10+1]; // 7 being length of pbmstart
 
   // check it has a header in our slightly odd format.
-  if(fread(buf,1,sizeof(buf),tmpf)==sizeof(buf) &&
+  if (fread(buf,1,sizeof(buf),tmpf)==sizeof(buf) &&
      memcmp(buf,pbmstart,strlen(pbmstart))==0 &&
      buf[sizeof(buf)-1]=='\n')
     {
@@ -166,24 +166,24 @@ if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
      * the height field looks ok. It should be all-spaces
      * until we get a digit, then all-digits.
      */
-    for(f=0;f<10;f++,ptr++)
+    for (f=0;f<10;f++,ptr++)
       {
       // make sure it's a space or digit
-      if(!strchr(" 0123456789",*ptr))
+      if (!strchr(" 0123456789",*ptr))
         break;
 
-      if(want_space)
+      if (want_space)
         {
-        if(*ptr!=' ')
+        if (*ptr!=' ')
           want_space=0;
         }
       else
-        if(!isdigit( (int)*ptr ))
+        if (!isdigit((int)*ptr))
           break;
       }
 
     // if it got through that, reuse the file
-    if(f==10)
+    if (f==10)
       {
       overwrite=0;
       zxpheight=atoi(buf+strlen(pbmstart));
@@ -193,7 +193,7 @@ if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
   fclose(tmpf);
   }
 
-if((printer_graphics_file=fopen(settings_current.printer_graphics_filename,
+if ((printer_graphics_file=fopen(settings_current.printer_graphics_filename,
                                 overwrite?"wb":"r+b"))==NULL)
   {
   ui_error(UI_ERROR_ERROR,"Couldn't open '%s', graphics printout disabled",
@@ -202,7 +202,7 @@ if((printer_graphics_file=fopen(settings_current.printer_graphics_filename,
   return 0;
   }
 
-if(overwrite)
+if (overwrite)
   {
   // we reserve 10 chars for height
   fputs(pbmstart,printer_graphics_file);
@@ -211,7 +211,7 @@ if(overwrite)
 else
   {
   // if appending, seek to the correct place
-  if(fseek(printer_graphics_file,
+  if (fseek(printer_graphics_file,
            strlen(pbmstart)+10+1+(256/8)*zxpheight,
            SEEK_SET)!=0)
     {
@@ -229,11 +229,11 @@ return 1;
 
 static int printer_text_open_file(void)
 {
-if(!printer_text_enabled || !settings_current.printer_text_filename)
+if (!printer_text_enabled || !settings_current.printer_text_filename)
   return 0;
 
 // append to any existing file...
-if((printer_text_file=fopen(settings_current.printer_text_filename,"a"))==NULL)
+if ((printer_text_file=fopen(settings_current.printer_text_filename,"a"))==NULL)
   {
   ui_error(UI_ERROR_ERROR,"Couldn't open '%s', text printout disabled",
 	   settings_current.printer_text_filename);
@@ -242,7 +242,7 @@ if((printer_text_file=fopen(settings_current.printer_text_filename,"a"))==NULL)
   }
 
 // ensure users have immediate access to text file contents
-setbuf( printer_text_file, NULL );
+setbuf(printer_text_file, NULL);
 
 return 1;
 }
@@ -254,10 +254,10 @@ return 1;
  */
 static void printer_text_output_char(int c)
 {
-if(!printer_text_enabled)
+if (!printer_text_enabled)
   return;
 
-if(!printer_text_file && !printer_text_open_file())
+if (!printer_text_file && !printer_text_open_file())
   return;
 
 fputc(c,printer_text_file);
@@ -268,15 +268,15 @@ static void printer_zxp_update_header(void)
 {
 long pos;
 
-if(!printer_graphics_enabled || !zxpheight) return;
+if (!printer_graphics_enabled || !zxpheight) return;
 
-if(!printer_graphics_file && !printer_zxp_open_file())
+if (!printer_graphics_file && !printer_zxp_open_file())
   return;
 
 pos=ftell(printer_graphics_file);
 
 // seek back to write the image height
-if(fseek(printer_graphics_file,strlen("P4\n256 "),SEEK_SET)!=0)
+if (fseek(printer_graphics_file,strlen("P4\n256 "),SEEK_SET)!=0)
   ui_error(UI_ERROR_ERROR,
 	   "Couldn't seek to write graphics printout image height");
 else
@@ -288,7 +288,7 @@ else
   fprintf(printer_graphics_file,"%10d",zxpheight);
   }
 
-if(fseek(printer_graphics_file,pos,SEEK_SET)!=0)
+if (fseek(printer_graphics_file,pos,SEEK_SET)!=0)
   {
   ui_error(UI_ERROR_ERROR,
 	   "Couldn't re-seek on file, graphics printout disabled");
@@ -305,7 +305,7 @@ static void printer_zxp_end(void)
 printer_zxp_write(0xfb,4);
 
 // if not enabled or not opened, can't have written anything
-if(!printer_graphics_enabled || !printer_graphics_file || zxpheight==0)
+if (!printer_graphics_enabled || !printer_graphics_file || zxpheight==0)
   return;
 
 // write header
@@ -319,10 +319,10 @@ printer_graphics_enabled=0;
 
 static void printer_text_end(void)
 {
-if(!printer_text_enabled)
+if (!printer_text_enabled)
   return;
 
-if(printer_text_file)
+if (printer_text_file)
   {
   fclose(printer_text_file);
   printer_text_file=NULL;
@@ -345,20 +345,20 @@ chars+=256*readbyte_internal(SYSV_CHARS+1);
 
 memset(charset,0,sizeof(charset));
 ptr=charset+32*8;
-for(f=32*8;f<128*8;f++)
+for (f=32*8;f<128*8;f++)
   *ptr++=readbyte_internal(chars+f);
 
-for(x=0;x<32;x++)
+for (x=0;x<32;x++)
   {
   c=-1;
 
   // try each char
-  for(f=32;f<128 && c==-1;f++)
+  for (f=32;f<128 && c==-1;f++)
     {
     ptr=zxplast8+x;
     c=f;
-    for(y=0;y<8;y++,ptr+=32)
-      if(*ptr!=charset[f*8+y])
+    for (y=0;y<8;y++,ptr+=32)
+      if (*ptr!=charset[f*8+y])
         {
         c=-1;
         break;
@@ -367,15 +367,15 @@ for(x=0;x<32;x++)
 
   // can't do UDGs, too unreliable
 
-  if(c==-1) c=32;
+  if (c==-1) c=32;
 
   outbuf[x]=c;
   }
 
-for(f=31;f>=0 && outbuf[f]==32;f--)
+for (f=31;f>=0 && outbuf[f]==32;f--)
   outbuf[f]=0;
 
-for(f=0;f<32 && outbuf[f];f++)
+for (f=0;f<32 && outbuf[f];f++)
   printer_text_output_char(outbuf[f]);
 printer_text_output_char('\n');
 }
@@ -387,9 +387,9 @@ static void printer_zxp_output_line(void)
 unsigned char *ptr;
 int i,j,d;
 
-if(!printer_graphics_enabled) return;
+if (!printer_graphics_enabled) return;
 
-if(!printer_graphics_file && !printer_zxp_open_file())
+if (!printer_graphics_file && !printer_zxp_open_file())
   return;
 
 zxpheight++;
@@ -399,9 +399,9 @@ zxplineofchar++;
 memmove(zxplast8,zxplast8+32,sizeof(zxplast8)-32);
 
 ptr=zxplast8+sizeof(zxplast8)-32;
-for(i=0;i<32;i++)
+for (i=0;i<32;i++)
   {
-  for(d=j=0;j<8;j++)
+  for (d=j=0;j<8;j++)
     {
     d<<=1;
     d|=(zxpline[i*8+j]?1:0);
@@ -412,7 +412,7 @@ for(i=0;i<32;i++)
   fputc(d,printer_graphics_file);
   }
 
-if(zxplineofchar>=8)
+if (zxplineofchar>=8)
   {
   printer_zxp_output_as_text();
   zxplineofchar=0;
@@ -437,16 +437,16 @@ frames++;
 static libspectrum_byte printer_zxp_read(libspectrum_word port GCC_UNUSED,
 				         libspectrum_byte *attached)
 {
-if(!settings_current.printer)
+if (!settings_current.printer)
   return 0xff;
-if(!printer_graphics_enabled)
+if (!printer_graphics_enabled)
   return 0xff;
-if(plusd_available)
+if (plusd_available)
   return 0xff;
 
 *attached = 0xff; // TODO: check this
 
-if(!zxpspeed)
+if (!zxpspeed)
   return 0x3e;
 else
   {
@@ -457,16 +457,16 @@ else
   int x,ans;
   int cpp=440/zxpspeed;
 
-  if(frame>400)
+  if (frame>400)
     frame=400;
   cycles+=frame*machine_current->timings.tstates_per_frame;
   x=cycles/cpp-64; // x-coordinate reached
 
-  while(x>320)
+  while (x>320)
     { // if we are on another line,
     pix=-1; // find out where we are
     x-=384;
-    if(sp)
+    if (sp)
       {
       x=(x+64)*cpp;
       cpp=440/sp;
@@ -474,11 +474,11 @@ else
       sp=0;
       }
     }
-  if((x>-10 && x<0) | zxpstylus)
+  if ((x>-10 && x<0) | zxpstylus)
     ans=0xbe;
   else
     ans=0x3e;
-  if(x>pix)
+  if (x>pix)
     ans|=1;
   return ans;
   }
@@ -488,13 +488,13 @@ else
 static void printer_zxp_write(libspectrum_word port GCC_UNUSED,
                               libspectrum_byte b)
 {
-if(!settings_current.printer)
+if (!settings_current.printer)
   return;
-if(plusd_available)
+if (plusd_available)
   return;
-if(!zxpspeed)
+if (!zxpspeed)
   {
-  if(!(b&4))
+  if (!(b&4))
     {
     zxpspeed=(b&2)?1:2;
     zxpframes=frames;
@@ -511,23 +511,23 @@ else
   int i,x;
   int cpp=440/zxpspeed;
 
-  if(frame>400)
+  if (frame>400)
     frame=400; // limit height of blank paper
   cycles+=frame*machine_current->timings.tstates_per_frame;
   x=cycles/cpp-64; // x-coordinate reached
-  for(i=zxppixel;i<x && i<256;i++)
-    if(i>=0) // should be, but just in case
+  for (i=zxppixel;i<x && i<256;i++)
+    if (i>=0) // should be, but just in case
       zxpline[i]=zxpstylus;
-  if(x>=256 && zxppixel<256)
+  if (x>=256 && zxppixel<256)
     printer_zxp_output_line();
 
-  while(x>=320)
+  while (x>=320)
     { // move to next line
     zxpcycles+=cpp*384;
-    if(zxpcycles>=machine_current->timings.tstates_per_frame)
+    if (zxpcycles>=machine_current->timings.tstates_per_frame)
       zxpcycles-=machine_current->timings.tstates_per_frame,zxpframes++;
     x-=384;
-    if(zxpnewspeed)
+    if (zxpnewspeed)
       {
       zxpspeed=zxpnewspeed;
       zxpnewspeed=0;
@@ -535,18 +535,18 @@ else
       cpp=440/zxpspeed;
       x=x/cpp-64;
       }
-    for(i=0;i<x && i<256;i++)
+    for (i=0;i<x && i<256;i++)
       zxpline[i]=zxpstylus;
-    if(x>=256)
+    if (x>=256)
       printer_zxp_output_line();
     }
-  if(x<0)
+  if (x<0)
     x=-1;
-  if(b&4)
+  if (b&4)
     {
-    if(x>=0 && x<256)
+    if (x>=0 && x<256)
       {
-      for(i=x;i<256;i++)
+      for (i=x;i<256;i++)
         zxpline[i]=zxpstylus;
       printer_zxp_output_line();
       }
@@ -564,12 +564,12 @@ else
     {
     zxppixel=x;
     zxpstylus=b&128;
-    if(x<0)
+    if (x<0)
       zxpspeed=(b&2)?1:2;
     else
       {
       zxpnewspeed=(b&2)?1:2;
-      if(zxpnewspeed==zxpspeed)
+      if (zxpnewspeed==zxpspeed)
         zxpnewspeed=0;
       }
     }
@@ -595,11 +595,11 @@ void printer_serial_write(libspectrum_byte b)
 {
 static int reading=0,bits_to_get=0,ser_byte=0;
 int high=(b&8);
-if(!settings_current.printer)
+if (!settings_current.printer)
   return;
-if(!reading)
+if (!reading)
   {
-  if(!high)
+  if (!high)
     {
     bits_to_get=9;
     reading=1;
@@ -607,14 +607,14 @@ if(!reading)
   }
 else // reading
   {
-  if(bits_to_get)
+  if (bits_to_get)
     {
     ser_byte>>=1;
     ser_byte|=(high?0x100:0);
     bits_to_get--;
-    if(!bits_to_get)
+    if (!bits_to_get)
       {
-      if(ser_byte&0x100) // check stop bit is valid
+      if (ser_byte&0x100) // check stop bit is valid
         printer_text_output_char(ser_byte&0xff);
       reading=0;
       }
@@ -644,13 +644,13 @@ static libspectrum_dword last_tstates=0;
 static unsigned char last_data=0;
 libspectrum_dword diff;
 
-if(!settings_current.printer)
+if (!settings_current.printer)
   return;
-if((old_on && !on) || (!old_on && on))
+if ((old_on && !on) || (!old_on && on))
   {
   // got an edge
 
-  if(!second_edge)
+  if (!second_edge)
     {
     /* the ROM also seems to assume the printer is reading at the first
      * edge, breaking the spec (sigh). So we need to save current
@@ -663,11 +663,11 @@ if((old_on && !on) || (!old_on && on))
     {
     second_edge=0;
     diff=tstates;
-    if(frames!=last_frames)
+    if (frames!=last_frames)
       diff+=machine_current->timings.tstates_per_frame;
     diff-=last_tstates;
 
-    if(diff<=PARALLEL_STROBE_MAX_CYCLES)
+    if (diff<=PARALLEL_STROBE_MAX_CYCLES)
       printer_text_output_char(last_data);
     else
       {
@@ -688,7 +688,7 @@ old_on=on;
 static libspectrum_byte printer_parallel_read(libspectrum_word port GCC_UNUSED,
 				              libspectrum_byte *attached)
 {
-if(!settings_current.printer)
+if (!settings_current.printer)
   return 0xff;
 
 *attached = 0xff; // TODO: check this
@@ -702,13 +702,13 @@ return 0xfe; // never busy
 void printer_parallel_write(libspectrum_word port GCC_UNUSED,
 			    libspectrum_byte b)
 {
-if(!settings_current.printer)
+if (!settings_current.printer)
   return;
 parallel_data=b;
 }
 
 static int
-printer_init( void *context )
+printer_init(void *context)
 {
   printer_graphics_enabled=printer_text_enabled = 1;
   printer_graphics_file=printer_text_file = NULL;
@@ -733,18 +733,18 @@ printer_register_startup(void)
     STARTUP_MANAGER_MODULE_MACHINE,
     STARTUP_MANAGER_MODULE_SETUID,
   };
-  startup_manager_register( STARTUP_MANAGER_MODULE_PRINTER, dependencies,
-                            ARRAY_SIZE( dependencies ), printer_init, NULL,
-                            printer_end );
+  startup_manager_register(STARTUP_MANAGER_MODULE_PRINTER, dependencies,
+                            ARRAY_SIZE(dependencies), printer_init, NULL,
+                            printer_end);
 }
 
-static void zx_printer_snapshot_enabled( libspectrum_snap *snap )
+static void zx_printer_snapshot_enabled(libspectrum_snap *snap)
 {
-  if (libspectrum_snap_zx_printer_active( snap ) )
+  if (libspectrum_snap_zx_printer_active(snap))
     settings_current.zxprinter = 1;
 }
 
-static void zx_printer_to_snapshot( libspectrum_snap *snap )
+static void zx_printer_to_snapshot(libspectrum_snap *snap)
 {
-  libspectrum_snap_set_zx_printer_active( snap, settings_current.zxprinter );
+  libspectrum_snap_set_zx_printer_active(snap, settings_current.zxprinter);
 }

@@ -39,9 +39,9 @@ extern libspectrum_dword tstates;
 extern libspectrum_byte RAM[ SPECTRUM_RAM_PAGES ][0x4000];
 
 typedef int
-  (*spectrum_port_from_ula_function)( libspectrum_word port );
+  (*spectrum_port_from_ula_function)(libspectrum_word port);
 typedef libspectrum_byte
-  (*spectrum_contention_delay_function)( libspectrum_dword time );
+  (*spectrum_contention_delay_function)(libspectrum_dword time);
 
 typedef struct spectrum_raminfo {
 
@@ -68,9 +68,9 @@ typedef struct spectrum_raminfo {
 
 } spectrum_raminfo;
 
-libspectrum_byte spectrum_contend_delay_none( libspectrum_dword time );
-libspectrum_byte spectrum_contend_delay_65432100( libspectrum_dword time );
-libspectrum_byte spectrum_contend_delay_76543210( libspectrum_dword time );
+libspectrum_byte spectrum_contend_delay_none(libspectrum_dword time);
+libspectrum_byte spectrum_contend_delay_65432100(libspectrum_dword time);
+libspectrum_byte spectrum_contend_delay_76543210(libspectrum_dword time);
 
 libspectrum_byte spectrum_unattached_port(void);
 libspectrum_byte spectrum_unattached_port_none(void);

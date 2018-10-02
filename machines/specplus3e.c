@@ -36,7 +36,7 @@ static int specplus3e_reset(void);
 extern upd_fdc *specplus3_fdc;
 
 int
-specplus3e_init( fuse_machine_info *machine )
+specplus3e_init(fuse_machine_info *machine)
 {
   machine->machine = LIBSPECTRUM_MACHINE_PLUS3E;
   machine->id = "plus3e";
@@ -63,26 +63,26 @@ specplus3e_reset(void)
 {
   int error;
 
-  error = machine_load_rom( 0, settings_current.rom_plus3e_0,
-                            settings_default.rom_plus3e_0, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom( 1, settings_current.rom_plus3e_1,
-                            settings_default.rom_plus3e_1, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom( 2, settings_current.rom_plus3e_2,
-                            settings_default.rom_plus3e_2, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom( 3, settings_current.rom_plus3e_3,
-                            settings_default.rom_plus3e_3, 0x4000 );
-  if (error ) return error;
+  error = machine_load_rom(0, settings_current.rom_plus3e_0,
+                            settings_default.rom_plus3e_0, 0x4000);
+  if (error) return error;
+  error = machine_load_rom(1, settings_current.rom_plus3e_1,
+                            settings_default.rom_plus3e_1, 0x4000);
+  if (error) return error;
+  error = machine_load_rom(2, settings_current.rom_plus3e_2,
+                            settings_default.rom_plus3e_2, 0x4000);
+  if (error) return error;
+  error = machine_load_rom(3, settings_current.rom_plus3e_3,
+                            settings_default.rom_plus3e_3, 0x4000);
+  if (error) return error;
 
   error = specplus3_plus2a_common_reset();
-  if (error ) return error;
+  if (error) return error;
 
   periph_clear();
   machines_periph_plus3();
 
-  periph_set_present( PERIPH_TYPE_UPD765, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_UPD765, PERIPH_PRESENT_ALWAYS);
 
   periph_update();
 

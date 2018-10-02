@@ -26,7 +26,7 @@
 
 int wiimouse_init(void);
 int wiimouse_end(void);
-void wiimouse_get_position( int *x, int *y );
+void wiimouse_get_position(int *x, int *y);
 
 void mouse_update(void);
 

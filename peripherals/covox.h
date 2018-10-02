@@ -33,6 +33,6 @@ typedef struct covox_info {
 } covox_info;
 
 void covox_register_startup(void);
-void covox_write( libspectrum_word port, libspectrum_byte val );
+void covox_write(libspectrum_word port, libspectrum_byte val);
 
 #endif // #ifndef FUSE_COVOX_H

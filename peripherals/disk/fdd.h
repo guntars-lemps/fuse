@@ -93,7 +93,7 @@ typedef struct fdd_t {
 /* WD/FD 177X may wait for an index or RDY->/RDY or /RDY->RDY
    we do not need more, just a subroutine and a pointer to fdc_struct
 */
-  void ( *fdc_index ) ( void *fdc );
+  void (*fdc_index) (void *fdc);
   void *fdc; // if not NULL FDC wait for an index pulse
 
 // --private section, fdc may never use it
@@ -117,41 +117,41 @@ extern const fdd_params_t fdd_params[];
 
 void fdd_register_startup(void);
 
-const char *fdd_strerror( int error );
-// initialize the fdd_t struct, and set fdd_heads and cylinders (e.g. 2/83 )
-int fdd_init( fdd_t *d, fdd_type_t type, const fdd_params_t *dt, int reinit );
+const char *fdd_strerror(int error);
+// initialize the fdd_t struct, and set fdd_heads and cylinders (e.g. 2/83)
+int fdd_init(fdd_t *d, fdd_type_t type, const fdd_params_t *dt, int reinit);
 // load the given disk into the fdd. if upsidedown = 1, floppy upsidedown in drive :)
-int fdd_load( fdd_t *d, int upsidedown );
+int fdd_load(fdd_t *d, int upsidedown);
 // unload the disk from fdd
-void fdd_unload( fdd_t *d );
+void fdd_unload(fdd_t *d);
 // set fdd head
-void fdd_set_head( fdd_t *d, int head );
+void fdd_set_head(fdd_t *d, int head);
 // step one track according to d->direction direction. set d->tr00 if reach track 0
-void fdd_step( fdd_t *d, fdd_dir_t direction );
-// set floppy position ( upsidedown or not )
-void fdd_motoron( fdd_t *d, int on );
+void fdd_step(fdd_t *d, fdd_dir_t direction);
+// set floppy position (upsidedown or not)
+void fdd_motoron(fdd_t *d, int on);
 // start (1) or stop (0) spindle motor
-void fdd_head_load( fdd_t *d, int load );
+void fdd_head_load(fdd_t *d, int load);
 // load (1) or unload (0) head
-void fdd_select( fdd_t *d, int select );
+void fdd_select(fdd_t *d, int select);
 // select (1) or unselect (0) FDD
-void fdd_flip( fdd_t *d, int upsidedown );
+void fdd_flip(fdd_t *d, int upsidedown);
 /* Read the next byte from disk. The byte will go into d->data.
    If d->data = 0xffnn then this byte was recorded with different clock 'mark'.
    d->idx is set if we reach the 'index hole'.  0x0100 is read if the disk is
    unreadable, the motor is not on, or the head is not loaded.
 */
-int fdd_read_data( fdd_t *d );
+int fdd_read_data(fdd_t *d);
 /* Write the next byte to disk. The byte is taken from d->data.
    If d->data = 0xffnn then this byte recorded with different clock 'mark'.
    d->idx is set if we reach the 'index hole'.
 */
-int fdd_write_data( fdd_t *d );
+int fdd_write_data(fdd_t *d);
 // set write protect status on loaded disk
-void fdd_wrprot( fdd_t *d, int wrprot );
+void fdd_wrprot(fdd_t *d, int wrprot);
 // to reach index hole
-void fdd_wait_index_hole( fdd_t *d );
-// set floppy position ( upsidedown or not )
-void fdd_flip( fdd_t *d, int upsidedown );
+void fdd_wait_index_hole(fdd_t *d);
+// set floppy position (upsidedown or not)
+void fdd_flip(fdd_t *d, int upsidedown);
 
 #endif // FUSE_FDD_H

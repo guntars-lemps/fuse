@@ -51,14 +51,14 @@ int debugger_breakpoint_event;
 static int exit_code = 0;
 
 static int
-debugger_init( void *context )
+debugger_init(void *context)
 {
   debugger_breakpoints = NULL;
   debugger_output_base = 16;
 
   debugger_memory_pool = mempool_register_pool();
 
-  debugger_breakpoint_event = event_register( debugger_breakpoint_time_fn, "Breakpoint");
+  debugger_breakpoint_event = event_register(debugger_breakpoint_time_fn, "Breakpoint");
 
   debugger_event_init();
   debugger_system_variable_init();
@@ -92,9 +92,9 @@ debugger_register_startup(void)
     STARTUP_MANAGER_MODULE_MEMPOOL,
     STARTUP_MANAGER_MODULE_SETUID,
   };
-  startup_manager_register( STARTUP_MANAGER_MODULE_DEBUGGER, dependencies,
-                            ARRAY_SIZE( dependencies ), debugger_init, NULL,
-                            debugger_end );
+  startup_manager_register(STARTUP_MANAGER_MODULE_DEBUGGER, dependencies,
+                            ARRAY_SIZE(dependencies), debugger_init, NULL,
+                            debugger_end);
 }
 
 // Activate the debugger
@@ -109,7 +109,7 @@ int
 debugger_step(void)
 {
   debugger_mode = DEBUGGER_MODE_HALTED;
-  ui_debugger_deactivate( 0 );
+  ui_debugger_deactivate(0);
   return 0;
 }
 
@@ -120,13 +120,13 @@ debugger_next(void)
   size_t length;
 
   // Find out how long the current instruction is
-  debugger_disassemble( NULL, 0, &length, PC );
+  debugger_disassemble(NULL, 0, &length, PC);
 
   // And add a breakpoint after that
   debugger_breakpoint_add_address(
     DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, PC + length, 0,
     DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
-  );
+);
 
   debugger_run();
 
@@ -140,7 +140,7 @@ debugger_run(void)
   debugger_mode = debugger_breakpoints ?
                   DEBUGGER_MODE_ACTIVE :
                   DEBUGGER_MODE_INACTIVE;
-  ui_debugger_deactivate( 1 );
+  ui_debugger_deactivate(1);
   return 0;
 }
 
@@ -151,47 +151,47 @@ debugger_breakpoint_exit(void)
 {
   libspectrum_word target;
 
-  target = readbyte_internal( SP ) + 0x100 * readbyte_internal( SP+1 );
+  target = readbyte_internal(SP) + 0x100 * readbyte_internal(SP+1);
 
   if (debugger_breakpoint_add_address(
         DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, target, 0,
 	DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
-      )
-    )
+)
+)
     return 1;
 
-  if (debugger_run() ) return 1;
+  if (debugger_run()) return 1;
 
   return 0;
 }
 
 // Poke a value into RAM
 int
-debugger_poke( libspectrum_word address, libspectrum_byte value )
+debugger_poke(libspectrum_word address, libspectrum_byte value)
 {
-  writebyte_internal( address, value );
+  writebyte_internal(address, value);
   return 0;
 }
 
 // Write a value to a port
 int
-debugger_port_write( libspectrum_word port, libspectrum_byte value )
+debugger_port_write(libspectrum_word port, libspectrum_byte value)
 {
-  writeport_internal( port, value );
+  writeport_internal(port, value);
   return 0;
 }
 
 // Exit the emulator
 void
-debugger_exit_emulator( debugger_expression *exit_code_expression )
+debugger_exit_emulator(debugger_expression *exit_code_expression)
 {
   fuse_exiting = 1;
 
   exit_code = exit_code_expression ?
-    debugger_expression_evaluate( exit_code_expression ) : 0;
+    debugger_expression_evaluate(exit_code_expression) : 0;
 
   // Ensure we break out of the main Z80 loop immediately
-  event_add( 0, event_type_null );
+  event_add(0, event_type_null);
 
   debugger_run();
 }

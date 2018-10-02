@@ -44,7 +44,7 @@ int joysticks_supported = 0;
 
 /* The bit masks used by the various joysticks. The order is the same
    as the ordering of buttons in joystick.h:joystick_button (left,
-   right, up, down, fire ) */
+   right, up, down, fire) */
 static const libspectrum_byte kempston_mask[5] =
   { 0x02, 0x01, 0x08, 0x04, 0x10 };
 static const libspectrum_byte timex_mask[5] =
@@ -84,8 +84,8 @@ const char *joystick_connection[ JOYSTICK_CONN_COUNT ] = {
   "Joystick 2",
 };
 
-static void joystick_from_snapshot( libspectrum_snap *snap );
-static void joystick_to_snapshot( libspectrum_snap *snap );
+static void joystick_from_snapshot(libspectrum_snap *snap);
+static void joystick_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t joystick_module_info = {
 
@@ -124,15 +124,15 @@ static const periph_t kempston_loose_periph = {
 // Init/shutdown functions. Errors aren't important here
 
 int
-joystick_init( void *context )
+joystick_init(void *context)
 {
   joysticks_supported = ui_joystick_init();
   kempston_value = timex1_value = timex2_value = 0x00;
   fuller_value = 0xff;
 
-  module_register( &joystick_module_info );
-  periph_register( PERIPH_TYPE_KEMPSTON, &kempston_strict_periph );
-  periph_register( PERIPH_TYPE_KEMPSTON_LOOSE, &kempston_loose_periph );
+  module_register(&joystick_module_info);
+  periph_register(PERIPH_TYPE_KEMPSTON, &kempston_strict_periph);
+  periph_register(PERIPH_TYPE_KEMPSTON_LOOSE, &kempston_loose_periph);
 
   return 0;
 }
@@ -150,17 +150,17 @@ joystick_register_startup(void)
     STARTUP_MANAGER_MODULE_LIBSPECTRUM,
     STARTUP_MANAGER_MODULE_SETUID
   };
-  startup_manager_register( STARTUP_MANAGER_MODULE_JOYSTICK, dependencies,
-                            ARRAY_SIZE( dependencies ), joystick_init,
-                            joystick_end, NULL );
+  startup_manager_register(STARTUP_MANAGER_MODULE_JOYSTICK, dependencies,
+                            ARRAY_SIZE(dependencies), joystick_init,
+                            joystick_end, NULL);
 }
 
 int
-joystick_press( int which, joystick_button button, int press )
+joystick_press(int which, joystick_button button, int press)
 {
   joystick_type_t type;
 
-  switch (which ) {
+  switch (which) {
   case 0: type = settings_current.joystick_1_output; break;
   case 1: type = settings_current.joystick_2_output; break;
 
@@ -171,18 +171,18 @@ joystick_press( int which, joystick_button button, int press )
     return 0;
   }
 
-  switch (type ) {
+  switch (type) {
 
   case JOYSTICK_TYPE_CURSOR:
-    if (press ) {
-      keyboard_press( cursor_key[ button ] );
+    if (press) {
+      keyboard_press(cursor_key[ button ]);
     } else {
-      keyboard_release( cursor_key[ button ] );
+      keyboard_release(cursor_key[ button ]);
     }
     return 1;
 
   case JOYSTICK_TYPE_KEMPSTON:
-    if (press ) {
+    if (press) {
       kempston_value |=  kempston_mask[ button ];
     } else {
       kempston_value &= ~kempston_mask[ button ];
@@ -190,23 +190,23 @@ joystick_press( int which, joystick_button button, int press )
     return 1;
 
   case JOYSTICK_TYPE_SINCLAIR_1:
-    if (press ) {
-      keyboard_press( sinclair1_key[ button ] );
+    if (press) {
+      keyboard_press(sinclair1_key[ button ]);
     } else {
-      keyboard_release( sinclair1_key[ button ] );
+      keyboard_release(sinclair1_key[ button ]);
     }
     return 1;
 
   case JOYSTICK_TYPE_SINCLAIR_2:
-    if (press ) {
-      keyboard_press( sinclair2_key[ button ] );
+    if (press) {
+      keyboard_press(sinclair2_key[ button ]);
     } else {
-      keyboard_release( sinclair2_key[ button ] );
+      keyboard_release(sinclair2_key[ button ]);
     }
     return 1;
 
   case JOYSTICK_TYPE_TIMEX_1:
-    if (press ) {
+    if (press) {
       timex1_value |=  timex_mask[ button ];
     } else {
       timex1_value &= ~timex_mask[ button ];
@@ -214,7 +214,7 @@ joystick_press( int which, joystick_button button, int press )
     return 1;
 
   case JOYSTICK_TYPE_TIMEX_2:
-    if (press ) {
+    if (press) {
       timex2_value |=  timex_mask[ button ];
     } else {
       timex2_value &= ~timex_mask[ button ];
@@ -222,7 +222,7 @@ joystick_press( int which, joystick_button button, int press )
     return 1;
 
   case JOYSTICK_TYPE_FULLER:
-    if (press ) {
+    if (press) {
       fuller_value &= ~timex_mask[ button ];
     } else {
       fuller_value |=  timex_mask[ button ];
@@ -232,42 +232,42 @@ joystick_press( int which, joystick_button button, int press )
   case JOYSTICK_TYPE_NONE: return 0;
   }
 
-  ui_error( UI_ERROR_ERROR, "%s:joystick_press:unknown joystick type %d",
-	    __FILE__, type );
+  ui_error(UI_ERROR_ERROR, "%s:joystick_press:unknown joystick type %d",
+	    __FILE__, type);
   fuse_abort();
 }
 
 // Read functions for specific interfaces
 
 libspectrum_byte
-joystick_kempston_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
+joystick_kempston_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
   *attached = 0xff; // TODO: check this
   return kempston_value;
 }
 
 libspectrum_byte
-joystick_timex_read( libspectrum_word port GCC_UNUSED, libspectrum_byte which )
+joystick_timex_read(libspectrum_word port GCC_UNUSED, libspectrum_byte which)
 {
   return which ? timex2_value : timex1_value;
 }
 
 libspectrum_byte
-joystick_fuller_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
+joystick_fuller_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
   *attached = 0xff; // TODO: check this
   return fuller_value;
 }
 
 static void
-joystick_from_snapshot( libspectrum_snap *snap )
+joystick_from_snapshot(libspectrum_snap *snap)
 {
   size_t i;
-  size_t num_joysticks = libspectrum_snap_joystick_active_count( snap );
+  size_t num_joysticks = libspectrum_snap_joystick_active_count(snap);
   joystick_type_t fuse_type;
 
   for (i = 0; i < num_joysticks; i++) {
-    switch (libspectrum_snap_joystick_list( snap, i ) ) {
+    switch (libspectrum_snap_joystick_list(snap, i)) {
     case LIBSPECTRUM_JOYSTICK_CURSOR:
       fuse_type = JOYSTICK_TYPE_CURSOR;
       break;
@@ -290,17 +290,17 @@ joystick_from_snapshot( libspectrum_snap *snap )
       fuse_type = JOYSTICK_TYPE_FULLER;
       break;
     default:
-      ui_error( UI_ERROR_INFO, "Ignoring unsupported joystick in snapshot %s",
-        libspectrum_joystick_name( libspectrum_snap_joystick_list( snap, i ) ));
+      ui_error(UI_ERROR_INFO, "Ignoring unsupported joystick in snapshot %s",
+        libspectrum_joystick_name(libspectrum_snap_joystick_list(snap, i)));
       continue;
     }
 
     if (settings_current.joystick_keyboard_output != fuse_type &&
         settings_current.joystick_1_output != fuse_type &&
         settings_current.joystick_2_output != fuse_type &&
-        !rzx_playback ) {
-      switch (ui_confirm_joystick( libspectrum_snap_joystick_list(snap,i),
-                                   libspectrum_snap_joystick_inputs(snap,i)) ) {
+        !rzx_playback) {
+      switch (ui_confirm_joystick(libspectrum_snap_joystick_list(snap,i),
+                                   libspectrum_snap_joystick_inputs(snap,i))) {
       case UI_CONFIRM_JOYSTICK_KEYBOARD:
         settings_current.joystick_keyboard_output = fuse_type;
         break;
@@ -318,19 +318,19 @@ joystick_from_snapshot( libspectrum_snap *snap )
     /* If the snap was configured for a Kempston joystick, enable
        our Kempston emulation in case the snap was reading from
        the joystick to prevent things going haywire */
-    if (fuse_type == JOYSTICK_TYPE_KEMPSTON )
+    if (fuse_type == JOYSTICK_TYPE_KEMPSTON)
       settings_current.joy_kempston = 1;
   }
 }
 
 static void
-add_joystick( libspectrum_snap *snap, joystick_type_t fuse_type, int inputs )
+add_joystick(libspectrum_snap *snap, joystick_type_t fuse_type, int inputs)
 {
   size_t i;
-  size_t num_joysticks = libspectrum_snap_joystick_active_count( snap );
+  size_t num_joysticks = libspectrum_snap_joystick_active_count(snap);
   libspectrum_joystick libspectrum_type;
 
-  switch (fuse_type ) {
+  switch (fuse_type) {
   case JOYSTICK_TYPE_CURSOR:
     libspectrum_type = LIBSPECTRUM_JOYSTICK_CURSOR;
     break;
@@ -359,29 +359,29 @@ add_joystick( libspectrum_snap *snap, joystick_type_t fuse_type, int inputs )
   }
 
   for (i = 0; i < num_joysticks; i++) {
-    if (libspectrum_snap_joystick_list( snap, i ) == libspectrum_type ) {
-      libspectrum_snap_set_joystick_inputs( snap, i, inputs |
-                                  libspectrum_snap_joystick_inputs( snap, i ) );
+    if (libspectrum_snap_joystick_list(snap, i) == libspectrum_type) {
+      libspectrum_snap_set_joystick_inputs(snap, i, inputs |
+                                  libspectrum_snap_joystick_inputs(snap, i));
       return;
     }
   }
 
-  libspectrum_snap_set_joystick_list( snap, num_joysticks, libspectrum_type );
-  libspectrum_snap_set_joystick_inputs( snap, num_joysticks, inputs );
-  libspectrum_snap_set_joystick_active_count( snap, num_joysticks + 1 );
+  libspectrum_snap_set_joystick_list(snap, num_joysticks, libspectrum_type);
+  libspectrum_snap_set_joystick_inputs(snap, num_joysticks, inputs);
+  libspectrum_snap_set_joystick_active_count(snap, num_joysticks + 1);
 }
 
 static void
-joystick_to_snapshot( libspectrum_snap *snap )
+joystick_to_snapshot(libspectrum_snap *snap)
 {
-  if (settings_current.joy_kempston ) {
-    add_joystick( snap, JOYSTICK_TYPE_KEMPSTON,
-                  LIBSPECTRUM_JOYSTICK_INPUT_NONE );
+  if (settings_current.joy_kempston) {
+    add_joystick(snap, JOYSTICK_TYPE_KEMPSTON,
+                  LIBSPECTRUM_JOYSTICK_INPUT_NONE);
   }
-  add_joystick( snap, settings_current.joystick_keyboard_output,
-                LIBSPECTRUM_JOYSTICK_INPUT_KEYBOARD );
-  add_joystick( snap, settings_current.joystick_1_output,
-                LIBSPECTRUM_JOYSTICK_INPUT_JOYSTICK_1 );
-  add_joystick( snap, settings_current.joystick_2_output,
-                LIBSPECTRUM_JOYSTICK_INPUT_JOYSTICK_2 );
+  add_joystick(snap, settings_current.joystick_keyboard_output,
+                LIBSPECTRUM_JOYSTICK_INPUT_KEYBOARD);
+  add_joystick(snap, settings_current.joystick_1_output,
+                LIBSPECTRUM_JOYSTICK_INPUT_JOYSTICK_1);
+  add_joystick(snap, settings_current.joystick_2_output,
+                LIBSPECTRUM_JOYSTICK_INPUT_JOYSTICK_2);
 }

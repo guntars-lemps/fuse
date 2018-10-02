@@ -36,11 +36,11 @@ typedef struct ayinfo {
 
 void ay_register_startup(void);
 
-libspectrum_byte ay_registerport_read( libspectrum_word port, libspectrum_byte *attached );
-void ay_registerport_write( libspectrum_word port, libspectrum_byte b );
+libspectrum_byte ay_registerport_read(libspectrum_word port, libspectrum_byte *attached);
+void ay_registerport_write(libspectrum_word port, libspectrum_byte b);
 
-void ay_dataport_write( libspectrum_word port, libspectrum_byte b );
+void ay_dataport_write(libspectrum_word port, libspectrum_byte b);
 
-void ay_state_from_snapshot( libspectrum_snap *snap );
+void ay_state_from_snapshot(libspectrum_snap *snap);
 
 #endif // #ifndef FUSE_AY_H

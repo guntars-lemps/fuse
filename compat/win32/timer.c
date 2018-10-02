@@ -34,7 +34,7 @@ compat_timer_get_time(void)
 }
 
 void
-compat_timer_sleep( int ms )
+compat_timer_sleep(int ms)
 {
-  Sleep( ms );
+  Sleep(ms);
 }

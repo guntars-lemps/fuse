@@ -90,7 +90,7 @@ typedef struct upd_fdc {
   fdd_t *drive[4]; // UPD765 control 4 drives
 
   upd_type_t type; // UPD765A UPD765B
-  upd_clock_t clock; // clock rate ( 4/8 MHz )
+  upd_clock_t clock; // clock rate (4/8 MHz)
 
   int stp_rate; // stepping rate ms
   int hut_time; // head unload time ms
@@ -155,22 +155,22 @@ typedef struct upd_fdc {
 
   libspectrum_word crc; // to hold crc
 
-  void ( *set_intrq ) ( struct upd_fdc *f );
-  void ( *reset_intrq ) ( struct upd_fdc *f );
-  void ( *set_datarq ) ( struct upd_fdc *f );
-  void ( *reset_datarq ) ( struct upd_fdc *f );
+  void (*set_intrq) (struct upd_fdc *f);
+  void (*reset_intrq) (struct upd_fdc *f);
+  void (*set_datarq) (struct upd_fdc *f);
+  void (*reset_datarq) (struct upd_fdc *f);
 
 } upd_fdc;
 
 void upd_fdc_init_events(void);
 
 // allocate an fdc
-upd_fdc *upd_fdc_alloc_fdc( upd_type_t type, upd_clock_t clock );
-void upd_fdc_master_reset( upd_fdc *f );
+upd_fdc *upd_fdc_alloc_fdc(upd_type_t type, upd_clock_t clock);
+void upd_fdc_master_reset(upd_fdc *f);
 
-libspectrum_byte upd_fdc_read_status( upd_fdc *f );
+libspectrum_byte upd_fdc_read_status(upd_fdc *f);
 
-libspectrum_byte upd_fdc_read_data( upd_fdc *f );
-void upd_fdc_write_data( upd_fdc *f, libspectrum_byte b );
+libspectrum_byte upd_fdc_read_data(upd_fdc *f);
+void upd_fdc_write_data(upd_fdc *f, libspectrum_byte b);
 
 #endif // #ifndef FUSE_UPD_FDC_H

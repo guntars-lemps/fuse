@@ -23,7 +23,7 @@
 #ifndef FUSE_CRC_H
 #define FUSE_CRC_H
 
-libspectrum_word crc_fdc( libspectrum_word crc, libspectrum_byte data );
-libspectrum_signed_dword crc_udi( libspectrum_signed_dword crc, libspectrum_byte data );
+libspectrum_word crc_fdc(libspectrum_word crc, libspectrum_byte data);
+libspectrum_signed_dword crc_udi(libspectrum_signed_dword crc, libspectrum_byte data);
 
 #endif // FUSE_CRC_H

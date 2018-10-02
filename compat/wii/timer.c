@@ -40,8 +40,8 @@ compat_timer_get_time(void)
   struct timespec tp;
 
   error = clock_gettime(&tp);
-  if (error ) {
-    ui_error( UI_ERROR_ERROR, "%s: error getting time: %s", __func__, strerror( errno ) );
+  if (error) {
+    ui_error(UI_ERROR_ERROR, "%s: error getting time: %s", __func__, strerror(errno));
     return -1;
   }
 
@@ -49,7 +49,7 @@ compat_timer_get_time(void)
 }
 
 void
-compat_timer_sleep( int ms )
+compat_timer_sleep(int ms)
 {
-  usleep( ms * 1000 );
+  usleep(ms * 1000);
 }

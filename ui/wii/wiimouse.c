@@ -58,11 +58,11 @@ int
 wiimouse_init(void)
 {
   WPAD_Init();
-  WPAD_SetDataFormat( WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR );
-  WPAD_SetIdleTimeout( 60 );
+  WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);
+  WPAD_SetIdleTimeout(60);
 
-  memset( &paddata, 0, sizeof(paddata) );
-  memset( &oldpaddata, 0, sizeof(oldpaddata) );
+  memset(&paddata, 0, sizeof(paddata));
+  memset(&oldpaddata, 0, sizeof(oldpaddata));
   ui_mouse_present = 1;
   return 0;
 }
@@ -74,9 +74,9 @@ wiimouse_end(void)
 }
 
 void
-wiimouse_get_position( int *x, int *y )
+wiimouse_get_position(int *x, int *y)
 {
-  if (paddata.ir.state == 0 ) *x = *y = -1;
+  if (paddata.ir.state == 0) *x = *y = -1;
 
   *x = paddata.ir.x;
   *y = paddata.ir.y;
@@ -105,7 +105,7 @@ mouse_update(void)
     fuse_event.types.key.native_key = pressed; \
     fuse_event.types.key.spectrum_key = pressed; \
     input_event(&fuse_event); \
-  } while(0)
+  } while (0)
 
 #define POST_KEYRELEASE(pressed) do {	    \
     input_event_t fuse_event; \
@@ -113,12 +113,12 @@ mouse_update(void)
     fuse_event.types.key.native_key = pressed; \
     fuse_event.types.key.spectrum_key = pressed; \
     input_event(&fuse_event); \
-  } while(0)
+  } while (0)
 
-  for( ctrlr = 0; ctrlr < 2; ctrlr++ ) {
+  for (ctrlr = 0; ctrlr < 2; ctrlr++) {
 
-    wpad = WPAD_Data( ctrlr );
-    if (!wpad ) continue;
+    wpad = WPAD_Data(ctrlr);
+    if (!wpad) continue;
 
     wm_down = wpad->btns_d;
 
@@ -126,51 +126,51 @@ mouse_update(void)
        and/or using the menu, which seems to at best disregard
        keyreleases and at worst react badly to them. */
 
-    if(fuse_emulation_paused) {
-      if (wm_down & WPAD_BUTTON_DOWN )
-        POST_KEYPRESS( INPUT_JOYSTICK_RIGHT );
-      else if (wm_down & WPAD_BUTTON_UP )
-        POST_KEYPRESS( INPUT_JOYSTICK_LEFT );
-      else if (wm_down & WPAD_BUTTON_LEFT )
-        POST_KEYPRESS( INPUT_JOYSTICK_DOWN );
-      else if (wm_down & WPAD_BUTTON_RIGHT )
-        POST_KEYPRESS( INPUT_JOYSTICK_UP );
-      else if (( wm_down & WPAD_BUTTON_A ) || ( wm_down & WPAD_BUTTON_2 ) )
-        POST_KEYPRESS( INPUT_JOYSTICK_FIRE_1 );
-      else if (( wm_down & WPAD_BUTTON_B ) || ( wm_down & WPAD_BUTTON_1 )
-           || ( wm_down & WPAD_BUTTON_HOME ) )
-        POST_KEYPRESS( INPUT_JOYSTICK_FIRE_2 );
+    if (fuse_emulation_paused) {
+      if (wm_down & WPAD_BUTTON_DOWN)
+        POST_KEYPRESS(INPUT_JOYSTICK_RIGHT);
+      else if (wm_down & WPAD_BUTTON_UP)
+        POST_KEYPRESS(INPUT_JOYSTICK_LEFT);
+      else if (wm_down & WPAD_BUTTON_LEFT)
+        POST_KEYPRESS(INPUT_JOYSTICK_DOWN);
+      else if (wm_down & WPAD_BUTTON_RIGHT)
+        POST_KEYPRESS(INPUT_JOYSTICK_UP);
+      else if ((wm_down & WPAD_BUTTON_A) || (wm_down & WPAD_BUTTON_2))
+        POST_KEYPRESS(INPUT_JOYSTICK_FIRE_1);
+      else if ((wm_down & WPAD_BUTTON_B) || (wm_down & WPAD_BUTTON_1)
+           || (wm_down & WPAD_BUTTON_HOME))
+        POST_KEYPRESS(INPUT_JOYSTICK_FIRE_2);
 
-      if (wpad->exp.type == EXP_NUNCHUK ) {
+      if (wpad->exp.type == EXP_NUNCHUK) {
 
         js = wpad->exp.nunchuk.js;
 
-        if (js.mag >= 0.5 ) {
+        if (js.mag >= 0.5) {
           // left
-          if (js.ang >= 270-45 && js.ang <= 270+45 ) {
-            if (last_nunchuck[ ctrlr ] != LEFT ) {
-              POST_KEYPRESS( INPUT_JOYSTICK_LEFT );
+          if (js.ang >= 270-45 && js.ang <= 270+45) {
+            if (last_nunchuck[ ctrlr ] != LEFT) {
+              POST_KEYPRESS(INPUT_JOYSTICK_LEFT);
               last_nunchuck[ ctrlr ] = LEFT;
             }
           }
           // right
-          else if (js.ang >= 90-45 && js.ang <= 90+45 ) {
-            if (last_nunchuck[ ctrlr ] != RIGHT ) {
-              POST_KEYPRESS( INPUT_JOYSTICK_RIGHT );
+          else if (js.ang >= 90-45 && js.ang <= 90+45) {
+            if (last_nunchuck[ ctrlr ] != RIGHT) {
+              POST_KEYPRESS(INPUT_JOYSTICK_RIGHT);
               last_nunchuck[ ctrlr ] = RIGHT;
             }
           }
           // up
-          else if (js.ang >= 360-45 || js.ang <= 45 ) {
-            if (last_nunchuck[ ctrlr ] != UP ) {
-              POST_KEYPRESS( INPUT_JOYSTICK_UP );
+          else if (js.ang >= 360-45 || js.ang <= 45) {
+            if (last_nunchuck[ ctrlr ] != UP) {
+              POST_KEYPRESS(INPUT_JOYSTICK_UP);
               last_nunchuck[ ctrlr ] = UP;
             }
           }
           // down
-          else if (js.ang >= 180-45 && js.ang <= 180+45 ) {
-            if (last_nunchuck[ ctrlr ] != DOWN ) {
-              POST_KEYPRESS( INPUT_JOYSTICK_DOWN );
+          else if (js.ang >= 180-45 && js.ang <= 180+45) {
+            if (last_nunchuck[ ctrlr ] != DOWN) {
+              POST_KEYPRESS(INPUT_JOYSTICK_DOWN);
               last_nunchuck[ ctrlr ] = DOWN;
             }
           }
@@ -179,27 +179,27 @@ mouse_update(void)
           last_nunchuck[ ctrlr ] = 0;
       }
     } else {
-      if (wm_down & WPAD_BUTTON_HOME )
-        POST_KEYPRESS( INPUT_KEY_F1 );
+      if (wm_down & WPAD_BUTTON_HOME)
+        POST_KEYPRESS(INPUT_KEY_F1);
     }
   }
 
-  WPAD_ReadEvent( 0, &paddata );
+  WPAD_ReadEvent(0, &paddata);
 
-  if (paddata.ir.state == 0 )
-    wiidisplay_showmouse( -1, -1 );
+  if (paddata.ir.state == 0)
+    wiidisplay_showmouse(-1, -1);
   else
-    wiidisplay_showmouse( paddata.ir.x/560.0f, paddata.ir.y/420.0f );
+    wiidisplay_showmouse(paddata.ir.x/560.0f, paddata.ir.y/420.0f);
 }
 
 int
-ui_mouse_grab( int startup GCC_UNUSED )
+ui_mouse_grab(int startup GCC_UNUSED)
 {
   return 1;
 }
 
 int
-ui_mouse_release( int suspend )
+ui_mouse_release(int suspend)
 {
   return !suspend;
 }

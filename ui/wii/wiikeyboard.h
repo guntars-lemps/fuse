@@ -26,8 +26,8 @@
 
 int wiikeyboard_init(void);
 
-int wiikeyboard_keypress( int keysym );
-void wiikeyboard_keyrelease( int keysym );
+int wiikeyboard_keypress(int keysym);
+void wiikeyboard_keyrelease(int keysym);
 
 int wiikeyboard_end(void);
 

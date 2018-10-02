@@ -94,10 +94,10 @@ typedef enum periph_present {
   PERIPH_PRESENT_ALWAYS, // Always present
 } periph_present;
 
-typedef libspectrum_byte (*periph_port_read_function)( libspectrum_word port,
-						       libspectrum_byte *attached );
-typedef void (*periph_port_write_function)( libspectrum_word port,
-					    libspectrum_byte data );
+typedef libspectrum_byte (*periph_port_read_function)(libspectrum_word port,
+						       libspectrum_byte *attached);
+typedef void (*periph_port_write_function)(libspectrum_word port,
+					    libspectrum_byte data);
 
 // Information about a specific port response
 typedef struct periph_port_t {
@@ -127,17 +127,17 @@ typedef struct periph_t {
 } periph_t;
 
 // Register a peripheral with the system
-void periph_register( periph_type type, const periph_t *periph );
+void periph_register(periph_type type, const periph_t *periph);
 
 // Set whether a peripheral can be present on this machine or not
-void periph_set_present( periph_type type, periph_present present );
+void periph_set_present(periph_type type, periph_present present);
 
 /* Mark a specific peripheral as (in)active, returns 1 if the enabled state has
    changed */
-int periph_activate_type( periph_type type, int active );
+int periph_activate_type(periph_type type, int active);
 
 // Is a specific peripheral active at the moment?
-int periph_is_active( periph_type type );
+int periph_is_active(periph_type type);
 
 // Empty out the list of peripherals
 void periph_clear(void);
@@ -149,11 +149,11 @@ void periph_end(void);
  * The actual routines to read and write a port
  */
 
-libspectrum_byte readport( libspectrum_word port );
-libspectrum_byte readport_internal( libspectrum_word port );
+libspectrum_byte readport(libspectrum_word port);
+libspectrum_byte readport_internal(libspectrum_word port);
 
-void writeport( libspectrum_word port, libspectrum_byte b );
-void writeport_internal( libspectrum_word port, libspectrum_byte b );
+void writeport(libspectrum_word port, libspectrum_byte b);
+void writeport_internal(libspectrum_word port, libspectrum_byte b);
 
 /*
  * The more Fuse-specific peripheral handling routines
@@ -168,11 +168,11 @@ int periph_postcheck(void);
 void periph_disable_optional(void);
 
 // Register debugger page/unpage events for a peripheral
-void periph_register_paging_events( const char *type_string, int *page_event,
-				    int *unpage_event );
+void periph_register_paging_events(const char *type_string, int *page_event,
+				    int *unpage_event);
 
-libspectrum_byte periph_merge_floating_bus( libspectrum_byte value,
+libspectrum_byte periph_merge_floating_bus(libspectrum_byte value,
                                             libspectrum_byte attached,
-                                            libspectrum_byte floating_bus );
+                                            libspectrum_byte floating_bus);
 
 #endif // #ifndef FUSE_PERIPH_H

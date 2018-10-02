@@ -48,18 +48,18 @@ void
 startup_manager_init(void)
 {
   registered_modules =
-    g_array_new( FALSE, FALSE, sizeof( registered_module_t ) );
+    g_array_new(FALSE, FALSE, sizeof(registered_module_t));
   end_functions =
-    g_array_new( FALSE, FALSE, sizeof( startup_manager_end_fn ) );
+    g_array_new(FALSE, FALSE, sizeof(startup_manager_end_fn));
 }
 
 void
 startup_manager_end(void)
 {
-  g_array_free( registered_modules, TRUE );
+  g_array_free(registered_modules, TRUE);
   registered_modules = NULL;
 
-  g_array_free( end_functions, TRUE );
+  g_array_free(end_functions, TRUE);
   end_functions = NULL;
 }
 
@@ -67,47 +67,47 @@ void
 startup_manager_register(
   startup_manager_module module, startup_manager_module *dependencies,
   size_t dependency_count, startup_manager_init_fn init_fn,
-  void *init_context, startup_manager_end_fn end_fn )
+  void *init_context, startup_manager_end_fn end_fn)
 {
   registered_module_t registered_module;
 
   registered_module.module = module;
   registered_module.dependencies =
-    g_array_sized_new( FALSE, FALSE, sizeof( startup_manager_module ),
-                       dependency_count );
-  g_array_append_vals( registered_module.dependencies, dependencies,
-                       dependency_count );
+    g_array_sized_new(FALSE, FALSE, sizeof(startup_manager_module),
+                       dependency_count);
+  g_array_append_vals(registered_module.dependencies, dependencies,
+                       dependency_count);
   registered_module.init_fn = init_fn;
   registered_module.init_context = init_context;
   registered_module.end_fn = end_fn;
 
-  g_array_append_val( registered_modules, registered_module );
+  g_array_append_val(registered_modules, registered_module);
 }
 
 void
 startup_manager_register_no_dependencies(
   startup_manager_module module, startup_manager_init_fn init_fn,
-  void *init_context, startup_manager_end_fn end_fn )
+  void *init_context, startup_manager_end_fn end_fn)
 {
-  startup_manager_register( module, NULL, 0, init_fn, init_context, end_fn );
+  startup_manager_register(module, NULL, 0, init_fn, init_context, end_fn);
 }
 
 static void
-remove_dependency( startup_manager_module module )
+remove_dependency(startup_manager_module module)
 {
   guint i, j;
 
   for (i = 0; i < registered_modules->len; i++) {
     registered_module_t *registered_module =
-      &g_array_index( registered_modules, registered_module_t, i );
+      &g_array_index(registered_modules, registered_module_t, i);
     GArray *dependencies = registered_module->dependencies;
 
-    for( j = 0; j < dependencies->len; j++ ) {
+    for (j = 0; j < dependencies->len; j++) {
       startup_manager_module dependency =
-        g_array_index( dependencies, startup_manager_module, j );
+        g_array_index(dependencies, startup_manager_module, j);
 
-      if (dependency == module ) {
-        g_array_remove_index_fast( dependencies, j );
+      if (dependency == module) {
+        g_array_remove_index_fast(dependencies, j);
         break;
       }
     }
@@ -128,38 +128,38 @@ startup_manager_run(void)
     i = 0;
     progress_made = 0;
 
-    while( i < registered_modules->len ) {
+    while (i < registered_modules->len) {
       registered_module_t *registered_module =
-        &g_array_index( registered_modules, registered_module_t, i );
+        &g_array_index(registered_modules, registered_module_t, i);
 
-      if (registered_module->dependencies->len == 0 ) {
+      if (registered_module->dependencies->len == 0) {
 
-        if (registered_module->init_fn ) {
+        if (registered_module->init_fn) {
           error = registered_module->init_fn(
             registered_module->init_context
-          );
-          if (error ) return error;
+);
+          if (error) return error;
         }
 
-        if (registered_module->end_fn )
-          g_array_append_val( end_functions, registered_module->end_fn );
+        if (registered_module->end_fn)
+          g_array_append_val(end_functions, registered_module->end_fn);
 
-        remove_dependency( registered_module->module );
+        remove_dependency(registered_module->module);
 
-        g_array_free( registered_module->dependencies, TRUE );
-        g_array_remove_index_fast( registered_modules, i );
+        g_array_free(registered_module->dependencies, TRUE);
+        g_array_remove_index_fast(registered_modules, i);
 
         progress_made = 1;
       } else {
         i++;
       }
     }
-  } while( progress_made && registered_modules->len );
+  } while (progress_made && registered_modules->len);
 
   // If there are still any modules left to be called, then that's bad
-  if (registered_modules->len ) {
-    ui_error( UI_ERROR_ERROR, "%u startup modules could not be called",
-              registered_modules->len );
+  if (registered_modules->len) {
+    ui_error(UI_ERROR_ERROR, "%u startup modules could not be called",
+              registered_modules->len);
     return 1;
   }
 
@@ -171,10 +171,10 @@ startup_manager_run_end(void)
 {
   guint i;
 
-  for( i = end_functions->len; i-- != 0; )
+  for (i = end_functions->len; i-- != 0;)
   {
     startup_manager_end_fn end_fn =
-      g_array_index( end_functions, startup_manager_end_fn, i );
+      g_array_index(end_functions, startup_manager_end_fn, i);
 
     end_fn();
   }

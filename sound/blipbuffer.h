@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 partially reimplemented in C by Gergely Szasz
 
 There is a lot of ambiguous thing in the original C++ source, some of them `rectified'
-(e.g. `int const blahblah = xxx` in the header translated to #define ), others not
+(e.g. `int const blahblah = xxx` in the header translated to #define), others not
 (e.g. blip_sample_t/imp_t/short or Blip_Synth_ in Blip_Synth, or the whole
 blip_eq_t struct ...).
 
@@ -53,7 +53,7 @@ typedef long buf_t_;
 
 typedef unsigned long blip_resampled_time_t;
 
-# define BLIP_BUFFER_DEF_MSEC_LENGTH ( 1000 / 4 )
+# define BLIP_BUFFER_DEF_MSEC_LENGTH (1000 / 4)
 # define BLIP_BUFFER_DEF_STEREO 0
 # define BLIP_BUFFER_DEF_ENTIRE_BUFF 1
 
@@ -72,59 +72,59 @@ typedef struct Blip_Buffer_s {
 
 Blip_Buffer *new_Blip_Buffer(void);
 
-void delete_Blip_Buffer( Blip_Buffer ** buff );
+void delete_Blip_Buffer(Blip_Buffer ** buff);
 
 /*  Set output sample rate and buffer length in milliseconds (1/1000 sec, defaults
  to 1/4 second), then clear buffer. Returns NULL on success, otherwise if there
  isn't enough memory, returns error without affecting current buffer setup.
 */
-blargg_err_t blip_buffer_set_sample_rate( Blip_Buffer * buff,
+blargg_err_t blip_buffer_set_sample_rate(Blip_Buffer * buff,
                                           long samples_per_sec,
-                                          int msec_length );
+                                          int msec_length);
 
 /*  Set number of source time units per second
 */
-void blip_buffer_set_clock_rate( Blip_Buffer * buff, long rate );
+void blip_buffer_set_clock_rate(Blip_Buffer * buff, long rate);
 
 /*  End current time frame of specified duration and make its samples available
  (along with any still-unread samples) for reading with read_samples(). Begins
  a new time frame at the end of the current frame.
 */
-void blip_buffer_end_frame( Blip_Buffer * buff, blip_time_t time );
+void blip_buffer_end_frame(Blip_Buffer * buff, blip_time_t time);
 
 /*  Read at most 'max_samples' out of buffer into 'dest', removing them from from
  the buffer. Returns number of samples actually read and removed. If stereo is
  true, increments 'dest' one extra time after writing each sample, to allow
  easy interleving of two channels into a stereo output buffer.
 */
-long blip_buffer_read_samples( Blip_Buffer * buff, blip_sample_t * dest,
-                               long max_samples, int stereo );
+long blip_buffer_read_samples(Blip_Buffer * buff, blip_sample_t * dest,
+                               long max_samples, int stereo);
 
 // Additional optional features
 
 // Set frequency high-pass filter frequency, where higher values reduce bass more
-void blip_buffer_set_bass_freq( Blip_Buffer * buff, int frequency );
+void blip_buffer_set_bass_freq(Blip_Buffer * buff, int frequency);
 
 /*  Remove all available samples and clear buffer to silence. If 'entire_buffer' is
  false, just clears out any samples waiting rather than the entire buffer.
 */
-void blip_buffer_clear( Blip_Buffer * buff, int entire_buffer );
+void blip_buffer_clear(Blip_Buffer * buff, int entire_buffer);
 
 /*  Number of samples available for reading with read_samples()
 */
 long
-blip_buffer_samples_avail( Blip_Buffer * buff );
+blip_buffer_samples_avail(Blip_Buffer * buff);
 
 /*  Remove 'count' samples from those waiting to be read
 */
-void blip_buffer_remove_samples( Blip_Buffer * buff, long count );
+void blip_buffer_remove_samples(Blip_Buffer * buff, long count);
 
 // Experimental features
 
-void blip_buffer_remove_silence( Blip_Buffer * buff, long count );
+void blip_buffer_remove_silence(Blip_Buffer * buff, long count);
 
-blip_resampled_time_t blip_buffer_clock_rate_factor( Blip_Buffer * buff,
-                                                    long clock_rate );
+blip_resampled_time_t blip_buffer_clock_rate_factor(Blip_Buffer * buff,
+                                                    long clock_rate);
 
 /*
  Number of bits in resample ratio fraction. Higher values give a more accurate ratio
@@ -158,13 +158,13 @@ typedef struct Blip_Synth_s_ {
   int delta_factor;
 } Blip_Synth_;
 
-int _blip_synth_impulses_size( Blip_Synth_ * synth_ );
+int _blip_synth_impulses_size(Blip_Synth_ * synth_);
 
-void _blip_synth_adjust_impulse( Blip_Synth_ * synth_ );
+void _blip_synth_adjust_impulse(Blip_Synth_ * synth_);
 
-void _blip_synth_treble_eq( Blip_Synth_ * synth_, struct blip_eq_s *eq );
+void _blip_synth_treble_eq(Blip_Synth_ * synth_, struct blip_eq_s *eq);
 
-void _blip_synth_volume_unit( Blip_Synth_ * synth_, double v );
+void _blip_synth_volume_unit(Blip_Synth_ * synth_, double v);
 
 // Quality level. Start with blip_good_quality.
 #define BLIP_MED_QUALITY 8
@@ -182,27 +182,27 @@ typedef struct Blip_Synth_s {
   Blip_Synth_ impl;
 } Blip_Synth;
 
-void blip_synth_set_volume( Blip_Synth * synth, double v );
+void blip_synth_set_volume(Blip_Synth * synth, double v);
 
 // Configure low-pass filter (see notes.txt)
-void blip_synth_set_treble_eq( Blip_Synth * synth, double treble );
+void blip_synth_set_treble_eq(Blip_Synth * synth, double treble);
 
 // Get/set Blip_Buffer used for output
-void blip_synth_set_output( Blip_Synth * synth, Blip_Buffer * b );
+void blip_synth_set_output(Blip_Synth * synth, Blip_Buffer * b);
 
 /*  Update amplitude of waveform at given time. Using this requires a separate
 Blip_Synth for each waveform. */
-void blip_synth_update( Blip_Synth * synth, blip_time_t time,
-                        int amplitude );
+void blip_synth_update(Blip_Synth * synth, blip_time_t time,
+                        int amplitude);
 
 // Low-level interface
 
-void blip_synth_offset_resampled( Blip_Synth * synth,
+void blip_synth_offset_resampled(Blip_Synth * synth,
                                  blip_resampled_time_t, int delta,
-                                 Blip_Buffer * buff );
+                                 Blip_Buffer * buff);
 Blip_Synth *new_Blip_Synth(void);
 
-void delete_Blip_Synth( Blip_Synth ** synth );
+void delete_Blip_Synth(Blip_Synth ** synth);
 
 #define BLIP_EQ_DEF_CUTOFF 0
 // Low-pass equalization parameters

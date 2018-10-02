@@ -125,18 +125,18 @@ extern memory_page timex_dock[MEMORY_PAGES_IN_64K];
 
 void scld_register_startup(void);
 
-void scld_dec_write( libspectrum_word port, libspectrum_byte b );
-void scld_hsr_write( libspectrum_word port, libspectrum_byte b );
+void scld_dec_write(libspectrum_word port, libspectrum_byte b);
+void scld_hsr_write(libspectrum_word port, libspectrum_byte b);
 
 void scld_memory_map(void);
 // Initialise the memory map to point to the home bank
 void scld_memory_map_home(void);
 
 libspectrum_byte hires_get_attr(void);
-libspectrum_byte hires_convert_dec( libspectrum_byte attr );
+libspectrum_byte hires_convert_dec(libspectrum_byte attr);
 
-void scld_home_map_16k( libspectrum_word address, memory_page source[],
-                        int page_num );
+void scld_home_map_16k(libspectrum_word address, memory_page source[],
+                        int page_num);
 
 /* Set contention for SCLD, contended in home, Dock and Exrom in the 0x4000 -
    0x7FFF range */

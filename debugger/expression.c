@@ -92,21 +92,21 @@ struct debugger_expression {
 
 };
 
-static libspectrum_dword evaluate_unaryop( struct unaryop_type *unaryop );
-static libspectrum_dword evaluate_binaryop( struct binaryop_type *binary );
+static libspectrum_dword evaluate_unaryop(struct unaryop_type *unaryop);
+static libspectrum_dword evaluate_binaryop(struct binaryop_type *binary);
 
-static int deparse_unaryop( char *buffer, size_t length,
-			    const struct unaryop_type *unaryop );
-static int deparse_binaryop( char *buffer, size_t length,
-			     const struct binaryop_type *binaryop );
+static int deparse_unaryop(char *buffer, size_t length,
+			    const struct unaryop_type *unaryop);
+static int deparse_binaryop(char *buffer, size_t length,
+			     const struct binaryop_type *binaryop);
 static int
-brackets_necessary( int top_operation, debugger_expression *operand );
-static int is_non_associative( int operation );
+brackets_necessary(int top_operation, debugger_expression *operand);
+static int is_non_associative(int operation);
 
 static enum precedence_t
-unaryop_precedence( int operation )
+unaryop_precedence(int operation)
 {
-  switch (operation ) {
+  switch (operation) {
 
   case '!': case '~': case '-': return PRECEDENCE_NEGATE;
 
@@ -114,15 +114,15 @@ unaryop_precedence( int operation )
     return PRECEDENCE_DEREFERENCE;
 
   default:
-    ui_error( UI_ERROR_ERROR, "unknown unary operator %d", operation );
+    ui_error(UI_ERROR_ERROR, "unknown unary operator %d", operation);
     fuse_abort();
   }
 }
 
 static enum precedence_t
-binaryop_precedence( int operation )
+binaryop_precedence(int operation)
 {
-  switch (operation ) {
+  switch (operation) {
 
   case DEBUGGER_TOKEN_LOGICAL_OR: return PRECEDENCE_LOGICAL_OR;
   case DEBUGGER_TOKEN_LOGICAL_AND: return PRECEDENCE_LOGICAL_AND;
@@ -142,17 +142,17 @@ binaryop_precedence( int operation )
     return PRECEDENCE_COMPARISON;
 
   default:
-    ui_error( UI_ERROR_ERROR, "unknown binary operator %d", operation );
+    ui_error(UI_ERROR_ERROR, "unknown binary operator %d", operation);
     fuse_abort();
   }
 }
 
 debugger_expression*
-debugger_expression_new_number( libspectrum_dword number, int pool )
+debugger_expression_new_number(libspectrum_dword number, int pool)
 {
   debugger_expression *exp;
 
-  exp = mempool_new( pool, debugger_expression, 1 );
+  exp = mempool_new(pool, debugger_expression, 1);
 
   exp->type = DEBUGGER_EXPRESSION_TYPE_INTEGER;
   exp->precedence = PRECEDENCE_ATOMIC;
@@ -162,15 +162,15 @@ debugger_expression_new_number( libspectrum_dword number, int pool )
 }
 
 debugger_expression*
-debugger_expression_new_binaryop( int operation, debugger_expression *operand1,
-				  debugger_expression *operand2, int pool )
+debugger_expression_new_binaryop(int operation, debugger_expression *operand1,
+				  debugger_expression *operand2, int pool)
 {
   debugger_expression *exp;
 
-  exp = mempool_new( pool, debugger_expression, 1 );
+  exp = mempool_new(pool, debugger_expression, 1);
 
   exp->type = DEBUGGER_EXPRESSION_TYPE_BINARYOP;
-  exp->precedence = binaryop_precedence( operation );
+  exp->precedence = binaryop_precedence(operation);
 
   exp->types.binaryop.operation = operation;
   exp->types.binaryop.op1 = operand1;
@@ -180,15 +180,15 @@ debugger_expression_new_binaryop( int operation, debugger_expression *operand1,
 }
 
 debugger_expression*
-debugger_expression_new_unaryop( int operation, debugger_expression *operand,
-				 int pool )
+debugger_expression_new_unaryop(int operation, debugger_expression *operand,
+				 int pool)
 {
   debugger_expression *exp;
 
-  exp = mempool_new( pool, debugger_expression, 1 );
+  exp = mempool_new(pool, debugger_expression, 1);
 
   exp->type = DEBUGGER_EXPRESSION_TYPE_UNARYOP;
-  exp->precedence = unaryop_precedence( operation );
+  exp->precedence = unaryop_precedence(operation);
 
   exp->types.unaryop.operation = operation;
   exp->types.unaryop.op = operand;
@@ -197,20 +197,20 @@ debugger_expression_new_unaryop( int operation, debugger_expression *operand,
 }
 
 debugger_expression*
-debugger_expression_new_system_variable( const char *type, const char *detail,
-                                         int pool )
+debugger_expression_new_system_variable(const char *type, const char *detail,
+                                         int pool)
 {
   debugger_expression *exp;
   int system_variable;
 
-  system_variable = debugger_system_variable_find( type, detail );
-  if (system_variable == -1 ) {
-    ui_error( UI_ERROR_WARNING, "System variable %s:%s not known", type,
-              detail );
+  system_variable = debugger_system_variable_find(type, detail);
+  if (system_variable == -1) {
+    ui_error(UI_ERROR_WARNING, "System variable %s:%s not known", type,
+              detail);
     return NULL;
   }
 
-  exp = mempool_new( pool, debugger_expression, 1 );
+  exp = mempool_new(pool, debugger_expression, 1);
 
   exp->type = DEBUGGER_EXPRESSION_TYPE_SYSVAR;
   exp->precedence = PRECEDENCE_ATOMIC;
@@ -220,57 +220,57 @@ debugger_expression_new_system_variable( const char *type, const char *detail,
 }
 
 debugger_expression*
-debugger_expression_new_variable( const char *name, int pool )
+debugger_expression_new_variable(const char *name, int pool)
 {
   debugger_expression *exp;
 
-  exp = mempool_new( pool, debugger_expression, 1 );
+  exp = mempool_new(pool, debugger_expression, 1);
 
   exp->type = DEBUGGER_EXPRESSION_TYPE_VARIABLE;
   exp->precedence = PRECEDENCE_ATOMIC;
-  exp->types.variable = mempool_strdup( pool, name );
+  exp->types.variable = mempool_strdup(pool, name);
 
   return exp;
 }
 
 void
-debugger_expression_delete( debugger_expression *exp )
+debugger_expression_delete(debugger_expression *exp)
 {
-  switch (exp->type ) {
+  switch (exp->type) {
 
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
   case DEBUGGER_EXPRESSION_TYPE_SYSVAR:
     break;
 
   case DEBUGGER_EXPRESSION_TYPE_UNARYOP:
-    debugger_expression_delete( exp->types.unaryop.op );
+    debugger_expression_delete(exp->types.unaryop.op);
     break;
 
   case DEBUGGER_EXPRESSION_TYPE_BINARYOP:
-    debugger_expression_delete( exp->types.binaryop.op1 );
-    debugger_expression_delete( exp->types.binaryop.op2 );
+    debugger_expression_delete(exp->types.binaryop.op1);
+    debugger_expression_delete(exp->types.binaryop.op2);
     break;
 
   case DEBUGGER_EXPRESSION_TYPE_VARIABLE:
-    libspectrum_free( exp->types.variable );
+    libspectrum_free(exp->types.variable);
     break;
   }
 
-  libspectrum_free( exp );
+  libspectrum_free(exp);
 }
 
 debugger_expression*
-debugger_expression_copy( debugger_expression *src )
+debugger_expression_copy(debugger_expression *src)
 {
   debugger_expression *dest;
 
-  dest = libspectrum_new( debugger_expression, 1 );
-  if (!dest ) return NULL;
+  dest = libspectrum_new(debugger_expression, 1);
+  if (!dest) return NULL;
 
   dest->type = src->type;
   dest->precedence = src->precedence;
 
-  switch (dest->type ) {
+  switch (dest->type) {
 
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
     dest->types.integer = src->types.integer;
@@ -278,9 +278,9 @@ debugger_expression_copy( debugger_expression *src )
 
   case DEBUGGER_EXPRESSION_TYPE_UNARYOP:
     dest->types.unaryop.operation = src->types.unaryop.operation;
-    dest->types.unaryop.op = debugger_expression_copy( src->types.unaryop.op );
-    if (!dest->types.unaryop.op ) {
-      libspectrum_free( dest );
+    dest->types.unaryop.op = debugger_expression_copy(src->types.unaryop.op);
+    if (!dest->types.unaryop.op) {
+      libspectrum_free(dest);
       return NULL;
     }
     break;
@@ -288,16 +288,16 @@ debugger_expression_copy( debugger_expression *src )
   case DEBUGGER_EXPRESSION_TYPE_BINARYOP:
     dest->types.binaryop.operation = src->types.binaryop.operation;
     dest->types.binaryop.op1 =
-      debugger_expression_copy( src->types.binaryop.op1 );
-    if (!dest->types.binaryop.op1 ) {
-      libspectrum_free( dest );
+      debugger_expression_copy(src->types.binaryop.op1);
+    if (!dest->types.binaryop.op1) {
+      libspectrum_free(dest);
       return NULL;
     }
     dest->types.binaryop.op2 =
-      debugger_expression_copy( src->types.binaryop.op2 );
-    if (!dest->types.binaryop.op2 ) {
-      debugger_expression_delete( dest->types.binaryop.op1 );
-      libspectrum_free( dest );
+      debugger_expression_copy(src->types.binaryop.op2);
+    if (!dest->types.binaryop.op2) {
+      debugger_expression_delete(dest->types.binaryop.op1);
+      libspectrum_free(dest);
       return NULL;
     }
     break;
@@ -307,7 +307,7 @@ debugger_expression_copy( debugger_expression *src )
     break;
 
   case DEBUGGER_EXPRESSION_TYPE_VARIABLE:
-    dest->types.variable = utils_safe_strdup( src->types.variable );
+    dest->types.variable = utils_safe_strdup(src->types.variable);
     break;
   }
 
@@ -315,154 +315,154 @@ debugger_expression_copy( debugger_expression *src )
 }
 
 libspectrum_dword
-debugger_expression_evaluate( debugger_expression *exp )
+debugger_expression_evaluate(debugger_expression *exp)
 {
-  switch (exp->type ) {
+  switch (exp->type) {
 
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
     return exp->types.integer;
 
   case DEBUGGER_EXPRESSION_TYPE_UNARYOP:
-    return evaluate_unaryop( &( exp->types.unaryop ) );
+    return evaluate_unaryop(&(exp->types.unaryop));
 
   case DEBUGGER_EXPRESSION_TYPE_BINARYOP:
-    return evaluate_binaryop( &( exp->types.binaryop ) );
+    return evaluate_binaryop(&(exp->types.binaryop));
 
   case DEBUGGER_EXPRESSION_TYPE_SYSVAR:
-    return debugger_system_variable_get( exp->types.system_variable );
+    return debugger_system_variable_get(exp->types.system_variable);
 
   case DEBUGGER_EXPRESSION_TYPE_VARIABLE:
-    return debugger_variable_get( exp->types.variable );
+    return debugger_variable_get(exp->types.variable);
 
   }
 
-  ui_error( UI_ERROR_ERROR, "unknown expression type %d", exp->type );
+  ui_error(UI_ERROR_ERROR, "unknown expression type %d", exp->type);
   fuse_abort();
 }
 
 static libspectrum_dword
-evaluate_unaryop( struct unaryop_type *unary )
+evaluate_unaryop(struct unaryop_type *unary)
 {
-  switch (unary->operation ) {
+  switch (unary->operation) {
 
-  case '!': return !debugger_expression_evaluate( unary->op );
-  case '~': return ~debugger_expression_evaluate( unary->op );
-  case '-': return -debugger_expression_evaluate( unary->op );
+  case '!': return !debugger_expression_evaluate(unary->op);
+  case '~': return ~debugger_expression_evaluate(unary->op);
+  case '-': return -debugger_expression_evaluate(unary->op);
 
   case DEBUGGER_TOKEN_DEREFERENCE:
-    return readbyte_internal( debugger_expression_evaluate( unary->op ) );
+    return readbyte_internal(debugger_expression_evaluate(unary->op));
 
   }
 
-  ui_error( UI_ERROR_ERROR, "unknown unary operator %d", unary->operation );
+  ui_error(UI_ERROR_ERROR, "unknown unary operator %d", unary->operation);
   fuse_abort();
 }
 
 static libspectrum_dword
-evaluate_binaryop( struct binaryop_type *binary )
+evaluate_binaryop(struct binaryop_type *binary)
 {
-  switch (binary->operation ) {
+  switch (binary->operation) {
 
-  case '+': return debugger_expression_evaluate( binary->op1 ) +
-		   debugger_expression_evaluate( binary->op2 );
+  case '+': return debugger_expression_evaluate(binary->op1) +
+		   debugger_expression_evaluate(binary->op2);
 
-  case '-': return debugger_expression_evaluate( binary->op1 ) -
-		   debugger_expression_evaluate( binary->op2 );
+  case '-': return debugger_expression_evaluate(binary->op1) -
+		   debugger_expression_evaluate(binary->op2);
 
-  case '*': return debugger_expression_evaluate( binary->op1 ) *
-		   debugger_expression_evaluate( binary->op2 );
+  case '*': return debugger_expression_evaluate(binary->op1) *
+		   debugger_expression_evaluate(binary->op2);
 
   case '/': {
-      libspectrum_dword op2 = debugger_expression_evaluate( binary->op2 );
-      if (op2 == 0 ) {
-        ui_error( UI_ERROR_ERROR, "divide by 0");
+      libspectrum_dword op2 = debugger_expression_evaluate(binary->op2);
+      if (op2 == 0) {
+        ui_error(UI_ERROR_ERROR, "divide by 0");
         return 0;
       }
-      return debugger_expression_evaluate( binary->op1 ) / op2;
+      return debugger_expression_evaluate(binary->op1) / op2;
     }
 
   case DEBUGGER_TOKEN_EQUAL_TO:
-            return debugger_expression_evaluate( binary->op1 ) ==
-                   debugger_expression_evaluate( binary->op2 );
+            return debugger_expression_evaluate(binary->op1) ==
+                   debugger_expression_evaluate(binary->op2);
 
   case DEBUGGER_TOKEN_NOT_EQUAL_TO:
-	    return debugger_expression_evaluate( binary->op1 ) !=
-		   debugger_expression_evaluate( binary->op2 );
+	    return debugger_expression_evaluate(binary->op1) !=
+		   debugger_expression_evaluate(binary->op2);
 
-  case '>': return debugger_expression_evaluate( binary->op1 ) >
-		   debugger_expression_evaluate( binary->op2 );
+  case '>': return debugger_expression_evaluate(binary->op1) >
+		   debugger_expression_evaluate(binary->op2);
 
-  case '<': return debugger_expression_evaluate( binary->op1 ) <
-	           debugger_expression_evaluate( binary->op2 );
+  case '<': return debugger_expression_evaluate(binary->op1) <
+	           debugger_expression_evaluate(binary->op2);
 
   case DEBUGGER_TOKEN_LESS_THAN_OR_EQUAL_TO:
-	    return debugger_expression_evaluate( binary->op1 ) <=
-		   debugger_expression_evaluate( binary->op2 );
+	    return debugger_expression_evaluate(binary->op1) <=
+		   debugger_expression_evaluate(binary->op2);
 
   case DEBUGGER_TOKEN_GREATER_THAN_OR_EQUAL_TO:
-	    return debugger_expression_evaluate( binary->op1 ) >=
-		   debugger_expression_evaluate( binary->op2 );
+	    return debugger_expression_evaluate(binary->op1) >=
+		   debugger_expression_evaluate(binary->op2);
 
-  case '&': return debugger_expression_evaluate( binary->op1 ) &
-	           debugger_expression_evaluate( binary->op2 );
+  case '&': return debugger_expression_evaluate(binary->op1) &
+	           debugger_expression_evaluate(binary->op2);
 
-  case '^': return debugger_expression_evaluate( binary->op1 ) ^
-		   debugger_expression_evaluate( binary->op2 );
+  case '^': return debugger_expression_evaluate(binary->op1) ^
+		   debugger_expression_evaluate(binary->op2);
 
-  case '|': return debugger_expression_evaluate( binary->op1 ) |
-		   debugger_expression_evaluate( binary->op2 );
+  case '|': return debugger_expression_evaluate(binary->op1) |
+		   debugger_expression_evaluate(binary->op2);
 
   case DEBUGGER_TOKEN_LOGICAL_AND:
-	    return debugger_expression_evaluate( binary->op1 ) &&
-		   debugger_expression_evaluate( binary->op2 );
+	    return debugger_expression_evaluate(binary->op1) &&
+		   debugger_expression_evaluate(binary->op2);
 
   case DEBUGGER_TOKEN_LOGICAL_OR:
-	    return debugger_expression_evaluate( binary->op1 ) ||
-		   debugger_expression_evaluate( binary->op2 );
+	    return debugger_expression_evaluate(binary->op1) ||
+		   debugger_expression_evaluate(binary->op2);
 
   }
 
-  ui_error( UI_ERROR_ERROR, "unknown binary operator %d", binary->operation );
+  ui_error(UI_ERROR_ERROR, "unknown binary operator %d", binary->operation);
   fuse_abort();
 }
 
 int
-debugger_expression_deparse( char *buffer, size_t length,
-			     const debugger_expression *exp )
+debugger_expression_deparse(char *buffer, size_t length,
+			     const debugger_expression *exp)
 {
-  switch (exp->type ) {
+  switch (exp->type) {
 
   case DEBUGGER_EXPRESSION_TYPE_INTEGER:
-    if (debugger_output_base == 10 ) {
-      snprintf( buffer, length, "%d", exp->types.integer );
+    if (debugger_output_base == 10) {
+      snprintf(buffer, length, "%d", exp->types.integer);
     } else {
-      snprintf( buffer, length, "0x%x", exp->types.integer );
+      snprintf(buffer, length, "0x%x", exp->types.integer);
     }
     return 0;
 
   case DEBUGGER_EXPRESSION_TYPE_UNARYOP:
-    return deparse_unaryop( buffer, length, &( exp->types.unaryop ) );
+    return deparse_unaryop(buffer, length, &(exp->types.unaryop));
 
   case DEBUGGER_EXPRESSION_TYPE_BINARYOP:
-    return deparse_binaryop( buffer, length, &( exp->types.binaryop ) );
+    return deparse_binaryop(buffer, length, &(exp->types.binaryop));
 
   case DEBUGGER_EXPRESSION_TYPE_SYSVAR:
-    debugger_system_variable_text( buffer, length, exp->types.system_variable );
+    debugger_system_variable_text(buffer, length, exp->types.system_variable);
     return 0;
 
   case DEBUGGER_EXPRESSION_TYPE_VARIABLE:
-    snprintf( buffer, length, "$%s", exp->types.variable );
+    snprintf(buffer, length, "$%s", exp->types.variable);
     return 0;
 
   }
 
-  ui_error( UI_ERROR_ERROR, "unknown expression type %d", exp->type );
+  ui_error(UI_ERROR_ERROR, "unknown expression type %d", exp->type);
   fuse_abort();
 }
 
 static int
-deparse_unaryop( char *buffer, size_t length,
-		 const struct unaryop_type *unaryop )
+deparse_unaryop(char *buffer, size_t length,
+		 const struct unaryop_type *unaryop)
 {
   char *operand_buffer; const char *operation_string = NULL;
   const char *operation_suffix = "";
@@ -471,12 +471,12 @@ deparse_unaryop( char *buffer, size_t length,
 
   int error;
 
-  operand_buffer = libspectrum_new( char, length );
+  operand_buffer = libspectrum_new(char, length);
 
-  error = debugger_expression_deparse( operand_buffer, length, unaryop->op );
-  if (error ) { libspectrum_free( operand_buffer ); return error; }
+  error = debugger_expression_deparse(operand_buffer, length, unaryop->op);
+  if (error) { libspectrum_free(operand_buffer); return error; }
 
-  switch (unaryop->operation ) {
+  switch (unaryop->operation) {
   case '!': operation_string = "!"; break;
   case '~': operation_string = "~"; break;
   case '-': operation_string = "-"; break;
@@ -487,45 +487,45 @@ deparse_unaryop( char *buffer, size_t length,
     break;
 
   default:
-    ui_error( UI_ERROR_ERROR, "unknown unary operation %d",
-	      unaryop->operation );
+    ui_error(UI_ERROR_ERROR, "unknown unary operation %d",
+	      unaryop->operation);
     fuse_abort();
   }
 
-  if (brackets_possible )
-    brackets = ( unaryop->op->precedence                  <
-                 unaryop_precedence( unaryop->operation )   );
+  if (brackets_possible)
+    brackets = (unaryop->op->precedence                  <
+                 unaryop_precedence(unaryop->operation));
 
-  snprintf( buffer, length, "%s%s%s%s%s", operation_string,
-	    brackets ? "( " : "", operand_buffer,
-	    brackets ? " )" : "", operation_suffix );
+  snprintf(buffer, length, "%s%s%s%s%s", operation_string,
+	    brackets ? "(" : "", operand_buffer,
+	    brackets ? ")" : "", operation_suffix);
 
-  libspectrum_free( operand_buffer );
+  libspectrum_free(operand_buffer);
 
   return 0;
 }
 
 static int
-deparse_binaryop( char *buffer, size_t length,
-		  const struct binaryop_type *binaryop )
+deparse_binaryop(char *buffer, size_t length,
+		  const struct binaryop_type *binaryop)
 {
   char *operand1_buffer, *operand2_buffer; const char *operation_string = NULL;
   int brackets_necessary1, brackets_necessary2;
 
   int error;
 
-  operand1_buffer = libspectrum_new( char, 2 * length );
+  operand1_buffer = libspectrum_new(char, 2 * length);
   operand2_buffer = &operand1_buffer[ length ];
 
-  error = debugger_expression_deparse( operand1_buffer, length,
-				       binaryop->op1 );
-  if (error ) { libspectrum_free( operand1_buffer ); return error; }
+  error = debugger_expression_deparse(operand1_buffer, length,
+				       binaryop->op1);
+  if (error) { libspectrum_free(operand1_buffer); return error; }
 
-  error = debugger_expression_deparse( operand2_buffer, length,
-				       binaryop->op2 );
-  if (error ) { libspectrum_free( operand1_buffer ); return error; }
+  error = debugger_expression_deparse(operand2_buffer, length,
+				       binaryop->op2);
+  if (error) { libspectrum_free(operand1_buffer); return error; }
 
-  switch (binaryop->operation ) {
+  switch (binaryop->operation) {
   case    '+': operation_string = "+";  break;
   case    '-': operation_string = "-";  break;
   case    '*': operation_string = "*";  break;
@@ -543,24 +543,24 @@ deparse_binaryop( char *buffer, size_t length,
   case DEBUGGER_TOKEN_LOGICAL_OR: operation_string = "||"; break;
 
   default:
-    ui_error( UI_ERROR_ERROR, "unknown binary operation %d",
-	      binaryop->operation );
+    ui_error(UI_ERROR_ERROR, "unknown binary operation %d",
+	      binaryop->operation);
     fuse_abort();
   }
 
-  brackets_necessary1 = brackets_necessary( binaryop->operation,
-					    binaryop->op1 );
-  brackets_necessary2 = brackets_necessary( binaryop->operation,
-					    binaryop->op2 );
+  brackets_necessary1 = brackets_necessary(binaryop->operation,
+					    binaryop->op1);
+  brackets_necessary2 = brackets_necessary(binaryop->operation,
+					    binaryop->op2);
 
-  snprintf( buffer, length, "%s%s%s %s %s%s%s",
-	    brackets_necessary1 ? "( " : "", operand1_buffer,
-	    brackets_necessary1 ? " )" : "",
+  snprintf(buffer, length, "%s%s%s %s %s%s%s",
+	    brackets_necessary1 ? "(" : "", operand1_buffer,
+	    brackets_necessary1 ? ")" : "",
 	    operation_string,
-	    brackets_necessary2 ? "( " : "", operand2_buffer,
-	    brackets_necessary2 ? " )" : "");
+	    brackets_necessary2 ? "(" : "", operand2_buffer,
+	    brackets_necessary2 ? ")" : "");
 
-  libspectrum_free( operand1_buffer );
+  libspectrum_free(operand1_buffer);
 
   return 0;
 }
@@ -568,16 +568,16 @@ deparse_binaryop( char *buffer, size_t length,
 /* When deparsing, do we need to put brackets around `operand' when
    being used as an operand of the binary operation `top_operation'? */
 static int
-brackets_necessary( int top_operation, debugger_expression *operand )
+brackets_necessary(int top_operation, debugger_expression *operand)
 {
   enum precedence_t top_precedence, bottom_precedence;
 
-  top_precedence = binaryop_precedence( top_operation );
+  top_precedence = binaryop_precedence(top_operation);
   bottom_precedence = operand->precedence;
 
   /* If the top level operation has a higher precedence than the
      bottom level operation, we always need brackets */
-  if (top_precedence > bottom_precedence ) return 1;
+  if (top_precedence > bottom_precedence) return 1;
 
   /* If the two operations are of equal precedence, we need brackets
      i) if the top level operation is non-associative, or
@@ -591,18 +591,18 @@ brackets_necessary( int top_operation, debugger_expression *operand )
      left-right associativity; I think things are clearer with
      brackets in.
   */
-  if (top_precedence == bottom_precedence ) {
+  if (top_precedence == bottom_precedence) {
 
-    if (is_non_associative( top_operation ) ) return 1;
+    if (is_non_associative(top_operation)) return 1;
 
     // Sanity check
-    if (operand->type != DEBUGGER_EXPRESSION_TYPE_BINARYOP ) {
-      ui_error( UI_ERROR_ERROR,
+    if (operand->type != DEBUGGER_EXPRESSION_TYPE_BINARYOP) {
+      ui_error(UI_ERROR_ERROR,
 		"binary operator has same precedence as non-binary operator");
       fuse_abort();
     }
 
-    return is_non_associative( operand->types.binaryop.operation );
+    return is_non_associative(operand->types.binaryop.operation);
   }
 
   /* Otherwise (ie if the top level operation is of lower precedence
@@ -613,9 +613,9 @@ brackets_necessary( int top_operation, debugger_expression *operand )
 
 // Is a binary operator non-associative?
 static int
-is_non_associative( int operation )
+is_non_associative(int operation)
 {
-  switch (operation ) {
+  switch (operation) {
 
   // Simple cases
   case '+': case '*': return 0;
@@ -643,7 +643,7 @@ is_non_associative( int operation )
   }
 
   // Should never get here
-  ui_error( UI_ERROR_ERROR, "unknown binary operation %d", operation );
+  ui_error(UI_ERROR_ERROR, "unknown binary operation %d", operation);
   fuse_abort();
 }
 

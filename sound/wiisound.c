@@ -43,17 +43,17 @@ int dmalen = BUFSIZE;
 static void
 sound_dmacallback(void)
 {
-  if (sfifo_used( &sound_fifo ) < 128) return;
+  if (sfifo_used(&sound_fifo) < 128) return;
 
-  dmalen = MIN( BUFSIZE, sfifo_used( &sound_fifo ) );
-  sfifo_read( &sound_fifo, dmabuf, dmalen );
-  DCFlushRange( dmabuf, dmalen );
-  AUDIO_InitDMA( (u32)dmabuf, dmalen );
+  dmalen = MIN(BUFSIZE, sfifo_used(&sound_fifo));
+  sfifo_read(&sound_fifo, dmabuf, dmalen);
+  DCFlushRange(dmabuf, dmalen);
+  AUDIO_InitDMA((u32)dmabuf, dmalen);
   AUDIO_StartDMA();
 }
 
 int
-sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
+sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
   switch(*freqptr) {
   case 32000:
@@ -67,17 +67,17 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 
-  sfifo_init( &sound_fifo, BUFSIZE );
+  sfifo_init(&sound_fifo, BUFSIZE);
   *stereoptr = 1;
 
-  AUDIO_Init( NULL );
-  AUDIO_SetDSPSampleRate( samplerate );
+  AUDIO_Init(NULL);
+  AUDIO_SetDSPSampleRate(samplerate);
 
 #ifndef DISPLAY_AUDIO
-  AUDIO_RegisterDMACallback( sound_dmacallback );
-  memset( dmabuf, 0, BUFSIZE );
-  AUDIO_InitDMA( (u32)dmabuf, BUFSIZE );
-  DCFlushRange( dmabuf, dmalen );
+  AUDIO_RegisterDMACallback(sound_dmacallback);
+  memset(dmabuf, 0, BUFSIZE);
+  AUDIO_InitDMA((u32)dmabuf, BUFSIZE);
+  DCFlushRange(dmabuf, dmalen);
   AUDIO_StartDMA();
 #endif
 
@@ -87,8 +87,8 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 void
 sound_lowlevel_end(void)
 {
-  sfifo_flush( &sound_fifo );
-  sfifo_close( &sound_fifo );
+  sfifo_flush(&sound_fifo);
+  sfifo_close(&sound_fifo);
   AUDIO_StopDMA();
 }
 
@@ -100,10 +100,10 @@ sound_lowlevel_frame(libspectrum_signed_word *data, int len)
   libspectrum_signed_byte *bytes = (libspectrum_signed_byte*)data;
   len <<= 1;
 
-  while(len) {
-    if (( i = sfifo_write( &sound_fifo, bytes, len ) ) < 0 )
+  while (len) {
+    if ((i = sfifo_write(&sound_fifo, bytes, len)) < 0)
       break;
-    else if (!i )
+    else if (!i)
       usleep(10000);
     bytes += i;
     len -= i;

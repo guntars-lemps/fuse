@@ -77,7 +77,7 @@ int win32display_scaled_width(void);
    between win32display.c and win32ui.c */
 
 void win32display_area(int x, int y, int width, int height);
-int win32display_drawing_area_resize( int width, int height, int force_scaler );
+int win32display_drawing_area_resize(int width, int height, int force_scaler);
 
 void blit(void);
 
@@ -87,34 +87,34 @@ void blit(void);
 
 void win32keyboard_init(void);
 void win32keyboard_end(void);
-void win32keyboard_keypress( WPARAM wParam, LPARAM lParam );
-void win32keyboard_keyrelease( WPARAM wParam, LPARAM lParam );
+void win32keyboard_keypress(WPARAM wParam, LPARAM lParam);
+void win32keyboard_keyrelease(WPARAM wParam, LPARAM lParam);
 
 /*
  * Mouse routines (win32mouse.c)
  */
 
-void win32mouse_position( LPARAM lParam );
-void win32mouse_button( int button, int down );
+void win32mouse_position(LPARAM lParam);
+void win32mouse_button(int button, int down);
 
 /*
  * General user interface routines (win32ui.c)
  */
 
-void win32ui_fuse_resize( int width, int height );
+void win32ui_fuse_resize(int width, int height);
 
-int win32ui_confirm( const char *string );
+int win32ui_confirm(const char *string);
 
-int win32ui_picture( const char *filename, int border );
+int win32ui_picture(const char *filename, int border);
 
-int win32ui_get_monospaced_font( HFONT *font );
-void win32ui_set_font( HWND hDlg, int nIDDlgItem, HFONT font );
+int win32ui_get_monospaced_font(HFONT *font);
+void win32ui_set_font(HWND hDlg, int nIDDlgItem, HFONT font);
 
-int handle_menu( DWORD cmd, HWND okno );
+int handle_menu(DWORD cmd, HWND okno);
 
-void win32_verror( int is_error );
+void win32_verror(int is_error);
 
-void win32ui_process_messages( int process_queue_once );
+void win32ui_process_messages(int process_queue_once);
 
 #define WM_USER_EXIT_PROCESS_MESSAGES WM_USER
 
@@ -122,11 +122,11 @@ void win32ui_process_messages( int process_queue_once );
  * Statusbar routines (statusbar.c)
  */
 
-void win32statusbar_create( HWND hWnd );
-int win32statusbar_set_visibility( int visible );
-void win32statusbar_redraw( HWND hWnd, LPARAM lParam );
-void win32statusbar_resize( HWND hWnd, WPARAM wParam, LPARAM lParam );
-void win32statusbar_update_machine( const char *name );
+void win32statusbar_create(HWND hWnd);
+int win32statusbar_set_visibility(int visible);
+void win32statusbar_redraw(HWND hWnd, LPARAM lParam);
+void win32statusbar_resize(HWND hWnd, WPARAM wParam, LPARAM lParam);
+void win32statusbar_update_machine(const char *name);
 
 /*
  * Dialog box reset

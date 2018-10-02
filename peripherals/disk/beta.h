@@ -47,21 +47,21 @@ void beta_register_startup(void);
 void beta_page(void);
 void beta_unpage(void);
 
-void beta_cr_write( libspectrum_word port, libspectrum_byte b );
+void beta_cr_write(libspectrum_word port, libspectrum_byte b);
 
-libspectrum_byte beta_sr_read( libspectrum_word port, libspectrum_byte *attached );
+libspectrum_byte beta_sr_read(libspectrum_word port, libspectrum_byte *attached);
 
-libspectrum_byte beta_tr_read( libspectrum_word port, libspectrum_byte *attached );
-void beta_tr_write( libspectrum_word port, libspectrum_byte b );
+libspectrum_byte beta_tr_read(libspectrum_word port, libspectrum_byte *attached);
+void beta_tr_write(libspectrum_word port, libspectrum_byte b);
 
-libspectrum_byte beta_sec_read( libspectrum_word port, libspectrum_byte *attached );
-void beta_sec_write( libspectrum_word port, libspectrum_byte b );
+libspectrum_byte beta_sec_read(libspectrum_word port, libspectrum_byte *attached);
+void beta_sec_write(libspectrum_word port, libspectrum_byte b);
 
-libspectrum_byte beta_dr_read( libspectrum_word port, libspectrum_byte *attached );
-void beta_dr_write( libspectrum_word port, libspectrum_byte b );
+libspectrum_byte beta_dr_read(libspectrum_word port, libspectrum_byte *attached);
+void beta_dr_write(libspectrum_word port, libspectrum_byte b);
 
-libspectrum_byte beta_sp_read( libspectrum_word port, libspectrum_byte *attached );
-void beta_sp_write( libspectrum_word port, libspectrum_byte b );
+libspectrum_byte beta_sp_read(libspectrum_word port, libspectrum_byte *attached);
+void beta_sp_write(libspectrum_word port, libspectrum_byte b);
 
 typedef enum beta_drive_number {
   BETA_DRIVE_A = 0,
@@ -71,14 +71,14 @@ typedef enum beta_drive_number {
   BETA_NUM_DRIVES,
 } beta_drive_number;
 
-int beta_disk_insert( beta_drive_number which, const char *filename,
-                       int autoload );
-int beta_disk_eject( beta_drive_number which );
-int beta_disk_save( beta_drive_number which, int saveas );
-int beta_disk_flip( beta_drive_number which, int flip );
-int beta_disk_writeprotect( beta_drive_number which, int wrprot );
-int beta_disk_write( beta_drive_number which, const char *filename );
-fdd_t *beta_get_fdd( beta_drive_number which );
+int beta_disk_insert(beta_drive_number which, const char *filename,
+                       int autoload);
+int beta_disk_eject(beta_drive_number which);
+int beta_disk_save(beta_drive_number which, int saveas);
+int beta_disk_flip(beta_drive_number which, int flip);
+int beta_disk_writeprotect(beta_drive_number which, int wrprot);
+int beta_disk_write(beta_drive_number which, const char *filename);
+fdd_t *beta_get_fdd(beta_drive_number which);
 
 int beta_unittest(void);
 

@@ -29,36 +29,36 @@
 
 static widget_picture_data *ptr;
 
-int widget_picture_draw( void* data )
+int widget_picture_draw(void* data)
 {
   ptr = (widget_picture_data*)data;
 
-  uidisplay_spectrum_screen( ptr->screen, ptr->border );
+  uidisplay_spectrum_screen(ptr->screen, ptr->border);
   uidisplay_frame_end();
 
   return 0;
 }
 
 void
-widget_picture_keyhandler( input_key key )
+widget_picture_keyhandler(input_key key)
 {
-  switch (key ) {
+  switch (key) {
 
 #if 0
   case INPUT_KEY_Resize: // Fake keypress used on widget resize
-    widget_picture_draw( ptr );
+    widget_picture_draw(ptr);
     break;
 #endif
 
   case INPUT_KEY_Escape:
   case INPUT_JOYSTICK_FIRE_2:
-    widget_end_widget( WIDGET_FINISHED_CANCEL );
+    widget_end_widget(WIDGET_FINISHED_CANCEL);
     break;
 
   case INPUT_KEY_Return:
   case INPUT_KEY_KP_Enter:
   case INPUT_JOYSTICK_FIRE_1:
-    widget_end_all( WIDGET_FINISHED_OK );
+    widget_end_all(WIDGET_FINISHED_OK);
     break;
 
   default: // Keep gcc happy

@@ -35,29 +35,29 @@ typedef struct utils_file {
 
 } utils_file;
 
-int utils_open_file( const char *filename, int autoload,
-		     libspectrum_id_t *type );
+int utils_open_file(const char *filename, int autoload,
+		     libspectrum_id_t *type);
 int utils_open_snap(void);
-int utils_read_auxiliary_file( const char *filename, utils_file *file,
-                               utils_aux_type type );
+int utils_read_auxiliary_file(const char *filename, utils_file *file,
+                               utils_aux_type type);
 
-int utils_read_file( const char *filename, utils_file *file );
-int utils_read_fd( compat_fd fd, const char *filename, utils_file *file );
-void utils_close_file( utils_file *file );
+int utils_read_file(const char *filename, utils_file *file);
+int utils_read_fd(compat_fd fd, const char *filename, utils_file *file);
+void utils_close_file(utils_file *file);
 
-int utils_write_file( const char *filename, const unsigned char *buffer,
-		      size_t length );
+int utils_write_file(const char *filename, const unsigned char *buffer,
+		      size_t length);
 
-int utils_find_file_path( const char *filename, char *path,
-                          utils_aux_type type );
+int utils_find_file_path(const char *filename, char *path,
+                          utils_aux_type type);
 
-int utils_read_screen( const char *filename, utils_file *screen );
+int utils_read_screen(const char *filename, utils_file *screen);
 
-char* utils_safe_strdup( const char *src );
+char* utils_safe_strdup(const char *src);
 
 int
-utils_save_binary( libspectrum_word start, libspectrum_word length,
-                   const char *filename );
+utils_save_binary(libspectrum_word start, libspectrum_word length,
+                   const char *filename);
 
 void utils_networking_init(void);
 void utils_networking_end(void);

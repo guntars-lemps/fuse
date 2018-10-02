@@ -525,7 +525,7 @@ void loader_detect_loader(void)
         if (tape_is_playing()) {
             if ((tstates_diff > 1000) || ((b_diff != 1) && (b_diff != 0) && (b_diff != 0xff))) {
                 successive_reads++;
-                if (successive_reads >= 2 ) {
+                if (successive_reads >= 2) {
                     tape_stop();
                 }
             } else {

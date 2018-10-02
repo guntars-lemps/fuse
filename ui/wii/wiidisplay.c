@@ -52,9 +52,9 @@ libspectrum_word display_image[2 * DISPLAY_SCREEN_HEIGHT][DISPLAY_SCREEN_WIDTH];
 
 /* An RGB image of the Spectrum screen; slightly bigger than the real
    screen to handle the smoothing filters which read around each pixel */
-static unsigned char rgb_image[ 4 * 2 * ( DISPLAY_SCREEN_HEIGHT + 4 ) *
-                                        ( DISPLAY_SCREEN_WIDTH  + 3 )   ];
-static const int rgb_pitch = ( DISPLAY_SCREEN_WIDTH + 3 ) * 4;
+static unsigned char rgb_image[ 4 * 2 * (DISPLAY_SCREEN_HEIGHT + 4) *
+                                        (DISPLAY_SCREEN_WIDTH  + 3)   ];
+static const int rgb_pitch = (DISPLAY_SCREEN_WIDTH + 3) * 4;
 
 // The scaled image
 static unsigned char scaled_image[ 4 * 3 * DISPLAY_SCREEN_HEIGHT *
@@ -136,7 +136,7 @@ u32 convert_rgb (rgb_t rgb1, rgb_t rgb2)
 
 static void put_pixel(int x, int y, int colour, int mouseputpixel)
 {
-  if (machine_current->timex ) {
+  if (machine_current->timex) {
     x <<= 1; y <<= 1;
     display_image[y  ][x  ] = colour;
     display_image[y  ][x+1] = colour;
@@ -144,7 +144,7 @@ static void put_pixel(int x, int y, int colour, int mouseputpixel)
     display_image[y+1][x+1] = colour;
   } else {
     display_image[y][x] = colour;
-    if(!mouseputpixel &&
+    if (!mouseputpixel &&
        x >= mousex && x < mousex+MOUSESIZEX &&
        y >= mousey && y < mousey+MOUSESIZEY)
       mousecache[y-mousey][x-mousex] = colour;
@@ -169,7 +169,7 @@ init_colours(void)
 
     // Addition of 0.5 is to avoid rounding errors
     grey.r = grey.g = grey.b =
-      ( 0.299 * colour.r + 0.587 * colour.g + 0.114 * colour.b ) + 0.5;
+      (0.299 * colour.r + 0.587 * colour.g + 0.114 * colour.b) + 0.5;
 
 #ifdef WORDS_BIGENDIAN
 
@@ -195,7 +195,7 @@ int uidisplay_init(int width, int height)
   image_width = width; image_height = height;
   image_scale = width / DISPLAY_ASPECT_WIDTH;
 
-  error = register_scalers(); if (error ) return error;
+  error = register_scalers(); if (error) return error;
 
   display_ui_initialised = 1;
   display_refresh_all();
@@ -208,73 +208,73 @@ register_scalers(void)
 {
   scaler_register_clear();
 
-  switch (wiidisplay_current_size ) {
+  switch (wiidisplay_current_size) {
 
   case 1:
 
-    switch (image_scale ) {
+    switch (image_scale) {
     case 1:
-      scaler_register( SCALER_NORMAL );
-      scaler_register( SCALER_PALTV );
-      if (!scaler_is_supported( current_scaler ) )
-	scaler_select_scaler( SCALER_NORMAL );
+      scaler_register(SCALER_NORMAL);
+      scaler_register(SCALER_PALTV);
+      if (!scaler_is_supported(current_scaler))
+	scaler_select_scaler(SCALER_NORMAL);
       return 0;
     case 2:
-      scaler_register( SCALER_HALF );
-      scaler_register( SCALER_HALFSKIP );
-      if (!scaler_is_supported( current_scaler ) )
-	scaler_select_scaler( SCALER_HALF );
+      scaler_register(SCALER_HALF);
+      scaler_register(SCALER_HALFSKIP);
+      if (!scaler_is_supported(current_scaler))
+	scaler_select_scaler(SCALER_HALF);
       return 0;
     }
 
   case 2:
 
-    switch (image_scale ) {
+    switch (image_scale) {
     case 1:
-      scaler_register( SCALER_DOUBLESIZE );
-      scaler_register( SCALER_TV2X );
-      scaler_register( SCALER_ADVMAME2X );
-      scaler_register( SCALER_2XSAI );
-      scaler_register( SCALER_SUPER2XSAI );
-      scaler_register( SCALER_SUPEREAGLE );
-      scaler_register( SCALER_DOTMATRIX );
-      scaler_register( SCALER_PALTV2X );
-      scaler_register( SCALER_HQ2X );
-      if (!scaler_is_supported( current_scaler ) )
-	scaler_select_scaler( SCALER_DOUBLESIZE );
+      scaler_register(SCALER_DOUBLESIZE);
+      scaler_register(SCALER_TV2X);
+      scaler_register(SCALER_ADVMAME2X);
+      scaler_register(SCALER_2XSAI);
+      scaler_register(SCALER_SUPER2XSAI);
+      scaler_register(SCALER_SUPEREAGLE);
+      scaler_register(SCALER_DOTMATRIX);
+      scaler_register(SCALER_PALTV2X);
+      scaler_register(SCALER_HQ2X);
+      if (!scaler_is_supported(current_scaler))
+	scaler_select_scaler(SCALER_DOUBLESIZE);
       return 0;
     case 2:
-      scaler_register( SCALER_NORMAL );
-      scaler_register( SCALER_TIMEXTV );
-      scaler_register( SCALER_PALTV );
-      if (!scaler_is_supported( current_scaler ) )
-	scaler_select_scaler( SCALER_NORMAL );
+      scaler_register(SCALER_NORMAL);
+      scaler_register(SCALER_TIMEXTV);
+      scaler_register(SCALER_PALTV);
+      if (!scaler_is_supported(current_scaler))
+	scaler_select_scaler(SCALER_NORMAL);
       return 0;
     }
 
   case 3:
 
-    switch (image_scale ) {
+    switch (image_scale) {
     case 1:
-      scaler_register( SCALER_TRIPLESIZE );
-      scaler_register( SCALER_TV3X );
-      scaler_register( SCALER_ADVMAME3X );
-      scaler_register( SCALER_PALTV3X );
-      scaler_register( SCALER_HQ3X );
-      if (!scaler_is_supported( current_scaler ) )
-	scaler_select_scaler( SCALER_TRIPLESIZE );
+      scaler_register(SCALER_TRIPLESIZE);
+      scaler_register(SCALER_TV3X);
+      scaler_register(SCALER_ADVMAME3X);
+      scaler_register(SCALER_PALTV3X);
+      scaler_register(SCALER_HQ3X);
+      if (!scaler_is_supported(current_scaler))
+	scaler_select_scaler(SCALER_TRIPLESIZE);
       return 0;
     case 2:
-      scaler_register( SCALER_TIMEX1_5X );
-      if (!scaler_is_supported( current_scaler ) )
-	scaler_select_scaler( SCALER_TIMEX1_5X );
+      scaler_register(SCALER_TIMEX1_5X);
+      if (!scaler_is_supported(current_scaler))
+	scaler_select_scaler(SCALER_TIMEX1_5X);
       return 0;
     }
 
   }
 
-  ui_error( UI_ERROR_ERROR, "Unknown display size/image size %d/%d",
-	    wiidisplay_current_size, image_scale );
+  ui_error(UI_ERROR_ERROR, "Unknown display size/image size %d/%d",
+	    wiidisplay_current_size, image_scale);
   return 1;
 }
 
@@ -282,7 +282,7 @@ int wiidisplay_init(void)
 {
   int error;
 
-  error = init_colours(); if (error ) return error;
+  error = init_colours(); if (error) return error;
 
   VIDEO_Init();
 
@@ -312,7 +312,7 @@ int wiidisplay_init(void)
   VIDEO_Flush();
 
   VIDEO_WaitVSync();
-  if(rmode->viTVMode & VI_NON_INTERLACE) VIDEO_WaitVSync();
+  if (rmode->viTVMode & VI_NON_INTERLACE) VIDEO_WaitVSync();
 
   return 0;
 }
@@ -327,55 +327,55 @@ void
 uidisplay_frame_end(void)
 {
   VIDEO_WaitVSync();
-  if(rmode->viTVMode & VI_NON_INTERLACE) VIDEO_WaitVSync();
+  if (rmode->viTVMode & VI_NON_INTERLACE) VIDEO_WaitVSync();
 
   return;
 }
 
-void wiidisplay_showmouse( float x, float y )
+void wiidisplay_showmouse(float x, float y)
 {
   int c, r;
 
-  if (!fuse_emulation_paused ) return;
+  if (!fuse_emulation_paused) return;
 
   int mousenewx = x*(DISPLAY_SCREEN_WIDTH/2-MOUSESIZEX);
   int mousenewy = y*(DISPLAY_SCREEN_HEIGHT-MOUSESIZEY);
 
   // if we had no old mouse and have no new mouse, forget it
   if ((mousex <= 0 || mousey <= 0) &&
-      (mousenewx <= 0 || mousenewy <= 0) ) return;
+      (mousenewx <= 0 || mousenewy <= 0)) return;
 
   /* if we had a mouse pos before, put mousecache at old position into
      picture  */
-  if (mousex > 0 && mousey > 0 ) {
-    for( r=0; r<MOUSESIZEY; r++ )
-      for( c=0; c<MOUSESIZEX; c++ )
-	put_pixel( c+mousex, r+mousey, mousecache[r][c], 1 );
+  if (mousex > 0 && mousey > 0) {
+    for (r=0; r<MOUSESIZEY; r++)
+      for (c=0; c<MOUSESIZEX; c++)
+	put_pixel(c+mousex, r+mousey, mousecache[r][c], 1);
   }
-  uidisplay_area( mousex, mousey, MOUSESIZEX, MOUSESIZEY );
+  uidisplay_area(mousex, mousey, MOUSESIZEX, MOUSESIZEY);
 
   // if we don't have a new mouse, remember that state and leave
-  if (mousenewx <= 0 || mousenewy <= 0 ) {
+  if (mousenewx <= 0 || mousenewy <= 0) {
     mousex = mousenewx; mousey = mousenewy;
     return;
   }
 
   /* we had an old mouse and have a new one. read mouse cache from the
      picture and draw mouse cursor. */
-  for( r=0; r<MOUSESIZEY; r++ )
-    for( c=0; c<MOUSESIZEX; c++ ) {
+  for (r=0; r<MOUSESIZEY; r++)
+    for (c=0; c<MOUSESIZEX; c++) {
       // put picture at new position into mouse cache
-      mousecache[r][c] = get_pixel( c+mousenewx, r+mousenewy );
+      mousecache[r][c] = get_pixel(c+mousenewx, r+mousenewy);
       // put mouse cursor into picture
-      if (mousecursor[r][c] != 0xff )
-	put_pixel( mousenewx+c, mousenewy+r, mousecursor[r][c], 1 );
+      if (mousecursor[r][c] != 0xff)
+	put_pixel(mousenewx+c, mousenewy+r, mousecursor[r][c], 1);
     }
   mousex = mousenewx; mousey = mousenewy;
-  uidisplay_area( mousex, mousey, MOUSESIZEX, MOUSESIZEY );
+  uidisplay_area(mousex, mousey, MOUSESIZEX, MOUSESIZEY);
 }
 
 void
-uidisplay_area( int x, int y, int w, int h )
+uidisplay_area(int x, int y, int w, int h)
 {
   float scale = (float)wiidisplay_current_size / image_scale;
   int scaled_x, scaled_y, i, yy;
@@ -383,31 +383,31 @@ uidisplay_area( int x, int y, int w, int h )
 
   /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */
-  if (scaler_flags & SCALER_FLAGS_EXPAND )
-    scaler_expander( &x, &y, &w, &h, image_width, image_height );
+  if (scaler_flags & SCALER_FLAGS_EXPAND)
+    scaler_expander(&x, &y, &w, &h, image_width, image_height);
 
   scaled_x = scale * x; scaled_y = scale * y;
 
   palette = settings_current.bw_tv ? bw_colours : wiidisplay_colours;
 
   // Create the RGB image
-  for( yy = y; yy < y + h; yy++ ) {
+  for (yy = y; yy < y + h; yy++) {
 
     libspectrum_dword *rgb; libspectrum_word *display;
 
-    rgb = (libspectrum_dword*)( rgb_image + ( yy + 2 ) * rgb_pitch );
+    rgb = (libspectrum_dword*)(rgb_image + (yy + 2) * rgb_pitch);
     rgb += x + 1;
 
     display = &display_image[yy][x];
 
-    for (i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
+    for (i = 0; i < w; i++, rgb++, display++) *rgb = palette[ *display ];
   }
 
   // Create scaled image
-  scaler_proc32( &rgb_image[ ( y + 2 ) * rgb_pitch + 4 * ( x + 1 ) ],
+  scaler_proc32(&rgb_image[ (y + 2) * rgb_pitch + 4 * (x + 1) ],
                  rgb_pitch,
                  &scaled_image[ scaled_y * scaled_pitch + 4 * scaled_x ],
-                 scaled_pitch, w, h );
+                 scaled_pitch, w, h);
 
   w *= scale; h *= scale;
 
@@ -416,23 +416,23 @@ uidisplay_area( int x, int y, int w, int h )
   long ofs;
   u16 fb_pitch = rmode->fbWidth / 2;
   // ystart is an offset to center spectrum screen on wii screen
-  int ystart = ( rmode->xfbHeight - 2 * DISPLAY_SCREEN_HEIGHT ) / 4;
+  int ystart = (rmode->xfbHeight - 2 * DISPLAY_SCREEN_HEIGHT) / 4;
   u32 *dest, *next_line;
 
-  if (scaled_x%2 ) {
+  if (scaled_x%2) {
     scaled_x -= 1;
     w += 1;
   }
 
 // FIXME: optimize this procedure and implement double buffering
-  next_line = xfb + scaled_x / 2 + ( scaled_y + ystart ) * fb_pitch;
+  next_line = xfb + scaled_x / 2 + (scaled_y + ystart) * fb_pitch;
 
-  for( disp_y = scaled_y; disp_y < scaled_y + h; disp_y++ ) {
+  for (disp_y = scaled_y; disp_y < scaled_y + h; disp_y++) {
 
     dest = next_line;
 
-    for( disp_x = scaled_x; disp_x < scaled_x + w; disp_x++ ) {
-      ofs = ( 4 * disp_x ) + ( scaled_pitch * disp_y );
+    for (disp_x = scaled_x; disp_x < scaled_x + w; disp_x++) {
+      ofs = (4 * disp_x) + (scaled_pitch * disp_y);
 
       rgb_t rgb1, rgb2;
 
@@ -444,7 +444,7 @@ uidisplay_area( int x, int y, int w, int h )
       rgb2.g = scaled_image[ ofs + 1 + 4 ]; // green
       rgb2.r = scaled_image[ ofs + 0 + 4 ]; // red
 
-      *dest = convert_rgb( rgb1, rgb2 );
+      *dest = convert_rgb(rgb1, rgb2);
 
       dest += disp_x%2;
     }
@@ -467,58 +467,58 @@ wiidisplay_end(void)
 
 // Set one pixel in the display
 void
-uidisplay_putpixel( int x, int y, int colour )
+uidisplay_putpixel(int x, int y, int colour)
 {
   put_pixel(x, y, colour, 0);
 }
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
-   colour `paper' to the screen at ( (8*x) , y ) */
+   colour `paper' to the screen at ((8*x) , y) */
 void
-uidisplay_plot8( int x, int y, libspectrum_byte data,
-                 libspectrum_byte ink, libspectrum_byte paper )
+uidisplay_plot8(int x, int y, libspectrum_byte data,
+                 libspectrum_byte ink, libspectrum_byte paper)
 {
   x <<= 3;
 
-  if (machine_current->timex ) {
+  if (machine_current->timex) {
     int i;
 
     x <<= 1; y <<= 1;
-    for( i=0; i<2; i++,y++ ) {
-      display_image[y][x+ 0] = ( data & 0x80 ) ? ink : paper;
-      display_image[y][x+ 1] = ( data & 0x80 ) ? ink : paper;
-      display_image[y][x+ 2] = ( data & 0x40 ) ? ink : paper;
-      display_image[y][x+ 3] = ( data & 0x40 ) ? ink : paper;
-      display_image[y][x+ 4] = ( data & 0x20 ) ? ink : paper;
-      display_image[y][x+ 5] = ( data & 0x20 ) ? ink : paper;
-      display_image[y][x+ 6] = ( data & 0x10 ) ? ink : paper;
-      display_image[y][x+ 7] = ( data & 0x10 ) ? ink : paper;
-      display_image[y][x+ 8] = ( data & 0x08 ) ? ink : paper;
-      display_image[y][x+ 9] = ( data & 0x08 ) ? ink : paper;
-      display_image[y][x+10] = ( data & 0x04 ) ? ink : paper;
-      display_image[y][x+11] = ( data & 0x04 ) ? ink : paper;
-      display_image[y][x+12] = ( data & 0x02 ) ? ink : paper;
-      display_image[y][x+13] = ( data & 0x02 ) ? ink : paper;
-      display_image[y][x+14] = ( data & 0x01 ) ? ink : paper;
-      display_image[y][x+15] = ( data & 0x01 ) ? ink : paper;
+    for (i=0; i<2; i++,y++) {
+      display_image[y][x+ 0] = (data & 0x80) ? ink : paper;
+      display_image[y][x+ 1] = (data & 0x80) ? ink : paper;
+      display_image[y][x+ 2] = (data & 0x40) ? ink : paper;
+      display_image[y][x+ 3] = (data & 0x40) ? ink : paper;
+      display_image[y][x+ 4] = (data & 0x20) ? ink : paper;
+      display_image[y][x+ 5] = (data & 0x20) ? ink : paper;
+      display_image[y][x+ 6] = (data & 0x10) ? ink : paper;
+      display_image[y][x+ 7] = (data & 0x10) ? ink : paper;
+      display_image[y][x+ 8] = (data & 0x08) ? ink : paper;
+      display_image[y][x+ 9] = (data & 0x08) ? ink : paper;
+      display_image[y][x+10] = (data & 0x04) ? ink : paper;
+      display_image[y][x+11] = (data & 0x04) ? ink : paper;
+      display_image[y][x+12] = (data & 0x02) ? ink : paper;
+      display_image[y][x+13] = (data & 0x02) ? ink : paper;
+      display_image[y][x+14] = (data & 0x01) ? ink : paper;
+      display_image[y][x+15] = (data & 0x01) ? ink : paper;
     }
   } else {
-    display_image[y][x+ 0] = ( data & 0x80 ) ? ink : paper;
-    display_image[y][x+ 1] = ( data & 0x40 ) ? ink : paper;
-    display_image[y][x+ 2] = ( data & 0x20 ) ? ink : paper;
-    display_image[y][x+ 3] = ( data & 0x10 ) ? ink : paper;
-    display_image[y][x+ 4] = ( data & 0x08 ) ? ink : paper;
-    display_image[y][x+ 5] = ( data & 0x04 ) ? ink : paper;
-    display_image[y][x+ 6] = ( data & 0x02 ) ? ink : paper;
-    display_image[y][x+ 7] = ( data & 0x01 ) ? ink : paper;
+    display_image[y][x+ 0] = (data & 0x80) ? ink : paper;
+    display_image[y][x+ 1] = (data & 0x40) ? ink : paper;
+    display_image[y][x+ 2] = (data & 0x20) ? ink : paper;
+    display_image[y][x+ 3] = (data & 0x10) ? ink : paper;
+    display_image[y][x+ 4] = (data & 0x08) ? ink : paper;
+    display_image[y][x+ 5] = (data & 0x04) ? ink : paper;
+    display_image[y][x+ 6] = (data & 0x02) ? ink : paper;
+    display_image[y][x+ 7] = (data & 0x01) ? ink : paper;
   }
 }
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
-   colour `paper' to the screen at ( (16*x) , y ) */
+   colour `paper' to the screen at ((16*x) , y) */
 void
-uidisplay_plot16( int x, int y, libspectrum_word data,
-                  libspectrum_byte ink, libspectrum_byte paper )
+uidisplay_plot16(int x, int y, libspectrum_word data,
+                  libspectrum_byte ink, libspectrum_byte paper)
 {
   // FIXME: what should this do?
   return;

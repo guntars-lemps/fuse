@@ -55,20 +55,20 @@ extern libspectrum_rzx *rzx;
 
 void rzx_register_startup(void);
 
-int rzx_start_recording( const char *filename, int embed_snapshot );
+int rzx_start_recording(const char *filename, int embed_snapshot);
 int rzx_stop_recording(void);
-int rzx_continue_recording( const char *filename );
-int rzx_finalise_recording( const char *filename );
+int rzx_continue_recording(const char *filename);
+int rzx_finalise_recording(const char *filename);
 
-int rzx_start_playback( const char *filename, int check_snapshot );
+int rzx_start_playback(const char *filename, int check_snapshot);
 int
-rzx_start_playback_from_buffer( const unsigned char *buffer, size_t length );
+rzx_start_playback_from_buffer(const unsigned char *buffer, size_t length);
 
-int rzx_stop_playback( int add_interrupt );
+int rzx_stop_playback(int add_interrupt);
 
 int rzx_frame(void);
 
-int rzx_store_byte( libspectrum_byte value );
+int rzx_store_byte(libspectrum_byte value);
 
 int rzx_rollback(void);
 

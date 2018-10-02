@@ -52,9 +52,9 @@ compat_socket_networking_end(void)
 }
 
 int
-compat_socket_close( compat_socket_t fd )
+compat_socket_close(compat_socket_t fd)
 {
-  return close( fd );
+  return close(fd);
 }
 
 int compat_socket_get_error(void)
@@ -65,7 +65,7 @@ int compat_socket_get_error(void)
 const char *
 compat_socket_get_strerror(void)
 {
-  return strerror( errno );
+  return strerror(errno);
 }
 
 compat_socket_selfpipe_t* compat_socket_selfpipe_alloc(void)
@@ -74,11 +74,11 @@ compat_socket_selfpipe_t* compat_socket_selfpipe_alloc(void)
   int pipefd[2];
 
   compat_socket_selfpipe_t *self =
-    libspectrum_new( compat_socket_selfpipe_t, 1 );
+    libspectrum_new(compat_socket_selfpipe_t, 1);
 
-  error = pipe( pipefd );
-  if (error ) {
-    ui_error( UI_ERROR_ERROR, "%s: %d: error %d creating pipe", __FILE__, __LINE__, error );
+  error = pipe(pipefd);
+  if (error) {
+    ui_error(UI_ERROR_ERROR, "%s: %d: error %d creating pipe", __FILE__, __LINE__, error);
     fuse_abort();
   }
 
@@ -88,35 +88,35 @@ compat_socket_selfpipe_t* compat_socket_selfpipe_alloc(void)
   return self;
 }
 
-void compat_socket_selfpipe_free( compat_socket_selfpipe_t *self )
+void compat_socket_selfpipe_free(compat_socket_selfpipe_t *self)
 {
-  close( self->read_fd );
-  close( self->write_fd );
-  libspectrum_free( self );
+  close(self->read_fd);
+  close(self->write_fd);
+  libspectrum_free(self);
 }
 
-compat_socket_t compat_socket_selfpipe_get_read_fd( compat_socket_selfpipe_t *self )
+compat_socket_t compat_socket_selfpipe_get_read_fd(compat_socket_selfpipe_t *self)
 {
   return self->read_fd;
 }
 
-void compat_socket_selfpipe_wake( compat_socket_selfpipe_t *self )
+void compat_socket_selfpipe_wake(compat_socket_selfpipe_t *self)
 {
     const char dummy = 0;
-    if (write( self->write_fd, &dummy, 1)) {};
+    if (write(self->write_fd, &dummy, 1)) {};
 }
 
-void compat_socket_selfpipe_discard_data( compat_socket_selfpipe_t *self )
+void compat_socket_selfpipe_discard_data(compat_socket_selfpipe_t *self)
 {
   char bitbucket;
   ssize_t bytes_read;
 
   do {
-    bytes_read = read( self->read_fd, &bitbucket, 1 );
-    if (bytes_read == -1 && errno != EINTR ) {
-      ui_error( UI_ERROR_ERROR,
+    bytes_read = read(self->read_fd, &bitbucket, 1);
+    if (bytes_read == -1 && errno != EINTR) {
+      ui_error(UI_ERROR_ERROR,
                 "%s: %d: unexpected error %d (%s) reading from pipe", __FILE__,
-                __LINE__, errno, strerror(errno) );
+                __LINE__, errno, strerror(errno));
     }
-  } while( bytes_read < 0 );
+  } while (bytes_read < 0);
 }

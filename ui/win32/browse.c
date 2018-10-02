@@ -35,52 +35,52 @@
 
 #include "browse.h"
 
-static INT_PTR CALLBACK dialog_proc( HWND hwndDlg, UINT uMsg,
-                                     WPARAM wParam, LPARAM lParam );
-static void add_block_details( libspectrum_tape_block *block, void *user_data );
-static void select_row( LPNMITEMACTIVATE lpnmitem );
+static INT_PTR CALLBACK dialog_proc(HWND hwndDlg, UINT uMsg,
+                                     WPARAM wParam, LPARAM lParam);
+static void add_block_details(libspectrum_tape_block *block, void *user_data);
+static void select_row(LPNMITEMACTIVATE lpnmitem);
 
 static HWND dialog; // The dialog box itself
 
 static int dialog_created; // Have we created the dialog box yet?
 
 void
-menu_media_tape_browse( int action )
+menu_media_tape_browse(int action)
 {
   // Firstly, stop emulation
   fuse_emulation_pause();
 
-  if (!dialog_created ) {
-    dialog = CreateDialog( fuse_hInstance, MAKEINTRESOURCE( IDD_BROWSE ),
-                           fuse_hWnd, dialog_proc );
-    if (dialog == NULL ) { fuse_emulation_unpause(); return; }
+  if (!dialog_created) {
+    dialog = CreateDialog(fuse_hInstance, MAKEINTRESOURCE(IDD_BROWSE),
+                           fuse_hWnd, dialog_proc);
+    if (dialog == NULL) { fuse_emulation_unpause(); return; }
   }
 
-  if (ui_tape_browser_update( UI_TAPE_BROWSER_NEW_TAPE, NULL ) ) {
+  if (ui_tape_browser_update(UI_TAPE_BROWSER_NEW_TAPE, NULL)) {
     fuse_emulation_unpause();
     return;
   }
 
-  ShowWindow( dialog, SW_SHOW );
+  ShowWindow(dialog, SW_SHOW);
 
   // Carry on with emulation
   fuse_emulation_unpause();
 }
 
 static void
-dialog_init( HWND hwndDlg )
+dialog_init(HWND hwndDlg)
 {
   size_t i;
-  LPCTSTR titles[3] = { _T( "" ), _T( "Block type" ), _T( "Data" ) };
+  LPCTSTR titles[3] = { _T(""), _T("Block type"), _T("Data") };
   int titles_widths[3] = { 16, 115, 150 };
 
   // set extended listview style to select full row, when an item is selected
   DWORD lv_ext_style;
-  lv_ext_style = SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV,
-                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
+  lv_ext_style = SendDlgItemMessage(hwndDlg, IDC_BROWSE_LV,
+                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
   lv_ext_style |= LVS_EX_FULLROWSELECT;
-  SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV,
-                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
+  SendDlgItemMessage(hwndDlg, IDC_BROWSE_LV,
+                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style);
 
   // Create columns in the listview
   LVCOLUMN lvc;
@@ -88,12 +88,12 @@ dialog_init( HWND hwndDlg )
   lvc.fmt = LVCFMT_LEFT;
 
   for (i = 0; i < 3; i++) {
-    if (i != 0 )
+    if (i != 0)
       lvc.mask |= LVCF_SUBITEM;
     lvc.cx = titles_widths[i];
     lvc.pszText = (LPTSTR)titles[i];
-    SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV, LVM_INSERTCOLUMN, i,
-                        ( LPARAM ) &lvc );
+    SendDlgItemMessage(hwndDlg, IDC_BROWSE_LV, LVM_INSERTCOLUMN, i,
+                        (LPARAM) &lvc);
   }
 
   // create image list for the listview
@@ -102,92 +102,92 @@ dialog_init( HWND hwndDlg )
   HIMAGELIST himl;
 
   // FIXME: need to destroy those objects later
-  icon_tape_marker = LoadImage( fuse_hInstance, "win32bmp_tape_marker",
+  icon_tape_marker = LoadImage(fuse_hInstance, "win32bmp_tape_marker",
                                 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-  icon_tape_marker_mask = LoadImage( fuse_hInstance, "win32bmp_tape_marker_mask",
+  icon_tape_marker_mask = LoadImage(fuse_hInstance, "win32bmp_tape_marker_mask",
                                      IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-  GetObject( icon_tape_marker, sizeof( bmp ), &bmp );
+  GetObject(icon_tape_marker, sizeof(bmp), &bmp);
 
   // FIXME: destroy the list later
-  himl = ImageList_Create( bmp.bmWidth, bmp.bmHeight,
-                           ILC_COLOR | ILC_MASK, 1, 0 );
+  himl = ImageList_Create(bmp.bmWidth, bmp.bmHeight,
+                           ILC_COLOR | ILC_MASK, 1, 0);
 
-  ImageList_Add( himl, icon_tape_marker, icon_tape_marker_mask );
+  ImageList_Add(himl, icon_tape_marker, icon_tape_marker_mask);
 
-  SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV, LVM_SETIMAGELIST,
-                      LVSIL_SMALL, ( LPARAM ) himl );
+  SendDlgItemMessage(hwndDlg, IDC_BROWSE_LV, LVM_SETIMAGELIST,
+                      LVSIL_SMALL, (LPARAM) himl);
 
   dialog_created = 1;
 }
 
 static INT_PTR CALLBACK
-dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
+dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 // FIXME: implement resizing the dialog
-  switch (uMsg ) {
+  switch (uMsg) {
 
     case WM_INITDIALOG:
-      dialog_init( hwndDlg );
+      dialog_init(hwndDlg);
       return FALSE;
 
     case WM_NOTIFY:
-      if (( ( LPNMHDR ) lParam )->code == NM_DBLCLK ) {
-        if (( ( LPNMHDR ) lParam )->idFrom == IDC_BROWSE_LV ) {
-          select_row( ( LPNMITEMACTIVATE ) lParam );
+      if (((LPNMHDR) lParam)->code == NM_DBLCLK) {
+        if (((LPNMHDR) lParam)->idFrom == IDC_BROWSE_LV) {
+          select_row((LPNMITEMACTIVATE) lParam);
           return 0;
         }
       }
       break;
 
     case WM_COMMAND:
-      if (LOWORD( wParam ) == IDCLOSE ) {
-        ShowWindow( dialog, SW_HIDE );
+      if (LOWORD(wParam) == IDCLOSE) {
+        ShowWindow(dialog, SW_HIDE);
         return 0;
       }
       break;
 
     case WM_CLOSE:
       // Catch attempts to delete the window and just hide it instead
-      ShowWindow( dialog, SW_HIDE );
+      ShowWindow(dialog, SW_HIDE);
       return 0;
   }
   return FALSE;
 }
 
 int
-ui_tape_browser_update( ui_tape_browser_update_type change GCC_UNUSED,
-                        libspectrum_tape_block *block GCC_UNUSED )
+ui_tape_browser_update(ui_tape_browser_update_type change GCC_UNUSED,
+                        libspectrum_tape_block *block GCC_UNUSED)
 {
   int error, current_block;
 
-  if (!dialog_created ) return 0;
+  if (!dialog_created) return 0;
 
   fuse_emulation_pause();
 
-  SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_DELETEALLITEMS, 0, 0 );
+  SendDlgItemMessage(dialog, IDC_BROWSE_LV, LVM_DELETEALLITEMS, 0, 0);
 
-  error = tape_foreach( add_block_details, NULL );
-  if (error ) {
+  error = tape_foreach(add_block_details, NULL);
+  if (error) {
     fuse_emulation_unpause();
     return 1;
   }
 
   current_block = tape_get_current_block();
-  if (current_block != -1 ) {
+  if (current_block != -1) {
     LVITEM li;
     li.mask = LVIF_IMAGE;
     li.iItem = current_block;
     li.iSubItem = 0;
     li.iImage = 0;
-    SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_SETITEM, 0, ( LPARAM ) &li );
+    SendDlgItemMessage(dialog, IDC_BROWSE_LV, LVM_SETITEM, 0, (LPARAM) &li);
   }
 
-  if (tape_modified ) {
-    SendDlgItemMessage( dialog, IDC_BROWSE_MODIFIED, WM_SETTEXT,
-                        0, ( LPARAM ) TEXT( "Tape modified" ) );
+  if (tape_modified) {
+    SendDlgItemMessage(dialog, IDC_BROWSE_MODIFIED, WM_SETTEXT,
+                        0, (LPARAM) TEXT("Tape modified"));
   } else {
-    SendDlgItemMessage( dialog, IDC_BROWSE_MODIFIED, WM_SETTEXT,
-                        0, ( LPARAM ) TEXT( "Tape not modified" ) );
+    SendDlgItemMessage(dialog, IDC_BROWSE_MODIFIED, WM_SETTEXT,
+                        0, (LPARAM) TEXT("Tape not modified"));
  }
 
   fuse_emulation_unpause();
@@ -196,37 +196,37 @@ ui_tape_browser_update( ui_tape_browser_update_type change GCC_UNUSED,
 }
 
 static void
-add_block_details( libspectrum_tape_block *block, void *user_data )
+add_block_details(libspectrum_tape_block *block, void *user_data)
 {
   TCHAR buffer[256];
   TCHAR *details[3] = { &buffer[0], &buffer[80], &buffer[160] };
   LV_ITEM lvi;
   size_t i;
 
-  _tcscpy( details[0], "");
-  libspectrum_tape_block_description( details[1], 80, block );
+  _tcscpy(details[0], "");
+  libspectrum_tape_block_description(details[1], 80, block);
   // FIXME: why does it give such a big number of bytes?
-  tape_block_details( details[2], 80, block );
+  tape_block_details(details[2], 80, block);
 
   lvi.mask = LVIF_TEXT | LVIF_IMAGE;
   lvi.iImage = -1;
-  lvi.iItem = SendDlgItemMessage( dialog, IDC_BROWSE_LV,
-                                  LVM_GETITEMCOUNT, 0, 0 );
+  lvi.iItem = SendDlgItemMessage(dialog, IDC_BROWSE_LV,
+                                  LVM_GETITEMCOUNT, 0, 0);
   for (i = 0; i < 3; i++) {
     lvi.iSubItem = i;
     lvi.pszText = details[i];
-    if (i == 0 )
-      SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_INSERTITEM, 0,
-                          ( LPARAM ) &lvi );
+    if (i == 0)
+      SendDlgItemMessage(dialog, IDC_BROWSE_LV, LVM_INSERTITEM, 0,
+                          (LPARAM) &lvi);
     else
-      SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_SETITEM, 0,
-                          ( LPARAM ) &lvi );
+      SendDlgItemMessage(dialog, IDC_BROWSE_LV, LVM_SETITEM, 0,
+                          (LPARAM) &lvi);
   }
 }
 
 // Called when a row is selected
 static void
-select_row( LPNMITEMACTIVATE lpnmitem )
+select_row(LPNMITEMACTIVATE lpnmitem)
 {
   int current_block, row;
 
@@ -234,22 +234,22 @@ select_row( LPNMITEMACTIVATE lpnmitem )
 
   // Don't do anything if the current block was clicked on
   current_block = tape_get_current_block();
-  if (row == current_block ) return;
+  if (row == current_block) return;
 
   // Otherwise, select the new block
-  tape_select_block_no_update( row );
+  tape_select_block_no_update(row);
 
   // set the marker at the current item, clear others
   size_t i, count;
-  count = SendDlgItemMessage( dialog, IDC_BROWSE_LV,
-                              LVM_GETITEMCOUNT, 0, 0 );
+  count = SendDlgItemMessage(dialog, IDC_BROWSE_LV,
+                              LVM_GETITEMCOUNT, 0, 0);
   LVITEM li;
   li.mask = LVIF_IMAGE;
   li.iSubItem = 0;
 
-  for( i=0; i<count; i++) {
-    li.iImage = ( i==row ? 0 : -1 );
+  for (i=0; i<count; i++) {
+    li.iImage = (i==row ? 0 : -1);
     li.iItem = i;
-    SendDlgItemMessage( dialog, IDC_BROWSE_LV, LVM_SETITEM, 0, ( LPARAM ) &li );
+    SendDlgItemMessage(dialog, IDC_BROWSE_LV, LVM_SETITEM, 0, (LPARAM) &li);
   }
 }

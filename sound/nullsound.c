@@ -25,7 +25,7 @@
 #include "fuse.h"
 
 int
-sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
+sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
   fuse_abort();
 }
@@ -37,7 +37,7 @@ sound_lowlevel_end(void)
 }
 
 void
-sound_lowlevel_frame( unsigned char *data, int len )
+sound_lowlevel_frame(unsigned char *data, int len)
 {
   fuse_abort();
 }

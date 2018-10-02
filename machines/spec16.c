@@ -42,7 +42,7 @@ static int spec16_reset(void);
 static memory_page empty_mapping[MEMORY_PAGES_IN_16K];
 static int empty_mapping_allocated = 0;
 
-int spec16_init( fuse_machine_info *machine )
+int spec16_init(fuse_machine_info *machine)
 {
   machine->machine = LIBSPECTRUM_MACHINE_16;
   machine->id = "16";
@@ -70,10 +70,10 @@ ensure_empty_mapping(void)
   int i;
   libspectrum_byte *empty_chunk;
 
-  if (empty_mapping_allocated ) return;
+  if (empty_mapping_allocated) return;
 
-  empty_chunk = memory_pool_allocate_persistent( 0x4000, 1 );
-  memset( empty_chunk, 0xff, 0x4000 );
+  empty_chunk = memory_pool_allocate_persistent(0x4000, 1);
+  memset(empty_chunk, 0xff, 0x4000);
 
   for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
     memory_page *page = &empty_mapping[i];
@@ -91,9 +91,9 @@ spec16_reset(void)
 {
   int error;
 
-  error = machine_load_rom( 0, settings_current.rom_16,
-                            settings_default.rom_16, 0x4000 );
-  if (error ) return error;
+  error = machine_load_rom(0, settings_current.rom_16,
+                            settings_default.rom_16, 0x4000);
+  if (error) return error;
 
   ensure_empty_mapping();
 
@@ -102,12 +102,12 @@ spec16_reset(void)
   periph_update();
 
   // The one RAM page is contended
-  memory_ram_set_16k_contention( 5, 1 );
+  memory_ram_set_16k_contention(5, 1);
 
-  memory_map_16k( 0x0000, memory_map_rom, 0 );
-  memory_map_16k( 0x4000, memory_map_ram, 5 );
-  memory_map_16k( 0x8000, empty_mapping, 0 );
-  memory_map_16k( 0xc000, empty_mapping, 0 );
+  memory_map_16k(0x0000, memory_map_rom, 0);
+  memory_map_16k(0x4000, memory_map_ram, 5);
+  memory_map_16k(0x8000, empty_mapping, 0);
+  memory_map_16k(0xc000, empty_mapping, 0);
 
   memory_current_screen = 5;
   memory_screen_mask = 0xffff;

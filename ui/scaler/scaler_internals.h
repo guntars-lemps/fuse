@@ -6,7 +6,7 @@
    Copyright (C) 2001/2002 The ScummVM project
 
    HQ2x and HQ3x scalers taken from HiEnd3D Demos (http://www.hiend3d.com)
-   Copyright (C) 2003 MaxSt ( maxst@hiend3d.com )
+   Copyright (C) 2003 MaxSt (maxst@hiend3d.com)
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,17 +31,17 @@
 #ifndef FUSE_SCALER_INTERNALS_H
 #define FUSE_SCALER_INTERNALS_H
 
-#define DECLARE_SCALER( name ) \
-         extern void scaler_##name##_16( const libspectrum_byte *srcPtr, \
+#define DECLARE_SCALER(name) \
+         extern void scaler_##name##_16(const libspectrum_byte *srcPtr, \
 					 libspectrum_dword srcPitch, \
 					 libspectrum_byte *dstPtr, \
 					 libspectrum_dword dstPitch, \
-					 int width, int height ); \
-         extern void scaler_##name##_32( const libspectrum_byte *srcPtr, \
+					 int width, int height); \
+         extern void scaler_##name##_32(const libspectrum_byte *srcPtr, \
 					 libspectrum_dword srcPitch, \
 					 libspectrum_byte *dstPtr, \
 					 libspectrum_dword dstPitch, \
-					 int width, int height );
+					 int width, int height);
 
 DECLARE_SCALER(2xSaI);
 DECLARE_SCALER(Super2xSaI);

@@ -29,33 +29,33 @@
 #include "compat.h"
 
 compat_dir
-compat_opendir( const char *path )
+compat_opendir(const char *path)
 {
-  return opendir( path );
+  return opendir(path);
 }
 
 compat_dir_result_t
-compat_readdir( compat_dir directory, char *name, size_t length )
+compat_readdir(compat_dir directory, char *name, size_t length)
 {
   compat_dir_result_t r;
   struct dirent *dirent;
 
   errno = 0;
-  dirent = readdir( directory );
+  dirent = readdir(directory);
 
-  if (dirent ) {
+  if (dirent) {
     r = COMPAT_DIR_RESULT_OK;
-    strncpy( name, dirent->d_name, length );
+    strncpy(name, dirent->d_name, length);
     name[ length - 1 ] = 0;
   } else {
-    r = ( errno == 0 ? COMPAT_DIR_RESULT_END : COMPAT_DIR_RESULT_ERROR );
+    r = (errno == 0 ? COMPAT_DIR_RESULT_END : COMPAT_DIR_RESULT_ERROR);
   }
 
   return r;
 }
 
 int
-compat_closedir( compat_dir directory )
+compat_closedir(compat_dir directory)
 {
-  return closedir( directory );
+  return closedir(directory);
 }

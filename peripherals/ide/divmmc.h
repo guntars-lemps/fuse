@@ -32,7 +32,7 @@ extern int divmmc_active;
 /* Notify DivMMC hardware of an opcode fetch to one of the designated
    entry / exit points. Depending on configuration, it may or may not
    result in the DivMMC memory being paged in */
-void divmmc_set_automap( int state );
+void divmmc_set_automap(int state);
 
 /* Call this after some state change other than an opcode fetch which could
    trigger DivMMC paging (such as updating the write-protect flag), to
@@ -40,7 +40,7 @@ void divmmc_set_automap( int state );
 void divmmc_refresh_page_state(void);
 
 void divmmc_register_startup(void);
-int divmmc_insert( const char *filename );
+int divmmc_insert(const char *filename);
 void divmmc_commit(void);
 int divmmc_eject(void);
 

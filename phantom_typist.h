@@ -30,7 +30,7 @@ phantom_typist_register_startup(void);
 /* Activate the phantom typist for a given machine, and optionally
    for a tape that needs LOAD ""CODE rather than just LOAD "" */
 void
-phantom_typist_activate( libspectrum_machine machine, int needs_code );
+phantom_typist_activate(libspectrum_machine machine, int needs_code);
 
 // Activate the phantom typist to load a +3 disk
 void
@@ -42,7 +42,7 @@ phantom_typist_deactivate(void);
 
 // Get the result of any keys pressed by the phantom typist
 libspectrum_byte
-phantom_typist_ula_read( libspectrum_word port );
+phantom_typist_ula_read(libspectrum_word port);
 
 // Returns non-zero if the phantom typist is active
 int

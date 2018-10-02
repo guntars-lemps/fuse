@@ -3,7 +3,7 @@
  *			   Philip Kendall
  *
  * HQ2x and HQ3x scalers taken from HiEnd3D Demos (http://www.hiend3d.com)
- * Copyright (C) 2003 MaxSt ( maxst@hiend3d.com )
+ * Copyright (C) 2003 MaxSt (maxst@hiend3d.com)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,14 +57,14 @@ typedef enum scaler_flags_t {
   SCALER_FLAGS_EXPAND      = 1 << 0,
 } scaler_flags_t;
 
-typedef void ScalerProc( const libspectrum_byte *srcPtr,
+typedef void ScalerProc(const libspectrum_byte *srcPtr,
 			 libspectrum_dword srcPitch,
 			 libspectrum_byte *dstPtr, libspectrum_dword dstPitch,
-			 int width, int height );
+			 int width, int height);
 
 // The type of function used to expand the area dirtied by a scaler
-typedef void scaler_expand_fn( int *x, int *y, int *w, int *h,
-			       int image_width, int image_height );
+typedef void scaler_expand_fn(int *x, int *y, int *w, int *h,
+			       int image_width, int image_height);
 
 extern scaler_type current_scaler;
 extern ScalerProc *scaler_proc16, *scaler_proc32;
@@ -72,20 +72,20 @@ extern scaler_flags_t scaler_flags;
 extern scaler_expand_fn *scaler_expander;
 extern int scalers_registered;
 
-typedef int (*scaler_available_fn)( scaler_type scaler );
+typedef int (*scaler_available_fn)(scaler_type scaler);
 
-int scaler_select_id( const char *scaler_mode );
+int scaler_select_id(const char *scaler_mode);
 void scaler_register_clear(void);
-int scaler_select_scaler( scaler_type scaler );
-void scaler_register( scaler_type scaler );
-int scaler_is_supported( scaler_type scaler );
-const char *scaler_name( scaler_type scaler );
-ScalerProc *scaler_get_proc16( scaler_type scaler );
-ScalerProc *scaler_get_proc32( scaler_type scaler );
-scaler_flags_t scaler_get_flags( scaler_type scaler );
-float scaler_get_scaling_factor( scaler_type scaler );
-scaler_expand_fn* scaler_get_expander( scaler_type scaler );
+int scaler_select_scaler(scaler_type scaler);
+void scaler_register(scaler_type scaler);
+int scaler_is_supported(scaler_type scaler);
+const char *scaler_name(scaler_type scaler);
+ScalerProc *scaler_get_proc16(scaler_type scaler);
+ScalerProc *scaler_get_proc32(scaler_type scaler);
+scaler_flags_t scaler_get_flags(scaler_type scaler);
+float scaler_get_scaling_factor(scaler_type scaler);
+scaler_expand_fn* scaler_get_expander(scaler_type scaler);
 
-int scaler_select_bitformat( libspectrum_dword BitFormat );
+int scaler_select_bitformat(libspectrum_dword BitFormat);
 
 #endif

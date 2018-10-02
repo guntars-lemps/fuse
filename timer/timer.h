@@ -41,6 +41,6 @@ int timer_fastloading_active(void);
 // Internal routines
 
 double timer_get_time(void);
-void timer_sleep( int ms );
+void timer_sleep(int ms);
 
 #endif // #ifndef FUSE_TIMER_H

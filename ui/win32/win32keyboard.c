@@ -50,17 +50,17 @@ extern const keysyms_map_t oem_keysyms_map[];
 static GHashTable *oem_keysyms_hash;
 
 static input_key
-oem_keysyms_remap( WPARAM wParam )
+oem_keysyms_remap(WPARAM wParam)
 {
   const input_key *ptr;
   unsigned int mapped_code;
   libspectrum_dword unshifted_char;
 
-  mapped_code = MapVirtualKey( wParam, MAPVK_VK_TO_CHAR );
-  if (!mapped_code ) return INPUT_KEY_NONE;
+  mapped_code = MapVirtualKey(wParam, MAPVK_VK_TO_CHAR);
+  if (!mapped_code) return INPUT_KEY_NONE;
 
-  unshifted_char = LOWORD( mapped_code );
-  ptr = g_hash_table_lookup( oem_keysyms_hash, &unshifted_char );
+  unshifted_char = LOWORD(mapped_code);
+  ptr = g_hash_table_lookup(oem_keysyms_hash, &unshifted_char);
 
   return ptr ? *ptr : INPUT_KEY_NONE;
 }
@@ -70,25 +70,25 @@ win32keyboard_init(void)
 {
   keysyms_map_t *ptr3;
 
-  oem_keysyms_hash = g_hash_table_new( g_int_hash, g_int_equal );
+  oem_keysyms_hash = g_hash_table_new(g_int_hash, g_int_equal);
 
-  for( ptr3 = (keysyms_map_t *)oem_keysyms_map; ptr3->ui; ptr3++ )
-    g_hash_table_insert( oem_keysyms_hash, &( ptr3->ui ), &( ptr3->fuse ) );
+  for (ptr3 = (keysyms_map_t *)oem_keysyms_map; ptr3->ui; ptr3++)
+    g_hash_table_insert(oem_keysyms_hash, &(ptr3->ui), &(ptr3->fuse));
 }
 
 void
 win32keyboard_end(void)
 {
-  g_hash_table_destroy( oem_keysyms_hash );
+  g_hash_table_destroy(oem_keysyms_hash);
 }
 
 void
-win32keyboard_keypress( WPARAM wParam, LPARAM lParam )
+win32keyboard_keypress(WPARAM wParam, LPARAM lParam)
 {
   input_key fuse_keysym;
   input_event_t fuse_event;
 
-  switch (wParam ) {
+  switch (wParam) {
   case VK_OEM_1:
   case VK_OEM_2:
   case VK_OEM_3:
@@ -102,29 +102,29 @@ win32keyboard_keypress( WPARAM wParam, LPARAM lParam )
   case VK_OEM_MINUS:
   case VK_OEM_PERIOD:
   case VK_OEM_PLUS:
-    fuse_keysym = oem_keysyms_remap( wParam );
+    fuse_keysym = oem_keysyms_remap(wParam);
     break;
   default:
-    fuse_keysym = keysyms_remap( wParam );
+    fuse_keysym = keysyms_remap(wParam);
     break;
   }
 
-  if (fuse_keysym == INPUT_KEY_NONE ) return;
+  if (fuse_keysym == INPUT_KEY_NONE) return;
 
   fuse_event.type = INPUT_EVENT_KEYPRESS;
   fuse_event.types.key.native_key = fuse_keysym;
   fuse_event.types.key.spectrum_key = fuse_keysym;
 
-  input_event( &fuse_event );
+  input_event(&fuse_event);
 }
 
 void
-win32keyboard_keyrelease( WPARAM wParam, LPARAM lParam )
+win32keyboard_keyrelease(WPARAM wParam, LPARAM lParam)
 {
   input_key fuse_keysym;
   input_event_t fuse_event;
 
-  switch (wParam ) {
+  switch (wParam) {
   case VK_OEM_1:
   case VK_OEM_2:
   case VK_OEM_3:
@@ -138,18 +138,18 @@ win32keyboard_keyrelease( WPARAM wParam, LPARAM lParam )
   case VK_OEM_MINUS:
   case VK_OEM_PERIOD:
   case VK_OEM_PLUS:
-    fuse_keysym = oem_keysyms_remap( wParam );
+    fuse_keysym = oem_keysyms_remap(wParam);
     break;
   default:
-    fuse_keysym = keysyms_remap( wParam );
+    fuse_keysym = keysyms_remap(wParam);
     break;
   }
 
-  if (fuse_keysym == INPUT_KEY_NONE ) return;
+  if (fuse_keysym == INPUT_KEY_NONE) return;
 
   fuse_event.type = INPUT_EVENT_KEYRELEASE;
   fuse_event.types.key.native_key = fuse_keysym;
   fuse_event.types.key.spectrum_key = fuse_keysym;
 
-  input_event( &fuse_event );
+  input_event(&fuse_event);
 }

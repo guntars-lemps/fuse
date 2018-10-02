@@ -28,9 +28,9 @@
 
 #include "machine.h"
 
-int spec48_port_from_ula( libspectrum_word port );
+int spec48_port_from_ula(libspectrum_word port);
 
-int spec48_init( fuse_machine_info *machine );
+int spec48_init(fuse_machine_info *machine);
 void spec48_common_display_setup(void);
 int spec48_common_reset(void);
 int spec48_memory_map(void);

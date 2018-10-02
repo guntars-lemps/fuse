@@ -58,21 +58,21 @@ int ui_event(void);
 int ui_end(void);
 
 // Error handling routines
-int ui_error( ui_error_level severity, const char *format, ... )
-     GCC_PRINTF( 2, 3 );
-libspectrum_error ui_libspectrum_error( libspectrum_error error,
-					const char *format, va_list ap )
-     GCC_PRINTF( 2, 0 );
-int ui_verror( ui_error_level severity, const char *format, va_list ap )
-     GCC_PRINTF( 2, 0 );
-int ui_error_specific( ui_error_level severity, const char *message );
+int ui_error(ui_error_level severity, const char *format, ...)
+     GCC_PRINTF(2, 3);
+libspectrum_error ui_libspectrum_error(libspectrum_error error,
+					const char *format, va_list ap)
+     GCC_PRINTF(2, 0);
+int ui_verror(ui_error_level severity, const char *format, va_list ap)
+     GCC_PRINTF(2, 0);
+int ui_error_specific(ui_error_level severity, const char *message);
 void ui_error_frame(void);
 
 // Callbacks used by the debugger
 int ui_debugger_activate(void);
-int ui_debugger_deactivate( int interruptable );
+int ui_debugger_deactivate(int interruptable);
 int ui_debugger_update(void);
-int ui_debugger_disassemble( libspectrum_word address );
+int ui_debugger_disassemble(libspectrum_word address);
 void ui_breakpoints_updated();
 
 // Reset anything in the UI which needs to be reset on machine selection
@@ -89,9 +89,9 @@ typedef enum ui_confirm_save_t {
 
 } ui_confirm_save_t;
 
-ui_confirm_save_t ui_confirm_save( const char *format, ... )
-     GCC_PRINTF( 1, 2 );
-ui_confirm_save_t ui_confirm_save_specific( const char *message );
+ui_confirm_save_t ui_confirm_save(const char *format, ...)
+     GCC_PRINTF(1, 2);
+ui_confirm_save_t ui_confirm_save_specific(const char *message);
 
 // Confirm whether we want to change a joystick setting
 typedef enum ui_confirm_joystick_t {
@@ -104,25 +104,25 @@ typedef enum ui_confirm_joystick_t {
 } ui_confirm_joystick_t;
 
 ui_confirm_joystick_t
-ui_confirm_joystick( libspectrum_joystick libspectrum_type, int inputs );
+ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs);
 
 // Mouse handling
 
 extern int ui_mouse_present, ui_mouse_grabbed;
 void ui_mouse_suspend(void);
 void ui_mouse_resume(void);
-void ui_mouse_button( int button, int down );
-void ui_mouse_motion( int dx, int dy );
-int ui_mouse_grab( int startup ); // UI: grab, return 1 if done
-int ui_mouse_release( int suspend ); // UI: ungrab, return 0 if done
+void ui_mouse_button(int button, int down);
+void ui_mouse_motion(int dx, int dy);
+int ui_mouse_grab(int startup); // UI: grab, return 1 if done
+int ui_mouse_release(int suspend); // UI: ungrab, return 0 if done
 
 // Write the current tape out
 int ui_tape_write(void);
 
-int ui_mdr_write( int which, int saveas );
+int ui_mdr_write(int which, int saveas);
 
 // Get a rollback point from the given list
-int ui_get_rollback_point( GSList *points );
+int ui_get_rollback_point(GSList *points);
 
 // Routines to (de)activate certain menu items
 
@@ -245,8 +245,8 @@ typedef enum ui_menu_item {
 
 } ui_menu_item;
 
-int ui_menu_activate( ui_menu_item item, int active );
-int ui_menu_item_set_active( const char *path, int active );
+int ui_menu_activate(ui_menu_item item, int active);
+int ui_menu_item_set_active(const char *path, int active);
 
 void ui_menu_disk_update(void);
 
@@ -270,8 +270,8 @@ typedef enum ui_statusbar_state {
 
 } ui_statusbar_state;
 
-int ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state );
-int ui_statusbar_update_speed( float speed );
+int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state);
+int ui_statusbar_update_speed(float speed);
 
 typedef enum ui_tape_browser_update_type {
 
@@ -285,12 +285,12 @@ typedef enum ui_tape_browser_update_type {
 } ui_tape_browser_update_type;
 
 // Cause the tape browser to be updated
-int ui_tape_browser_update( ui_tape_browser_update_type change,
-                            libspectrum_tape_block *block );
+int ui_tape_browser_update(ui_tape_browser_update_type change,
+                            libspectrum_tape_block *block);
 
-char *ui_get_open_filename( const char *title );
-char *ui_get_save_filename( const char *title );
-int ui_query( const char *message );
+char *ui_get_open_filename(const char *title);
+char *ui_get_save_filename(const char *title);
+int ui_query(const char *message);
 
 #ifdef USE_WIDGET
 #include "ui/widget/widget.h"
@@ -307,10 +307,10 @@ int ui_widget_end(void);
 extern int ui_widget_level;
 
 // widget system popup the apropriate menu
-void ui_popup_menu( int native_key );
+void ui_popup_menu(int native_key);
 
-void ui_widget_keyhandler( int native_key );
+void ui_widget_keyhandler(int native_key);
 
-void ui_pokemem_selector( const char *filename );
+void ui_pokemem_selector(const char *filename);
 
 #endif // #ifndef FUSE_UI_H

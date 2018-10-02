@@ -47,55 +47,55 @@ compat_get_config_path(void)
 }
 
 int
-compat_is_absolute_path( const char *path )
+compat_is_absolute_path(const char *path)
 {
   return strchr(path,':');
 }
 
 int
-compat_get_next_path( path_context *ctx )
+compat_get_next_path(path_context *ctx)
 {
   char buffer[ PATH_MAX ];
   const char *path_segment, *path2;
 
-  switch ((ctx->state)++ ) {
+  switch ((ctx->state)++) {
 
     // First look relative to the current directory
   case 0:
-    strncpy( ctx->path, "PROGDIR:", PATH_MAX );
+    strncpy(ctx->path, "PROGDIR:", PATH_MAX);
     return 1;
 
     // Then relative to the Fuse executable
   case 1:
 
-    switch (ctx->type ) {
-    case UTILS_AUXILIARY_LIB: strncpy( ctx->path, "PROGDIR:lib/", PATH_MAX); return 1;
-    case UTILS_AUXILIARY_ROM: strncpy( ctx->path, "PROGDIR:roms/", PATH_MAX); return 1;
-    case UTILS_AUXILIARY_WIDGET: strncpy( ctx->path, "PROGDIR:ui/widget/", PATH_MAX); return 1;
-    case UTILS_AUXILIARY_GTK: strncpy( ctx->path, "PROGDIR:ui/gtk/", PATH_MAX); return 1;
+    switch (ctx->type) {
+    case UTILS_AUXILIARY_LIB: strncpy(ctx->path, "PROGDIR:lib/", PATH_MAX); return 1;
+    case UTILS_AUXILIARY_ROM: strncpy(ctx->path, "PROGDIR:roms/", PATH_MAX); return 1;
+    case UTILS_AUXILIARY_WIDGET: strncpy(ctx->path, "PROGDIR:ui/widget/", PATH_MAX); return 1;
+    case UTILS_AUXILIARY_GTK: strncpy(ctx->path, "PROGDIR:ui/gtk/", PATH_MAX); return 1;
     default:
-      ui_error( UI_ERROR_ERROR, "unknown auxiliary file type %d", ctx->type );
+      ui_error(UI_ERROR_ERROR, "unknown auxiliary file type %d", ctx->type);
       return 0;
     }
 
-    if (compat_is_absolute_path( fuse_progname ) ) {
-      strncpy( buffer, fuse_progname, PATH_MAX );
+    if (compat_is_absolute_path(fuse_progname)) {
+      strncpy(buffer, fuse_progname, PATH_MAX);
       buffer[ PATH_MAX - 1 ] = '\0';
     } else {
       size_t len;
-      len = PATH_MAX - strlen( fuse_progname ) - strlen( FUSE_DIR_SEP_STR );
-      if (!getcwd( buffer, len ) ) {
-        ui_error( UI_ERROR_ERROR, "error getting current working directory: %s",
-	          strerror( errno ) );
+      len = PATH_MAX - strlen(fuse_progname) - strlen(FUSE_DIR_SEP_STR);
+      if (!getcwd(buffer, len)) {
+        ui_error(UI_ERROR_ERROR, "error getting current working directory: %s",
+	          strerror(errno));
         return 0;
       }
-      strcat( buffer, FUSE_DIR_SEP_STR );
-      strcat( buffer, fuse_progname );
+      strcat(buffer, FUSE_DIR_SEP_STR);
+      strcat(buffer, fuse_progname);
     }
 
-    path2 = dirname( buffer );
-    snprintf( ctx->path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "%s", path2,
-              path_segment );
+    path2 = dirname(buffer);
+    snprintf(ctx->path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "%s", path2,
+              path_segment);
     return 1;
 
     // Then where we may have installed the data files
@@ -106,11 +106,11 @@ compat_get_next_path( path_context *ctx )
 #else // #ifndef ROMSDIR
     path2 = ctx->type == UTILS_AUXILIARY_ROM ? ROMSDIR : FUSEDATADIR;
 #endif // #ifndef ROMSDIR
-    strncpy( ctx->path, path2, PATH_MAX ); buffer[ PATH_MAX - 1 ] = '\0';
+    strncpy(ctx->path, path2, PATH_MAX); buffer[ PATH_MAX - 1 ] = '\0';
     return 1;
 
   case 3: return 0;
   }
-  ui_error( UI_ERROR_ERROR, "unknown path_context state %d", ctx->state );
+  ui_error(UI_ERROR_ERROR, "unknown path_context state %d", ctx->state);
   fuse_abort();
 }

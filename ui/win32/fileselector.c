@@ -82,16 +82,16 @@ static LPCTSTR file_filter = TEXT(
 static DWORD filter_index = 0;
 
 static char*
-run_dialog( const char *title, int is_saving )
+run_dialog(const char *title, int is_saving)
 {
   OPENFILENAME ofn;
   char szFile[512];
   int result;
 
-  memset( &ofn, 0, sizeof( ofn ) );
+  memset(&ofn, 0, sizeof(ofn));
   szFile[0] = '\0';
 
-  ofn.lStructSize = sizeof( ofn );
+  ofn.lStructSize = sizeof(ofn);
   ofn.hwndOwner = fuse_hWnd;
   ofn.lpstrFilter = file_filter;
   ofn.lpstrCustomFilter = NULL;
@@ -99,12 +99,12 @@ run_dialog( const char *title, int is_saving )
   // TODO: custom filter based file action (open, save)
   ofn.nFilterIndex = filter_index;
   ofn.lpstrFile = szFile;
-  ofn.nMaxFile = sizeof( szFile );
+  ofn.nMaxFile = sizeof(szFile);
   ofn.lpstrFileTitle = NULL;
   ofn.lpstrInitialDir = NULL;
   ofn.lpstrTitle = title;
   ofn.Flags = /* OFN_DONTADDTORECENT | */ OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-  if (is_saving ) {
+  if (is_saving) {
     ofn.Flags |= OFN_OVERWRITEPROMPT | OFN_NOREADONLYRETURN;
   } else {
     ofn.Flags |= OFN_FILEMUSTEXIST;
@@ -115,29 +115,29 @@ run_dialog( const char *title, int is_saving )
 // ofn.pvReserved = NULL;
 // ofn.FlagsEx = 0;
 
-  if (is_saving ) {
-    result = GetSaveFileName( &ofn );
+  if (is_saving) {
+    result = GetSaveFileName(&ofn);
   } else {
-    result = GetOpenFileName( &ofn );
+    result = GetOpenFileName(&ofn);
   }
 
   filter_index = ofn.nFilterIndex;
 
-  if (!result ) {
+  if (!result) {
     return NULL;
   } else {
-    return utils_safe_strdup( ofn.lpstrFile );
+    return utils_safe_strdup(ofn.lpstrFile);
   }
 }
 
 char*
-ui_get_open_filename( const char *title )
+ui_get_open_filename(const char *title)
 {
-  return run_dialog( title, 0 );
+  return run_dialog(title, 0);
 }
 
 char*
-ui_get_save_filename( const char *title )
+ui_get_save_filename(const char *title)
 {
-  return run_dialog( title, 1 );
+  return run_dialog(title, 1);
 }

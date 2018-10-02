@@ -36,7 +36,7 @@
 #include "sound.h"
 #include "ui/ui.h"
 
-static void sdlwrite( void *userdata, Uint8 *stream, int len );
+static void sdlwrite(void *userdata, Uint8 *stream, int len);
 
 sfifo_t sound_fifo;
 
@@ -47,7 +47,7 @@ sfifo_t sound_fifo;
 static int audio_output_started;
 
 int
-sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
+sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
   SDL_AudioSpec requested, received;
   int error;
@@ -56,26 +56,26 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
 #ifndef __MORPHOS__
   // I'd rather just use setenv, but Windows doesn't have it
-  if (device ) {
+  if (device) {
     const char *environment = "SDL_AUDIODRIVER=";
-    char *command = libspectrum_new( char, strlen( environment ) +
-                                           strlen( device ) + 1 );
-    strcpy( command, environment );
-    strcat( command, device );
-    error = putenv( command );
-    libspectrum_free( command );
-    if (error ) {
+    char *command = libspectrum_new(char, strlen(environment) +
+                                           strlen(device) + 1);
+    strcpy(command, environment);
+    strcat(command, device);
+    error = putenv(command);
+    libspectrum_free(command);
+    if (error) {
       settings_current.sound = 0;
-      ui_error( UI_ERROR_ERROR, "Couldn't set SDL_AUDIODRIVER: %s",
-                strerror ( error ) );
+      ui_error(UI_ERROR_ERROR, "Couldn't set SDL_AUDIODRIVER: %s",
+                strerror (error));
       return 1;
     }
   }
 #endif // #ifndef __MORPHOS__
 
-  SDL_InitSubSystem( SDL_INIT_AUDIO );
+  SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-  memset( &requested, 0, sizeof( SDL_AudioSpec ) );
+  memset(&requested, 0, sizeof(SDL_AudioSpec));
 
   requested.freq = *freqptr;
   requested.channels = *stereoptr ? 2 : 1;
@@ -91,24 +91,24 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
      Not much point having more than 100Hz playback, we probably get
      downgraded by the OS as being a hog too (unlimited Hz limits playback
      speed to about 2000% on my Mac, 100Hz allows up to 5000% for me) */
-  if (hz > 100.0 ) hz = 100.0;
+  if (hz > 100.0) hz = 100.0;
   sound_framesiz = *freqptr / hz;
 #ifdef __FreeBSD__
-  requested.samples = pow( 2.0, floor( log2( sound_framesiz ) ) );
+  requested.samples = pow(2.0, floor(log2(sound_framesiz)));
 #else // #ifdef __FreeBSD__
   requested.samples = sound_framesiz;
 #endif // #ifdef __FreeBSD__
 
-  if ( SDL_OpenAudio( &requested, &received ) < 0 ) {
+  if (SDL_OpenAudio(&requested, &received) < 0) {
     settings_current.sound = 0;
-    ui_error( UI_ERROR_ERROR, "Couldn't open sound device: %s",
-              SDL_GetError() );
+    ui_error(UI_ERROR_ERROR, "Couldn't open sound device: %s",
+              SDL_GetError());
     return 1;
   }
 
   *freqptr = received.freq;
 
-  if (received.format != AUDIO_S16SYS ) {
+  if (received.format != AUDIO_S16SYS) {
     /* close audio and then just let SDL convert to this wacky format at a
        supported sample rate */
     SDL_CloseAudio();
@@ -117,10 +117,10 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     sound_framesiz = *freqptr / hz;
     requested.samples = sound_framesiz;
 
-    if (SDL_OpenAudio( &requested, NULL ) < 0 ) {
+    if (SDL_OpenAudio(&requested, NULL) < 0) {
       settings_current.sound = 0;
-      ui_error( UI_ERROR_ERROR, "Couldn't open sound device: %s",
-                SDL_GetError() );
+      ui_error(UI_ERROR_ERROR, "Couldn't open sound device: %s",
+                SDL_GetError());
       return 1;
     }
   } else {
@@ -130,11 +130,11 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   sound_framesiz = *freqptr / hz;
   sound_framesiz <<= 1;
 
-  if (( error = sfifo_init( &sound_fifo, NUM_FRAMES
+  if ((error = sfifo_init(&sound_fifo, NUM_FRAMES
                                          * received.channels
-                                         * sound_framesiz + 1 ) ) ) {
-    ui_error( UI_ERROR_ERROR, "Problem initialising sound fifo: %s",
-              strerror ( error ) );
+                                         * sound_framesiz + 1))) {
+    ui_error(UI_ERROR_ERROR, "Problem initialising sound fifo: %s",
+              strerror (error));
     return 1;
   }
 
@@ -147,17 +147,17 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 void
 sound_lowlevel_end(void)
 {
-  SDL_PauseAudio( 1 );
+  SDL_PauseAudio(1);
   SDL_LockAudio();
   SDL_CloseAudio();
-  SDL_QuitSubSystem( SDL_INIT_AUDIO );
-  sfifo_flush( &sound_fifo );
-  sfifo_close( &sound_fifo );
+  SDL_QuitSubSystem(SDL_INIT_AUDIO);
+  sfifo_flush(&sound_fifo);
+  sfifo_close(&sound_fifo);
 }
 
 // Copy data to fifo
 void
-sound_lowlevel_frame( libspectrum_signed_word *data, int len )
+sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
   int i = 0;
 
@@ -165,8 +165,8 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   libspectrum_signed_byte* bytes = (libspectrum_signed_byte*)data;
   len <<= 1;
 
-  while( len ) {
-    if (( i = sfifo_write( &sound_fifo, bytes, len ) ) < 0 ) {
+  while (len) {
+    if ((i = sfifo_write(&sound_fifo, bytes, len)) < 0) {
       break;
     } else if (!i) {
       SDL_Delay(10);
@@ -174,13 +174,13 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
     bytes += i;
     len -= i;
   }
-  if (i < 0 ) {
-    ui_error( UI_ERROR_ERROR, "Couldn't write sound fifo: %s",
-              strerror( i ) );
+  if (i < 0) {
+    ui_error(UI_ERROR_ERROR, "Couldn't write sound fifo: %s",
+              strerror(i));
   }
 
-  if (!audio_output_started ) {
-    SDL_PauseAudio( 0 );
+  if (!audio_output_started) {
+    SDL_PauseAudio(0);
     audio_output_started = 1;
   }
 }
@@ -191,20 +191,20 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 
 // Write len samples from fifo into stream
 void
-sdlwrite( void *userdata, Uint8 *stream, int len )
+sdlwrite(void *userdata, Uint8 *stream, int len)
 {
   int f;
 
   // Try to only read an even number of bytes so as not to fragment a sample
-  len = MIN( len, sfifo_used( &sound_fifo ) );
+  len = MIN(len, sfifo_used(&sound_fifo));
   len &= sound_stereo_ay ? 0xfffc : 0xfffe;
 
   // Read input_size bytes from fifo into sound stream
-  while( ( f = sfifo_read( &sound_fifo, stream, len ) ) > 0 ) {
+  while ((f = sfifo_read(&sound_fifo, stream, len)) > 0) {
     stream += f;
     len -= f;
   }
 
   /* If we ran out of sound, do nothing else as SDL has prefilled
-     the output buffer with silence :( */
+     the output buffer with silence :(*/
 }

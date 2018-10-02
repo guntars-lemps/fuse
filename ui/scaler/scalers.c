@@ -6,7 +6,7 @@
  * Copyright (C) 2001-2003 The ScummVM project
  *
  * HQ2x and HQ3x scalers taken from HiEnd3D Demos (http://www.hiend3d.com)
- * Copyright (C) 2003 MaxSt ( maxst@hiend3d.com )
+ * Copyright (C) 2003 MaxSt (maxst@hiend3d.com)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,7 +49,7 @@
 #if SCALER_DATA_SIZE == 2
 
 typedef libspectrum_word scaler_data_type;
-#define FUNCTION( name ) name##_16
+#define FUNCTION(name) name##_16
 
 static libspectrum_dword colorMask;
 static libspectrum_dword lowPixelMask;
@@ -80,9 +80,9 @@ static const libspectrum_word dotmatrix_555[16] = {
 static const libspectrum_word *dotmatrix;
 
 int
-scaler_select_bitformat( libspectrum_dword BitFormat )
+scaler_select_bitformat(libspectrum_dword BitFormat)
 {
-  switch (BitFormat ) {
+  switch (BitFormat) {
 
     /* FIXME(?): there is an assumption here that our colour fields
        are (*) xxxx|xyyy|yyyz|zzzz for the 565 mode
@@ -129,7 +129,7 @@ scaler_select_bitformat( libspectrum_dword BitFormat )
     break;
 
   default:
-    ui_error( UI_ERROR_ERROR, "unknown bitformat %d", BitFormat );
+    ui_error(UI_ERROR_ERROR, "unknown bitformat %d", BitFormat);
     return 1;
 
   }
@@ -140,7 +140,7 @@ scaler_select_bitformat( libspectrum_dword BitFormat )
 #elif SCALER_DATA_SIZE == 4 // #if SCALER_DATA_SIZE == 2
 
 typedef libspectrum_dword scaler_data_type;
-#define FUNCTION( name ) name##_32
+#define FUNCTION(name) name##_32
 
 /* The assumption here is that the colour fields are laid out in
    memory as (LSB) red|green|blue|padding (MSB). We wish to access
@@ -198,8 +198,8 @@ static const libspectrum_dword dotmatrix[16] = {
 #endif // #if SCALER_DATA_SIZE == 2 or 4
 
 static inline int
-GetResult( libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
-	   libspectrum_dword D )
+GetResult(libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
+	   libspectrum_dword D)
 {
   const int ac = (A==C);
   const int bc = (B==C);
@@ -220,7 +220,7 @@ GetResult( libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
 }
 
 static inline libspectrum_dword
-INTERPOLATE( libspectrum_dword A, libspectrum_dword B )
+INTERPOLATE(libspectrum_dword A, libspectrum_dword B)
 {
   if (A != B) {
     return (((A & colorMask) >> 1) + ((B & colorMask) >> 1) + (A & B & lowPixelMask));
@@ -229,8 +229,8 @@ INTERPOLATE( libspectrum_dword A, libspectrum_dword B )
 }
 
 static inline libspectrum_dword
-Q_INTERPOLATE( libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
-	       libspectrum_dword D )
+Q_INTERPOLATE(libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
+	       libspectrum_dword D)
 {
   register libspectrum_dword x = ((A & qcolorMask) >> 2) +
   ((B & qcolorMask) >> 2) + ((C & qcolorMask) >> 2) + ((D & qcolorMask) >> 2);
@@ -247,63 +247,63 @@ Q_INTERPOLATE( libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
 #define HQ_INTERPOLATE_2(A,B,C) Q_INTERPOLATE(A,A,B,C)
 
 static inline libspectrum_dword
-HQ_INTERPOLATE_3( libspectrum_dword A, libspectrum_dword B )
+HQ_INTERPOLATE_3(libspectrum_dword A, libspectrum_dword B)
 {
-  return ( ( ( ( A & greenMask ) * 7 + ( B & greenMask) ) & green8_Mask ) +
-         ( ( ( A & redblueMask ) * 7 + ( B & redblueMask ) ) & redblue8_Mask )
-         ) >> 3;
+  return ((((A & greenMask) * 7 + (B & greenMask)) & green8_Mask) +
+         (((A & redblueMask) * 7 + (B & redblueMask)) & redblue8_Mask)
+) >> 3;
 }
 
 static inline libspectrum_dword
-HQ_INTERPOLATE_4( libspectrum_dword A, libspectrum_dword B,
-                  libspectrum_dword C )
+HQ_INTERPOLATE_4(libspectrum_dword A, libspectrum_dword B,
+                  libspectrum_dword C)
 {
-  return ( ( ( ( A & greenMask ) * 2 + ( ( B & greenMask) +
-		( C & greenMask ) ) * 7 ) & green16_Mask) +
-         ( ( ( A & redblueMask ) * 2 + ( ( B & redblueMask ) +
-		( C & redblueMask ) ) * 7 ) & redblue16_Mask ) ) >> 4;
+  return ((((A & greenMask) * 2 + ((B & greenMask) +
+		(C & greenMask)) * 7) & green16_Mask) +
+         (((A & redblueMask) * 2 + ((B & redblueMask) +
+		(C & redblueMask)) * 7) & redblue16_Mask)) >> 4;
 }
 
 #define HQ_INTERPOLATE_5(A,B) INTERPOLATE(A,B)
 
 static inline libspectrum_dword
-HQ_INTERPOLATE_6( libspectrum_dword A, libspectrum_dword B,
-                  libspectrum_dword C )
+HQ_INTERPOLATE_6(libspectrum_dword A, libspectrum_dword B,
+                  libspectrum_dword C)
 {
-  return ( ( ( ( A & greenMask ) * 5 + ( B & greenMask) * 2 +
-		( C & greenMask ) ) & green8_Mask) +
-         ( ( ( A & redblueMask ) * 5 + ( B & redblueMask ) * 2 +
-		( C & redblueMask ) ) & redblue8_Mask ) ) >> 3;
+  return ((((A & greenMask) * 5 + (B & greenMask) * 2 +
+		(C & greenMask)) & green8_Mask) +
+         (((A & redblueMask) * 5 + (B & redblueMask) * 2 +
+		(C & redblueMask)) & redblue8_Mask)) >> 3;
 }
 
 static inline libspectrum_dword
-HQ_INTERPOLATE_7( libspectrum_dword A, libspectrum_dword B,
-                  libspectrum_dword C )
+HQ_INTERPOLATE_7(libspectrum_dword A, libspectrum_dword B,
+                  libspectrum_dword C)
 {
-  return ( ( ( ( A & greenMask ) * 6 + ( B & greenMask) +
-		( C & greenMask ) ) & green8_Mask) +
-         ( ( ( A & redblueMask ) * 6 + ( B & redblueMask ) +
-		( C & redblueMask ) ) & redblue8_Mask ) ) >> 3;
+  return ((((A & greenMask) * 6 + (B & greenMask) +
+		(C & greenMask)) & green8_Mask) +
+         (((A & redblueMask) * 6 + (B & redblueMask) +
+		(C & redblueMask)) & redblue8_Mask)) >> 3;
 }
 
 static inline libspectrum_dword
-HQ_INTERPOLATE_9( libspectrum_dword A, libspectrum_dword B,
-                  libspectrum_dword C )
+HQ_INTERPOLATE_9(libspectrum_dword A, libspectrum_dword B,
+                  libspectrum_dword C)
 {
-  return ( ( ( ( A & greenMask ) * 2 + ( ( B & greenMask) +
-		( C & greenMask ) ) * 3 ) & green8_Mask) +
-         ( ( ( A & redblueMask ) * 2 + ( ( B & redblueMask ) +
-		( C & redblueMask ) ) * 3 ) & redblue8_Mask ) ) >> 3;
+  return ((((A & greenMask) * 2 + ((B & greenMask) +
+		(C & greenMask)) * 3) & green8_Mask) +
+         (((A & redblueMask) * 2 + ((B & redblueMask) +
+		(C & redblueMask)) * 3) & redblue8_Mask)) >> 3;
 }
 
 static inline libspectrum_dword
-HQ_INTERPOLATE_10( libspectrum_dword A, libspectrum_dword B,
-                   libspectrum_dword C )
+HQ_INTERPOLATE_10(libspectrum_dword A, libspectrum_dword B,
+                   libspectrum_dword C)
 {
-  return ( ( ( ( A & greenMask ) * 14 + ( B & greenMask) +
-		( C & greenMask ) ) & green16_Mask) +
-         ( ( ( A & redblueMask ) * 14 + ( B & redblueMask ) +
-		( C & redblueMask ) ) & redblue16_Mask ) ) >> 4;
+  return ((((A & greenMask) * 14 + (B & greenMask) +
+		(C & greenMask)) & green16_Mask) +
+         (((A & redblueMask) * 14 + (B & redblueMask) +
+		(C & redblueMask)) & redblue16_Mask)) >> 4;
 }
 
 // dstPtr
@@ -419,30 +419,30 @@ HQ_INTERPOLATE_10( libspectrum_dword A, libspectrum_dword B,
 #define HQ_trV 0x00000006
 
 #define HQ_YUVDIFF(y1,u1,v1,y2,u2,v2) \
-  ( ( ABS( y1 - y2 ) > HQ_trY ) || \
-    ( ABS( u1 - u2 ) > HQ_trU ) || \
-    ( ABS( v1 - v2 ) > HQ_trV ) )
+  ((ABS(y1 - y2) > HQ_trY) || \
+    (ABS(u1 - u2) > HQ_trU) || \
+    (ABS(v1 - v2) > HQ_trV))
 
 void
-FUNCTION( scaler_Super2xSaI )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_Super2xSaI)(const libspectrum_byte *srcPtr,
 			       libspectrum_dword srcPitch,
 			       libspectrum_byte *dstPtr,
 			       libspectrum_dword dstPitch,
-			       int width, int height )
+			       int width, int height)
 {
   const scaler_data_type *bP;
   scaler_data_type *dP;
 
   {
-    const libspectrum_dword nextlineSrc = srcPitch / sizeof( scaler_data_type );
-    libspectrum_dword nextDstLine = dstPitch / sizeof( scaler_data_type );
+    const libspectrum_dword nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    libspectrum_dword nextDstLine = dstPitch / sizeof(scaler_data_type);
     size_t i;
 
     while (height--) {
       bP = (const scaler_data_type*)srcPtr;
       dP = (scaler_data_type*)dstPtr;
 
-      for (i = 0; i < width; ++i ) {
+      for (i = 0; i < width; ++i) {
 	libspectrum_dword color4, color5, color6;
 	libspectrum_dword color1, color2, color3;
 	libspectrum_dword colorA0, colorA1, colorA2, colorA3, colorB0, colorB1, colorB2,
@@ -542,24 +542,24 @@ FUNCTION( scaler_Super2xSaI )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_SuperEagle )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_SuperEagle)(const libspectrum_byte *srcPtr,
 			       libspectrum_dword srcPitch,
 			       libspectrum_byte *dstPtr,
 			       libspectrum_dword dstPitch,
-			       int width, int height )
+			       int width, int height)
 {
   const scaler_data_type *bP;
   scaler_data_type *dP;
 
   {
     size_t i;
-    const libspectrum_dword nextlineSrc = srcPitch / sizeof( scaler_data_type );
-    libspectrum_dword nextDstLine = dstPitch / sizeof( scaler_data_type );
+    const libspectrum_dword nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    libspectrum_dword nextDstLine = dstPitch / sizeof(scaler_data_type);
 
     while (height--) {
       bP = (const scaler_data_type*)srcPtr;
       dP = (scaler_data_type*)dstPtr;
-      for (i = 0; i < width; ++i ) {
+      for (i = 0; i < width; ++i) {
 	libspectrum_dword color4, color5, color6;
 	libspectrum_dword color1, color2, color3;
 	libspectrum_dword colorA1, colorA2, colorB1, colorB2, colorS1, colorS2;
@@ -582,7 +582,7 @@ FUNCTION( scaler_SuperEagle )( const libspectrum_byte *srcPtr,
 	colorA2 = *(bP + 2 * nextlineSrc + 1);
 
 	// --------------------------------------
-        if (color5 != color3 )
+        if (color5 != color3)
         {
           if (color2 == color6)
           {
@@ -672,24 +672,24 @@ FUNCTION( scaler_SuperEagle )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_2xSaI )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_2xSaI)(const libspectrum_byte *srcPtr,
 			  libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
 			  libspectrum_dword dstPitch,
-			  int width, int height )
+			  int width, int height)
 {
   const scaler_data_type *bP;
   scaler_data_type *dP;
 
   {
-    libspectrum_dword nextlineSrc = srcPitch / sizeof( scaler_data_type );
-    libspectrum_dword nextDstLine = dstPitch / sizeof( scaler_data_type );
+    libspectrum_dword nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    libspectrum_dword nextDstLine = dstPitch / sizeof(scaler_data_type);
 
     while (height--) {
       size_t i;
       bP = (const scaler_data_type*)srcPtr;
       dP = (scaler_data_type*)dstPtr;
 
-      for (i = 0; i < width; ++i ) {
+      for (i = 0; i < width; ++i) {
 
 	register libspectrum_dword colorA, colorB;
 	libspectrum_dword colorC, colorD, colorE, colorF, colorG, colorH,
@@ -818,16 +818,16 @@ FUNCTION( scaler_2xSaI )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_AdvMame2x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_AdvMame2x)(const libspectrum_byte *srcPtr,
 			      libspectrum_dword srcPitch,
 			      libspectrum_byte *dstPtr,
 			      libspectrum_dword dstPitch,
-			      int width, int height )
+			      int width, int height)
 {
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p = (const scaler_data_type*) srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q = (scaler_data_type*) dstPtr;
 
   scaler_data_type /* A, */ B, C;
@@ -862,16 +862,16 @@ FUNCTION( scaler_AdvMame2x )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_AdvMame3x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_AdvMame3x)(const libspectrum_byte *srcPtr,
 			      libspectrum_dword srcPitch,
 			      libspectrum_byte *dstPtr,
 			      libspectrum_dword dstPitch,
-			      int width, int height )
+			      int width, int height)
 {
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p = (const scaler_data_type*) srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q = (scaler_data_type*) dstPtr;
 
   scaler_data_type /* A, */ B, C;
@@ -911,10 +911,10 @@ FUNCTION( scaler_AdvMame3x )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_Half )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_Half)(const libspectrum_byte *srcPtr,
 			 libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
 			 libspectrum_dword dstPitch,
-			 int width, int height )
+			 int width, int height)
 {
   scaler_data_type *r;
 
@@ -922,7 +922,7 @@ FUNCTION( scaler_Half )( const libspectrum_byte *srcPtr,
     int i;
     r = (scaler_data_type*) dstPtr;
 
-    if (( height & 1 ) == 0 ) {
+    if ((height & 1) == 0) {
       for (i = 0; i < width; i+=2, ++r) {
         scaler_data_type color1 = *(((scaler_data_type*) srcPtr) + i);
         scaler_data_type color2 = *(((scaler_data_type*) srcPtr) + i + 1);
@@ -937,11 +937,11 @@ FUNCTION( scaler_Half )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_HalfSkip )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_HalfSkip)(const libspectrum_byte *srcPtr,
 			     libspectrum_dword srcPitch,
 			     libspectrum_byte *dstPtr,
 			     libspectrum_dword dstPitch,
-			     int width, int height )
+			     int width, int height)
 {
   scaler_data_type *r;
 
@@ -949,7 +949,7 @@ FUNCTION( scaler_HalfSkip )( const libspectrum_byte *srcPtr,
     int i;
     r = (scaler_data_type*) dstPtr;
 
-    if (( height & 1 ) == 0 ) {
+    if ((height & 1) == 0) {
       for (i = 0; i < width; i+=2, ++r) {
         *r = *(((const scaler_data_type*) srcPtr) + i + 1);
       }
@@ -961,36 +961,36 @@ FUNCTION( scaler_HalfSkip )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_Normal1x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_Normal1x)(const libspectrum_byte *srcPtr,
 			     libspectrum_dword srcPitch,
 			     libspectrum_byte *dstPtr,
 			     libspectrum_dword dstPitch,
-			     int width, int height )
+			     int width, int height)
 {
-  while( height-- ) {
-    memcpy( dstPtr, srcPtr, SCALER_DATA_SIZE * width );
+  while (height--) {
+    memcpy(dstPtr, srcPtr, SCALER_DATA_SIZE * width);
     srcPtr += srcPitch;
     dstPtr += dstPitch;
   }
 }
 
 void
-FUNCTION( scaler_Normal2x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_Normal2x)(const libspectrum_byte *srcPtr,
 			     libspectrum_dword srcPitch,
 			     libspectrum_byte *dstPtr,
 			     libspectrum_dword dstPitch,
-			     int width, int height )
+			     int width, int height)
 {
   const scaler_data_type *s;
   scaler_data_type i, *d, *d2;
 
-  while( height-- ) {
+  while (height--) {
 
-    for( i = 0, s = (const scaler_data_type*)srcPtr,
+    for (i = 0, s = (const scaler_data_type*)srcPtr,
 	   d = (scaler_data_type*)dstPtr,
 	   d2 = (scaler_data_type*)(dstPtr + dstPitch);
 	 i < width;
-	 i++ ) {
+	 i++) {
       *d++ = *d2++ = *s; *d++ = *d2++ = *s++;
     }
 
@@ -1000,11 +1000,11 @@ FUNCTION( scaler_Normal2x )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_Normal3x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_Normal3x)(const libspectrum_byte *srcPtr,
 			     libspectrum_dword srcPitch,
 			     libspectrum_byte *dstPtr,
 			     libspectrum_dword dstPitch,
-			     int width, int height )
+			     int width, int height)
 {
   libspectrum_byte *r;
   libspectrum_dword dstPitch2 = dstPitch * 2;
@@ -1013,18 +1013,18 @@ FUNCTION( scaler_Normal3x )( const libspectrum_byte *srcPtr,
   while (height--) {
     int i;
     r = dstPtr;
-    for (i = 0; i < width; ++i, r += 3 * SCALER_DATA_SIZE ) {
+    for (i = 0; i < width; ++i, r += 3 * SCALER_DATA_SIZE) {
       scaler_data_type color = *(((const scaler_data_type*) srcPtr) + i);
 
-      *(scaler_data_type*)( r +                    0             ) = color;
-      *(scaler_data_type*)( r +     SCALER_DATA_SIZE             ) = color;
-      *(scaler_data_type*)( r + 2 * SCALER_DATA_SIZE             ) = color;
-      *(scaler_data_type*)( r +                    0 + dstPitch  ) = color;
-      *(scaler_data_type*)( r +     SCALER_DATA_SIZE + dstPitch  ) = color;
-      *(scaler_data_type*)( r + 2 * SCALER_DATA_SIZE + dstPitch  ) = color;
-      *(scaler_data_type*)( r +                    0 + dstPitch2 ) = color;
-      *(scaler_data_type*)( r +     SCALER_DATA_SIZE + dstPitch2 ) = color;
-      *(scaler_data_type*)( r + 2 * SCALER_DATA_SIZE + dstPitch2 ) = color;
+      *(scaler_data_type*)(r +                    0) = color;
+      *(scaler_data_type*)(r +     SCALER_DATA_SIZE) = color;
+      *(scaler_data_type*)(r + 2 * SCALER_DATA_SIZE) = color;
+      *(scaler_data_type*)(r +                    0 + dstPitch) = color;
+      *(scaler_data_type*)(r +     SCALER_DATA_SIZE + dstPitch) = color;
+      *(scaler_data_type*)(r + 2 * SCALER_DATA_SIZE + dstPitch) = color;
+      *(scaler_data_type*)(r +                    0 + dstPitch2) = color;
+      *(scaler_data_type*)(r +     SCALER_DATA_SIZE + dstPitch2) = color;
+      *(scaler_data_type*)(r + 2 * SCALER_DATA_SIZE + dstPitch2) = color;
     }
     srcPtr += srcPitch;
     dstPtr += dstPitch3;
@@ -1032,11 +1032,11 @@ FUNCTION( scaler_Normal3x )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_Timex1_5x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_Timex1_5x)(const libspectrum_byte *srcPtr,
            libspectrum_dword srcPitch,
            libspectrum_byte *dstPtr,
            libspectrum_dword dstPitch,
-           int width, int height )
+           int width, int height)
 {
   libspectrum_byte *r;
   libspectrum_dword dstPitch2 = dstPitch * 2;
@@ -1045,22 +1045,22 @@ FUNCTION( scaler_Timex1_5x )( const libspectrum_byte *srcPtr,
   while (height--) {
     int i;
     r = dstPtr;
-    if (( height & 1 ) == 0 ) {
-      for (i = 0; i < width; i+=2, r += 3 * SCALER_DATA_SIZE ) {
+    if ((height & 1) == 0) {
+      for (i = 0; i < width; i+=2, r += 3 * SCALER_DATA_SIZE) {
         // Interpolate a new pixel inbetween the source pixels
         scaler_data_type color1 = *(((const scaler_data_type*) srcPtr) + i);
         scaler_data_type color2 = *(((const scaler_data_type*) srcPtr) + i + 1);
         scaler_data_type color3 = INTERPOLATE(color1, color2);
 
-        *(scaler_data_type*)( r +                    0             ) = color1;
-        *(scaler_data_type*)( r +     SCALER_DATA_SIZE             ) = color3;
-        *(scaler_data_type*)( r + 2 * SCALER_DATA_SIZE             ) = color2;
-        *(scaler_data_type*)( r +                    0 + dstPitch  ) = color1;
-        *(scaler_data_type*)( r +     SCALER_DATA_SIZE + dstPitch  ) = color3;
-        *(scaler_data_type*)( r + 2 * SCALER_DATA_SIZE + dstPitch  ) = color2;
-        *(scaler_data_type*)( r +                    0 + dstPitch2 ) = color1;
-        *(scaler_data_type*)( r +     SCALER_DATA_SIZE + dstPitch2 ) = color3;
-        *(scaler_data_type*)( r + 2 * SCALER_DATA_SIZE + dstPitch2 ) = color2;
+        *(scaler_data_type*)(r +                    0) = color1;
+        *(scaler_data_type*)(r +     SCALER_DATA_SIZE) = color3;
+        *(scaler_data_type*)(r + 2 * SCALER_DATA_SIZE) = color2;
+        *(scaler_data_type*)(r +                    0 + dstPitch) = color1;
+        *(scaler_data_type*)(r +     SCALER_DATA_SIZE + dstPitch) = color3;
+        *(scaler_data_type*)(r + 2 * SCALER_DATA_SIZE + dstPitch) = color2;
+        *(scaler_data_type*)(r +                    0 + dstPitch2) = color1;
+        *(scaler_data_type*)(r +     SCALER_DATA_SIZE + dstPitch2) = color3;
+        *(scaler_data_type*)(r + 2 * SCALER_DATA_SIZE + dstPitch2) = color2;
       }
       dstPtr += dstPitch3;
     }
@@ -1069,25 +1069,25 @@ FUNCTION( scaler_Timex1_5x )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_TV2x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_TV2x)(const libspectrum_byte *srcPtr,
 			 libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
 			 libspectrum_dword dstPitch,
-			 int width, int height )
+			 int width, int height)
 {
   int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p = (const scaler_data_type*)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q = (scaler_data_type*)dstPtr;
 
-  while(height--) {
+  while (height--) {
     for (i = 0, j = 0; i < width; ++i, j += 2) {
       scaler_data_type p1 = *(p + i);
       scaler_data_type pi;
 
       pi  = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
-      pi |= (((p1 & greenMask  ) * 7) >> 3) & greenMask;
+      pi |= (((p1 & greenMask) * 7) >> 3) & greenMask;
 
       *(q + j) = p1;
       *(q + j + 1) = p1;
@@ -1100,25 +1100,25 @@ FUNCTION( scaler_TV2x )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_TV3x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_TV3x)(const libspectrum_byte *srcPtr,
                          libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
                          libspectrum_dword dstPitch,
-                         int width, int height )
+                         int width, int height)
 {
   int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p = (const scaler_data_type*)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q = (scaler_data_type*)dstPtr;
 
-  while(height--) {
+  while (height--) {
     for (i = 0, j = 0; i < width; ++i, j += 3) {
       scaler_data_type p1 = *(p + i);
       scaler_data_type pi;
 
       pi  = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
-      pi |= (((p1 & greenMask  ) * 7) >> 3) & greenMask;
+      pi |= (((p1 & greenMask) * 7) >> 3) & greenMask;
 
       *(q + j) = p1;
       *(q + j + 1) = p1;
@@ -1138,27 +1138,27 @@ FUNCTION( scaler_TV3x )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_TimexTV )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_TimexTV)(const libspectrum_byte *srcPtr,
 			    libspectrum_dword srcPitch,
 			    libspectrum_byte *dstPtr,
 			    libspectrum_dword dstPitch,
-			    int width, int height )
+			    int width, int height)
 {
   int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q = (scaler_data_type *)dstPtr;
 
-  while(height--) {
-    if (( height & 1 ) == 0 ) {
-      for (i = 0, j = 0; i < width; ++i, j++ ) {
+  while (height--) {
+    if ((height & 1) == 0) {
+      for (i = 0, j = 0; i < width; ++i, j++) {
         scaler_data_type p1 = *(p + i);
         scaler_data_type pi;
 
 	pi  = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
-	pi |= (((p1 & greenMask  ) * 7) >> 3) & greenMask;
+	pi |= (((p1 & greenMask) * 7) >> 3) & greenMask;
 
         *(q + j) = p1;
         *(q + j + nextlineDst) = pi;
@@ -1174,17 +1174,17 @@ static inline scaler_data_type DOT_16(scaler_data_type c, int j, int i) {
 }
 
 void
-FUNCTION( scaler_DotMatrix )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_DotMatrix)(const libspectrum_byte *srcPtr,
 			      libspectrum_dword srcPitch,
 			      libspectrum_byte *dstPtr,
 			      libspectrum_dword dstPitch,
-			      int width, int height )
+			      int width, int height)
 {
   int i, j, ii, jj;
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q = (scaler_data_type *)dstPtr;
 
   for (j = 0, jj = 0; j < height; ++j, jj += 2) {
@@ -1206,9 +1206,9 @@ FUNCTION( scaler_DotMatrix )( const libspectrum_byte *srcPtr,
     V  =  0.50000 * R - 0.41869 * G - 0.08131 * B  (+ 128)
 */
 
-#define RGB_TO_Y(r, g, b) ( ( 2449L * r + 4809L * g + 934L * b + 1024 ) >> 11 )
-#define RGB_TO_U(r, g, b) ( ( 4096L * b - 1383L * r - 2713L * g + 1024 ) >> 11 )
-#define RGB_TO_V(r, g, b) ( ( 4096L * r - 3430L * g - 666L * b +  1024 ) >> 11 )
+#define RGB_TO_Y(r, g, b) ((2449L * r + 4809L * g + 934L * b + 1024) >> 11)
+#define RGB_TO_U(r, g, b) ((4096L * b - 1383L * r - 2713L * g + 1024) >> 11)
+#define RGB_TO_V(r, g, b) ((4096L * r - 3430L * g - 666L * b +  1024) >> 11)
 
 /*
     R = Y + 1.402 (V-128)
@@ -1216,9 +1216,9 @@ FUNCTION( scaler_DotMatrix )( const libspectrum_byte *srcPtr,
     B = Y + 1.772 (U-128)
 */
 
-#define YUV_TO_R(y, u, v) ( MIN( ABS( ( 8192L * y              + 11485L * v + 16384 ) >> 15 ), 255 ) )
-#define YUV_TO_G(y, u, v) ( MIN( ABS( ( 8192L * y - 2819L  * u -  5850L * v + 16384 ) >> 15 ), 255 ) )
-#define YUV_TO_B(y, u, v) ( MIN( ABS( ( 8192L * y + 14516L * u              + 16384 ) >> 15 ), 255 ) )
+#define YUV_TO_R(y, u, v) (MIN(ABS((8192L * y              + 11485L * v + 16384) >> 15), 255))
+#define YUV_TO_G(y, u, v) (MIN(ABS((8192L * y - 2819L  * u -  5850L * v + 16384) >> 15), 255))
+#define YUV_TO_B(y, u, v) (MIN(ABS((8192L * y + 14516L * u              + 16384) >> 15), 255))
 
 #define RGB_TO_PIXEL_555(r,g,b) \
         (((r * 125) >> 10) + (((g * 125) >> 5) & greenMask) + \
@@ -1229,24 +1229,24 @@ FUNCTION( scaler_DotMatrix )( const libspectrum_byte *srcPtr,
                 ((b * 249) & blueMask))
 
 #define R_TO_R(r) \
-        ( ( ( (r) & redMask ) * 8424 ) >> 10 )
+        ((((r) & redMask) * 8424) >> 10)
 
 #define G_TO_G(g) \
-      ( green6bit ? \
-        ( ( ( (g) & greenMask ) >> 5 ) * 4145 ) >> 10 : \
-        ( ( ( (g) & greenMask ) >> 5 ) * 8424 ) >> 10 )
+      (green6bit ? \
+        ((((g) & greenMask) >> 5) * 4145) >> 10 : \
+        ((((g) & greenMask) >> 5) * 8424) >> 10)
 
 #define B_TO_B(b) \
-      ( green6bit ? \
-        ( ( ( (b) & blueMask ) >> 11 ) * 8424 ) >> 10 : \
-        ( ( ( (b) & blueMask ) >> 10 ) * 8424 ) >> 10 )
+      (green6bit ? \
+        ((((b) & blueMask) >> 11) * 8424) >> 10 : \
+        ((((b) & blueMask) >> 10) * 8424) >> 10)
 
 void
-FUNCTION( scaler_PalTV )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_PalTV)(const libspectrum_byte *srcPtr,
                               libspectrum_dword srcPitch,
                               libspectrum_byte *dstPtr,
                               libspectrum_dword dstPitch,
-                              int width, int height )
+                              int width, int height)
 {
 /*
    1.a. RGB => 255,255,255 RGB
@@ -1256,10 +1256,10 @@ FUNCTION( scaler_PalTV )( const libspectrum_byte *srcPtr,
    3.b  255,255,255 RGB => RGB
 */
   int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
 
   libspectrum_byte  r0, g0, b0,
@@ -1278,21 +1278,21 @@ FUNCTION( scaler_PalTV )( const libspectrum_byte *srcPtr,
     always 3 sample/proc
 
 */
-  for( j = height; j; j-- ) {
+  for (j = height; j; j--) {
     p = p0 - 1; q = q0;
 #if SCALER_DATA_SIZE == 2
     // 1.a. RGB => RGB
-    r2 = R_TO_R( *p );
-    g2 = G_TO_G( *p );
-    b2 = B_TO_B( *p );
+    r2 = R_TO_R(*p);
+    g2 = G_TO_G(*p);
+    b2 = B_TO_B(*p);
     p++;
-    r0 = R_TO_R( *p );
-    g0 = G_TO_G( *p );
-    b0 = B_TO_B( *p );
+    r0 = R_TO_R(*p);
+    g0 = G_TO_G(*p);
+    b0 = B_TO_B(*p);
     p++;
-    r1 = R_TO_R( *p );
-    g1 = G_TO_G( *p );
-    b1 = B_TO_B( *p );
+    r1 = R_TO_R(*p);
+    g1 = G_TO_G(*p);
+    b1 = B_TO_B(*p);
     p++;
 #else
     r2 = (*p & redMask);
@@ -1308,20 +1308,20 @@ FUNCTION( scaler_PalTV )( const libspectrum_byte *srcPtr,
     b1 = (*p & blueMask) >> 16;
     p++;
 #endif
-    u1 = ( RGB_TO_U( r2, g2, b2 ) + 2 * RGB_TO_U( r0, g0, b0 ) +
-            RGB_TO_U( r1, g1, b1 ) ) >> 2;
-    v1 = ( RGB_TO_V( r2, g2, b2 ) + 2 * RGB_TO_V( r0, g0, b0 ) +
-            RGB_TO_V( r1, g1, b1 ) ) >> 2;
-    for( i = width; i; i -= 2 ) {
+    u1 = (RGB_TO_U(r2, g2, b2) + 2 * RGB_TO_U(r0, g0, b0) +
+            RGB_TO_U(r1, g1, b1)) >> 2;
+    v1 = (RGB_TO_V(r2, g2, b2) + 2 * RGB_TO_V(r0, g0, b0) +
+            RGB_TO_V(r1, g1, b1)) >> 2;
+    for (i = width; i; i -= 2) {
 #if SCALER_DATA_SIZE == 2
       // 1.a. RGB => RGB
-      r2 = R_TO_R( *p );
-      g2 = G_TO_G( *p );
-      b2 = B_TO_B( *p );
+      r2 = R_TO_R(*p);
+      g2 = G_TO_G(*p);
+      b2 = B_TO_B(*p);
       p++;
-      r3 = R_TO_R( *p );
-      g3 = G_TO_G( *p );
-      b3 = B_TO_B( *p );
+      r3 = R_TO_R(*p);
+      g3 = G_TO_G(*p);
+      b3 = B_TO_B(*p);
       p++;
 #else
       r2 = (*p & redMask);
@@ -1334,13 +1334,13 @@ FUNCTION( scaler_PalTV )( const libspectrum_byte *srcPtr,
       p++;
 #endif
 // 1.b. RGB => YUV && 2. YUV subsampling
-      y1 = RGB_TO_Y( r0, g0, b0 );
-      y2 = RGB_TO_Y( r1, g1, b1 );
+      y1 = RGB_TO_Y(r0, g0, b0);
+      y2 = RGB_TO_Y(r1, g1, b1);
 
-      u2 = ( RGB_TO_U( r1, g1, b1 ) + 2 * RGB_TO_U( r2, g2, b2 ) +
-            RGB_TO_U( r3, g3, b3 ) ) >> 2;
-      v2 = ( RGB_TO_V( r1, g1, b1 ) + 2 * RGB_TO_V( r2, g2, b2 ) +
-            RGB_TO_V( r3, g3, b3 ) ) >> 2;
+      u2 = (RGB_TO_U(r1, g1, b1) + 2 * RGB_TO_U(r2, g2, b2) +
+            RGB_TO_U(r3, g3, b3)) >> 2;
+      v2 = (RGB_TO_V(r1, g1, b1) + 2 * RGB_TO_V(r2, g2, b2) +
+            RGB_TO_V(r3, g3, b3)) >> 2;
 // 3.a. YUV => RGB
       r0 = YUV_TO_R(y1, u1, v1);
       g0 = YUV_TO_G(y1, u1, v1);
@@ -1354,12 +1354,12 @@ FUNCTION( scaler_PalTV )( const libspectrum_byte *srcPtr,
       b1 = YUV_TO_B(y2, u1, v1);
 #if SCALER_DATA_SIZE == 2
 // 3.b. RGB => RGB
-      if (green6bit ) {
-        *q++ = RGB_TO_PIXEL_565( r0, g0, b0 );
-        *q++ = RGB_TO_PIXEL_565( r1, g1, b1 );
+      if (green6bit) {
+        *q++ = RGB_TO_PIXEL_565(r0, g0, b0);
+        *q++ = RGB_TO_PIXEL_565(r1, g1, b1);
       } else {
-        *q++ = RGB_TO_PIXEL_555( r0, g0, b0 );
-        *q++ = RGB_TO_PIXEL_555( r1, g1, b1 );
+        *q++ = RGB_TO_PIXEL_555(r0, g0, b0);
+        *q++ = RGB_TO_PIXEL_555(r1, g1, b1);
       }
 #else
       *q++ = r0 + (g0 << 8) + (b0 << 16);
@@ -1375,11 +1375,11 @@ FUNCTION( scaler_PalTV )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_PalTV2x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_PalTV2x)(const libspectrum_byte *srcPtr,
                               libspectrum_dword srcPitch,
                               libspectrum_byte *dstPtr,
                               libspectrum_dword dstPitch,
-                              int width, int height )
+                              int width, int height)
 {
 /*
    1.a. RGB => 255,255,255 RGB
@@ -1389,10 +1389,10 @@ FUNCTION( scaler_PalTV2x )( const libspectrum_byte *srcPtr,
    3.b  255,255,255 RGB => RGB
 */
   int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
 
   libspectrum_byte  r0, g0, b0,
@@ -1410,16 +1410,16 @@ FUNCTION( scaler_PalTV2x )( const libspectrum_byte *srcPtr,
     always 3 sample/proc
 
 */
-  for( j = height; j; j-- ) {
+  for (j = height; j; j--) {
     p = p0 - 1; q = q0;
 #if SCALER_DATA_SIZE == 2
-    r0 = R_TO_R( *p );
-    g0 = G_TO_G( *p );
-    b0 = B_TO_B( *p );
+    r0 = R_TO_R(*p);
+    g0 = G_TO_G(*p);
+    b0 = B_TO_B(*p);
     p++;
-    r1 = R_TO_R( *p );
-    g1 = G_TO_G( *p );
-    b1 = B_TO_B( *p );
+    r1 = R_TO_R(*p);
+    g1 = G_TO_G(*p);
+    b1 = B_TO_B(*p);
 #else
     r0 = *p & redMask;
     g0 = (*p & greenMask) >> 8;
@@ -1429,71 +1429,71 @@ FUNCTION( scaler_PalTV2x )( const libspectrum_byte *srcPtr,
     g1 = (*(p) & greenMask) >> 8;
     b1 = (*(p) & blueMask) >> 16;
 #endif
-    y1 = RGB_TO_Y( r1, g1, b1 );
-    u1 = ( RGB_TO_U( r0, g0, b0 ) + 3 * RGB_TO_U( r1, g1, b1 ) ) >> 2;
-    v1 = ( RGB_TO_V( r0, g0, b0 ) + 3 * RGB_TO_V( r1, g1, b1 ) ) >> 2;
-    for( i = width; i; i-- ) {
+    y1 = RGB_TO_Y(r1, g1, b1);
+    u1 = (RGB_TO_U(r0, g0, b0) + 3 * RGB_TO_U(r1, g1, b1)) >> 2;
+    v1 = (RGB_TO_V(r0, g0, b0) + 3 * RGB_TO_V(r1, g1, b1)) >> 2;
+    for (i = width; i; i--) {
       p++; // next point
 #if SCALER_DATA_SIZE == 2
       // 1.a. RGB => RGB
-      r0 = R_TO_R( *p );
-      g0 = G_TO_G( *p );
-      b0 = B_TO_B( *p );
+      r0 = R_TO_R(*p);
+      g0 = G_TO_G(*p);
+      b0 = B_TO_B(*p);
 #else
       r0 = (*p & redMask);
       g0 = (*p & greenMask) >> 8;
       b0 = (*p & blueMask) >> 16;
 #endif
 // 1.b. RGB => YUV && 2. YUV subsampling
-      y2 = RGB_TO_Y( r0, g0, b0 );
-      u2 = ( RGB_TO_U( r1, g1, b1 ) + 3 * RGB_TO_U( r0, g0, b0 ) ) >> 2;
-      v2 = ( RGB_TO_V( r1, g1, b1 ) + 3 * RGB_TO_V( r0, g0, b0 ) ) >> 2;
+      y2 = RGB_TO_Y(r0, g0, b0);
+      u2 = (RGB_TO_U(r1, g1, b1) + 3 * RGB_TO_U(r0, g0, b0)) >> 2;
+      v2 = (RGB_TO_V(r1, g1, b1) + 3 * RGB_TO_V(r0, g0, b0)) >> 2;
 
 // 3.a. YUV => RGB
-      rx = YUV_TO_R( y1, u1, v1 ); // [x0][  ]
-      gx = YUV_TO_G( y1, u1, v1 );
-      bx = YUV_TO_B( y1, u1, v1 );
+      rx = YUV_TO_R(y1, u1, v1); // [x0][  ]
+      gx = YUV_TO_G(y1, u1, v1);
+      bx = YUV_TO_B(y1, u1, v1);
 
-      u1 = ( u1 + u2 ) >> 1;
-      v1 = ( v1 + v2 ) >> 1;
+      u1 = (u1 + u2) >> 1;
+      v1 = (v1 + v2) >> 1;
 
-      r1 = YUV_TO_R( y1, u1, v1 );
-      g1 = YUV_TO_G( y1, u1, v1 );
-      b1 = YUV_TO_B( y1, u1, v1 );
+      r1 = YUV_TO_R(y1, u1, v1);
+      g1 = YUV_TO_G(y1, u1, v1);
+      b1 = YUV_TO_B(y1, u1, v1);
 
 #if SCALER_DATA_SIZE == 2
 // 3.b. RGB => RGB
-      if (green6bit ) {
-        *q = RGB_TO_PIXEL_565( rx, gx, bx );
+      if (green6bit) {
+        *q = RGB_TO_PIXEL_565(rx, gx, bx);
       } else {
-        *q = RGB_TO_PIXEL_555( rx, gx, bx );
+        *q = RGB_TO_PIXEL_555(rx, gx, bx);
       }
 #else
-      *q = rx + ( gx << 8 ) + ( bx << 16 );
+      *q = rx + (gx << 8) + (bx << 16);
 #endif
 
-      if (settings_current.pal_tv2x )
+      if (settings_current.pal_tv2x)
         *(q + nextlineDst) =
             ((((*q & redblueMask) * 7) >> 3) & redblueMask) |
-                ((((*q & greenMask  ) * 7) >> 3) & greenMask);
+                ((((*q & greenMask) * 7) >> 3) & greenMask);
       else
         *(q + nextlineDst) = *q;
 
       q++;
 #if SCALER_DATA_SIZE == 2
 // 3.b. RGB => RGB
-      if (green6bit ) {
-        *q = RGB_TO_PIXEL_565( r1, g1, b1 );
+      if (green6bit) {
+        *q = RGB_TO_PIXEL_565(r1, g1, b1);
       } else {
-        *q = RGB_TO_PIXEL_555( r1, g1, b1 );
+        *q = RGB_TO_PIXEL_555(r1, g1, b1);
       }
 #else
-      *q = r1 + ( g1 << 8 ) + ( b1 << 16 );
+      *q = r1 + (g1 << 8) + (b1 << 16);
 #endif
-      if (settings_current.pal_tv2x )
+      if (settings_current.pal_tv2x)
         *(q + nextlineDst) =
             ((((*q & redblueMask) * 7) >> 3) & redblueMask) |
-                ((((*q & greenMask  ) * 7) >> 3) & greenMask);
+                ((((*q & greenMask) * 7) >> 3) & greenMask);
       else
         *(q + nextlineDst) = *q;
 
@@ -1507,11 +1507,11 @@ FUNCTION( scaler_PalTV2x )( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_PalTV3x )( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_PalTV3x)(const libspectrum_byte *srcPtr,
                               libspectrum_dword srcPitch,
                               libspectrum_byte *dstPtr,
                               libspectrum_dword dstPitch,
-                              int width, int height )
+                              int width, int height)
 {
 /*
    1.a. RGB => 255,255,255 RGB
@@ -1521,10 +1521,10 @@ FUNCTION( scaler_PalTV3x )( const libspectrum_byte *srcPtr,
    3.b  255,255,255 RGB => RGB
 */
   int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
 
   libspectrum_byte  r0, g0, b0,
@@ -1543,16 +1543,16 @@ FUNCTION( scaler_PalTV3x )( const libspectrum_byte *srcPtr,
     always 3 sample/proc
 
 */
-  for( j = height; j; j-- ) {
+  for (j = height; j; j--) {
     p = p0 - 1; q = q0;
 #if SCALER_DATA_SIZE == 2
-    r0 = R_TO_R( *p );
-    g0 = G_TO_G( *p );
-    b0 = B_TO_B( *p );
+    r0 = R_TO_R(*p);
+    g0 = G_TO_G(*p);
+    b0 = B_TO_B(*p);
     p++;
-    r1 = R_TO_R( *p );
-    g1 = G_TO_G( *p );
-    b1 = B_TO_B( *p );
+    r1 = R_TO_R(*p);
+    g1 = G_TO_G(*p);
+    b1 = B_TO_B(*p);
 #else
     r0 = *p & redMask;
     g0 = (*p & greenMask) >> 8;
@@ -1562,37 +1562,37 @@ FUNCTION( scaler_PalTV3x )( const libspectrum_byte *srcPtr,
     g1 = (*(p) & greenMask) >> 8;
     b1 = (*(p) & blueMask) >> 16;
 #endif
-    y1 = RGB_TO_Y( r1, g1, b1 );
-    u1 = ( RGB_TO_U( r0, g0, b0 ) + 3 * RGB_TO_U( r1, g1, b1 ) ) >> 2;
-    v1 = ( RGB_TO_V( r0, g0, b0 ) + 3 * RGB_TO_V( r1, g1, b1 ) ) >> 2;
-    for( i = width; i; i-- ) {
+    y1 = RGB_TO_Y(r1, g1, b1);
+    u1 = (RGB_TO_U(r0, g0, b0) + 3 * RGB_TO_U(r1, g1, b1)) >> 2;
+    v1 = (RGB_TO_V(r0, g0, b0) + 3 * RGB_TO_V(r1, g1, b1)) >> 2;
+    for (i = width; i; i--) {
       p++;
 #if SCALER_DATA_SIZE == 2
       // 1.a. RGB => RGB
-      r0 = R_TO_R( *p );
-      g0 = G_TO_G( *p );
-      b0 = B_TO_B( *p );
+      r0 = R_TO_R(*p);
+      g0 = G_TO_G(*p);
+      b0 = B_TO_B(*p);
 #else
       r0 = (*p & redMask);
       g0 = (*p & greenMask) >> 8;
       b0 = (*p & blueMask) >> 16;
 #endif
 // 1.b. RGB => YUV && 2. YUV subsampling
-      y2 = RGB_TO_Y( r0, g0, b0 );
-      u2 = ( RGB_TO_U( r1, g1, b1 ) + 3 * RGB_TO_U( r0, g0, b0 ) ) >> 2;
-      v2 = ( RGB_TO_V( r1, g1, b1 ) + 3 * RGB_TO_V( r0, g0, b0 ) ) >> 2;
+      y2 = RGB_TO_Y(r0, g0, b0);
+      u2 = (RGB_TO_U(r1, g1, b1) + 3 * RGB_TO_U(r0, g0, b0)) >> 2;
+      v2 = (RGB_TO_V(r1, g1, b1) + 3 * RGB_TO_V(r0, g0, b0)) >> 2;
 
 // 3.a. YUV => RGB
-      rx = YUV_TO_R( y1, u1, v1 ); // [x0][  ]
-      gx = YUV_TO_G( y1, u1, v1 );
-      bx = YUV_TO_B( y1, u1, v1 );
+      rx = YUV_TO_R(y1, u1, v1); // [x0][  ]
+      gx = YUV_TO_G(y1, u1, v1);
+      bx = YUV_TO_B(y1, u1, v1);
 
-      u1 = ( u1 + u2 ) >> 1;
-      v1 = ( v1 + v2 ) >> 1;
+      u1 = (u1 + u2) >> 1;
+      v1 = (v1 + v2) >> 1;
 
-      r1 = YUV_TO_R( y1, u1, v1 );
-      g1 = YUV_TO_G( y1, u1, v1 );
-      b1 = YUV_TO_B( y1, u1, v1 );
+      r1 = YUV_TO_R(y1, u1, v1);
+      g1 = YUV_TO_G(y1, u1, v1);
+      b1 = YUV_TO_B(y1, u1, v1);
 
 /*
     ab  => EFG
@@ -1605,59 +1605,59 @@ FUNCTION( scaler_PalTV3x )( const libspectrum_byte *srcPtr,
 
 #if SCALER_DATA_SIZE == 2
 // 3.b. RGB => RGB
-      if (green6bit ) {
-        *q = RGB_TO_PIXEL_565( rx, gx, bx);
+      if (green6bit) {
+        *q = RGB_TO_PIXEL_565(rx, gx, bx);
       } else {
-        *q = RGB_TO_PIXEL_555( rx, gx, bx);
+        *q = RGB_TO_PIXEL_555(rx, gx, bx);
       }
 #else
-      *q = rx + ( gx << 8 ) + ( bx << 16 ); // E, E, e
+      *q = rx + (gx << 8) + (bx << 16); // E, E, e
 #endif
       *(q + nextlineDst) = *q;
 
-      if (settings_current.pal_tv2x )
+      if (settings_current.pal_tv2x)
         *(q + (nextlineDst << 1)) =
             ((((*q & redblueMask) * 7) >> 3) & redblueMask) |
-                ((((*q & greenMask  ) * 7) >> 3) & greenMask);
+                ((((*q & greenMask) * 7) >> 3) & greenMask);
       else
         *(q + (nextlineDst << 1)) = *q;
 
       q++;
 #if SCALER_DATA_SIZE == 2
 // 3.b. RGB => RGB
-      if (green6bit ) {
-        *q = RGB_TO_PIXEL_565( r2, g2, b2 );
+      if (green6bit) {
+        *q = RGB_TO_PIXEL_565(r2, g2, b2);
       } else {
-        *q = RGB_TO_PIXEL_555( r2, g2, b2 );
+        *q = RGB_TO_PIXEL_555(r2, g2, b2);
       }
 #else
-      *q = r2 + ( g2 << 8 ) + ( b2 << 16 ); // F, F, f
+      *q = r2 + (g2 << 8) + (b2 << 16); // F, F, f
 #endif
       *(q + nextlineDst) = *q;
 
-      if (settings_current.pal_tv2x )
+      if (settings_current.pal_tv2x)
         *(q + (nextlineDst << 1)) =
             ((((*q & redblueMask) * 7) >> 3) & redblueMask) |
-                ((((*q & greenMask  ) * 7) >> 3) & greenMask);
+                ((((*q & greenMask) * 7) >> 3) & greenMask);
       else
         *(q + (nextlineDst << 1)) = *q;
 
       q++;
 #if SCALER_DATA_SIZE == 2
 // 3.b. RGB => RGB
-      if (green6bit ) {
-        *q = RGB_TO_PIXEL_565( r1, g1, b1 );
+      if (green6bit) {
+        *q = RGB_TO_PIXEL_565(r1, g1, b1);
       } else {
-        *q = RGB_TO_PIXEL_555( r1, g1, b1 );
+        *q = RGB_TO_PIXEL_555(r1, g1, b1);
       }
 #else
-      *q = r1 + ( g1 << 8 ) + ( b1 << 16 ); // G, G, g
+      *q = r1 + (g1 << 8) + (b1 << 16); // G, G, g
 #endif
       *(q + nextlineDst) = *q;
-      if (settings_current.pal_tv2x )
+      if (settings_current.pal_tv2x)
         *(q + (nextlineDst << 1)) =
             ((((*q & redblueMask) * 7) >> 3) & redblueMask) |
-                ((((*q & greenMask  ) * 7) >> 3) & greenMask);
+                ((((*q & greenMask) * 7) >> 3) & greenMask);
       else
         *(q + (nextlineDst << 1)) = *q;
 
@@ -1683,16 +1683,16 @@ FUNCTION( scaler_PalTV3x )( const libspectrum_byte *srcPtr,
 	MOVE_B_TO_A(8,9)
 
 void
-FUNCTION( scaler_HQ2x ) ( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_HQ2x) (const libspectrum_byte *srcPtr,
                           libspectrum_dword srcPitch,
                           libspectrum_byte *dstPtr,
                           libspectrum_dword dstPitch,
-                          int width, int height )
+                          int width, int height)
 {
   int i, j, k, pattern;
-  int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
-  int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q, *q1, *qN, *qN1, *q0 = (scaler_data_type *)dstPtr;
   libspectrum_qword w[10];
 
@@ -1709,7 +1709,7 @@ FUNCTION( scaler_HQ2x ) ( const libspectrum_byte *srcPtr,
        |    |    |    |
        | w7 | w8 | w9 |
        +----+----+----+ */
-  for( j = 0; j < height; j++ ) {
+  for (j = 0; j < height; j++) {
     p = p0;
     q = q0; q1 = q + 1;
     qN = q + nextlineDst; qN1 = qN + 1;
@@ -1722,31 +1722,31 @@ FUNCTION( scaler_HQ2x ) ( const libspectrum_byte *srcPtr,
     w[3] = *(p + prevline + 1);
     w[6] = *(p + 1);
     w[9] = *(p + nextline + 1);
-    for( k = 1; k <= 9; k++ ) {
+    for (k = 1; k <= 9; k++) {
 #if SCALER_DATA_SIZE == 2
-      r = R_TO_R( w[k] );
-      g = G_TO_G( w[k] );
-      b = B_TO_B( w[k] );
+      r = R_TO_R(w[k]);
+      g = G_TO_G(w[k]);
+      b = B_TO_B(w[k]);
 #else
       r =  w[k] & redMask;
       g = (w[k] & greenMask) >> 8;
       b = (w[k] & blueMask) >> 16;
 #endif
-      y[k] = RGB_TO_Y( r, g, b );
-      u[k] = RGB_TO_U( r, g, b );
-      v[k] = RGB_TO_V( r, g, b );
+      y[k] = RGB_TO_Y(r, g, b);
+      u[k] = RGB_TO_U(r, g, b);
+      v[k] = RGB_TO_V(r, g, b);
     }
 
     for (i = 0; i < width; i++) {
       pattern = 0;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[1], u[1], v[1] ) ) pattern |= 0x01;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[2], u[2], v[2] ) ) pattern |= 0x02;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[3], u[3], v[3] ) ) pattern |= 0x04;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[4], u[4], v[4] ) ) pattern |= 0x08;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[6], u[6], v[6] ) ) pattern |= 0x10;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[7], u[7], v[7] ) ) pattern |= 0x20;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[8], u[8], v[8] ) ) pattern |= 0x40;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[9], u[9], v[9] ) ) pattern |= 0x80;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[1], u[1], v[1])) pattern |= 0x01;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[2], u[2], v[2])) pattern |= 0x02;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[3], u[3], v[3])) pattern |= 0x04;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[4], u[4], v[4])) pattern |= 0x08;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[6], u[6], v[6])) pattern |= 0x10;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[7], u[7], v[7])) pattern |= 0x20;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[8], u[8], v[8])) pattern |= 0x40;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[9], u[9], v[9])) pattern |= 0x80;
 
 #include "scaler_hq2x.c"
 
@@ -1757,19 +1757,19 @@ FUNCTION( scaler_HQ2x ) ( const libspectrum_byte *srcPtr,
       w[3] = *(p + prevline + 1);
       w[6] = *(p + 1);
       w[9] = *(p + nextline + 1);
-      for( k = 3; k <= 9; k += 3 ) {
+      for (k = 3; k <= 9; k += 3) {
 #if SCALER_DATA_SIZE == 2
-        r = R_TO_R( w[k] );
-        g = G_TO_G( w[k] );
-        b = B_TO_B( w[k] );
+        r = R_TO_R(w[k]);
+        g = G_TO_G(w[k]);
+        b = B_TO_B(w[k]);
 #else
         r =   w[k] & redMask;
-        g = ( w[k] & greenMask ) >> 8;
-        b = ( w[k] & blueMask  ) >> 16;
+        g = (w[k] & greenMask) >> 8;
+        b = (w[k] & blueMask) >> 16;
 #endif
-        y[k] = RGB_TO_Y( r, g, b );
-        u[k] = RGB_TO_U( r, g, b );
-        v[k] = RGB_TO_V( r, g, b );
+        y[k] = RGB_TO_Y(r, g, b);
+        u[k] = RGB_TO_U(r, g, b);
+        v[k] = RGB_TO_V(r, g, b);
       }
     }
     p0 += nextlineSrc;
@@ -1778,16 +1778,16 @@ FUNCTION( scaler_HQ2x ) ( const libspectrum_byte *srcPtr,
 }
 
 void
-FUNCTION( scaler_HQ3x ) ( const libspectrum_byte *srcPtr,
+FUNCTION(scaler_HQ3x) (const libspectrum_byte *srcPtr,
                           libspectrum_dword srcPitch,
                           libspectrum_byte *dstPtr,
                           libspectrum_dword dstPitch,
-                          int width, int height )
+                          int width, int height)
 {
   int i, j, k, pattern;
-  int nextlineSrc = srcPitch / sizeof( scaler_data_type );
+  int nextlineSrc = srcPitch / sizeof(scaler_data_type);
   const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
-  int nextlineDst = dstPitch / sizeof( scaler_data_type );
+  int nextlineDst = dstPitch / sizeof(scaler_data_type);
   scaler_data_type *q, *qN, *qNN, *q1, *qN1, *qNN1, *q2, *qN2, *qNN2,
 		   *q0 = (scaler_data_type *)dstPtr;
   libspectrum_qword w[10];
@@ -1805,8 +1805,8 @@ FUNCTION( scaler_HQ3x ) ( const libspectrum_byte *srcPtr,
        |    |    |    |
        | w7 | w8 | w9 |
        +----+----+----+ */
-  for( j = 0; j < height; j++ ) {
-    if (j == height - 1 ) nextline = 0;
+  for (j = 0; j < height; j++) {
+    if (j == height - 1) nextline = 0;
 
     p = p0;
     q = q0;
@@ -1823,31 +1823,31 @@ FUNCTION( scaler_HQ3x ) ( const libspectrum_byte *srcPtr,
     w[3] = *(p + prevline + 1);
     w[6] = *(p + 1);
     w[9] = *(p + nextline + 1);
-    for( k = 1; k <= 9; k++ ) {
+    for (k = 1; k <= 9; k++) {
 #if SCALER_DATA_SIZE == 2
-      r = R_TO_R( w[k] );
-      g = G_TO_G( w[k] );
-      b = B_TO_B( w[k] );
+      r = R_TO_R(w[k]);
+      g = G_TO_G(w[k]);
+      b = B_TO_B(w[k]);
 #else
       r =  w[k] & redMask;
       g = (w[k] & greenMask) >> 8;
       b = (w[k] & blueMask) >> 16;
 #endif
-      y[k] = RGB_TO_Y( r, g, b );
-      u[k] = RGB_TO_U( r, g, b );
-      v[k] = RGB_TO_V( r, g, b );
+      y[k] = RGB_TO_Y(r, g, b);
+      u[k] = RGB_TO_U(r, g, b);
+      v[k] = RGB_TO_V(r, g, b);
     }
 
     for (i = 0; i < width; i++) {
       pattern = 0;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[1], u[1], v[1] ) ) pattern |= 0x01;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[2], u[2], v[2] ) ) pattern |= 0x02;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[3], u[3], v[3] ) ) pattern |= 0x04;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[4], u[4], v[4] ) ) pattern |= 0x08;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[6], u[6], v[6] ) ) pattern |= 0x10;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[7], u[7], v[7] ) ) pattern |= 0x20;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[8], u[8], v[8] ) ) pattern |= 0x40;
-      if (HQ_YUVDIFF( y[5], u[5], v[5], y[9], u[9], v[9] ) ) pattern |= 0x80;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[1], u[1], v[1])) pattern |= 0x01;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[2], u[2], v[2])) pattern |= 0x02;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[3], u[3], v[3])) pattern |= 0x04;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[4], u[4], v[4])) pattern |= 0x08;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[6], u[6], v[6])) pattern |= 0x10;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[7], u[7], v[7])) pattern |= 0x20;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[8], u[8], v[8])) pattern |= 0x40;
+      if (HQ_YUVDIFF(y[5], u[5], v[5], y[9], u[9], v[9])) pattern |= 0x80;
 
 #include "scaler_hq3x.c"
 
@@ -1859,22 +1859,22 @@ FUNCTION( scaler_HQ3x ) ( const libspectrum_byte *srcPtr,
       w[3] = *(p + prevline + 1);
       w[6] = *(p + 1);
       w[9] = *(p + nextline + 1);
-      for( k = 3; k <= 9; k += 3 ) {
+      for (k = 3; k <= 9; k += 3) {
 #if SCALER_DATA_SIZE == 2
-        r = R_TO_R( w[k] );
-        g = G_TO_G( w[k] );
-        b = B_TO_B( w[k] );
+        r = R_TO_R(w[k]);
+        g = G_TO_G(w[k]);
+        b = B_TO_B(w[k]);
 #else
         r =   w[k] & redMask;
-        g = ( w[k] & greenMask ) >> 8;
-        b = ( w[k] & blueMask  ) >> 16;
+        g = (w[k] & greenMask) >> 8;
+        b = (w[k] & blueMask) >> 16;
 #endif
-        y[k] = RGB_TO_Y( r, g, b );
-        u[k] = RGB_TO_U( r, g, b );
-        v[k] = RGB_TO_V( r, g, b );
+        y[k] = RGB_TO_Y(r, g, b);
+        u[k] = RGB_TO_U(r, g, b);
+        v[k] = RGB_TO_V(r, g, b);
       }
     }
     p0 += nextlineSrc;
-    q0 += ( nextlineDst << 1 ) + nextlineDst;
+    q0 += (nextlineDst << 1) + nextlineDst;
   }
 }

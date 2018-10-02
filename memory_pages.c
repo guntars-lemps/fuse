@@ -360,7 +360,7 @@ void memory_map_romcs_4k(libspectrum_word address, memory_page source[])
 // Page in 2K from /ROMCS
 void memory_map_romcs_2k(libspectrum_word address, memory_page source[])
 {
-    memory_map_2k_read_write( address, source, 0, 1, 1);
+    memory_map_2k_read_write(address, source, 0, 1, 1);
 }
 
 
@@ -645,7 +645,7 @@ static void memory_to_snapshot(libspectrum_snap *snap)
     libspectrum_snap_set_out_plus3_memoryport(snap, machine_current->ram.last_byte2);
 
     for (i = 0; i < 64; i++) {
-        if (RAM[i] != NULL ) {
+        if (RAM[i] != NULL) {
             buffer = libspectrum_new(libspectrum_byte, 0x4000);
             memcpy(buffer, RAM[i], 0x4000);
             libspectrum_snap_set_pages(snap, i, buffer);

@@ -41,15 +41,15 @@
 static int tc2048_reset(void);
 
 int
-tc2048_port_from_ula( libspectrum_word port )
+tc2048_port_from_ula(libspectrum_word port)
 {
   // Ports F4 (HSR), FE (SCLD) and FF (DEC) supplied by ULA
   port &= 0xff;
 
-  return (port == 0xf4 || port == 0xfe || port == 0xff );
+  return (port == 0xf4 || port == 0xfe || port == 0xff);
 }
 
-int tc2048_init( fuse_machine_info *machine )
+int tc2048_init(fuse_machine_info *machine)
 {
   machine->machine = LIBSPECTRUM_MACHINE_TC2048;
   machine->id = "2048";
@@ -77,50 +77,50 @@ tc2048_reset(void)
   size_t i, j;
   int error;
 
-  error = machine_load_rom( 0, settings_current.rom_tc2048,
-                            settings_default.rom_tc2048, 0x4000 );
-  if (error ) return error;
+  error = machine_load_rom(0, settings_current.rom_tc2048,
+                            settings_default.rom_tc2048, 0x4000);
+  if (error) return error;
 
   // 0x0000: ROM 0
-  scld_home_map_16k( 0x0000, memory_map_rom, 0 );
+  scld_home_map_16k(0x0000, memory_map_rom, 0);
   // 0x4000: RAM 5, contended
-  memory_ram_set_16k_contention( 5, 1 );
-  scld_home_map_16k( 0x4000, memory_map_ram, 5 );
+  memory_ram_set_16k_contention(5, 1);
+  scld_home_map_16k(0x4000, memory_map_ram, 5);
   // 0x8000: RAM 2, not contended
-  memory_ram_set_16k_contention( 2, 0 );
-  scld_home_map_16k( 0x8000, memory_map_ram, 2 );
+  memory_ram_set_16k_contention(2, 0);
+  scld_home_map_16k(0x8000, memory_map_ram, 2);
   // 0xc000: RAM 0, not contended
-  memory_ram_set_16k_contention( 0, 0 );
-  scld_home_map_16k( 0xc000, memory_map_ram, 0 );
+  memory_ram_set_16k_contention(0, 0);
+  scld_home_map_16k(0xc000, memory_map_ram, 0);
 
   periph_clear();
   machines_periph_48();
 
   // ULA uses full decoding
-  periph_set_present( PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER );
-  periph_set_present( PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER);
+  periph_set_present(PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS);
 
   // As does the ZX Printer
-  periph_set_present( PERIPH_TYPE_ZXPRINTER, PERIPH_PRESENT_NEVER );
-  periph_set_present( PERIPH_TYPE_ZXPRINTER_FULL_DECODE, PERIPH_PRESENT_OPTIONAL );
+  periph_set_present(PERIPH_TYPE_ZXPRINTER, PERIPH_PRESENT_NEVER);
+  periph_set_present(PERIPH_TYPE_ZXPRINTER_FULL_DECODE, PERIPH_PRESENT_OPTIONAL);
 
   // SCLD always present
-  periph_set_present( PERIPH_TYPE_SCLD, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_SCLD, PERIPH_PRESENT_ALWAYS);
 
   /* TC2048 has a built-in Kempston joystick, which uses the "loose"
      decoding */
-  periph_set_present( PERIPH_TYPE_KEMPSTON, PERIPH_PRESENT_NEVER );
-  periph_set_present( PERIPH_TYPE_KEMPSTON_LOOSE, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_KEMPSTON, PERIPH_PRESENT_NEVER);
+  periph_set_present(PERIPH_TYPE_KEMPSTON_LOOSE, PERIPH_PRESENT_ALWAYS);
 
   // SpeccyBoot doesn't seem to work on the TC2048
-  periph_set_present( PERIPH_TYPE_SPECCYBOOT, PERIPH_PRESENT_NEVER );
+  periph_set_present(PERIPH_TYPE_SPECCYBOOT, PERIPH_PRESENT_NEVER);
 
   periph_update();
 
   beta_builtin = 0;
 
   for (i = 0; i < 8; i++)
-    for( j = 0; j < MEMORY_PAGES_IN_8K; j++ ) {
+    for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
       memory_page *dock_page, *exrom_page;
 
       dock_page = &timex_dock[i * MEMORY_PAGES_IN_8K + j];

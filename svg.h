@@ -33,7 +33,7 @@ typedef enum svg_capture_type {
   SVG_CAPTURE_LINES,
 } svg_capture_type;
 
-void svg_startcapture( const char *name, svg_capture_type mode );
+void svg_startcapture(const char *name, svg_capture_type mode);
 void svg_stopcapture(void);
 
 void svg_capture(void);

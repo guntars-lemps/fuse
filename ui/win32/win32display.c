@@ -44,13 +44,13 @@ int image_width, image_height;
 libspectrum_word
   win32display_image[ 2 * DISPLAY_SCREEN_HEIGHT ][ DISPLAY_SCREEN_WIDTH ];
 ptrdiff_t win32display_pitch = DISPLAY_SCREEN_WIDTH *
-                               sizeof( libspectrum_word );
+                               sizeof(libspectrum_word);
 
 /* An RGB image of the Spectrum screen; slightly bigger than the real
    screen to handle the smoothing filters which read around each pixel */
-static unsigned char rgb_image[ 4 * 2 * ( DISPLAY_SCREEN_HEIGHT + 4 ) *
-                                        ( DISPLAY_SCREEN_WIDTH  + 3 )   ];
-static const int rgb_pitch = ( DISPLAY_SCREEN_WIDTH + 3 ) * 4;
+static unsigned char rgb_image[ 4 * 2 * (DISPLAY_SCREEN_HEIGHT + 4) *
+                                        (DISPLAY_SCREEN_WIDTH  + 3)   ];
+static const int rgb_pitch = (DISPLAY_SCREEN_WIDTH + 3) * 4;
 
 // The scaled image
 static unsigned char scaled_image[ 3 * DISPLAY_SCREEN_HEIGHT *
@@ -91,7 +91,7 @@ static libspectrum_dword bw_colours[16];
 static int win32display_current_size=1;
 
 static int init_colours(void);
-static void register_scalers( int force_scaler );
+static void register_scalers(int force_scaler);
 static void win32display_load_gfx_mode(void);
 
 void
@@ -102,24 +102,24 @@ blit(void)
   HBITMAP src_bmp;
   int x, y, width, height;
 
-  dest_dc = BeginPaint( fuse_hWnd, &ps );
+  dest_dc = BeginPaint(fuse_hWnd, &ps);
 
   x = ps.rcPaint.left;
   y = ps.rcPaint.top;
   width = ps.rcPaint.right - ps.rcPaint.left;
   height = ps.rcPaint.bottom - ps.rcPaint.top;
 
-  if (width && height ) {
-    src_dc = CreateCompatibleDC( dest_dc );
-    src_bmp = SelectObject( src_dc, fuse_BMP );
+  if (width && height) {
+    src_dc = CreateCompatibleDC(dest_dc);
+    src_bmp = SelectObject(src_dc, fuse_BMP);
 
-    BitBlt( dest_dc, x, y, width, height, src_dc, x, y, SRCCOPY );
+    BitBlt(dest_dc, x, y, width, height, src_dc, x, y, SRCCOPY);
 
-    SelectObject( src_dc, src_bmp );
-    DeleteDC( src_dc );
+    SelectObject(src_dc, src_bmp);
+    DeleteDC(src_dc);
   }
 
-  EndPaint( fuse_hWnd, &ps );
+  EndPaint(fuse_hWnd, &ps);
 }
 
 int
@@ -128,21 +128,21 @@ win32display_init(void)
   int x, y, error;
   libspectrum_dword black;
 
-  error = init_colours(); if (error ) return error;
+  error = init_colours(); if (error) return error;
 
   black = settings_current.bw_tv ? bw_colours[0] : win32display_colours[0];
 
-  for( y = 0; y < DISPLAY_SCREEN_HEIGHT + 4; y++ )
-    for( x = 0; x < DISPLAY_SCREEN_WIDTH + 3; x++ )
-      *(libspectrum_dword*)( rgb_image + y * rgb_pitch + 4 * x ) = black;
+  for (y = 0; y < DISPLAY_SCREEN_HEIGHT + 4; y++)
+    for (x = 0; x < DISPLAY_SCREEN_WIDTH + 3; x++)
+      *(libspectrum_dword*)(rgb_image + y * rgb_pitch + 4 * x) = black;
 
   // create the back buffer
 
-  memset( &fuse_BMI, 0, sizeof( fuse_BMI ) );
-  fuse_BMI.bmiHeader.biSize = sizeof( fuse_BMI.bmiHeader );
-  fuse_BMI.bmiHeader.biWidth = (size_t)( 1.5 * DISPLAY_SCREEN_WIDTH );
+  memset(&fuse_BMI, 0, sizeof(fuse_BMI));
+  fuse_BMI.bmiHeader.biSize = sizeof(fuse_BMI.bmiHeader);
+  fuse_BMI.bmiHeader.biWidth = (size_t)(1.5 * DISPLAY_SCREEN_WIDTH);
   // negative to avoid "shep-mode":
-  fuse_BMI.bmiHeader.biHeight = -( 3 * DISPLAY_SCREEN_HEIGHT );
+  fuse_BMI.bmiHeader.biHeight = -(3 * DISPLAY_SCREEN_HEIGHT);
   fuse_BMI.bmiHeader.biPlanes = 1;
   fuse_BMI.bmiHeader.biBitCount = 32;
   fuse_BMI.bmiHeader.biCompression = BI_RGB;
@@ -156,12 +156,12 @@ win32display_init(void)
   fuse_BMI.bmiColors[0].rgbBlue = 0;
   fuse_BMI.bmiColors[0].rgbReserved = 0;
 
-  HDC dc = GetDC( fuse_hWnd );
+  HDC dc = GetDC(fuse_hWnd);
 
-  fuse_BMP = CreateDIBSection( dc, &fuse_BMI, DIB_RGB_COLORS, &win32_pixdata,
-                               NULL, 0 );
+  fuse_BMP = CreateDIBSection(dc, &fuse_BMI, DIB_RGB_COLORS, &win32_pixdata,
+                               NULL, 0);
 
-  ReleaseDC( fuse_hWnd, dc );
+  ReleaseDC(fuse_hWnd, dc);
 
   display_ui_initialised = 1;
 
@@ -182,7 +182,7 @@ init_colours(void)
     blue  = rgb_colours[i][2];
 
     // Addition of 0.5 is to avoid rounding errors
-    grey = ( 0.299 * red + 0.587 * green + 0.114 * blue ) + 0.5;
+    grey = (0.299 * red + 0.587 * green + 0.114 * blue) + 0.5;
 
 #ifdef WORDS_BIGENDIAN
 
@@ -202,87 +202,87 @@ init_colours(void)
 }
 
 int
-win32display_drawing_area_resize( int width, int height, int force_scaler )
+win32display_drawing_area_resize(int width, int height, int force_scaler)
 {
   int size;
 
   size = width / DISPLAY_ASPECT_WIDTH;
-  if (size > height / DISPLAY_SCREEN_HEIGHT )
+  if (size > height / DISPLAY_SCREEN_HEIGHT)
     size = height / DISPLAY_SCREEN_HEIGHT;
 
   // If we're the same size as before, no need to do anything else
-  if (size == win32display_current_size ) return 0;
+  if (size == win32display_current_size) return 0;
 
   win32display_current_size = size;
 
-  register_scalers( force_scaler );
+  register_scalers(force_scaler);
 
-  memset( scaled_image, 0, sizeof( scaled_image ) );
+  memset(scaled_image, 0, sizeof(scaled_image));
   display_refresh_all();
 
   return 0;
 }
 
 int
-uidisplay_init( int width, int height )
+uidisplay_init(int width, int height)
 {
   const char *machine_name;
 
   image_width = width; image_height = height;
   image_scale = width / DISPLAY_ASPECT_WIDTH;
-  SetRectEmpty( &invalidated_area );
+  SetRectEmpty(&invalidated_area);
 
-  register_scalers( 0 );
+  register_scalers(0);
 
   display_refresh_all();
 
-  if ( scaler_select_scaler( current_scaler ) )
-        scaler_select_scaler( SCALER_NORMAL );
+  if (scaler_select_scaler(current_scaler))
+        scaler_select_scaler(SCALER_NORMAL);
 
   win32display_load_gfx_mode();
 
-  machine_name = libspectrum_machine_name( machine_current->machine );
-  win32statusbar_update_machine( machine_name );
+  machine_name = libspectrum_machine_name(machine_current->machine);
+  win32statusbar_update_machine(machine_name);
 
   return 0;
 }
 
 static void
-register_scalers( int force_scaler )
+register_scalers(int force_scaler)
 {
   scaler_type scaler;
 
   scaler_register_clear();
 
-  if (machine_current->timex ) {
-    scaler_register( SCALER_HALF );
-    scaler_register( SCALER_HALFSKIP );
-    scaler_register( SCALER_TIMEXTV );
-    scaler_register( SCALER_TIMEX1_5X );
+  if (machine_current->timex) {
+    scaler_register(SCALER_HALF);
+    scaler_register(SCALER_HALFSKIP);
+    scaler_register(SCALER_TIMEXTV);
+    scaler_register(SCALER_TIMEX1_5X);
   } else {
-    scaler_register( SCALER_DOUBLESIZE );
-    scaler_register( SCALER_TRIPLESIZE );
-    scaler_register( SCALER_TV2X );
-    scaler_register( SCALER_TV3X );
-    scaler_register( SCALER_PALTV2X );
-    scaler_register( SCALER_PALTV3X );
-    scaler_register( SCALER_HQ2X );
-    scaler_register( SCALER_HQ3X );
-    scaler_register( SCALER_ADVMAME2X );
-    scaler_register( SCALER_ADVMAME3X );
-    scaler_register( SCALER_2XSAI );
-    scaler_register( SCALER_SUPER2XSAI );
-    scaler_register( SCALER_SUPEREAGLE );
-    scaler_register( SCALER_DOTMATRIX );
+    scaler_register(SCALER_DOUBLESIZE);
+    scaler_register(SCALER_TRIPLESIZE);
+    scaler_register(SCALER_TV2X);
+    scaler_register(SCALER_TV3X);
+    scaler_register(SCALER_PALTV2X);
+    scaler_register(SCALER_PALTV3X);
+    scaler_register(SCALER_HQ2X);
+    scaler_register(SCALER_HQ3X);
+    scaler_register(SCALER_ADVMAME2X);
+    scaler_register(SCALER_ADVMAME3X);
+    scaler_register(SCALER_2XSAI);
+    scaler_register(SCALER_SUPER2XSAI);
+    scaler_register(SCALER_SUPEREAGLE);
+    scaler_register(SCALER_DOTMATRIX);
   }
-  scaler_register( SCALER_NORMAL );
-  scaler_register( SCALER_PALTV );
+  scaler_register(SCALER_NORMAL);
+  scaler_register(SCALER_PALTV);
 
   scaler =
-    scaler_is_supported( current_scaler ) ? current_scaler : SCALER_NORMAL;
+    scaler_is_supported(current_scaler) ? current_scaler : SCALER_NORMAL;
 
-  if (force_scaler ) {
-    switch (win32display_current_size ) {
+  if (force_scaler) {
+    switch (win32display_current_size) {
     case 1: scaler = machine_current->timex ? SCALER_HALF : SCALER_NORMAL;
       break;
     case 2: scaler = machine_current->timex ? SCALER_NORMAL : SCALER_DOUBLESIZE;
@@ -293,24 +293,24 @@ register_scalers( int force_scaler )
     }
   }
 
-  scaler_select_scaler( scaler );
+  scaler_select_scaler(scaler);
 }
 
 void
 uidisplay_frame_end(void)
 {
-  if (!IsRectEmpty( &invalidated_area ) ) {
+  if (!IsRectEmpty(&invalidated_area)) {
 
-    InvalidateRect( fuse_hWnd, &invalidated_area, FALSE );
+    InvalidateRect(fuse_hWnd, &invalidated_area, FALSE);
 
-    SetRectEmpty( &invalidated_area );
+    SetRectEmpty(&invalidated_area);
 
-    UpdateWindow( fuse_hWnd );
+    UpdateWindow(fuse_hWnd);
   }
 }
 
 void
-uidisplay_area( int x, int y, int w, int h )
+uidisplay_area(int x, int y, int w, int h)
 {
   float scale = (float)win32display_current_size / image_scale;
   int scaled_x, scaled_y, i, yy;
@@ -318,36 +318,36 @@ uidisplay_area( int x, int y, int w, int h )
 
   /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */
-  if (scaler_flags & SCALER_FLAGS_EXPAND )
-    scaler_expander( &x, &y, &w, &h, image_width, image_height );
+  if (scaler_flags & SCALER_FLAGS_EXPAND)
+    scaler_expander(&x, &y, &w, &h, image_width, image_height);
 
   scaled_x = scale * x; scaled_y = scale * y;
 
   palette = settings_current.bw_tv ? bw_colours : win32display_colours;
 
   // Create the RGB image
-  for( yy = y; yy < y + h; yy++ ) {
+  for (yy = y; yy < y + h; yy++) {
 
     libspectrum_dword *rgb; libspectrum_word *display;
 
-    rgb = (libspectrum_dword*)( rgb_image + ( yy + 2 ) * rgb_pitch );
+    rgb = (libspectrum_dword*)(rgb_image + (yy + 2) * rgb_pitch);
     rgb += x + 1;
 
     display = &win32display_image[yy][x];
 
-    for (i = 0; i < w; i++, rgb++, display++ ) *rgb = palette[ *display ];
+    for (i = 0; i < w; i++, rgb++, display++) *rgb = palette[ *display ];
   }
 
   // Create scaled image
-  scaler_proc32( &rgb_image[ ( y + 2 ) * rgb_pitch + 4 * ( x + 1 ) ],
+  scaler_proc32(&rgb_image[ (y + 2) * rgb_pitch + 4 * (x + 1) ],
                  rgb_pitch,
                  &scaled_image[ scaled_y * scaled_pitch + 4 * scaled_x ],
-                 scaled_pitch, w, h );
+                 scaled_pitch, w, h);
 
   w *= scale; h *= scale;
 
   // Blit to the real screen
-  win32display_area( scaled_x, scaled_y, w, h );
+  win32display_area(scaled_x, scaled_y, w, h);
 }
 
 void
@@ -362,9 +362,9 @@ win32display_area(int x, int y, int width, int height)
   bottom = y + height;
   right = x + width;
 
-  for( disp_y = y; disp_y < bottom; disp_y++ ) {
-    for( disp_x = x; disp_x < right; disp_x++ ) {
-      ofs = ( disp_x << 2 ) + ( disp_y * scaled_pitch );
+  for (disp_y = y; disp_y < bottom; disp_y++) {
+    for (disp_x = x; disp_x < right; disp_x++) {
+      ofs = (disp_x << 2) + (disp_y * scaled_pitch);
 
       pixdata[ ofs + 0 ] = scaled_image[ ofs + 2 ]; // blue
       pixdata[ ofs + 1 ] = scaled_image[ ofs + 1 ]; // green
@@ -374,8 +374,8 @@ win32display_area(int x, int y, int width, int height)
   }
 
   // Mark area for updating
-  SetRect( &r, x, y, right, bottom );
-  UnionRect( &invalidated_area, &invalidated_area, &r );
+  SetRect(&r, x, y, right, bottom);
+  UnionRect(&invalidated_area, &invalidated_area, &r);
 }
 
 int
@@ -400,16 +400,16 @@ uidisplay_end(void)
 int
 win32display_end(void)
 {
-  DeleteObject( fuse_BMP );
+  DeleteObject(fuse_BMP);
 
   return 0;
 }
 
 // Set one pixel in the display
 void
-uidisplay_putpixel( int x, int y, int colour )
+uidisplay_putpixel(int x, int y, int colour)
 {
-  if (machine_current->timex ) {
+  if (machine_current->timex) {
     x <<= 1; y <<= 1;
     win32display_image[y  ][x  ] = colour;
     win32display_image[y  ][x+1] = colour;
@@ -421,73 +421,73 @@ uidisplay_putpixel( int x, int y, int colour )
 }
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
-   colour `paper' to the screen at ( (8*x) , y ) */
+   colour `paper' to the screen at ((8*x) , y) */
 void
-uidisplay_plot8( int x, int y, libspectrum_byte data,
-                 libspectrum_byte ink, libspectrum_byte paper )
+uidisplay_plot8(int x, int y, libspectrum_byte data,
+                 libspectrum_byte ink, libspectrum_byte paper)
 {
   x <<= 3;
 
-  if (machine_current->timex ) {
+  if (machine_current->timex) {
     int i;
 
     x <<= 1; y <<= 1;
-    for( i=0; i<2; i++,y++ ) {
-      win32display_image[y][x+ 0] = ( data & 0x80 ) ? ink : paper;
-      win32display_image[y][x+ 1] = ( data & 0x80 ) ? ink : paper;
-      win32display_image[y][x+ 2] = ( data & 0x40 ) ? ink : paper;
-      win32display_image[y][x+ 3] = ( data & 0x40 ) ? ink : paper;
-      win32display_image[y][x+ 4] = ( data & 0x20 ) ? ink : paper;
-      win32display_image[y][x+ 5] = ( data & 0x20 ) ? ink : paper;
-      win32display_image[y][x+ 6] = ( data & 0x10 ) ? ink : paper;
-      win32display_image[y][x+ 7] = ( data & 0x10 ) ? ink : paper;
-      win32display_image[y][x+ 8] = ( data & 0x08 ) ? ink : paper;
-      win32display_image[y][x+ 9] = ( data & 0x08 ) ? ink : paper;
-      win32display_image[y][x+10] = ( data & 0x04 ) ? ink : paper;
-      win32display_image[y][x+11] = ( data & 0x04 ) ? ink : paper;
-      win32display_image[y][x+12] = ( data & 0x02 ) ? ink : paper;
-      win32display_image[y][x+13] = ( data & 0x02 ) ? ink : paper;
-      win32display_image[y][x+14] = ( data & 0x01 ) ? ink : paper;
-      win32display_image[y][x+15] = ( data & 0x01 ) ? ink : paper;
+    for (i=0; i<2; i++,y++) {
+      win32display_image[y][x+ 0] = (data & 0x80) ? ink : paper;
+      win32display_image[y][x+ 1] = (data & 0x80) ? ink : paper;
+      win32display_image[y][x+ 2] = (data & 0x40) ? ink : paper;
+      win32display_image[y][x+ 3] = (data & 0x40) ? ink : paper;
+      win32display_image[y][x+ 4] = (data & 0x20) ? ink : paper;
+      win32display_image[y][x+ 5] = (data & 0x20) ? ink : paper;
+      win32display_image[y][x+ 6] = (data & 0x10) ? ink : paper;
+      win32display_image[y][x+ 7] = (data & 0x10) ? ink : paper;
+      win32display_image[y][x+ 8] = (data & 0x08) ? ink : paper;
+      win32display_image[y][x+ 9] = (data & 0x08) ? ink : paper;
+      win32display_image[y][x+10] = (data & 0x04) ? ink : paper;
+      win32display_image[y][x+11] = (data & 0x04) ? ink : paper;
+      win32display_image[y][x+12] = (data & 0x02) ? ink : paper;
+      win32display_image[y][x+13] = (data & 0x02) ? ink : paper;
+      win32display_image[y][x+14] = (data & 0x01) ? ink : paper;
+      win32display_image[y][x+15] = (data & 0x01) ? ink : paper;
     }
   } else {
-    win32display_image[y][x+ 0] = ( data & 0x80 ) ? ink : paper;
-    win32display_image[y][x+ 1] = ( data & 0x40 ) ? ink : paper;
-    win32display_image[y][x+ 2] = ( data & 0x20 ) ? ink : paper;
-    win32display_image[y][x+ 3] = ( data & 0x10 ) ? ink : paper;
-    win32display_image[y][x+ 4] = ( data & 0x08 ) ? ink : paper;
-    win32display_image[y][x+ 5] = ( data & 0x04 ) ? ink : paper;
-    win32display_image[y][x+ 6] = ( data & 0x02 ) ? ink : paper;
-    win32display_image[y][x+ 7] = ( data & 0x01 ) ? ink : paper;
+    win32display_image[y][x+ 0] = (data & 0x80) ? ink : paper;
+    win32display_image[y][x+ 1] = (data & 0x40) ? ink : paper;
+    win32display_image[y][x+ 2] = (data & 0x20) ? ink : paper;
+    win32display_image[y][x+ 3] = (data & 0x10) ? ink : paper;
+    win32display_image[y][x+ 4] = (data & 0x08) ? ink : paper;
+    win32display_image[y][x+ 5] = (data & 0x04) ? ink : paper;
+    win32display_image[y][x+ 6] = (data & 0x02) ? ink : paper;
+    win32display_image[y][x+ 7] = (data & 0x01) ? ink : paper;
   }
 }
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
-   colour `paper' to the screen at ( (16*x) , y ) */
+   colour `paper' to the screen at ((16*x) , y) */
 void
-uidisplay_plot16( int x, int y, libspectrum_word data,
-                  libspectrum_byte ink, libspectrum_byte paper )
+uidisplay_plot16(int x, int y, libspectrum_word data,
+                  libspectrum_byte ink, libspectrum_byte paper)
 {
   int i;
   x <<= 4; y <<= 1;
 
-  for( i=0; i<2; i++,y++ ) {
-    win32display_image[y][x+ 0] = ( data & 0x8000 ) ? ink : paper;
-    win32display_image[y][x+ 1] = ( data & 0x4000 ) ? ink : paper;
-    win32display_image[y][x+ 2] = ( data & 0x2000 ) ? ink : paper;
-    win32display_image[y][x+ 3] = ( data & 0x1000 ) ? ink : paper;
-    win32display_image[y][x+ 4] = ( data & 0x0800 ) ? ink : paper;
-    win32display_image[y][x+ 5] = ( data & 0x0400 ) ? ink : paper;
-    win32display_image[y][x+ 6] = ( data & 0x0200 ) ? ink : paper;
-    win32display_image[y][x+ 7] = ( data & 0x0100 ) ? ink : paper;
-    win32display_image[y][x+ 8] = ( data & 0x0080 ) ? ink : paper;
-    win32display_image[y][x+ 9] = ( data & 0x0040 ) ? ink : paper;
-    win32display_image[y][x+10] = ( data & 0x0020 ) ? ink : paper;
-    win32display_image[y][x+11] = ( data & 0x0010 ) ? ink : paper;
-    win32display_image[y][x+12] = ( data & 0x0008 ) ? ink : paper;
-    win32display_image[y][x+13] = ( data & 0x0004 ) ? ink : paper;
-    win32display_image[y][x+14] = ( data & 0x0002 ) ? ink : paper;
-    win32display_image[y][x+15] = ( data & 0x0001 ) ? ink : paper;
+  for (i=0; i<2; i++,y++) {
+    win32display_image[y][x+ 0] = (data & 0x8000) ? ink : paper;
+    win32display_image[y][x+ 1] = (data & 0x4000) ? ink : paper;
+    win32display_image[y][x+ 2] = (data & 0x2000) ? ink : paper;
+    win32display_image[y][x+ 3] = (data & 0x1000) ? ink : paper;
+    win32display_image[y][x+ 4] = (data & 0x0800) ? ink : paper;
+    win32display_image[y][x+ 5] = (data & 0x0400) ? ink : paper;
+    win32display_image[y][x+ 6] = (data & 0x0200) ? ink : paper;
+    win32display_image[y][x+ 7] = (data & 0x0100) ? ink : paper;
+    win32display_image[y][x+ 8] = (data & 0x0080) ? ink : paper;
+    win32display_image[y][x+ 9] = (data & 0x0040) ? ink : paper;
+    win32display_image[y][x+10] = (data & 0x0020) ? ink : paper;
+    win32display_image[y][x+11] = (data & 0x0010) ? ink : paper;
+    win32display_image[y][x+12] = (data & 0x0008) ? ink : paper;
+    win32display_image[y][x+13] = (data & 0x0004) ? ink : paper;
+    win32display_image[y][x+14] = (data & 0x0002) ? ink : paper;
+    win32display_image[y][x+15] = (data & 0x0001) ? ink : paper;
   }
 }
 
@@ -496,9 +496,9 @@ win32display_load_gfx_mode(void)
 {
   float scale;
 
-  scale = scaler_get_scaling_factor( current_scaler );
-  win32display_drawing_area_resize( scale * image_width, scale * image_height, 0 );
-  win32ui_fuse_resize( scale * image_width, scale * image_height );
+  scale = scaler_get_scaling_factor(current_scaler);
+  win32display_drawing_area_resize(scale * image_width, scale * image_height, 0);
+  win32ui_fuse_resize(scale * image_width, scale * image_height);
 
   // Redraw the entire screen...
   display_refresh_all();

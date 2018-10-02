@@ -34,7 +34,7 @@ timer_get_time(void)
 }
 
 void
-timer_sleep( int ms )
+timer_sleep(int ms)
 {
-  SDL_Delay( ms );
+  SDL_Delay(ms);
 }

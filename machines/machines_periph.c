@@ -36,8 +36,8 @@
 #include "tc2068.h"
 
 static void
-spec_se_memoryport_write( libspectrum_word port GCC_UNUSED,
-			  libspectrum_byte b )
+spec_se_memoryport_write(libspectrum_word port GCC_UNUSED,
+			  libspectrum_byte b)
 {
   machine_current->ram.last_byte = b;
   machine_current->memory_map();
@@ -152,16 +152,16 @@ static const periph_t pentagon1024_memory = {
 };
 
 static int
-machines_periph_init( void *context )
+machines_periph_init(void *context)
 {
-  periph_register( PERIPH_TYPE_128_MEMORY, &spec128_memory );
-  periph_register( PERIPH_TYPE_PLUS3_MEMORY, &plus3_memory );
-  periph_register( PERIPH_TYPE_UPD765, &upd765 );
-  periph_register( PERIPH_TYPE_SE_MEMORY, &se_memory );
-  periph_register( PERIPH_TYPE_AY_TIMEX_WITH_JOYSTICK, &tc2068_ay );
-  periph_register( PERIPH_TYPE_BETA128_PENTAGON, &beta128_pentagon );
-  periph_register( PERIPH_TYPE_BETA128_PENTAGON_LATE, &beta128_pentagon_late );
-  periph_register( PERIPH_TYPE_PENTAGON1024_MEMORY, &pentagon1024_memory );
+  periph_register(PERIPH_TYPE_128_MEMORY, &spec128_memory);
+  periph_register(PERIPH_TYPE_PLUS3_MEMORY, &plus3_memory);
+  periph_register(PERIPH_TYPE_UPD765, &upd765);
+  periph_register(PERIPH_TYPE_SE_MEMORY, &se_memory);
+  periph_register(PERIPH_TYPE_AY_TIMEX_WITH_JOYSTICK, &tc2068_ay);
+  periph_register(PERIPH_TYPE_BETA128_PENTAGON, &beta128_pentagon);
+  periph_register(PERIPH_TYPE_BETA128_PENTAGON_LATE, &beta128_pentagon_late);
+  periph_register(PERIPH_TYPE_PENTAGON1024_MEMORY, &pentagon1024_memory);
 
   return 0;
 }
@@ -170,9 +170,9 @@ void
 machines_periph_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register( STARTUP_MANAGER_MODULE_MACHINES_PERIPH,
-                            dependencies, ARRAY_SIZE( dependencies ),
-                            machines_periph_init, NULL, NULL );
+  startup_manager_register(STARTUP_MANAGER_MODULE_MACHINES_PERIPH,
+                            dependencies, ARRAY_SIZE(dependencies),
+                            machines_periph_init, NULL, NULL);
 }
 
 /* Peripherals generally available on all machines; the Timex machines and
@@ -180,16 +180,16 @@ machines_periph_register_startup(void)
 static void
 base_peripherals(void)
 {
-  periph_set_present( PERIPH_TYPE_DIVIDE, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_DIVMMC, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_KEMPSTON, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_KEMPSTON_MOUSE, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_SIMPLEIDE, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_SPECCYBOOT, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_SPECTRANET, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_ULA, PERIPH_PRESENT_ALWAYS );
-  periph_set_present( PERIPH_TYPE_ZXATASP, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_ZXCF, PERIPH_PRESENT_OPTIONAL );
+  periph_set_present(PERIPH_TYPE_DIVIDE, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_DIVMMC, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_KEMPSTON, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_KEMPSTON_MOUSE, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_SIMPLEIDE, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_SPECCYBOOT, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_SPECTRANET, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_ULA, PERIPH_PRESENT_ALWAYS);
+  periph_set_present(PERIPH_TYPE_ZXATASP, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_ZXCF, PERIPH_PRESENT_OPTIONAL);
 }
 
 // Peripherals available on the 48K and 128K
@@ -197,14 +197,14 @@ static void
 base_peripherals_48_128(void)
 {
   base_peripherals();
-  periph_set_present( PERIPH_TYPE_BETA128, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_INTERFACE1, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_INTERFACE2, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_MULTIFACE_128, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_OPUS, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_PLUSD, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_SPECDRUM, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_USOURCE, PERIPH_PRESENT_OPTIONAL );
+  periph_set_present(PERIPH_TYPE_BETA128, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_INTERFACE1, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_INTERFACE2, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_MULTIFACE_128, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_OPUS, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_PLUSD, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_SPECDRUM, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_USOURCE, PERIPH_PRESENT_OPTIONAL);
 }
 
 // The set of peripherals available on the 48K and similar machines
@@ -212,12 +212,12 @@ void
 machines_periph_48(void)
 {
   base_peripherals_48_128();
-  periph_set_present( PERIPH_TYPE_FULLER, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_MELODIK, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_MULTIFACE_1, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_ZXPRINTER, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_DIDAKTIK80, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_DISCIPLE, PERIPH_PRESENT_OPTIONAL );
+  periph_set_present(PERIPH_TYPE_FULLER, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_MELODIK, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_MULTIFACE_1, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_ZXPRINTER, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_DIDAKTIK80, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_DISCIPLE, PERIPH_PRESENT_OPTIONAL);
 }
 
 // The set of peripherals available on the 128K and similar machines
@@ -225,8 +225,8 @@ void
 machines_periph_128(void)
 {
   base_peripherals_48_128();
-  periph_set_present( PERIPH_TYPE_AY, PERIPH_PRESENT_ALWAYS );
-  periph_set_present( PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_AY, PERIPH_PRESENT_ALWAYS);
+  periph_set_present(PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_ALWAYS);
 }
 
 // The set of peripherals available on the +3 and similar machines
@@ -234,11 +234,11 @@ void
 machines_periph_plus3(void)
 {
   base_peripherals();
-  periph_set_present( PERIPH_TYPE_AY_PLUS3, PERIPH_PRESENT_ALWAYS );
-  periph_set_present( PERIPH_TYPE_MULTIFACE_3, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_PARALLEL_PRINTER, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_PLUS3_MEMORY, PERIPH_PRESENT_ALWAYS );
-  periph_set_present( PERIPH_TYPE_ZXMMC, PERIPH_PRESENT_OPTIONAL );
+  periph_set_present(PERIPH_TYPE_AY_PLUS3, PERIPH_PRESENT_ALWAYS);
+  periph_set_present(PERIPH_TYPE_MULTIFACE_3, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_PARALLEL_PRINTER, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_PLUS3_MEMORY, PERIPH_PRESENT_ALWAYS);
+  periph_set_present(PERIPH_TYPE_ZXMMC, PERIPH_PRESENT_OPTIONAL);
 }
 
 // The set of peripherals available on the TC2068 and TS2068
@@ -248,18 +248,18 @@ machines_periph_timex(void)
   base_peripherals();
 
   // ULA uses full decoding
-  periph_set_present( PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER );
-  periph_set_present( PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER);
+  periph_set_present(PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS);
 
   // SCLD always present
-  periph_set_present( PERIPH_TYPE_SCLD, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_SCLD, PERIPH_PRESENT_ALWAYS);
 
   // AY chip with joystick always present
-  periph_set_present( PERIPH_TYPE_AY_TIMEX_WITH_JOYSTICK, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_AY_TIMEX_WITH_JOYSTICK, PERIPH_PRESENT_ALWAYS);
 
   // ZX Printer and Interface 2 available
-  periph_set_present( PERIPH_TYPE_INTERFACE2, PERIPH_PRESENT_OPTIONAL );
-  periph_set_present( PERIPH_TYPE_ZXPRINTER_FULL_DECODE, PERIPH_PRESENT_OPTIONAL );
+  periph_set_present(PERIPH_TYPE_INTERFACE2, PERIPH_PRESENT_OPTIONAL);
+  periph_set_present(PERIPH_TYPE_ZXPRINTER_FULL_DECODE, PERIPH_PRESENT_OPTIONAL);
 }
 
 // The set of peripherals available on the Pentagon and Scorpion
@@ -269,18 +269,18 @@ machines_periph_pentagon(void)
   base_peripherals();
 
   // 128K-style memory paging available
-  periph_set_present( PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_ALWAYS);
 
   // AY available
-  periph_set_present( PERIPH_TYPE_AY, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_AY, PERIPH_PRESENT_ALWAYS);
 
   // ULA uses full decoding
-  periph_set_present( PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER );
-  periph_set_present( PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_ULA, PERIPH_PRESENT_NEVER);
+  periph_set_present(PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS);
 
   /* All machines have a built-in Betadisk 128 interface, which also
      handles Kempston joystick as they share a port; we don't add the
      actual Betadisk interface here as it differs slightly between the
      (original) Pentagon and the Scorpion/Pentagon 1024 */
-  periph_set_present( PERIPH_TYPE_KEMPSTON, PERIPH_PRESENT_NEVER );
+  periph_set_present(PERIPH_TYPE_KEMPSTON, PERIPH_PRESENT_NEVER);
 }

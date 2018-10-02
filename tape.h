@@ -29,28 +29,28 @@
 
 void tape_register_startup(void);
 
-int tape_open( const char *filename, int autoload );
+int tape_open(const char *filename, int autoload);
 
 int
-tape_read_buffer( unsigned char *buffer, size_t length, libspectrum_id_t type,
-		  const char *filename, int autoload );
+tape_read_buffer(unsigned char *buffer, size_t length, libspectrum_id_t type,
+		  const char *filename, int autoload);
 
 int tape_close(void);
 int tape_rewind(void);
-int tape_select_block( size_t n );
-int tape_select_block_no_update( size_t n );
+int tape_select_block(size_t n);
+int tape_select_block_no_update(size_t n);
 int tape_get_current_block(void);
-int tape_write( const char *filename );
+int tape_write(const char *filename);
 
 int tape_can_autoload(void);
 
 int tape_load_trap(void);
 int tape_save_trap(void);
 
-int tape_do_play( int autoplay );
-int tape_toggle_play( int autoplay );
+int tape_do_play(int autoplay);
+int tape_toggle_play(int autoplay);
 
-void tape_next_edge( libspectrum_dword last_tstates, int from_acceleration );
+void tape_next_edge(libspectrum_dword last_tstates, int from_acceleration);
 
 int tape_stop(void);
 int tape_is_playing(void);
@@ -61,14 +61,14 @@ int tape_record_stop(void);
 
 // Call a user-supplied function for every block in the current tape
 int
-tape_foreach( void (*function)( libspectrum_tape_block *block,
+tape_foreach(void (*function)(libspectrum_tape_block *block,
 				void *user_data),
-	      void *user_data );
+	      void *user_data);
 
 /* Fill 'buffer' with up a maximum of 'length' characters of
    information about 'block' */
-int tape_block_details( char *buffer, size_t length,
-			libspectrum_tape_block *block );
+int tape_block_details(char *buffer, size_t length,
+			libspectrum_tape_block *block);
 
 extern int tape_microphone;
 extern int tape_modified;

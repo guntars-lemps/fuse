@@ -39,10 +39,10 @@
 #include "covox.h"
 #include "spectrum.h"
 
-static void covox_reset( int hard_reset );
-static void covox_enabled_snapshot( libspectrum_snap *snap );
-static void covox_from_snapshot( libspectrum_snap *snap );
-static void covox_to_snapshot( libspectrum_snap *snap );
+static void covox_reset(int hard_reset);
+static void covox_enabled_snapshot(libspectrum_snap *snap);
+static void covox_from_snapshot(libspectrum_snap *snap);
+static void covox_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t covox_module_info = {
 
@@ -79,11 +79,11 @@ static const periph_t covox_periph_dd = {
 };
 
 static int
-covox_init( void *context )
+covox_init(void *context)
 {
-  module_register( &covox_module_info );
-  periph_register( PERIPH_TYPE_COVOX_FB, &covox_periph_fb );
-  periph_register( PERIPH_TYPE_COVOX_DD, &covox_periph_dd );
+  module_register(&covox_module_info);
+  periph_register(PERIPH_TYPE_COVOX_FB, &covox_periph_fb);
+  periph_register(PERIPH_TYPE_COVOX_DD, &covox_periph_dd);
 
   return 0;
 }
@@ -92,43 +92,43 @@ void
 covox_register_startup(void)
 {
   startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register( STARTUP_MANAGER_MODULE_COVOX, dependencies,
-                            ARRAY_SIZE( dependencies ), covox_init, NULL,
-                            NULL );
+  startup_manager_register(STARTUP_MANAGER_MODULE_COVOX, dependencies,
+                            ARRAY_SIZE(dependencies), covox_init, NULL,
+                            NULL);
 }
 
 static void
-covox_reset( int hard_reset GCC_UNUSED )
+covox_reset(int hard_reset GCC_UNUSED)
 {
   machine_current->covox.covox_dac = 0;
 }
 
 static void
-covox_enabled_snapshot( libspectrum_snap *snap )
+covox_enabled_snapshot(libspectrum_snap *snap)
 {
-  settings_current.covox = libspectrum_snap_covox_active( snap );
+  settings_current.covox = libspectrum_snap_covox_active(snap);
 }
 
 static void
-covox_from_snapshot( libspectrum_snap *snap )
+covox_from_snapshot(libspectrum_snap *snap)
 {
-  if (!libspectrum_snap_covox_active( snap ) ) return;
+  if (!libspectrum_snap_covox_active(snap)) return;
 
   /* We just set the internal machine status to the last read covox_dac
    * instead of trying to write to the sound routines, as at this stage
    * sound isn't initialised so there is no synth to write to
    */
 
-  machine_current->covox.covox_dac = libspectrum_snap_covox_dac( snap );
+  machine_current->covox.covox_dac = libspectrum_snap_covox_dac(snap);
 }
 
 static void
-covox_to_snapshot( libspectrum_snap *snap )
+covox_to_snapshot(libspectrum_snap *snap)
 {
-  if (!(periph_is_active( PERIPH_TYPE_COVOX_FB ) ||
-        periph_is_active( PERIPH_TYPE_COVOX_DD ) ) )
+  if (!(periph_is_active(PERIPH_TYPE_COVOX_FB) ||
+        periph_is_active(PERIPH_TYPE_COVOX_DD)))
     return;
 
-  libspectrum_snap_set_covox_active( snap, 1 );
-  libspectrum_snap_set_covox_dac( snap, machine_current->covox.covox_dac );
+  libspectrum_snap_set_covox_active(snap, 1);
+  libspectrum_snap_set_covox_dac(snap, machine_current->covox.covox_dac);
 }

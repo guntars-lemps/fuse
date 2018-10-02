@@ -7,7 +7,7 @@
  * Copyright (C) 2001/2002 The ScummVM project
  *
  * HQ2x and HQ3x scalers taken from HiEnd3D Demos (http://www.hiend3d.com)
- * Copyright (C) 2003 MaxSt ( maxst@hiend3d.com )
+ * Copyright (C) 2003 MaxSt (maxst@hiend3d.com)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,19 +56,19 @@ struct scaler_info {
 // The expander functions
 
 // Clip back to screen size after expansion
-static void clip( int *x, int *y, int *w, int *h,
-		  int image_width, int image_height );
+static void clip(int *x, int *y, int *w, int *h,
+		  int image_width, int image_height);
 
-static void expand_1( int *x, int *y, int *w, int *h,
-		      int image_width, int image_height );
-static void expand_sai( int *x, int *y, int *w, int *h,
-			int image_width, int image_height );
-static void expand_pal1( int *x, int *y, int *w, int *h,
-			int image_width, int image_height );
-static void expand_pal( int *x, int *y, int *w, int *h,
-			int image_width, int image_height );
-static void expand_dotmatrix( int *x, int *y, int *w, int *h,
-			      int image_width, int image_height );
+static void expand_1(int *x, int *y, int *w, int *h,
+		      int image_width, int image_height);
+static void expand_sai(int *x, int *y, int *w, int *h,
+			int image_width, int image_height);
+static void expand_pal1(int *x, int *y, int *w, int *h,
+			int image_width, int image_height);
+static void expand_pal(int *x, int *y, int *w, int *h,
+			int image_width, int image_height);
+static void expand_dotmatrix(int *x, int *y, int *w, int *h,
+			      int image_width, int image_height);
 
 /* Information on each of the available scalers. Make sure this array stays
    in the same order as scaler.h:scaler_type */
@@ -122,39 +122,39 @@ scaler_flags_t scaler_flags;
 scaler_expand_fn *scaler_expander;
 
 int
-scaler_select_scaler( scaler_type scaler )
+scaler_select_scaler(scaler_type scaler)
 {
-  if (!scaler_is_supported( scaler ) ) return 1;
+  if (!scaler_is_supported(scaler)) return 1;
 
-  if (current_scaler == scaler ) return 0;
+  if (current_scaler == scaler) return 0;
 
   current_scaler = scaler;
 
-  if (settings_current.start_scaler_mode ) libspectrum_free( settings_current.start_scaler_mode );
+  if (settings_current.start_scaler_mode) libspectrum_free(settings_current.start_scaler_mode);
   settings_current.start_scaler_mode =
-    utils_safe_strdup( available_scalers[current_scaler].id );
+    utils_safe_strdup(available_scalers[current_scaler].id);
 
-  scaler_proc16 = scaler_get_proc16( current_scaler );
-  scaler_proc32 = scaler_get_proc32( current_scaler );
-  scaler_flags = scaler_get_flags( current_scaler );
-  scaler_expander = scaler_get_expander( current_scaler );
+  scaler_proc16 = scaler_get_proc16(current_scaler);
+  scaler_proc32 = scaler_get_proc32(current_scaler);
+  scaler_flags = scaler_get_flags(current_scaler);
+  scaler_expander = scaler_get_expander(current_scaler);
 
   return uidisplay_hotswap_gfx_mode();
 }
 
 int
-scaler_select_id( const char *id )
+scaler_select_id(const char *id)
 {
   scaler_type i;
 
-  for( i=0; i < SCALER_NUM; i++) {
-    if (! strcmp( available_scalers[i].id, id ) ) {
-      scaler_select_scaler( i );
+  for (i=0; i < SCALER_NUM; i++) {
+    if (! strcmp(available_scalers[i].id, id)) {
+      scaler_select_scaler(i);
       return 0;
     }
   }
 
-  ui_error( UI_ERROR_ERROR, "Scaler id '%s' unknown", id );
+  ui_error(UI_ERROR_ERROR, "Scaler id '%s' unknown", id);
   return 1;
 }
 
@@ -162,55 +162,55 @@ void
 scaler_register_clear(void)
 {
   scalers_registered = 0;
-  memset( scaler_supported, 0, sizeof(int) * SCALER_NUM );
+  memset(scaler_supported, 0, sizeof(int) * SCALER_NUM);
 }
 
 void
-scaler_register( scaler_type scaler )
+scaler_register(scaler_type scaler)
 {
-  if (scaler_supported[scaler] == 1 ) return;
+  if (scaler_supported[scaler] == 1) return;
   scalers_registered++;
   scaler_supported[scaler] = 1;
 }
 
 int
-scaler_is_supported( scaler_type scaler )
+scaler_is_supported(scaler_type scaler)
 {
-  return ( scaler >= SCALER_NUM ? 0 : scaler_supported[scaler] );
+  return (scaler >= SCALER_NUM ? 0 : scaler_supported[scaler]);
 }
 
 const char *
-scaler_name( scaler_type scaler )
+scaler_name(scaler_type scaler)
 {
   return available_scalers[scaler].name;
 }
 
 ScalerProc*
-scaler_get_proc16( scaler_type scaler )
+scaler_get_proc16(scaler_type scaler)
 {
   return available_scalers[scaler].scaler16;
 }
 
 ScalerProc*
-scaler_get_proc32( scaler_type scaler )
+scaler_get_proc32(scaler_type scaler)
 {
   return available_scalers[scaler].scaler32;
 }
 
 scaler_flags_t
-scaler_get_flags( scaler_type scaler )
+scaler_get_flags(scaler_type scaler)
 {
   return available_scalers[scaler].flags;
 }
 
 float
-scaler_get_scaling_factor( scaler_type scaler )
+scaler_get_scaling_factor(scaler_type scaler)
 {
   return available_scalers[scaler].scaling_factor;
 }
 
 scaler_expand_fn*
-scaler_get_expander( scaler_type scaler )
+scaler_get_expander(scaler_type scaler)
 {
   return available_scalers[scaler].expander;
 }
@@ -219,53 +219,53 @@ scaler_get_expander( scaler_type scaler )
 
 // Clip after expansion
 static inline void
-clip( int *x, int *y, int *w, int *h, int image_width, int image_height )
+clip(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
-  if ( *x < 0 ) { *w += *x; *x=0; }
-  if ( *y < 0 ) { *h += *y; *y=0; }
-  if ( *w > image_width - *x ) *w = image_width - *x;
-  if ( *h > image_height - *y ) *h = image_height - *y;
+  if (*x < 0) { *w += *x; *x=0; }
+  if (*y < 0) { *h += *y; *y=0; }
+  if (*w > image_width - *x) *w = image_width - *x;
+  if (*h > image_height - *y) *h = image_height - *y;
 }
 
 // Expand one pixel in all directions
 static void
-expand_1( int *x, int *y, int *w, int *h, int image_width, int image_height )
+expand_1(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
   (*x)--; (*y)--; (*w)+=2; (*h)+=2;
-  clip( x, y, w, h, image_width, image_height );
+  clip(x, y, w, h, image_width, image_height);
 }
 
 // Expand two pixels up and left and one pixel down and right
 static void
-expand_sai( int *x, int *y, int *w, int *h, int image_width, int image_height )
+expand_sai(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
   (*x)-=2; (*y)-=2; (*w)+=3; (*h)+=3;
-  clip( x, y, w, h, image_width, image_height );
+  clip(x, y, w, h, image_width, image_height);
 }
 
 // Expand two pixels left and right
 static void
-expand_pal1( int *x, int *y, int *w, int *h, int image_width, int image_height )
+expand_pal1(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
   int w_mod = (*w) % 2;
   (*x)-=2; (*w)+=4;
   (*w)+=w_mod; // expand to even
-  clip( x, y, w, h, image_width, image_height );
+  clip(x, y, w, h, image_width, image_height);
 }
 
 // Expand one pixels left and right
 static void
-expand_pal( int *x, int *y, int *w, int *h, int image_width, int image_height )
+expand_pal(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
   (*x)-=1; (*w)+=2;
-  clip( x, y, w, h, image_width, image_height );
+  clip(x, y, w, h, image_width, image_height);
 }
 
 // Expand to a even y co-ord
 static void
-expand_dotmatrix( int *x GCC_UNUSED, int *y GCC_UNUSED, int *w GCC_UNUSED,
+expand_dotmatrix(int *x GCC_UNUSED, int *y GCC_UNUSED, int *w GCC_UNUSED,
 		  int *h, int image_width GCC_UNUSED,
-		  int image_height GCC_UNUSED )
+		  int image_height GCC_UNUSED)
 {
   int y_mod = (*y) % 2;
 

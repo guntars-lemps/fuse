@@ -40,19 +40,19 @@ void gtkdisplay_update_geometry(void);
  * Keyboard routines (gtkkeyboard.c)
  */
 
-int gtkkeyboard_keypress( GtkWidget *widget, GdkEvent *event,
+int gtkkeyboard_keypress(GtkWidget *widget, GdkEvent *event,
 			  gpointer data);
-int gtkkeyboard_keyrelease( GtkWidget *widget, GdkEvent *event,
+int gtkkeyboard_keyrelease(GtkWidget *widget, GdkEvent *event,
 			    gpointer data);
-int gtkkeyboard_release_all( GtkWidget *widget, GdkEvent *event,
-			     gpointer data );
+int gtkkeyboard_release_all(GtkWidget *widget, GdkEvent *event,
+			     gpointer data);
 
 /*
  * Mouse routines (gtkmouse.c)
  */
 
-gboolean gtkmouse_position( GtkWidget*, GdkEventMotion*, gpointer );
-gboolean gtkmouse_button( GtkWidget*, GdkEventButton*, gpointer);
+gboolean gtkmouse_position(GtkWidget*, GdkEventMotion*, gpointer);
+gboolean gtkmouse_button(GtkWidget*, GdkEventButton*, gpointer);
 
 /*
  * General user interface routines (gtkui.c)
@@ -61,15 +61,15 @@ gboolean gtkmouse_button( GtkWidget*, GdkEventButton*, gpointer);
 extern GtkWidget *gtkui_window;
 extern GtkWidget *gtkui_drawing_area;
 
-void gtkui_destroy_widget_and_quit( GtkWidget *widget, gpointer data );
+void gtkui_destroy_widget_and_quit(GtkWidget *widget, gpointer data);
 
-int gtkui_confirm( const char *string );
+int gtkui_confirm(const char *string);
 
-int gtkui_picture( const char *filename, int border );
+int gtkui_picture(const char *filename, int border);
 
 extern void gtkui_popup_menu(void);
 
-GtkAccelGroup* gtkstock_add_accel_group( GtkWidget *widget );
+GtkAccelGroup* gtkstock_add_accel_group(GtkWidget *widget);
 
 /* Set modifier=0 to use the first default accel key.
  * Set modifier_alt=0 to use the second default accel key.
@@ -98,31 +98,31 @@ typedef struct gtkstock_button {
  * If the label begins with "!", then g_signal_connect_swapped, rather than
  * g_signal_connect, is used to connect the action function.
  */
-GtkWidget* gtkstock_create_button( GtkWidget *widget, GtkAccelGroup *accel,
-				   const gtkstock_button *btn );
+GtkWidget* gtkstock_create_button(GtkWidget *widget, GtkAccelGroup *accel,
+				   const gtkstock_button *btn);
 GtkAccelGroup*
-gtkstock_create_buttons( GtkWidget *widget, GtkAccelGroup *accel,
-			 const gtkstock_button *buttons, size_t count );
-GtkAccelGroup* gtkstock_create_ok_cancel( GtkWidget *widget,
+gtkstock_create_buttons(GtkWidget *widget, GtkAccelGroup *accel,
+			 const gtkstock_button *buttons, size_t count);
+GtkAccelGroup* gtkstock_create_ok_cancel(GtkWidget *widget,
 					  GtkAccelGroup *accel,
 	/* for OK button -> */	          GCallback action,
 				          gpointer actiondata,
 	/* for both buttons -> */         GCallback destroy_ok,
-	                                  GCallback destroy_cancel );
-GtkAccelGroup* gtkstock_create_close( GtkWidget *widget, GtkAccelGroup *accel,
+	                                  GCallback destroy_cancel);
+GtkAccelGroup* gtkstock_create_close(GtkWidget *widget, GtkAccelGroup *accel,
 				      GCallback destroy,
-				      gboolean esconly );
+				      gboolean esconly);
 	// destroy==NULL => use DEFAULT_DESTROY
 
-#define DEFAULT_DESTROY ( G_CALLBACK( gtkui_destroy_widget_and_quit ) )
+#define DEFAULT_DESTROY (G_CALLBACK(gtkui_destroy_widget_and_quit))
 
-GtkWidget *gtkstock_dialog_new( const gchar *title, GCallback destroy );
+GtkWidget *gtkstock_dialog_new(const gchar *title, GCallback destroy);
 
 typedef PangoFontDescription *gtkui_font;
 
-int gtkui_get_monospaced_font( gtkui_font *font );
-void gtkui_free_font( gtkui_font font );
-void gtkui_set_font( GtkWidget *widget, gtkui_font font );
+int gtkui_get_monospaced_font(gtkui_font *font);
+void gtkui_free_font(gtkui_font font);
+void gtkui_set_font(GtkWidget *widget, gtkui_font font);
 
 int gtkui_menubar_get_height(void);
 
@@ -153,18 +153,18 @@ extern const char *gtkpixmap_mouse_active[];
  */
 
 
-int gtkstatusbar_create( GtkBox *parent );
+int gtkstatusbar_create(GtkBox *parent);
 int gtkstatusbar_get_height(void);
-int gtkstatusbar_set_visibility( int visible );
-void gtkstatusbar_update_machine( const char *name );
+int gtkstatusbar_set_visibility(int visible);
+void gtkstatusbar_update_machine(const char *name);
 
 /*
  * Routines for list widgets
  */
 
-void gtkui_scroll_connect( GtkTreeView *list, GtkAdjustment *adj );
-void gtkui_list_set_cursor( GtkTreeView *list, int row );
-int gtkui_list_get_cursor( GtkTreeView *list );
+void gtkui_scroll_connect(GtkTreeView *list, GtkAdjustment *adj);
+void gtkui_list_set_cursor(GtkTreeView *list, int row);
+int gtkui_list_get_cursor(GtkTreeView *list);
 
 /*
  * Dialog box reset

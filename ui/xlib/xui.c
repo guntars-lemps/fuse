@@ -49,7 +49,7 @@ Cursor nullpointer;
 static Atom delete_window_atom;
 
 int
-ui_init( int *argc, char ***argv )
+ui_init(int *argc, char ***argv)
 {
   char *displayName=NULL; // Use default display
   XWMHints *wmHints;
@@ -62,30 +62,30 @@ ui_init( int *argc, char ***argv )
 
   // Allocate memory for various things
 
-  if (ui_widget_init() ) return 1;
+  if (ui_widget_init()) return 1;
 
-  if(!(wmHints = XAllocWMHints())) {
+  if (!(wmHints = XAllocWMHints())) {
     fprintf(stderr,"%s: failure allocating memory\n", fuse_progname);
     return 1;
   }
 
-  if(!(sizeHints = XAllocSizeHints())) {
+  if (!(sizeHints = XAllocSizeHints())) {
     fprintf(stderr,"%s: failure allocating memory\n", fuse_progname);
     return 1;
   }
 
-  if(!(classHint = XAllocClassHint())) {
+  if (!(classHint = XAllocClassHint())) {
     fprintf(stderr,"%s: failure allocating memory\n", fuse_progname);
     return 1;
   }
 
-  if(XStringListToTextProperty(&windowNameList,1,&windowName) == 0 ) {
+  if (XStringListToTextProperty(&windowNameList,1,&windowName) == 0) {
     fprintf(stderr,"%s: structure allocation for windowName failed\n",
 	    fuse_progname);
     return 1;
   }
 
-  if(XStringListToTextProperty(&iconNameList,1,&iconName) == 0 ) {
+  if (XStringListToTextProperty(&iconNameList,1,&iconName) == 0) {
     fprintf(stderr,"%s: structure allocation for iconName failed\n",
 	    fuse_progname);
     return 1;
@@ -93,7 +93,7 @@ ui_init( int *argc, char ***argv )
 
   // Open a connection to the X server
 
-  if ( ( display=XOpenDisplay(displayName)) == NULL ) {
+  if ((display=XOpenDisplay(displayName)) == NULL) {
     fprintf(stderr,"%s: cannot connect to X server %s\n", fuse_progname,
 	    XDisplayName(displayName));
     return 1;
@@ -101,17 +101,17 @@ ui_init( int *argc, char ***argv )
 
   // Set up our error handler
   xerror_expecting = xerror_error = 0;
-  XSetErrorHandler( xerror_handler );
+  XSetErrorHandler(xerror_handler);
 
   xui_screenNum = DefaultScreen(display);
 
   // Create the main window
 
   xui_mainWindow = XCreateSimpleWindow(
-    display, RootWindow( display, xui_screenNum ), 0, 0,
+    display, RootWindow(display, xui_screenNum), 0, 0,
     DISPLAY_ASPECT_WIDTH, DISPLAY_SCREEN_HEIGHT, 0,
-    BlackPixel( display, xui_screenNum ), WhitePixel( display, xui_screenNum )
-  );
+    BlackPixel(display, xui_screenNum), WhitePixel(display, xui_screenNum)
+);
 
   // Set standard window properties
 
@@ -127,7 +127,7 @@ ui_init( int *argc, char ***argv )
   sizeHints->max_width    = 3 * DISPLAY_ASPECT_WIDTH;
   sizeHints->max_height   = 3 * DISPLAY_SCREEN_HEIGHT;
 
-  if (settings_current.aspect_hint ) {
+  if (settings_current.aspect_hint) {
     sizeHints->flags |= PAspect;
     sizeHints->min_aspect.x = 4;
     sizeHints->min_aspect.y = 3;
@@ -145,11 +145,11 @@ ui_init( int *argc, char ***argv )
   XSetWMProperties(display, xui_mainWindow, &windowName, &iconName,
 		   *argv, *argc, sizeHints, wmHints, classHint);
 
-  XFree( windowName.value );
-  XFree( iconName.value );
-  XFree( sizeHints );
-  XFree( wmHints );
-  XFree( classHint );
+  XFree(windowName.value);
+  XFree(iconName.value);
+  XFree(sizeHints);
+  XFree(wmHints);
+  XFree(classHint);
 
   // Ask the server to use its backing store for this window
 
@@ -163,7 +163,7 @@ ui_init( int *argc, char ***argv )
 
   XSelectInput(display, xui_mainWindow, ExposureMask | KeyPressMask |
 	       KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
-	       StructureNotifyMask | FocusChangeMask | PointerMotionMask );
+	       StructureNotifyMask | FocusChangeMask | PointerMotionMask);
 
   {
     static XColor dummy = { 0, 0, 0, 0, 4, 0 };
@@ -171,22 +171,22 @@ ui_init( int *argc, char ***argv )
     GC gc;
 
     Pixmap mask =
-      XCreatePixmap( display, RootWindow( display, xui_screenNum ), 1, 1, 1 );
+      XCreatePixmap(display, RootWindow(display, xui_screenNum), 1, 1, 1);
 
     xgc.function = GXclear;
-    gc = XCreateGC( display, mask, GCFunction, &xgc );
-    XFillRectangle( display, mask, gc, 0, 0, 1, 1 );
-    nullpointer = XCreatePixmapCursor( display, mask,mask, &dummy,&dummy, 0,0 );
-    XFreePixmap( display, mask );
-    XFreeGC( display, gc );
+    gc = XCreateGC(display, mask, GCFunction, &xgc);
+    XFillRectangle(display, mask, gc, 0, 0, 1, 1);
+    nullpointer = XCreatePixmapCursor(display, mask,mask, &dummy,&dummy, 0,0);
+    XFreePixmap(display, mask);
+    XFreeGC(display, gc);
   }
 
   // Ask to be notified of window close requests
 
-  delete_window_atom = XInternAtom( display, "WM_DELETE_WINDOW", 0 );
-  XSetWMProtocols( display, xui_mainWindow, &delete_window_atom, 1 );
+  delete_window_atom = XInternAtom(display, "WM_DELETE_WINDOW", 0);
+  XSetWMProtocols(display, xui_mainWindow, &delete_window_atom, 1);
 
-  if (xdisplay_init() ) return 1;
+  if (xdisplay_init()) return 1;
 
   // And finally display the window
   XMapWindow(display,xui_mainWindow);
@@ -200,9 +200,9 @@ int ui_event(void)
 {
   XEvent event;
 
-  XFlush( display );
-  while( XEventsQueued( display, QueuedAlready ) ) {
-    XNextEvent( display, &event );
+  XFlush(display);
+  while (XEventsQueued(display, QueuedAlready)) {
+    XNextEvent(display, &event);
 
     switch(event.type) {
     case ConfigureNotify:
@@ -210,20 +210,20 @@ int ui_event(void)
 				event.xconfigure.height);
       break;
     case Expose:
-      xdisplay_area( event.xexpose.x, event.xexpose.y,
-		     event.xexpose.width, event.xexpose.height );
+      xdisplay_area(event.xexpose.x, event.xexpose.y,
+		     event.xexpose.width, event.xexpose.height);
       break;
     case ButtonPress:
-      ui_mouse_button( event.xbutton.button, 1 );
+      ui_mouse_button(event.xbutton.button, 1);
       break;
     case ButtonRelease:
-      ui_mouse_button( event.xbutton.button, 0 );
+      ui_mouse_button(event.xbutton.button, 0);
       break;
     case MotionNotify:
-      if (ui_mouse_grabbed ) {
-        ui_mouse_motion( event.xmotion.x - 128, event.xmotion.y - 128 );
-        if (event.xmotion.x != 128 || event.xmotion.y != 128 )
-          XWarpPointer( display, None, xui_mainWindow, 0, 0, 0, 0, 128, 128 );
+      if (ui_mouse_grabbed) {
+        ui_mouse_motion(event.xmotion.x - 128, event.xmotion.y - 128);
+        if (event.xmotion.x != 128 || event.xmotion.y != 128)
+          XWarpPointer(display, None, xui_mainWindow, 0, 0, 0, 0, 128, 128);
       }
       break;
     case FocusOut:
@@ -241,7 +241,7 @@ int ui_event(void)
       break;
     case ClientMessage:
       if (event.xclient.format == 32 &&
-          event.xclient.data.l[0] == delete_window_atom ) {
+          event.xclient.data.l[0] == delete_window_atom) {
         fuse_emulation_pause();
         menu_file_exit(0);
         fuse_emulation_unpause();
@@ -260,7 +260,7 @@ int ui_end(void)
   XUnmapWindow(display,xui_mainWindow);
 
   // Tidy up the low level stuff
-  error = xdisplay_end(); if (error ) return error;
+  error = xdisplay_end(); if (error) return error;
 
   // Now free up the window itself
   XDestroyWindow(display,xui_mainWindow);
@@ -274,28 +274,28 @@ int ui_end(void)
 }
 
 int
-ui_mouse_grab( int startup )
+ui_mouse_grab(int startup)
 {
-  if (startup ) return 0;
+  if (startup) return 0;
 
-  switch (XGrabPointer( display, xui_mainWindow, True,
+  switch (XGrabPointer(display, xui_mainWindow, True,
 			ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
 			GrabModeAsync, GrabModeAsync, xui_mainWindow,
-			nullpointer, CurrentTime )
+			nullpointer, CurrentTime)
 	) {
   case GrabSuccess:
   case GrabNotViewable:
-    XWarpPointer( display, None, xui_mainWindow, 0, 0, 0, 0, 128, 128 );
+    XWarpPointer(display, None, xui_mainWindow, 0, 0, 0, 0, 128, 128);
     return 1;
   default:
-    ui_error( UI_ERROR_WARNING, "Mouse grab failed");
+    ui_error(UI_ERROR_WARNING, "Mouse grab failed");
     return 0;
   }
 }
 
 int
-ui_mouse_release( int suspend GCC_UNUSED )
+ui_mouse_release(int suspend GCC_UNUSED)
 {
-  XUngrabPointer( display, CurrentTime );
+  XUngrabPointer(display, CurrentTime);
   return 0;
 }

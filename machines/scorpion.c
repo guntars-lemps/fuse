@@ -46,7 +46,7 @@ static int scorpion_reset(void);
 static int scorpion_memory_map(void);
 
 int
-scorpion_init( fuse_machine_info *machine )
+scorpion_init(fuse_machine_info *machine)
 {
   machine->machine = LIBSPECTRUM_MACHINE_SCORP;
   machine->id = "scorpion";
@@ -73,22 +73,22 @@ scorpion_reset(void)
 {
   int error;
 
-  error = machine_load_rom( 0, settings_current.rom_scorpion_0,
-                            settings_default.rom_scorpion_0, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom( 1, settings_current.rom_scorpion_1,
-                            settings_default.rom_scorpion_1, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom( 2, settings_current.rom_scorpion_2,
-                            settings_default.rom_scorpion_2, 0x4000 );
-  if (error ) return error;
-  error = machine_load_rom_bank( beta_memory_map_romcs, 0,
+  error = machine_load_rom(0, settings_current.rom_scorpion_0,
+                            settings_default.rom_scorpion_0, 0x4000);
+  if (error) return error;
+  error = machine_load_rom(1, settings_current.rom_scorpion_1,
+                            settings_default.rom_scorpion_1, 0x4000);
+  if (error) return error;
+  error = machine_load_rom(2, settings_current.rom_scorpion_2,
+                            settings_default.rom_scorpion_2, 0x4000);
+  if (error) return error;
+  error = machine_load_rom_bank(beta_memory_map_romcs, 0,
                                  settings_current.rom_scorpion_3,
-                                 settings_default.rom_scorpion_3, 0x4000 );
-  if (error ) return error;
+                                 settings_default.rom_scorpion_3, 0x4000);
+  if (error) return error;
 
-  error = spec128_common_reset( 0 );
-  if (error ) return error;
+  error = spec128_common_reset(0);
+  if (error) return error;
 
   machine_current->ram.last_byte2 = 0;
   machine_current->ram.special = 0;
@@ -97,13 +97,13 @@ scorpion_reset(void)
   machines_periph_pentagon();
 
   // +3-style memory paging
-  periph_set_present( PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_NEVER );
-  periph_set_present( PERIPH_TYPE_PLUS3_MEMORY, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_NEVER);
+  periph_set_present(PERIPH_TYPE_PLUS3_MEMORY, PERIPH_PRESENT_ALWAYS);
 
   // Later style Betadisk 128 interface
-  periph_set_present( PERIPH_TYPE_BETA128_PENTAGON_LATE, PERIPH_PRESENT_ALWAYS );
+  periph_set_present(PERIPH_TYPE_BETA128_PENTAGON_LATE, PERIPH_PRESENT_ALWAYS);
 
-  periph_set_present( PERIPH_TYPE_COVOX_DD, PERIPH_PRESENT_OPTIONAL );
+  periph_set_present(PERIPH_TYPE_COVOX_DD, PERIPH_PRESENT_OPTIONAL);
 
   periph_update();
 
@@ -120,31 +120,31 @@ scorpion_memory_map(void)
 {
   int rom, page, screen;
 
-  screen = ( machine_current->ram.last_byte & 0x08 ) ? 7 : 5;
-  if (memory_current_screen != screen ) {
-    display_update_critical( 0, 0 );
+  screen = (machine_current->ram.last_byte & 0x08) ? 7 : 5;
+  if (memory_current_screen != screen) {
+    display_update_critical(0, 0);
     display_refresh_main_screen();
     memory_current_screen = screen;
   }
 
-  if (machine_current->ram.last_byte2 & 0x02 ) {
+  if (machine_current->ram.last_byte2 & 0x02) {
     rom = 2;
   } else {
-    rom = ( machine_current->ram.last_byte & 0x10 ) >> 4;
+    rom = (machine_current->ram.last_byte & 0x10) >> 4;
   }
   machine_current->ram.current_rom = rom;
 
-  if (machine_current->ram.last_byte2 & 0x01 ) {
-    memory_map_16k( 0x0000, memory_map_ram, 0 );
+  if (machine_current->ram.last_byte2 & 0x01) {
+    memory_map_16k(0x0000, memory_map_ram, 0);
     machine_current->ram.special = 1;
   } else {
-    spec128_select_rom( rom );
+    spec128_select_rom(rom);
   }
 
-  page = ( ( machine_current->ram.last_byte2 & 0x10 ) >> 1 ) |
-           ( machine_current->ram.last_byte  & 0x07 );
+  page = ((machine_current->ram.last_byte2 & 0x10) >> 1) |
+           (machine_current->ram.last_byte  & 0x07);
 
-  spec128_select_page( page );
+  spec128_select_page(page);
   machine_current->ram.current_page = page;
 
   memory_romcs_map();

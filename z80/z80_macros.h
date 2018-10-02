@@ -82,7 +82,7 @@
 #define IFF2 z80.iff2
 #define IM   z80.im
 
-#define IR ( ( z80.i ) << 8 | ( z80.r7 & 0x80 ) | ( z80.r & 0x7f ) )
+#define IR ((z80.i) << 8 | (z80.r7 & 0x80) | (z80.r & 0x7f))
 
 #define IS_CMOS settings_current.z80_is_cmos
 
@@ -107,25 +107,25 @@
 #ifndef CORETEST
 
 #define contend_read(address,time) \
-  if (memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
+  if (memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended) \
     tstates += ula_contention[ tstates ]; \
   tstates += (time);
 
 #define contend_read_no_mreq(address,time) \
-  if (memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
+  if (memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended) \
     tstates += ula_contention_no_mreq[ tstates ]; \
   tstates += (time);
 
 #define contend_write_no_mreq(address,time) \
-  if (memory_map_write[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended ) \
+  if (memory_map_write[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM ].contended) \
     tstates += ula_contention_no_mreq[ tstates ]; \
   tstates += (time);
 
 #else // #ifndef CORETEST
 
-void contend_read( libspectrum_word address, libspectrum_dword time );
-void contend_read_no_mreq( libspectrum_word address, libspectrum_dword time );
-void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
+void contend_read(libspectrum_word address, libspectrum_dword time);
+void contend_read_no_mreq(libspectrum_word address, libspectrum_dword time);
+void contend_write_no_mreq(libspectrum_word address, libspectrum_dword time);
 
 #endif // #ifndef CORETEST
 
@@ -139,12 +139,12 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
 
 #define ADC(value)\
 {\
-  libspectrum_word adctemp = A + (value) + ( F & FLAG_C ); \
-  libspectrum_byte lookup = ( (       A & 0x88 ) >> 3 ) | \
-			    ( ( (value) & 0x88 ) >> 2 ) | \
-			    ( ( adctemp & 0x88 ) >> 1 );  \
+  libspectrum_word adctemp = A + (value) + (F & FLAG_C); \
+  libspectrum_byte lookup = ((A & 0x88) >> 3) | \
+			    (((value) & 0x88) >> 2) | \
+			    ((adctemp & 0x88) >> 1);  \
   A=adctemp;\
-  F = ( adctemp & 0x100 ? FLAG_C : 0 ) |\
+  F = (adctemp & 0x100 ? FLAG_C : 0) |\
     halfcarry_add_table[lookup & 0x07] | overflow_add_table[lookup >> 4] |\
     sz53_table[A];\
   Q = F;\
@@ -152,28 +152,28 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
 
 #define ADC16(value)\
 {\
-  libspectrum_dword add16temp= HL + (value) + ( F & FLAG_C ); \
-  libspectrum_byte lookup = ( (        HL & 0x8800 ) >> 11 ) | \
-			    ( (   (value) & 0x8800 ) >> 10 ) | \
-			    ( ( add16temp & 0x8800 ) >>  9 );  \
+  libspectrum_dword add16temp= HL + (value) + (F & FLAG_C); \
+  libspectrum_byte lookup = ((HL & 0x8800) >> 11) | \
+			    (((value) & 0x8800) >> 10) | \
+			    ((add16temp & 0x8800) >>  9);  \
   z80.memptr.w=HL+1;\
   HL = add16temp;\
-  F = ( add16temp & 0x10000 ? FLAG_C : 0 )|\
+  F = (add16temp & 0x10000 ? FLAG_C : 0)|\
     overflow_add_table[lookup >> 4] |\
-    ( H & ( FLAG_3 | FLAG_5 | FLAG_S ) ) |\
+    (H & (FLAG_3 | FLAG_5 | FLAG_S)) |\
     halfcarry_add_table[lookup&0x07]|\
-    ( HL ? 0 : FLAG_Z );\
+    (HL ? 0 : FLAG_Z);\
   Q = F;\
 }
 
 #define ADD(value)\
 {\
   libspectrum_word addtemp = A + (value); \
-  libspectrum_byte lookup = ( (       A & 0x88 ) >> 3 ) | \
-			    ( ( (value) & 0x88 ) >> 2 ) | \
-			    ( ( addtemp & 0x88 ) >> 1 );  \
+  libspectrum_byte lookup = ((A & 0x88) >> 3) | \
+			    (((value) & 0x88) >> 2) | \
+			    ((addtemp & 0x88) >> 1);  \
   A=addtemp;\
-  F = ( addtemp & 0x100 ? FLAG_C : 0 ) |\
+  F = (addtemp & 0x100 ? FLAG_C : 0) |\
     halfcarry_add_table[lookup & 0x07] | overflow_add_table[lookup >> 4] |\
     sz53_table[A];\
   Q = F;\
@@ -182,39 +182,39 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
 #define ADD16(value1,value2)\
 {\
   libspectrum_dword add16temp = (value1) + (value2); \
-  libspectrum_byte lookup = ( (  (value1) & 0x0800 ) >> 11 ) | \
-			    ( (  (value2) & 0x0800 ) >> 10 ) | \
-			    ( ( add16temp & 0x0800 ) >>  9 );  \
+  libspectrum_byte lookup = (((value1) & 0x0800) >> 11) | \
+			    (((value2) & 0x0800) >> 10) | \
+			    ((add16temp & 0x0800) >>  9);  \
   z80.memptr.w=(value1)+1;\
   (value1) = add16temp;\
-  F = ( F & ( FLAG_V | FLAG_Z | FLAG_S ) ) |\
-    ( add16temp & 0x10000 ? FLAG_C : 0 )|\
-    ( ( add16temp >> 8 ) & ( FLAG_3 | FLAG_5 ) ) |\
+  F = (F & (FLAG_V | FLAG_Z | FLAG_S)) |\
+    (add16temp & 0x10000 ? FLAG_C : 0)|\
+    ((add16temp >> 8) & (FLAG_3 | FLAG_5)) |\
     halfcarry_add_table[lookup];\
   Q = F;\
 }
 
 /* This may look fairly inefficient, but the (gcc) optimiser does the
    right thing assuming it's given a constant for 'bit' */
-#define BIT( bit, value ) \
+#define BIT(bit, value) \
 { \
-  F = ( F & FLAG_C ) | FLAG_H | ( value & ( FLAG_3 | FLAG_5 ) ); \
-  if (! ( (value) & ( 0x01 << (bit) ) ) ) F |= FLAG_P | FLAG_Z; \
-  if ((bit) == 7 && (value) & 0x80 ) F |= FLAG_S; \
+  F = (F & FLAG_C) | FLAG_H | (value & (FLAG_3 | FLAG_5)); \
+  if (! ((value) & (0x01 << (bit)))) F |= FLAG_P | FLAG_Z; \
+  if ((bit) == 7 && (value) & 0x80) F |= FLAG_S; \
   Q = F;\
 }
 
-#define BIT_MEMPTR( bit, value ) \
+#define BIT_MEMPTR(bit, value) \
 { \
-  F = ( F & FLAG_C ) | FLAG_H | ( z80.memptr.b.h & ( FLAG_3 | FLAG_5 ) ); \
-  if (! ( (value) & ( 0x01 << (bit) ) ) ) F |= FLAG_P | FLAG_Z; \
-  if ((bit) == 7 && (value) & 0x80 ) F |= FLAG_S; \
+  F = (F & FLAG_C) | FLAG_H | (z80.memptr.b.h & (FLAG_3 | FLAG_5)); \
+  if (! ((value) & (0x01 << (bit)))) F |= FLAG_P | FLAG_Z; \
+  if ((bit) == 7 && (value) & 0x80) F |= FLAG_S; \
   Q = F;\
 }
 
 #define CALL()\
 {\
-  contend_read_no_mreq( PC, 1 ); PC++;\
+  contend_read_no_mreq(PC, 1); PC++;\
   PUSH16(PCL,PCH);\
   PC=z80.memptr.w;\
 }
@@ -222,14 +222,14 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
 #define CP(value)\
 {\
   libspectrum_word cptemp = A - value; \
-  libspectrum_byte lookup = ( (       A & 0x88 ) >> 3 ) | \
-			    ( ( (value) & 0x88 ) >> 2 ) | \
-			    ( (  cptemp & 0x88 ) >> 1 );  \
-  F = ( cptemp & 0x100 ? FLAG_C : ( cptemp ? 0 : FLAG_Z ) ) | FLAG_N |\
+  libspectrum_byte lookup = ((A & 0x88) >> 3) | \
+			    (((value) & 0x88) >> 2) | \
+			    ((cptemp & 0x88) >> 1);  \
+  F = (cptemp & 0x100 ? FLAG_C : (cptemp ? 0 : FLAG_Z)) | FLAG_N |\
     halfcarry_sub_table[lookup & 0x07] |\
     overflow_sub_table[lookup >> 4] |\
-    ( value & ( FLAG_3 | FLAG_5 ) ) |\
-    ( cptemp & FLAG_S );\
+    (value & (FLAG_3 | FLAG_5)) |\
+    (cptemp & FLAG_S);\
   Q = F;\
 }
 
@@ -237,33 +237,33 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
 #define DDFDCB_ROTATESHIFT(time, target, instruction)\
 tstates+=(time);\
 {\
-  (target) = readbyte( tempaddr );\
-  instruction( (target) );\
-  writebyte( tempaddr, (target) );\
+  (target) = readbyte(tempaddr);\
+  instruction((target));\
+  writebyte(tempaddr, (target));\
 }\
 break
 
 #define DEC(value)\
 {\
-  F = ( F & FLAG_C ) | ( (value)&0x0f ? 0 : FLAG_H ) | FLAG_N;\
+  F = (F & FLAG_C) | ((value)&0x0f ? 0 : FLAG_H) | FLAG_N;\
   (value)--;\
-  F |= ( (value)==0x7f ? FLAG_V : 0 ) | sz53_table[value];\
+  F |= ((value)==0x7f ? FLAG_V : 0) | sz53_table[value];\
   Q = F;\
 }
 
-#define Z80_IN( reg, port )\
+#define Z80_IN(reg, port)\
 {\
   z80.memptr.w=port + 1;\
   (reg)=readport((port));\
-  F = ( F & FLAG_C) | sz53p_table[(reg)];\
+  F = (F & FLAG_C) | sz53p_table[(reg)];\
   Q = F;\
 }
 
 #define INC(value)\
 {\
   (value)++;\
-  F = ( F & FLAG_C ) | ( (value)==0x80 ? FLAG_V : 0 ) |\
-  ( (value)&0x0f ? 0 : FLAG_H ) | sz53_table[(value)];\
+  F = (F & FLAG_C) | ((value)==0x80 ? FLAG_V : 0) |\
+  ((value)&0x0f ? 0 : FLAG_H) | sz53_table[(value)];\
   Q = F;\
 }
 
@@ -296,10 +296,10 @@ break
 
 #define JR()\
 {\
-  libspectrum_signed_byte jrtemp = readbyte( PC ); \
-  contend_read_no_mreq( PC, 1 ); contend_read_no_mreq( PC, 1 ); \
-  contend_read_no_mreq( PC, 1 ); contend_read_no_mreq( PC, 1 ); \
-  contend_read_no_mreq( PC, 1 ); \
+  libspectrum_signed_byte jrtemp = readbyte(PC); \
+  contend_read_no_mreq(PC, 1); contend_read_no_mreq(PC, 1); \
+  contend_read_no_mreq(PC, 1); contend_read_no_mreq(PC, 1); \
+  contend_read_no_mreq(PC, 1); \
   PC += jrtemp; \
   PC++; \
   z80.memptr.w = PC; \
@@ -320,8 +320,8 @@ break
 
 #define PUSH16(regl,regh)\
 {\
-  writebyte( --SP, (regh) );\
-  writebyte( --SP, (regl) );\
+  writebyte(--SP, (regh));\
+  writebyte(--SP, (regl));\
 }
 
 #define RET()\
@@ -333,30 +333,30 @@ break
 #define RL(value)\
 {\
   libspectrum_byte rltemp = (value); \
-  (value) = ( (value)<<1 ) | ( F & FLAG_C );\
-  F = ( rltemp >> 7 ) | sz53p_table[(value)];\
+  (value) = ((value)<<1) | (F & FLAG_C);\
+  F = (rltemp >> 7) | sz53p_table[(value)];\
   Q = F;\
 }
 
 #define RLC(value)\
 {\
-  (value) = ( (value)<<1 ) | ( (value)>>7 );\
-  F = ( (value) & FLAG_C ) | sz53p_table[(value)];\
+  (value) = ((value)<<1) | ((value)>>7);\
+  F = ((value) & FLAG_C) | sz53p_table[(value)];\
   Q = F;\
 }
 
 #define RR(value)\
 {\
   libspectrum_byte rrtemp = (value); \
-  (value) = ( (value)>>1 ) | ( F << 7 );\
-  F = ( rrtemp & FLAG_C ) | sz53p_table[(value)];\
+  (value) = ((value)>>1) | (F << 7);\
+  F = (rrtemp & FLAG_C) | sz53p_table[(value)];\
   Q = F;\
 }
 
 #define RRC(value)\
 {\
   F = (value) & FLAG_C;\
-  (value) = ( (value)>>1 ) | ( (value)<<7 );\
+  (value) = ((value)>>1) | ((value)<<7);\
   F |= sz53p_table[(value)];\
   Q = F;\
 }
@@ -370,12 +370,12 @@ break
 
 #define SBC(value)\
 {\
-  libspectrum_word sbctemp = A - (value) - ( F & FLAG_C ); \
-  libspectrum_byte lookup = ( (       A & 0x88 ) >> 3 ) | \
-			    ( ( (value) & 0x88 ) >> 2 ) | \
-			    ( ( sbctemp & 0x88 ) >> 1 );  \
+  libspectrum_word sbctemp = A - (value) - (F & FLAG_C); \
+  libspectrum_byte lookup = ((A & 0x88) >> 3) | \
+			    (((value) & 0x88) >> 2) | \
+			    ((sbctemp & 0x88) >> 1);  \
   A=sbctemp;\
-  F = ( sbctemp & 0x100 ? FLAG_C : 0 ) | FLAG_N |\
+  F = (sbctemp & 0x100 ? FLAG_C : 0) | FLAG_N |\
     halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] |\
     sz53_table[A];\
   Q = F;\
@@ -384,16 +384,16 @@ break
 #define SBC16(value)\
 {\
   libspectrum_dword sub16temp = HL - (value) - (F & FLAG_C); \
-  libspectrum_byte lookup = ( (        HL & 0x8800 ) >> 11 ) | \
-			    ( (   (value) & 0x8800 ) >> 10 ) | \
-			    ( ( sub16temp & 0x8800 ) >>  9 );  \
+  libspectrum_byte lookup = ((HL & 0x8800) >> 11) | \
+			    (((value) & 0x8800) >> 10) | \
+			    ((sub16temp & 0x8800) >>  9);  \
   z80.memptr.w=HL+1;\
   HL = sub16temp;\
-  F = ( sub16temp & 0x10000 ? FLAG_C : 0 ) |\
+  F = (sub16temp & 0x10000 ? FLAG_C : 0) |\
     FLAG_N | overflow_sub_table[lookup >> 4] |\
-    ( H & ( FLAG_3 | FLAG_5 | FLAG_S ) ) |\
+    (H & (FLAG_3 | FLAG_5 | FLAG_S)) |\
     halfcarry_sub_table[lookup&0x07] |\
-    ( HL ? 0 : FLAG_Z) ;\
+    (HL ? 0 : FLAG_Z) ;\
   Q = F;\
 }
 
@@ -408,7 +408,7 @@ break
 #define SLL(value)\
 {\
   F = (value) >> 7;\
-  (value) = ( (value) << 1 ) | 0x01;\
+  (value) = ((value) << 1) | 0x01;\
   F |= sz53p_table[(value)];\
   Q = F;\
 }
@@ -416,7 +416,7 @@ break
 #define SRA(value)\
 {\
   F = (value) & FLAG_C;\
-  (value) = ( (value) & 0x80 ) | ( (value) >> 1 );\
+  (value) = ((value) & 0x80) | ((value) >> 1);\
   F |= sz53p_table[(value)];\
   Q = F;\
 }
@@ -432,11 +432,11 @@ break
 #define SUB(value)\
 {\
   libspectrum_word subtemp = A - (value); \
-  libspectrum_byte lookup = ( (       A & 0x88 ) >> 3 ) | \
-			    ( ( (value) & 0x88 ) >> 2 ) | \
-			    (  (subtemp & 0x88 ) >> 1 );  \
+  libspectrum_byte lookup = ((A & 0x88) >> 3) | \
+			    (((value) & 0x88) >> 2) | \
+			    ((subtemp & 0x88) >> 1);  \
   A=subtemp;\
-  F = ( subtemp & 0x100 ? FLAG_C : 0 ) | FLAG_N |\
+  F = (subtemp & 0x100 ? FLAG_C : 0) | FLAG_N |\
     halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] |\
     sz53_table[A];\
   Q = F;\

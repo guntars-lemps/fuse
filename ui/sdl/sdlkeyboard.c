@@ -46,11 +46,11 @@ extern const keysyms_map_t unicode_keysyms_map[];
 static GHashTable *unicode_keysyms_hash;
 
 static input_key
-unicode_keysyms_remap( libspectrum_dword ui_keysym )
+unicode_keysyms_remap(libspectrum_dword ui_keysym)
 {
   const input_key *ptr;
 
-  ptr = g_hash_table_lookup( unicode_keysyms_hash, &ui_keysym );
+  ptr = g_hash_table_lookup(unicode_keysyms_hash, &ui_keysym);
 
   return ptr ? *ptr : INPUT_KEY_NONE;
 }
@@ -60,11 +60,11 @@ sdlkeyboard_init(void)
 {
   keysyms_map_t *ptr3;
 
-  unicode_keysyms_hash = g_hash_table_new( g_int_hash, g_int_equal );
+  unicode_keysyms_hash = g_hash_table_new(g_int_hash, g_int_equal);
 
-  for( ptr3 = (keysyms_map_t *)unicode_keysyms_map; ptr3->ui; ptr3++ )
-    g_hash_table_insert( unicode_keysyms_hash, &( ptr3->ui ),
-                         &( ptr3->fuse ) );
+  for (ptr3 = (keysyms_map_t *)unicode_keysyms_map; ptr3->ui; ptr3++)
+    g_hash_table_insert(unicode_keysyms_hash, &(ptr3->ui),
+                         &(ptr3->fuse));
 
   SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 }
@@ -72,45 +72,45 @@ sdlkeyboard_init(void)
 void
 sdlkeyboard_end(void)
 {
-  g_hash_table_destroy( unicode_keysyms_hash );
+  g_hash_table_destroy(unicode_keysyms_hash);
 }
 
 void
-sdlkeyboard_keypress( SDL_KeyboardEvent *keyevent )
+sdlkeyboard_keypress(SDL_KeyboardEvent *keyevent)
 {
   input_key fuse_keysym, unicode_keysym;
   input_event_t fuse_event;
 
-  fuse_keysym = keysyms_remap( keyevent->keysym.sym );
+  fuse_keysym = keysyms_remap(keyevent->keysym.sym);
 
   // Currently unicode_keysyms_map contains ASCII character keys
-  if (( keyevent->keysym.unicode & 0xFF80 ) == 0 )
-    unicode_keysym = unicode_keysyms_remap( keyevent->keysym.unicode );
+  if ((keyevent->keysym.unicode & 0xFF80) == 0)
+    unicode_keysym = unicode_keysyms_remap(keyevent->keysym.unicode);
   else
     unicode_keysym = INPUT_KEY_NONE;
 
-  if (fuse_keysym == INPUT_KEY_NONE && unicode_keysym == INPUT_KEY_NONE )
+  if (fuse_keysym == INPUT_KEY_NONE && unicode_keysym == INPUT_KEY_NONE)
     return;
 
   fuse_event.type = INPUT_EVENT_KEYPRESS;
-  if (unicode_keysym == INPUT_KEY_NONE )
+  if (unicode_keysym == INPUT_KEY_NONE)
     fuse_event.types.key.native_key = fuse_keysym;
   else
     fuse_event.types.key.native_key = unicode_keysym;
   fuse_event.types.key.spectrum_key = fuse_keysym;
 
-  input_event( &fuse_event );
+  input_event(&fuse_event);
 }
 
 void
-sdlkeyboard_keyrelease( SDL_KeyboardEvent *keyevent )
+sdlkeyboard_keyrelease(SDL_KeyboardEvent *keyevent)
 {
   input_key fuse_keysym;
   input_event_t fuse_event;
 
-  fuse_keysym = keysyms_remap( keyevent->keysym.sym );
+  fuse_keysym = keysyms_remap(keyevent->keysym.sym);
 
-  if (fuse_keysym == INPUT_KEY_NONE ) return;
+  if (fuse_keysym == INPUT_KEY_NONE) return;
 
   fuse_event.type = INPUT_EVENT_KEYRELEASE;
   /* SDL doesn't provide key release information for UNICODE, assuming that
@@ -119,5 +119,5 @@ sdlkeyboard_keyrelease( SDL_KeyboardEvent *keyevent )
   fuse_event.types.key.native_key = fuse_keysym;
   fuse_event.types.key.spectrum_key = fuse_keysym;
 
-  input_event( &fuse_event );
+  input_event(&fuse_event);
 }

@@ -64,51 +64,51 @@ libspectrum_dword event_next_event;
 // 64Kb of RAM
 static libspectrum_byte initial_memory[ 0x10000 ], memory[ 0x10000 ];
 
-libspectrum_byte readbyte( libspectrum_word address );
-libspectrum_byte readbyte_internal( libspectrum_word address );
+libspectrum_byte readbyte(libspectrum_word address);
+libspectrum_byte readbyte_internal(libspectrum_word address);
 
-void writebyte( libspectrum_word address, libspectrum_byte b );
-void writebyte_internal( libspectrum_word address, libspectrum_byte b );
+void writebyte(libspectrum_word address, libspectrum_byte b);
+void writebyte_internal(libspectrum_word address, libspectrum_byte b);
 
-static int run_test( FILE *f );
-static int read_test( FILE *f, libspectrum_dword *end_tstates );
+static int run_test(FILE *f);
+static int read_test(FILE *f, libspectrum_dword *end_tstates);
 
 static void dump_z80_state(void);
 static void dump_memory_state(void);
 
 int
-main( int argc, char **argv )
+main(int argc, char **argv)
 {
   FILE *f;
 
   progname = argv[0];
 
-  if (argc < 2 ) {
-    fprintf( stderr, "Usage: %s <testsfile>\n", progname );
+  if (argc < 2) {
+    fprintf(stderr, "Usage: %s <testsfile>\n", progname);
     return 1;
   }
 
   testsfile = argv[1];
 
-  if (init_dummies() ) return 1;
+  if (init_dummies()) return 1;
 
   // Initialise the tables used by the Z80 core
-  z80_init( NULL );
+  z80_init(NULL);
 
-  f = fopen( testsfile, "r");
-  if (!f ) {
-    fprintf( stderr, "%s: couldn't open tests file `%s': %s\n", progname,
-	     testsfile, strerror( errno ) );
+  f = fopen(testsfile, "r");
+  if (!f) {
+    fprintf(stderr, "%s: couldn't open tests file `%s': %s\n", progname,
+	     testsfile, strerror(errno));
     return 1;
   }
 
-  while( run_test( f ) ) {
+  while (run_test(f)) {
     // Do nothing
   }
 
-  if (fclose( f ) ) {
-    fprintf( stderr, "%s: couldn't close `%s': %s\n", progname, testsfile,
-	     strerror( errno ) );
+  if (fclose(f)) {
+    fprintf(stderr, "%s: couldn't close `%s': %s\n", progname, testsfile,
+	     strerror(errno));
     return 1;
   }
 
@@ -116,125 +116,125 @@ main( int argc, char **argv )
 }
 
 libspectrum_byte
-readbyte( libspectrum_word address )
+readbyte(libspectrum_word address)
 {
-  printf( "%5d MC %04x\n", tstates, address );
+  printf("%5d MC %04x\n", tstates, address);
   tstates += 3;
-  return readbyte_internal( address );
+  return readbyte_internal(address);
 }
 
 libspectrum_byte
-readbyte_internal( libspectrum_word address )
+readbyte_internal(libspectrum_word address)
 {
-  printf( "%5d MR %04x %02x\n", tstates, address, memory[ address ] );
+  printf("%5d MR %04x %02x\n", tstates, address, memory[ address ]);
   return memory[ address ];
 }
 
 void
-writebyte( libspectrum_word address, libspectrum_byte b )
+writebyte(libspectrum_word address, libspectrum_byte b)
 {
-  printf( "%5d MC %04x\n", tstates, address );
+  printf("%5d MC %04x\n", tstates, address);
   tstates += 3;
-  writebyte_internal( address, b );
+  writebyte_internal(address, b);
 }
 
 void
-writebyte_internal( libspectrum_word address, libspectrum_byte b )
+writebyte_internal(libspectrum_word address, libspectrum_byte b)
 {
-  printf( "%5d MW %04x %02x\n", tstates, address, b );
+  printf("%5d MW %04x %02x\n", tstates, address, b);
   memory[ address ] = b;
 }
 
 void
-contend_read( libspectrum_word address, libspectrum_dword time )
+contend_read(libspectrum_word address, libspectrum_dword time)
 {
-  printf( "%5d MC %04x\n", tstates, address );
+  printf("%5d MC %04x\n", tstates, address);
   tstates += time;
 }
 
 void
-contend_read_no_mreq( libspectrum_word address, libspectrum_dword time )
+contend_read_no_mreq(libspectrum_word address, libspectrum_dword time)
 {
-  contend_read( address, time );
+  contend_read(address, time);
 }
 
 void
-contend_write_no_mreq( libspectrum_word address, libspectrum_dword time )
+contend_write_no_mreq(libspectrum_word address, libspectrum_dword time)
 {
-  printf( "%5d MC %04x\n", tstates, address );
+  printf("%5d MC %04x\n", tstates, address);
   tstates += time;
 }
 
 static void
-contend_port_preio( libspectrum_word port )
+contend_port_preio(libspectrum_word port)
 {
-  if (( port & 0xc000 ) == 0x4000 ) {
-    printf( "%5d PC %04x\n", tstates, port );
+  if ((port & 0xc000) == 0x4000) {
+    printf("%5d PC %04x\n", tstates, port);
   }
 
   tstates++;
 }
 
 static void
-contend_port_postio( libspectrum_word port )
+contend_port_postio(libspectrum_word port)
 {
-  if (port & 0x0001 ) {
+  if (port & 0x0001) {
 
-    if (( port & 0xc000 ) == 0x4000 ) {
-      printf( "%5d PC %04x\n", tstates, port ); tstates++;
-      printf( "%5d PC %04x\n", tstates, port ); tstates++;
-      printf( "%5d PC %04x\n", tstates, port ); tstates++;
+    if ((port & 0xc000) == 0x4000) {
+      printf("%5d PC %04x\n", tstates, port); tstates++;
+      printf("%5d PC %04x\n", tstates, port); tstates++;
+      printf("%5d PC %04x\n", tstates, port); tstates++;
     } else {
       tstates += 3;
     }
 
   } else {
 
-    printf( "%5d PC %04x\n", tstates, port ); tstates += 3;
+    printf("%5d PC %04x\n", tstates, port); tstates += 3;
 
   }
 }
 
 libspectrum_byte
-readport( libspectrum_word port )
+readport(libspectrum_word port)
 {
   libspectrum_byte r = port >> 8;
 
-  contend_port_preio( port );
+  contend_port_preio(port);
 
-  printf( "%5d PR %04x %02x\n", tstates, port, r );
+  printf("%5d PR %04x %02x\n", tstates, port, r);
 
-  contend_port_postio( port );
+  contend_port_postio(port);
 
   return r;
 }
 
 void
-writeport( libspectrum_word port, libspectrum_byte b )
+writeport(libspectrum_word port, libspectrum_byte b)
 {
-  contend_port_preio( port );
+  contend_port_preio(port);
 
-  printf( "%5d PW %04x %02x\n", tstates, port, b );
+  printf("%5d PW %04x %02x\n", tstates, port, b);
 
-  contend_port_postio( port );
+  contend_port_postio(port);
 }
 
 static int
-run_test( FILE *f )
+run_test(FILE *f)
 {
   size_t i;
 
   // Get ourselves into a known state
-  z80_reset( 1 ); tstates = 0;
-  for (i = 0; i < 0x10000; i += 4 ) {
+  z80_reset(1); tstates = 0;
+  for (i = 0; i < 0x10000; i += 4) {
     memory[ i     ] = 0xde; memory[ i + 1 ] = 0xad;
     memory[ i + 2 ] = 0xbe; memory[ i + 3 ] = 0xef;
   }
 
-  if (read_test( f, &event_next_event ) ) return 0;
+  if (read_test(f, &event_next_event)) return 0;
 
   // Grab a copy of the memory for comparison at the end
-  memcpy( initial_memory, memory, 0x10000 );
+  memcpy(initial_memory, memory, 0x10000);
 
   z80_do_opcodes();
 
@@ -242,13 +242,13 @@ run_test( FILE *f )
   dump_z80_state();
   dump_memory_state();
 
-  printf( "\n");
+  printf("\n");
 
   return 1;
 }
 
 static int
-read_test( FILE *f, libspectrum_dword *end_tstates )
+read_test(FILE *f, libspectrum_dword *end_tstates)
 {
   unsigned af, bc, de, hl, af_, bc_, de_, hl_, ix, iy, sp, pc, memptr;
   unsigned i, r, iff1, iff2, im;
@@ -258,23 +258,23 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
 
   do {
 
-    if (!fgets( test_name, sizeof( test_name ), f ) ) {
+    if (!fgets(test_name, sizeof(test_name), f)) {
 
-      if (feof( f ) ) return 1;
+      if (feof(f)) return 1;
 
-      fprintf( stderr, "%s: error reading test description from `%s': %s\n",
-	       progname, testsfile, strerror( errno ) );
+      fprintf(stderr, "%s: error reading test description from `%s': %s\n",
+	       progname, testsfile, strerror(errno));
       return 1;
     }
 
-  } while( test_name[0] == '\n' );
+  } while (test_name[0] == '\n');
 
   // FIXME: how should we read/write our data types?
-  if (fscanf( f, "%x %x %x %x %x %x %x %x %x %x %x %x %x", &af, &bc,
+  if (fscanf(f, "%x %x %x %x %x %x %x %x %x %x %x %x %x", &af, &bc,
 	      &de, &hl, &af_, &bc_, &de_, &hl_, &ix, &iy, &sp, &pc,
-	      &memptr ) != 13 ) {
-    fprintf( stderr, "%s: first registers line in `%s' corrupt\n", progname,
-	     testsfile );
+	      &memptr) != 13) {
+    fprintf(stderr, "%s: first registers line in `%s' corrupt\n", progname,
+	     testsfile);
     return 1;
   }
 
@@ -283,43 +283,43 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
   IX  = ix;  IY  = iy;  SP  = sp;  PC  = pc;
   z80.memptr.w = memptr;
 
-  if (fscanf( f, "%x %x %u %u %u %d %d", &i, &r, &iff1, &iff2, &im,
-	      &z80.halted, &end_tstates2 ) != 7 ) {
-    fprintf( stderr, "%s: second registers line in `%s' corrupt\n", progname,
-	     testsfile );
+  if (fscanf(f, "%x %x %u %u %u %d %d", &i, &r, &iff1, &iff2, &im,
+	      &z80.halted, &end_tstates2) != 7) {
+    fprintf(stderr, "%s: second registers line in `%s' corrupt\n", progname,
+	     testsfile);
     return 1;
   }
 
   I = i; R = R7 = r; IFF1 = iff1; IFF2 = iff2; IM = im;
   *end_tstates = end_tstates2;
 
-  while( 1 ) {
+  while (1) {
 
-    if (fscanf( f, "%x", &address ) != 1 ) {
-      fprintf( stderr, "%s: no address found in `%s'\n", progname, testsfile );
+    if (fscanf(f, "%x", &address) != 1) {
+      fprintf(stderr, "%s: no address found in `%s'\n", progname, testsfile);
       return 1;
     }
 
-    if (address >= 0x10000 ) break;
+    if (address >= 0x10000) break;
 
-    while( 1 ) {
+    while (1) {
 
       unsigned byte;
 
-      if (fscanf( f, "%x", &byte ) != 1 ) {
-	fprintf( stderr, "%s: no data byte found in `%s'\n", progname,
-		 testsfile );
+      if (fscanf(f, "%x", &byte) != 1) {
+	fprintf(stderr, "%s: no data byte found in `%s'\n", progname,
+		 testsfile);
 	return 1;
       }
 
-      if (byte >= 0x100 ) break;
+      if (byte >= 0x100) break;
 
       memory[ address++ ] = byte;
 
     }
   }
 
-  printf( "%s", test_name );
+  printf("%s", test_name);
 
   return 0;
 }
@@ -327,10 +327,10 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
 static void
 dump_z80_state(void)
 {
-  printf( "%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x\n",
-	  AF, BC, DE, HL, AF_, BC_, DE_, HL_, IX, IY, SP, PC, z80.memptr.w );
-  printf( "%02x %02x %d %d %d %d %d\n", I, ( R7 & 0x80 ) | ( R & 0x7f ),
-	  IFF1, IFF2, IM, z80.halted, tstates );
+  printf("%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x\n",
+	  AF, BC, DE, HL, AF_, BC_, DE_, HL_, IX, IY, SP, PC, z80.memptr.w);
+  printf("%02x %02x %d %d %d %d %d\n", I, (R7 & 0x80) | (R & 0x7f),
+	  IFF1, IFF2, IM, z80.halted, tstates);
 }
 
 static void
@@ -340,14 +340,14 @@ dump_memory_state(void)
 
   for (i = 0; i < 0x10000; i++) {
 
-    if (memory[ i ] == initial_memory[ i ] ) continue;
+    if (memory[ i ] == initial_memory[ i ]) continue;
 
-    printf( "%04x ", (unsigned)i );
+    printf("%04x ", (unsigned)i);
 
-    while( i < 0x10000 && memory[ i ] != initial_memory[ i ] )
-      printf( "%02x ", memory[ i++ ] );
+    while (i < 0x10000 && memory[ i ] != initial_memory[ i ])
+      printf("%02x ", memory[ i++ ]);
 
-    printf( "-1\n");
+    printf("-1\n");
   }
 }
 
@@ -360,13 +360,13 @@ fuse_abort(void)
 }
 
 int
-ui_error( ui_error_level severity GCC_UNUSED, const char *format, ... )
+ui_error(ui_error_level severity GCC_UNUSED, const char *format, ...)
 {
   va_list ap;
 
-  va_start( ap, format );
-  vfprintf( stderr, format, ap );
-  va_end( ap );
+  va_start(ap, format);
+  vfprintf(stderr, format, ap);
+  va_end(ap);
 
   abort();
 }
@@ -415,13 +415,13 @@ libspectrum_byte spectrum_contention[ 80000 ] = { 0 };
 int profile_active = 0;
 
 void
-profile_map( libspectrum_word pc GCC_UNUSED )
+profile_map(libspectrum_word pc GCC_UNUSED)
 {
   abort();
 }
 
 int
-debugger_check( debugger_breakpoint_type type GCC_UNUSED, libspectrum_dword value GCC_UNUSED )
+debugger_check(debugger_breakpoint_type type GCC_UNUSED, libspectrum_dword value GCC_UNUSED)
 {
   abort();
 }
@@ -429,7 +429,7 @@ debugger_check( debugger_breakpoint_type type GCC_UNUSED, libspectrum_dword valu
 void debugger_system_variable_register(
   const char *type, const char *detail,
   debugger_get_system_variable_fn_t get,
-  debugger_set_system_variable_fn_t set )
+  debugger_set_system_variable_fn_t set)
 {
 }
 
@@ -440,7 +440,7 @@ debugger_trap(void)
 }
 
 int
-slt_trap( libspectrum_word address GCC_UNUSED, libspectrum_byte level GCC_UNUSED )
+slt_trap(libspectrum_word address GCC_UNUSED, libspectrum_byte level GCC_UNUSED)
 {
   return 0;
 }
@@ -464,7 +464,7 @@ beta_unpage(void)
 int spectrum_frame_event = 0;
 
 int
-event_register( event_fn_t fn GCC_UNUSED, const char *string GCC_UNUSED )
+event_register(event_fn_t fn GCC_UNUSED, const char *string GCC_UNUSED)
 {
   return 0;
 }
@@ -548,13 +548,13 @@ multiface_setic8(void)
 }
 
 void
-divide_set_automap( int state GCC_UNUSED )
+divide_set_automap(int state GCC_UNUSED)
 {
   abort();
 }
 
 void
-divmmc_set_automap( int state GCC_UNUSED )
+divmmc_set_automap(int state GCC_UNUSED)
 {
   abort();
 }
@@ -562,7 +562,7 @@ divmmc_set_automap( int state GCC_UNUSED )
 int spectranet_available = 0;
 
 void
-spectranet_page( int via_io GCC_UNUSED )
+spectranet_page(int via_io GCC_UNUSED)
 {
   abort();
 }
@@ -591,10 +591,10 @@ spectranet_nmi_flipflop(void)
 }
 
 void
-startup_manager_register( startup_manager_module module,
+startup_manager_register(startup_manager_module module,
   startup_manager_module *dependencies, size_t dependency_count,
   startup_manager_init_fn init_fn, void *init_context,
-  startup_manager_end_fn end_fn )
+  startup_manager_end_fn end_fn)
 {
 }
 
@@ -613,20 +613,20 @@ rzx_frame(void)
 }
 
 void
-writeport_internal( libspectrum_word port GCC_UNUSED, libspectrum_byte b GCC_UNUSED )
+writeport_internal(libspectrum_word port GCC_UNUSED, libspectrum_byte b GCC_UNUSED)
 {
   abort();
 }
 
 void
-event_add_with_data( libspectrum_dword event_time GCC_UNUSED,
-		     int type GCC_UNUSED, void *user_data GCC_UNUSED )
+event_add_with_data(libspectrum_dword event_time GCC_UNUSED,
+		     int type GCC_UNUSED, void *user_data GCC_UNUSED)
 {
   // Do nothing
 }
 
 int
-module_register( module_info_t *module GCC_UNUSED )
+module_register(module_info_t *module GCC_UNUSED)
 {
   return 0;
 }
