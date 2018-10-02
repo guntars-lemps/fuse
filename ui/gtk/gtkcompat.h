@@ -34,7 +34,7 @@
 #define gtk_combo_box_text_new() gtk_combo_box_new_text()
 #define gtk_combo_box_text_append_text( X, Y ) gtk_combo_box_append_text( X, Y )
 
-#endif				/* #ifndef GTK_TYPE_COMBO_BOX_TEXT */
+#endif // #ifndef GTK_TYPE_COMBO_BOX_TEXT
 
 
 #if !GTK_CHECK_VERSION( 3, 0, 0 )
@@ -193,6 +193,6 @@ gtk_scrollbar_new( GtkOrientation orientation, GtkAdjustment *adjustment );
 #define GDK_KEY_Hyper_R         GDK_Hyper_R
 #define GDK_KEY_Mode_switch     GDK_Mode_switch
 
-#endif				/* #if !GTK_CHECK_VERSION( 2, 22, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 2, 22, 0 )
 
-#endif				/* #ifndef FUSE_GTKCOMPAT_H */
+#endif // #ifndef FUSE_GTKCOMPAT_H

@@ -43,11 +43,11 @@
 /* Do we have any of our sound devices available? */
 
 /* configuration */
-int sound_enabled = 0;		/* Are we currently using the sound card */
+int sound_enabled = 0; // Are we currently using the sound card
 
 static int sound_enabled_ever = 0; /* whether sound has *ever* been in use; see
 				      sound_ay_write() and sound_ay_reset() */
-int sound_stereo_ay = SOUND_STEREO_AY_NONE; /* local copy of settings_current.stereo_ay */
+int sound_stereo_ay = SOUND_STEREO_AY_NONE; // local copy of settings_current.stereo_ay
 
 /* assume all three tone channels together match the beeper volume (ish).
  * Must be <=127 for all channels; 50+2+(24*3) = 124.
@@ -55,7 +55,7 @@ int sound_stereo_ay = SOUND_STEREO_AY_NONE; /* local copy of settings_current.st
  */
 #define AMPL_BEEPER		( 50 * 256)
 #define AMPL_TAPE		( 2 * 256 )
-#define AMPL_AY_TONE		( 24 * 256 )	/* three of these */
+#define AMPL_AY_TONE		( 24 * 256 ) // three of these
 
 /* max. number of sub-frame AY port writes allowed;
  * given the number of port writes theoretically possible in a
@@ -121,7 +121,7 @@ sound_get_volume( int volume )
 libspectrum_dword
 sound_get_effective_processor_speed( void )
 {
-  return machine_current->timings.processor_speed / 100 * 
+  return machine_current->timings.processor_speed / 100 *
            settings_current.emulation_speed;
 }
 
@@ -182,12 +182,12 @@ sound_ay_init( void )
 #ifndef UI_WIN32
 #define MIN_SPEED_PERCENTAGE 2
 #define MAX_SPEED_PERCENTAGE 500
-#else                        /* #ifndef UI_WIN32 */
+#else // #ifndef UI_WIN32
 /* We are limiting speed until bugs in the DirectSound driver are resolved, see
    [bugs:#364] for more details */
 #define MIN_SPEED_PERCENTAGE 50
 #define MAX_SPEED_PERCENTAGE 300
-#endif                       /* #ifndef UI_WIN32 */
+#endif // #ifndef UI_WIN32
 
 static int
 is_in_sound_enabled_range( void )
@@ -255,7 +255,7 @@ sound_init( const char *device )
                          sound_get_volume( settings_current.volume_covox ) );
   blip_synth_set_output( left_covox_synth, left_buf );
   blip_synth_set_treble_eq( left_covox_synth, treble );
-  
+
   /* important to override these settings if not using stereo
    * (it would probably be confusing to mess with the stereo
    * settings in settings_current though, which is why we make copies
@@ -371,7 +371,7 @@ sound_end( void )
     delete_Blip_Buffer( &left_buf );
     delete_Blip_Buffer( &right_buf );
 
-    if( settings_current.sound ) 
+    if( settings_current.sound )
       sound_lowlevel_end();
     libspectrum_free( samples );
     sound_enabled = 0;
@@ -713,7 +713,7 @@ sound_frame( void )
     count = blip_buffer_read_samples( left_buf, samples, sound_framesiz, BLIP_BUFFER_DEF_STEREO );
   }
 
-  if( settings_current.sound ) 
+  if( settings_current.sound )
     sound_lowlevel_frame( samples, count );
 
   if( movie_recording )

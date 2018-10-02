@@ -46,4 +46,4 @@ int divmmc_eject( void );
 
 int divmmc_unittest( void );
 
-#endif			/* #ifndef FUSE_DIVMMC_H */
+#endif // #ifndef FUSE_DIVMMC_H

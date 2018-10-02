@@ -26,4 +26,4 @@
 
 void z80_debugger_variables_init( void );
 
-#endif			/* #ifndef FUSE_Z80_INTERNALS */
+#endif // #ifndef FUSE_Z80_INTERNALS

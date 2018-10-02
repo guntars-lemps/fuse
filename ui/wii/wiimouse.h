@@ -30,4 +30,4 @@ void wiimouse_get_position( int *x, int *y );
 
 void mouse_update( void );
 
-#endif /* FUSE_WIIMOUSE_H */
+#endif // FUSE_WIIMOUSE_H

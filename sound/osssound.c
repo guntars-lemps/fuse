@@ -137,7 +137,7 @@ if(ioctl(soundfd,SNDCTL_DSP_SETFRAGMENT,&frag)<0)
   return 1;
   }
 
-return 0;	/* success */
+return 0; // success
 }
 
 
@@ -154,7 +154,7 @@ static unsigned char buf8[4096];
 unsigned char *data8=(unsigned char *)data;
 int ret=0,ofs=0;
 
-len<<=1;	/* now in bytes */
+len<<=1; // now in bytes
 
 if(!sixteenbit)
   {
@@ -166,7 +166,7 @@ if(!sixteenbit)
   len>>=1;
   for(f=0;f<len;f++)
     *dst++=128+(int)((*src++)/256);
-  
+
   data8=buf8;
   }
 

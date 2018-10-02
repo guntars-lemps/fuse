@@ -30,4 +30,4 @@ int simpleide_insert( const char *filename, libspectrum_ide_unit unit );
 int simpleide_commit( libspectrum_ide_unit unit );
 int simpleide_eject( libspectrum_ide_unit unit );
 
-#endif                 /* #ifndef FUSE_SIMPLEIDE_H */
+#endif // #ifndef FUSE_SIMPLEIDE_H

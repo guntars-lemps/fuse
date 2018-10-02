@@ -74,4 +74,4 @@ int rzx_rollback( void );
 
 int rzx_rollback_to( void );
 
-#endif			/* #ifndef FUSE_RZX_H */
+#endif // #ifndef FUSE_RZX_H

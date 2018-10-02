@@ -54,17 +54,17 @@ typedef struct spectrum_raminfo {
   /* And without MREQ */
   spectrum_contention_delay_function contend_delay_no_mreq;
 
-  int locked;			/* Is the memory configuration locked? */
-  int current_page, current_rom; /* Current paged memory */
+  int locked; // Is the memory configuration locked?
+  int current_page, current_rom; // Current paged memory
 
-  libspectrum_byte last_byte;	/* The last byte sent to the 128K port */
-  libspectrum_byte last_byte2;	/* The last byte sent to +3 port */
+  libspectrum_byte last_byte; // The last byte sent to the 128K port
+  libspectrum_byte last_byte2; // The last byte sent to +3 port
 
-  int special;			/* Is a +3 special config in use? */
+  int special; // Is a +3 special config in use?
 
-  int romcs;			/* Is the /ROMCS line low? */
+  int romcs; // Is the /ROMCS line low?
 
-  int valid_pages;		/* Available RAM */
+  int valid_pages; // Available RAM
 
 } spectrum_raminfo;
 
@@ -82,4 +82,4 @@ extern int spectrum_frame_event;
 void spectrum_register_startup( void );
 int spectrum_frame( void );
 
-#endif			/* #ifndef FUSE_SPECTRUM_H */
+#endif // #ifndef FUSE_SPECTRUM_H

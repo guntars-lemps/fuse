@@ -76,25 +76,25 @@ typedef struct {
 
 rgb_t rgb_colours[16] = {
   /* no bright */
-  {0, 0, 0},       /* BLACK */
-  {0, 0, 192},     /* BLUE */
-  {192, 0, 0},     /* RED */
-  {192, 0, 192},   /* MAGENTA */
-  {0, 192, 0},     /* GREEN */
-  {0, 192, 192},   /* CYAN */
-  {192, 192, 0},   /* YELLOW */
-  {192, 192, 192}, /* WHITE */
+  {0, 0, 0}, // BLACK
+  {0, 0, 192}, // BLUE
+  {192, 0, 0}, // RED
+  {192, 0, 192}, // MAGENTA
+  {0, 192, 0}, // GREEN
+  {0, 192, 192}, // CYAN
+  {192, 192, 0}, // YELLOW
+  {192, 192, 192}, // WHITE
   /* bright */
-  {0, 0, 0},       /* BLACK */
-  {0, 0, 255},     /* BLUE */
-  {255, 0, 0},     /* RED */
-  {255, 0, 255},   /* MAGENTA */
-  {0, 255, 0},     /* GREEN */
-  {0, 255, 255},   /* CYAN */
-  {255, 255, 0},   /* YELLOW */
-  {255, 255, 255}, /* WHITE */
+  {0, 0, 0}, // BLACK
+  {0, 0, 255}, // BLUE
+  {255, 0, 0}, // RED
+  {255, 0, 255}, // MAGENTA
+  {0, 255, 0}, // GREEN
+  {0, 255, 255}, // CYAN
+  {255, 255, 0}, // YELLOW
+  {255, 255, 255}, // WHITE
 };
-  
+
 static u32 wiidisplay_colours[16];
 static u32 bw_colours[16];
 
@@ -119,18 +119,18 @@ static int mousex = 0, mousey = 0;
 u32 convert_rgb (rgb_t rgb1, rgb_t rgb2)
 {
   int y1, cb1, cr1, y2, cb2, cr2, cb, cr;
- 
+
   y1 = (299 * rgb1.r + 587 * rgb1.g + 114 * rgb1.b) / 1000;
   cb1 = (-16874 * rgb1.r - 33126 * rgb1.g + 50000 * rgb1.b + 12800000) / 100000;
   cr1 = (50000 * rgb1.r - 41869 * rgb1.g - 8131 * rgb1.b + 12800000) / 100000;
- 
+
   y2 = (299 * rgb2.r + 587 * rgb2.g + 114 * rgb2.b) / 1000;
   cb2 = (-16874 * rgb2.r - 33126 * rgb2.g + 50000 * rgb2.b + 12800000) / 100000;
   cr2 = (50000 * rgb2.r - 41869 * rgb2.g - 8131 * rgb2.b + 12800000) / 100000;
- 
+
   cb = (cb1 + cb2) >> 1;
   cr = (cr1 + cr2) >> 1;
- 
+
   return (y1 << 24) | (cb << 16) | (y2 << 8) | cr;
 }
 
@@ -176,12 +176,12 @@ init_colours( void )
     wiidisplay_colours[i] = colour.r << 24 | colour.g << 16 | colour.b << 8;
             bw_colours[i] = grey.r << 24 |  grey.g << 16 | grey.b << 8;
 
-#else                           /* #ifdef WORDS_BIGENDIAN */
+#else // #ifdef WORDS_BIGENDIAN
 
     wiidisplay_colours[i] = colour.r | colour.g << 8 | colour.b << 16;
             bw_colours[i] = grey.r |  grey.g << 8 | grey.b << 16;
 
-#endif                          /* #ifdef WORDS_BIGENDIAN */
+#endif // #ifdef WORDS_BIGENDIAN
 
   }
 
@@ -281,7 +281,7 @@ register_scalers( void )
 int wiidisplay_init(void)
 {
   int error;
-        
+
   error = init_colours(); if( error ) return error;
 
   VIDEO_Init();
@@ -324,7 +324,7 @@ uidisplay_hotswap_gfx_mode( void )
 }
 
 void
-uidisplay_frame_end( void ) 
+uidisplay_frame_end( void )
 {
   VIDEO_WaitVSync();
   if(rmode->viTVMode & VI_NON_INTERLACE) VIDEO_WaitVSync();
@@ -436,16 +436,16 @@ uidisplay_area( int x, int y, int w, int h )
 
       rgb_t rgb1, rgb2;
 
-      rgb1.b = scaled_image[ ofs + 2 ]; /* blue */
-      rgb1.g = scaled_image[ ofs + 1 ]; /* green */
-      rgb1.r = scaled_image[ ofs + 0 ]; /* red */
+      rgb1.b = scaled_image[ ofs + 2 ]; // blue
+      rgb1.g = scaled_image[ ofs + 1 ]; // green
+      rgb1.r = scaled_image[ ofs + 0 ]; // red
 
-      rgb2.b = scaled_image[ ofs + 2 + 4 ]; /* blue */
-      rgb2.g = scaled_image[ ofs + 1 + 4 ]; /* green */
-      rgb2.r = scaled_image[ ofs + 0 + 4 ]; /* red */
+      rgb2.b = scaled_image[ ofs + 2 + 4 ]; // blue
+      rgb2.g = scaled_image[ ofs + 1 + 4 ]; // green
+      rgb2.r = scaled_image[ ofs + 0 + 4 ]; // red
 
       *dest = convert_rgb( rgb1, rgb2 );
-      
+
       dest += disp_x%2;
     }
     next_line += fb_pitch;

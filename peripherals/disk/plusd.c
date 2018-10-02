@@ -43,7 +43,7 @@
 #include "unittests/unittests.h"
 #include "utils.h"
 #include "wd_fdc.h"
-#include "options.h"	/* needed for get combo options */
+#include "options.h" // needed for get combo options
 
 /* 8KB ROM */
 #define ROM_SIZE 0x2000
@@ -342,7 +342,7 @@ plusd_cn_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
   fdd_select( &plusd_drives[ drive ], 1 );
 
   if( plusd_fdc->current_drive != &plusd_drives[ drive ] ) {
-    if( plusd_fdc->current_drive->motoron ) {            /* swap motoron */
+    if( plusd_fdc->current_drive->motoron ) { // swap motoron
       fdd_motoron( &plusd_drives[ (!drive) ], 0 );
       fdd_motoron( &plusd_drives[ drive ], 1 );
     }
@@ -370,14 +370,14 @@ plusd_patch_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b GCC_UNUS
 static libspectrum_byte
 plusd_printer_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
 
   /* bit 7 = busy. other bits high? */
 
   if(!settings_current.printer)
-    return(0xff); /* no printer attached */
+    return(0xff); // no printer attached
 
-  return(0x7f);   /* never busy */
+  return(0x7f); // never busy
 }
 
 static void
@@ -473,7 +473,7 @@ plusd_to_snapshot( libspectrum_snap *snap )
   memcpy( buffer, plusd_ram, RAM_SIZE );
   libspectrum_snap_set_plusd_ram( snap, 0, buffer );
 
-  drive_count++; /* Drive 1 is not removable */
+  drive_count++; // Drive 1 is not removable
   if( option_enumerate_diskoptions_drive_plusd2_type() > 0 ) drive_count++;
   libspectrum_snap_set_plusd_drive_count( snap, drive_count );
 

@@ -272,7 +272,7 @@ void display_dirty_timex(libspectrum_word offset)
         // case EXTCOLALTD: extended colours, but attributes and data taken from second screen
         // case HIRESDOUBLECOL: hires mode, but data taken only from second screen
         if ((offset >= 0x2000) && (offset < 0x3800)) {
-            display_dirty8( offset - ALTDFILE_OFFSET );
+            display_dirty8(offset - ALTDFILE_OFFSET);
         }
         break;
     }
@@ -402,7 +402,6 @@ void display_write_if_dirty_timex(int x, int y)
                 offset = display_attr_start[y] + x;
                 data2 = screen[offset];
                 break;
-
         }
     } else {
         data2 = display_get_attr_byte(x, y);

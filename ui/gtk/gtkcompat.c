@@ -53,4 +53,4 @@ gtk_scrollbar_new( GtkOrientation orientation, GtkAdjustment *adjustment )
           gtk_vscrollbar_new( adjustment );
 }
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )

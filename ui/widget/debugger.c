@@ -29,7 +29,7 @@
 #include <string.h>
 
 #include <libspectrum.h>
-  
+
 #include "debugger/debugger.h"
 #include "display.h"
 #include "keyboard.h"
@@ -163,54 +163,54 @@ void widget_debugger_keyhandler( input_key key )
 {
   /* Display mode */
   switch ( key ) {
-  case INPUT_KEY_Escape:	/* Close widget */
+  case INPUT_KEY_Escape: // Close widget
     widget_end_widget( WIDGET_FINISHED_CANCEL );
     debugger_run();
     break;
 
   case INPUT_KEY_c:
-  case INPUT_KEY_Return:	/* Close widget */
+  case INPUT_KEY_Return: // Close widget
   case INPUT_KEY_KP_Enter:
     widget_end_all( WIDGET_FINISHED_OK );
     debugger_run();
     break;
 
-  case INPUT_KEY_s:		/* Single step & reopen widget */
+  case INPUT_KEY_s: // Single step & reopen widget
     debugger_mode = DEBUGGER_MODE_HALTED;
     widget_end_all( WIDGET_FINISHED_OK );
     break;
 
-  case INPUT_KEY_r:		/* Display the registers */
+  case INPUT_KEY_r: // Display the registers
     display = DB_REGISTERS;
     widget_debugger_draw( NULL );
     break;
 
-  case INPUT_KEY_b:		/* Display a memory dump (bytes) */
+  case INPUT_KEY_b: // Display a memory dump (bytes)
     display = DB_BYTES;
     widget_debugger_draw( NULL );
     break;
 
-  case INPUT_KEY_t:		/* Display a memory dump (text) */
+  case INPUT_KEY_t: // Display a memory dump (text)
     display = DB_TEXT;
     widget_debugger_draw( NULL );
     break;
 
-  case INPUT_KEY_d:		/* Display a disassembly */
+  case INPUT_KEY_d: // Display a disassembly
     display = DB_DISASM;
     widget_debugger_draw( NULL );
     break;
 
-  case INPUT_KEY_k:		/* Display the breakpoints */
+  case INPUT_KEY_k: // Display the breakpoints
     display = DB_BREAKPT;
     widget_debugger_draw( NULL );
     break;
 
-  case INPUT_KEY_e:		/* Switch base */
-    debugger_output_base = 26 - debugger_output_base;	/* 10 or 16 */
+  case INPUT_KEY_e: // Switch base
+    debugger_output_base = 26 - debugger_output_base; // 10 or 16
     widget_debugger_draw( NULL );
     break;
 
-  case INPUT_KEY_m:		/* Enter a command */
+  case INPUT_KEY_m: // Enter a command
     {
       widget_text_t text_data;
 
@@ -223,28 +223,28 @@ void widget_debugger_keyhandler( input_key key )
     }
     break;
 
-  case INPUT_KEY_Up:		/* Back one line */
+  case INPUT_KEY_Up: // Back one line
     scroll( -1 );
     break;
 
-  case INPUT_KEY_Down:		/* Back one instruction or four lines */
+  case INPUT_KEY_Down: // Back one instruction or four lines
     scroll( 1 );
     break;
 
-  case INPUT_KEY_Page_Up:	/* Back eight lines */
+  case INPUT_KEY_Page_Up: // Back eight lines
     scroll( -8 );
     break;
 
-  case INPUT_KEY_Page_Down:	/* Forward eight lines */
+  case INPUT_KEY_Page_Down: // Forward eight lines
     scroll( 8 );
     break;
 
-  case INPUT_KEY_Home:		/* To start of memory */
+  case INPUT_KEY_Home: // To start of memory
     debugger_memaddr = 0;
     scroll( 0 );
     break;
 
-  case INPUT_KEY_End:		/* To end of RAM */
+  case INPUT_KEY_End: // To end of RAM
     debugger_memaddr = 0;
     scroll( -8 );
     break;

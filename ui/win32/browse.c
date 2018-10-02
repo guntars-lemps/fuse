@@ -40,9 +40,9 @@ static INT_PTR CALLBACK dialog_proc( HWND hwndDlg, UINT uMsg,
 static void add_block_details( libspectrum_tape_block *block, void *user_data );
 static void select_row( LPNMITEMACTIVATE lpnmitem );
 
-static HWND dialog;             /* The dialog box itself */
+static HWND dialog; // The dialog box itself
 
-static int dialog_created;	/* Have we created the dialog box yet? */
+static int dialog_created; // Have we created the dialog box yet?
 
 void
 menu_media_tape_browse( int action )
@@ -77,10 +77,10 @@ dialog_init( HWND hwndDlg )
   /* set extended listview style to select full row, when an item is selected */
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV,
-                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 ); 
+                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
   lv_ext_style |= LVS_EX_FULLROWSELECT;
   SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV,
-                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style ); 
+                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
   /* Create columns in the listview */
   LVCOLUMN lvc;
@@ -102,18 +102,18 @@ dialog_init( HWND hwndDlg )
   HIMAGELIST himl;
 
   /* FIXME: need to destroy those objects later */
-  icon_tape_marker = LoadImage( fuse_hInstance, "win32bmp_tape_marker", 
+  icon_tape_marker = LoadImage( fuse_hInstance, "win32bmp_tape_marker",
                                 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-  icon_tape_marker_mask = LoadImage( fuse_hInstance, "win32bmp_tape_marker_mask", 
+  icon_tape_marker_mask = LoadImage( fuse_hInstance, "win32bmp_tape_marker_mask",
                                      IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
   GetObject( icon_tape_marker, sizeof( bmp ), &bmp );
-  
+
   /* FIXME: destroy the list later */
   himl = ImageList_Create( bmp.bmWidth, bmp.bmHeight,
                            ILC_COLOR | ILC_MASK, 1, 0 );
-  
+
   ImageList_Add( himl, icon_tape_marker, icon_tape_marker_mask );
-  
+
   SendDlgItemMessage( hwndDlg, IDC_BROWSE_LV, LVM_SETIMAGELIST,
                       LVSIL_SMALL, ( LPARAM ) himl );
 
@@ -127,7 +127,7 @@ dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
   switch( uMsg ) {
 
     case WM_INITDIALOG:
-      dialog_init( hwndDlg );      
+      dialog_init( hwndDlg );
       return FALSE;
 
     case WM_NOTIFY:
@@ -149,7 +149,7 @@ dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
     case WM_CLOSE:
       /* Catch attempts to delete the window and just hide it instead */
       ShowWindow( dialog, SW_HIDE );
-      return 0;      
+      return 0;
   }
   return FALSE;
 }
@@ -229,7 +229,7 @@ static void
 select_row( LPNMITEMACTIVATE lpnmitem )
 {
   int current_block, row;
-  
+
   row = lpnmitem->iItem;
 
   /* Don't do anything if the current block was clicked on */
@@ -246,7 +246,7 @@ select_row( LPNMITEMACTIVATE lpnmitem )
   LVITEM li;
   li.mask = LVIF_IMAGE;
   li.iSubItem = 0;
-  
+
   for( i=0; i<count; i++ ) {
     li.iImage = ( i==row ? 0 : -1 );
     li.iItem = i;

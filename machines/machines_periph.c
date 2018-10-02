@@ -140,7 +140,7 @@ static const periph_t beta128_pentagon_late = {
 
 static const periph_port_t pentagon1024_memory_ports[] = {
   { 0xc002, 0x4000, NULL, pentagon1024_memoryport_write  },
-  { 0xf008, 0xe000, NULL, pentagon1024_v22_memoryport_write }, /* v2.2 */
+  { 0xf008, 0xe000, NULL, pentagon1024_v22_memoryport_write }, // v2.2
   { 0, 0, NULL, NULL }
 };
 

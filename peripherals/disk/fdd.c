@@ -40,10 +40,10 @@
 #include "wd_fdc.h"
 
 #define FDD_LOAD_FACT 2
-#define FDD_HEAD_FACT 16		/* load head */
+#define FDD_HEAD_FACT 16 // load head
 #define FDD_STEP_FACT 34
-#define FDD_MAX_TRACK 99		/* absolute maximum number of track*/
-#define FDD_TRACK_TRESHOLD 10		/* unreadable disk*/
+#define FDD_MAX_TRACK 99 // absolute maximum number of track
+#define FDD_TRACK_TRESHOLD 10 // unreadable disk
 
 typedef enum fdd_write_t {
   FDD_READ = 0,
@@ -56,15 +56,15 @@ static const char * const fdd_error[] = {
   "read only disk",
   "disk not exist (disabled)",
 
-  "unknown error code"			/* will be the last */
+  "unknown error code" // will be the last
 };
 
 const fdd_params_t fdd_params[] = {
-  { 0, 0, 0 },		/* Disabled */
-  { 1, 1, 40 },		/* Single-sided 40 track */
-  { 1, 2, 40 },		/* Double-sided 80 track */
-  { 1, 1, 80 },		/* Single-sided 40 track */
-  { 1, 2, 80 }		/* Double-sided 80 track */
+  { 0, 0, 0 }, // Disabled
+  { 1, 1, 40 }, // Single-sided 40 track
+  { 1, 2, 40 }, // Double-sided 80 track
+  { 1, 1, 80 }, // Single-sided 40 track
+  { 1, 2, 80 } // Double-sided 80 track
 };
 
 static void
@@ -73,7 +73,7 @@ fdd_event( libspectrum_dword last_tstates, int event, void *user_data );
 static int motor_event;
 static int index_event;
 
-static int fdd_motor = 0; /* to manage 'disk' icon */
+static int fdd_motor = 0; // to manage 'disk' icon
 
 static int
 fdd_init_events( void *context )
@@ -135,7 +135,7 @@ fdd_set_data( fdd_t *d, int fact )
   DISK_SET_TRACK( &d->disk, head, d->c_cylinder );
   d->c_bpt = d->disk.track[-3] + 256 * d->disk.track[-2];
   if( fact > 0 ) {
-    /* this generate a bpt/fact +-10% triangular distribution skip in bytes 
+    /* this generate a bpt/fact +-10% triangular distribution skip in bytes
        i know, we should use the higher bits of rand(), but we not
        keen on _real_ (pseudo)random numbers... ;)
     */
@@ -219,17 +219,17 @@ fdd_motoron( fdd_t *d, int on )
     Note: Pre-ready is the state that at least one INDEX
 	pulse has been detected after item iii) is satisfied
   */
-  event_remove_type_user_data( motor_event, d );		/* remove pending motor-on event for *this* drive */
+  event_remove_type_user_data( motor_event, d ); // remove pending motor-on event for *this* drive
   if( on ) {
-    event_add_with_data( tstates + 4 *			/* 2 revolution: 2 * 200 / 1000 */
+    event_add_with_data( tstates + 4 * // 2 revolution: 2 * 200 / 1000
 			 machine_current->timings.processor_speed / 10,
 			 motor_event, d );
-    if( d->loaded ) /* index rotating */
+    if( d->loaded ) // index rotating
       event_add_with_data( tstates + ( d->index_pulse ? 10 : 190 ) *
 			 machine_current->timings.processor_speed / 1000,
 			 index_event, d );
   } else {
-    event_add_with_data( tstates + 3 *			/* 1.5 revolution */
+    event_add_with_data( tstates + 3 * // 1.5 revolution
 			 machine_current->timings.processor_speed / 10,
 			 motor_event, d );
   }
@@ -274,7 +274,7 @@ fdd_load( fdd_t *d, int upsidedown )
     return d->status = FDD_GEOM;
 
   if( d->auto_geom )
-    d->fdd_heads = d->disk.sides;		/* 1 or 2 */
+    d->fdd_heads = d->disk.sides; // 1 or 2
   if( d->auto_geom )
     d->fdd_cylinders = d->disk.cylinders > settings_current.drive_40_max_track ?
 				settings_current.drive_80_max_track :
@@ -289,7 +289,7 @@ fdd_load( fdd_t *d, int upsidedown )
   }
 
   d->upsidedown = upsidedown > 0 ? 1 : 0;
-  d->wrprot = d->disk.wrprot;		/* write protect */
+  d->wrprot = d->disk.wrprot; // write protect
   d->loaded = 1;
   if( d->type == FDD_SHUGART && d->selected )
     fdd_head_load( d, 1 );
@@ -334,7 +334,7 @@ fdd_step( fdd_t *d, fdd_dir_t direction )
   if( direction == FDD_STEP_OUT ) {
     if( d->c_cylinder > 0 )
       d->c_cylinder--;
-  } else { /* direction == FDD_STEP_IN */
+  } else { // direction == FDD_STEP_IN
     if( d->c_cylinder < d->fdd_cylinders - 1 )
       d->c_cylinder++;
   }
@@ -352,19 +352,19 @@ static int
 fdd_read_write_data( fdd_t *d, fdd_write_t write )
 {
   if( !d->selected || !d->ready || !d->loadhead || d->disk.track == NULL ) {
-    if( d->loaded && d->motoron ) {			/* spin the disk */
-      if( d->disk.i >= d->c_bpt ) {		/* next data byte */
+    if( d->loaded && d->motoron ) { // spin the disk
+      if( d->disk.i >= d->c_bpt ) { // next data byte
         d->disk.i = 0;
       }
       if( !write )
-        d->data = 0x100;				/* no data */
+        d->data = 0x100; // no data
       d->disk.i++;
       d->index = d->disk.i >= d->c_bpt ? 1 : 0;
     }
     return d->status = FDD_OK;
   }
 
-  if( d->disk.i >= d->c_bpt ) {		/* next data byte */
+  if( d->disk.i >= d->c_bpt ) { // next data byte
     d->disk.i = 0;
   }
   if( write ) {
@@ -383,7 +383,7 @@ fdd_read_write_data( fdd_t *d, fdd_write_t write )
       bitmap_set( d->disk.fm, d->disk.i );
     else
       bitmap_reset( d->disk.fm, d->disk.i );
-#if 0		/* hmm... we cannot write weak data with 'standard' hardware */
+#if 0 // hmm... we cannot write weak data with 'standard' hardware
     if( d->marks & 0x02 )
       bitmap_set( d->disk.weak, d->disk.i );
     else
@@ -392,7 +392,7 @@ fdd_read_write_data( fdd_t *d, fdd_write_t write )
     bitmap_reset( d->disk.weak, d->disk.i );
 #endif
     d->disk.dirty = 1;
-  } else {	/* read */
+  } else { // read
     d->data = d->disk.track[ d->disk.i ];
     if( bitmap_test( d->disk.clocks, d->disk.i ) )
       d->data |= 0xff00;
@@ -455,22 +455,22 @@ fdd_wait_index_hole( fdd_t *d )
 
 static void
 fdd_event( libspectrum_dword last_tstates, int event,
-           void *user_data ) 
+           void *user_data )
 {
   fdd_t *d = user_data;
 
   if( event == motor_event ) {
-    d->ready = ( d->motoron & d->loaded );	/* 0x01 & 0x01 */
+    d->ready = ( d->motoron & d->loaded ); // 0x01 & 0x01
     return;
   }
 
   d->index_pulse = !d->index_pulse;
-  if( !d->index_pulse && d->fdc ) { /* if d->fdc != NULL fdc wait for index */
+  if( !d->index_pulse && d->fdc ) { // if d->fdc != NULL fdc wait for index
       d->fdc_index( d->fdc );
       d->fdc = NULL;
   }
 
-  if( d->motoron & d->loaded ) /* keep rotating */
+  if( d->motoron & d->loaded ) // keep rotating
     event_add_with_data( last_tstates + ( d->index_pulse ? 10 : 190 ) *
 			 machine_current->timings.processor_speed / 1000,
 			 index_event, d );

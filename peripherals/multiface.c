@@ -76,16 +76,16 @@ static memory_page multiface_memory_map_romcs_ram[MEMORY_PAGES_IN_8K];
 static int romcs = 0;
 
 typedef struct multiface_t {
-  int IC8a_Q;			/* IC8 74LS74 first Flip-flop /Q output*/
-  int IC8b_Q;			/* IC8 74LS74 second Flip-flop /Q output */
+  int IC8a_Q; // IC8 74LS74 first Flip-flop /Q output
+  int IC8b_Q; // IC8 74LS74 second Flip-flop /Q output
   int J2;			/* Jumper 2 to disable software paging, or
 				   the software on/off state for 128/3 */
-  int J1;			/* Jumper 1 to disable joystick (always 0) */
+  int J1; // Jumper 1 to disable joystick (always 0)
   libspectrum_byte xfdd_reg[4]; /* 74LS670 chip store low 4 bits of
                                    0x1ffd, 0x3ffd, 0x5ffd and 0x7ffd */
-  periph_type type;		/* type of multiface: one/128/3 */
-  libspectrum_byte ram[8192];	/* 8k RAM */
-  int *c_settings;		/* ptr to current_settings.multiface### */
+  periph_type type; // type of multiface: one/128/3
+  libspectrum_byte ram[8192]; // 8k RAM
+  int *c_settings; // ptr to current_settings.multiface###
   char **d_rom;
   char **c_rom;
 } multiface_t;
@@ -247,7 +247,7 @@ multiface_reset_real( int idx, int hard_reset )
 
   mf[idx].IC8a_Q = 1;
   mf[idx].IC8b_Q = 1;
-  mf[idx].J1 = 0;		/* Joystick always disabled :-( */
+  mf[idx].J1 = 0; // Joystick always disabled :-(
 
   if( mf[idx].type == PERIPH_TYPE_MULTIFACE_1 )
     mf[idx].J2 = settings_current.multiface1_stealth ? 0 : 1;
@@ -375,7 +375,7 @@ multiface_port_in1( libspectrum_word port, libspectrum_byte *attached )
     }
   }
   else {
-    multiface_unpage( MF_1 );		/* a7 == 0 */
+    multiface_unpage( MF_1 ); // a7 == 0
     mf[MF_1].IC8a_Q = 1;
   }
 
@@ -411,7 +411,7 @@ multiface_port_in128( libspectrum_word port, libspectrum_byte *attached )
       mf[MF_128].IC8a_Q = 0;
     }
   } else {
-    multiface_unpage( MF_128 );		/* a7 == 0 */
+    multiface_unpage( MF_128 ); // a7 == 0
     mf[MF_128].IC8a_Q = 1;
   }
   return ret;
@@ -436,11 +436,11 @@ multiface_port_in3( libspectrum_word port, libspectrum_byte *attached )
   /*  IN A, (63) -> page in, and IN A, (191) page out */
 
   a7 = port & 0x0080;
-  if( a7 ) {			/* a7 == 1 */
+  if( a7 ) { // a7 == 1
     multiface_unpage( MF_3 );
     mf[MF_3].IC8a_Q = 0;
   } else if( mf[MF_3].J2 ) {
-    multiface_page( MF_3 );	/* a7 == 0 */
+    multiface_page( MF_3 ); // a7 == 0
     mf[MF_3].IC8a_Q = 1;
   }
 
@@ -468,7 +468,7 @@ multiface_port_out128_3( int idx, libspectrum_word port )
   if( !IS( multiface_available, idx ) ) return;
 
   if( IS( multiface_active, idx ) ) {
-    mf[idx].J2 = port & 0x0080 ? 1 : 0; /* A7 == 1 */
+    mf[idx].J2 = port & 0x0080 ? 1 : 0; // A7 == 1
   }
   mf[idx].IC8b_Q = 1;
 }
@@ -511,7 +511,7 @@ multiface_red_button( void )
 
     mf[i].IC8b_Q = 0;
     SET( multiface_activated, i, 1 );
-    event_add( 0, z80_nmi_event );	/* pull /NMI */
+    event_add( 0, z80_nmi_event ); // pull /NMI
     break;
   }
 }

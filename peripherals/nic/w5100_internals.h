@@ -83,7 +83,7 @@ enum w5100_socket_registers {
 
 typedef struct nic_w5100_socket_t {
 
-  int id; /* For debug use only */
+  int id; // For debug use only
 
   /* W5100 properties */
 
@@ -92,33 +92,33 @@ typedef struct nic_w5100_socket_t {
 
   w5100_socket_state state;
 
-  libspectrum_byte ir;      /* Interrupt register */
+  libspectrum_byte ir; // Interrupt register
 
-  libspectrum_byte port[2]; /* Source port */
+  libspectrum_byte port[2]; // Source port
 
-  libspectrum_byte dip[4];  /* Destination IP address */
+  libspectrum_byte dip[4]; // Destination IP address
   libspectrum_byte dport[2];/* Destination port */
 
-  libspectrum_word tx_rr;   /* Transmit read pointer */
-  libspectrum_word tx_wr;   /* Transmit write pointer */
+  libspectrum_word tx_rr; // Transmit read pointer
+  libspectrum_word tx_wr; // Transmit write pointer
 
-  libspectrum_word rx_rsr;  /* Received size */
-  libspectrum_word rx_rd;   /* Received read pointer */
+  libspectrum_word rx_rsr; // Received size
+  libspectrum_word rx_rd; // Received read pointer
 
-  libspectrum_word old_rx_rd; /* Used in RECV command processing */
+  libspectrum_word old_rx_rd; // Used in RECV command processing
 
-  libspectrum_byte tx_buffer[0x800];  /* Transmit buffer */
-  libspectrum_byte rx_buffer[0x800];  /* Received buffer */
+  libspectrum_byte tx_buffer[0x800]; // Transmit buffer
+  libspectrum_byte rx_buffer[0x800]; // Received buffer
 
   /* Host properties */
 
-  compat_socket_t fd;       /* Socket file descriptor */
-  int bind_count;           /* Number of writes to the Sn_PORTx registers we've received */
-  int socket_bound;         /* True once we've bound the socket to a port */
-  int write_pending;        /* True if we're waiting to write data on this socket */
+  compat_socket_t fd; // Socket file descriptor
+  int bind_count; // Number of writes to the Sn_PORTx registers we've received
+  int socket_bound; // True once we've bound the socket to a port
+  int write_pending; // True if we're waiting to write data on this socket
 
-  int last_send;            /* The value of Sn_TX_WR when the SEND command was last sent */
-  int datagram_lengths[0x20]; /* The lengths of datagrams to be sent */
+  int last_send; // The value of Sn_TX_WR when the SEND command was last sent
+  int datagram_lengths[0x20]; // The lengths of datagrams to be sent
   int datagram_count;
 
   /* Flag used to indicate that a socket has been closed since we started
@@ -126,21 +126,21 @@ typedef struct nic_w5100_socket_t {
      longer be used */
   int ok_for_io;
 
-  pthread_mutex_t lock;     /* Mutex for this socket */
+  pthread_mutex_t lock; // Mutex for this socket
 
 } nic_w5100_socket_t;
 
 struct nic_w5100_t {
-  libspectrum_byte gw[4];   /* Gateway IP address */
-  libspectrum_byte sub[4];  /* Our subnet mask */
-  libspectrum_byte sha[6];  /* MAC address */
-  libspectrum_byte sip[4];  /* Our IP address */
+  libspectrum_byte gw[4]; // Gateway IP address
+  libspectrum_byte sub[4]; // Our subnet mask
+  libspectrum_byte sha[6]; // MAC address
+  libspectrum_byte sip[4]; // Our IP address
 
   nic_w5100_socket_t socket[4];
 
-  pthread_t thread;         /* Thread for doing I/O */
-  sig_atomic_t stop_io_thread; /* Flag to stop I/O thread */
-  compat_socket_selfpipe_t *selfpipe; /* Device for waking I/O thread */
+  pthread_t thread; // Thread for doing I/O
+  sig_atomic_t stop_io_thread; // Flag to stop I/O thread
+  compat_socket_selfpipe_t *selfpipe; // Device for waking I/O thread
 };
 
 void nic_w5100_socket_init( nic_w5100_socket_t *socket, int which );
@@ -171,4 +171,4 @@ void nic_w5100_vdebug( const char *format, va_list ap )
 void nic_w5100_error( int severity, const char *format, ... )
      GCC_PRINTF( 2, 3 );
 
-#endif                          /* #ifndef FUSE_W5100_H */
+#endif // #ifndef FUSE_W5100_H

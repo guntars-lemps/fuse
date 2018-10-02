@@ -114,12 +114,12 @@ const char* compat_get_config_path(void);
 int compat_is_absolute_path(const char *path);
 int compat_get_next_path(path_context *ctx);
 
-typedef FILE* compat_fd;
+typedef FILE *compat_fd;
 
 #ifndef GEKKO
-typedef DIR* compat_dir;
+typedef DIR *compat_dir;
 #else                           // #ifndef GEKKO
-typedef DIR_ITER* compat_dir;
+typedef DIR_ITER *compat_dir;
 #endif                          // #ifndef GEKKO
 
 extern const compat_fd COMPAT_FILE_OPEN_FAILED;
@@ -171,7 +171,7 @@ const char *compat_socket_get_strerror(void);
 
 typedef struct compat_socket_selfpipe_t compat_socket_selfpipe_t;
 
-compat_socket_selfpipe_t* compat_socket_selfpipe_alloc(void);
+compat_socket_selfpipe_t *compat_socket_selfpipe_alloc(void);
 void compat_socket_selfpipe_free(compat_socket_selfpipe_t *self);
 compat_socket_t compat_socket_selfpipe_get_read_fd(compat_socket_selfpipe_t *self);
 void compat_socket_selfpipe_wake(compat_socket_selfpipe_t *self);

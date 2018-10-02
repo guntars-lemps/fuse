@@ -119,13 +119,13 @@ print_error_to_stderr( ui_error_level severity, const char *message )
        idea. Things are OK if we're exiting though */
 #if defined( UI_FB ) || defined( UI_SVGA )
     if( isatty( STDERR_FILENO ) && !fuse_exiting ) return 1;
-#endif			/* #if defined( UI_FB ) || defined( UI_SVGA ) */
+#endif // #if defined( UI_FB ) || defined( UI_SVGA )
 
     fprintf( stderr, "%s: ", fuse_progname );
 
     switch( severity ) {
 
-    case UI_ERROR_INFO: break;		/* Shouldn't happen */
+    case UI_ERROR_INFO: break; // Shouldn't happen
 
     case UI_ERROR_WARNING: fprintf( stderr, "warning: " ); break;
     case UI_ERROR_ERROR: fprintf( stderr, "error: " ); break;
@@ -228,11 +228,11 @@ static const struct menu_item_entries menu_item_lookup[] = {
     "/File/Movie/Record...", 1,
     "/File/Movie/Record from RZX...", 1
   },
-  
+
   { UI_MENU_ITEM_FILE_MOVIE_PAUSE, "/File/Movie/Pause",
     "/File/Movie/Continue", 1,
   },
-  
+
   { UI_MENU_ITEM_MACHINE_PROFILER, "/Machine/Profiler/Stop",
     "/Machine/Profiler/Start", 1 },
 
@@ -644,7 +644,7 @@ static const struct menu_item_entries menu_item_lookup[] = {
     "/Media/IDE/ZXMMC/Eject", 0 },
 
   { UI_MENU_ITEM_RECORDING,
-    "/File/Recording/Stop", 
+    "/File/Recording/Stop",
     "/File/Recording/Record...", 1,
     "/File/Recording/Record from snapshot...", 1,
     "/File/Recording/Continue recording...", 1,
@@ -668,8 +668,8 @@ static const struct menu_item_entries menu_item_lookup[] = {
     "/Media/Tape/Rewind", 1,
     "/Media/Tape/Clear", 1,
     "/Media/Tape/Write...", 1 },
-  
-  { UI_MENU_ITEM_TAPE_RECORDING, NULL },	/* End marker */
+
+  { UI_MENU_ITEM_TAPE_RECORDING, NULL }, // End marker
 
 };
 
@@ -682,10 +682,10 @@ ui_menu_activate( ui_menu_item item, int active )
 
     if( item == ptr->item ) {
       ui_menu_item_set_active( ptr->string1, active );
-      if( ptr->string2 ) 
+      if( ptr->string2 )
 	ui_menu_item_set_active( ptr->string2,
 				 ptr->string2_inverted ? !active : active );
-      if( ptr->string3 ) 
+      if( ptr->string3 )
 	ui_menu_item_set_active( ptr->string3,
 				 ptr->string3_inverted ? !active : active );
       if( ptr->string4 )
@@ -807,4 +807,4 @@ void
 ui_widget_keyhandler( int native_key )
 {
 }
-#endif				/* #ifndef USE_WIDGET */
+#endif // #ifndef USE_WIDGET

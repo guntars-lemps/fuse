@@ -51,19 +51,19 @@ static gboolean delete_dialog( GtkWidget *widget, GdkEvent *event,
 static GdkPixbuf *tape_marker_pixbuf;
 
 static GtkWidget
-  *dialog,			/* The dialog box itself */
-  *blocks,			/* The list of blocks */
+  *dialog, // The dialog box itself
+  *blocks, // The list of blocks
   *modified_label;		/* The label saying if the tape has been
 				   modified */
 
-static int dialog_created;	/* Have we created the dialog box yet? */
+static int dialog_created; // Have we created the dialog box yet?
 
 /* List columns */
 enum
 {
-  COL_PIX = 0,       /* Pixmap */
-  COL_BLOCK,         /* Block type */
-  COL_DATA,          /* Data detail */
+  COL_PIX = 0, // Pixmap
+  COL_BLOCK, // Block type
+  COL_DATA, // Data detail
   NUM_COLS
 };
 
@@ -182,7 +182,7 @@ ui_tape_browser_update( ui_tape_browser_update_type change GCC_UNUSED,
                         libspectrum_tape_block *block GCC_UNUSED )
 {
   int error, current_block;
-  GtkTreeModel *model;    
+  GtkTreeModel *model;
 
   if( !dialog_created ) return 0;
 
@@ -199,7 +199,7 @@ ui_tape_browser_update( ui_tape_browser_update_type change GCC_UNUSED,
 
   current_block = tape_get_current_block();
 
-  if( current_block != -1 )  
+  if( current_block != -1 )
     mark_row( model, current_block );
 
   if( tape_modified ) {
@@ -284,7 +284,7 @@ select_row( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
 
 void
 mark_row( GtkTreeModel *model, int row )
-{    
+{
   GtkTreeIter iter;
   GtkTreePath *path;
 

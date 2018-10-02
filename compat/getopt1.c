@@ -101,7 +101,7 @@ libc_hidden_def (getopt_long)
 libc_hidden_def (getopt_long_only)
 # endif
 
-#endif	/* Not ELIDE_CODE.  */
+#endif // Not ELIDE_CODE.
 
 #ifdef TEST
 
@@ -195,4 +195,4 @@ main (argc, argv)
   exit (0);
 }
 
-#endif /* TEST */
+#endif // TEST

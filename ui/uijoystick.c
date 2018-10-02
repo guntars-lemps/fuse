@@ -130,7 +130,7 @@ int open_joystick( int which, const char *device, const char *calibration )
   /* Otherwise try /dev/input/js<n> and /dev/js<n> */
   snprintf( path, PATH_MAX, "/dev/input/js%d", which );
   if( !init_stick( which, path, calibration ) ) return 0;
-    
+
   snprintf( path, PATH_MAX, "/dev/js%d", which );
   if( !init_stick( which, path, calibration ) ) return 0;
 
@@ -215,7 +215,7 @@ poll_joystick( int which )
   event.types.joystick.which = which;
 
   buttons = joystick->total_buttons;
-  if( buttons > NUM_JOY_BUTTONS ) buttons = NUM_JOY_BUTTONS;	/* We support 'only' NUM_JOY_BUTTONS (15 as defined in ui/uijoystick.h) fire buttons */
+  if( buttons > NUM_JOY_BUTTONS ) buttons = NUM_JOY_BUTTONS; // We support 'only' NUM_JOY_BUTTONS (15 as defined in ui/uijoystick.h) fire buttons
 
   for( i = 0; i < buttons; i++ ) {
 
@@ -262,7 +262,7 @@ do_axis( int which, double position, input_key negative, input_key positive )
   input_event( &event2 );
 }
 
-#else			/* #if defined USE_JOYSTICK && defined HAVE_JSW_H */
+#else // #if defined USE_JOYSTICK && defined HAVE_JSW_H
 
 /* No joystick library */
 
@@ -282,4 +282,4 @@ ui_joystick_poll( void )
 {
 }
 
-#endif			/* #if defined USE_JOYSTICK && defined HAVE_JSW_H */
+#endif // #if defined USE_JOYSTICK && defined HAVE_JSW_H

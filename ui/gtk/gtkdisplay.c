@@ -90,8 +90,8 @@ static libspectrum_dword bw_colours[16];
 
 /* Colour format for the back buffer in endianess-order */
 typedef enum {
-  FORMAT_x8r8g8b8,    /* Cairo  (GTK3) */
-  FORMAT_x8b8g8r8     /* GdkRGB (GTK2) */
+  FORMAT_x8r8g8b8, // Cairo  (GTK3)
+  FORMAT_x8b8g8r8 // GdkRGB (GTK2)
 } colour_format_t;
 
 
@@ -101,7 +101,7 @@ static int display_updated = 0;
 
 static cairo_surface_t *surface = NULL;
 
-#endif                /* #if GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if GTK_CHECK_VERSION( 3, 0, 0 )
 
 /* The current size of the window (in units of DISPLAY_SCREEN_*) */
 static int gtkdisplay_current_size=1;
@@ -122,7 +122,7 @@ static gint gtkdisplay_expose(GtkWidget *widget, GdkEvent *event,
 #else
 static gboolean gtkdisplay_draw( GtkWidget *widget, cairo_t *cr,
                                  gpointer user_data );
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
 static gint drawing_area_resize_callback( GtkWidget *widget, GdkEvent *event,
                                           gpointer data );
@@ -157,7 +157,7 @@ init_colours( colour_format_t format )
 
               bw_colours[i] = grey << 24 |  grey << 16 | grey << 8;
 
-#else                           /* #ifdef WORDS_BIGENDIAN */
+#else // #ifdef WORDS_BIGENDIAN
 
     switch( format ) {
     case FORMAT_x8b8g8r8:
@@ -170,7 +170,7 @@ init_colours( colour_format_t format )
 
               bw_colours[i] = grey |  grey << 8 | grey << 16;
 
-#endif                          /* #ifdef WORDS_BIGENDIAN */
+#endif // #ifdef WORDS_BIGENDIAN
 
   }
 
@@ -205,7 +205,7 @@ uidisplay_init( int width, int height )
   g_signal_connect( G_OBJECT( gtkui_window ), "configure_event",
                     G_CALLBACK( drawing_area_resize_callback ), NULL );
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
   error = init_colours( colour_format ); if( error ) return error;
 
@@ -266,7 +266,7 @@ drawing_area_resize( int width, int height, int force_scaler )
                                            scale * image_height,
                                            scaled_pitch );
 
-#endif                /* #if GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if GTK_CHECK_VERSION( 3, 0, 0 )
 
   display_refresh_all();
 
@@ -337,7 +337,7 @@ uidisplay_frame_end( void )
                                 FALSE );
     display_updated = 0;
   }
-#endif                /* #if GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if GTK_CHECK_VERSION( 3, 0, 0 )
 
   return;
 }
@@ -398,7 +398,7 @@ static void gtkdisplay_area(int x, int y, int width, int height)
 
   gtk_widget_queue_draw_area( gtkui_drawing_area, x, y, width, height );
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 }
 
 int
@@ -531,7 +531,7 @@ drawing_area_resize_callback( GtkWidget *widget GCC_UNUSED, GdkEvent *event,
   return TRUE;
 }
 
-#else                 /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#else // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
 /* Called by gtkui_drawing_area on "draw" event */
 static gboolean
@@ -569,7 +569,7 @@ drawing_area_resize_callback( GtkWidget *widget GCC_UNUSED, GdkEvent *event,
   return FALSE;
 }
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
 void
 gtkdisplay_update_geometry( void )
@@ -601,7 +601,7 @@ gtkdisplay_update_geometry( void )
 
   geometry_widget = gtkui_drawing_area;
 
-#endif                /* #if GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if GTK_CHECK_VERSION( 3, 0, 0 )
 
   hints = GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE |
           GDK_HINT_BASE_SIZE | GDK_HINT_RESIZE_INC;
@@ -651,8 +651,8 @@ gtkdisplay_load_gfx_mode( void )
 
   drawing_area_resize( scale * image_width, scale * image_height, 0 );
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
- 
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
+
   gtk_window_resize( GTK_WINDOW( gtkui_window ), scale * image_width,
                      scale * image_height + extra_height );
 

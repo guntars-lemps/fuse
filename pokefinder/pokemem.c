@@ -47,9 +47,9 @@ typedef enum do_t {
   DO_EOF,
 } do_t;
 
-char *pokfile = NULL;              /* Path of a .pok file to load */
-GSList *trainer_list = NULL;       /* Trainers loaded from a file */
-trainer_t *current_trainer = NULL; /* Last trainer parsed */
+char *pokfile = NULL; // Path of a .pok file to load
+GSList *trainer_list = NULL; // Trainers loaded from a file
+trainer_t *current_trainer = NULL; // Last trainer parsed
 
 static void pokemem_read_from_buffer( const libspectrum_byte *buffer,
                                       size_t length );
@@ -151,7 +151,7 @@ pokemem_read_from_buffer( const libspectrum_byte *buffer, size_t length )
 
   while( !eop ) {
 
-    id = *ptr++; /* First char of a line */
+    id = *ptr++; // First char of a line
 
     switch( id ) {
 
@@ -465,10 +465,10 @@ pokemem_find_pokfile( const char *path )
   size_t length, filename_size;
   char *test_file, *c;
 
-  if( pokfile ) return 1; /* Previous .pok file already found */
+  if( pokfile ) return 1; // Previous .pok file already found
 
   length = strlen( path );
-  if( !length ) return 1; /* Nothing to search */
+  if( !length ) return 1; // Nothing to search
 
   test_file = libspectrum_new( char, length + 11 );
 
@@ -484,10 +484,10 @@ pokemem_find_pokfile( const char *path )
 
   /* Try .pok extension */
   if( has_extension ) {
-    n = last_dot; /* Replace file extension */
+    n = last_dot; // Replace file extension
     test_file[n] = '\0';
   } else {
-    n = length; /* Append file extension */
+    n = length; // Append file extension
   }
 
   strncat( test_file, ".pok", 4 );
@@ -506,14 +506,14 @@ pokemem_find_pokfile( const char *path )
 
   /* Browse POKES/ directory */
   if( last_slash >= 0 ) {
-    n = last_slash + 1; /* insert directory */
+    n = last_slash + 1; // insert directory
     filename_size =
       ( has_extension )? (unsigned int) ( last_dot - last_slash - 1 ) :
                          strlen( &path[n] );
     test_file[ n ] = '\0';
     strncat( test_file, "POKES", 5 );
   } else {
-    n = 0; /* prepend directory */
+    n = 0; // prepend directory
     filename_size = ( has_extension )? (unsigned int) last_dot : length;
     strncpy( test_file, "POKES", 5 );
     test_file[ 5 ] = '\0';

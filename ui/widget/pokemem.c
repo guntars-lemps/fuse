@@ -237,7 +237,7 @@ widget_pokemem_update_line( unsigned int left_edge, unsigned int width,
     widget_up_arrow( left_edge, 3, WIDGET_COLOUR_FOREGROUND );
 
   /* Last row in page */
-  if( top_index + page_size < pokemem_count && 
+  if( top_index + page_size < pokemem_count &&
       ( index - top_index == page_size - 1 ) )
     widget_down_arrow( left_edge, page_size + 2, WIDGET_COLOUR_FOREGROUND );
 }
@@ -250,18 +250,18 @@ widget_pokemem_keyhandler( input_key key )
   new_selected = selected;
 
   switch ( key ) {
-  case INPUT_KEY_Return: /* Do pokes */
+  case INPUT_KEY_Return: // Do pokes
   case INPUT_KEY_KP_Enter:
   case INPUT_JOYSTICK_FIRE_1:
     widget_end_all( WIDGET_FINISHED_OK );
     break;
 
-  case INPUT_KEY_Escape: /* Close widget */
+  case INPUT_KEY_Escape: // Close widget
   case INPUT_JOYSTICK_FIRE_2:
     widget_end_widget( WIDGET_FINISHED_CANCEL );
     return;
 
-  case INPUT_KEY_a: /* Add poke */
+  case INPUT_KEY_a: // Add poke
     if( !widget_pokemem_add_custom_poke() ) new_selected = pokemem_count - 1;
     break;
 
@@ -457,7 +457,7 @@ widget_pokemem_add_custom_poke( void )
     return 1;
   }
 
-  if( endptr == widget_text_text ) b = 8; /* ignore bank by default */
+  if( endptr == widget_text_text ) b = 8; // ignore bank by default
 
   /* Address */
   text_data.title = "Enter address / offset";

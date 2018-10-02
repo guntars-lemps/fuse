@@ -28,7 +28,7 @@
 
 #ifdef HAVE_LIB_GLIB
 #include <glib.h>
-#endif				/* #ifdef HAVE_LIB_GLIB */
+#endif // #ifdef HAVE_LIB_GLIB
 
 #include <libspectrum.h>
 
@@ -37,9 +37,9 @@
 /* The current state of the debugger */
 enum debugger_mode_t
 {
-  DEBUGGER_MODE_INACTIVE,	/* No breakpoint set */
-  DEBUGGER_MODE_ACTIVE,		/* Breakpoint set, but emulator running */
-  DEBUGGER_MODE_HALTED,		/* Execution not happening */
+  DEBUGGER_MODE_INACTIVE, // No breakpoint set
+  DEBUGGER_MODE_ACTIVE, // Breakpoint set, but emulator running
+  DEBUGGER_MODE_HALTED, // Execution not happening
 };
 
 extern enum debugger_mode_t debugger_mode;
@@ -51,11 +51,11 @@ void debugger_register_startup( void );
 
 void debugger_reset( void );
 
-int debugger_trap( void );	/* Activate the debugger */
+int debugger_trap( void ); // Activate the debugger
 
-int debugger_step( void );	/* Single step */
-int debugger_next( void );	/* Go to next instruction, ignoring CALL etc */
-int debugger_run( void ); /* Set debugger_mode so that emulation will occur */
+int debugger_step( void ); // Single step
+int debugger_next( void ); // Go to next instruction, ignoring CALL etc
+int debugger_run( void ); // Set debugger_mode so that emulation will occur
 
 /* Disassemble the instruction at 'address', returning its length in
    '*length' */
@@ -97,4 +97,4 @@ void debugger_system_variable_register(
 /* Unit tests */
 int debugger_disassemble_unittest( void );
 
-#endif				/* #ifndef FUSE_DEBUGGER_H */
+#endif // #ifndef FUSE_DEBUGGER_H

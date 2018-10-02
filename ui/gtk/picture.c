@@ -56,7 +56,7 @@ picture_expose( GtkWidget *widget, GdkEvent *event, gpointer data );
 static gboolean
 picture_draw( GtkWidget *widget, cairo_t *cr, gpointer user_data );
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
 static GtkWidget *dialog;
 
@@ -79,7 +79,7 @@ gtkui_picture( const char *filename, int border )
 
     dialog = gtkstock_dialog_new( "Fuse - Keyboard",
 				  G_CALLBACK( gtk_widget_hide ) );
-  
+
     drawing_area = gtk_drawing_area_new();
     gtk_widget_set_size_request( drawing_area, DISPLAY_ASPECT_WIDTH,
                                  DISPLAY_SCREEN_HEIGHT );
@@ -92,7 +92,7 @@ gtkui_picture( const char *filename, int border )
     g_signal_connect( G_OBJECT( drawing_area ),
 		      "draw", G_CALLBACK( picture_draw ),
 		      NULL );
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
     content_area = gtk_dialog_get_content_area( GTK_DIALOG( dialog ) );
     gtk_container_add( GTK_CONTAINER( content_area ), drawing_area );
@@ -115,7 +115,7 @@ static void
 draw_screen( libspectrum_byte *screen, int border )
 {
   int i, x, y, ink, paper;
-  libspectrum_byte attr, data; 
+  libspectrum_byte attr, data;
 
   for( y=0; y < DISPLAY_BORDER_HEIGHT; y++ ) {
     for( x=0; x < DISPLAY_ASPECT_WIDTH; x++ ) {
@@ -182,7 +182,7 @@ picture_expose( GtkWidget *widget, GdkEvent *event, gpointer data GCC_UNUSED )
   return TRUE;
 }
 
-#else                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#else // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
 static gboolean
 picture_draw( GtkWidget *widget, cairo_t *cr, gpointer user_data )
@@ -204,4 +204,4 @@ picture_draw( GtkWidget *widget, cairo_t *cr, gpointer user_data )
   return FALSE;
 }
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )

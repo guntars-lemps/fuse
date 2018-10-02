@@ -45,14 +45,14 @@ ui_statusbar_item icons_order[5] = {
 };
 
 ui_statusbar_state icons_status[5] = {
-  UI_STATUSBAR_STATE_NOT_AVAILABLE, /* disk */
-  UI_STATUSBAR_STATE_NOT_AVAILABLE, /* microdrive */
-  UI_STATUSBAR_STATE_NOT_AVAILABLE, /* mouse */
-  UI_STATUSBAR_STATE_NOT_AVAILABLE, /* paused */
-  UI_STATUSBAR_STATE_NOT_AVAILABLE  /* tape */
+  UI_STATUSBAR_STATE_NOT_AVAILABLE, // disk
+  UI_STATUSBAR_STATE_NOT_AVAILABLE, // microdrive
+  UI_STATUSBAR_STATE_NOT_AVAILABLE, // mouse
+  UI_STATUSBAR_STATE_NOT_AVAILABLE, // paused
+  UI_STATUSBAR_STATE_NOT_AVAILABLE // tape
 };
 
-int icons_part_width = 140; /* will be calculated dynamically later */
+int icons_part_width = 140; // will be calculated dynamically later
 int icons_part_height = 27;
 int icons_part_margin = 2;
 
@@ -62,30 +62,30 @@ win32statusbar_create( HWND hWnd )
   DWORD dwStyle;
 
   /* FIXME: destroy those icons later on using DeleteObject */
-  
-  icon_tape_inactive = LoadImage( fuse_hInstance, "win32bmp_tape_inactive", 
+
+  icon_tape_inactive = LoadImage( fuse_hInstance, "win32bmp_tape_inactive",
                                   IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-  icon_tape_active = LoadImage( fuse_hInstance, "win32bmp_tape_active", 
+  icon_tape_active = LoadImage( fuse_hInstance, "win32bmp_tape_active",
                                 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-  icon_mdr_inactive = LoadImage( fuse_hInstance, "win32bmp_mdr_inactive", 
+  icon_mdr_inactive = LoadImage( fuse_hInstance, "win32bmp_mdr_inactive",
                                   IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-  icon_mdr_active = LoadImage( fuse_hInstance, "win32bmp_mdr_active", 
+  icon_mdr_active = LoadImage( fuse_hInstance, "win32bmp_mdr_active",
                                 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-  icon_disk_inactive = LoadImage( fuse_hInstance, "win32bmp_disk_inactive", 
+  icon_disk_inactive = LoadImage( fuse_hInstance, "win32bmp_disk_inactive",
                                   IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-  icon_disk_active = LoadImage( fuse_hInstance, "win32bmp_disk_active", 
+  icon_disk_active = LoadImage( fuse_hInstance, "win32bmp_disk_active",
                                 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-  icon_pause_inactive = LoadImage( fuse_hInstance, "win32bmp_pause_inactive", 
+  icon_pause_inactive = LoadImage( fuse_hInstance, "win32bmp_pause_inactive",
                                    IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-  icon_pause_active = LoadImage( fuse_hInstance, "win32bmp_pause_active", 
+  icon_pause_active = LoadImage( fuse_hInstance, "win32bmp_pause_active",
                                  IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-  icon_mouse_inactive = LoadImage( fuse_hInstance, "win32bmp_mouse_inactive", 
+  icon_mouse_inactive = LoadImage( fuse_hInstance, "win32bmp_mouse_inactive",
                                    IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-  icon_mouse_active = LoadImage( fuse_hInstance, "win32bmp_mouse_active", 
+  icon_mouse_active = LoadImage( fuse_hInstance, "win32bmp_mouse_active",
                                  IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
   dwStyle = WS_CHILD | SBARS_SIZEGRIP;
@@ -146,7 +146,7 @@ ui_statusbar_update_speed( float speed )
 {
   TCHAR buffer[8];
 
-  _sntprintf( buffer, 8, "\t%3.0f%%", speed ); /* \t centers the text */
+  _sntprintf( buffer, 8, "\t%3.0f%%", speed ); // \t centers the text
   SendMessage( fuse_hStatusWindow, SB_SETTEXT, (WPARAM) 2,
                (LPARAM) buffer);
 
@@ -164,7 +164,7 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
   BITMAP bmp;
   size_t i;
   int new_icons_part_width;
-  
+
   src_bmp = 0;
 
   di = ( DRAWITEMSTRUCT* ) lParam;
@@ -174,7 +174,7 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
   new_icons_part_width = 0;
 
   for( i=0; i<5; i++ ) {
-    
+
     switch( icons_order[ i ] ) {
       case UI_STATUSBAR_ITEM_DISK:
         switch( icons_status[ UI_STATUSBAR_ITEM_DISK ] ) {
@@ -214,7 +214,7 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
         break;
     }
 
-    if( src_bmp != NULL ) {    
+    if( src_bmp != NULL ) {
       new_icons_part_width += icons_part_margin;
 
       /* create a bitmap mask on the fly */
@@ -227,18 +227,18 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
       SetBkColor( src_dc, RGB( 0, 0, 0 ) );
       BitBlt( mask_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, src_dc, 0, 0, SRCCOPY );
       BitBlt( src_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, mask_dc, 0, 0, SRCINVERT );
-      
+
       /* blit the transparent icon onto the status bar */
       SelectObject( mask_dc, src_bmp_mask );
       BitBlt( dest_dc, rc_item.left + new_icons_part_width,
               rc_item.top + ( icons_part_height - bmp.bmHeight )
-              - ( 2 * icons_part_margin ), 
+              - ( 2 * icons_part_margin ),
               bmp.bmWidth, bmp.bmHeight, mask_dc, 0, 0, SRCAND );
 
       SelectObject( src_dc, src_bmp );
       BitBlt( dest_dc, rc_item.left + new_icons_part_width,
               rc_item.top + ( icons_part_height - bmp.bmHeight )
-              - ( 2 * icons_part_margin ), 
+              - ( 2 * icons_part_margin ),
               bmp.bmWidth, bmp.bmHeight, src_dc, 0, 0, SRCPAINT );
 
       SelectObject( src_dc, old_bmp );
@@ -246,7 +246,7 @@ win32statusbar_redraw( HWND hWnd, LPARAM lParam )
       DeleteDC( src_dc );
       DeleteDC( mask_dc );
       DeleteObject( src_bmp_mask );
-      
+
       new_icons_part_width += bmp.bmWidth;
     }
   }
@@ -280,7 +280,7 @@ win32statusbar_resize( HWND hWnd, WPARAM wParam GCC_UNUSED, LPARAM lParam )
   }
 
   parts[0] = parts[0] - icons_part_width - speed_bar_width;
-  parts[1] = parts[0] + icons_part_width;  
+  parts[1] = parts[0] + icons_part_width;
   parts[2] = parts[1] + speed_bar_width;
   SendMessage( fuse_hStatusWindow, SB_SETPARTS, 3, ( LPARAM ) &parts );
 }

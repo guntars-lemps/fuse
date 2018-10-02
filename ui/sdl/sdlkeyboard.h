@@ -30,4 +30,4 @@ void sdlkeyboard_end(void);
 void sdlkeyboard_keypress(SDL_KeyboardEvent *keyevent);
 void sdlkeyboard_keyrelease(SDL_KeyboardEvent *keyevent);
 
-#endif			/* #ifndef FUSE_SDLKEYBOARD_H */
+#endif // #ifndef FUSE_SDLKEYBOARD_H

@@ -121,7 +121,7 @@ static void gtkui_drag_data_received( GtkWidget *widget GCC_UNUSED,
     selection_data = gtk_selection_data_get_data( data );
     data_begin = selection_data + sizeof( uri_prefix ) - 1;
     data_end = selection_data + selection_length;
-    p = data_begin; 
+    p = data_begin;
     do {
       if ( *p == '\r' || *p == '\n' ) {
         data_end = p;
@@ -160,7 +160,7 @@ ui_init( int *argc, char ***argv )
   gdk_rgb_set_install( TRUE );
   gtk_widget_set_default_colormap( gdk_rgb_get_cmap() );
   gtk_widget_set_default_visual( gdk_rgb_get_visual() );
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
   gtkui_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
@@ -968,7 +968,7 @@ wheel_scroll_event( GtkTreeView *list, GdkEvent *event, gpointer user_data )
   if( base < 0 ) {
     base = 0;
   } else {
-    base_limit = gtk_adjustment_get_upper( adjustment ) - 
+    base_limit = gtk_adjustment_get_upper( adjustment ) -
                  gtk_adjustment_get_page_size( adjustment );
     if( base > base_limit ) base = base_limit;
   }

@@ -88,7 +88,7 @@ timer_estimate_speed( void )
   stored_times[ next_stored_time ] = current_time;
 
   next_stored_time = ( next_stored_time + 1 ) % 10;
-  frames_until_update = 
+  frames_until_update =
     ( machine_current->timings.processor_speed /
     machine_current->timings.tstates_per_frame ) - 1;
 
@@ -163,7 +163,7 @@ timer_frame_callback_sound( libspectrum_dword last_tstates )
              timer_event );
 }
 
-#else                           /* #ifdef SOUND_FIFO */
+#else // #ifdef SOUND_FIFO
 
 /* Blocking socket-style sound based timer */
 static void
@@ -172,8 +172,8 @@ timer_frame_callback_sound( libspectrum_dword last_tstates )
   event_add( last_tstates + machine_current->timings.tstates_per_frame,
              timer_event );
 }
-  
-#endif                          /* #ifdef SOUND_FIFO */
+
+#endif // #ifdef SOUND_FIFO
 
 void
 timer_start_fastloading( void )
@@ -246,7 +246,7 @@ timer_frame( libspectrum_dword last_tstates, int event GCC_UNUSED,
     tstates = ( ( difference + TEN_MS / 1000.0 ) *
 		machine_current->timings.processor_speed
 		) * speed + 0.5;
-  
+
     event_add( last_tstates + tstates, timer_event );
 
     start_time = current_time + TEN_MS / 1000.0;

@@ -25,7 +25,7 @@
 
 #ifdef HAVE_LIBGEN_H
 #include <libgen.h>
-#endif				/* #ifdef HAVE_LIBGEN_H */
+#endif // #ifdef HAVE_LIBGEN_H
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
@@ -88,7 +88,7 @@ compat_get_next_path( path_context *ctx )
       strncpy( buffer, fuse_progname, PATH_MAX );
       buffer[ PATH_MAX - 1 ] = '\0';
     } else {
-      DWORD retval; 
+      DWORD retval;
       retval = GetModuleFileName( NULL, buffer, PATH_MAX );
       if( !retval ) return 0;
     }
@@ -102,7 +102,7 @@ compat_get_next_path( path_context *ctx )
   case 1:
     path2 = getenv( "APPDATA" );
     if( !path2 ) return 0;
-    snprintf( ctx->path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "Fuse" 
+    snprintf( ctx->path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "Fuse"
               FUSE_DIR_SEP_STR "%s", path2, path_segment );
 
     return 1;

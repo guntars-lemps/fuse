@@ -44,4 +44,4 @@ int tc2048_init( fuse_machine_info *machine );
 int tc2048_port_from_ula( libspectrum_word port );
 int ts2068_init( fuse_machine_info *machine );
 
-#endif			/* #ifndef FUSE_MACHINES_H */
+#endif // #ifndef FUSE_MACHINES_H

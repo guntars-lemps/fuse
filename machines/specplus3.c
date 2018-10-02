@@ -53,7 +53,7 @@
 #include "ui/ui.h"
 #include "ui/uimedia.h"
 #include "utils.h"
-#include "options.h"	/* needed for get combo options */
+#include "options.h" // needed for get combo options
 
 static int normal_memory_map( int rom, int page );
 static void special_memory_map( int which );
@@ -157,7 +157,7 @@ specplus3_765_init( void )
   }
 					/* builtin drive 1 head 42 track */
   fdd_init( &specplus3_drives[ 0 ], FDD_SHUGART, &fdd_params[ 1 ], 0 );
-  fdd_init( &specplus3_drives[ 1 ], FDD_SHUGART, NULL, 0 );	/* drive geometry 'autodetect' */
+  fdd_init( &specplus3_drives[ 1 ], FDD_SHUGART, NULL, 0 ); // drive geometry 'autodetect'
   specplus3_fdc->set_intrq = NULL;
   specplus3_fdc->reset_intrq = NULL;
   specplus3_fdc->set_datarq = NULL;
@@ -177,7 +177,7 @@ specplus3_765_reset( void )
   const fdd_params_t *dt;
 
   upd_fdc_master_reset( specplus3_fdc );
-  dt = &fdd_params[ option_enumerate_diskoptions_drive_plus3a_type() + 1 ];	/* +1 => there is no `Disabled' */
+  dt = &fdd_params[ option_enumerate_diskoptions_drive_plus3a_type() + 1 ]; // +1 => there is no `Disabled'
   fdd_init( &specplus3_drives[ 0 ], FDD_SHUGART, dt, 1 );
 
   dt = &fdd_params[ option_enumerate_diskoptions_drive_plus3b_type() ];
@@ -374,7 +374,7 @@ libspectrum_byte
 specplus3_fdc_status( libspectrum_word port GCC_UNUSED,
                       libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   return upd_fdc_read_status( specplus3_fdc );
 }
 
@@ -382,7 +382,7 @@ libspectrum_byte
 specplus3_fdc_read( libspectrum_word port GCC_UNUSED,
                     libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   return upd_fdc_read_data( specplus3_fdc );
 }
 
@@ -439,7 +439,7 @@ ui_drive_inserted( const ui_media_drive_info_t *drive, int new )
   /* Did real +3 hardware also have problems formatting disks unformatted
      disks? */
   if( new )
-    disk_preformat( &drive->fdd->disk );	/* pre-format disk for +3 ??? */
+    disk_preformat( &drive->fdd->disk ); // pre-format disk for +3 ???
   return 0;
 }
 

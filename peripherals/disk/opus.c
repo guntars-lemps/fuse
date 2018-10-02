@@ -43,7 +43,7 @@
 #include "unittests/unittests.h"
 #include "utils.h"
 #include "wd_fdc.h"
-#include "options.h"	/* needed for get combo options */
+#include "options.h" // needed for get combo options
 #include "z80/z80.h"
 
 /* 8KB ROM */
@@ -141,7 +141,7 @@ opus_init( void *context )
 
   for( i = 0; i < OPUS_NUM_DRIVES; i++ ) {
     d = &opus_drives[ i ];
-    fdd_init( d, FDD_SHUGART, NULL, 0 );	/* drive geometry 'autodetect' */
+    fdd_init( d, FDD_SHUGART, NULL, 0 ); // drive geometry 'autodetect'
     d->disk.flag = DISK_FLAG_NONE;
   }
 
@@ -288,7 +288,7 @@ opus_6821_access( libspectrum_byte reg, libspectrum_byte data,
         fdd_select( &opus_drives[ drive ], 1 );
 
         if( opus_fdc->current_drive != &opus_drives[ drive ] ) {
-          if( opus_fdc->current_drive->motoron ) {        /* swap motoron */
+          if( opus_fdc->current_drive->motoron ) { // swap motoron
             fdd_motoron( &opus_drives[ (!drive) ], 0 );
             fdd_motoron( &opus_drives[ drive ], 1 );
           }
@@ -373,10 +373,10 @@ opus_read( libspectrum_word address )
 {
   libspectrum_byte data = 0xff;
 
-  if( address >= 0x3800 ) data = 0xff; /* Undefined on Opus */
-  else if( address >= 0x3000 )         /* 6821 PIA */
+  if( address >= 0x3800 ) data = 0xff; // Undefined on Opus
+  else if( address >= 0x3000 ) // 6821 PIA
     data = opus_6821_access( address, 0, 0 );
-  else if( address >= 0x2800 ) {       /* WD1770 FDC */
+  else if( address >= 0x2800 ) { // WD1770 FDC
     switch( address & 0x03 ) {
     case 0:
       data = wd_fdc_sr_read( opus_fdc );
@@ -496,7 +496,7 @@ opus_to_snapshot( libspectrum_snap *snap )
   memcpy( buffer, opus_ram, OPUS_RAM_SIZE );
   libspectrum_snap_set_opus_ram( snap, 0, buffer );
 
-  drive_count++; /* Drive 1 is not removable */
+  drive_count++; // Drive 1 is not removable
   if( option_enumerate_diskoptions_drive_opus2_type() > 0 ) drive_count++;
   libspectrum_snap_set_opus_drive_count( snap, drive_count );
 

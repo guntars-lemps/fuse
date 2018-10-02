@@ -92,4 +92,4 @@ divxxx_page( divxxx_t *divxxx );
 void
 divxxx_unpage( divxxx_t *divxxx );
 
-#endif			/* #ifndef FUSE_DIVXXX_H */
+#endif // #ifndef FUSE_DIVXXX_H

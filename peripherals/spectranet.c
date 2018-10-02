@@ -1,25 +1,25 @@
 /* spectranet.c: Spectranet emulation
    Copyright (c) 2011-2016 Philip Kendall
    Copyright (c) 2015 Stuart Brady
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation, Inc.,
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-   
+
    Author contact information:
 
    E-mail: philip-fuse@shadowmagic.org.uk
-   
+
 */
 
 #include <config.h>
@@ -155,15 +155,15 @@ spectranet_map_page( int dest, int source )
 static void
 spectranet_hard_reset( void )
 {
-  spectranet_map_page( 1, 0xff ); /* Map something into 0x1000 to 0x1fff */
-  spectranet_map_page( 2, 0xff ); /* And 0x2000 to 0x2fff */
+  spectranet_map_page( 1, 0xff ); // Map something into 0x1000 to 0x1fff
+  spectranet_map_page( 2, 0xff ); // And 0x2000 to 0x2fff
 
   spectranet_programmable_trap = 0x0000;
   spectranet_programmable_trap_active = 0;
   trap_write_msb = 0;
 
   nmi_flipflop = 0;
-}  
+}
 
 static void
 spectranet_reset( int hard_reset )
@@ -276,7 +276,7 @@ spectranet_from_snapshot( libspectrum_snap *snap )
 
     spectranet_programmable_trap =
       libspectrum_snap_spectranet_programmable_trap( snap );
-    spectranet_programmable_trap_active = 
+    spectranet_programmable_trap_active =
       libspectrum_snap_spectranet_programmable_trap_active( snap );
     trap_write_msb =
       libspectrum_snap_spectranet_programmable_trap_msb( snap );
@@ -380,7 +380,7 @@ spectranet_page_b( libspectrum_word port, libspectrum_byte data )
 static libspectrum_byte
 spectranet_cpld_version( libspectrum_word port, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   return SPECTRANET_CPLD_VERSION;
 }
 
@@ -408,7 +408,7 @@ spectranet_control_read( libspectrum_word port, libspectrum_byte *attached )
     machine_current->ram.last_byte & 0x08 )
     b |= 0x10;
 
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
 
   return b;
 }
@@ -500,7 +500,7 @@ void
 spectranet_flash_rom_write( libspectrum_word address, libspectrum_byte b )
 {
   int pageb_page = spectranet_current_map[2 * MEMORY_PAGES_IN_4K].page_num;
-  
+
   if( pageb_page < SPECTRANET_ROM_LENGTH / SPECTRANET_PAGE_LENGTH ) {
     /* Which 16Kb flash page are we accessing */
     int flash_page = pageb_page / 4;
@@ -510,7 +510,7 @@ spectranet_flash_rom_write( libspectrum_word address, libspectrum_byte b )
   }
 }
 
-#else			/* #ifdef BUILD_SPECTRANET */
+#else // #ifdef BUILD_SPECTRANET
 
 /* No spectranet support */
 
@@ -553,7 +553,7 @@ spectranet_w5100_read( memory_page *page GCC_UNUSED,
 }
 
 void
-spectranet_w5100_write( memory_page *page GCC_UNUSED, 
+spectranet_w5100_write( memory_page *page GCC_UNUSED,
                         libspectrum_word address GCC_UNUSED,
                         libspectrum_byte b GCC_UNUSED )
 {
@@ -565,4 +565,4 @@ spectranet_flash_rom_write( libspectrum_word address GCC_UNUSED,
 {
 }
 
-#endif			/* #ifdef BUILD_SPECTRANET */
+#endif // #ifdef BUILD_SPECTRANET

@@ -10,7 +10,7 @@
 
    SpeccyBoot:
      http://patrikpersson.github.io/speccyboot/
-  
+
    Copyright (c) 2009-2016 Patrik Persson, Philip Kendall
 
    This program is free software; you can redistribute it and/or modify
@@ -40,4 +40,4 @@ void speccyboot_register_startup( void );
 
 int speccyboot_unittest( void );
 
-#endif /* #ifndef FUSE_SPECCYBOOT_H */
+#endif // #ifndef FUSE_SPECCYBOOT_H

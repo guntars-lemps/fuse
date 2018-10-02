@@ -32,4 +32,4 @@ void machines_periph_plus3( void );
 void machines_periph_timex( void );
 void machines_periph_pentagon( void );
 
-#endif  /* #ifndef FUSE_MACHINES_PERIPH_H */
+#endif // #ifndef FUSE_MACHINES_PERIPH_H

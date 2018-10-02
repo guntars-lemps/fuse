@@ -60,9 +60,9 @@ const libspectrum_byte overflow_sub_table[] = { 0, FLAG_V, 0, 0, 0, 0, FLAG_V, 0
 
 /* Some more tables; initialised in z80_init_tables() */
 
-libspectrum_byte sz53_table[0x100]; /* The S, Z, 5 and 3 bits of the index */
-libspectrum_byte parity_table[0x100]; /* The parity of the lookup value */
-libspectrum_byte sz53p_table[0x100]; /* OR the above two tables together */
+libspectrum_byte sz53_table[0x100]; // The S, Z, 5 and 3 bits of the index
+libspectrum_byte parity_table[0x100]; // The parity of the lookup value
+libspectrum_byte sz53p_table[0x100]; // OR the above two tables together
 
 /* This is what everything acts on! */
 processor z80;
@@ -165,7 +165,7 @@ z80_reset( int hard_reset )
     BC =DE =HL =0;
     BC_=DE_=HL_=0;
     IX=IY=0;
-    z80.memptr.w=0;	/* TODO: confirm if this happens on soft reset */
+    z80.memptr.w=0; // TODO: confirm if this happens on soft reset
   }
 
   z80.interrupts_enabled_at = -1;
@@ -200,11 +200,11 @@ z80_interrupt( void )
     }
 
     if( z80.halted ) { PC++; z80.halted = 0; }
-    
+
     IFF1=IFF2=0;
     R++; rzx_instructions_offset--;
 
-    tstates += 7; /* Longer than usual M1 cycle */
+    tstates += 7; // Longer than usual M1 cycle
 
     writebyte( --SP, PCH ); writebyte( --SP, PCL );
 
@@ -220,7 +220,7 @@ z80_interrupt( void )
       case 1:
 	/* RST 38 */
 	PC = 0x0038; break;
-      case 2: 
+      case 2:
 	/* We assume 0xff is on the data bus, as the Spectrum leaves it pulled
 	   high when the end-of-frame interrupt is delivered.  Our interrupt
 	   vector is therefore 0xff. */
@@ -237,11 +237,11 @@ z80_interrupt( void )
     z80.memptr.w = PC;
     Q = 0;
 
-    return 1;			/* Accepted an interrupt */
+    return 1; // Accepted an interrupt
 
   } else {
 
-    return 0;			/* Did not accept an interrupt */
+    return 0; // Did not accept an interrupt
 
   }
 }
@@ -273,7 +273,7 @@ z80_nmi( libspectrum_dword ts, int type, void *user_data )
     /* Page in TR-DOS ROM */
     beta_page();
   } else if( spectranet_available ) {
-    
+
     /* Page in spectranet */
     spectranet_nmi();
   }
@@ -316,7 +316,7 @@ z80_from_snapshot( libspectrum_snap *snap )
 
   Q = libspectrum_snap_last_instruction_set_f( snap ) ? F : 0;
 }
-  
+
 static void
 z80_to_snapshot( libspectrum_snap *snap )
 {

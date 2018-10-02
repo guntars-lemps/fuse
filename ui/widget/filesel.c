@@ -32,7 +32,7 @@
 #include <string.h>
 #ifdef HAVE_STRINGS_STRCASECMP
 #include <strings.h>
-#endif      /* #ifdef HAVE_STRINGS_STRCASECMP */
+#endif // #ifdef HAVE_STRINGS_STRCASECMP
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -51,19 +51,19 @@ struct Library *AslBase;
 #ifndef __MORPHOS__
 struct AslIFace *IAsl;
 struct Library *DOSBase;
-#endif				/* #ifndef __MORPHOS__ */
+#endif // #ifndef __MORPHOS__
 
 #ifndef __MORPHOS__
 struct DOSIFace *IDOS;
 struct Library *ExecBase;
-#endif				/* #ifndef __MORPHOS__ */
+#endif // #ifndef __MORPHOS__
 
 
 int err = 0;
 
 char *amiga_asl( char *title, BOOL is_saving );
 
-#endif /* ifdef AMIGA */
+#endif // ifdef AMIGA
 
 struct widget_dirent **widget_filenames; /* Filenames in the current
 					    directory */
@@ -93,7 +93,7 @@ static int widget_scan_compare( const widget_dirent **a,
 
 #if !defined AMIGA && !defined __MORPHOS__
 static char* widget_getcwd( void );
-#endif /* ifndef AMIGA */
+#endif // ifndef AMIGA
 static int widget_print_all_filenames( struct widget_dirent **filenames, int n,
 				       int top_left, int current,
 				       const char *dir );
@@ -219,7 +219,7 @@ amiga_asl( char *title, BOOL is_saving ) {
                                            TAG_DONE );
       if( err = IAsl->AslRequest( filereq, NULL ) ) {
         filename = ( STRPTR ) IExec->AllocVec( 1024, MEMF_CLEAR );
-#else				/* #ifndef __MORPHOS__ */
+#else // #ifndef __MORPHOS__
   if( AslBase = OpenLibrary( "asl.library", 0 ) ) {
       filereq = AllocAslRequestTags( ASL_FileRequest,
                                      ASLFR_RejectIcons,TRUE,
@@ -230,20 +230,20 @@ amiga_asl( char *title, BOOL is_saving ) {
                                      TAG_DONE );
       if( err = AslRequest( filereq, NULL ) ) {
         filename = ( STRPTR ) AllocVec( 1024, MEMF_CLEAR );
-#endif				/* #ifndef __MORPHOS__ */
+#endif // #ifndef __MORPHOS__
 
         strcpy( filename,filereq->fr_Drawer );
 #ifndef __MORPHOS__
         IDOS->AddPart( filename, filereq->fr_File, 1024 );
-#else				/* #ifndef __MORPHOS__ */
+#else // #ifndef __MORPHOS__
         AddPart( filename, filereq->fr_File, 1024 );
-#endif				/* #ifndef __MORPHOS__ */
+#endif // #ifndef __MORPHOS__
         widget_filesel_name = utils_safe_strdup( filename );
 #ifndef __MORPHOS__
         IExec->FreeVec( filename );
-#else				/* #ifndef __MORPHOS__ */
+#else // #ifndef __MORPHOS__
         FreeVec( filename );
-#endif				/* #ifndef __MORPHOS__ */
+#endif // #ifndef __MORPHOS__
         err = WIDGET_FINISHED_OK;
       } else {
         err = WIDGET_FINISHED_CANCEL;
@@ -252,13 +252,13 @@ amiga_asl( char *title, BOOL is_saving ) {
       IExec->DropInterface( ( struct Interface * )IAsl );
     }
     IExec->CloseLibrary( AslBase );
-#else				/* #ifndef __MORPHOS__ */
+#else // #ifndef __MORPHOS__
     CloseLibrary( AslBase );
-#endif				/* #ifndef __MORPHOS__ */
+#endif // #ifndef __MORPHOS__
   }
   return widget_filesel_name;
 }
-#else /* ifdef AMIGA */
+#else // ifdef AMIGA
 
 static int widget_scandir( const char *dir, struct widget_dirent ***namelist,
 			   int (*select_fn)(const char*) )
@@ -385,7 +385,7 @@ static int widget_scan_compare( const struct widget_dirent **a,
   }
 
 }
-#endif /* ifdef AMIGA */
+#endif // ifdef AMIGA
 
 /* File selection widget */
 
@@ -421,7 +421,7 @@ widget_filesel_draw( void *data )
 
   free( directory );
 
-#endif /* ifndef AMIGA */
+#endif // ifndef AMIGA
 
   return 0;
 }
@@ -621,7 +621,7 @@ static int widget_print_filename( struct widget_dirent *filename, int position,
 
   return 0;
 }
-#endif /* ifndef AMIGA */
+#endif // ifndef AMIGA
 
 static int
 widget_filesel_chdir( void )
@@ -647,7 +647,7 @@ widget_filesel_chdir( void )
 #ifndef GEKKO
   /* Wii getcwd() already has the slash on the end */
   strcat( fn, FUSE_DIR_SEP_STR );
-#endif				/* #ifndef GEKKO */
+#endif // #ifndef GEKKO
   strcat( fn, widget_filenames[ current_file ]->name );
 
 /*
@@ -697,14 +697,14 @@ widget_filesel_keyhandler( input_key key )
   } else {
     widget_end_widget( err );
   }
-#else  /* ifndef AMIGA */
+#else // ifndef AMIGA
 
   new_current_file = current_file;
 
   switch(key) {
 
 #if 0
-  case INPUT_KEY_Resize:	/* Fake keypress used on window resize */
+  case INPUT_KEY_Resize: // Fake keypress used on window resize
     widget_dialog_with_border( 1, 2, 30, 20 );
     widget_print_all_filenames( widget_filenames, widget_numfiles,
 				top_left_file, current_file        );
@@ -731,7 +731,7 @@ widget_filesel_keyhandler( input_key key )
     break;
 
   case INPUT_KEY_Up:
-  case INPUT_KEY_7:		/* Up */
+  case INPUT_KEY_7: // Up
   case INPUT_KEY_k:
   case INPUT_JOYSTICK_UP:
     if( current_file > 1                 ) new_current_file -= 2;
@@ -789,7 +789,7 @@ widget_filesel_keyhandler( input_key key )
         /* Append the leafname and return it */
         strcat( fn, FUSE_DIR_SEP_STR );
         strcat( fn, widget_text_text );
-      } else {						/* absolute name */
+      } else { // absolute name
 	fn = utils_safe_strdup( widget_text_text );
       }
       widget_filesel_name = fn;
@@ -808,7 +808,7 @@ widget_filesel_keyhandler( input_key key )
 
     break;
 
-  default:	/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }
@@ -854,5 +854,5 @@ widget_filesel_keyhandler( input_key key )
   }
 
   free( dirtitle );
-#endif /* ifdef AMIGA */
+#endif // ifdef AMIGA
 }

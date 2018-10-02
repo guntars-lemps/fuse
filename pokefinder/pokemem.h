@@ -28,7 +28,7 @@
 
 #ifdef HAVE_LIB_GLIB
 #include <glib.h>
-#endif				/* #ifdef HAVE_LIB_GLIB */
+#endif // #ifdef HAVE_LIB_GLIB
 
 #include <libspectrum.h>
 
@@ -36,18 +36,18 @@ extern GSList *trainer_list;
 
 typedef struct trainer_t {
   char *name;
-  int disabled;               /* malformed trainer or pokes? */
-  int ask_value;              /* request user for a value */
-  libspectrum_byte value;     /* user's custom value */
-  int active;                 /* pokes applied? */
+  int disabled; // malformed trainer or pokes?
+  int ask_value; // request user for a value
+  libspectrum_byte value; // user's custom value
+  int active; // pokes applied?
   GSList *poke_list;
 } trainer_t;
 
 typedef struct poke_t {
-  libspectrum_byte bank;      /* 8 means ignore bank */
-  libspectrum_word address;   /* address to poke */
-  libspectrum_word value;     /* 256 means request to user */
-  libspectrum_byte restore;   /* original value before poke */
+  libspectrum_byte bank; // 8 means ignore bank
+  libspectrum_word address; // address to poke
+  libspectrum_word value; // 256 means request to user
+  libspectrum_byte restore; // original value before poke
 } poke_t;
 
 void pokemem_clear( void );

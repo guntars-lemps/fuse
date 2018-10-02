@@ -49,9 +49,9 @@ enum
 };
 
 static GtkWidget
-  *dialog,        /* The dialog box itself */
-  *poke_list,     /* The list of possible pokes */
-  *bank,          /* Entries for custom poke */
+  *dialog, // The dialog box itself
+  *poke_list, // The list of possible pokes
+  *bank, // Entries for custom poke
   *address,
   *value;
 
@@ -114,7 +114,7 @@ create_dialog( void )
   accel_group = gtk_accel_group_new();
   gtk_window_add_accel_group( GTK_WINDOW( dialog ), accel_group );
 
-  hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );    
+  hbox = gtk_box_new( GTK_ORIENTATION_HORIZONTAL, 0 );
   gtk_box_pack_start( GTK_BOX( vbox ), hbox,  TRUE, TRUE, 5 );
 
   /* Bank */
@@ -166,12 +166,12 @@ create_dialog( void )
   create_and_fill_treeview();
   scroll = gtk_scrolled_window_new( NULL, NULL );
 
-  /* Adjust size for list */ 
+  /* Adjust size for list */
 #if !GTK_CHECK_VERSION( 3, 0, 0 )
   gtk_widget_set_size_request( GTK_WIDGET( poke_list ), -1, 250 );
 #else
   gtk_scrolled_window_set_min_content_height( GTK_SCROLLED_WINDOW( scroll ), 250 );
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
   gtk_container_add( GTK_CONTAINER( scroll ), GTK_WIDGET( poke_list ) );
   gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scroll ), TRUE, TRUE, 5 );
@@ -353,7 +353,7 @@ pokemem_add_custom_poke( GtkWidget *widget GCC_UNUSED,
     return;
   }
 
-  if( endptr == entry ) b = 8; /* ignore bank by default */
+  if( endptr == entry ) b = 8; // ignore bank by default
 
   /* Parse address */
   entry = gtk_entry_get_text( GTK_ENTRY( address ) );

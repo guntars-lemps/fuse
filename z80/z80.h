@@ -42,9 +42,9 @@ typedef struct {
   libspectrum_byte i;
   libspectrum_word r;	/* The low seven bits of the R register. 16 bits long
 			   so it can also act as an RZX instruction counter */
-  libspectrum_byte r7;	/* The high bit of the R register */
+  libspectrum_byte r7; // The high bit of the R register
   regpair sp,pc;
-  regpair memptr;	/* The hidden register */
+  regpair memptr; // The hidden register
   int iff2_read;
   libspectrum_byte iff1, iff2, im;
   int halted;
@@ -85,4 +85,4 @@ extern int z80_interrupt_event;
 extern int z80_nmi_event;
 extern int z80_nmos_iff2_event;
 
-#endif			/* #ifndef FUSE_Z80_H */
+#endif // #ifndef FUSE_Z80_H

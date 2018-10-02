@@ -41,13 +41,13 @@ static GdkPixbuf
   *pixbuf_mouse_inactive, *pixbuf_mouse_active;
 
 static GtkWidget
-  *microdrive_status,	/* Is any microdrive motor running? */
-  *disk_status,		/* Is the disk motor running? */
-  *mouse_status,	/* Have we grabbed the mouse? */
-  *pause_status,	/* Is emulation paused (via the menu option)? */
-  *tape_status,		/* Is the tape running? */
-  *speed_status,	/* How fast are we running? */
-  *machine_name;	/* What machine is being emulated? */
+  *microdrive_status, // Is any microdrive motor running?
+  *disk_status, // Is the disk motor running?
+  *mouse_status, // Have we grabbed the mouse?
+  *pause_status, // Is emulation paused (via the menu option)?
+  *tape_status, // Is the tape running?
+  *speed_status, // How fast are we running?
+  *machine_name; // What machine is being emulated?
 
 int
 gtkstatusbar_create( GtkBox *parent )
@@ -122,7 +122,7 @@ gtkstatusbar_get_height( void )
 
   gtk_widget_get_allocation( status_bar, &alloc );
 
-  return alloc.height + 6;        /* status bar + vbox padding */
+  return alloc.height + 6; // status bar + vbox padding
 }
 
 int
@@ -165,7 +165,7 @@ ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
       gtk_image_set_from_pixbuf( GTK_IMAGE( disk_status ),
                                  pixbuf_disk_inactive );
       break;
-    }      
+    }
     return 0;
 
   case UI_STATUSBAR_ITEM_MOUSE:
@@ -194,7 +194,7 @@ ui_statusbar_update( ui_statusbar_item item, ui_statusbar_state state )
       gtk_image_set_from_pixbuf( GTK_IMAGE( microdrive_status ),
                                  pixbuf_mdr_inactive );
       break;
-    }      
+    }
     return 0;
 
   case UI_STATUSBAR_ITEM_TAPE:

@@ -37,4 +37,4 @@ void spec128_select_page( int page );
 
 int spec128_memory_map( void );
 
-#endif			/* #ifndef FUSE_SPEC128_H */
+#endif // #ifndef FUSE_SPEC128_H

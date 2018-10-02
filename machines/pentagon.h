@@ -39,4 +39,4 @@ int pentagon_port_contended( libspectrum_word port );
 void pentagon1024_memoryport_write( libspectrum_word port, libspectrum_byte b );
 void pentagon1024_v22_memoryport_write( libspectrum_word port, libspectrum_byte b );
 
-#endif			/* #ifndef FUSE_PENTAGON_H */
+#endif // #ifndef FUSE_PENTAGON_H

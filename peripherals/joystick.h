@@ -39,7 +39,7 @@ void joystick_register_startup( void );
 typedef enum joystick_type_t {
 
   JOYSTICK_TYPE_NONE = 0,
-  
+
   JOYSTICK_TYPE_CURSOR,
   JOYSTICK_TYPE_KEMPSTON,
   JOYSTICK_TYPE_SINCLAIR_1,
@@ -78,4 +78,4 @@ libspectrum_byte joystick_timex_read ( libspectrum_word port,
 libspectrum_byte joystick_fuller_read ( libspectrum_word port,
 					libspectrum_byte *attached );
 
-#endif			/* #ifndef FUSE_JOYSTICK_H */
+#endif // #ifndef FUSE_JOYSTICK_H

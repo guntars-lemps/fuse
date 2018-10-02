@@ -41,4 +41,4 @@ void mempool_free( int pool );
 int mempool_get_pools( void );
 int mempool_get_pool_size( int pool );
 
-#endif				/* #ifndef FUSE_MEMPOOL_H */
+#endif // #ifndef FUSE_MEMPOOL_H

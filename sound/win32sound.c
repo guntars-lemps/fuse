@@ -56,7 +56,7 @@ sound_callback( HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance,
 int
 sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 {
-  WAVEFORMATEX pcmwf; /* waveformat struct */
+  WAVEFORMATEX pcmwf; // waveformat struct
   MMRESULT result;
 
   /* create wave format description */
@@ -116,7 +116,7 @@ sound_lowlevel_end( void )
     if( result != MMSYSERR_NOERROR )
       sound_display_mmresult( "waveOutUnprepareHeader", result );
   }
-  
+
   if( wavehdr[ 1 ].dwFlags & WHDR_PREPARED ) {
     result = waveOutUnprepareHeader( hwaveout, &wavehdr[ 1 ], sizeof( WAVEHDR ) );
     if( result != MMSYSERR_NOERROR )
@@ -156,7 +156,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 
     bytes = buf8;
   }
-  
+
   if( len > BUFFER_SIZE ) {
     ui_error( UI_ERROR_WARNING, "%s: requested wave size exceeds the buffer size", __func__ );
     return;
@@ -165,18 +165,18 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   /* wait for the buffer to finish playing */
   if( buffer_used[ current_buffer ] > 0 )
     WaitForSingleObject( sem_sound_done, INFINITE );
-  
+
   /* unprepare the header if it's prepared */
   if( wavehdr[ current_buffer ].dwFlags & WHDR_PREPARED ) {
     result = waveOutUnprepareHeader( hwaveout, &wavehdr[ current_buffer ], sizeof( WAVEHDR ) );
     if( result != MMSYSERR_NOERROR )
       sound_display_mmresult( "waveOutUnprepareHeader", result );
   }
-  
+
   /* copy the new wave into the buffer */
   memcpy( buffers[ current_buffer ], bytes, len );
   buffer_used[ current_buffer ] = len;
-  
+
   /* prepare the header */
   wavehdr[ current_buffer ].lpData = ( LPSTR ) bytes;
   wavehdr[ current_buffer ].dwBufferLength = len;
@@ -190,7 +190,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   result = waveOutWrite( hwaveout, &wavehdr[ current_buffer ], sizeof( WAVEHDR ) );
   if( result != MMSYSERR_NOERROR )
     sound_display_mmresult( "waveOutWrite", result );
-  
+
   /* FIXME this could be done way easier */
   current_buffer++;
   if( current_buffer == 2 )

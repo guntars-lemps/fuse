@@ -39,10 +39,10 @@
 #include "xkeyboard.h"
 #include "xui.h"
 
-Display *display;		/* Which display are we connected to */
+Display *display; // Which display are we connected to
 int xui_screenNum;		/* Which screen are we using on our
 				   X server? */
-Window xui_mainWindow;		/* Window ID for the main Fuse window */
+Window xui_mainWindow; // Window ID for the main Fuse window
 
 Cursor nullpointer;
 
@@ -51,7 +51,7 @@ static Atom delete_window_atom;
 int
 ui_init( int *argc, char ***argv )
 {
-  char *displayName=NULL;	/* Use default display */
+  char *displayName=NULL; // Use default display
   XWMHints *wmHints;
   XSizeHints *sizeHints;
   XClassHint *classHint;

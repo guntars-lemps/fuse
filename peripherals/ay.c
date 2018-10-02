@@ -125,7 +125,7 @@ ay_init( void *context )
   periph_register( PERIPH_TYPE_AY_PLUS3, &ay_periph_plus3 );
   periph_register( PERIPH_TYPE_AY_FULL_DECODE, &ay_periph_full_decode );
   periph_register( PERIPH_TYPE_AY_TIMEX, &ay_periph_timex );
-  
+
   debugger_system_variable_register(
     debugger_type_string, current_register_detail_string, get_current_register,
     set_current_register );
@@ -159,7 +159,7 @@ libspectrum_byte
 ay_registerport_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
   int current;
-  const libspectrum_byte port_input = 0xbf; /* always allow serial output */
+  const libspectrum_byte port_input = 0xbf; // always allow serial output
 
   *attached = 0xff;
 

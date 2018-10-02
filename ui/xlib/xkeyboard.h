@@ -27,4 +27,4 @@
 void xkeyboard_keypress(XKeyEvent *event);
 void xkeyboard_keyrelease(XKeyEvent *event);
 
-#endif			/* #ifndef FUSE_XKEYBOARD_H */
+#endif // #ifndef FUSE_XKEYBOARD_H

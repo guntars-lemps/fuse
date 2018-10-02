@@ -39,4 +39,4 @@ extern int xerror_error;
 /* The X error handler */
 int xerror_handler( Display *display, XErrorEvent *error );
 
-#endif			/* #ifndef FUSE_XDISPLAY_H */
+#endif // #ifndef FUSE_XDISPLAY_H

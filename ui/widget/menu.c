@@ -86,8 +86,8 @@ GET_SET_KEY_FUNCTIONS( 12 )
 GET_SET_KEY_FUNCTIONS( 13 )
 GET_SET_KEY_FUNCTIONS( 14 )
 GET_SET_KEY_FUNCTIONS( 15 )
-#endif  /* #ifndef GEKKO */
-#endif  /* #ifdef USE_JOYSTICK */
+#endif // #ifndef GEKKO
+#endif // #ifdef USE_JOYSTICK
 
 #define SUBMENU_KEY_SELECTIONS( which ) \
 \
@@ -173,8 +173,8 @@ SUBMENU_KEY_SELECTIONS( 12 )
 SUBMENU_KEY_SELECTIONS( 13 )
 SUBMENU_KEY_SELECTIONS( 14 )
 SUBMENU_KEY_SELECTIONS( 15 )
-#endif  /* #ifndef GEKKO */
-#endif  /* #ifdef USE_JOYSTICK */
+#endif // #ifndef GEKKO
+#endif // #ifdef USE_JOYSTICK
 
 #ifdef USE_JOYSTICK
 static widget_menu_entry submenu_joystick_buttons[] = {
@@ -195,7 +195,7 @@ static widget_menu_entry submenu_joystick_buttons[] = {
   { "Button 13(\012c\011)", INPUT_KEY_c, submenu_select_key_for_button_13, NULL, get_key_name_for_button_13, 0 },
   { "Button 14(\012d\011)", INPUT_KEY_d, submenu_select_key_for_button_14, NULL, get_key_name_for_button_14, 0 },
   { "Button 15(\012e\011)", INPUT_KEY_e, submenu_select_key_for_button_15, NULL, get_key_name_for_button_15, 0 },
-#else  /* #ifndef GEKKO */
+#else // #ifndef GEKKO
   { "Button \0121\011", INPUT_KEY_1, submenu_select_key_for_button_1, NULL, get_key_name_for_button_1, 0 },
   { "Button \0122\011", INPUT_KEY_2, submenu_select_key_for_button_2, NULL, get_key_name_for_button_2, 0 },
   { "Button \012A\011", INPUT_KEY_a, submenu_select_key_for_button_3, NULL, get_key_name_for_button_3, 0 },
@@ -204,10 +204,10 @@ static widget_menu_entry submenu_joystick_buttons[] = {
   { "Button \012M\011inus", INPUT_KEY_m, submenu_select_key_for_button_6, NULL, get_key_name_for_button_6, 0 },
   { "Button \012Z\011 on Nunchuck", INPUT_KEY_z, submenu_select_key_for_button_7, NULL, get_key_name_for_button_7, 0 },
   { "Button \012C\011 on Nunchuck", INPUT_KEY_c, submenu_select_key_for_button_8, NULL, get_key_name_for_button_8, 0 },
-#endif  /* #ifndef GEKKO */
+#endif // #ifndef GEKKO
   { NULL }
 };
-#endif  /* #ifdef USE_JOYSTICK */
+#endif // #ifdef USE_JOYSTICK
 
 static widget_menu_entry submenu_keyboard_buttons[] = {
   { "Select keyboard key" },
@@ -236,7 +236,7 @@ static widget_menu_entry submenu_type_and_mapping_for_ ## device [] = { \
 
 #ifdef USE_JOYSTICK
 SUBMENU_DEVICE_SELECTIONS( joystick )
-#endif  /* #ifdef USE_JOYSTICK */
+#endif // #ifdef USE_JOYSTICK
 SUBMENU_DEVICE_SELECTIONS( keyboard )
 
 static void
@@ -320,11 +320,11 @@ widget_menu_keyhandler( input_key key )
   switch( key ) {
 
 #if 0
-  case INPUT_KEY_Resize:	/* Fake keypress used on window resize */
+  case INPUT_KEY_Resize: // Fake keypress used on window resize
     widget_menu_draw( menu );
     break;
 #endif
-    
+
   case INPUT_KEY_Escape:
   case INPUT_JOYSTICK_FIRE_2:
     widget_end_widget( WIDGET_FINISHED_CANCEL );
@@ -361,7 +361,7 @@ widget_menu_keyhandler( input_key key )
     }
     break;
 
-  default:	/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }
@@ -540,7 +540,7 @@ menu_options_joysticks_select( int action )
     current_settings[ 15 ] = &( settings_current.joystick_2_fire_15 );
     submenu_type_and_mapping_for_joystick[ 1 ].detail = menu_joystick_2_detail;
     break;
-#endif  /* #ifdef USE_JOYSTICK */
+#endif // #ifdef USE_JOYSTICK
 
   case JOYSTICK_KEYBOARD:
     current_settings[ 0 ] = &( settings_current.joystick_keyboard_output );
@@ -569,13 +569,13 @@ menu_options_joysticks_select( int action )
   }
   submenu_types[ i + 1 ].text = NULL;
 
-  if( action - 1 == JOYSTICK_KEYBOARD ) 
+  if( action - 1 == JOYSTICK_KEYBOARD )
     error = widget_do_menu( submenu_type_and_mapping_for_keyboard );
 
 #ifdef USE_JOYSTICK
   else
     error = widget_do_menu( submenu_type_and_mapping_for_joystick );
-#endif  /* #ifdef USE_JOYSTICK */
+#endif // #ifdef USE_JOYSTICK
 
   if( error ) return;
 }
@@ -746,16 +746,16 @@ set_active( struct widget_menu_entry *menu, const char *path, int active )
       if( *p == 9 || *p == 10 ) p++;
     } while( *p && *p++ == *q++ );
 
-    if( *p ) continue;		/* not matched */
+    if( *p ) continue; // not matched
 
     /* match, but with a submenu */
     if( *q == '/' ) return set_active( menu->submenu, q, active );
 
-    if( *q ) continue;		/* not matched */
+    if( *q ) continue; // not matched
 
     /* we have a match */
     menu->inactive = !active;
-    return 0; 
+    return 0;
   }
 
   return 1;

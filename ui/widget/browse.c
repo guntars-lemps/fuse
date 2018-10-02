@@ -29,9 +29,9 @@
 
 #ifdef HAVE_LIB_GLIB
 #include <glib.h>
-#else				/* #ifdef HAVE_LIB_GLIB */
+#else // #ifdef HAVE_LIB_GLIB
 #include <libspectrum.h>
-#endif				/* #ifdef HAVE_LIB_GLIB */
+#endif // #ifdef HAVE_LIB_GLIB
 
 #include "fuse.h"
 #include "tape.h"
@@ -137,7 +137,7 @@ widget_browse_keyhandler( input_key key )
   switch( key ) {
 
 #if 0
-  case INPUT_KEY_Resize:	/* Fake keypress used on window resize */
+  case INPUT_KEY_Resize: // Fake keypress used on window resize
     widget_browse_draw( NULL );
     break;
 #endif
@@ -157,12 +157,12 @@ widget_browse_keyhandler( input_key key )
       show_blocks();
     }
     break;
-    
+
   case INPUT_KEY_Up:
   case INPUT_KEY_7:
   case INPUT_KEY_k:
   case INPUT_JOYSTICK_UP:
-    if( highlight > 0 ) { 
+    if( highlight > 0 ) {
       highlight--;
       if( highlight < top_line )
 	{
@@ -207,7 +207,7 @@ widget_browse_keyhandler( input_key key )
     widget_end_widget( WIDGET_FINISHED_OK );
     return;
 
-  default:	/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }
@@ -223,11 +223,11 @@ widget_browse_finish( widget_finish_state finished )
     if( highlight != -1 ) tape_select_block( highlight );
     widget_end_all( WIDGET_FINISHED_OK );
   }
-    
+
   return 0;
 }
 
-static void 
+static void
 free_description( gpointer data, gpointer user_data )
 {
   free( data );

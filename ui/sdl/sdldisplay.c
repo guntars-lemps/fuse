@@ -42,8 +42,8 @@
 #include "ui/uidisplay.h"
 #include "utils.h"
 
-SDL_Surface *sdldisplay_gc = NULL;   /* Hardware screen */
-static SDL_Surface *tmp_screen=NULL; /* Temporary screen for scalers */
+SDL_Surface *sdldisplay_gc = NULL; // Hardware screen
+static SDL_Surface *tmp_screen=NULL; // Temporary screen for scalers
 
 static SDL_Surface *red_cassette[2], *green_cassette[2];
 static SDL_Surface *red_mdr[2], *green_mdr[2];
@@ -57,21 +57,21 @@ static int tmp_screen_width;
 static Uint32 colour_values[16];
 
 static SDL_Color colour_palette[] = {
-  {   0,   0,   0,   0 }, 
-  {   0,   0, 192,   0 }, 
-  { 192,   0,   0,   0 }, 
-  { 192,   0, 192,   0 }, 
-  {   0, 192,   0,   0 }, 
-  {   0, 192, 192,   0 }, 
-  { 192, 192,   0,   0 }, 
-  { 192, 192, 192,   0 }, 
-  {   0,   0,   0,   0 }, 
-  {   0,   0, 255,   0 }, 
-  { 255,   0,   0,   0 }, 
-  { 255,   0, 255,   0 }, 
-  {   0, 255,   0,   0 }, 
-  {   0, 255, 255,   0 }, 
-  { 255, 255,   0,   0 }, 
+  {   0,   0,   0,   0 },
+  {   0,   0, 192,   0 },
+  { 192,   0,   0,   0 },
+  { 192,   0, 192,   0 },
+  {   0, 192,   0,   0 },
+  {   0, 192, 192,   0 },
+  { 192, 192,   0,   0 },
+  { 192, 192, 192,   0 },
+  {   0,   0,   0,   0 },
+  {   0,   0, 255,   0 },
+  { 255,   0,   0,   0 },
+  { 255,   0, 255,   0 },
+  {   0, 255,   0,   0 },
+  {   0, 255, 255,   0 },
+  { 255, 255,   0,   0 },
   { 255, 255, 255,   0 }
 };
 
@@ -123,7 +123,7 @@ init_scalers( void )
   scaler_register( SCALER_PALTV );
   scaler_register( SCALER_HQ2X );
   if( machine_current->timex ) {
-    scaler_register( SCALER_HALF ); 
+    scaler_register( SCALER_HALF );
     scaler_register( SCALER_HALFSKIP );
     scaler_register( SCALER_TIMEXTV );
     scaler_register( SCALER_TIMEX1_5X );
@@ -134,7 +134,7 @@ init_scalers( void )
     scaler_register( SCALER_PALTV3X );
     scaler_register( SCALER_HQ3X );
   }
-  
+
   if( scaler_is_supported( current_scaler ) ) {
     scaler_select_scaler( current_scaler );
   } else {
@@ -145,7 +145,7 @@ init_scalers( void )
 static int
 sdl_convert_icon( SDL_Surface *source, SDL_Surface **icon, int red )
 {
-  SDL_Surface *copy;   /* Copy with altered palette */
+  SDL_Surface *copy; // Copy with altered palette
   int i;
 
   SDL_Color colors[ source->format->palette->ncolors ];
@@ -187,7 +187,7 @@ static int
 sdl_load_status_icon( const char*filename, SDL_Surface **red, SDL_Surface **green )
 {
   char path[ PATH_MAX ];
-  SDL_Surface *temp;    /* Copy of image as loaded */
+  SDL_Surface *temp; // Copy of image as loaded
 
   if( utils_find_file_path( filename, path, UTILS_AUXILIARY_LIB ) ) {
     fprintf( stderr, "%s: Error getting path for icons\n", fuse_progname );
@@ -249,7 +249,7 @@ uidisplay_init( int width, int height )
     return 0;
   }
 
-  for( i=0; modes[i]; ++i ); /* count modes */
+  for( i=0; modes[i]; ++i ); // count modes
   if( settings_current.sdl_fullscreen_mode ) {
     if( sscanf( settings_current.sdl_fullscreen_mode, " %dx%d", &mw, &mh ) != 2 ) {
       if( sscanf( settings_current.sdl_fullscreen_mode, " %d", &mn ) == 1 && mn <= i ) {

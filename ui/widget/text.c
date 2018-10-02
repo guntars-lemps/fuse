@@ -29,14 +29,14 @@
 
 #include "widget_internals.h"
 
-char *widget_text_text = NULL;	/* What we return the text in */
+char *widget_text_text = NULL; // What we return the text in
 
-static const char *title;	/* The window title */
+static const char *title; // The window title
 static widget_text_input_allow allow;
 static unsigned int max_length;
 
 #define WIDGET_TEXT_LENGTH 64
-static char text[WIDGET_TEXT_LENGTH];	/* The current entry text */
+static char text[WIDGET_TEXT_LENGTH]; // The current entry text
 
 static int widget_text_draw_text( void );
 static void delete_character( void );
@@ -93,7 +93,7 @@ widget_text_keyhandler( input_key key )
 {
   switch( key ) {
 
-  case INPUT_KEY_BackSpace:	/* Backspace generates DEL which is Caps + 0 */
+  case INPUT_KEY_BackSpace: // Backspace generates DEL which is Caps + 0
     delete_character(); widget_text_draw_text();
     return;
 
@@ -106,7 +106,7 @@ widget_text_keyhandler( input_key key )
     widget_end_widget( WIDGET_FINISHED_OK );
     return;
 
-  default:			/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }
@@ -114,12 +114,12 @@ widget_text_keyhandler( input_key key )
   /* Input validation.
    * We rely on various INPUT_KEY_* being mapped directly onto ASCII.
    */
- 
+
   /* FIXME: we *don't* want keypresses filtered through the input layer */
- 
+
   /* First, return if the character isn't printable ASCII. */
   if( key < ' ' || key > '~' ) return;
- 
+
   /* Return if the key isn't valid. */
   switch( allow ) {
   case WIDGET_INPUT_ASCII:
@@ -134,14 +134,14 @@ widget_text_keyhandler( input_key key )
     if( !isdigit( key ) && !isalpha( key ) ) return;
     break;
   }
-  
+
   /* If we've got this far, we have a valid key */
   append_character( key );
- 
+
   widget_text_draw_text();
 }
 
-static void 
+static void
 delete_character( void )
 {
   size_t length = strlen( text );

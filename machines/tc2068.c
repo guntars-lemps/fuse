@@ -68,7 +68,7 @@ tc2068_ay_dataport_read( libspectrum_word port, libspectrum_byte *attached )
        is returned here and were it isn't. In practice, this doesn't
        matter for the TC2068 as it doesn't have a floating bus, so we'll
        get 0xff in both cases anyway */
-    *attached = 0xff; /* TODO: check this */
+    *attached = 0xff; // TODO: check this
 
     ret =   machine_current->ay.registers[7] & 0x40
 	  ? machine_current->ay.registers[14]
@@ -161,7 +161,7 @@ tc2068_reset( void )
   for( i = 0; i < 8; i++ )
     for( j = 0; j < MEMORY_PAGES_IN_8K; j++ ) {
       memory_page *dock_page, *exrom_page;
-      
+
       dock_page = &timex_dock[i * MEMORY_PAGES_IN_8K + j];
       *dock_page = tc2068_empty_mapping[j];
       dock_page->page_num = i;

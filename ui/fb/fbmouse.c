@@ -97,7 +97,7 @@ fbmouse_init(void)
   /* Try to select plain PS/2 (just in case it's not already selected).
    * Ignore any error.
    */
-  i = -1; /* account for big-endian */
+  i = -1; // account for big-endian
   write( mouse_fd, &i, 1 );
 
   /* Try to set the mouse mode. We prefer ExPS/2 but will accept ImPS/2.
@@ -113,7 +113,7 @@ fbmouse_init(void)
   /* *Now* we want non-blocking I/O... */
   i = 1;
   if( ioctl( mouse_fd, FIONBIO, &i ) )
-    return fbmouse_end(); /* couldn't get it */
+    return fbmouse_end(); // couldn't get it
 
   ui_mouse_present = 1;
   return 0;
@@ -195,7 +195,7 @@ mouse_update( void )
 #endif
 {
   static int btn_state = 0;
-  unsigned char mousebuf[60]; /* max. events: 20 (PS/2) or 15 (other) */
+  unsigned char mousebuf[60]; // max. events: 20 (PS/2) or 15 (other)
   ssize_t xoff = 0, yoff = 0;
   int btn_changed = 0, btn_new = btn_state, btn_mod = btn_state;
 

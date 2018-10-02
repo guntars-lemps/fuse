@@ -43,7 +43,7 @@
 #include "unittests/unittests.h"
 #include "utils.h"
 #include "wd_fdc.h"
-#include "options.h"	/* needed for get combo options */
+#include "options.h" // needed for get combo options
 
 /* Two 8 KiB memory chunks accessible by the Z80 when /ROMCS is low */
 /* One 8 KiB chunk of ROM, one 8 KiB chunk of RAM */
@@ -57,7 +57,7 @@ static memory_page disciple_memory_map_romcs_ram[ MEMORY_PAGES_IN_8K ];
 static int disciple_memory_source_rom;
 static int disciple_memory_source_ram;
 
-int disciple_memswap = 0;        /* Are the ROM and RAM pages swapped? */
+int disciple_memswap = 0; // Are the ROM and RAM pages swapped?
 /* TODO: add support for 16 KiB ROM images. */
 /* int disciple_rombank = 0; */
 int disciple_inhibited;
@@ -379,13 +379,13 @@ disciple_dr_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 static libspectrum_byte
 disciple_joy_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
 
   /* bit 6 - printer busy */
   if( !settings_current.printer )
-    return 0xbf; /* no printer attached */
+    return 0xbf; // no printer attached
 
-  return 0xff;   /* never busy */
+  return 0xff; // never busy
 }
 
 static void
@@ -681,7 +681,7 @@ disciple_to_snapshot( libspectrum_snap *snap )
             disciple_memory_map_romcs_ram[ i ].page, MEMORY_PAGE_SIZE );
   libspectrum_snap_set_disciple_ram( snap, 0, buffer );
 
-  drive_count++; /* Drive 1 is not removable */
+  drive_count++; // Drive 1 is not removable
   if( option_enumerate_diskoptions_drive_disciple2_type() > 0 ) drive_count++;
   libspectrum_snap_set_disciple_drive_count( snap, drive_count );
 

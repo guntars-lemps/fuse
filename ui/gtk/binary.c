@@ -112,7 +112,7 @@ create_binary_dialog( struct binary_info *info, const char *title )
   gtk_grid_attach( GTK_GRID( table ), label_length, 0, 2, 1, 1 );
   gtk_grid_attach( GTK_GRID( table ), info->length_widget, 1, 2, 2, 1 );
 
-#else                /* #if GTK_CHECK_VERSION( 3, 0, 0 ) */
+#else // #if GTK_CHECK_VERSION( 3, 0, 0 )
 
   table = gtk_table_new( 3, 3, FALSE );
   gtk_box_pack_start( GTK_BOX( content_area ), table, TRUE, TRUE, 0 );
@@ -185,7 +185,7 @@ static void
 change_load_filename( GtkButton *button GCC_UNUSED, gpointer user_data )
 {
   struct binary_info *info = user_data;
-  
+
   char *new_filename;
   utils_file new_file;
 
@@ -208,7 +208,7 @@ change_load_filename( GtkButton *button GCC_UNUSED, gpointer user_data )
 
   /* And update the displayed information */
   gtk_label_set_text( GTK_LABEL( info->filename_widget ), new_filename );
-  
+
   snprintf( buffer, 80, "%lu", (unsigned long)info->file.length );
   gtk_entry_set_text( GTK_ENTRY( info->length_widget ), buffer );
 }
@@ -260,7 +260,7 @@ load_data( GtkEntry *entry GCC_UNUSED, gpointer user_data )
 
   gtkui_destroy_widget_and_quit( info->dialog, NULL );
 }
-  
+
 void
 menu_file_savebinarydata( GtkAction *gtk_action GCC_UNUSED,
                           gpointer data GCC_UNUSED )

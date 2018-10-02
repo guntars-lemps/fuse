@@ -53,7 +53,7 @@
 /* The various debugger panes */
 typedef enum debugger_pane {
 
-  DEBUGGER_PANE_BEGIN = 1,	/* Start marker */
+  DEBUGGER_PANE_BEGIN = 1, // Start marker
 
   DEBUGGER_PANE_REGISTERS = DEBUGGER_PANE_BEGIN,
   DEBUGGER_PANE_MEMORYMAP,
@@ -62,7 +62,7 @@ typedef enum debugger_pane {
   DEBUGGER_PANE_STACK,
   DEBUGGER_PANE_EVENTS,
 
-  DEBUGGER_PANE_END		/* End marker */
+  DEBUGGER_PANE_END // End marker
 
 } debugger_pane;
 
@@ -160,18 +160,18 @@ static gboolean delete_dialog( GtkWidget *widget, GdkEvent *event,
 			       gpointer user_data );
 static void gtkui_debugger_done_close( GtkWidget *widget, gpointer user_data );
 
-static GtkWidget *dialog,		/* The debugger dialog box */
-  *continue_button, *break_button,	/* Two of its buttons */
-  *register_display,			/* The register display */
-  *registers[18],			/* Individual registers */
-  *memory_map,				/* The memory map display */
-  *memory_map_table,                    /* The table for the memory map */
-  *map_label[MEMORY_PAGES_IN_64K][4],   /* Labels in the memory map */
-  *breakpoints,				/* The breakpoint display */
-  *disassembly_box,			/* A box to hold the disassembly */
-  *disassembly,				/* The actual disassembly widget */
-  *stack,				/* The stack display */
-  *events;				/* The events display */
+static GtkWidget *dialog, // The debugger dialog box
+  *continue_button, *break_button, // Two of its buttons
+  *register_display, // The register display
+  *registers[18], // Individual registers
+  *memory_map, // The memory map display
+  *memory_map_table, // The table for the memory map
+  *map_label[MEMORY_PAGES_IN_64K][4], // Labels in the memory map
+  *breakpoints, // The breakpoint display
+  *disassembly_box, // A box to hold the disassembly
+  *disassembly, // The actual disassembly widget
+  *stack, // The stack display
+  *events; // The events display
 
 static GtkListStore *breakpoints_model, *disassembly_model, *stack_model,
   *events_model;
@@ -336,7 +336,7 @@ get_pane( debugger_pane pane )
   ui_error( UI_ERROR_ERROR, "unknown debugger pane %u", pane );
   return NULL;
 }
-  
+
 int
 ui_debugger_deactivate( int interruptable )
 {
@@ -445,7 +445,7 @@ create_menu_bar( GtkBox *parent, GtkAccelGroup **accel_group )
   menu_bar = gtk_ui_manager_get_widget( ui_manager_debugger, "/DebuggerMenu" );
 
   gtk_box_pack_start( parent, menu_bar, FALSE, FALSE, 0 );
-  
+
   return 0;
 }
 
@@ -510,7 +510,7 @@ create_register_display( GtkBox *parent, gtkui_font font )
   gtk_grid_set_row_spacing( GTK_GRID( register_display ), 4 );
   gtk_container_set_border_width( GTK_CONTAINER( register_display ), 6 );
 
-#else                /* #if GTK_CHECK_VERSION( 3, 0, 0 ) */
+#else // #if GTK_CHECK_VERSION( 3, 0, 0 )
 
   register_display = gtk_table_new( 9, 2, FALSE );
 
@@ -561,7 +561,7 @@ create_memory_map( GtkBox *parent )
   gtk_grid_attach( GTK_GRID( memory_map_table ), label_writable, 2, 0, 1, 1 );
   gtk_grid_attach( GTK_GRID( memory_map_table ), label_contended, 3, 0, 1, 1 );
 
-#else                /* #if GTK_CHECK_VERSION( 3, 0, 0 ) */
+#else // #if GTK_CHECK_VERSION( 3, 0, 0 )
 
   memory_map_table = gtk_table_new( 1 + MEMORY_PAGES_IN_64K, 4, FALSE );
   gtk_container_add( GTK_CONTAINER( memory_map ), memory_map_table );
@@ -653,7 +653,7 @@ create_stack_display( GtkBox *parent, gtkui_font font )
 {
   size_t i;
   static const gchar *const titles[] = { "Address", "Instruction" };
-  
+
   stack_model =
     gtk_list_store_new( STACK_COLUMN_COUNT, G_TYPE_STRING, G_TYPE_STRING,
 			G_TYPE_INT );
@@ -911,7 +911,7 @@ ui_debugger_update( void )
   for( i = 0, address = SP + 38; i < 20; i++, address -= 2 ) {
 
     GtkTreeIter it;
-    
+
     libspectrum_word contents = readbyte_internal( address ) +
 				0x100 * readbyte_internal( address + 1 );
 
@@ -1172,7 +1172,7 @@ move_disassembly( GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED )
     ui_debugger_disassemble( addresss );
 
   /* disassembly_top - 1 <= value < disassembly_top => 'up' button pressed
-     
+
      The desired state after this is for the current top instruction
      to be the second instruction shown in the disassembly.
 

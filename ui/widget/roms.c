@@ -111,7 +111,7 @@ widget_roms_keyhandler( input_key key )
   switch( key ) {
 
 #if 0
-  case INPUT_KEY_Resize:	/* Fake keypress used on window resize */
+  case INPUT_KEY_Resize: // Fake keypress used on window resize
     widget_roms_draw( NULL );
     break;
 #endif
@@ -125,7 +125,7 @@ widget_roms_keyhandler( input_key key )
     widget_end_all( WIDGET_FINISHED_OK );
     return;
 
-  default:	/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }

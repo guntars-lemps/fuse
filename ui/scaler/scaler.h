@@ -49,7 +49,7 @@ typedef enum scaler_type {
   SCALER_HQ2X,
   SCALER_HQ3X,
 
-  SCALER_NUM		/* End marker; do not remove */
+  SCALER_NUM // End marker; do not remove
 } scaler_type;
 
 typedef enum scaler_flags_t {

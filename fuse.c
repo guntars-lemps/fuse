@@ -365,7 +365,7 @@ static int fuse_init(int argc, char **argv)
 
 #ifdef GEKKO
     // On the Wii, init the display first so we have a way of outputting messages
-    if (display_init(&argc,&argv)) {
+    if (display_init(&argc, &argv)) {
         return 1;
     }
 #endif
@@ -794,7 +794,7 @@ static int parse_nonoption_args(int argc, char **argv, int first_arg, start_file
                break;
 
         }
-        utils_close_file( &file );
+        utils_close_file(&file);
     }
     return 0;
 }

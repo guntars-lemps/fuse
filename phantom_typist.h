@@ -52,4 +52,4 @@ phantom_typist_is_active( void );
 void
 phantom_typist_frame( void );
 
-#endif /* #ifndef FUSE_PHANTOM_TYPIST_H */
+#endif // #ifndef FUSE_PHANTOM_TYPIST_H

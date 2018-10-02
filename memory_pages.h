@@ -37,26 +37,26 @@ const char *memory_source_description( int source );
 int memory_source_find( const char *description );
 
 /* Pre-created memory sources */
-extern int memory_source_rom; /* System ROM */
-extern int memory_source_ram; /* System RAM */
-extern int memory_source_dock; /* Timex DOCK */
-extern int memory_source_exrom; /* Timex EXROM */
-extern int memory_source_any; /* Used by the debugger to signify an absolute address */
-extern int memory_source_none; /* No memory attached here */
+extern int memory_source_rom; // System ROM
+extern int memory_source_ram; // System RAM
+extern int memory_source_dock; // Timex DOCK
+extern int memory_source_exrom; // Timex EXROM
+extern int memory_source_any; // Used by the debugger to signify an absolute address
+extern int memory_source_none; // No memory attached here
 
 typedef struct memory_page {
 
-  libspectrum_byte *page;	/* The data for this page */
-  int writable;			/* Can we write to this data? */
-  int contended;		/* Are reads/writes to this page contended? */
+  libspectrum_byte *page; // The data for this page
+  int writable; // Can we write to this data?
+  int contended; // Are reads/writes to this page contended?
 
-  int source;	                /* Where did this page come from? */
+  int source; // Where did this page come from?
   int save_to_snapshot;         /* Set if this page should be saved snapshots
                                    (set only if this page would not normally be
                                     saved; things like RAM are always saved) */
 
-  int page_num;			/* Which page from the source */
-  libspectrum_word offset;	/* How far into the page this chunk starts */
+  int page_num; // Which page from the source
+  libspectrum_word offset; // How far into the page this chunk starts
 
 } memory_page;
 
@@ -183,11 +183,11 @@ libspectrum_byte readbyte( libspectrum_word address );
 #define readbyte_internal( address ) \
   memory_map_read[ (libspectrum_word)(address) >> MEMORY_PAGE_SIZE_LOGARITHM ].page[ (address) & MEMORY_PAGE_SIZE_MASK ]
 
-#else				/* #ifndef CORETEST */
+#else // #ifndef CORETEST
 
 libspectrum_byte readbyte_internal( libspectrum_word address );
 
-#endif				/* #ifndef CORETEST */
+#endif // #ifndef CORETEST
 
 void writebyte( libspectrum_word address, libspectrum_byte b );
 void writebyte_internal( libspectrum_word address, libspectrum_byte b );
@@ -209,4 +209,4 @@ typedef enum trap_type {
 /* Check whether we're actually in the right ROM when a tape or other traps hit */
 extern int trap_check_rom( trap_type type );
 
-#endif				/* #ifndef FUSE_MEMORY_PAGES_H */
+#endif // #ifndef FUSE_MEMORY_PAGES_H

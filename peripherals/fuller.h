@@ -28,4 +28,4 @@
 
 void fuller_register_startup( void );
 
-#endif				/* #ifndef FUSE_FULLER_H */
+#endif // #ifndef FUSE_FULLER_H

@@ -211,7 +211,7 @@ blip_synth_init( Blip_Synth * synth )
     malloc( ( BLIP_RES * ( BLIP_SYNTH_QUALITY / 2 ) +
               1 ) * sizeof( imp_t ) * 4 );
   if( synth->impulses ) {
-    _blip_synth_init( &synth->impl, ( short * )synth->impulses );       /* sorry, somewhere imp_t, somewhere short ???? */
+    _blip_synth_init( &synth->impl, ( short * )synth->impulses ); // sorry, somewhere imp_t, somewhere short ????
   }
 }
 
@@ -297,7 +297,7 @@ blip_buffer_set_sample_rate( Blip_Buffer * buff, long new_rate, int msec )
 
   blip_buffer_clear( buff, BLIP_BUFFER_DEF_ENTIRE_BUFF );
 
-  return 0;                     /*  success */
+  return 0; // success
 }
 
 blip_resampled_time_t
@@ -403,7 +403,7 @@ gen_sinc( float *out, int count, double oversample, double treble,
     b = 2.0 - cos_angle - cos_angle;
     a = 1.0 - cos_angle - cos_nc_angle + cos_nc1_angle;
 
-    out[i] = ( float )( ( a * d + c * b ) / ( b * d ) );        /*  a / b + c / d */
+    out[i] = ( float )( ( a * d + c * b ) / ( b * d ) ); // a / b + c / d
   }
 }
 
@@ -451,7 +451,7 @@ _blip_synth_adjust_impulse( Blip_Synth_ * synth_ )
     }
 
     if( p == p2 )
-      error /= 2;    /*  phase = 0.5 impulse uses same half for both sides */
+      error /= 2; // phase = 0.5 impulse uses same half for both sides
 
     synth_->impulses[size - BLIP_RES + p] += error;
   }
@@ -487,7 +487,7 @@ _blip_synth_treble_eq( Blip_Synth_ * synth_, blip_eq_t * eq )
 
 /* double const base_unit = 44800.0 - 128 * 18;  allows treble up to +0 dB
    double const base_unit = 37888.0;  allows treble to +5 dB */
-  base_unit = 32768.0;          /*  necessary for blip_unscaled to work */
+  base_unit = 32768.0; // necessary for blip_unscaled to work
   rescale = base_unit / 2 / total;
   synth_->kernel_unit = ( long )base_unit;
 

@@ -110,7 +110,7 @@ struct option
 # define no_argument		0
 # define required_argument	1
 # define optional_argument	2
-#endif	/* need getopt */
+#endif // need getopt
 
 
 /* Get definitions and prototypes for functions to process the
@@ -143,9 +143,9 @@ struct option
    differences in the consts, in stdlib.h.  To avoid compilation
    errors, only prototype getopt for the GNU C library.  */
 extern int getopt (int ___argc, char *const *___argv, const char *__shortopts);
-# else /* not __GNU_LIBRARY__ */
+# else // not __GNU_LIBRARY__
 extern int getopt ();
-# endif /* __GNU_LIBRARY__ */
+# endif // __GNU_LIBRARY__
 
 # ifndef __need_getopt
 extern int getopt_long (int ___argc, char *const *___argv,
@@ -161,7 +161,7 @@ extern int _getopt_internal (int ___argc, char *const *___argv,
 		             const struct option *__longopts, int *__longind,
 			     int __long_only);
 # endif
-#else /* not __STDC__ */
+#else // not __STDC__
 extern int getopt ();
 # ifndef __need_getopt
 extern int getopt_long ();
@@ -169,7 +169,7 @@ extern int getopt_long_only ();
 
 extern int _getopt_internal ();
 # endif
-#endif /* __STDC__ */
+#endif // __STDC__
 
 #ifdef	__cplusplus
 }
@@ -178,4 +178,4 @@ extern int _getopt_internal ();
 /* Make sure we later can get all the definitions and declarations.  */
 #undef __need_getopt
 
-#endif /* getopt.h */
+#endif // getopt.h

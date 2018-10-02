@@ -54,16 +54,16 @@ extern "C" {
 typedef int sfifo_atomic_t;
 #ifdef __TURBOC__
 #	define	SFIFO_MAX_BUFFER_SIZE	0x7fff
-#else /* Kludge: Assume 32 bit platform */
+#else // Kludge: Assume 32 bit platform
 #	define	SFIFO_MAX_BUFFER_SIZE	0x7fffffff
 #endif
 
 typedef struct sfifo_t
 {
 	char *buffer;
-	int size;			/* Number of bytes */
-	sfifo_atomic_t readpos;		/* Read position */
-	sfifo_atomic_t writepos;	/* Write position */
+	int size; // Number of bytes
+	sfifo_atomic_t readpos; // Read position
+	sfifo_atomic_t writepos; // Write position
 } sfifo_t;
 
 #define SFIFO_SIZEMASK(x)	((x)->size - 1)

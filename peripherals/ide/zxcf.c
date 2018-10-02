@@ -2,7 +2,7 @@
    Copyright (c) 2003-2016 Garry Lancaster, Philip Kendall
    Copyright (c) 2015 Stuart Brady
    Copyright (c) 2016 Sergio Baldoví
-		 
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
@@ -115,7 +115,7 @@ zxcf_init( void *context )
   int error, i;
 
   last_memctl = 0x00;
-                                
+
   zxcf_idechn = libspectrum_ide_alloc( LIBSPECTRUM_IDE_DATA16 );
 
   ui_menu_activate( UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT, 0 );
@@ -210,22 +210,22 @@ set_zxcf_bank( int bank )
 
     page = &zxcf_memory_map_romcs[i];
     offset = i * MEMORY_PAGE_SIZE;
-    
+
     page->page = &ZXCFMEM[ bank ][ offset ];
     page->writable = zxcf_writeenable;
     page->contended = 0;
-    
+
     page->page_num = bank;
     page->offset = offset;
   }
-}  
+}
 
 /* Port read/writes */
 
 static libspectrum_byte
 zxcf_memctl_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
 
   return 0xff;
 }
@@ -242,7 +242,7 @@ zxcf_memctl_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 
   /* Bit 6 /MWRPROT: 0=mem protected, 1=mem writable */
   zxcf_writeenable = ( data & 0x40 ) ? 1 : 0;
-  
+
   /* Bits 5-0: MEMBANK */
   set_zxcf_bank( data & 0x3f );
 
@@ -262,19 +262,19 @@ static libspectrum_byte
 zxcf_ide_read( libspectrum_word port, libspectrum_byte *attached )
 {
   libspectrum_ide_register idereg = ( port >> 8 ) & 0x07;
-  
-  *attached = 0xff; /* TODO: check this */
 
-  return libspectrum_ide_read( zxcf_idechn, idereg ); 
+  *attached = 0xff; // TODO: check this
+
+  return libspectrum_ide_read( zxcf_idechn, idereg );
 }
 
 static void
 zxcf_ide_write( libspectrum_word port, libspectrum_byte data )
 {
   libspectrum_ide_register idereg;
-  
+
   idereg = ( port >> 8 ) & 0x07;
-  libspectrum_ide_write( zxcf_idechn, idereg, data ); 
+  libspectrum_ide_write( zxcf_idechn, idereg, data );
 }
 
 static void

@@ -118,7 +118,7 @@ widget_select_keyhandler( input_key key )
   switch( key ) {
 
 #if 0
-  case INPUT_KEY_Resize:	/* Fake keypress used on window resize */
+  case INPUT_KEY_Resize: // Fake keypress used on window resize
     widget_select_draw( NULL );
     break;
 #endif
@@ -166,7 +166,7 @@ widget_select_keyhandler( input_key key )
     }
     break;
 
-  default:	/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }
@@ -175,7 +175,7 @@ widget_select_keyhandler( input_key key )
       ( key >= INPUT_KEY_a && key <= INPUT_KEY_z &&
 	key - INPUT_KEY_a < (ptrdiff_t)count        )
     ) {
-    
+
     /* Remove the old highlight */
     widget_rectangle( menu_left_edge_x * 8 + 1, highlight_line * 8 + 24,
                       width * 8 - 2, 1 * 8, WIDGET_COLOUR_BACKGROUND );
@@ -188,7 +188,7 @@ widget_select_keyhandler( input_key key )
     } else {
       highlight_line = key - INPUT_KEY_a;
     }
-    
+
     widget_rectangle( menu_left_edge_x * 8 + 1, highlight_line * 8 + 24,
                       width * 8 - 2, 1 * 8, WIDGET_COLOUR_HIGHLIGHT );
     print_item( menu_left_edge_x, width, highlight_line, WIDGET_COLOUR_FOREGROUND );

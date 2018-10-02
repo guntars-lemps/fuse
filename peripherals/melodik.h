@@ -26,4 +26,4 @@
 
 void melodik_register_startup( void );
 
-#endif				/* #ifndef FUSE_MELODIK_H */
+#endif // #ifndef FUSE_MELODIK_H

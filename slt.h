@@ -30,4 +30,4 @@ void slt_register_startup( void );
 
 int slt_trap( libspectrum_word address, libspectrum_byte level );
 
-#endif				/* #ifndef FUSE_SLT_H */
+#endif // #ifndef FUSE_SLT_H

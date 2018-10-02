@@ -28,7 +28,7 @@
 #include <string.h>
 #ifdef HAVE_STRINGS_STRCASECMP
 #include <strings.h>
-#endif      /* #ifdef HAVE_STRINGS_STRCASECMP */
+#endif // #ifdef HAVE_STRINGS_STRCASECMP
 
 #include <libspectrum.h>
 
@@ -53,12 +53,12 @@
 static GArray *memory_sources;
 
 /* Some "well-known" memory sources */
-int memory_source_rom; /* System ROM */
-int memory_source_ram; /* System RAM */
-int memory_source_dock; /* Timex DOCK */
-int memory_source_exrom; /* Timex EXROM */
-int memory_source_any; /* Used by the debugger to signify an absolute address */
-int memory_source_none; /* No memory attached here */
+int memory_source_rom; // System ROM
+int memory_source_ram; // System RAM
+int memory_source_dock; // Timex DOCK
+int memory_source_exrom; // Timex EXROM
+int memory_source_any; // Used by the debugger to signify an absolute address
+int memory_source_none; // No memory attached here
 
 /* Each RAM chunk accessible by the Z80 */
 memory_page memory_map_read[MEMORY_PAGES_IN_64K];
@@ -125,7 +125,7 @@ memory_init( void *context )
       page->contended = 0;
       page->source = memory_source_rom;
     }
-    
+
   for( i = 0; i < SPECTRUM_RAM_PAGES; i++ )
     for( j = 0; j < MEMORY_PAGES_IN_16K; j++ ) {
       memory_page *page = &memory_map_ram[i * MEMORY_PAGES_IN_16K + j];
@@ -434,7 +434,7 @@ memory_display_dirty_pentagon_16_col( libspectrum_word address,
      page 5 and 4 (if screen 1 is in use), and page 7 & 6 (if screen 2 is in
      use) and both the standard and ALTDFILE areas of those pages
    */
-  if( mapping->source == memory_source_ram && 
+  if( mapping->source == memory_source_ram &&
       ( ( memory_current_screen  == 5 &&
           ( mapping->page_num == 5 || mapping->page_num == 4 ) ) ||
         ( memory_current_screen  == 7 &&
@@ -457,7 +457,7 @@ memory_display_dirty_sinclair( libspectrum_word address, libspectrum_byte b ) \
 
   /* If this is a write to the current screen (and it actually changes
      the destination), redraw that bit */
-  if( mapping->source == memory_source_ram && 
+  if( mapping->source == memory_source_ram &&
       mapping->page_num == memory_current_screen &&
       ( offset2 & memory_screen_mask ) < 0x1b00 &&
       memory[ offset ] != b )
@@ -471,11 +471,11 @@ writebyte_internal( libspectrum_word address, libspectrum_byte b )
 {
   libspectrum_word bank = address >> MEMORY_PAGE_SIZE_LOGARITHM;
   memory_page *mapping = &memory_map_write[ bank ];
-  
+
   if( spectranet_paged ) {
     /* all writes need to be parsed by the flash rom emulation */
     spectranet_flash_rom_write(address, b);
-    
+
     if( spectranet_w5100_paged_a && address >= 0x1000 && address < 0x2000 ) {
       spectranet_w5100_write( mapping, address, b );
       return;
@@ -508,7 +508,7 @@ memory_romcs_map( void )
 
   /* FIXME: what should we do if more than one of these devices is
      active? What happen in the real situation? e.g. if1+if2 with cartridge?
-     
+
      OK. in the Interface 1 service manual: p.: 1.2 par.: 1.3.1
        All the additional software needed in IC2 (the if1 ROM). IC2 enable
        is discussed in paragraph 1.2.2 above. In addition to control from
@@ -516,11 +516,11 @@ memory_romcs_map( void )
        the (if1's) expansion connector J1. ROMCS2 from (B25), for example,
        Interface 2 connected to J1 would disable both ROM IC2 (if1 ROM) and
        the Spectrum ROM, via isolating diodes D10 and D9 respectively.
-     
+
      All comment in parenthesis added by me (Gergely Szasz).
      The ROMCS2 (B25 conn) in Interface 1 J1 edge connector is in the
      same position than ROMCS (B25 conn) in the Spectrum edge connector.
-     
+
    */
 
   module_romcs();
@@ -672,13 +672,13 @@ int
 trap_check_rom( trap_type type )
 {
   if( plusd_available && plusd_active )
-    return 0;		/* +D must not be active */
+    return 0; // +D must not be active
 
   if( disciple_available && disciple_active )
-    return 0;		/* DISCiPLE must not be active */
+    return 0; // DISCiPLE must not be active
 
   if( opus_available && opus_active )
-    return 0;		/* Opus must not be active */
+    return 0; // Opus must not be active
 
   switch( machine_current->machine ) {
   case LIBSPECTRUM_MACHINE_16:
@@ -686,7 +686,7 @@ trap_check_rom( trap_type type )
   case LIBSPECTRUM_MACHINE_48_NTSC:
   case LIBSPECTRUM_MACHINE_SE:
   case LIBSPECTRUM_MACHINE_TC2048:
-    return 1;		/* Always OK here */
+    return 1; // Always OK here
 
   case LIBSPECTRUM_MACHINE_TC2068:
   case LIBSPECTRUM_MACHINE_TS2068:
@@ -724,7 +724,7 @@ trap_check_rom( trap_type type )
     /* OK if we're in ROM 1 and the Beta disk interface is not active */
     return( machine_current->ram.current_rom == 1 && !beta_active );
 
-  case LIBSPECTRUM_MACHINE_UNKNOWN:	/* should never happen */
+  case LIBSPECTRUM_MACHINE_UNKNOWN: // should never happen
     ui_error( UI_ERROR_ERROR,
               "trap_check_rom: machine type is LIBSPECTRUM_MACHINE_UNKNOWN" );
     fuse_abort();

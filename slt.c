@@ -41,7 +41,7 @@
 static libspectrum_byte *slt[256];
 static size_t slt_length[256];
 
-static libspectrum_byte *slt_screen;	/* The screenshot from the .slt file */
+static libspectrum_byte *slt_screen; // The screenshot from the .slt file
 static int slt_screen_level;		/* The level of the screenshot.
 					   Not used for anything AFAIK */
 
@@ -83,7 +83,7 @@ slt_trap( libspectrum_word address, libspectrum_byte level )
   if( !settings_current.slt_traps ) return 0;
 
   if( slt_length[ level ] ) {
-    
+
     length = slt_length[ level ];
     data = slt[ level ];
 
@@ -142,7 +142,7 @@ slt_to_snapshot( libspectrum_snap *snap )
   }
 
   if( slt_screen ) {
- 
+
     buffer = libspectrum_new( libspectrum_byte, 6912 );
 
     memcpy( buffer, slt_screen, 6912 );

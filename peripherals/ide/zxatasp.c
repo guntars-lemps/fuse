@@ -220,7 +220,7 @@ static void
 zxatasp_reset( int hard_reset GCC_UNUSED )
 {
   if( !settings_current.zxatasp_active ) return;
-  
+
   machine_current->ram.romcs = 1;
 
   set_zxatasp_bank( 0 ); current_page = 0;
@@ -271,8 +271,8 @@ zxatasp_eject( libspectrum_ide_unit unit )
 libspectrum_byte
 zxatasp_portA_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
-  
+  *attached = 0xff; // TODO: check this
+
   return zxatasp_portA;
 }
 
@@ -285,8 +285,8 @@ zxatasp_portA_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 libspectrum_byte
 zxatasp_portB_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
-  
+  *attached = 0xff; // TODO: check this
+
   return zxatasp_portB;
 }
 
@@ -299,8 +299,8 @@ zxatasp_portB_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 libspectrum_byte
 zxatasp_portC_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
-  
+  *attached = 0xff; // TODO: check this
+
   return zxatasp_portC;
 }
 
@@ -309,39 +309,39 @@ zxatasp_portC_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 {
   libspectrum_byte oldC = zxatasp_portC;
   libspectrum_byte newC;
-  
+
   /* Determine new port C value, dependent on I/O modes */
   newC = ( zxatasp_control & MC8255_PORT_C_LOW_IO )
             ? ( oldC & 0x0f ) : ( data & 0x0f );
-            
+
   newC |= ( zxatasp_control & MC8255_PORT_C_HI_IO )
             ? ( oldC & 0xf0 ) : ( data & 0xf0 );
-            
+
   /* Set the new port value */
   zxatasp_portC = newC;
-  
+
   /* No action can occur if high part of port C is in input mode */
   if( zxatasp_control & MC8255_PORT_C_HI_IO ) return;
-  
+
   /* Check for any I/O action */
   if(  ( ZXATASP_READ_PRIMARY( newC ) ) &&
       !( ZXATASP_READ_PRIMARY( oldC ) )   ) {
     zxatasp_readide( zxatasp_idechn0, ( newC & ZXATASP_IDE_REG ) );
     return;
   }
-  
+
   if(  ( ZXATASP_READ_SECONDARY( newC ) ) &&
       !( ZXATASP_READ_SECONDARY( oldC ) )   ) {
     zxatasp_readide( zxatasp_idechn1, ( newC & ZXATASP_IDE_REG ) );
     return;
   }
-  
+
   if(  ( ZXATASP_WRITE_PRIMARY( newC ) ) &&
       !( ZXATASP_WRITE_PRIMARY( oldC ) )   ) {
     zxatasp_writeide( zxatasp_idechn0, ( newC & ZXATASP_IDE_REG ) );
     return;
   }
-  
+
   if(  ( ZXATASP_WRITE_SECONDARY( newC ) ) &&
       !( ZXATASP_WRITE_SECONDARY( oldC ) )   ) {
     zxatasp_writeide( zxatasp_idechn1, ( newC & ZXATASP_IDE_REG ) );
@@ -371,8 +371,8 @@ zxatasp_portC_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
 libspectrum_byte
 zxatasp_control_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
-  
+  *attached = 0xff; // TODO: check this
+
   return zxatasp_control;
 }
 
@@ -389,13 +389,13 @@ zxatasp_control_write( libspectrum_word port GCC_UNUSED, libspectrum_byte data )
     /* Set or reset a bit of port C */
     libspectrum_byte bit = (data >> 1) & 7;
     libspectrum_byte newC = zxatasp_portC;
-      
+
     if( data & 1 ) {
       newC |=  ( 1 << bit );
     } else {
       newC &= ~( 1 << bit );
     }
-    
+
     zxatasp_portC_write( 0, newC );
   }
 }
@@ -427,7 +427,7 @@ set_zxatasp_bank( int bank )
     page->page = &ZXATASPMEM[ bank ][ offset ];
     page->writable = !settings_current.zxatasp_wp;
     page->contended = 0;
-    
+
     page->page_num = bank;
     page->offset = offset;
   }
@@ -440,9 +440,9 @@ zxatasp_readide(libspectrum_ide_channel *chn,
                 libspectrum_ide_register idereg)
 {
   libspectrum_byte dataHi, dataLo;
-  
+
   dataLo = libspectrum_ide_read( chn, idereg );
-  
+
   if( idereg == LIBSPECTRUM_IDE_REGISTER_DATA ) {
     dataHi = libspectrum_ide_read( chn, idereg );
   } else {
@@ -461,9 +461,9 @@ zxatasp_writeide(libspectrum_ide_channel *chn,
 
   dataLo = ( zxatasp_control & MC8255_PORT_A_IO ) ? 0xff : zxatasp_portA;
   dataHi = ( zxatasp_control & MC8255_PORT_B_IO ) ? 0xff : zxatasp_portB;
-  
+
   libspectrum_ide_write( chn, idereg, dataLo );
-  
+
   if( idereg == LIBSPECTRUM_IDE_REGISTER_DATA )
     libspectrum_ide_write( chn, idereg, dataHi );
 }

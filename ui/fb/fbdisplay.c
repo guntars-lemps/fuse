@@ -71,7 +71,7 @@ static void register_scalers( void );
 /* probably 0rrrrrgggggbbbbb */
 static short rgbs[16], greys[16];
 
-static int fb_fd = -1;		/* The framebuffer's file descriptor */
+static int fb_fd = -1; // The framebuffer's file descriptor
 static libspectrum_word *gm = 0;
 
 static struct fb_fix_screeninfo fixed;
@@ -79,7 +79,7 @@ static struct fb_var_screeninfo orig_display, display;
 static int got_orig_display = 0;
 static int changed_palette = 0;
 
-unsigned long fb_resolution; /* == xres << 16 | yres */
+unsigned long fb_resolution; // == xres << 16 | yres
 #define FB_RES(X,Y) ((X) << 16 | (Y))
 #define FB_WIDTH (fb_resolution >> 16)
 #define IF_FB_WIDTH(X) ((fb_resolution >> 16) == (X))
@@ -102,23 +102,23 @@ typedef struct {
  *    x    y  clock   lm  rm  tm  bm   hl  vl  s  d
  */
 static const fuse_fb_mode_t fb_modes_singlescan[] = {
-  { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, /* 640x480-72  72.114 */
-  { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, /* 640x480-60  59.940 std */
-  { 0 } /* end of list */
+  { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, // 640x480-72  72.114
+  { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, // 640x480-60  59.940 std
+  { 0 } // end of list
 };
 static const fuse_fb_mode_t fb_modes_doublescan[] = {
-  { 640, 240, 32052,  92, 56, 14,  4,  40,  3, 0, 1 }, /* 640x240-72  72.185 */
-  { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, /* 640x480-72  72.114 */
-  { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, /* 640x480-60  59.940 std */
-  { 320, 240, 64104,  46, 28, 14,  4,  20,  3, 3, 1 }, /* 320x240-72  72.185 M wide */
-  { 0 } /* end of list */
+  { 640, 240, 32052,  92, 56, 14,  4,  40,  3, 0, 1 }, // 640x240-72  72.185
+  { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, // 640x480-72  72.114
+  { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, // 640x480-60  59.940 std
+  { 320, 240, 64104,  46, 28, 14,  4,  20,  3, 3, 1 }, // 320x240-72  72.185 M wide
+  { 0 } // end of list
 };
 static const fuse_fb_mode_t fb_modes_doublescan_alt[] = {
-  { 640, 240, 39722,  36, 12, 18,  7,  96,  2, 1, 1 }, /* 640x240-60  60.133 AM large */
-  { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, /* 640x480-72  72.114 */
-  { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, /* 640x480-60  59.940 std */
-  { 320, 240, 79444,  18,  6, 18,  7,  48,  2, 1, 1 }, /* 320x240-60  60.133 AM large */
-  { 0 } /* end of list */
+  { 640, 240, 39722,  36, 12, 18,  7,  96,  2, 1, 1 }, // 640x240-60  60.133 AM large
+  { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, // 640x480-72  72.114
+  { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, // 640x480-60  59.940 std
+  { 320, 240, 79444,  18,  6, 18,  7,  48,  2, 1, 1 }, // 320x240-60  60.133 AM large
+  { 0 } // end of list
 };
 /* Modes not used but which may work are listed here.
  *    x    y  clock   lm  rm  tm  bm   hl  vl  s  d
@@ -154,7 +154,7 @@ static void
 register_scalers( void )
 {
   scaler_register_clear();
-  scaler_select_bitformat( 565 );		/* 16bit always */
+  scaler_select_bitformat( 565 ); // 16bit always
   scaler_register( SCALER_NORMAL );
 }
 
@@ -205,7 +205,7 @@ int fbdisplay_init(void)
 
   if( fb_set_mode() ) return 1;
 
-  fputs( "\x1B[H\x1B[J", stdout );	/* clear tty */
+  fputs( "\x1B[H\x1B[J", stdout ); // clear tty
   memset( gm, 0, display.xres_virtual * display.yres_virtual * 2 );
 
 
@@ -241,9 +241,9 @@ int fbdisplay_init(void)
   if ( fixed.visual == FB_VISUAL_DIRECTCOLOR) {
     ioctl( fb_fd, FBIOPUTCMAP, &fb_cmap );
   }
-  sleep( 1 ); /* give the monitor time to sync before we start emulating */
+  sleep( 1 ); // give the monitor time to sync before we start emulating
 
-  fputs( "\x1B[?25l", stdout );		/* hide cursor */
+  fputs( "\x1B[?25l", stdout ); // hide cursor
   fflush( stdout );
 
   return 0;
@@ -292,7 +292,7 @@ fb_select_mode( const fuse_fb_mode_t *fb_mode )
   }
 
   fb_resolution = FB_RES( display.xres, display.yres );
-  return 0;			/* success */
+  return 0; // success
 }
 
 static int
@@ -329,7 +329,7 @@ uidisplay_hotswap_gfx_mode( void )
 }
 
 void
-uidisplay_frame_end( void ) 
+uidisplay_frame_end( void )
 {
   return;
 }
@@ -360,7 +360,7 @@ uidisplay_area( int x, int start, int width, int height)
 	     i < width;
 	     i++, point += 2 )
 	  *  point       = *( point +     display.xres_virtual ) =
-	  *( point + 1 ) = *( point + 1 + display.xres_virtual ) = 
+	  *( point + 1 ) = *( point + 1 + display.xres_virtual ) =
 	    colours[fbdisplay_image[y][x+i]];
 
       }
@@ -419,7 +419,7 @@ uidisplay_area( int x, int start, int width, int height)
     }
     break;
 
-  default:;		/* Shut gcc up */
+  default:; // Shut gcc up
   }
 }
 
@@ -442,7 +442,7 @@ fbdisplay_end( void )
     }
     close( fb_fd );
     fb_fd = -1;
-    fputs( "\x1B[H\x1B[J\x1B[?25h", stdout );	/* clear screen, show cursor */
+    fputs( "\x1B[H\x1B[J\x1B[?25h", stdout ); // clear screen, show cursor
   }
 
   return 0;

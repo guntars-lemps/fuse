@@ -61,7 +61,7 @@ static int z80_ddxx( libspectrum_byte opcode2 );
 static int z80_edxx( libspectrum_byte opcode2 );
 static int z80_fdxx( libspectrum_byte opcode2 );
 static void z80_ddfdcbxx( libspectrum_byte opcode3 );
-#endif				/* #ifndef HAVE_ENOUGH_MEMORY */
+#endif // #ifndef HAVE_ENOUGH_MEMORY
 
 /* Certain features (eg RZX playback trigged interrupts, the debugger,
    TR-DOS ROM paging) can't be handled within the normal 'events'
@@ -97,12 +97,12 @@ enum {
 #define CHECK( label, condition ) goto *cgoto[ pos_##label ]; label:
 #define END_CHECK
 
-#else				/* #ifdef __GNUC__ */
+#else // #ifdef __GNUC__
 
 #define CHECK( label, condition ) if( condition ) {
 #define END_CHECK }
 
-#endif				/* #ifdef __GNUC__ */
+#endif // #ifdef __GNUC__
 
 #ifndef HAVE_ENOUGH_MEMORY
 static libspectrum_byte opcode = 0x00;
@@ -118,7 +118,7 @@ z80_do_opcodes( void )
   libspectrum_byte last_Q;
 
   int even_m1 =
-    machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_EVEN_M1; 
+    machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_EVEN_M1;
 
 #ifdef __GNUC__
 
@@ -136,7 +136,7 @@ z80_do_opcodes( void )
 
 #include "z80_checks.h"
 
-#endif				/* #ifdef __GNUC__ */
+#endif // #ifdef __GNUC__
 
   while( tstates < event_next_event ) {
 
@@ -234,19 +234,19 @@ z80_do_opcodes( void )
     END_CHECK
 
     CHECK( divide_early, settings_current.divide_enabled )
-    
+
     if( ( PC & 0xff00 ) == 0x3d00 ) {
       divide_set_automap( 1 );
     }
-    
+
     END_CHECK
 
     CHECK( divmmc_early, settings_current.divmmc_enabled )
-    
+
     if( ( PC & 0xff00 ) == 0x3d00 ) {
       divmmc_set_automap( 1 );
     }
-    
+
     END_CHECK
 
     CHECK( spectranet_page, spectranet_available && !settings_current.spectranet_disable )
@@ -296,7 +296,7 @@ z80_do_opcodes( void )
       || (PC == 0x0066) || (PC == 0x04c6) || (PC == 0x0562) ) {
       divide_set_automap( 1 );
     }
-    
+
     END_CHECK
 
     CHECK( divmmc_late, settings_current.divmmc_enabled )
@@ -307,7 +307,7 @@ z80_do_opcodes( void )
       || (PC == 0x0066) || (PC == 0x04c6) || (PC == 0x0562) ) {
       divmmc_set_automap( 1 );
     }
-    
+
     END_CHECK
 
     CHECK( opus, opus_available )
@@ -340,8 +340,8 @@ z80_do_opcodes( void )
     CHECK( didaktik80snap, didaktik80_snap )
 
     if( PC == 0x0066 && !didaktik80_active ) {
-      opcode = 0xc7;	/* RST 00 */
-      didaktik80_snap = 0; /* FIXME: this should be a time-based reset */
+      opcode = 0xc7; // RST 00
+      didaktik80_snap = 0; // FIXME: this should be a time-based reset
     }
 
     END_CHECK
@@ -354,8 +354,8 @@ z80_do_opcodes( void )
 
   end_opcode:
     PC++; R++;
-    last_Q = Q; /* keep Q value from previous opcode for SCF and CCF */
-    Q = 0;      /* preempt Q value assuming next opcode doesn't set flags */
+    last_Q = Q; // keep Q value from previous opcode for SCF and CCF
+    Q = 0; // preempt Q value assuming next opcode doesn't set flags
 
     switch(opcode) {
 #include "z80/opcodes_base.c"
@@ -423,4 +423,4 @@ z80_ddfdcbxx( libspectrum_byte opcode3 )
   }
 }
 
-#endif			/* #ifndef HAVE_ENOUGH_MEMORY */
+#endif // #ifndef HAVE_ENOUGH_MEMORY

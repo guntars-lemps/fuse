@@ -31,10 +31,10 @@
 #include <wiiuse/wpad.h>
 
 typedef enum {
-  WII_JOYSTICK_SIDEWAYS_RH, /* sideways config (fire on the right) */
-  WII_JOYSTICK_SIDEWAYS_LH, /* sideways config (fire on the left) */
-  WII_JOYSTICK_NUNCHUK,     /* nunchuk for directions, A+B for fire */
-  WII_JOYSTICK_CLASSIC,     /* classic controller */
+  WII_JOYSTICK_SIDEWAYS_RH, // sideways config (fire on the right)
+  WII_JOYSTICK_SIDEWAYS_LH, // sideways config (fire on the left)
+  WII_JOYSTICK_NUNCHUK, // nunchuk for directions, A+B for fire
+  WII_JOYSTICK_CLASSIC, // classic controller
 } WiiJoystickConfig;
 
 int
@@ -52,11 +52,11 @@ void
 ui_joystick_poll( void )
 {
   input_event_t fuse_event;
-  int ctrlr; /* Which controller */
-  u32 wm_down; /* Wii Remote buttons that are down */
-  u32 wm_up; /* Wii Remote buttons that are up */
-  ubyte nunchuck_down; /* Nunchuck buttons that are down */
-  ubyte nunchuck_up; /* Nunchuck buttons that are up */
+  int ctrlr; // Which controller
+  u32 wm_down; // Wii Remote buttons that are down
+  u32 wm_up; // Wii Remote buttons that are up
+  ubyte nunchuck_down; // Nunchuck buttons that are down
+  ubyte nunchuck_up; // Nunchuck buttons that are up
   WPADData *wpad;
   joystick_t js;
 
@@ -68,7 +68,7 @@ ui_joystick_poll( void )
     fuse_event.types.joystick.button = pressed; \
     input_event(&fuse_event); \
   } while(0)
-  
+
 #define POST_JOYRELEASE(number, pressed) do {	    \
     fuse_event.type = INPUT_EVENT_JOYSTICK_RELEASE; \
     fuse_event.types.joystick.which = number; \
@@ -80,7 +80,7 @@ ui_joystick_poll( void )
 
     wpad = WPAD_Data( ctrlr );
     if( !wpad ) continue;
-  
+
     wm_down = wpad->btns_d;
     wm_up = wpad->btns_u;
 
@@ -90,7 +90,7 @@ ui_joystick_poll( void )
       nunchuck_down = wpad->exp.nunchuk.btns;
       nunchuck_up = wpad->exp.nunchuk.btns_released;
     }
-  
+
     if( wm_down & WPAD_BUTTON_LEFT )
       POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_DOWN );
     if( wm_down & WPAD_BUTTON_RIGHT )
@@ -99,12 +99,12 @@ ui_joystick_poll( void )
       POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_LEFT );
     if( wm_down & WPAD_BUTTON_DOWN )
       POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_RIGHT );
-  
+
     if( wm_down & WPAD_BUTTON_1 )
       POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_FIRE_1 );
     if( wm_down & WPAD_BUTTON_2 )
       POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_FIRE_2 );
-  
+
     if( wm_down & WPAD_BUTTON_A )
       POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_FIRE_3 );
     if( wm_down & WPAD_BUTTON_B )
@@ -117,7 +117,7 @@ ui_joystick_poll( void )
       POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_FIRE_7 );
     if( nunchuck_down & WPAD_NUNCHUK_BUTTON_C )
       POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_FIRE_8 );
-  
+
     if( wm_up & WPAD_BUTTON_LEFT )
       POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_DOWN );
     if( wm_up & WPAD_BUTTON_RIGHT )
@@ -126,12 +126,12 @@ ui_joystick_poll( void )
       POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_LEFT );
     if( wm_up & WPAD_BUTTON_DOWN )
       POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_RIGHT );
-  
+
     if( wm_up & WPAD_BUTTON_1 )
       POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_FIRE_1 );
     if( wm_up & WPAD_BUTTON_2 )
       POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_FIRE_2 );
-  
+
     if( wm_up & WPAD_BUTTON_A )
       POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_FIRE_3 );
     if( wm_up & WPAD_BUTTON_B )
@@ -144,7 +144,7 @@ ui_joystick_poll( void )
       POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_FIRE_7 );
     if( nunchuck_up & WPAD_NUNCHUK_BUTTON_C )
       POST_JOYRELEASE( ctrlr, INPUT_JOYSTICK_FIRE_8 );
-      
+
     if( wpad->exp.type == EXP_NUNCHUK ) {
 
       js = wpad->exp.nunchuk.js;
@@ -161,7 +161,7 @@ ui_joystick_poll( void )
         int right_held = 0;
         int up_held = 0;
         int down_held = 0;
-      	
+
         /* left */
         if( js.ang >= 270-60 && js.ang <= 270+60 ) {
           POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_LEFT );
@@ -182,7 +182,7 @@ ui_joystick_poll( void )
           POST_JOYPRESS( ctrlr, INPUT_JOYSTICK_DOWN );
           down_held = 1;
         }
-        
+
         /* the below prevents an issue when user makes 180 deg circle with
            the nunchuck from for example left to right while mag > 0.5, in
            which case spectrum would get both left and right signal from

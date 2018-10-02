@@ -24,7 +24,7 @@
 #include <config.h>
 
 #include <windows.h>
-#include <windowsx.h> /* for GET_X_LPARAM and GET_Y_LPARAM */
+#include <windowsx.h> // for GET_X_LPARAM and GET_Y_LPARAM
 
 #include "ui/ui.h"
 #include "win32internals.h"
@@ -34,25 +34,25 @@ win32mouse_reset_pointer( void )
 {
   RECT rect;
   POINT point;
-  
+
   GetClientRect( fuse_hWnd, &rect );
 
   point.x = rect.left + 128;
   point.y = rect.top + 128;
 
-  ClientToScreen( fuse_hWnd, &point ); 
-  SetCursorPos( point.x, point.y ); 
+  ClientToScreen( fuse_hWnd, &point );
+  SetCursorPos( point.x, point.y );
 }
 
 void
 win32mouse_position( LPARAM lParam )
 {
   int x,y;
-  
+
   if( !ui_mouse_grabbed ) return;
 
-  x = GET_X_LPARAM( lParam ); 
-  y = GET_Y_LPARAM( lParam ); 
+  x = GET_X_LPARAM( lParam );
+  y = GET_Y_LPARAM( lParam );
 
   if( x != 128 || y != 128 )
     win32mouse_reset_pointer();

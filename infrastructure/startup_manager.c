@@ -25,7 +25,7 @@
 
 #ifdef HAVE_LIB_GLIB
 #include <glib.h>
-#endif				/* #ifdef HAVE_LIB_GLIB */
+#endif // #ifdef HAVE_LIB_GLIB
 
 #include <libspectrum.h>
 
@@ -173,7 +173,7 @@ startup_manager_run_end( void )
 
   for( i = end_functions->len; i-- != 0; )
   {
-    startup_manager_end_fn end_fn = 
+    startup_manager_end_fn end_fn =
       g_array_index( end_functions, startup_manager_end_fn, i );
 
     end_fn();

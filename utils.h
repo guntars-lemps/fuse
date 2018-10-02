@@ -62,4 +62,4 @@ utils_save_binary( libspectrum_word start, libspectrum_word length,
 void utils_networking_init( void );
 void utils_networking_end( void );
 
-#endif			/* #ifndef FUSE_UTILS_H */
+#endif // #ifndef FUSE_UTILS_H

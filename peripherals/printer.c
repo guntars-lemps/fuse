@@ -27,7 +27,7 @@
 /* The ZX Printer support is based on Ian Collier's emulation in xz80.
  * Well, `based' is an understatement, it's almost exactly the same. :-)
  */
-   
+
 #include <config.h>
 
 #include <stdio.h>
@@ -152,7 +152,7 @@ if(!printer_graphics_enabled || !settings_current.printer_graphics_filename)
 /* first, see if there's an existing file we can add to. */
 if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
   {
-  char buf[7+10+1];		/* 7 being length of pbmstart */
+  char buf[7+10+1]; // 7 being length of pbmstart
 
   /* check it has a header in our slightly odd format. */
   if(fread(buf,1,sizeof(buf),tmpf)==sizeof(buf) &&
@@ -161,7 +161,7 @@ if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
     {
     char *ptr=buf+strlen(pbmstart);
     int f,want_space=1;
-    
+
     /* looks good so far, but now we need to check that
      * the height field looks ok. It should be all-spaces
      * until we get a digit, then all-digits.
@@ -171,7 +171,7 @@ if((tmpf=fopen(settings_current.printer_graphics_filename,"rb"))!=NULL)
       /* make sure it's a space or digit */
       if(!strchr(" 0123456789",*ptr))
         break;
-      
+
       if(want_space)
         {
         if(*ptr!=' ')
@@ -351,7 +351,7 @@ for(f=32*8;f<128*8;f++)
 for(x=0;x<32;x++)
   {
   c=-1;
-  
+
   /* try each char */
   for(f=32;f<128 && c==-1;f++)
     {
@@ -368,7 +368,7 @@ for(x=0;x<32;x++)
   /* can't do UDGs, too unreliable */
 
   if(c==-1) c=32;
-  
+
   outbuf[x]=c;
   }
 
@@ -406,9 +406,9 @@ for(i=0;i<32;i++)
     d<<=1;
     d|=(zxpline[i*8+j]?1:0);
     }
-  
+
   *ptr++=d;
-  
+
   fputc(d,printer_graphics_file);
   }
 
@@ -444,7 +444,7 @@ if(!printer_graphics_enabled)
 if(plusd_available)
   return(0xff);
 
-*attached = 0xff; /* TODO: check this */
+*attached = 0xff; // TODO: check this
 
 if(!zxpspeed)
   return 0x3e;
@@ -456,15 +456,15 @@ else
   int sp=zxpnewspeed;
   int x,ans;
   int cpp=440/zxpspeed;
-      
+
   if(frame>400)
     frame=400;
   cycles+=frame*machine_current->timings.tstates_per_frame;
-  x=cycles/cpp-64;        /* x-coordinate reached */
-      
+  x=cycles/cpp-64; // x-coordinate reached
+
   while(x>320)
-    {           /* if we are on another line, */
-    pix=-1;              /* find out where we are */
+    { // if we are on another line,
+    pix=-1; // find out where we are
     x-=384;
     if(sp)
       {
@@ -510,19 +510,19 @@ else
   int cycles=tstates-zxpcycles;
   int i,x;
   int cpp=440/zxpspeed;
-      
+
   if(frame>400)
-    frame=400; /* limit height of blank paper */
+    frame=400; // limit height of blank paper
   cycles+=frame*machine_current->timings.tstates_per_frame;
-  x=cycles/cpp-64;        /* x-coordinate reached */
+  x=cycles/cpp-64; // x-coordinate reached
   for(i=zxppixel;i<x && i<256;i++)
-    if(i>=0)		/* should be, but just in case */
+    if(i>=0) // should be, but just in case
       zxpline[i]=zxpstylus;
   if(x>=256 && zxppixel<256)
     printer_zxp_output_line();
-      
+
   while(x>=320)
-    {          /* move to next line */
+    { // move to next line
     zxpcycles+=cpp*384;
     if(zxpcycles>=machine_current->timings.tstates_per_frame)
       zxpcycles-=machine_current->timings.tstates_per_frame,zxpframes++;
@@ -554,7 +554,7 @@ else
 
     /* this marks the end of a char line or COPY */
     zxplineofchar=0;
-    
+
     /* this is pretty frequent (on a per-char-line basis!),
      * but it's the only time we can really do it automagically.
      */
@@ -573,7 +573,7 @@ else
         zxpnewspeed=0;
       }
     }
-  } 
+  }
 }
 
 
@@ -605,7 +605,7 @@ if(!reading)
     reading=1;
     }
   }
-else /* reading */
+else // reading
   {
   if(bits_to_get)
     {
@@ -614,7 +614,7 @@ else /* reading */
     bits_to_get--;
     if(!bits_to_get)
       {
-      if(ser_byte&0x100)	/* check stop bit is valid */
+      if(ser_byte&0x100) // check stop bit is valid
         printer_text_output_char(ser_byte&0xff);
       reading=0;
       }
@@ -691,11 +691,11 @@ static libspectrum_byte printer_parallel_read(libspectrum_word port GCC_UNUSED,
 if(!settings_current.printer)
   return(0xff);
 
-*attached = 0xff; /* TODO: check this */
+*attached = 0xff; // TODO: check this
 
 /* bit 0 = busy. other bits high? */
 
-return(0xfe);	/* never busy */
+return(0xfe); // never busy
 }
 
 

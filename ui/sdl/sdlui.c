@@ -40,12 +40,12 @@
 
 static void
 atexit_proc( void )
-{ 
+{
   SDL_ShowCursor( SDL_ENABLE );
   SDL_Quit();
 }
 
-int 
+int
 ui_init( int *argc, char ***argv )
 {
   int error;
@@ -62,7 +62,7 @@ ui_init( int *argc, char ***argv )
 
 #ifndef __MORPHOS__
   SDL_EnableUNICODE( 1 );
-#endif				/* #ifndef __MORPHOS__ */
+#endif // #ifndef __MORPHOS__
 
   sdlkeyboard_init();
 
@@ -71,7 +71,7 @@ ui_init( int *argc, char ***argv )
   return 0;
 }
 
-int 
+int
 ui_event( void )
 {
   SDL_Event event;
@@ -96,7 +96,7 @@ ui_event( void )
         ui_mouse_motion( event.motion.x - 128, event.motion.y - 128 );
         if( event.motion.x != 128 || event.motion.y != 128 )
           SDL_WarpMouse( 128, 128 );
-      }	
+      }
       break;
 
 #if defined USE_JOYSTICK && !defined HAVE_JSW_H
@@ -114,7 +114,7 @@ ui_event( void )
       sdljoystick_hatmove( &(event.jhat) );
       break;
 
-#endif			/* if defined USE_JOYSTICK && !defined HAVE_JSW_H */
+#endif // if defined USE_JOYSTICK && !defined HAVE_JSW_H
 
     case SDL_QUIT:
       fuse_emulation_pause();
@@ -137,7 +137,7 @@ ui_event( void )
   return 0;
 }
 
-int 
+int
 ui_end( void )
 {
   int error;

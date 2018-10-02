@@ -31,7 +31,7 @@
 #include <errno.h>
 #ifdef HAVE_LIBGEN_H
 #include <libgen.h>
-#endif				/* #ifdef HAVE_LIBGEN_H */
+#endif // #ifdef HAVE_LIBGEN_H
 #include <string.h>
 #include <ui/ui.h>
 #include <unistd.h>
@@ -89,7 +89,7 @@ utils_open_file( const char *filename, int autoload,
   }
 
   switch( class ) {
-    
+
   case LIBSPECTRUM_CLASS_UNKNOWN:
     ui_error( UI_ERROR_ERROR, "utils_open_file: couldn't identify `%s'",
 	      filename );
@@ -147,7 +147,7 @@ utils_open_file( const char *filename, int autoload,
     }
 
     /* Check that we actually got a Beta capable machine to insert the disk */
-    if( ( machine_current->capabilities & 
+    if( ( machine_current->capabilities &
           LIBSPECTRUM_MACHINE_CAPABILITY_TRDOS_DISK ) ||
         periph_is_active( PERIPH_TYPE_BETA128 ) ) {
       error = beta_disk_insert( BETA_DRIVE_A, filename, autoload );
@@ -217,7 +217,7 @@ utils_open_file( const char *filename, int autoload,
       error = divmmc_insert( filename );
     }
     if( error ) return error;
-    
+
     break;
 
   case LIBSPECTRUM_CLASS_AUXILIARY:
@@ -487,7 +487,7 @@ utils_networking_end( void )
   networking_init_count--;
 
 #ifdef HAVE_SOCKETS
-  
+
   if( !networking_init_count )
     compat_socket_networking_end();
 

@@ -56,11 +56,11 @@ static void possible_click( GtkTreeView *treeview, GtkTreePath *path,
 static int dialog_created = 0;
 
 static GtkWidget
-  *dialog,			/* The dialog box itself */
-  *count_label,			/* The number of possible locations */
-  *location_list;		/* The list view of possible locations */
+  *dialog, // The dialog box itself
+  *count_label, // The number of possible locations
+  *location_list; // The list view of possible locations
 
-static GtkTreeModel *location_model; /* The data of possible locations */
+static GtkTreeModel *location_model; // The data of possible locations
 
 /* The possible locations */
 
@@ -277,7 +277,7 @@ update_pokefinder( void )
 	  possible_page[ which ] = bank;
 	  possible_offset[ which ] = bank_offset;
 	  which++;
-	
+
 	  snprintf( possible_text[0], 128, "%lu", (unsigned long)bank );
 	  snprintf( possible_text[1], 128, "0x%04X", (unsigned)bank_offset );
 
@@ -301,7 +301,7 @@ update_pokefinder( void )
   snprintf( buffer, 256, "Possible locations: %lu",
 	    (unsigned long)pokefinder_count );
   gtk_label_set_text( GTK_LABEL( count_label ), buffer );
-}  
+}
 
 static void
 possible_click( GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,

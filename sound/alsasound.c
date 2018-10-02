@@ -81,7 +81,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   if( init_running )
     return 0;
-  
+
   init_running = 1;
 /* select a default device if we weren't explicitly given one */
 
@@ -115,10 +115,10 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     } else if( ( err = sscanf( option, " verbose %n%c", &n, &tmp ) == 1 ) &&
 		( tmp == ','  || strlen( option ) == n ) ) {
       verb = 1;
-    } else {					/* try as device name */
+    } else { // try as device name
 	while( isspace(*option) )
           option++;
-	if( *option == '\'' )		/* force device... */
+	if( *option == '\'' ) // force device...
 	  option++;
 	pcm_name = option;
 	n = strlen( pcm_name );
@@ -176,9 +176,9 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     init_running = 0;
     return 1;
   }
-  
+
     /* Set sample format */
-  if( snd_pcm_hw_params_set_format( pcm_handle, hw_params, 
+  if( snd_pcm_hw_params_set_format( pcm_handle, hw_params,
 #if defined WORDS_BIGENDIAN
 				    SND_PCM_FORMAT_S16_BE
 #else
@@ -198,7 +198,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 	    < 0 ) {
     fprintf( stderr, "Couldn't set %s to '%s'.\n", pcm_name,
     		    (*stereoptr ? "stereo" : "mono") );
-    ch = *stereoptr ? 1 : 2;		/* try with opposite */
+    ch = *stereoptr ? 1 : 2; // try with opposite
     if( snd_pcm_hw_params_set_channels( pcm_handle, hw_params, ch )
 	    < 0 ) {
       ui_error( UI_ERROR_ERROR, "couldn't set %s to '%s'.", pcm_name,
@@ -208,12 +208,12 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
       init_running = 0;
       return 1;
     }
-    *stereoptr = *stereoptr ? 0 : 1;		/* write back */
+    *stereoptr = *stereoptr ? 0 : 1; // write back
   }
 
-  framesize = ch << 1;			/* we always use 16 bit sorry :-( */
+  framesize = ch << 1; // we always use 16 bit sorry :-(
 /* Set sample rate. If the exact rate is not supported */
-/* by the hardware, use nearest possible rate.         */ 
+/* by the hardware, use nearest possible rate.         */
   exact_rate = *freqptr;
   if( snd_pcm_hw_params_set_rate_near( pcm_handle, hw_params, &exact_rate,
 							NULL ) < 0) {
@@ -225,7 +225,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
   if( first_init && *freqptr != exact_rate ) {
-    fprintf( stderr, 
+    fprintf( stderr,
               "The rate %d Hz is not supported by your hardware. "
               "Using %d Hz instead.\n", *freqptr, exact_rate );
     *freqptr = exact_rate;
@@ -345,7 +345,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     return 1;
   }
 #endif
-  
+
   if( ( err = snd_pcm_sw_params( pcm_handle, sw_params ) ) < 0 ) {
     ui_error( UI_ERROR_ERROR,"couldn't set sw_params on %s: %s", pcm_name,
               snd_strerror ( err ) );
@@ -357,7 +357,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   first_init = 0;
   init_running = 0;
-  return 0;	/* success */
+  return 0; // success
 }
 
 
@@ -366,14 +366,14 @@ void
 sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 {
   int ret = 0;
-  len /= ch;	/* now in frames */
+  len /= ch; // now in frames
 
 /*	to measure sound lag :-)
   snd_pcm_status_t *status;
   snd_pcm_sframes_t delay;
-    
+
   snd_pcm_status_alloca( &status );
-  snd_pcm_status( pcm_handle, status ); 
+  snd_pcm_status( pcm_handle, status );
   delay = snd_pcm_status_get_delay( status );
   fprintf( stderr, "%d ", (int)delay );
 */

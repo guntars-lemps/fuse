@@ -26,7 +26,7 @@
 #ifndef FUSE_SVG_H
 #define FUSE_SVG_H
 
-extern int svg_capture_active;     /* SVG capture enabled? */
+extern int svg_capture_active; // SVG capture enabled?
 
 typedef enum svg_capture_type {
   SVG_CAPTURE_DOTS,
@@ -39,4 +39,4 @@ void svg_stopcapture( void );
 void svg_capture( void );
 void svg_capture_end( void );
 
-#endif				/* #ifndef FUSE_SVG_H */
+#endif // #ifndef FUSE_SVG_H

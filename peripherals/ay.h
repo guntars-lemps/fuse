@@ -43,4 +43,4 @@ void ay_dataport_write( libspectrum_word port, libspectrum_byte b );
 
 void ay_state_from_snapshot( libspectrum_snap *snap );
 
-#endif			/* #ifndef FUSE_AY_H */
+#endif // #ifndef FUSE_AY_H

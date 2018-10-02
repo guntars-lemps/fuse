@@ -1,5 +1,5 @@
 /* enc28j60.c: SpeccyBoot Ethernet emulation
-   
+
    Emulates SPI communication and (a minimal subset of) the
    functionality of the Microchip ENC28J60 Ethernet controller. Refer
    to the ENC28J60 data sheet for details.
@@ -8,25 +8,25 @@
      http://www.microchip.com/wwwproducts/Devices.aspx?dDocName=en022889
 
    Copyright (c) 2009-2015 Patrik Persson, Philip Kendall
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation, Inc.,
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-   
+
    Author contact information:
-   
+
    E-mail: philip-fuse@shadowmagic.org.uk
- 
+
 */
 
 #include <config.h>
@@ -160,7 +160,7 @@ nic_enc28j60_poll( nic_enc28j60_t *self )
 {
   ssize_t n;
 
-  if ( (ECON1(self) & ECON1_RXEN)     /* Ethernet RX enabled? */
+  if ( (ECON1(self) & ECON1_RXEN) // Ethernet RX enabled?
        && self->tap_fd > 0
        && (n = read( self->tap_fd,
                      self->eth_rx_buf + ETH_STATUS_LENGTH,
@@ -177,17 +177,17 @@ nic_enc28j60_poll( nic_enc28j60_t *self )
     if (erxwrpt > erxnd)
       return;
 
-    if ( next_addr > erxnd ) {  /* FIFO wrap-around? */  
+    if ( next_addr > erxnd ) {  /* FIFO wrap-around? */
       libspectrum_word first_part = (erxnd - erxwrpt) + 1;
 
       next_addr = (next_addr - erxnd) + erxst;
-          
+
       self->eth_rx_buf[ ETH_STATUS_NEXT_LO ] = LOBYTE( next_addr );
       self->eth_rx_buf[ ETH_STATUS_NEXT_HI ] = HIBYTE( next_addr );
-      
+
       memcpy( self->sram + erxwrpt, self->eth_rx_buf, first_part );
       memcpy( self->sram + erxst, self->eth_rx_buf + first_part, total_length - first_part );
-    } else {         
+    } else {
       self->eth_rx_buf[ ETH_STATUS_NEXT_LO ] = LOBYTE( next_addr );
       self->eth_rx_buf[ ETH_STATUS_NEXT_HI ] = HIBYTE( next_addr );
 
@@ -204,20 +204,20 @@ nic_enc28j60_poll( nic_enc28j60_t *self )
 static void
 perform_side_effects_for_write( nic_enc28j60_t *self )
 {
-  if ( ECON1(self) & ECON1_TXRTS ) {     /* TXRTS: transmission request */
+  if ( ECON1(self) & ECON1_TXRTS ) { // TXRTS: transmission request
     libspectrum_word frame_start = (GET_PTR_REG(self, ETXST) & 0x1fff) + 1;
     libspectrum_word frame_end   = GET_PTR_REG(self, ETXND) & 0x1fff;
 
     if ( frame_end > frame_start && self->tap_fd >= 0) {
       ssize_t length = (frame_end - frame_start) + 1;
       if ( write( self->tap_fd, self->sram + frame_start, length ) != length )
-        self->tap_fd = -1; /* write failed: disable TAP */
+        self->tap_fd = -1; // write failed: disable TAP
     }
 
     ECON1(self) &= ~ECON1_TXRTS;
   }
 
-  if ( ECON2(self) & ECON2_PKTDEC ) {    /* PKTDEC: decrease EPKTCNT */
+  if ( ECON2(self) & ECON2_PKTDEC ) { // PKTDEC: decrease EPKTCNT
     --EPKTCNT(self);
     ECON2(self) &= ~ECON2_PKTDEC;
   }
@@ -237,7 +237,7 @@ nic_enc28j60_reset( nic_enc28j60_t *self )
 
   memset( self->registers, 0, sizeof( self->registers ) );
 
-  MIRDH(self) = PHSTAT2_HI_LSTAT;  /* Assume PHSTAT2 is mapped to MIRDH */
+  MIRDH(self) = PHSTAT2_HI_LSTAT; // Assume PHSTAT2 is mapped to MIRDH
   ESTAT(self) = ESTAT_CLKRDY;
 }
 
@@ -249,7 +249,7 @@ nic_enc28j60_spi_produce_bit( nic_enc28j60_t *self )
 
   libspectrum_word erdpt = GET_PTR_REG(self, ERDPT);
 
-  if ( self->miso_valid_bits-- == 0 ) {  /* Load another byte */
+  if ( self->miso_valid_bits-- == 0 ) { // Load another byte
     switch ( self->spi_state ) {
 
     case SPI_RCR:
@@ -268,7 +268,7 @@ nic_enc28j60_spi_produce_bit( nic_enc28j60_t *self )
       break;
     }
 
-    self->miso_valid_bits = 7;  /* 8 bits in total, one shifted out below */
+    self->miso_valid_bits = 7; // 8 bits in total, one shifted out below
   }
 
   bit = self->miso_bits & 0x80 ? 1 : 0;
@@ -294,7 +294,7 @@ nic_enc28j60_spi_consume_bit( nic_enc28j60_t *self, int bit )
       if ( self->spi_state == SPI_SRC )
         nic_enc28j60_reset( self );
 
-      self->curr_register = (self->mosi_bits & 0x1f);    
+      self->curr_register = (self->mosi_bits & 0x1f);
       self->curr_register_bank = (self->curr_register >= 0x1b) ? 0 : (ECON1(self) & 0x03);
       break;
 
@@ -305,7 +305,7 @@ nic_enc28j60_spi_consume_bit( nic_enc28j60_t *self, int bit )
       break;
 
     case SPI_WBM:
-      self->sram[ ewrpt++ ] = self->mosi_bits;      /* Assume ECON2:AUTOINC to be set */
+      self->sram[ ewrpt++ ] = self->mosi_bits; // Assume ECON2:AUTOINC to be set
       SET_PTR_REG( self, EWRPT, ewrpt );
       break;
 

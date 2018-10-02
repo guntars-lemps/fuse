@@ -223,6 +223,6 @@ typedef struct blip_eq_s {
 
 #define BLIP_SYNTH_QUALITY BLIP_GOOD_QUALITY
 #define BLIP_SYNTH_RANGE BLIP_UNSCALED
-#define BLIP_SYNTH_WIDTH BLIP_SYNTH_QUALITY    /* `quality' of synth as `width' of synth_ */
+#define BLIP_SYNTH_WIDTH BLIP_SYNTH_QUALITY // `quality' of synth as `width' of synth_
 
 #endif

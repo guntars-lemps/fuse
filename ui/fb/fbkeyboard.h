@@ -33,4 +33,4 @@ int fbkeyboard_end(void);
 
 void keyboard_update(void);
 
-#endif			/* #ifndef FUSE_FBKEYBOARD_H */
+#endif // #ifndef FUSE_FBKEYBOARD_H

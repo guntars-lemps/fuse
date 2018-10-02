@@ -32,4 +32,4 @@ void profile_map( libspectrum_word pc );
 void profile_frame( libspectrum_dword frame_length );
 void profile_finish( const char *filename );
 
-#endif			/* #ifndef FUSE_PROFILE_H */
+#endif // #ifndef FUSE_PROFILE_H

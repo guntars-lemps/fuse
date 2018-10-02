@@ -85,7 +85,7 @@ widget_about_keyhandler( input_key key )
     widget_end_widget( WIDGET_FINISHED_OK );
     return;
 
-  default:	/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }

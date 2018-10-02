@@ -1,23 +1,23 @@
 /* am29f010.c 1Mbit flash chip emulation
-   
+
    Emulates the AMD 29F010 flash chip
 
    Copyright (c) 2011-2015 Guesser, Philip Kendall
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation, Inc.,
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
+
 */
 
 #include <config.h>
@@ -28,8 +28,8 @@
 #include "fuse.h"
 #include "ui/ui.h"
 
-#define SIZE_OF_FLASH_ROM 0x20000 /* 128kB */
-#define SIZE_OF_FLASH_PAGE 0x4000 /* 16kB */
+#define SIZE_OF_FLASH_ROM 0x20000 // 128kB
+#define SIZE_OF_FLASH_PAGE 0x4000 // 16kB
 
 typedef enum am29f010_flash_state {
   FLASH_STATE_RESET,

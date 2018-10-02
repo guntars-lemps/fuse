@@ -34,9 +34,9 @@ typedef enum didaktik80_drive_number {
   DIDAKTIK80_NUM_DRIVES,
 } didaktik80_drive_number;
 
-extern int didaktik80_available;  /* Is the D80/40 available for use? */
-extern int didaktik80_active;     /* D80/D40 enabled? */
-extern int didaktik80_snap;       /* SNAPshot pressed */
+extern int didaktik80_available; // Is the D80/40 available for use?
+extern int didaktik80_active; // D80/D40 enabled?
+extern int didaktik80_snap; // SNAPshot pressed
 
 void didaktik80_register_startup( void );
 
@@ -49,4 +49,4 @@ fdd_t *didaktik80_get_fdd( didaktik80_drive_number which );
 
 int didaktik80_unittest( void );
 
-#endif                  /* #ifndef FUSE_DIDAKTIK80_H */
+#endif // #ifndef FUSE_DIDAKTIK80_H

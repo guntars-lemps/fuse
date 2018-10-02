@@ -103,9 +103,9 @@ trdos_read_fat( trdos_boot_info_t *info, const libspectrum_byte *sectors,
 
   /* FAT sectors */
   for( i = 0; i < 8; i++ ) {
-    sector = sectors + i * seclen * 2;    /* interleaved */
+    sector = sectors + i * seclen * 2; // interleaved
 
-    /* Note: some TR-DOS versions like 5.04T have a turbo format with 
+    /* Note: some TR-DOS versions like 5.04T have a turbo format with
        sequential sectors: 1, 2, 3, ..., 8, 9, 10, ...
        The SCL/TRD image formats can't specify a format mode and Fuse
        load the sectors as interleaved: 1, 9, 2, 10, 3, ...

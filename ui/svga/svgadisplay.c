@@ -142,9 +142,9 @@ typedef struct svga_mode_t {
 #define SIZE_3x_REGISTER(p,s) if( modes[2].n != -1 && ( p || modes[2].depth > 4 ) ) scaler_register( s )
 
 svga_mode_t modes[] = {
-  { -1, 0, 0, 0, 0, 0, },		/* 320x240 */
-  { -1, 0, 0, 0, 0, 0, },		/* 640x480 */
-  { -1, 0, 0, 0, 0, 0, },		/* 960x720 */
+  { -1, 0, 0, 0, 0, 0, }, // 320x240
+  { -1, 0, 0, 0, 0, 0, }, // 640x480
+  { -1, 0, 0, 0, 0, 0, }, // 960x720
 };
 
 void
@@ -158,8 +158,8 @@ set_mode( int i, int n, vga_modeinfo *inf )
     modes[i].height = inf->height;
     modes[i].colors = inf->colors;
     modes[i].bytesperpixel = inf->bytesperpixel ? inf->bytesperpixel : 1;
-    modes[i].depth = inf->colors == 16 ? 4 : 
-		    ( inf->colors == 256 ? 8 : 
+    modes[i].depth = inf->colors == 16 ? 4 :
+		    ( inf->colors == 256 ? 8 :
 			( inf->colors == 32768 ? 15 :
 			    ( inf->colors == 65536 ? 16 :
 				inf->bytesperpixel == 3 ? 24 : 32 ) ) );
@@ -186,7 +186,7 @@ find_mode( int exact )
 	    ( modes[j].n == -1 ||
 		( ( modes[j].width != w || modes[j].height != h ||
 		    modes[j].depth != 16 ) && (
-			inf->colors == 65536 || 
+			inf->colors == 65536 ||
 			    inf->colors > modes[j].colors ) ) ) ) {
 	    set_mode( j, i, inf );
 	  }
@@ -197,7 +197,7 @@ find_mode( int exact )
 		( ( modes[j].width > inf->width ||
 			     modes[j].height > inf->height ||
 		    modes[j].depth != 16 ) && (
-			inf->colors == 65536 || 
+			inf->colors == 65536 ||
 			    inf->colors > modes[j].colors ) ) ) ) {
 	    set_mode( j, i, inf );
 	  }
@@ -208,7 +208,7 @@ find_mode( int exact )
 		( ( modes[j].width < inf->width ||
 			     modes[j].height < inf->height ||
 		    modes[j].depth != 16 ) && (
-			inf->colors == 65536 || 
+			inf->colors == 65536 ||
 			    inf->colors > modes[j].colors ) ) ) ) {
 	    set_mode( j, i, inf );
 	  }
@@ -252,12 +252,12 @@ svgadisplay_init( void )
   int n0 = -1, n1 = -1, n2 = -1;
   vga_modeinfo *inf;
   vga_init();
-  
-  if( settings_current.svga_modes && 
+
+  if( settings_current.svga_modes &&
 	strcmp( settings_current.svga_modes, "list" ) == 0 ) {
-    fprintf( stderr, 
+    fprintf( stderr,
     "=====================================================================\n"
-    " List of available SVGA modes:\n" 
+    " List of available SVGA modes:\n"
     "---------------------------------------------------------------------\n"
     "  No. width height colors     Normal       Double       Triple\n"
     "---------------------------------------------------------------------\n"
@@ -269,8 +269,8 @@ svgadisplay_init( void )
 		inf->width >= 256 &&
 		inf->height >= 192 ) {
 	  fprintf( stderr, "% 4d  % 5d% 5d    %s   % 4d%%% 4d%%", j, inf->width, inf->height,
-		( inf->colors == 16 ? " 16 " : 
-		    ( inf->colors == 256 ? "256 " : 
+		( inf->colors == 16 ? " 16 " :
+		    ( inf->colors == 256 ? "256 " :
 			( inf->colors == 32768 ? " 32k" :
 			    ( inf->colors == 65536 ? " 64k" : " 16M" ) ) ) ),
 			inf->width  * 100 / DISPLAY_ASPECT_WIDTH,
@@ -298,7 +298,7 @@ svgadisplay_init( void )
   find_mode( 0 );
   find_mode( 1 );
   find_mode( -1 );
-  
+
 
   if( settings_current.svga_modes ) {
     sscanf( settings_current.svga_modes, " %i%*[ ,;/|] %i%*[ ,;/|] %i", &n0, &n1, &n2 );
@@ -307,11 +307,11 @@ svgadisplay_init( void )
     if( n2 > 0 && vga_hasmode( n2 ) ) set_mode( 2, n2, vga_getmodeinfo( n2 ) );
   }
 
-#if 0		/* for debugging */
+#if 0 // for debugging
   for( i = 0; i < 3; i++ ) {
     fprintf( stderr, "svgadisplay_size: %d:", i );
     if( modes[i].n != -1 ) {
-      fprintf( stderr, " %d %dx%d %s (%d)", modes[i].n, modes[i].width, modes[i].height, 
+      fprintf( stderr, " %d %dx%d %s (%d)", modes[i].n, modes[i].width, modes[i].height,
     			vga_getmodename( modes[i].n ), modes[i].depth );
     }
     fprintf( stderr, "\n" );
@@ -358,7 +358,7 @@ svgadisplay_putpixel_15( int x, int y, libspectrum_word *colour )
 {
   libspectrum_word c = *colour;
 
-  *(libspectrum_word *)line_buff_ptr = 
+  *(libspectrum_word *)line_buff_ptr =
 		( c & 0x1f ) + ( ( c >>  1 ) & 0xffe0 );
   line_buff_ptr += 2;
 }
@@ -405,7 +405,7 @@ svgadisplay_allocate_colours4( void )
 /*    Y  =  0.29900 * R + 0.58700 * G + 0.11400 * B */
 
   if( settings_current.bw_tv ) {
-    for( i=0; i<16; i++ ) {	/* grey */
+    for( i=0; i<16; i++ ) { // grey
       red = green = blue = (
 	    rgb_for_4[i * 3    ] * 4822 / 255 +
 	    rgb_for_4[i * 3 + 1] * 9467 / 255 +
@@ -413,7 +413,7 @@ svgadisplay_allocate_colours4( void )
       vga_setpalette( i, red, green, blue );
     }
   } else {
-    for( i=0; i<16; i++ ) {	/* rgb */
+    for( i=0; i<16; i++ ) { // rgb
       red   = rgb_for_4[i * 3    ] * 63 / 255;
       green = rgb_for_4[i * 3 + 1] * 63 / 255;
       blue  = rgb_for_4[i * 3 + 2] * 63 / 255;
@@ -431,7 +431,7 @@ svgadisplay_allocate_colours8( void )
   int red, green, blue;
 
   i = 0;
-  for( r=0; r<4; r++ )		/* rgb232 => 128 */
+  for( r=0; r<4; r++ ) // rgb232 => 128
     for( g=0; g<8; g++ )
       for( b=0; b<4; b++ ) {
         if( settings_current.bw_tv ) {
@@ -450,7 +450,7 @@ svgadisplay_allocate_colours8( void )
 
   return 0;
 }
-  
+
 
 int
 uidisplay_init( int width, int height )
@@ -475,9 +475,9 @@ static void
 register_scalers( void )
 {
   int f = -1;
-  
+
   scaler_register_clear();
-  scaler_select_bitformat( 565 );		/* 16bit always */
+  scaler_select_bitformat( 565 ); // 16bit always
 
   if( machine_current->timex ) {
     SIZE_1x_REGISTER( 0, SCALER_HALF );
@@ -489,7 +489,7 @@ register_scalers( void )
   } else {
     SIZE_1x_REGISTER( 1, SCALER_NORMAL );
     SIZE_1x_REGISTER( 0, SCALER_PALTV );
-    
+
     SIZE_2x_REGISTER( 1, SCALER_DOUBLESIZE );
     SIZE_2x_REGISTER( 0, SCALER_2XSAI );
     SIZE_2x_REGISTER( 0, SCALER_SUPER2XSAI );
@@ -507,7 +507,7 @@ register_scalers( void )
     SIZE_3x_REGISTER( 0, SCALER_HQ3X );
   }
   if( current_scaler != SCALER_NUM )
-    f = 4.0 * scaler_get_scaling_factor( current_scaler ) * 
+    f = 4.0 * scaler_get_scaling_factor( current_scaler ) *
 	    ( machine_current->timex ? 2 : 1 );
   if( scaler_is_supported( current_scaler ) &&
 	( svgadisplay_current_size * 4 == f ) ) {
@@ -560,7 +560,7 @@ uidisplay_hotswap_gfx_mode( void )
   scaled_image_w = image_width  * image_scale >> 2;
   scaled_image_h = image_height * image_scale >> 2;
 
-  if( svgadisplay_current_size * 4 != 
+  if( svgadisplay_current_size * 4 !=
 	image_scale * ( machine_current->timex ? 2 : 1 ) ) {
     svgadisplay_current_size = ( image_scale * ( machine_current->timex ? 2 : 1 ) ) >> 2;
     svgadisplay_setmode( svgadisplay_current_size - 1 );
@@ -624,7 +624,7 @@ svgadisplay_update_rect_scale( int x, int y, int w, int h )
 
   w = w * image_scale >> 2;
   h = h * image_scale >> 2;
-  
+
   if( xclip || yclip ) {
     if( x < xclip ) w -= xclip - x, x = xclip;
     if( y < yclip ) h -= yclip - y, y = yclip;
@@ -642,7 +642,7 @@ svgadisplay_update_rect_scale( int x, int y, int w, int h )
 }
 
 void
-uidisplay_frame_end( void ) 
+uidisplay_frame_end( void )
 {
   SVGA_Rect *r, *last_rect;
 

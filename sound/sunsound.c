@@ -87,8 +87,8 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 	}
 
 	AUDIO_INITINFO(&ai);
-	
-	ai.play.encoding = AUDIO_ENCODING_LINEAR;	
+
+	ai.play.encoding = AUDIO_ENCODING_LINEAR;
 	ai.play.precision = 16;
 	sixteenbit = 1;
 	if (settings_current.sound_force_8bit ||
@@ -180,7 +180,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 	unsigned char *data8=(unsigned char *)data;
 	int ret=0, ofs=0;
 
-	len <<= 1;		/* now in bytes */
+	len <<= 1; // now in bytes
 
 	if (!sixteenbit) {
 		libspectrum_signed_word *src;
@@ -193,7 +193,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 			*dst++ = 128 + (int)((*src++)/256);
 
 		data8 = buf8;
-	}	
+	}
 
 	while (len) {
 		ret = write (soundfd, data8 + ofs, len);
@@ -204,5 +204,5 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
 	}
 }
 
-#endif		/* #if defined AUDIO_SETINFO || defined HAVE_SYS_AUDIOIO_H */
+#endif // #if defined AUDIO_SETINFO || defined HAVE_SYS_AUDIOIO_H
 

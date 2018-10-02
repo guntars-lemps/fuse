@@ -40,7 +40,7 @@ struct binary_info {
   utils_file file;
 
   TCHAR *dialog_title;
-  
+
   void (*on_change_filename)( HWND hwndDlg, LONG_PTR user_data );
   void (*on_execute)( HWND hwndDlg, LONG_PTR user_data );
 };
@@ -59,7 +59,7 @@ menu_file_loadbinarydata( int action )
 {
   /* FIXME: a way to associate a long type with a window is via SetWindowLong
             with GWL_USERDATA parameter - review past code and implement */
-  
+
   struct binary_info info;
 
   int error;
@@ -67,7 +67,7 @@ menu_file_loadbinarydata( int action )
   fuse_emulation_pause();
 
   info.dialog_title = (TCHAR *) TEXT( "Fuse - Load Binary Data" );
-  
+
   info.filename = ui_get_open_filename( info.dialog_title );
   if( !info.filename ) { fuse_emulation_unpause(); return; }
 
@@ -90,8 +90,8 @@ menu_file_loadbinarydata( int action )
 static INT_PTR CALLBACK
 binarydata_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-  struct binary_info *info = NULL;  
-  
+  struct binary_info *info = NULL;
+
   switch( uMsg ) {
     case WM_INITDIALOG: {
       TCHAR buffer[80];
@@ -99,7 +99,7 @@ binarydata_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 
       /* save the pointer to info with this dialog window */
       SetWindowLongPtr( hwndDlg, GWLP_USERDATA, ( LONG_PTR ) info );
-                          
+
       SendMessage( hwndDlg, WM_SETTEXT, 0, ( LPARAM ) info->dialog_title );
 
       SendDlgItemMessage( hwndDlg, IDC_BINARY_STATIC_PATH, WM_SETTEXT,
@@ -141,7 +141,7 @@ static void
 change_load_filename( HWND hwndDlg, LONG_PTR user_data )
 {
   struct binary_info *info = ( struct binary_info * ) user_data;
-  
+
   TCHAR *new_filename;
   utils_file new_file;
 
@@ -240,7 +240,7 @@ load_data( HWND hwndDlg, LONG_PTR user_data )
 
   EndDialog( hwndDlg, 0 );
 }
-  
+
 void
 menu_file_savebinarydata( int action )
 {
@@ -253,7 +253,7 @@ menu_file_savebinarydata( int action )
   info.filename = ui_get_save_filename( info.dialog_title );
   if( !info.filename ) { fuse_emulation_unpause(); return; }
 
-  info.file.length = -1; /* let the dialog know to leave length box blank */
+  info.file.length = -1; // let the dialog know to leave length box blank
   info.on_change_filename = &change_save_filename;
   info.on_execute = &save_data;
 

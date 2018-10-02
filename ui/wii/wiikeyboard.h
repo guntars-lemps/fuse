@@ -33,4 +33,4 @@ int wiikeyboard_end( void );
 
 void keyboard_update( void );
 
-#endif			/* #ifndef FUSE_WIIKEYBOARD_H */
+#endif // #ifndef FUSE_WIIKEYBOARD_H

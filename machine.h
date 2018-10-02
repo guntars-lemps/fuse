@@ -57,15 +57,15 @@ typedef struct machine_timings {
 
 typedef struct fuse_machine_info {
 
-  libspectrum_machine machine; /* which machine type is this? */
-  const char *id;	/* Used to select from command line */
-  int capabilities;	/* Capabilities of this machine */
+  libspectrum_machine machine; // which machine type is this?
+  const char *id; // Used to select from command line
+  int capabilities; // Capabilities of this machine
 
-  int (*reset)(void);	/* Reset function */
+  int (*reset)(void); // Reset function
 
-  int timex;      /* Timex machine (keyboard emulation/loading sounds etc.) */
+  int timex; // Timex machine (keyboard emulation/loading sounds etc.)
 
-  machine_timings timings; /* How long do things take to happen? */
+  machine_timings timings; // How long do things take to happen?
   /* Redraw line y this many tstates after interrupt */
   libspectrum_dword line_times[DISPLAY_SCREEN_HEIGHT+1];
 
@@ -76,11 +76,11 @@ typedef struct fuse_machine_info {
 						  from a port which isn't
 						  attached to anything */
 
-  ayinfo ay;		/* The AY-3-8912 chip */
+  ayinfo ay; // The AY-3-8912 chip
 
-  specdrum_info specdrum; /* SpecDrum settings */
+  specdrum_info specdrum; // SpecDrum settings
 
-  covox_info covox; /* Covox settings */
+  covox_info covox; // Covox settings
 
   int (*shutdown)( void );
 
@@ -88,10 +88,10 @@ typedef struct fuse_machine_info {
 
 } fuse_machine_info;
 
-extern fuse_machine_info **machine_types;	/* All available machines */
-extern int machine_count;		/* of which there are this many */
+extern fuse_machine_info **machine_types; // All available machines
+extern int machine_count; // of which there are this many
 
-extern fuse_machine_info *machine_current;	/* The currently selected machine */
+extern fuse_machine_info *machine_current; // The currently selected machine
 
 void machine_register_startup( void );
 
@@ -108,4 +108,4 @@ int machine_load_rom( int page_num, const char *filename, const char *fallback,
 
 int machine_reset( int hard_reset );
 
-#endif			/* #ifndef FUSE_MACHINE_H */
+#endif // #ifndef FUSE_MACHINE_H

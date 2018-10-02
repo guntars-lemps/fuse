@@ -120,7 +120,7 @@ pentagon1024_memoryport_write( libspectrum_word port GCC_UNUSED,
   machine_current->ram.last_byte = b;
   machine_current->memory_map();
 
-  if( machine_current->ram.last_byte2 & 0x04 ) /* v2.2 */
+  if( machine_current->ram.last_byte2 & 0x04 ) // v2.2
     machine_current->ram.locked = b & 0x20;
 }
 
@@ -162,8 +162,8 @@ static int pentagon1024_memory_map( void )
   machine_current->ram.current_rom = rom;
 
   if( machine_current->ram.last_byte2 & 0x08 ) {
-    memory_map_16k( 0x0000, memory_map_ram, 0 );  /* v2.2 */
-    machine_current->ram.special = 1;             /* v2.2 */
+    memory_map_16k( 0x0000, memory_map_ram, 0 ); // v2.2
+    machine_current->ram.special = 1; // v2.2
   } else {
     spec128_select_rom( rom );
   }

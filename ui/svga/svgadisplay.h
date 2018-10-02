@@ -27,4 +27,4 @@
 int svgadisplay_init( void );
 int svgadisplay_end( void );
 
-#endif			/* #ifndef FUSE_SVGADISPLAY_H */
+#endif // #ifndef FUSE_SVGADISPLAY_H

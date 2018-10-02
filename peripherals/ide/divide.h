@@ -46,4 +46,4 @@ int divide_eject( libspectrum_ide_unit unit );
 
 int divide_unittest( void );
 
-#endif			/* #ifndef FUSE_DIVIDE_H */
+#endif // #ifndef FUSE_DIVIDE_H

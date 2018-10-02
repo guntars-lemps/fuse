@@ -34,10 +34,10 @@
 /* same as for SDL Sound */
 #define MAX_AUDIO_BUFFER 8192*5
 
-static LPDIRECTSOUND lpDS; /* DirectSound object */
-static LPDIRECTSOUNDBUFFER lpDSBuffer; /* sound buffer */
+static LPDIRECTSOUND lpDS; // DirectSound object
+static LPDIRECTSOUNDBUFFER lpDSBuffer; // sound buffer
 
-static DWORD nextpos; /* next position in circular buffer */
+static DWORD nextpos; // next position in circular buffer
 
 static int sixteenbit;
 
@@ -45,8 +45,8 @@ int
 sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 {
 
-  WAVEFORMATEX pcmwf; /* waveformat struct */ 
-  DSBUFFERDESC dsbd; /* buffer description */
+  WAVEFORMATEX pcmwf; /* waveformat struct */
+  DSBUFFERDESC dsbd; // buffer description
 
   /* Initialize COM */
   CoInitialize(NULL);
@@ -59,15 +59,15 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     CoUninitialize();
     return 1;
   }
-  
-  /* initialize it */    
+
+  /* initialize it */
   if( IDirectSound_Initialize( lpDS, NULL ) != DS_OK ) {
     settings_current.sound = 0;
     ui_error( UI_ERROR_ERROR, "Couldn't initialize DirectSound." );
     CoUninitialize();
     return 1;
   }
-  
+
   /* set normal cooperative level */
   if( IDirectSound_SetCooperativeLevel( lpDS, GetDesktopWindow(),
 					DSSCL_NORMAL ) != DS_OK ) {
@@ -77,7 +77,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     CoUninitialize();
     return 1;
   }
-  
+
   /* create wave format description */
   memset( &pcmwf, 0, sizeof( WAVEFORMATEX ) );
 
@@ -101,13 +101,13 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   memset( &dsbd, 0, sizeof( DSBUFFERDESC ) );
   dsbd.dwBufferBytes = MAX_AUDIO_BUFFER;
 
-  dsbd.dwFlags = DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLVOLUME | 
+  dsbd.dwFlags = DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLVOLUME |
                  DSBCAPS_CTRLFREQUENCY | DSBCAPS_STATIC | DSBCAPS_LOCSOFTWARE;
 
   dsbd.dwSize = sizeof( DSBUFFERDESC );
   dsbd.lpwfxFormat = &pcmwf;
-  
-  /* attempt to create the buffer */  
+
+  /* attempt to create the buffer */
   if( IDirectSound_CreateSoundBuffer( lpDS, &dsbd, &lpDSBuffer, NULL )
       != DS_OK ) {
     settings_current.sound = 0;
@@ -116,7 +116,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     CoUninitialize();
     return 1;
   }
-  
+
   /* play buffer */
   if( IDirectSoundBuffer_Play( lpDSBuffer, 0, 0, DSBPLAY_LOOPING ) != DS_OK ) {
     settings_current.sound = 0;
@@ -129,7 +129,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   nextpos = 0;
 
-  return 0;      
+  return 0;
 }
 
 void
@@ -182,7 +182,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
                                   (void **)&ucbuffer1, &length1,
                                   (void **)&ucbuffer2, &length2,
                                   0 );
-    if( hres != DS_OK ) return; /* couldn't get a lock on the buffer */
+    if( hres != DS_OK ) return; // couldn't get a lock on the buffer
 
     /* write to the first part of buffer */
     for( i1 = 0; i1 < length1 && len > 0; i1++ ) {

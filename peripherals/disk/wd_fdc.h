@@ -35,14 +35,14 @@
 
 /* Status register bits */
 enum {
-  WD_FDC_SR_MOTORON = 1<<7, /* Motor on or READY */
-  WD_FDC_SR_WRPROT  = 1<<6, /* Write-protect */
-  WD_FDC_SR_SPINUP  = 1<<5, /* Record type / Spin-up complete */
-  WD_FDC_SR_RNF     = 1<<4, /* Record Not Found or SEEK Error */
-  WD_FDC_SR_CRCERR  = 1<<3, /* CRC error */
-  WD_FDC_SR_LOST    = 1<<2, /* Lost data or TRACK00 */
-  WD_FDC_SR_IDX_DRQ = 1<<1, /* Index pulse / Data request */
-  WD_FDC_SR_BUSY    = 1<<0  /* Busy (command under execution) */
+  WD_FDC_SR_MOTORON = 1<<7, // Motor on or READY
+  WD_FDC_SR_WRPROT  = 1<<6, // Write-protect
+  WD_FDC_SR_SPINUP  = 1<<5, // Record type / Spin-up complete
+  WD_FDC_SR_RNF     = 1<<4, // Record Not Found or SEEK Error
+  WD_FDC_SR_CRCERR  = 1<<3, // CRC error
+  WD_FDC_SR_LOST    = 1<<2, // Lost data or TRACK00
+  WD_FDC_SR_IDX_DRQ = 1<<1, // Index pulse / Data request
+  WD_FDC_SR_BUSY    = 1<<0 // Busy (command under execution)
 };
 
 /* Configuration flags (interface-specific) */
@@ -72,23 +72,23 @@ typedef enum wd_type_t {
 typedef struct wd_fdc {
   fdd_t *current_drive;
 
-  wd_type_t type;	/* WD1770, FD1793, WD1772, WD1773, WD2797 */
+  wd_type_t type; // WD1770, FD1793, WD1772, WD1773, WD2797
 
   int rates[ 4 ];
   int spin_cycles;
-  fdd_dir_t direction;	/* 0 = spindlewards, 1 = rimwards */
-  int dden;		/* SD/DD -> FM/MFM */
-  int intrq;		/* INTRQ line status */
-  int datarq;		/* DRQ line status */
-  int head_load;	/* WD1773/FD1793 */
-  int hlt;		/* WD1773/FD1793 Head Load Timing input pin */
+  fdd_dir_t direction; // 0 = spindlewards, 1 = rimwards
+  int dden; // SD/DD -> FM/MFM
+  int intrq; // INTRQ line status
+  int datarq; // DRQ line status
+  int head_load; // WD1773/FD1793
+  int hlt; // WD1773/FD1793 Head Load Timing input pin
   int hlt_time;		/* "... When a logic high is found on the HLT input
 			   the head is assumed to be enganged. It is typically
 			   derived from a 1 shot triggered by HLD ..."
 			   if hlt_time > 0 it means trigger time in ms, if = 0
 			   then hlt should be set with wd_fdc_set_hlt()  */
-  unsigned int flags;	/* Configuration flags (interface-specific) */
-  int extra_signal;	/* Extra line for boards with non-standard wiring */
+  unsigned int flags; // Configuration flags (interface-specific)
+  int extra_signal; // Extra line for boards with non-standard wiring
 
   enum wd_fdc_state {
     WD_FDC_STATE_NONE = 0,
@@ -102,7 +102,7 @@ typedef struct wd_fdc {
     WD_FDC_STATE_READID,
   } state;
 
-  int read_id;		/* FDC try to read a DAM */
+  int read_id; // FDC try to read a DAM
 
   enum wd_fdc_status_type {
     WD_FDC_STATUS_TYPE1,
@@ -119,24 +119,24 @@ typedef struct wd_fdc {
   int id_track;
   int id_head;
   int id_sector;
-  int id_length;	/* sector length code 0, 1, 2, 3 */
-  int non_ibm_len_code;	/* WD2797 can use alternative sector len code set */
-  int sector_length;	/* sector length from length code */
-  int ddam;		/* read a deleted data mark */
-  int rev;		/* revolution counter */
+  int id_length; // sector length code 0, 1, 2, 3
+  int non_ibm_len_code; // WD2797 can use alternative sector len code set
+  int sector_length; // sector length from length code
+  int ddam; // read a deleted data mark
+  int rev; // revolution counter
 
   /* state during transfer */
-  int data_check_head;	/* -1 no check, 0/1 wait side 0 or 1 */
+  int data_check_head; // -1 no check, 0/1 wait side 0 or 1
   int data_multisector;
   int data_offset;
 
-  libspectrum_byte command_register;    /* command register */
-  libspectrum_byte status_register;     /* status register */
-  libspectrum_byte track_register;      /* track register */
-  libspectrum_byte sector_register;     /* sector register */
-  libspectrum_byte data_register;       /* data register */
+  libspectrum_byte command_register; // command register
+  libspectrum_byte status_register; // status register
+  libspectrum_byte track_register; // track register
+  libspectrum_byte sector_register; // sector register
+  libspectrum_byte data_register; // data register
 
-  libspectrum_word crc;			/* to hold crc */
+  libspectrum_word crc; // to hold crc
 
   void ( *set_intrq ) ( struct wd_fdc *f );
   void ( *reset_intrq ) ( struct wd_fdc *f );
@@ -169,4 +169,4 @@ void wd_fdc_set_datarq( wd_fdc *f );
 void wd_fdc_reset_datarq( wd_fdc *f );
 void wd_fdc_set_hlt( wd_fdc *f, int hlt );
 
-#endif                  /* #ifndef FUSE_WD_FDC_H */
+#endif // #ifndef FUSE_WD_FDC_H

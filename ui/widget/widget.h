@@ -36,30 +36,30 @@ int widget_end( void );
 /* The various widgets which are available */
 typedef enum widget_type {
 
-  WIDGET_TYPE_FILESELECTOR,	/* File selector (load) */
+  WIDGET_TYPE_FILESELECTOR, // File selector (load)
   WIDGET_TYPE_FILESELECTOR_SAVE,/* File selector (save) */
-  WIDGET_TYPE_GENERAL,		/* General options */
-  WIDGET_TYPE_PICTURE,		/* Keyboard picture */
-  WIDGET_TYPE_ABOUT,		/* About info */
-  WIDGET_TYPE_MENU,		/* General menu */
-  WIDGET_TYPE_SELECT,		/* Select machine */
-  WIDGET_TYPE_MEDIA,		/* Media options */
-  WIDGET_TYPE_SOUND,		/* Sound options */
-  WIDGET_TYPE_ERROR,		/* Error report */
-  WIDGET_TYPE_RZX,		/* RZX options */
-  WIDGET_TYPE_MOVIE,		/* Movie options */
-  WIDGET_TYPE_BROWSE,		/* Browse tape */
-  WIDGET_TYPE_TEXT,		/* Text entry widget */
-  WIDGET_TYPE_DEBUGGER,		/* Debugger widget */
-  WIDGET_TYPE_POKEFINDER,	/* Poke finder widget */
-  WIDGET_TYPE_POKEMEM,  	/* Poke memory widget */
-  WIDGET_TYPE_MEMORYBROWSER,	/* Memory browser widget */
-  WIDGET_TYPE_ROM,		/* ROM selector widget */
-  WIDGET_TYPE_PERIPHERALS_GENERAL, /* General peripherals options */
-  WIDGET_TYPE_PERIPHERALS_DISK, /* Disk peripherals options */
-  WIDGET_TYPE_QUERY,		/* Query (yes/no) */
-  WIDGET_TYPE_QUERY_SAVE,	/* Query (save/don't save/cancel) */
-  WIDGET_TYPE_DISKOPTIONS,	/* Disk options widget */
+  WIDGET_TYPE_GENERAL, // General options
+  WIDGET_TYPE_PICTURE, // Keyboard picture
+  WIDGET_TYPE_ABOUT, // About info
+  WIDGET_TYPE_MENU, // General menu
+  WIDGET_TYPE_SELECT, // Select machine
+  WIDGET_TYPE_MEDIA, // Media options
+  WIDGET_TYPE_SOUND, // Sound options
+  WIDGET_TYPE_ERROR, // Error report
+  WIDGET_TYPE_RZX, // RZX options
+  WIDGET_TYPE_MOVIE, // Movie options
+  WIDGET_TYPE_BROWSE, // Browse tape
+  WIDGET_TYPE_TEXT, // Text entry widget
+  WIDGET_TYPE_DEBUGGER, // Debugger widget
+  WIDGET_TYPE_POKEFINDER, // Poke finder widget
+  WIDGET_TYPE_POKEMEM, // Poke memory widget
+  WIDGET_TYPE_MEMORYBROWSER, // Memory browser widget
+  WIDGET_TYPE_ROM, // ROM selector widget
+  WIDGET_TYPE_PERIPHERALS_GENERAL, // General peripherals options
+  WIDGET_TYPE_PERIPHERALS_DISK, // Disk peripherals options
+  WIDGET_TYPE_QUERY, // Query (yes/no)
+  WIDGET_TYPE_QUERY_SAVE, // Query (save/don't save/cancel)
+  WIDGET_TYPE_DISKOPTIONS, // Disk options widget
 } widget_type;
 
 /* Activate a widget */
@@ -86,8 +86,8 @@ typedef const char* (*widget_menu_detail_callback_fn)( void );
 
 /* A general menu */
 typedef struct widget_menu_entry {
-  const char *text;		/* Menu entry text */
-  input_key key;		/* Which key to activate this widget */
+  const char *text; // Menu entry text
+  input_key key; // Which key to activate this widget
 
   struct widget_menu_entry *submenu;
   widget_menu_callback_fn callback;
@@ -109,7 +109,7 @@ extern char* widget_filesel_name;
 
 /* Select a machine */
 int widget_select_machine( void *data );
-     
+
 /* The error widget data type */
 
 typedef struct widget_error_t {
@@ -267,4 +267,4 @@ static inline int widget_do_diskoptions( void )
   return widget_do( WIDGET_TYPE_DISKOPTIONS, NULL );
 }
 
-#endif				/* #ifndef FUSE_WIDGET_H */
+#endif // #ifndef FUSE_WIDGET_H

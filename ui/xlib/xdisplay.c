@@ -35,18 +35,18 @@
 #include <X11/Xutil.h>
 
 #ifdef HAVE_SIGINFO_H
-#include <siginfo.h>		/* Needed for psignal on Solaris */
-#endif				/* #ifdef HAVE_SIGINFO_H */
+#include <siginfo.h> // Needed for psignal on Solaris
+#endif // #ifdef HAVE_SIGINFO_H
 
 #ifdef HAVE_X11_EXTENSIONS_XSHM_H
 #define X_USE_SHM
-#endif				/* #ifdef HAVE_X11_EXTENSIONS_XSHM_H */
+#endif // #ifdef HAVE_X11_EXTENSIONS_XSHM_H
 
 #ifdef X_USE_SHM
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <X11/extensions/XShm.h>
-#endif				/* #ifdef X_USE_SHM */
+#endif // #ifdef X_USE_SHM
 
 #include <libspectrum.h>
 
@@ -66,16 +66,16 @@
 void xstatusbar_init( int size );
 
 typedef enum {
-  MSB_RED = 0,			/* 0RGB */
-  LSB_RED,			/* 0BGR */
+  MSB_RED = 0, // 0RGB
+  LSB_RED, // 0BGR
 				/* ARGB/ABGR RGBA/BGRA ????*/
 } redmask_t;
 
 static XImage *image = NULL;	/* The image structure to draw the
 				   Speccy's screen on */
-static GC gc;			/* A graphics context to draw with */
+static GC gc; // A graphics context to draw with
 
-Colormap currentMap;		/* The used colormap */
+Colormap currentMap; // The used colormap
 
 /* The size of a 1x1 image in units of
    DISPLAY_ASPECT WIDTH x DISPLAY_SCREEN_HEIGHT
@@ -109,7 +109,7 @@ static int xdisplay_current_size = 1;
 static int xdisplay_depth = -1;
 static Visual *xdisplay_visual = NULL;
 static int xdisplay_bw = -1;
-static redmask_t xdisplay_redpos = MSB_RED;	/* red_mask 0xff000 ...*/
+static redmask_t xdisplay_redpos = MSB_RED; // red_mask 0xff000 ...
 static int rShift = 16, gShift = 8, bShift = 0;
 
 /* This is a rule of thumb for the maximum number of rects that can be updated
@@ -128,7 +128,7 @@ int shm_eventtype;
 
 static int try_shm( void );
 static int get_shm_id( const int size );
-#endif				/* #ifdef X_USE_SHM */
+#endif // #ifdef X_USE_SHM
 
 static int shm_used = 0;
 
@@ -224,15 +224,15 @@ xdisplay_find_visual( void )
              * truecolor visual, or a visual that is 'preferred' over the
              * previous 'best' visual.
              */
-      if( ( sel_v_depth == -1 && vis[i].depth >= 4 ) || /* depth >= 4  */
+      if( ( sel_v_depth == -1 && vis[i].depth >= 4 ) || // depth >= 4
     	  ( vis[i].depth > sel_v_depth &&
-		vis[i].depth <= 16 ) ||			/* depth up to 16 */
+		vis[i].depth <= 16 ) || // depth up to 16
     	  ( vis[i].depth <= 8 && vis[i].depth == sel_v_depth &&
-		vis[i].class != sel_v_class && 
-		    vis[i].class == PseudoColor ) || /* indexed changable palette */
+		vis[i].class != sel_v_class &&
+		    vis[i].class == PseudoColor ) || // indexed changable palette
     	  ( vis[i].depth > 8 && vis[i].depth == sel_v_depth &&
-		vis[i].class != sel_v_class && 
-		    vis[i].class == TrueColor ) /* decomposed constatant colors */
+		vis[i].class != sel_v_class &&
+		    vis[i].class == TrueColor ) // decomposed constatant colors
       ) {
         sel_v = i;
         sel_v_depth = vis[i].depth;
@@ -321,13 +321,13 @@ xdisplay_allocate_colours4( void )
 
   currentMap = DefaultColormap( display, xui_screenNum );
 
-  if( colours_allocated ) {	/* free it */
+  if( colours_allocated ) { // free it
     XFreeColors( display, currentMap, colours, 16, 0x00 );
     colours_allocated = 0;
   }
   if( settings_current.bw_tv ) {
-    for( i=0; i<16; i++ ) {	/* grey */
-      c.red = c.green = c.blue = 
+    for( i=0; i<16; i++ ) { // grey
+      c.red = c.green = c.blue =
 	    rgb_for_4[i * 3    ] * 19595 / 255 +
 	    rgb_for_4[i * 3 + 1] * 38469 / 255 +
 	    rgb_for_4[i * 3 + 2] *  7471 / 255;
@@ -336,7 +336,7 @@ xdisplay_allocate_colours4( void )
       colours[i] = pal_grey[i] = c.pixel;
     }
   } else {
-    for( i=0; i<16; i++ ) {	/* rgb */
+    for( i=0; i<16; i++ ) { // rgb
       c.red   = rgb_for_4[i * 3    ] * 65535 / 255;
       c.green = rgb_for_4[i * 3 + 1] * 65535 / 255;
       c.blue  = rgb_for_4[i * 3 + 2] * 65535 / 255;
@@ -357,13 +357,13 @@ xdisplay_allocate_colours8( void )
   int i, r, g, b;
 
   currentMap = DefaultColormap( display, xui_screenNum );
-  
-  if( colours_allocated ) {	/* free it */
+
+  if( colours_allocated ) { // free it
     XFreeColors( display, currentMap, colours, 128, 0x00 );
     colours_allocated = 0;
   }
   i = 0;
-  for( r=0; r<4; r++ )		/* rgb232 => 128 */
+  for( r=0; r<4; r++ ) // rgb232 => 128
     for( g=0; g<8; g++ )
       for( b=0; b<4; b++ ) {
         if( settings_current.bw_tv ) {
@@ -383,7 +383,7 @@ xdisplay_allocate_colours8( void )
 
   return 0;
 }
-  
+
 static int
 xdisplay_allocate_gc( Window window, GC *new_gc )
 {
@@ -407,7 +407,7 @@ xdisplay_allocate_image( void )
 
 #ifdef X_USE_SHM
   shm_used = try_shm();
-#endif				/* #ifdef X_USE_SHM */
+#endif // #ifdef X_USE_SHM
 
   /* If SHM isn't available, or we're not using it for some reason,
      just get a normal image */
@@ -433,23 +433,23 @@ xdisplay_allocate_image( void )
   }
   if( image ) {
     switch( image->red_mask ) {
-    case 0xff0000:		/* 24bit/32bit 0RGB */
+    case 0xff0000: // 24bit/32bit 0RGB
       rShift = 16, gShift = 8, bShift = 0;
       break;
-    case 0x0000ff:		/* 24bit/32bit 0BGR */
+    case 0x0000ff: // 24bit/32bit 0BGR
       rShift = 0, gShift = 8, bShift = 16;
       break;
-    case 0xff000000:		/* 24bit/32bit RGB0 */
+    case 0xff000000: // 24bit/32bit RGB0
       rShift = 24, gShift = 16, bShift = 8;
       break;
-    case 0x0000ff00:		/* 24bit/32bit BGR0 */
+    case 0x0000ff00: // 24bit/32bit BGR0
       rShift = 8, gShift = 16, bShift = 24;
       break;
-    case 0xf800:		/* 16 RGB */
-    case 0x7c00:		/* 15 RGB */
+    case 0xf800: // 16 RGB
+    case 0x7c00: // 15 RGB
       xdisplay_redpos = MSB_RED;
       break;
-    case 0x001f:		/* 16/15 BGR */
+    case 0x001f: // 16/15 BGR
       xdisplay_redpos = LSB_RED;
       break;
     }
@@ -514,7 +514,7 @@ try_shm( void )
   shmctl( id, IPC_RMID, NULL );
 
   return 1;
-}  
+}
 
 /* Get an SHM ID; also attempt to reclaim any stale chunks we find */
 static int
@@ -526,7 +526,7 @@ get_shm_id( const int size )
   int id;
 
   int pollution = 5;
-  
+
   do {
     /* See if a chunk already exists with this key */
     id = shmget( key, size, 0777 );
@@ -535,7 +535,7 @@ get_shm_id( const int size )
        use */
     if( id == -1 ) {
       id = shmget( key, size, IPC_CREAT | 0777 );
-      continue;			/* And then jump to the end of the loop */
+      continue; // And then jump to the end of the loop
     }
 
     /* If the chunk already exists, try and get information about it */
@@ -544,23 +544,23 @@ get_shm_id( const int size )
       /* If something's actively using this chunk, try another key */
       if( shm.shm_nattch ) {
 	key++;
-      } else {		/* Otherwise, attempt to remove the chunk */
-	
+      } else { // Otherwise, attempt to remove the chunk
+
 	/* If we couldn't remove that chunk, try another key. If we
 	   could, just try again */
 	if( shmctl( id, IPC_RMID, NULL ) != 0 ) key++;
       }
-    } else {		/* Couldn't get info on the chunk, so try next key */
+    } else { // Couldn't get info on the chunk, so try next key
       key++;
     }
-    
-    id = -1;		/* To prevent early exit from loop */
+
+    id = -1; // To prevent early exit from loop
 
   } while( id == -1 && --pollution );
 
   return id;
 }
-#endif			/* #ifdef X_USE_SHM */
+#endif // #ifdef X_USE_SHM
 
 int
 uidisplay_init( int width, int height )
@@ -596,7 +596,7 @@ register_scalers( void )
   int f = -1;
 
   scaler_register_clear();
-  scaler_select_bitformat( 565 );		/* 16bit always */
+  scaler_select_bitformat( 565 ); // 16bit always
 
     if( xdisplay_depth == 4 ) {
       scaler_register( SCALER_NORMAL );
@@ -614,7 +614,7 @@ register_scalers( void )
       scaler_register( SCALER_NORMAL );
       scaler_register( SCALER_PALTV );
       if( machine_current->timex ) {
-        scaler_register( SCALER_HALF ); 
+        scaler_register( SCALER_HALF );
         scaler_register( SCALER_HALFSKIP );
         scaler_register( SCALER_TIMEXTV );
         scaler_register( SCALER_TIMEX1_5X );
@@ -637,7 +637,7 @@ register_scalers( void )
       }
     }
   if( current_scaler != SCALER_NUM )
-    f = 4.0 * scaler_get_scaling_factor( current_scaler ) * 
+    f = 4.0 * scaler_get_scaling_factor( current_scaler ) *
 	    ( machine_current->timex ? 2 : 1 );
   if( scaler_is_supported( current_scaler ) &&
 	( xdisplay_current_size * 4 == f ) ) {
@@ -664,14 +664,14 @@ xdisplay_configure_notify( int width, int height )
 
   /* If we're the same size as before, nothing special needed */
   size = width / DISPLAY_ASPECT_WIDTH;
-  if( size != height / DISPLAY_SCREEN_HEIGHT ) {	/* out of aspect */
+  if( size != height / DISPLAY_SCREEN_HEIGHT ) { // out of aspect
     if( size > height / DISPLAY_SCREEN_HEIGHT ) {
       size = height / DISPLAY_SCREEN_HEIGHT;
       width = size * DISPLAY_ASPECT_WIDTH;
     } else {
       height = size * DISPLAY_SCREEN_HEIGHT;
     }
-    xdisplay_current_size = 0;				/* force resize */
+    xdisplay_current_size = 0; // force resize
     resize_window( width, height );
   } else if( size == xdisplay_current_size ) {
     return 0;
@@ -726,7 +726,7 @@ xdisplay_update_rect_scale( int x, int y, int w, int h )
 }
 
 void
-uidisplay_frame_end( void ) 
+uidisplay_frame_end( void )
 {
   X_Rect *r, *last_rect;
 
@@ -802,7 +802,7 @@ xdisplay_area( int x, int y, int w, int h )
 #ifdef X_USE_SHM
     XShmPutImage( display, xui_mainWindow, gc, image, x, y, x, y, w, h, True );
     /* FIXME: should wait for an ShmCompletion event here */
-#endif				/* #ifdef X_USE_SHM */
+#endif // #ifdef X_USE_SHM
   } else {
     XPutImage( display, xui_mainWindow, gc, image, x, y, x, y, w, h );
   }

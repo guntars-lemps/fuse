@@ -43,4 +43,4 @@ int timer_fastloading_active( void );
 double timer_get_time( void );
 void timer_sleep( int ms );
 
-#endif			/* #ifndef FUSE_TIMER_H */
+#endif // #ifndef FUSE_TIMER_H

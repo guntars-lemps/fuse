@@ -24,6 +24,6 @@
 #ifndef FUSE_SDLDISPLAY_H
 #define FUSE_SDLDISPLAY_H
 
-extern SDL_Surface *sdldisplay_gc;    /* Hardware screen */
+extern SDL_Surface *sdldisplay_gc; // Hardware screen
 
-#endif			/* #ifndef FUSE_SDLDISPLAY_H */
+#endif // #ifndef FUSE_SDLDISPLAY_H

@@ -41,7 +41,7 @@ OSStatus coreaudiowrite( void *inRefCon,
                          AudioUnitRenderActionFlags *ioActionFlags,
                          const AudioTimeStamp *inTimeStamp,
                          UInt32 inBusNumber,
-                         UInt32 inNumberFrames,                       
+                         UInt32 inNumberFrames,
                          AudioBufferList *ioData );
 
 /* info about the format used for writing to output unit */
@@ -61,16 +61,16 @@ get_default_output_device(AudioDeviceID* device)
   OSStatus err = kAudioHardwareNoError;
   UInt32 count;
 
-  AudioObjectPropertyAddress property_address = { 
-    kAudioHardwarePropertyDefaultOutputDevice, 
+  AudioObjectPropertyAddress property_address = {
+    kAudioHardwarePropertyDefaultOutputDevice,
     kAudioObjectPropertyScopeGlobal,
     kAudioObjectPropertyElementMaster
-  }; 
+  };
 
   /* get the default output device for the HAL */
   count = sizeof( *device );
   err = AudioObjectGetPropertyData( kAudioObjectSystemObject, &property_address,
-                                    0, NULL, &count, device); 
+                                    0, NULL, &count, device);
   if ( err != kAudioHardwareNoError && device != kAudioObjectUnknown ) {
     ui_error( UI_ERROR_ERROR,
               "get kAudioHardwarePropertyDefaultOutputDevice error %ld",
@@ -88,11 +88,11 @@ get_default_sample_rate( AudioDeviceID device, Float64 *rate )
   OSStatus err = kAudioHardwareNoError;
   UInt32 count;
 
-  AudioObjectPropertyAddress property_address = { 
+  AudioObjectPropertyAddress property_address = {
     kAudioDevicePropertyNominalSampleRate,
     kAudioObjectPropertyScopeGlobal,
     kAudioObjectPropertyElementMaster
-  }; 
+  };
 
   /* get the default output device for the HAL */
   count = sizeof( *rate );
@@ -112,7 +112,7 @@ int
 sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
 {
   OSStatus err = kAudioHardwareNoError;
-  AudioDeviceID device = kAudioObjectUnknown; /* the default device */
+  AudioDeviceID device = kAudioObjectUnknown; // the default device
   int error;
   float hz;
   int sound_framesiz;
@@ -126,7 +126,7 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
   deviceFormat.mFormatFlags =  kLinearPCMFormatFlagIsSignedInteger
 #ifdef WORDS_BIGENDIAN
                     | kLinearPCMFormatFlagIsBigEndian
-#endif      /* #ifdef WORDS_BIGENDIAN */
+#endif // #ifdef WORDS_BIGENDIAN
                     | kLinearPCMFormatFlagIsPacked;
   deviceFormat.mBytesPerPacket = *stereoptr ? 4 : 2;
   deviceFormat.mFramesPerPacket = 1;
@@ -159,7 +159,7 @@ sound_lowlevel_init( const char *dev, int *freqptr, int *stereoptr )
   input.inputProc = coreaudiowrite;
   input.inputProcRefCon = NULL;
 
-  err = AudioUnitSetProperty( gOutputUnit,                       
+  err = AudioUnitSetProperty( gOutputUnit,
                               kAudioUnitProperty_SetRenderCallback,
                               kAudioUnitScope_Input,
                               0,
@@ -289,7 +289,7 @@ OSStatus coreaudiowrite( void *inRefCon,
                          AudioUnitRenderActionFlags *ioActionFlags,
                          const AudioTimeStamp *inTimeStamp,
                          UInt32 inBusNumber,
-                         UInt32 inNumberFrames,                       
+                         UInt32 inNumberFrames,
                          AudioBufferList *ioData )
 {
   int f;

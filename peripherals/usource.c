@@ -213,7 +213,7 @@ usource_from_snapshot( libspectrum_snap *snap )
     return;
 
   if( libspectrum_snap_usource_paged( snap ) ) {
-    usource_active = 0; /* Will be toggled to active next */
+    usource_active = 0; // Will be toggled to active next
     usource_toggle();
   }
 }

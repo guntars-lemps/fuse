@@ -53,8 +53,8 @@
 #include "z80.h"
 #include "z80_macros.h"
 
-static const char *progname;		/* argv[0] */
-static const char *testsfile;		/* argv[1] */
+static const char *progname; // argv[0]
+static const char *testsfile; // argv[1]
 
 static int init_dummies( void );
 
@@ -179,7 +179,7 @@ static void
 contend_port_postio( libspectrum_word port )
 {
   if( port & 0x0001 ) {
-    
+
     if( ( port & 0xc000 ) == 0x4000 ) {
       printf( "%5d PC %04x\n", tstates, port ); tstates++;
       printf( "%5d PC %04x\n", tstates, port ); tstates++;
@@ -311,7 +311,7 @@ read_test( FILE *f, libspectrum_dword *end_tstates )
 		 testsfile );
 	return 1;
       }
-    
+
       if( byte >= 0x100 ) break;
 
       memory[ address++ ] = byte;
@@ -598,7 +598,7 @@ startup_manager_register( startup_manager_module module,
 {
 }
 
-int svg_capture_active = 0;     /* SVG capture enabled? */
+int svg_capture_active = 0; // SVG capture enabled?
 
 void
 svg_capture( void )

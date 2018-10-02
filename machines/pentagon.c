@@ -69,7 +69,7 @@ pentagon_select_1f_read( libspectrum_word port, libspectrum_byte *attached )
     data = joystick_kempston_read( port, &tmpattached );
 
   if( tmpattached ) {
-    *attached = 0xff; /* TODO: check this */
+    *attached = 0xff; // TODO: check this
     return data;
   }
 
@@ -81,14 +81,14 @@ pentagon_select_ff_read( libspectrum_word port, libspectrum_byte *attached )
 {
   libspectrum_byte data;
   libspectrum_byte tmpattached = 0x00;
-  
+
   /* TODO: fine-grained attachment handling */
 
   data = beta_sp_read( port, &tmpattached );
   if( !tmpattached )
     data = spectrum_unattached_port();
 
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   return data;
 }
 
@@ -170,7 +170,7 @@ pentagon_from_snapshot( libspectrum_snap *snap )
   /* During init we set beta_active to true unconditionally to bootstrap into
      the TR-DOS ROM, but during snapshot loading we should repect the paging
      setting from the snapshot itself */
-  if( periph_is_active( PERIPH_TYPE_BETA128_PENTAGON ) || 
+  if( periph_is_active( PERIPH_TYPE_BETA128_PENTAGON ) ||
       periph_is_active( PERIPH_TYPE_BETA128_PENTAGON_LATE ) ) {
     if( libspectrum_snap_beta_paged( snap ) ) {
       beta_page();

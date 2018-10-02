@@ -77,14 +77,14 @@ GtkAccelGroup* gtkstock_add_accel_group( GtkWidget *widget );
  */
 typedef struct gtkstock_button {
   const gchar *label;
-  GCallback action;		/* "clicked" func; data is actiondata. */
+  GCallback action; // "clicked" func; data is actiondata.
   gpointer actiondata;
-  GCallback destroy;	/* "clicked" func; data is parent widget */
+  GCallback destroy; // "clicked" func; data is parent widget
   guint shortcut;
-  GdkModifierType modifier;     /* primary shortcut */
+  GdkModifierType modifier; // primary shortcut
   guint shortcut_alt;
-  GdkModifierType modifier_alt; /* secondary shortcut */
-  gint response_id;             /* response id for dialog */
+  GdkModifierType modifier_alt; // secondary shortcut
+  gint response_id; // response id for dialog
 } gtkstock_button;
 
 /* GTK1: create a simple button with the given label.
@@ -172,4 +172,4 @@ int gtkui_list_get_cursor( GtkTreeView *list );
 
 void gtkui_pokefinder_clear( void );
 
-#endif				/* #ifndef FUSE_GTKINTERNALS_H */
+#endif // #ifndef FUSE_GTKINTERNALS_H

@@ -36,4 +36,4 @@ extern size_t rectangle_inactive_count, rectangle_inactive_allocated;
 void rectangle_add( int y, int x, int w );
 void rectangle_end_line( int y );
 
-#endif				/* #ifndef FUSE_RECTANGLE_H */
+#endif // #ifndef FUSE_RECTANGLE_H

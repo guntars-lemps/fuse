@@ -28,4 +28,4 @@ int fbmouse_init(void);
 int fbmouse_end(void);
 void mouse_update(void);
 
-#endif			/* #ifndef FUSE_FBMOUSE_H */
+#endif // #ifndef FUSE_FBMOUSE_H

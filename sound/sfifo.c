@@ -106,7 +106,7 @@ int sfifo_write(sfifo_t *f, const void *_buf, int len)
 	const char *buf = (const char *)_buf;
 
 	if(!f->buffer)
-		return -ENODEV;	/* No buffer! */
+		return -ENODEV; // No buffer!
 
 	/* total = len = min(space, len) */
 	total = sfifo_space(f);
@@ -141,7 +141,7 @@ int sfifo_write_user(sfifo_t *f, const void *buf, int len)
 	int i;
 
 	if(!f->buffer)
-		return -ENODEV;	/* No buffer! */
+		return -ENODEV; // No buffer!
 
 	/* total = len = min(space, len) */
 	total = sfifo_space(f);
@@ -181,7 +181,7 @@ int sfifo_read(sfifo_t *f, void *_buf, int len)
 	char *buf = (char *)_buf;
 
 	if(!f->buffer)
-		return -ENODEV;	/* No buffer! */
+		return -ENODEV; // No buffer!
 
 	/* total = len = min(used, len) */
 	total = sfifo_used(f);
@@ -216,7 +216,7 @@ int sfifo_read_user(sfifo_t *f, void *buf, int len)
 	int i;
 
 	if(!f->buffer)
-		return -ENODEV;	/* No buffer! */
+		return -ENODEV; // No buffer!
 
 	/* total = len = min(used, len) */
 	total = sfifo_used(f);

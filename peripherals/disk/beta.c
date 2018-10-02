@@ -32,8 +32,8 @@
 #include <unistd.h>
 #include <string.h>
 #ifdef HAVE_STRINGS_H
-#include <strings.h>            /* Needed for strncasecmp() on QNX6 */
-#endif                          /* #ifdef HAVE_STRINGS_H */
+#include <strings.h> // Needed for strncasecmp() on QNX6
+#endif // #ifdef HAVE_STRINGS_H
 #include <limits.h>
 #include <sys/stat.h>
 
@@ -54,7 +54,7 @@
 #include "wd_fdc.h"
 #include "z80/z80.h"
 #include "z80/z80_macros.h"
-#include "options.h"	/* needed for get combo options */
+#include "options.h" // needed for get combo options
 
 /* A 16KB memory chunk accessible by the Z80 when /ROMCS is low */
 memory_page beta_memory_map_romcs[MEMORY_PAGES_IN_16K];
@@ -64,7 +64,7 @@ int beta_available = 0;
 int beta_active = 0;
 int beta_builtin = 0;
 
-static libspectrum_byte beta_system_register; /* FDC system register */
+static libspectrum_byte beta_system_register; // FDC system register
 
 libspectrum_word beta_pc_mask;
 libspectrum_word beta_pc_value;
@@ -83,7 +83,7 @@ static const periph_port_t beta_ports[] = {
 };
 
 static const periph_t beta_peripheral = {
-  /* .option = */ &settings_current.beta128,  
+  /* .option = */ &settings_current.beta128,
   /* .ports = */ beta_ports,
   /* .hard_reset = */ 1,
   /* .activate = */ NULL,
@@ -160,7 +160,7 @@ beta_init( void *context )
 
   for( i = 0; i < BETA_NUM_DRIVES; i++ ) {
     d = &beta_drives[ i ];
-    fdd_init( d, FDD_SHUGART, NULL, 0 );	/* drive geometry 'autodetect' */
+    fdd_init( d, FDD_SHUGART, NULL, 0 ); // drive geometry 'autodetect'
     d->disk.flag = DISK_FLAG_NONE;
   }
   beta_select_drive( 0 );
@@ -340,7 +340,7 @@ void
 beta_sp_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 {
   if( !beta_active ) return;
-  
+
   /* reset 0x04 and then set it to reset controller */
   beta_select_drive( b & 0x03 );
   /* 0x08 = block hlt, normally set */
@@ -359,7 +359,7 @@ beta_sp_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 
   if( !beta_active ) return 0xff;
 
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   b = 0;
 
   if( beta_fdc->intrq )
@@ -397,7 +397,7 @@ ui_drive_autoload( void )
         LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY ) ||
       !settings_current.beta128_48boot ) {
     PC = 0;
-    machine_current->ram.last_byte |= 0x10;   /* Select ROM 1 */
+    machine_current->ram.last_byte |= 0x10; // Select ROM 1
     beta_page();
   }
 
@@ -481,7 +481,7 @@ beta_to_snapshot( libspectrum_snap *snap )
   if( beta_memory_map_romcs[0].save_to_snapshot )
     libspectrum_snap_set_beta_custom_rom( snap, 1 );
 
-  drive_count++; /* Drive A is not removable */
+  drive_count++; // Drive A is not removable
   if( option_enumerate_diskoptions_drive_beta128b_type() > 0 ) drive_count++;
   if( option_enumerate_diskoptions_drive_beta128c_type() > 0 ) drive_count++;
   if( option_enumerate_diskoptions_drive_beta128d_type() > 0 ) drive_count++;

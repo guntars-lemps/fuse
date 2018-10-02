@@ -34,4 +34,4 @@ int unittests_assert_16k_ram_page( libspectrum_word base, int page );
 
 int unittests_paging_test_48( int ram8000 );
 
-#endif				/* #ifndef FUSE_UNITTESTS_H */
+#endif // #ifndef FUSE_UNITTESTS_H

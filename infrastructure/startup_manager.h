@@ -78,7 +78,7 @@ typedef enum startup_manager_module {
   STARTUP_MANAGER_MODULE_ZXATASP,
   STARTUP_MANAGER_MODULE_ZXCF,
   STARTUP_MANAGER_MODULE_ZXMMC,
- 
+
 } startup_manager_module;
 
 /* Callback for each module's init function */
@@ -107,4 +107,4 @@ int startup_manager_run( void );
 /* Run all the end functions in inverse order of the init functions */
 void startup_manager_run_end( void );
 
-#endif				/* #ifndef FUSE_STARTUP_MANAGER_H */
+#endif // #ifndef FUSE_STARTUP_MANAGER_H

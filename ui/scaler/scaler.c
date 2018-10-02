@@ -1,7 +1,7 @@
 /* scaler.c: code for selecting (etc) scalers
  * Copyright (C) 2003 Fredrick Meunier, Philip Kendall
  * Copyright (c) 2015 Sergio Baldoví
- * 
+ *
  * Originally taken from ScummVM - Scumm Interpreter
  * Copyright (C) 2001  Ludvig Strigeus
  * Copyright (C) 2001/2002 The ScummVM project
@@ -78,27 +78,27 @@ static const struct scaler_info available_scalers[] = {
     scaler_Half_16,       scaler_Half_32,       NULL                },
   { "Timex Half (skipping)", "halfskip", SCALER_FLAGS_NONE,    0.5,
     scaler_HalfSkip_16,   scaler_HalfSkip_32,   NULL                },
-  { "Normal",	       "normal",     SCALER_FLAGS_NONE,	       1.0, 
+  { "Normal",	       "normal",     SCALER_FLAGS_NONE,	       1.0,
     scaler_Normal1x_16,   scaler_Normal1x_32,   NULL                },
-  { "Double size",     "2x",	     SCALER_FLAGS_NONE,	       2.0, 
+  { "Double size",     "2x",	     SCALER_FLAGS_NONE,	       2.0,
     scaler_Normal2x_16,   scaler_Normal2x_32,   NULL                },
-  { "Triple size",     "3x",	     SCALER_FLAGS_NONE,	       3.0, 
+  { "Triple size",     "3x",	     SCALER_FLAGS_NONE,	       3.0,
     scaler_Normal3x_16,   scaler_Normal3x_32,   NULL		    },
-  { "2xSaI",	       "2xsai",	     SCALER_FLAGS_EXPAND,      2.0, 
+  { "2xSaI",	       "2xsai",	     SCALER_FLAGS_EXPAND,      2.0,
     scaler_2xSaI_16,      scaler_2xSaI_32,      expand_sai          },
-  { "Super 2xSaI",     "super2xsai", SCALER_FLAGS_EXPAND,      2.0, 
+  { "Super 2xSaI",     "super2xsai", SCALER_FLAGS_EXPAND,      2.0,
     scaler_Super2xSaI_16, scaler_Super2xSaI_32, expand_sai          },
-  { "SuperEagle",      "supereagle", SCALER_FLAGS_EXPAND,      2.0, 
+  { "SuperEagle",      "supereagle", SCALER_FLAGS_EXPAND,      2.0,
     scaler_SuperEagle_16, scaler_SuperEagle_32, expand_sai          },
-  { "AdvMAME 2x",      "advmame2x",  SCALER_FLAGS_EXPAND,      2.0, 
+  { "AdvMAME 2x",      "advmame2x",  SCALER_FLAGS_EXPAND,      2.0,
     scaler_AdvMame2x_16,  scaler_AdvMame2x_32,  expand_1            },
-  { "AdvMAME 3x",      "advmame3x",  SCALER_FLAGS_EXPAND,      3.0, 
+  { "AdvMAME 3x",      "advmame3x",  SCALER_FLAGS_EXPAND,      3.0,
     scaler_AdvMame3x_16,  scaler_AdvMame3x_32,  expand_1            },
-  { "TV 2x",	       "tv2x",	     SCALER_FLAGS_NONE,        2.0, 
+  { "TV 2x",	       "tv2x",	     SCALER_FLAGS_NONE,        2.0,
     scaler_TV2x_16,       scaler_TV2x_32,       NULL                },
-  { "TV 3x",	       "tv3x",	     SCALER_FLAGS_NONE,        3.0, 
+  { "TV 3x",	       "tv3x",	     SCALER_FLAGS_NONE,        3.0,
     scaler_TV3x_16,       scaler_TV3x_32,       NULL                },
-  { "Timex TV",	       "timextv",    SCALER_FLAGS_NONE,        1.0, 
+  { "Timex TV",	       "timextv",    SCALER_FLAGS_NONE,        1.0,
     scaler_TimexTV_16,    scaler_TimexTV_32,    NULL                },
   { "Dot Matrix",      "dotmatrix",  SCALER_FLAGS_EXPAND,      2.0,
     scaler_DotMatrix_16,  scaler_DotMatrix_32,  expand_dotmatrix    },
@@ -249,7 +249,7 @@ expand_pal1( int *x, int *y, int *w, int *h, int image_width, int image_height )
 {
   int w_mod = (*w) % 2;
   (*x)-=2; (*w)+=4;
-  (*w)+=w_mod;		/* expand to even*/
+  (*w)+=w_mod; // expand to even
   clip( x, y, w, h, image_width, image_height );
 }
 

@@ -49,4 +49,4 @@ void if1_update_menu( void );
 
 int if1_unittest( void );
 
-#endif				/* #ifndef FUSE_IF1_H */
+#endif // #ifndef FUSE_IF1_H

@@ -90,7 +90,7 @@ win32ui_pokefinder_proc( HWND hWnd GCC_UNUSED, UINT msg,
       move_button( IDC_PF_RESET, height );
       move_button( IDCLOSE, height );
       return TRUE;
-	
+
     case WM_CLOSE:
       win32ui_pokefinder_close();
       return TRUE;
@@ -99,9 +99,9 @@ win32ui_pokefinder_proc( HWND hWnd GCC_UNUSED, UINT msg,
       switch ( ( ( LPNMHDR ) lParam )->code ) {
         case NM_DBLCLK:
           possible_click( ( LPNMITEMACTIVATE ) lParam );
-          return TRUE; /* The return value for this notification is not used */
+          return TRUE; // The return value for this notification is not used
       }
-      break;      
+      break;
   }
   return FALSE;
 }
@@ -153,7 +153,7 @@ update_pokefinder( void )
 	  possible_page[ which ] = bank;
 	  possible_offset[ which ] = bank_offset;
 	  which++;
-	
+
 	  _sntprintf( possible_text[0], 128, "%d", (unsigned)bank );
 	  _sntprintf( possible_text[1], 128, "0x%04X", (unsigned)bank_offset );
 
@@ -182,7 +182,7 @@ update_pokefinder( void )
     /* change the size of the listview */
     dw_res = SendMessage( lv_hWnd, LVM_APPROXIMATEVIEWRECT, pokefinder_count,
                           MAKELPARAM( -1, -1 ) );
-    rcx = lv_width; /* same width */
+    rcx = lv_width; // same width
     rcy = HIWORD( dw_res );
     SetWindowPos( lv_hWnd, NULL, 0, 0, rcx, rcy,
                   SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE );
@@ -218,10 +218,10 @@ menu_machine_pokefinder( int action GCC_UNUSED )
     /* FIXME: Implement accelerators for this dialog */
     fuse_hPFWnd = CreateDialog( fuse_hInstance,
                                 MAKEINTRESOURCE( IDD_POKEFINDER ),
-                                fuse_hWnd, 
+                                fuse_hWnd,
                                 ( DLGPROC ) win32ui_pokefinder_proc );
     if ( fuse_hPFWnd == NULL ) {
-      win32_verror( 1 ); /* FIXME: improve this function */
+      win32_verror( 1 ); // FIXME: improve this function
       return;
     }
 
@@ -237,10 +237,10 @@ menu_machine_pokefinder( int action GCC_UNUSED )
        is selected */
     DWORD lv_ext_style;
     lv_ext_style = SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LIST,
-                                       LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 ); 
+                                       LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
     lv_ext_style |= LVS_EX_FULLROWSELECT;
     SendDlgItemMessage( fuse_hPFWnd, IDC_PF_LIST,
-                        LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style ); 
+                        LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
     /* calculate columns width */
     lv_hWnd = GetDlgItem( fuse_hPFWnd, IDC_PF_LIST );
@@ -345,20 +345,20 @@ static void
 possible_click( LPNMITEMACTIVATE lpnmitem )
 {
   /* FIXME: implement equivalent of GTK's select-via-keyboard to enter here */
- 
+
   int error;
   libspectrum_word row;
 
   if( lpnmitem->iItem < 0 ) return;
-        
+
   row = lpnmitem->iItem;
-  
+
   error = debugger_breakpoint_add_address(
     DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[ row ],
     possible_offset[ row ], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
   );
   if( error ) return;
-  
+
   ui_debugger_update();
 }
 

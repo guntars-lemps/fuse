@@ -39,7 +39,7 @@ int uidisplay_hotswap_gfx_mode( void );
    it's work */
 void uidisplay_frame_save( void );
 void uidisplay_frame_restore( void );
-#endif                          /* #ifdef USE_WIDGET */
+#endif // #ifdef USE_WIDGET
 
 int uidisplay_end(void);
 
@@ -53,4 +53,4 @@ void uidisplay_plot8( int x, int y, libspectrum_byte data, libspectrum_byte ink,
 void uidisplay_plot16( int x, int y, libspectrum_word data, libspectrum_byte ink,
                        libspectrum_byte paper);
 
-#endif			/* #ifndef FUSE_UIDISPLAY_H */
+#endif // #ifndef FUSE_UIDISPLAY_H

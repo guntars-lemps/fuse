@@ -41,11 +41,11 @@
 /* Fake joystick, or override UI-specific handling */
 #include "../uijoystick.c"
 
-#else			/* #if !defined USE_JOYSTICK || defined HAVE_JSW_H */
+#else // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
 #include "../sdl/sdljoystick.c"
 
-#endif			/* #if !defined USE_JOYSTICK || defined HAVE_JSW_H */
+#endif // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
 enum
 {
@@ -94,9 +94,9 @@ static void joystick_done( GtkButton *button, gpointer user_data );
 
 static key_menu_t key_menu[] = {
 
-    { ITEM, "Joystick Fire", KEYBOARD_JOYSTICK_FIRE }, 
+    { ITEM, "Joystick Fire", KEYBOARD_JOYSTICK_FIRE },
 
-    { GROUP, "Numbers", KEYBOARD_NONE }, 
+    { GROUP, "Numbers", KEYBOARD_NONE },
     { SUBITEM, "0", KEYBOARD_0 },
     { SUBITEM, "1", KEYBOARD_1 },
     { SUBITEM, "2", KEYBOARD_2 },
@@ -211,12 +211,12 @@ menu_options_joysticks_select( GtkAction *gtk_action GCC_UNUSED,
   model = create_joystick_options_store();
 
   for( i = 0; i < NUM_JOY_BUTTONS; i += 5 ) {
-    
+
     int j;
 
     vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 2 );
     gtk_box_pack_start( GTK_BOX( hbox ), vbox, TRUE, TRUE, 0 );
-    
+
     for( j = i; j < i + 5; j++ )
       if( info.button[j].setting ) {
         create_fire_button_selector( info.button[j].name, &( info.button[j] ),
@@ -370,7 +370,7 @@ create_fire_button_selector( const char *title, struct button_info *info,
   info->label = gtk_label_new( "" );
 
   for( i = 0; i < ARRAY_SIZE( key_menu ); i++ ) {
-    
+
     keyboard_key_name key;
 
     key = key_menu[i].key;
@@ -385,7 +385,7 @@ create_fire_button_selector( const char *title, struct button_info *info,
   gtk_box_pack_start( GTK_BOX( box ), info->label, TRUE, TRUE, 0 );
 
   /* Create combobox */
-  combo = gtk_combo_box_new_with_model( model );    
+  combo = gtk_combo_box_new_with_model( model );
   renderer = gtk_cell_renderer_text_new();
   gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), renderer, TRUE );
   gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( combo ), renderer,

@@ -189,12 +189,12 @@ init_colours( void )
     win32display_colours[i] =  red << 24 | green << 16 | blue << 8;
               bw_colours[i] = grey << 24 |  grey << 16 | grey << 8;
 
-#else                           /* #ifdef WORDS_BIGENDIAN */
+#else // #ifdef WORDS_BIGENDIAN
 
     win32display_colours[i] =  red | green << 8 | blue << 16;
               bw_colours[i] = grey |  grey << 8 | grey << 16;
 
-#endif                          /* #ifdef WORDS_BIGENDIAN */
+#endif // #ifdef WORDS_BIGENDIAN
 
   }
 
@@ -222,7 +222,7 @@ win32display_drawing_area_resize( int width, int height, int force_scaler )
 
   return 0;
 }
-        
+
 int
 uidisplay_init( int width, int height )
 {
@@ -366,10 +366,10 @@ win32display_area(int x, int y, int width, int height)
     for( disp_x = x; disp_x < right; disp_x++ ) {
       ofs = ( disp_x << 2 ) + ( disp_y * scaled_pitch );
 
-      pixdata[ ofs + 0 ] = scaled_image[ ofs + 2 ]; /* blue */
-      pixdata[ ofs + 1 ] = scaled_image[ ofs + 1 ]; /* green */
-      pixdata[ ofs + 2 ] = scaled_image[ ofs + 0 ]; /* red */
-      pixdata[ ofs + 3 ] = 0; /* unused */
+      pixdata[ ofs + 0 ] = scaled_image[ ofs + 2 ]; // blue
+      pixdata[ ofs + 1 ] = scaled_image[ ofs + 1 ]; // green
+      pixdata[ ofs + 2 ] = scaled_image[ ofs + 0 ]; // red
+      pixdata[ ofs + 3 ] = 0; // unused
     }
   }
 
@@ -401,7 +401,7 @@ int
 win32display_end( void )
 {
   DeleteObject( fuse_BMP );
-        
+
   return 0;
 }
 

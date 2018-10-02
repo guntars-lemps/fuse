@@ -163,21 +163,21 @@ void
 widget_pokefinder_keyhandler( input_key key )
 {
   switch ( key ) {
-  case INPUT_KEY_Escape:	/* Close widget */
+  case INPUT_KEY_Escape: // Close widget
     widget_end_widget( WIDGET_FINISHED_CANCEL );
     break;
 
-  case INPUT_KEY_c:		/* Close widget */
+  case INPUT_KEY_c: // Close widget
     widget_end_all( WIDGET_FINISHED_OK );
     break;
 
-  case INPUT_KEY_i:		/* Search for incremented */
+  case INPUT_KEY_i: // Search for incremented
     pokefinder_incremented();
     update_possible();
     display_possible();
     break;
 
-  case INPUT_KEY_d:		/* Search for incremented */
+  case INPUT_KEY_d: // Search for incremented
     pokefinder_decremented();
     update_possible();
     display_possible();
@@ -185,7 +185,7 @@ widget_pokefinder_keyhandler( input_key key )
 
   case INPUT_KEY_Return:
   case INPUT_KEY_KP_Enter:
-  case INPUT_KEY_s:		/* Search */
+  case INPUT_KEY_s: // Search
     if( value < 256 ) {
       pokefinder_search( value );
       update_possible();
@@ -193,13 +193,13 @@ widget_pokefinder_keyhandler( input_key key )
     }
     break;
 
-  case INPUT_KEY_r:		/* Reset */
+  case INPUT_KEY_r: // Reset
     pokefinder_clear();
     update_possible();
     display_possible();
     break;
 
-  case INPUT_KEY_b:		/* Add breakpoint */
+  case INPUT_KEY_b: // Add breakpoint
     if( FEW_ENOUGH() )
     {
       widget_rectangle( 128, 24, 112, 8, WIDGET_COLOUR_BACKGROUND );
@@ -241,7 +241,7 @@ widget_pokefinder_keyhandler( input_key key )
     display_value();
     break;
 
-  case INPUT_KEY_BackSpace:	/* Value alteration */
+  case INPUT_KEY_BackSpace: // Value alteration
     value /= 10;
     display_value();
     break;

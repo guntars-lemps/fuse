@@ -48,7 +48,7 @@ gtkmouse_reset_pointer( void )
    */
   GdkWindow *window = gtk_widget_get_window( gtkui_drawing_area );
 
-  XWarpPointer( GDK_WINDOW_XDISPLAY( window ), None, 
+  XWarpPointer( GDK_WINDOW_XDISPLAY( window ), None,
                 GDK_WINDOW_XID( window ), 0, 0, 0, 0, 128, 128 );
 }
 
@@ -117,7 +117,7 @@ ui_mouse_grab( int startup )
                             GDK_BUTTON_RELEASE_MASK,
                             nullpointer, GDK_CURRENT_TIME );
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
+#endif // #if !GTK_CHECK_VERSION( 3, 0, 0 )
 
   if( status == GDK_GRAB_SUCCESS ) {
     gtkmouse_reset_pointer();
@@ -148,7 +148,7 @@ ui_mouse_release( int suspend GCC_UNUSED )
 
   gdk_device_ungrab( pointer, GDK_CURRENT_TIME );
 
-#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */ 
+#endif                /* #if !GTK_CHECK_VERSION( 3, 0, 0 ) */
 
   ui_statusbar_update( UI_STATUSBAR_ITEM_MOUSE, UI_STATUSBAR_STATE_INACTIVE );
   return 0;

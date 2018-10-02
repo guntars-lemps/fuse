@@ -61,15 +61,15 @@ static widget_font_character *widget_font[1] = {0};
 
 static const widget_font_character default_invalid = {
   { 0x7E, 0xDF, 0x9F, 0xB5, 0xA5, 0x8F, 0xDF, 0x7E }, 0, 8, 1
-}; /* "(?)" (inv) */
+}; // "(?)" (inv)
 
 static const widget_font_character default_unknown = {
   { 0x7C, 0xDE, 0xBE, 0xAA, 0xDE, 0x7C }, 1, 6, 1
-}; /* "(?)" */
+}; // "(?)"
 
 static const widget_font_character default_keyword = {
   { 0x7C, 0x82, 0xEE, 0xD6, 0xBA, 0x7C }, 1, 6, 1
-}; /* "(K)" */
+}; // "(K)"
 
 /* The current widget keyhandler */
 widget_keyhandler_fn widget_keyhandler;
@@ -77,14 +77,14 @@ widget_keyhandler_fn widget_keyhandler;
 /* The data used for recursive widgets */
 typedef struct widget_recurse_t {
 
-  widget_type type;		/* Which type of widget are we? */
-  void *data;			/* What data were we passed? */
+  widget_type type; // Which type of widget are we?
+  void *data; // What data were we passed?
 
-  int finished;			/* Have we finished this widget yet? */
+  int finished; // Have we finished this widget yet?
 
 } widget_recurse_t;
 
-static widget_recurse_t widget_return[10]; /* The stack to recurse on */
+static widget_recurse_t widget_return[10]; // The stack to recurse on
 
 /* The settings used whilst playing with an options dialog box */
 settings_info widget_options_settings;
@@ -122,7 +122,7 @@ static int widget_read_font( const char *filename )
     width = file.buffer[i+2] >> 4 & 15;
 
     /* weed out invalid character codes and misdefined characters */
-    if( page != 0 /* we don't currently have more than page 0 */
+    if( page != 0 // we don't currently have more than page 0
 	|| i + 3 + width > file.length || (left >= 0 && left + width > 8) )
     {
       ui_error( UI_ERROR_ERROR, "font contains invalid character" );
@@ -389,7 +389,7 @@ void widget_print_checkbox( int x, int y, int colour, int value )
     widget_rectangle( x, y - 1, 3, 3, colour );
     widget_rectangle( x - 5, y, 5, 5, 0 );
     widget_rectangle( x - 4, y + 1, 3, 3, colour );
-    if( value ) {	/* checked */
+    if( value ) { // checked
       for( z = -1; z < 3; z++ ) {
         widget_putpixel( x - z, y + z, CHECK_COLOR );
         widget_putpixel( x - z + 1, y + z, CHECK_COLOR );
@@ -593,10 +593,10 @@ widget_draw_speccy_rainbow_bar(int x, int y)
   int cur_x = x - 8;
 
   for (i = 0; i < 8; i++) {
-    widget_draw_line_horiz(cur_x, y + i, 8, 10);       /* bright red */
-    widget_draw_line_horiz(cur_x + 8, y + i, 8, 14);   /* bright yellow */
-    widget_draw_line_horiz(cur_x + 16, y + i, 8, 12);  /* bright green */
-    widget_draw_line_horiz(cur_x + 24, y + i, 8, 13);  /* bright cyan */
+    widget_draw_line_horiz(cur_x, y + i, 8, 10); // bright red
+    widget_draw_line_horiz(cur_x + 8, y + i, 8, 14); // bright yellow
+    widget_draw_line_horiz(cur_x + 16, y + i, 8, 12); // bright green
+    widget_draw_line_horiz(cur_x + 24, y + i, 8, 13); // bright cyan
     cur_x--;
   }
 }
@@ -705,7 +705,7 @@ ui_statusbar_update_speed( float speed )
   return 0;
 }
 #endif
-#endif                          /* #ifndef UI_SDL */
+#endif // #ifndef UI_SDL
 
 /* Tape browser update function. The dialog box is created every time it
    is displayed, so no need to do anything here */
@@ -824,7 +824,7 @@ ui_popup_menu( int native_key )
     fuse_emulation_unpause();
     break;
 
-  default: break;		/* Remove gcc warning */
+  default: break; // Remove gcc warning
 
   }
 }

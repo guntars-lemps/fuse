@@ -87,4 +87,4 @@ typedef enum ui_media_controller {
   UI_MEDIA_CONTROLLER_DIDAKTIK,
 } ui_media_controller;
 
-#endif			/* #ifndef FUSE_UIMEDIA_H */
+#endif // #ifndef FUSE_UIMEDIA_H

@@ -31,4 +31,4 @@ int zxmmc_insert( const char *filename );
 void zxmmc_commit( void );
 int zxmmc_eject( void );
 
-#endif			/* #ifndef FUSE_ZXMMC_H */
+#endif // #ifndef FUSE_ZXMMC_H

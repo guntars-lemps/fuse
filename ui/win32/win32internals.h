@@ -134,4 +134,4 @@ void win32statusbar_update_machine( const char *name );
 
 void win32ui_pokefinder_clear( void );
 
-#endif                          /* #ifndef FUSE_WIN32INTERNALS_H */
+#endif // #ifndef FUSE_WIN32INTERNALS_H

@@ -24,7 +24,7 @@
 #include <string.h>
 #ifdef HAVE_STRINGS_STRCASECMP
 #include <strings.h>
-#endif      /* #ifdef HAVE_STRINGS_STRCASECMP */
+#endif // #ifdef HAVE_STRINGS_STRCASECMP
 
 #include <config.h>
 
@@ -65,7 +65,7 @@ typedef enum phantom_typist_mode_t {
   /* J, SS + P, SS + P, CS + SS, I, Enter => LOAD ""CODE */
   PHANTOM_TYPIST_MODE_JPPI,
 
-  PHANTOM_TYPIST_MODE_ENTER, /* Enter only */
+  PHANTOM_TYPIST_MODE_ENTER, // Enter only
 
   /* Down, Enter, L, O, A, D, SS + P, SS + P, C, O, D, E =>
      LOAD ""CODE in BASIC */
@@ -170,7 +170,7 @@ static struct state_info_t state_info[] = {
   { { KEYBOARD_Symbol, KEYBOARD_p }, t_colon_or_quote, 0, 0 },
   { { KEYBOARD_Symbol, KEYBOARD_p }, code_or_enter, 0, 5 },
   { { KEYBOARD_Enter, KEYBOARD_NONE }, next_command_or_end, 0, 0 },
-  
+
   { { KEYBOARD_Enter, KEYBOARD_NONE }, NULL, PHANTOM_TYPIST_STATE_WAIT_AFTER_ENTER, 3 },
   /* This state is here to "swallow" the pause while the +3 checks for a disk */
   { { KEYBOARD_NONE, KEYBOARD_NONE }, NULL, PHANTOM_TYPIST_STATE_INACTIVE, 600 },
@@ -515,7 +515,7 @@ phantom_typist_ula_read( libspectrum_word port )
       process_waiting_state( high_byte );
       break;
 
-     default: 
+     default:
       r &= process_state( high_byte );
       break;
   }

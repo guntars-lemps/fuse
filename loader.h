@@ -26,10 +26,10 @@
 
 #include <libspectrum.h>
 
-void loader_frame( libspectrum_dword frame_length );
-void loader_tape_play( void );
-void loader_tape_stop( void );
-void loader_detect_loader( void );
-void loader_set_acceleration_flags( int flags, int from_acceleration );
+void loader_frame(libspectrum_dword frame_length);
+void loader_tape_play(void);
+void loader_tape_stop(void);
+void loader_detect_loader(void);
+void loader_set_acceleration_flags(int flags, int from_acceleration);
 
-#endif			/* #ifndef FUSE_LOADER_H */
+#endif // #ifndef FUSE_LOADER_H

@@ -121,13 +121,13 @@
     tstates += ula_contention_no_mreq[ tstates ]; \
   tstates += (time);
 
-#else				/* #ifndef CORETEST */
+#else // #ifndef CORETEST
 
 void contend_read( libspectrum_word address, libspectrum_dword time );
 void contend_read_no_mreq( libspectrum_word address, libspectrum_dword time );
 void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
 
-#endif				/* #ifndef CORETEST */
+#endif // #ifndef CORETEST
 
 /* Some commonly used instructions */
 #define AND(value)\
@@ -210,7 +210,7 @@ void contend_write_no_mreq( libspectrum_word address, libspectrum_dword time );
   if( ! ( (value) & ( 0x01 << (bit) ) ) ) F |= FLAG_P | FLAG_Z; \
   if( (bit) == 7 && (value) & 0x80 ) F |= FLAG_S; \
   Q = F;\
-}  
+}
 
 #define CALL()\
 {\
@@ -449,4 +449,4 @@ break
   Q = F;\
 }
 
-#endif		/* #ifndef FUSE_Z80_MACROS_H */
+#endif // #ifndef FUSE_Z80_MACROS_H

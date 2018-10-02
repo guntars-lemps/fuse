@@ -35,4 +35,4 @@ void usource_toggle( void );
 
 int usource_unittest( void );
 
-#endif				/* #ifndef FUSE_USOURCE_H */
+#endif // #ifndef FUSE_USOURCE_H

@@ -54,7 +54,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   float hz;
   int sound_framesiz;
 
-#ifndef __MORPHOS__    
+#ifndef __MORPHOS__
   /* I'd rather just use setenv, but Windows doesn't have it */
   if( device ) {
     const char *environment = "SDL_AUDIODRIVER=";
@@ -64,14 +64,14 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
     strcat( command, device );
     error = putenv( command );
     libspectrum_free( command );
-    if( error ) { 
+    if( error ) {
       settings_current.sound = 0;
       ui_error( UI_ERROR_ERROR, "Couldn't set SDL_AUDIODRIVER: %s",
                 strerror ( error ) );
       return 1;
     }
   }
-#endif			/* #ifndef __MORPHOS__ */
+#endif // #ifndef __MORPHOS__
 
   SDL_InitSubSystem( SDL_INIT_AUDIO );
 
@@ -95,9 +95,9 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   sound_framesiz = *freqptr / hz;
 #ifdef __FreeBSD__
   requested.samples = pow( 2.0, floor( log2( sound_framesiz ) ) );
-#else			/* #ifdef __FreeBSD__ */
+#else // #ifdef __FreeBSD__
   requested.samples = sound_framesiz;
-#endif			/* #ifdef __FreeBSD__ */
+#endif // #ifdef __FreeBSD__
 
   if ( SDL_OpenAudio( &requested, &received ) < 0 ) {
     settings_current.sound = 0;

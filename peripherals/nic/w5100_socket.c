@@ -660,7 +660,7 @@ w5100_socket_process_read( nic_w5100_socket_t *socket )
       memcpy( socket->rx_buffer, buffer + first_chunk, bytes_read - first_chunk );
     }
   }
-  else if( bytes_read == 0 ) {  /* TCP */
+  else if( bytes_read == 0 ) { // TCP
     socket->state = W5100_SOCKET_STATE_CLOSE_WAIT;
     nic_w5100_debug( "w5100: EOF on %s socket %d; errno %d: %s\n",
                      description, socket->id, compat_socket_get_error(),

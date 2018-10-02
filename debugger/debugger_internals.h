@@ -117,4 +117,4 @@ void debugger_variable_end( void );
 void debugger_variable_set( const char *name, libspectrum_dword value );
 libspectrum_dword debugger_variable_get( const char *name );
 
-#endif				/* #ifndef FUSE_DEBUGGER_INTERNALS_H */
+#endif // #ifndef FUSE_DEBUGGER_INTERNALS_H

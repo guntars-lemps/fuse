@@ -102,7 +102,7 @@ typedef struct debugger_breakpoint {
   debugger_breakpoint_type type;
   debugger_breakpoint_value value;
 
-  size_t ignore;		/* Ignore this breakpoint this many times */
+  size_t ignore; // Ignore this breakpoint this many times
   debugger_breakpoint_life life;
   debugger_expression *condition; /* Conditional expression to activate this
 				     breakpoint */
@@ -148,4 +148,4 @@ debugger_breakpoint_add_event(
    during this frame */
 int debugger_add_time_events( void );
 
-#endif				/* #ifndef FUSE_DEBUGGER_BREAKPOINT_H */
+#endif // #ifndef FUSE_DEBUGGER_BREAKPOINT_H

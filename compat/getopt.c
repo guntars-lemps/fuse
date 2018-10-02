@@ -70,7 +70,7 @@
    contain conflicting prototypes for getopt.  */
 # include <stdlib.h>
 # include <unistd.h>
-#endif	/* GNU C library.  */
+#endif // GNU C library.
 
 #ifdef VMS
 # include <unixlib.h>
@@ -245,10 +245,10 @@ my_index (str, chr)
 /* gcc with -traditional declares the built-in strlen to return int,
    and has done so at least since version 2.4.5. -- rms.  */
 extern int strlen (const char *);
-# endif /* not __STDC__ */
-#endif /* __GNUC__ */
+# endif // not __STDC__
+#endif // __GNUC__
 
-#endif /* not __GNU_LIBRARY__ */
+#endif // not __GNU_LIBRARY__
 
 /* Handle permutation of arguments.  */
 
@@ -288,9 +288,9 @@ static int nonoption_flags_len;
 # else
 #  define SWAP_FLAGS(ch1, ch2)
 # endif
-#else	/* !_LIBC */
+#else // !_LIBC
 # define SWAP_FLAGS(ch1, ch2)
-#endif	/* _LIBC */
+#endif // _LIBC
 
 /* Exchange two adjacent subsequences of ARGV.
    One subsequence is elements [first_nonopt,last_nonopt)
@@ -533,7 +533,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
   if (optind == 0 || !__getopt_initialized)
     {
       if (optind == 0)
-	optind = 1;	/* Don't scan ARGV[0], the program name.  */
+	optind = 1; // Don't scan ARGV[0], the program name.
       optstring = _getopt_initialize (argc, argv, optstring);
       __getopt_initialized = 1;
     }
@@ -1125,7 +1125,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	    return pfound->val;
 	  }
 	  nextchar = NULL;
-	  return 'W';	/* Let the application handle it.   */
+	  return 'W'; // Let the application handle it.
       }
     if (temp[1] == ':')
       {
@@ -1205,7 +1205,7 @@ getopt (argc, argv, optstring)
 			   0);
 }
 
-#endif	/* Not ELIDE_CODE.  */
+#endif // Not ELIDE_CODE.
 
 #ifdef TEST
 
@@ -1277,4 +1277,4 @@ main (argc, argv)
   exit (0);
 }
 
-#endif /* TEST */
+#endif // TEST

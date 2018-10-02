@@ -36,8 +36,8 @@ typedef enum plusd_drive_number {
 
 #include "fdd.h"
 
-extern int plusd_available;  /* Is the +D available for use? */
-extern int plusd_active;     /* +D enabled? */
+extern int plusd_available; // Is the +D available for use?
+extern int plusd_active; // +D enabled?
 
 void plusd_register_startup( void );
 
@@ -55,4 +55,4 @@ fdd_t *plusd_get_fdd( plusd_drive_number which );
 
 int plusd_unittest( void );
 
-#endif                  /* #ifndef FUSE_PLUSD_H */
+#endif // #ifndef FUSE_PLUSD_H

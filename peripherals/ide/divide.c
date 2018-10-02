@@ -100,7 +100,7 @@ divide_init( void *context )
 
   divide_idechn0 = libspectrum_ide_alloc( LIBSPECTRUM_IDE_DATA16 );
   divide_idechn1 = libspectrum_ide_alloc( LIBSPECTRUM_IDE_DATA16 );
-  
+
   error = ide_init( divide_idechn0,
 		    settings_current.divide_master_file,
 		    UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
@@ -205,7 +205,7 @@ port_to_ide_register( libspectrum_byte port )
       return LIBSPECTRUM_IDE_REGISTER_CYLINDER_HIGH;
     case 0xbb:
       return LIBSPECTRUM_IDE_REGISTER_HEAD_DRIVE;
-    default: /* 0xbf */
+    default: // 0xbf
       return LIBSPECTRUM_IDE_REGISTER_COMMAND_STATUS;
   }
 }
@@ -215,7 +215,7 @@ divide_ide_read( libspectrum_word port, libspectrum_byte *attached )
 {
   int ide_register;
 
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   ide_register = port_to_ide_register( port );
 
   return libspectrum_ide_read( divide_idechn0, ide_register );
@@ -225,9 +225,9 @@ static void
 divide_ide_write( libspectrum_word port, libspectrum_byte data )
 {
   int ide_register;
-  
+
   ide_register = port_to_ide_register( port );
-  
+
   libspectrum_ide_write( divide_idechn0, ide_register, data );
 }
 

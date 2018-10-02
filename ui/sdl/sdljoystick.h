@@ -31,4 +31,4 @@ void sdljoystick_buttonrelease( SDL_JoyButtonEvent *buttonevent );
 void sdljoystick_axismove( SDL_JoyAxisEvent *axisevent );
 void sdljoystick_hatmove( SDL_JoyHatEvent *hatevent );
 
-#endif			/* #ifndef FUSE_SDLJOYSTICK_H */
+#endif // #ifndef FUSE_SDLJOYSTICK_H

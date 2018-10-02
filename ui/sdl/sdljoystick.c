@@ -30,7 +30,7 @@
 /* Fake joystick, or override UI-specific handling */
 #include "../uijoystick.c"
 
-#else			/* #if !defined USE_JOYSTICK || defined HAVE_JSW_H */
+#else // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
 #include <SDL.h>
 
@@ -90,7 +90,7 @@ ui_joystick_init( void )
       ui_error( UI_ERROR_ERROR, "failed to initialise joystick 1" );
       return 0;
     }
- 
+
     if( SDL_JoystickNumAxes( joystick1 ) < 2    ||
         SDL_JoystickNumButtons( joystick1 ) < 1    ) {
       ui_error( UI_ERROR_ERROR, "sorry, joystick 1 is inadequate!" );
@@ -139,9 +139,9 @@ button_action( SDL_JoyButtonEvent *buttonevent, input_event_type type )
 {
   int button;
   input_event_t event;
-  
+
   button = buttonevent->button;
-  if( button >= NUM_JOY_BUTTONS ) return;	/* We support 'only' NUM_JOY_BUTTONS (15 as defined in ui/uijoystick.h) fire buttons */
+  if( button >= NUM_JOY_BUTTONS ) return; // We support 'only' NUM_JOY_BUTTONS (15 as defined in ui/uijoystick.h) fire buttons
 
   event.type = type;
   event.types.joystick.which = buttonevent->which;
@@ -252,4 +252,4 @@ ui_joystick_end( void )
 #endif
 }
 
-#endif			/* #if !defined USE_JOYSTICK || defined HAVE_JSW_H */
+#endif // #if !defined USE_JOYSTICK || defined HAVE_JSW_H

@@ -52,7 +52,7 @@ static WPADData oldpaddata;
 #define RIGHT 2
 #define UP    3
 #define DOWN  4
-static u8 last_nunchuck[ 2 ]; /* for 2 controllers */
+static u8 last_nunchuck[ 2 ]; // for 2 controllers
 
 int
 wiimouse_init( void )
@@ -92,8 +92,8 @@ mouse_update( void )
      FIXME: A function that does this only once depending on the
      current frame counter would be better */
 
-  int ctrlr; /* Which controller */
-  u32 wm_down; /* Wii Remote buttons that are down */
+  int ctrlr; // Which controller
+  u32 wm_down; // Wii Remote buttons that are down
   WPADData *wpad;
   joystick_t js;
 
@@ -106,7 +106,7 @@ mouse_update( void )
     fuse_event.types.key.spectrum_key = pressed; \
     input_event(&fuse_event); \
   } while(0)
-  
+
 #define POST_KEYRELEASE(pressed) do {	    \
     input_event_t fuse_event; \
     fuse_event.type = INPUT_EVENT_KEYRELEASE; \
@@ -125,7 +125,7 @@ mouse_update( void )
     /* we don't bother with key releases here; this is only for entering
        and/or using the menu, which seems to at best disregard
        keyreleases and at worst react badly to them. */
-  
+
     if(fuse_emulation_paused) {
       if( wm_down & WPAD_BUTTON_DOWN )
         POST_KEYPRESS( INPUT_JOYSTICK_RIGHT );
@@ -140,9 +140,9 @@ mouse_update( void )
       else if( ( wm_down & WPAD_BUTTON_B ) || ( wm_down & WPAD_BUTTON_1 )
            || ( wm_down & WPAD_BUTTON_HOME ) )
         POST_KEYPRESS( INPUT_JOYSTICK_FIRE_2 );
-  
+
       if( wpad->exp.type == EXP_NUNCHUK ) {
-  
+
         js = wpad->exp.nunchuk.js;
 
         if( js.mag >= 0.5 ) {
@@ -189,7 +189,7 @@ mouse_update( void )
   if( paddata.ir.state == 0 )
     wiidisplay_showmouse( -1, -1 );
   else
-    wiidisplay_showmouse( paddata.ir.x/560.0f, paddata.ir.y/420.0f );  
+    wiidisplay_showmouse( paddata.ir.x/560.0f, paddata.ir.y/420.0f );
 }
 
 int

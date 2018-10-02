@@ -43,14 +43,14 @@ ui_init( int *argc, char ***argv )
 
 #ifdef USE_WIDGET
   if( ui_widget_init() ) return 1;
-#endif				/* #ifdef USE_WIDGET */
+#endif // #ifdef USE_WIDGET
 
   error = atexit( wii_end );
   if( error ) {
     ui_error( UI_ERROR_ERROR, "%s: couldn't set atexit function", __func__ );
     return 1;
   }
-  
+
   error = wiidisplay_init();
   if( error ) return error;
   error = wiikeyboard_init();
@@ -73,13 +73,13 @@ int ui_end(void)
 {
   /* Cleanup handled by atexit function */
   int error;
-  
+
   error = wiikeyboard_end(); if( error ) return error;
   error = wiidisplay_end(); if( error ) return error;
 
 #ifdef USE_WIDGET
   ui_widget_end();
-#endif                          /* #ifdef USE_WIDGET */
+#endif // #ifdef USE_WIDGET
 
   return 0;
 }

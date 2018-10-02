@@ -128,15 +128,15 @@ disassemble_main( libspectrum_word address, char *buffer, size_t buflen,
     snprintf( buffer, buflen, "HALT" ); *length = 1;
   } else if( b < 0x80 ) {
 
-    if( ( b & 0x07 ) == 0x06 ) {		 /* LD something,(HL) */
+    if( ( b & 0x07 ) == 0x06 ) { // LD something,(HL)
       dest_reg( address, USE_HL, buffer2, 40 );
       source_reg( address, use_hl, buffer3, 40 );
       *length = ( use_hl == USE_HL ? 1 : 2 );
-    } else if( ( ( b >> 3 ) & 0x07 ) == 0x06 ) { /* LD (HL),something */
+    } else if( ( ( b >> 3 ) & 0x07 ) == 0x06 ) { // LD (HL),something
       dest_reg( address, use_hl, buffer2, 40 );
       source_reg( address, USE_HL, buffer3, 40 );
       *length = ( use_hl == USE_HL ? 1 : 2 );
-    } else {				/* Does not involve (HL) at all */
+    } else { // Does not involve (HL) at all
       dest_reg( address, use_hl, buffer2, 40 );
       source_reg( address, use_hl, buffer3, 40 );
       *length = 1;
@@ -245,7 +245,7 @@ disassemble_00xxx010( libspectrum_word address, char *buffer, size_t buflen,
 
   switch( b >> 4 ) {
 
-  case 0: case 1: 
+  case 0: case 1:
     snprintf( buffer, buflen, "LD (%s),A", reg_pair( b, use_hl ) );
     *length = 1;
     break;
@@ -273,7 +273,7 @@ disassemble_00xxx110( libspectrum_word address, char *buffer, size_t buflen,
 
   switch( b >> 4 ) {
 
-  case 0: case 1: 
+  case 0: case 1:
     snprintf( buffer, buflen, "LD A,(%s)", reg_pair( b, use_hl ) );
     *length = 1;
     break;
@@ -290,7 +290,7 @@ disassemble_00xxx110( libspectrum_word address, char *buffer, size_t buflen,
     break;
   }
 }
-  
+
 /* Disassemble something of the form 11xxxxxx */
 static void
 disassemble_11xxxxxx( libspectrum_word address, char *buffer, size_t buflen,
@@ -314,7 +314,7 @@ disassemble_11xxxxxx( libspectrum_word address, char *buffer, size_t buflen,
     snprintf( buffer, buflen, "JP %s,%s", condition( b ), buffer2 );
     *length = 3;
     break;
-      
+
   case 0x03:
     disassemble_11xxx011( address, buffer, buflen, length, use_hl );
     break;
@@ -348,7 +348,7 @@ disassemble_11xxx001( libspectrum_byte b, char *buffer, size_t buflen,
 		      size_t *length, enum hl_type use_hl )
 {
   switch( ( b >> 3 ) - 0x18 ) {
-    
+
   case 0x00: case 0x02: case 0x04:
     snprintf( buffer, buflen, "POP %s", reg_pair( b, use_hl ) ); *length = 1;
     break;
@@ -356,7 +356,7 @@ disassemble_11xxx001( libspectrum_byte b, char *buffer, size_t buflen,
   case 0x01: snprintf( buffer, buflen, "RET" ); *length = 1; break;
   case 0x03: snprintf( buffer, buflen, "EXX" ); *length = 1; break;
 
-  case 0x05: 
+  case 0x05:
     snprintf( buffer, buflen, "JP (%s)", hl_ix_iy( use_hl ) ); *length = 1;
     break;
 
@@ -432,7 +432,7 @@ disassemble_11xxx101( libspectrum_word address, char *buffer, size_t buflen,
   libspectrum_byte b = readbyte_internal( address );
 
   switch( ( b >> 3 ) - 0x18 ) {
-	
+
   case 0x00: case 0x02: case 0x04:
     snprintf( buffer, buflen, "PUSH %s", reg_pair( b, use_hl ) ); *length = 1;
     break;
@@ -662,7 +662,7 @@ reg_pair( libspectrum_byte b, enum hl_type use_hl )
   case 2: return hl_ix_iy( use_hl );
   case 3: return "SP";
   }
-  return "* INTERNAL ERROR *";	/* Should never happen */
+  return "* INTERNAL ERROR *"; // Should never happen
 }
 
 /* Get whichever of HL, IX or IY is in use here */
@@ -674,7 +674,7 @@ hl_ix_iy( enum hl_type use_hl )
   case USE_IX: return "IX";
   case USE_IY: return "IY";
   }
-  return "* INTERNAL ERROR *";	/* Should never happen */
+  return "* INTERNAL ERROR *"; // Should never happen
 }
 
 /* Get a text representation of '(IX+03)' or similar things */
@@ -861,7 +861,7 @@ run_test( libspectrum_byte *data, size_t data_length, const char *expected )
   size_t length;
 
   memcpy( memory_map_read[8].page, data, data_length );
-  
+
   debugger_disassemble( disassembly, sizeof( disassembly ), &length, 0x4000 );
 
   if( strcmp( disassembly, expected ) ) return 1;

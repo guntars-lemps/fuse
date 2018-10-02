@@ -153,22 +153,22 @@ static libspectrum_byte
 simpleide_read( libspectrum_word port, libspectrum_byte *attached )
 {
   libspectrum_ide_register idereg;
-  
-  *attached = 0xff; /* TODO: check this */
-  
+
+  *attached = 0xff; // TODO: check this
+
   idereg = ( ( port >> 8 ) & 0x01 ) | ( ( port >> 11 ) & 0x06 );
-  
-  return libspectrum_ide_read( simpleide_idechn, idereg ); 
-}  
+
+  return libspectrum_ide_read( simpleide_idechn, idereg );
+}
 
 static void
 simpleide_write( libspectrum_word port, libspectrum_byte data )
 {
   libspectrum_ide_register idereg;
-  
+
   idereg = ( ( port >> 8 ) & 0x01 ) | ( ( port >> 11 ) & 0x06 );
-  
-  libspectrum_ide_write( simpleide_idechn, idereg, data ); 
+
+  libspectrum_ide_write( simpleide_idechn, idereg, data );
 }
 
 static void

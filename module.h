@@ -52,4 +52,4 @@ void module_snapshot_enabled( libspectrum_snap *snap );
 void module_snapshot_from( libspectrum_snap *snap );
 void module_snapshot_to( libspectrum_snap *snap );
 
-#endif			/* #ifndef FUSE_MODULE_H */
+#endif // #ifndef FUSE_MODULE_H

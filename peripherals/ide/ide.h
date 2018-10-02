@@ -60,4 +60,4 @@ ide_eject_mass_storage(
     libspectrum_error (*eject_fn)( void *context ),
     void *context, const char *message, char **setting, ui_menu_item item );
 
-#endif			/* #ifndef FUSE_IDE_H */
+#endif // #ifndef FUSE_IDE_H

@@ -35,4 +35,4 @@ void spec48_common_display_setup( void );
 int spec48_common_reset( void );
 int spec48_memory_map( void );
 
-#endif			/* #ifndef FUSE_SPEC48_H */
+#endif // #ifndef FUSE_SPEC48_H

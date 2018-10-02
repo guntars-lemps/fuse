@@ -135,7 +135,7 @@ tape_init( void *context )
   tape_microphone = 0;
 
   next_tape_edge_tstates = 0;
-  
+
   return 0;
 }
 
@@ -403,7 +403,7 @@ tape_load_trap( void )
     block = libspectrum_tape_select_next_block( tape );
     if( !block ) return 1;
   }
-  
+
   /* If this block isn't a ROM loader, start the block playing. After
      that, return with `error' so that we actually do whichever
      instruction it was that caused the trap to hit */
@@ -494,7 +494,7 @@ trap_load_block( libspectrum_tape_block *block )
   }
 
   verify =  !(F_ & FLAG_C);
-  i = A_; /* i = A' (flag byte) */
+  i = A_; // i = A' (flag byte)
   A = 0;
 
   /* Initialise the parity check and L to the block ID byte */
@@ -502,10 +502,10 @@ trap_load_block( libspectrum_tape_block *block )
 
   /* emulate zero length block rom bug */
   if (!DE) {
-    i = 0; /* one byte was read, but it is not treated as data byte */
-    B = 0xB0; /* B is set to 0xB0 at the end of LD-8-BITS/0x05CA loop */
-    A = parity; /* rom 0x05DF */
-    CP( 1 ); /* parity check is successful if A==0 */
+    i = 0; // one byte was read, but it is not treated as data byte
+    B = 0xB0; // B is set to 0xB0 at the end of LD-8-BITS/0x05CA loop
+    A = parity; // rom 0x05DF
+    CP( 1 ); // parity check is successful if A==0
     goto common_ret;
   }
 
@@ -519,7 +519,7 @@ trap_load_block( libspectrum_tape_block *block )
   L = data[read - 1];
 
   /* Loading or verifying determined by the carry flag of F' */
-  if( verify ) {		/* verifying */
+  if( verify ) { // verifying
     for( i = 0; i < read; i++ ) {
       parity ^= data[i];
       if( data[i] != readbyte_internal(IX+i) ) {
@@ -541,7 +541,7 @@ trap_load_block( libspectrum_tape_block *block )
   if( DE == i && read + 1 < length ) {
     parity ^= data[read];
     A = parity;
-    CP( 1 ); /* parity check is successful if A==0 */
+    CP( 1 ); // parity check is successful if A==0
     B = 0xB0;
   } else {
     /* Failure to read first bit of the next byte (ref. 48K ROM, 0x5EC) */
@@ -582,7 +582,7 @@ tape_save_trap( void )
   if( !trap_check_rom( CHECK_TAPE_ROM ) ) return 3;
 
   block = libspectrum_tape_block_alloc( LIBSPECTRUM_TAPE_BLOCK_ROM );
-  
+
   /* The +2 here is for the flag and parity bytes */
   length = DE + 2;
   libspectrum_tape_block_set_data_length( block, length );
@@ -627,7 +627,7 @@ static int
 tape_play( int autoplay )
 {
   if( !libspectrum_tape_present( tape ) ) return 1;
-  
+
   /* Otherwise, start the tape going */
   tape_playing = 1;
   tape_autoplay = autoplay;
@@ -890,7 +890,7 @@ tape_next_edge( libspectrum_dword last_tstates, int from_acceleration )
   /* If we've been requested to stop the tape, do so and then
      return without stacking another edge */
   if( ( flags & LIBSPECTRUM_TAPE_FLAGS_STOP ) ||
-      ( ( flags & LIBSPECTRUM_TAPE_FLAGS_STOP48 ) && 
+      ( ( flags & LIBSPECTRUM_TAPE_FLAGS_STOP48 ) &&
 	( !( libspectrum_machine_capabilities( machine_current->machine ) &
 	     LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY
 	   )
@@ -984,7 +984,7 @@ tape_block_details( char *buffer, size_t length,
     case 0x03: type = "Bytes"; break;
     default: goto normal;
     }
-    
+
     make_name( name, &data[2] );
 
     snprintf( buffer, length, "%s: \"%s\"", type, name );

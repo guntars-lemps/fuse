@@ -1,27 +1,27 @@
 /* speccyboot.c: SpeccyBoot Ethernet emulation
    See http://patrikpersson.github.io/speccyboot/
-   
+
    Copyright (c) 2009-2016 Patrik Persson, Philip Kendall
    Copyright (c) 2015 Stuart Brady
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation, Inc.,
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-   
+
    Author contact information:
 
    E-mail: philip-fuse@shadowmagic.org.uk
-   
+
 */
 
 #include <config.h>
@@ -104,7 +104,7 @@ static int page_event, unpage_event;
  * ROM paging state
  * ------------------------------------------------------------------------ */
 
-static int speccyboot_rom_active = 0;  /* SpeccyBoot ROM paged in? */
+static int speccyboot_rom_active = 0; // SpeccyBoot ROM paged in?
 static int speccyboot_memory_source;
 static memory_page speccyboot_memory_map_romcs[ MEMORY_PAGES_IN_8K ];
 
@@ -116,7 +116,7 @@ speccyboot_page( void )
   machine_current->memory_map();
   debugger_event( page_event );
 }
-  
+
 static void
 speccyboot_unpage( void )
 {
@@ -149,7 +149,7 @@ speccyboot_reset( int hard_reset GCC_UNUSED )
                              settings_default.rom_speccyboot, 0x2000 ) )
     return;
 
-  out_register_state = 0xff;  /* force transitions to low */
+  out_register_state = 0xff; // force transitions to low
 
   speccyboot_register_write( 0, 0 );
 
@@ -169,7 +169,7 @@ speccyboot_reset( int hard_reset GCC_UNUSED )
 static libspectrum_byte
 speccyboot_register_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   return in_register_state;
 }
 
@@ -206,7 +206,7 @@ speccyboot_register_write( libspectrum_word port GCC_UNUSED,
       nic_enc28j60_spi_consume_bit( nic, (out_register_state & OUT_BIT_SPI_MOSI) ? 1 : 0 );
     }
   }
-   
+
   /* Update ROM paging status when the ROM_CS bit is cleared or set */
   if( GONE_LO( out_register_state, val, OUT_BIT_ROM_CS ) ) {
     speccyboot_page();
@@ -277,7 +277,7 @@ speccyboot_unittest( void )
   return r;
 }
 
-#else			/* #ifdef BUILD_SPECCYBOOT */
+#else // #ifdef BUILD_SPECCYBOOT
 
 /* No speccyboot support */
 
@@ -292,4 +292,4 @@ speccyboot_unittest( void )
   return 0;
 }
 
-#endif			/* #ifdef BUILD_SPECCYBOOT */
+#endif // #ifdef BUILD_SPECCYBOOT

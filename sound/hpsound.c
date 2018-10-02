@@ -43,7 +43,7 @@ int sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
 
   /* select a default device if we weren't explicitly given one */
   if( device == NULL ) device = "/dev/audio";
-  
+
   /* Open the sound device non-blocking to avoid hangs if it is being
    * used by something else, but then set it blocking again as that's what
    * we actually want */
@@ -116,7 +116,7 @@ int sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   if( ioctl( soundfd, AUDIO_SET_SAMPLE_RATE, *freqptr ) < 0 ) {
     settings_current.sound = 0;
     ui_error( UI_ERROR_ERROR,"Couldn't set sound device '%s' speed to %d",
-	      device, *freqptr ); 
+	      device, *freqptr );
     close( soundfd );
     return 1;
   }
@@ -140,7 +140,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   unsigned char *data8=(unsigned char *)data;
   int ret=0, ofs=0;
 
-  len <<= 1;	/* now in bytes */
+  len <<= 1; // now in bytes
   if( !sixteenbit ) {
     libspectrum_signed_word *src;
     unsigned char *dst;
@@ -164,4 +164,4 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   }
 }
 
-#endif				/* #ifdef AUDIO_FORMAT_LINEAR16BIT */
+#endif // #ifdef AUDIO_FORMAT_LINEAR16BIT

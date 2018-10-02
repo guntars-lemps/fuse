@@ -50,7 +50,7 @@
 #ifdef HAVE_ZLIB_H
 #define ZLIB_CONST
 #include <zlib.h>
-#endif				/* #ifdef HAVE_ZLIB_H */
+#endif // #ifdef HAVE_ZLIB_H
 
 static int get_rgb32_data( libspectrum_byte *rgb32_data, size_t stride,
 			   size_t height, size_t width );
@@ -86,7 +86,7 @@ screenshot_write( const char *filename, scaler_type scaler )
 
   if( machine_current->timex ) {
     base_height = 2 * DISPLAY_SCREEN_HEIGHT;
-    base_width = DISPLAY_SCREEN_WIDTH; 
+    base_width = DISPLAY_SCREEN_WIDTH;
   } else {
     base_height = DISPLAY_SCREEN_HEIGHT;
     base_width = DISPLAY_ASPECT_WIDTH;
@@ -149,7 +149,7 @@ screenshot_write( const char *filename, scaler_type scaler )
   png_set_compression_level( png_ptr, Z_BEST_COMPRESSION );
 
   png_set_IHDR( png_ptr, info_ptr,
-		width, height, 8, 
+		width, height, 8,
 		PNG_COLOR_TYPE_RGB,
 		PNG_INTERLACE_NONE,
 		PNG_COMPRESSION_TYPE_DEFAULT,
@@ -176,7 +176,7 @@ get_rgb32_data( libspectrum_byte *rgb32_data, size_t stride,
 {
   size_t i, x, y;
 
-  static const			      /*  R    G    B */
+  static const // R    G    B
   libspectrum_byte palette[16][3] = { {   0,   0,   0 },
 				      {   0,   0, 192 },
 				      { 192,   0,   0 },
@@ -221,11 +221,11 @@ get_rgb32_data( libspectrum_byte *rgb32_data, size_t stride,
 	blue  = palette[colour][2];
 
       }
-      
+
       rgb32_data[ y * stride + 4 * x     ] = red;
       rgb32_data[ y * stride + 4 * x + 1 ] = green;
       rgb32_data[ y * stride + 4 * x + 2 ] = blue;
-      rgb32_data[ y * stride + 4 * x + 3 ] = 0;		 /* padding */
+      rgb32_data[ y * stride + 4 * x + 3 ] = 0; // padding
 
     }
   }
@@ -267,7 +267,7 @@ screenshot_available_scalers( scaler_type scaler )
     }
 
   } else {
-    
+
     switch( scaler ) {
 
     case SCALER_NORMAL: case SCALER_DOUBLESIZE: case SCALER_TRIPLESIZE:
@@ -283,7 +283,7 @@ screenshot_available_scalers( scaler_type scaler )
   }
 }
 
-#endif				/* #ifdef USE_LIBPNG */
+#endif // #ifdef USE_LIBPNG
 
 static int
 screenshot_scr_hires_write( const char *filename )
@@ -373,7 +373,7 @@ screenshot_scr_write( const char *filename )
     return scr_write( filename, HICOLOUR_SCR_SIZE,
                       &set_hicolor_pixels_and_attribute );
   }
-  else { /* ALTDFILE and default */
+  else { // ALTDFILE and default
     return scr_write( filename, STANDARD_SCR_SIZE,
                       &set_standard_pixels_and_attribute );
   }
@@ -416,7 +416,7 @@ typedef struct {
   unsigned b7 : 1;
 } byte_field_type;
 
-#else			/* #ifdef WORDS_BIGENDIAN */
+#else // #ifdef WORDS_BIGENDIAN
 
 typedef struct {
   unsigned b7 : 1;
@@ -429,7 +429,7 @@ typedef struct {
   unsigned b0 : 1;
 } byte_field_type;
 
-#endif			/* #ifdef WORDS_BIGENDIAN */
+#endif // #ifdef WORDS_BIGENDIAN
 
 typedef union {
   libspectrum_byte byte;

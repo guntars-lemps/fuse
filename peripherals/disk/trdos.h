@@ -27,31 +27,31 @@
 #include <libspectrum.h>
 
 typedef struct trdos_spec_t {
-  libspectrum_byte first_free_sector; /* 0 to 15 */
-  libspectrum_byte first_free_track;  /* 0 to ? */
+  libspectrum_byte first_free_sector; // 0 to 15
+  libspectrum_byte first_free_track; // 0 to ?
   libspectrum_byte disk_type;
   libspectrum_byte file_count;
   libspectrum_word free_sectors;
   libspectrum_byte id;
-  char password[9];                   /* not null-terminated */
+  char password[9]; // not null-terminated
   libspectrum_byte deleted_files;
-  char disk_label[8];                 /* not null-terminated */
+  char disk_label[8]; // not null-terminated
 } trdos_spec_t;
 
 typedef struct trdos_dirent_t {
-  char filename[8];                   /* not null-terminated */
+  char filename[8]; // not null-terminated
   char file_extension;
   libspectrum_word param1;
   libspectrum_word param2;
-  libspectrum_byte file_length;       /* in sectors */
-  libspectrum_byte start_sector;      /* 0 to 15 */
-  libspectrum_byte start_track;       /* 0 to ? */
+  libspectrum_byte file_length; // in sectors
+  libspectrum_byte start_sector; // 0 to 15
+  libspectrum_byte start_track; // 0 to ?
 } trdos_dirent_t;
 
 typedef struct trdos_boot_info_t {
   int have_boot_file;
   int basic_files_count;
-  char first_basic_file[8];           /* not null-terminated */
+  char first_basic_file[8]; // not null-terminated
 } trdos_boot_info_t;
 
 int
@@ -70,4 +70,4 @@ int
 trdos_read_fat( trdos_boot_info_t *info, const libspectrum_byte *sectors,
                 unsigned int seclen );
 
-#endif                  /* #ifndef FUSE_TRDOS_H */
+#endif // #ifndef FUSE_TRDOS_H

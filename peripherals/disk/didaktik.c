@@ -43,7 +43,7 @@
 #include "unittests/unittests.h"
 #include "utils.h"
 #include "wd_fdc.h"
-#include "options.h"	/* needed for get combo options */
+#include "options.h" // needed for get combo options
 #include "z80/z80.h"
 
 #define INTRQ_ENABLED  0x80
@@ -184,7 +184,7 @@ didaktik80_init( void *context )
 
   for( i = 0; i < DIDAKTIK80_NUM_DRIVES; i++ ) {
     d = &didaktik_drives[ i ];
-    fdd_init( d, FDD_SHUGART, NULL, 0 );       /* drive geometry 'autodetect' */
+    fdd_init( d, FDD_SHUGART, NULL, 0 ); // drive geometry 'autodetect'
     d->disk.flag = DISK_FLAG_NONE;
   }
 
@@ -348,7 +348,7 @@ didaktik_dr_write( libspectrum_word port GCC_UNUSED, libspectrum_byte b )
 static libspectrum_byte
 didaktik_8255_read( libspectrum_word port, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   return 0xff;
 }
 
@@ -543,7 +543,7 @@ didaktik_to_snapshot( libspectrum_snap *snap )
             didaktik_memory_map_romcs_ram[ i ].page, MEMORY_PAGE_SIZE );
   libspectrum_snap_set_didaktik80_ram( snap, 0, buffer );
 
-  drive_count++; /* Drive 1 is not removable */
+  drive_count++; // Drive 1 is not removable
   if( option_enumerate_diskoptions_drive_didaktik80b_type() > 0 ) drive_count++;
   libspectrum_snap_set_didaktik80_drive_count( snap, drive_count );
 

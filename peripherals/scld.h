@@ -27,9 +27,9 @@
 
 #ifndef FUSE_MEMORY_H
 #include "memory_pages.h"
-#endif				/* #ifndef FUSE_MEMORY_H */
+#endif // #ifndef FUSE_MEMORY_H
 
-#define STANDARD        0x00 /* standard Spectrum */
+#define STANDARD        0x00 // standard Spectrum
 #define ALTDFILE        0x01 /* the same in nature as above, but using second
                                 display file */
 #define EXTCOLOUR       0x02 /* extended colours (data taken from first screen,
@@ -63,58 +63,58 @@
 
 typedef struct
 {
-  unsigned altmembank : 1;  /* ALTMEMBANK : 0 = cartridge, 1 = exrom */
-  unsigned intdisable : 1;  /* INTDISABLE */
-  unsigned b5  : 1;  /* */
-  unsigned b4  : 1;  /* */
-  unsigned b3  : 1;  /* */
-  unsigned hires  : 1;  /* SCLD HIRES mode */
-  unsigned b1     : 1;  /* */
-  unsigned altdfile : 1;  /* SCLD use ALTDFILE */
+  unsigned altmembank : 1; // ALTMEMBANK : 0 = cartridge, 1 = exrom
+  unsigned intdisable : 1; // INTDISABLE
+  unsigned b5  : 1; //
+  unsigned b4  : 1; //
+  unsigned b3  : 1; //
+  unsigned hires  : 1; // SCLD HIRES mode
+  unsigned b1     : 1; //
+  unsigned altdfile : 1; // SCLD use ALTDFILE
 } scld_names;
 
 typedef struct
 {
-  unsigned b7  : 1;  /* */
-  unsigned b6  : 1;  /* */
-  unsigned hirescol  : 3;  /* HIRESCOLMASK */
-  unsigned scrnmode  : 3;  /* SCRNMODEMASK */
+  unsigned b7  : 1; //
+  unsigned b6  : 1; //
+  unsigned hirescol  : 3; // HIRESCOLMASK
+  unsigned scrnmode  : 3; // SCRNMODEMASK
 } scld_masks;
 
-#else				/* #ifdef WORDS_BIGENDIAN */
+#else // #ifdef WORDS_BIGENDIAN
 
 typedef struct
 {
-  unsigned altdfile : 1;  /* SCLD use ALTDFILE */
-  unsigned b1     : 1;  /* */
-  unsigned hires  : 1;  /* SCLD HIRES mode */
-  unsigned b3  : 1;  /* */
-  unsigned b4  : 1;  /* */
-  unsigned b5  : 1;  /* */
-  unsigned intdisable : 1;  /* INTDISABLE */
-  unsigned altmembank : 1;  /* ALTMEMBANK : 0 = cartridge, 1 = exrom */
+  unsigned altdfile : 1; // SCLD use ALTDFILE
+  unsigned b1     : 1; //
+  unsigned hires  : 1; // SCLD HIRES mode
+  unsigned b3  : 1; //
+  unsigned b4  : 1; //
+  unsigned b5  : 1; //
+  unsigned intdisable : 1; // INTDISABLE
+  unsigned altmembank : 1; // ALTMEMBANK : 0 = cartridge, 1 = exrom
 } scld_names;
 
 typedef struct
 {
-  unsigned scrnmode  : 3;  /* SCRNMODEMASK */
-  unsigned hirescol  : 3;  /* HIRESCOLMASK */
-  unsigned b6  : 1;  /* */
-  unsigned b7  : 1;  /* */
+  unsigned scrnmode  : 3; // SCRNMODEMASK
+  unsigned hirescol  : 3; // HIRESCOLMASK
+  unsigned b6  : 1; //
+  unsigned b7  : 1; //
 } scld_masks;
 
-#endif				/* #ifdef WORDS_BIGENDIAN */
+#endif // #ifdef WORDS_BIGENDIAN
 
 typedef union
 {
   libspectrum_byte byte;
   scld_masks mask;
   scld_names name;
-} scld; 
+} scld;
 
-extern scld scld_last_dec;           /* The last byte sent to Timex DEC port */
+extern scld scld_last_dec; // The last byte sent to Timex DEC port
 
-extern libspectrum_byte scld_last_hsr; /* Last byte sent to Timex HSR port */
+extern libspectrum_byte scld_last_hsr; // Last byte sent to Timex HSR port
 
 /* Home map has pointers to the related entries in the RAM array so that the
    dck loading code can locate the associated pages when extracting data from
@@ -142,4 +142,4 @@ void scld_home_map_16k( libspectrum_word address, memory_page source[],
    0x7FFF range */
 void scld_set_exrom_dock_contention( void );
 
-#endif                  /* #ifndef FUSE_SCLD_H */
+#endif // #ifndef FUSE_SCLD_H

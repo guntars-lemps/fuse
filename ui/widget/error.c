@@ -58,7 +58,7 @@ int widget_error_draw( void *data )
 
   error_info = (widget_error_t*)data;
   if( split_message( error_info->message, &lines, &count, 28 ) ) return 1;
-  
+
   widget_dialog_with_border( 1, 2, 30, count+2 );
 
   switch( error_info->severity ) {
@@ -139,14 +139,14 @@ split_message( const char *message, char ***lines, size_t *count,
 	free( (*lines) );
 	return 1;
       }
-      
+
       strncpy( (*lines)[*count], message, ptr - message );
       position = widget_substringwidth( message, ptr - message );
       (*lines)[*count][ptr - message] = '\0';
 
       (*count)++;
 
-    } else {		/* Enough room on this line */
+    } else { // Enough room on this line
 
       strcat( (*lines)[*count-1], " " );
       (*lines)[*count-1][strlen( (*lines)[*count-1] ) + ptr - message] = '\0';
@@ -174,7 +174,7 @@ widget_error_keyhandler( input_key key )
     widget_end_widget( WIDGET_FINISHED_OK );
     return;
 
-  default:	/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }

@@ -34,10 +34,10 @@
 #include "widget.h"
 
 /* The default colours used in the widget */
-#define WIDGET_COLOUR_DISABLED   7	/* White */
-#define WIDGET_COLOUR_BACKGROUND 15	/* Bright White */
-#define WIDGET_COLOUR_FOREGROUND 0	/* Black */
-#define WIDGET_COLOUR_HIGHLIGHT  13	/* Cyan */
+#define WIDGET_COLOUR_DISABLED   7 // White
+#define WIDGET_COLOUR_BACKGROUND 15 // Bright White
+#define WIDGET_COLOUR_FOREGROUND 0 // Black
+#define WIDGET_COLOUR_HIGHLIGHT  13 // Cyan
 #define WIDGET_COLOUR_TITLE      WIDGET_COLOUR_BACKGROUND
 
 /* The ways of finishing a widget */
@@ -51,9 +51,9 @@ typedef int (*widget_draw_fn)( void *data );
 
 /* The information we need to store for each widget */
 typedef struct widget_t {
-  widget_draw_fn draw;			/* Draw this widget */
-  int (*finish)( widget_finish_state finished ); /* Post-widget processing */
-  widget_keyhandler_fn keyhandler;	/* Keyhandler */
+  widget_draw_fn draw; // Draw this widget
+  int (*finish)( widget_finish_state finished ); // Post-widget processing
+  widget_keyhandler_fn keyhandler; // Keyhandler
 } widget_t;
 
 int widget_end_widget( widget_finish_state state );
@@ -160,13 +160,13 @@ scaler_type widget_select_scaler( int (*selector)( scaler_type ) );
 
 typedef struct widget_select_t {
 
-  const char *title;	/* Dialog title */
-  const char * const *options;	/* The available options */
-  size_t count;		/* The number of options */
-  size_t current;	/* Which option starts active? */
+  const char *title; // Dialog title
+  const char * const *options; // The available options
+  size_t count; // The number of options
+  size_t current; // Which option starts active?
 
-  int result;		/* What was selected? ( -1 if dialog cancelled ) */
-  int finish_all;	/* close all widget or not */
+  int result; // What was selected? ( -1 if dialog cancelled )
+  int finish_all; // close all widget or not
 
 } widget_select_t;
 
@@ -191,7 +191,7 @@ typedef enum widget_text_input_allow {
 
 typedef struct widget_text_t {
   const char *title;
-  widget_text_input_allow allow; 
+  widget_text_input_allow allow;
   unsigned int max_length;
   char text[40];
 } widget_text_t;
@@ -200,7 +200,7 @@ int widget_text_draw( void* data );
 void widget_text_keyhandler( input_key key );
 int widget_text_finish( widget_finish_state finished );
 
-extern char *widget_text_text;	/* The returned text */
+extern char *widget_text_text; // The returned text
 
 /* The options widgets */
 int widget_options_finish( widget_finish_state finished );
@@ -271,4 +271,4 @@ int widget_query_finish( widget_finish_state finished );
 
 extern widget_t widget_data[];
 
-#endif				/* #ifndef FUSE_WIDGET_INTERNALS_H */
+#endif // #ifndef FUSE_WIDGET_INTERNALS_H

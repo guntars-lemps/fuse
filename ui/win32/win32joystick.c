@@ -43,7 +43,7 @@
 
 #include "../uijoystick.c"
 
-#else /* #if !defined USE_JOYSTICK || defined HAVE_JSW_H */
+#else // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
 /* Functions to handle Joystick events */
 #include "ui/ui.h"
@@ -113,9 +113,9 @@ win32joystick_buttonevent( int which_joystick, int button_down,
   else if( wParam & JOY_BUTTON2CHG ) button = INPUT_JOYSTICK_FIRE_2;
   else if( wParam & JOY_BUTTON3CHG ) button = INPUT_JOYSTICK_FIRE_3;
   else if( wParam & JOY_BUTTON4CHG ) button = INPUT_JOYSTICK_FIRE_4;
-  else return; /* Fuse for Windows supports up to 4 joystick buttons */
+  else return; // Fuse for Windows supports up to 4 joystick buttons
 
-  event.types.joystick.which = which_joystick; 
+  event.types.joystick.which = which_joystick;
   event.type = button_down
                ? INPUT_EVENT_JOYSTICK_PRESS : INPUT_EVENT_JOYSTICK_RELEASE;
   event.types.joystick.button = button;
@@ -164,15 +164,15 @@ ui_joystick_end( void )
   /* Initialization and unitialization is handled by MS Windows */
 }
 
-#endif /* #if !defined USE_JOYSTICK || defined HAVE_JSW_H */
+#endif // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
 /* Win32 UI functions to handle Joystick options menus */
 struct button_info {
   int *setting;
   TCHAR name[80];
-  HWND label; /* this is the label on the button */
-  HWND static_label; /* this is the label on the static */
-  HWND frame; 
+  HWND label; // this is the label on the button
+  HWND static_label; // this is the label on the static
+  HWND frame;
   keyboard_key_name key;
 };
 
@@ -205,7 +205,7 @@ menu_options_joysticks_select( int action )
   fuse_emulation_pause();
 
   setup_info( &info, action );
-  
+
   DialogBoxParam( fuse_hInstance, MAKEINTRESOURCE( IDD_JOYSTICKS ),
                   fuse_hWnd, dialog_proc, ( LPARAM ) &info );
 
@@ -241,7 +241,7 @@ dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
         case IDC_JOYSTICKS_BUTTON_BUTTON15:
           show_key_selection_popoup( hwndDlg, lParam );
           return 0;
-          
+
         case IDOK:
           joystick_done( GetWindowLongPtr( hwndDlg, GWLP_USERDATA ) );
           EndDialog( hwndDlg, 0 );
@@ -255,7 +255,7 @@ dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 
     case WM_CLOSE:
       EndDialog( hwndDlg, 0 );
-      return 0;      
+      return 0;
   }
   return FALSE;
 }
@@ -267,7 +267,7 @@ dialog_init( HWND hwndDlg, struct joystick_info *info )
   create_joystick_type_selector( info, hwndDlg );
 
   for( i = 0; i < NUM_JOY_BUTTONS; i++ ) {
-    
+
     info->button[i].label = GetDlgItem( hwndDlg,
                                        IDC_JOYSTICKS_BUTTON_BUTTON1 + i );
     info->button[i].static_label = GetDlgItem( hwndDlg,
@@ -384,10 +384,10 @@ create_joystick_type_selector( struct joystick_info *info, HWND hwndDlg )
                                        hwndDlg, 0, fuse_hInstance, 0 );
     SendMessage( info->radio[ i ], WM_SETFONT, ( WPARAM ) font, FALSE );
 
-    if( i == *( info->type ) ) 
+    if( i == *( info->type ) )
       SendMessage( info->radio[ i ], BM_SETCHECK, BST_CHECKED, 0 );
   }
-  
+
   rect.left = 0; rect.top = 0;
   rect.right = 60; rect.bottom = ( i * 10 ) + 10 + 10 + 5;
   MapDialogRect( hwndDlg, &rect );
@@ -418,7 +418,7 @@ set_key_text( HWND hlabel, keyboard_key_name key )
   text = keyboard_key_text( key );
 
   _sntprintf( buffer, 40, "%s", text );
-  
+
   SendMessage( hlabel, WM_SETTEXT, 0, ( LPARAM ) buffer );
 }
 
@@ -449,7 +449,7 @@ show_key_selection_popoup( HWND hwndDlg, LPARAM lParam )
   HMENU hpopup;
   struct button_info *info;
   BOOL menu_id;
-  
+
   info = ( struct button_info * ) GetWindowLongPtr( ( HWND ) lParam,
                                                     GWLP_USERDATA );
   /* create a popup right over the button that has been clicked */

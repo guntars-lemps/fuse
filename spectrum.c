@@ -132,7 +132,7 @@ spectrum_register_startup( void )
     STARTUP_MANAGER_MODULE_SETUID,
   };
   startup_manager_register( STARTUP_MANAGER_MODULE_SPECTRUM, dependencies,
-                            ARRAY_SIZE( dependencies ), spectrum_init, NULL, 
+                            ARRAY_SIZE( dependencies ), spectrum_init, NULL,
                             NULL );
 }
 
@@ -183,7 +183,7 @@ contend_delay_common( libspectrum_dword time, int* timings, int offset )
 {
   int line, tstates_through_line;
 
-  line = 
+  line =
     (libspectrum_signed_dword)( time - machine_current->line_times[ 0 ] ) /
     machine_current->timings.tstates_per_line;
 
@@ -200,7 +200,7 @@ contend_delay_common( libspectrum_dword time, int* timings, int offset )
       line >= DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT    ) return 0;
 
   /* Or in the left border */
-  if( tstates_through_line < machine_current->timings.left_border - offset ) 
+  if( tstates_through_line < machine_current->timings.left_border - offset )
     return 0;
 
   /* Or the right border or retrace */
@@ -292,7 +292,7 @@ spectrum_unattached_port( void )
 
   }
 
-  return 0;		/* Keep gcc happy */
+  return 0; // Keep gcc happy
 }
 
 libspectrum_byte

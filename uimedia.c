@@ -188,7 +188,7 @@ drive_disk_write( const ui_media_drive_info_t *drive, const char *filename )
 
   drive->fdd->disk.type = DISK_TYPE_NONE;
   if( filename == NULL )
-    filename = drive->fdd->disk.filename; /* write over original file */
+    filename = drive->fdd->disk.filename; // write over original file
   else if( compat_file_exists( filename ) ) {
     const char *filename1 = strrchr( filename, FUSE_DIR_SEP_CHR );
     filename1 = filename1 ? filename1 + 1 : filename;
@@ -289,7 +289,7 @@ drive_eject( const ui_media_drive_info_t *drive )
 
     case UI_CONFIRM_SAVE_SAVE:
       if( drive_save( drive, 0 ) )
-        return 1;   /* first save it...*/
+        return 1; // first save it...
       break;
 
     case UI_CONFIRM_SAVE_DONTSAVE: break;

@@ -27,4 +27,4 @@
 int fbdisplay_init( void );
 int fbdisplay_end( void );
 
-#endif			/* #ifndef FUSE_FBDISPLAY_H */
+#endif // #ifndef FUSE_FBDISPLAY_H

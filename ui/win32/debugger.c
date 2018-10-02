@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <tchar.h>
 #include <windows.h>
- 
+
 #include "debugger/debugger.h"
 #include "event.h"
 #include "fuse.h"
@@ -60,7 +60,7 @@
 /* The various debugger panes */
 typedef enum debugger_pane {
 
-  DEBUGGER_PANE_BEGIN = 1,	/* Start marker */
+  DEBUGGER_PANE_BEGIN = 1, // Start marker
 
   DEBUGGER_PANE_REGISTERS = DEBUGGER_PANE_BEGIN,
   DEBUGGER_PANE_MEMORYMAP,
@@ -69,7 +69,7 @@ typedef enum debugger_pane {
   DEBUGGER_PANE_STACK,
   DEBUGGER_PANE_EVENTS,
 
-  DEBUGGER_PANE_END		/* End marker */
+  DEBUGGER_PANE_END // End marker
 } debugger_pane;
 
 static int create_dialog( void );
@@ -152,10 +152,10 @@ ui_debugger_activate( void )
 
   /* create_dialog will create the dialog or activate if it exists */
   if( !dialog_created ) if( create_dialog() ) return 1;
-        
+
   ShowWindow( fuse_hDBGWnd, SW_SHOW );
   error = hide_hidden_panes(); if( error ) return error;
-  
+
   EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_CONT ), TRUE);
   EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_BREAK ), FALSE );
   if( !debugger_active ) activate_debugger();
@@ -184,7 +184,7 @@ hide_hidden_panes( void )
     mii.cbSize = sizeof( MENUITEMINFO );
     if( ! GetMenuItemInfo( GetMenu( fuse_hDBGWnd ), checkitem, FALSE, &mii ) )
       return 1;
-    
+
     if( mii.fState && MFS_CHECKED ) continue;
 
     if( ! show_hide_pane( i, SW_HIDE ) ) return 1;
@@ -231,38 +231,38 @@ show_hide_pane( debugger_pane pane, int show )
 */
   /* FIXME: window needs to resize/collapse as panel are being hidden */
   int i;
-        
+
   switch( pane ) {
     case DEBUGGER_PANE_REGISTERS:
       for( i = IDC_DBG_REG_PC; i <= IDC_DBG_REG_IM; i++ ) {
         ShowWindow( GetDlgItem( fuse_hDBGWnd, i ), show );
       }
       return TRUE;
-  
+
     case DEBUGGER_PANE_MEMORYMAP:
       for( i = IDC_DBG_MAP11; i <= IDC_DBG_TEXT_CONTENDED; i++ ) {
         ShowWindow( GetDlgItem( fuse_hDBGWnd, i ), show );
       }
       ShowWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_GRP_MEMMAP ), show );
       return TRUE;
-  
+
     case DEBUGGER_PANE_BREAKPOINTS:
       ShowWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_BPS ), show );
       return TRUE;
-  
+
     case DEBUGGER_PANE_DISASSEMBLY:
       ShowWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_PC ), show );
       ShowWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_SB_PC ), show );
       return TRUE;
-  
+
     case DEBUGGER_PANE_STACK:
       ShowWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_STACK ), show );
       return TRUE;
-  
+
     case DEBUGGER_PANE_EVENTS:
       ShowWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_EVENTS ), show );
       return TRUE;
-  
+
     case DEBUGGER_PANE_END: break;
   }
 
@@ -278,7 +278,7 @@ ui_debugger_deactivate( int interruptable )
   if( dialog_created ) {
     EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_CONT ),
                   !interruptable ? TRUE : FALSE );
-    EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_BREAK ), 
+    EnableWindow( GetDlgItem( fuse_hDBGWnd, IDC_DBG_BTN_BREAK ),
                   interruptable ? TRUE : FALSE );
   }
 
@@ -290,7 +290,7 @@ create_dialog( void )
 {
   int error;
   debugger_pane i;
-  MENUITEMINFO mii;  
+  MENUITEMINFO mii;
 
   HFONT font;
 
@@ -313,7 +313,7 @@ create_dialog( void )
 
   /* Initially, have all the panes visible */
   for( i = DEBUGGER_PANE_BEGIN; i < DEBUGGER_PANE_END; i++ ) {
-  
+
     UINT check_item;
 
     check_item = get_pane_menu_item( i ); if( !check_item ) break;
@@ -333,11 +333,11 @@ static void
 toggle_display( debugger_pane pane, UINT menu_item_id )
 {
   MENUITEMINFO mii;
-        
+
   mii.fMask = MIIM_STATE;
   mii.cbSize = sizeof( MENUITEMINFO );
   GetMenuItemInfo( GetMenu( fuse_hDBGWnd ), menu_item_id, FALSE, &mii );
-    
+
   /* Windows doesn't automatically checks/unchecks
      the menus when they're clicked */
   if( mii.fState && MFS_CHECKED ) {
@@ -370,15 +370,15 @@ create_breakpoints( void )
   size_t i;
 
   LPCTSTR breakpoint_titles[] = { _T( "ID" ), _T( "Type" ), _T( "Value" ),
-                                  _T( "Ignore" ), _T( "Life" ), 
+                                  _T( "Ignore" ), _T( "Life" ),
                                   _T( "Condition" ) };
   /* set extended listview style to select full row, when an item is selected */
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_BPS,
-                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 ); 
+                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
   lv_ext_style |= LVS_EX_FULLROWSELECT;
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_BPS,
-                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style ); 
+                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
   /* create columns */
   LVCOLUMN lvc;
@@ -393,7 +393,7 @@ create_breakpoints( void )
     SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_BPS, LVM_INSERTCOLUMN, i,
                         ( LPARAM ) &lvc );
   }
-  
+
   return 0;
 }
 
@@ -410,17 +410,17 @@ create_disassembly( HFONT font )
   HWND hwnd_list = GetDlgItem( fuse_hDBGWnd, IDC_DBG_LV_PC );
   WNDPROC orig_proc = (WNDPROC) GetWindowLongPtr( hwnd_list, GWLP_WNDPROC );
   SetProp( hwnd_list, "original_proc", (HANDLE) orig_proc );
-  SetWindowLongPtr( hwnd_list, GWLP_WNDPROC, 
+  SetWindowLongPtr( hwnd_list, GWLP_WNDPROC,
                     (LONG_PTR) (WNDPROC) disassembly_listview_proc );
 
   /* set extended listview style to select full row, when an item is selected */
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_PC,
-                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 ); 
+                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
   lv_ext_style |= LVS_EX_FULLROWSELECT;
   lv_ext_style |= LVS_EX_DOUBLEBUFFER;
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_PC,
-                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style ); 
+                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
   win32ui_set_font( fuse_hDBGWnd, IDC_DBG_LV_PC, font );
 
@@ -446,15 +446,15 @@ create_disassembly( HFONT font )
 
   /* The disassembly scrollbar */
   SCROLLINFO si;
-  si.cbSize = sizeof(si); 
-  si.fMask = SIF_POS | SIF_RANGE | SIF_PAGE; 
+  si.cbSize = sizeof(si);
+  si.fMask = SIF_POS | SIF_RANGE | SIF_PAGE;
   si.nPos = 0;
   si.nMin = disassembly_min;
   si.nMax = disassembly_max;
   si.nPage = disassembly_page;
   SetScrollInfo( GetDlgItem( fuse_hDBGWnd, IDC_DBG_SB_PC ),
                  SB_CTL, &si, TRUE );
-  
+
   return 0;
 }
 
@@ -468,10 +468,10 @@ create_stack_display( HFONT font )
   /* set extended listview style to select full row, when an item is selected */
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_STACK,
-                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 ); 
+                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
   lv_ext_style |= LVS_EX_FULLROWSELECT;
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_STACK,
-                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style ); 
+                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
   win32ui_set_font( fuse_hDBGWnd, IDC_DBG_LV_STACK, font );
 
@@ -537,10 +537,10 @@ create_events( void )
   /* set extended listview style to select full row, when an item is selected */
   DWORD lv_ext_style;
   lv_ext_style = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
-                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 ); 
+                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
   lv_ext_style |= LVS_EX_FULLROWSELECT;
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
-                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style ); 
+                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style );
 
   /* create columns */
   LVCOLUMN lvc;
@@ -572,7 +572,7 @@ events_click( LPNMITEMACTIVATE lpnmitem )
 
   row = lpnmitem->iItem;
   if( row < 0 ) return;
-        
+
   li.iSubItem = 0;
   li.pszText = buffer;
   li.cchTextMax = 255;
@@ -634,7 +634,7 @@ ui_debugger_update( void )
   for( i = 0; i < 12; i++ ) {
     _sntprintf( buffer, 5, "%3s ", register_name[i] );
     _sntprintf( &buffer[4], 76, format_16_bit(), *value_ptr[i] );
-    SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_REG_PC + i, 
+    SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_REG_PC + i,
                         WM_SETTEXT, (WPARAM) 0, (LPARAM) buffer );
   }
 
@@ -724,12 +724,12 @@ ui_debugger_update( void )
   /* And the stack display */
   SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_LV_STACK,
                       LVM_DELETEALLITEMS, 0, 0 );
-  
+
   LV_ITEM lvi;
   lvi.mask = LVIF_TEXT;
 
   for( i = 0, address = SP + 38; i < 20; i++, address -= 2 ) {
-    
+
     libspectrum_word contents = readbyte_internal( address ) +
 				0x100 * readbyte_internal( address + 1 );
 
@@ -777,7 +777,7 @@ update_memory_map( void )
 
       _sntprintf( buffer, 40, format_16_bit(),
                   (unsigned)block * MEMORY_PAGE_SIZE );
-      SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_MAP11 + ( row * 4 ), 
+      SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_MAP11 + ( row * 4 ),
                           WM_SETTEXT, ( WPARAM ) 0, ( LPARAM ) buffer );
 
       /* FIXME: memory_source_description is not unicode */
@@ -872,7 +872,7 @@ update_breakpoints( void )
     case DEBUGGER_BREAKPOINT_TYPE_TIME:
       _sntprintf( breakpoint_text[2], 40, "%5d", bp->value.time.tstates );
       break;
-      
+
     case DEBUGGER_BREAKPOINT_TYPE_EVENT:
       _sntprintf( breakpoint_text[2], 40, "%s:%s", bp->value.event.type,
                   bp->value.event.detail );
@@ -1003,8 +1003,8 @@ ui_debugger_disassemble( libspectrum_word address )
   /* Note: the scroll bar can not cope with "upper bound - page_size" value and
      higher. PC register, key and wheel scrolling are fine with that */
   SCROLLINFO si;
-  si.cbSize = sizeof(si); 
-  si.fMask = SIF_POS; 
+  si.cbSize = sizeof(si);
+  si.fMask = SIF_POS;
   si.nPos = disassembly_top = address;
   SetScrollInfo( GetDlgItem( fuse_hDBGWnd, IDC_DBG_SB_PC ),
                  SB_CTL, &si, TRUE );
@@ -1085,7 +1085,7 @@ static void
 evaluate_command( void )
 {
   TCHAR *buffer;
-  int buffer_size; 
+  int buffer_size;
 
   /* poll the size of the value in Evaluate text box first */
   buffer_size = SendDlgItemMessage( fuse_hDBGWnd, IDC_DBG_ED_EVAL, WM_GETTEXTLENGTH,

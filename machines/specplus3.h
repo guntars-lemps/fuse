@@ -55,7 +55,7 @@ void specplus3_fdc_write( libspectrum_word port, libspectrum_byte data );
 int specplus3_memory_map( void );
 
 typedef enum specplus3_drive_number {
-  SPECPLUS3_DRIVE_A = 0,	/* First drive must be number zero */
+  SPECPLUS3_DRIVE_A = 0, // First drive must be number zero
   SPECPLUS3_DRIVE_B,
   SPECPLUS3_NUM_DRIVES,
 } specplus3_drive_number;
@@ -64,4 +64,4 @@ int specplus3_disk_insert( specplus3_drive_number which, const char *filename,
                            int autoload );
 fdd_t *specplus3_get_fdd( specplus3_drive_number which );
 
-#endif			/* #ifndef FUSE_SPECPLUS3_H */
+#endif // #ifndef FUSE_SPECPLUS3_H

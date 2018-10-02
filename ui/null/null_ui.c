@@ -29,7 +29,7 @@
 #include "../uijoystick.c"
 
 keysyms_map_t keysyms_map[] = {
-  { 0, 0 } /* End marker */
+  { 0, 0 } // End marker
 };
 
 scaler_type

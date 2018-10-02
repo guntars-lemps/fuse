@@ -189,11 +189,11 @@ fuse_window_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
       fuse_emulation_unpause();
       return 0;
     }
-    
+
     case WM_LBUTTONUP:
       win32mouse_button( 1, 0 );
       return 0;
-      
+
     case WM_LBUTTONDOWN:
       win32mouse_button( 1, 1 );
       return 0;
@@ -213,11 +213,11 @@ fuse_window_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     case WM_RBUTTONDOWN:
       win32mouse_button( 3, 1 );
       return 0;
-      
+
     case WM_MOUSEMOVE:
       win32mouse_position( lParam );
       return 0;
-      
+
     case WM_SETCURSOR:
     /* prevent the cursor from being redrawn if fuse has grabbed the mouse */
       if( ui_mouse_grabbed )
@@ -272,7 +272,7 @@ fuse_window_proc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
       win32joystick_move( 1, LOWORD( lParam ), HIWORD( lParam ) );
       break;
 
-#endif			/* if defined USE_JOYSTICK && !defined HAVE_JSW_H */
+#endif // if defined USE_JOYSTICK && !defined HAVE_JSW_H
 
   }
   return( DefWindowProc( hWnd, msg, wParam, lParam ) );
@@ -349,7 +349,7 @@ ui_init( int *argc, char ***argv )
   /* set the initial size of the drawing area */
   RECT wr, cr, statr;
   int w_ofs, h_ofs;
-  
+
   GetWindowRect( fuse_hWnd, &wr );
   GetClientRect( fuse_hWnd, &cr );
   GetClientRect( fuse_hStatusWindow, &statr );
@@ -413,12 +413,12 @@ ui_end( void )
 
   error = win32display_end(); if( error ) return error;
 
-  /* close the monospaced font handle */     
+  /* close the monospaced font handle */
   if( monospaced_font ) {
     DeleteObject( monospaced_font );
     monospaced_font = NULL;
   }
-        
+
   return 0;
 }
 
@@ -491,7 +491,7 @@ menu_get_scaler( scaler_available_fn selector )
   scaler_type scaler;
 
   /* Get count of currently applicable scalars first */
-  count = 0; 
+  count = 0;
   for( scaler = 0; scaler < SCALER_NUM; scaler++ ) {
     if( selector( scaler ) ) count++;
   }
@@ -499,11 +499,11 @@ menu_get_scaler( scaler_available_fn selector )
   /* Populate win32ui_select_info */
   items.dialog_title = TEXT( "Fuse - Select Scaler" );
   items.labels = malloc( count * sizeof( char * ) );
-  items.length = count; 
+  items.length = count;
 
   /* Populate the labels with currently applicable scalars */
   count = 0;
-  
+
   for( scaler = 0; scaler < SCALER_NUM; scaler++ ) {
 
     if( !selector( scaler ) ) continue;
@@ -519,22 +519,22 @@ menu_get_scaler( scaler_available_fn selector )
 
   /* Start the selection dialog box */
   selection = selector_dialog( &items );
-  
+
   if( selection >= 0 ) {
     /* Apply the selected scalar */
     count = 0;
-    
+
     for( i = 0; i < SCALER_NUM; i++ ) {
       if( !selector( i ) ) continue;
-      	
+
       if( selection == count ) {
       	selected_scaler = i;
       }
-  
+
       count++;
     }
   }
-	
+
   free( items.labels );
 
   return selected_scaler;
@@ -606,7 +606,7 @@ menu_machine_select( int action )
   /* Populate win32ui_select_info */
   items.dialog_title = TEXT( "Fuse - Select Machine" );
   items.labels = malloc( machine_count * sizeof( char * ) );
-  items.length = machine_count; 
+  items.length = machine_count;
 
   for( i=0; i<machine_count; i++ ) {
 
@@ -659,7 +659,7 @@ set_active( HMENU menu, const char *path, int active )
   int i, menu_count;
   char menu_text[255];
   MENUITEMINFO mii;
-  
+
   if( *path == '/' ) path++;
 
   menu_count = GetMenuItemCount( menu );
@@ -677,12 +677,12 @@ set_active( HMENU menu, const char *path, int active )
       p++; q++;
     } while( 1 );
 
-    if( *p && *p != '\t' ) continue;		/* not matched */
+    if( *p && *p != '\t' ) continue; // not matched
 
     /* match, but with a submenu */
     if( *q == '/' ) return set_active( GetSubMenu( menu, i ), q, active );
 
-    if( *q ) continue;		/* not matched */
+    if( *q ) continue; // not matched
 
     /* we have a match */
     mii.fState = active ? MFS_ENABLED : MFS_DISABLED;
@@ -727,7 +727,7 @@ ui_confirm_joystick( libspectrum_joystick libspectrum_type, int inputs )
   _sntprintf( title, ARRAY_SIZE( title ), _T( "Fuse - Configure %s Joystick" ),
 	    libspectrum_joystick_name( libspectrum_type ) );
   items.dialog_title = title;
-  items.length = JOYSTICK_CONN_COUNT; 
+  items.length = JOYSTICK_CONN_COUNT;
 
   for( i=0; i<JOYSTICK_CONN_COUNT; i++ ) {
     items.labels[i] = joystick_connection[ i ];
@@ -804,13 +804,13 @@ window_recommended_width( HWND hwndDlg, LPCTSTR title )
   /* Calculate title width (pixels) */
   SetMapMode( dc, MM_TEXT );
   GetTextExtentPoint32( dc, title, _tcslen( title ), &sz );
-  width = sz.cx; /* Actually in pixels because of MM_TEXT map mode */
+  width = sz.cx; // Actually in pixels because of MM_TEXT map mode
   SelectObject( dc, hDefaultFont );
   DeleteObject( hCaptionFont );
   ReleaseDC( hwndDlg, dc );
 
   /* Calculate buttons width (pixels) */
-  buttons = 1; /* close  button */
+  buttons = 1; // close  button
   if( window_style & WS_MAXIMIZEBOX ) buttons++;
   if( window_style & WS_MINIMIZEBOX ) buttons++;
   width += ncm.iCaptionWidth * buttons;
@@ -818,7 +818,7 @@ window_recommended_width( HWND hwndDlg, LPCTSTR title )
   /* Window decorations width (pixels) */
   GetWindowRect( hwndDlg, &wr );
   GetClientRect( hwndDlg, &cr );
-  width += ( wr.right - wr.left ) - ( cr.right - cr.left ); 
+  width += ( wr.right - wr.left ) - ( cr.right - cr.left );
 
   /* Icon width (pixels) */
   window_style = GetWindowLongPtr( hwndDlg, GWL_EXSTYLE );
@@ -835,7 +835,7 @@ void
 win32ui_set_font( HWND hDlg, int nIDDlgItem, HFONT font )
 {
   SendDlgItemMessage( hDlg, nIDDlgItem , WM_SETFONT, (WPARAM) font, FALSE );
-}  
+}
 
 static void
 selector_dialog_build( HWND hwndDlg, win32ui_select_info *items )
@@ -856,7 +856,7 @@ selector_dialog_build( HWND hwndDlg, win32ui_select_info *items )
 
   /* calculate window width (pixels) */
   or.left = or.top = or.bottom = 0;
-  or.right = 100 + 14 + 5; /* 2 buttons, 2 margins, 1 separation (DLUs) */
+  or.right = 100 + 14 + 5; // 2 buttons, 2 margins, 1 separation (DLUs)
   MapDialogRect( hwndDlg, &or );
 
   window_width = or.right + decor_width;
@@ -865,19 +865,19 @@ selector_dialog_build( HWND hwndDlg, win32ui_select_info *items )
   client_width = window_width - decor_width;
 
   /* create radio buttons */
-  client_height = 7; /* Top margin (DLUs) */
+  client_height = 7; // Top margin (DLUs)
   for( i=0; i< items->length; i++ ) {
 
     dwStyle = WS_VISIBLE | WS_CHILD | WS_TABSTOP | BS_AUTORADIOBUTTON;
     /* Need for WS_GROUP to allow using arrow up/down to cycle thru this group */
     if( i == 0 ) dwStyle = dwStyle | WS_GROUP;
 
-    or.left = 7; /* Left margin (DLUs) */
-    or.top = client_height; /* Top position (DLUs) */
-    or.right = 160; /* Control width (DLUs) */
-    or.bottom = 9; /* Control height (DLUs) */
+    or.left = 7; // Left margin (DLUs)
+    or.top = client_height; // Top position (DLUs)
+    or.right = 160; // Control width (DLUs)
+    or.bottom = 9; // Control height (DLUs)
     MapDialogRect( hwndDlg, &or );
-    client_height += 9; /* Control height (DLUs) */
+    client_height += 9; // Control height (DLUs)
 
     CreateWindow( TEXT( "BUTTON" ), items->labels[i],
                   dwStyle,
@@ -892,18 +892,18 @@ selector_dialog_build( HWND hwndDlg, win32ui_select_info *items )
                           BST_CHECKED, 0 );
     }
 
-    client_height += 2; /* Separation between radio buttons (DLUs) */
+    client_height += 2; // Separation between radio buttons (DLUs)
   }
-  client_height += 5; /* Space after radio buttons (actually 7 DLUs) */
+  client_height += 5; // Space after radio buttons (actually 7 DLUs)
 
   /* create OK and Cancel buttons */
-  or.left = 5; /* Vertical space between buttons (DLUs) */
-  or.top = client_height; /* Position Y (DLUs) */
-  or.right = 50; /* Typical width of buttons (DLUs) */
-  or.bottom = 14; /* Typical height of buttons (DLUs) */
+  or.left = 5; // Vertical space between buttons (DLUs)
+  or.top = client_height; // Position Y (DLUs)
+  or.right = 50; // Typical width of buttons (DLUs)
+  or.bottom = 14; // Typical height of buttons (DLUs)
   MapDialogRect( hwndDlg, &or );
 
-  left = ( client_width - or.left - ( or.right * 2 ) ) / 2; /* centered */
+  left = ( client_width - or.left - ( or.right * 2 ) ) / 2; // centered
   CreateWindow( TEXT( "BUTTON" ), TEXT( "&OK" ),
                 WS_VISIBLE | WS_CHILD | WS_TABSTOP | WS_GROUP | BS_DEFPUSHBUTTON,
                 left, or.top, or.right, or.bottom,
@@ -919,7 +919,7 @@ selector_dialog_build( HWND hwndDlg, win32ui_select_info *items )
   SendDlgItemMessage( hwndDlg, IDCANCEL, WM_SETFONT,
                       (WPARAM) h_ms_font, FALSE );
 
-  client_height += 21; /* Button height (14) + bottom margin (7) (DLUs) */
+  client_height += 21; // Button height (14) + bottom margin (7) (DLUs)
 
   /* Calculate window heigth (pixels) */
   wr.left = wr.top = wr.right = 0;
@@ -940,14 +940,14 @@ selector_dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 
   switch( uMsg )
   {
-    case WM_INITDIALOG: 
+    case WM_INITDIALOG:
       /* items are passed to WM_INITDIALOG as lParam */
       selector_dialog_build( hwndDlg, ( win32ui_select_info * ) lParam );
       return TRUE;
 
     case WM_SETFONT:
       h_ms_font = (HFONT) wParam;
-      return TRUE; /* "This message does not return a value." */
+      return TRUE; // "This message does not return a value."
 
     case WM_COMMAND:
       if ( HIWORD( wParam ) != BN_CLICKED ) break;
@@ -961,14 +961,14 @@ selector_dialog_proc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
           i = 0;
           while( ( next_item = GetNextDlgGroupItem( hwndDlg, next_item,
                                                     FALSE ) ) != NULL ) {
-            if( SendDlgItemMessage( hwndDlg, ( IDC_SELECT_OFFSET + i ), 
+            if( SendDlgItemMessage( hwndDlg, ( IDC_SELECT_OFFSET + i ),
                                     BM_GETCHECK, 0, 0 ) == BST_CHECKED ) {
               EndDialog( hwndDlg, i );
               return TRUE;
             }
             i++;
           }
-          break; /* program should never reach here */
+          break; // program should never reach here
         }
         case IDCANCEL:
           EndDialog( hwndDlg, -1 );
@@ -994,7 +994,7 @@ selector_dialog( win32ui_select_info *items )
      radiobuttons, OK and Cancel buttons. The radiobuttons' labels, their count,
      current selection and dialog title are provided via win32ui_select_info.
      The function returns an int corresponding to the selected radiobutton */
-  
+
   /* FIXME: fix accelerators for this window */
 
   return DialogBoxParam( fuse_hInstance, MAKEINTRESOURCE( IDD_SELECT_DIALOG ),
@@ -1174,7 +1174,7 @@ win32ui_fuse_resize( int width, int height )
  * message, which should be sent using:
  * PostMessage( fuse_hWnd, WM_USER_EXIT_PROCESS_MESSAGES, 0, 0 );
  * ( equivalent of gtk_main_quit() );
- * With process_queue_once = 1 it checks for messages pending for fuse 
+ * With process_queue_once = 1 it checks for messages pending for fuse
  *   window, processes them and exists.
  * With process_queue_once = 0 it processes the messages until it receives
  *   WM_USER_EXIT_PROCESS_MESSAGES message.

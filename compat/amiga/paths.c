@@ -26,7 +26,7 @@
 #include <errno.h>
 #ifdef HAVE_LIBGEN_H
 #include <libgen.h>
-#endif				/* #ifdef HAVE_LIBGEN_H */
+#endif // #ifdef HAVE_LIBGEN_H
 #include <string.h>
 #include <unistd.h>
 
@@ -103,9 +103,9 @@ compat_get_next_path( path_context *ctx )
 
 #ifndef ROMSDIR
     path2 = FUSEDATADIR;
-#else				/* #ifndef ROMSDIR */
+#else // #ifndef ROMSDIR
     path2 = ctx->type == UTILS_AUXILIARY_ROM ? ROMSDIR : FUSEDATADIR;
-#endif				/* #ifndef ROMSDIR */
+#endif // #ifndef ROMSDIR
     strncpy( ctx->path, path2, PATH_MAX ); buffer[ PATH_MAX - 1 ] = '\0';
     return 1;
 

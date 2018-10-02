@@ -27,4 +27,4 @@
 int svgakeyboard_init(void);
 int svgakeyboard_end(void);
 
-#endif			/* #ifndef FUSE_SVGAKEYBOARD_H */
+#endif // #ifndef FUSE_SVGAKEYBOARD_H

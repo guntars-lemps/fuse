@@ -45,7 +45,7 @@ typedef void (*widget_query_click_fn)( void );
 typedef struct widget_query_entry {
   const char *text;
   int index;
-  input_key key;		/* Which key to activate this query */
+  input_key key; // Which key to activate this query
 
   widget_query_click_fn click;
 } widget_query_entry;
@@ -227,12 +227,12 @@ widget_query_generic_keyhandler( widget_query_entry *query, int num_entries,
   switch( key ) {
 
 #if 0
-  case INPUT_KEY_Resize:	/* Fake keypress used on window resize */
+  case INPUT_KEY_Resize: // Fake keypress used on window resize
     widget_dialog_with_border( 1, 2, 30, 2 + 20 );
     widget_general_show_all( &widget_options_settings );
     break;
 #endif
-    
+
   case INPUT_KEY_Escape:
   case INPUT_JOYSTICK_FIRE_2:
     widget_end_widget( WIDGET_FINISHED_CANCEL );
@@ -264,7 +264,7 @@ widget_query_generic_keyhandler( widget_query_entry *query, int num_entries,
     display_refresh_all();
     return;
 
-  default:	/* Keep gcc happy */
+  default: // Keep gcc happy
     break;
 
   }

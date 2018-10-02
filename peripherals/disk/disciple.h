@@ -36,8 +36,8 @@ typedef enum disciple_drive_number {
 
 #include "fdd.h"
 
-extern int disciple_available;  /* Is the DISCiPLE available for use? */
-extern int disciple_active;     /* DISCiPLE enabled? */
+extern int disciple_available; // Is the DISCiPLE available for use?
+extern int disciple_active; // DISCiPLE enabled?
 
 void disciple_register_startup( void );
 
@@ -55,4 +55,4 @@ fdd_t *disciple_get_fdd( disciple_drive_number which );
 
 int disciple_unittest( void );
 
-#endif                  /* #ifndef FUSE_DISCIPLE_H */
+#endif // #ifndef FUSE_DISCIPLE_H

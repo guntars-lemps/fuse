@@ -26,7 +26,7 @@
 
 #ifndef LIBSPECTRUM_LIBSPECTRUM_H
 #include <libspectrum.h>
-#endif				/* #ifndef LIBSPECTRUM_LIBSPECTRUM_H */
+#endif // #ifndef LIBSPECTRUM_LIBSPECTRUM_H
 
 int snapshot_read( const char *filename );
 int snapshot_read_buffer( const unsigned char *buffer, size_t length,

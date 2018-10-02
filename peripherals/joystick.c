@@ -242,7 +242,7 @@ joystick_press( int which, joystick_button button, int press )
 libspectrum_byte
 joystick_kempston_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   return kempston_value;
 }
 
@@ -255,7 +255,7 @@ joystick_timex_read( libspectrum_word port GCC_UNUSED, libspectrum_byte which )
 libspectrum_byte
 joystick_fuller_read( libspectrum_word port GCC_UNUSED, libspectrum_byte *attached )
 {
-  *attached = 0xff; /* TODO: check this */
+  *attached = 0xff; // TODO: check this
   return fuller_value;
 }
 
@@ -271,13 +271,13 @@ joystick_from_snapshot( libspectrum_snap *snap )
     case LIBSPECTRUM_JOYSTICK_CURSOR:
       fuse_type = JOYSTICK_TYPE_CURSOR;
       break;
-    case LIBSPECTRUM_JOYSTICK_KEMPSTON:            
+    case LIBSPECTRUM_JOYSTICK_KEMPSTON:
       fuse_type = JOYSTICK_TYPE_KEMPSTON;
       break;
     case LIBSPECTRUM_JOYSTICK_SINCLAIR_1:
       fuse_type = JOYSTICK_TYPE_SINCLAIR_1;
       break;
-    case LIBSPECTRUM_JOYSTICK_SINCLAIR_2:           
+    case LIBSPECTRUM_JOYSTICK_SINCLAIR_2:
       fuse_type = JOYSTICK_TYPE_SINCLAIR_2;
       break;
     case LIBSPECTRUM_JOYSTICK_TIMEX_1:
@@ -290,7 +290,7 @@ joystick_from_snapshot( libspectrum_snap *snap )
       fuse_type = JOYSTICK_TYPE_FULLER;
       break;
     default:
-      ui_error( UI_ERROR_INFO, "Ignoring unsupported joystick in snapshot %s", 
+      ui_error( UI_ERROR_INFO, "Ignoring unsupported joystick in snapshot %s",
         libspectrum_joystick_name( libspectrum_snap_joystick_list( snap, i ) ));
       continue;
     }
@@ -352,7 +352,7 @@ add_joystick( libspectrum_snap *snap, joystick_type_t fuse_type, int inputs )
   case JOYSTICK_TYPE_FULLER:
     libspectrum_type = LIBSPECTRUM_JOYSTICK_FULLER;
     break;
-  
+
   case JOYSTICK_TYPE_NONE:
   default:
     return;

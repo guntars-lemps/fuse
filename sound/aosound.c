@@ -93,7 +93,7 @@ parse_driver_options( const char *device, int *driver_id, ao_option **options )
   option = strchr( mutable, ':' );
   if( option ) *option++ = '\0';
 
-  if( *mutable )				/* ! \0 */
+  if( *mutable ) // ! \0
     *driver_id = ao_driver_id( mutable );
 
   /* Now parse any further options */
@@ -160,9 +160,9 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   }
 
   driver_info = ao_driver_info( driver_id );
-  
+
   if( driver_info->type == AO_TYPE_FILE &&
-      format.bits != 0 ) {	/* OK. We not want to trunc the file :-) */
+      format.bits != 0 ) { // OK. We not want to trunc the file :-)
     ui_error( UI_ERROR_WARNING, "ao: must truncate audio file '%s'",
 	      filename );
   }
@@ -172,7 +172,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   format.bits = settings_current.sound_force_8bit ? 8 : 16;
   format.byte_format = AO_FMT_LITTLE;
   sixteenbit = settings_current.sound_force_8bit ? 0 : 1;
-  
+
   if( driver_info->type == AO_TYPE_LIVE ) {
 
     dev_for_ao = ao_open_live( driver_id, &format, options);
@@ -192,7 +192,7 @@ sound_lowlevel_init( const char *device, int *freqptr, int *stereoptr )
   }
 
   ao_free_options( options );
-  
+
   sound_lowlevel_init_in_progress = 0;
   first_init = 0;
 
@@ -213,7 +213,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
   static signed char buf8[4096];
   void *data8 = data;
 
-  len <<= 1;	/* now in bytes */
+  len <<= 1; // now in bytes
 
   if( !sixteenbit ) {
     libspectrum_signed_word *src;
@@ -225,7 +225,7 @@ sound_lowlevel_frame( libspectrum_signed_word *data, int len )
     len >>= 1;
     for( f = 0; f < len; f++)
       *dst++ = ( int )( ( *src++ ) / 256 );
-  
+
     data8 = buf8;
   }
 

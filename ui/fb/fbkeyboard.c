@@ -126,7 +126,7 @@ keyboard_update( void )
       if( ignore ) {
 	ignore--;
       } else if( ( keybuf[i] & 0x7f ) == 0 ) {
-	ignore = 2; /* ignore extended keysyms */
+	ignore = 2; // ignore extended keysyms
       } else {
 	input_key fuse_keysym;
 	input_event_t fuse_event;

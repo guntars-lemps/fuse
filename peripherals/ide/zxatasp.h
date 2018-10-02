@@ -33,4 +33,4 @@ int zxatasp_eject( libspectrum_ide_unit unit );
 
 int zxatasp_unittest( void );
 
-#endif			/* #ifndef FUSE_ZXATASP_H */
+#endif // #ifndef FUSE_ZXATASP_H

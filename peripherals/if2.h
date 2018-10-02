@@ -37,4 +37,4 @@ void if2_eject( void );
 
 int if2_unittest( void );
 
-#endif				/* #ifndef FUSE_IF2_H */
+#endif // #ifndef FUSE_IF2_H

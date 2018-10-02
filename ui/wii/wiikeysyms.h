@@ -108,4 +108,4 @@ enum {
 
 };
 
-#endif			/* #ifndef FUSE_WIIKEYSYMS_H */
+#endif // #ifndef FUSE_WIIKEYSYMS_H

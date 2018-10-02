@@ -40,12 +40,12 @@
 #define MENU_CALLBACK_WITH_ACTION( name ) \
   void name( GtkAction *gtk_action GCC_UNUSED, guint action )
 
-#else			/* #ifdef UI_GTK */
+#else // #ifdef UI_GTK
 
 #define MENU_CALLBACK( name ) void name( int action )
 #define MENU_CALLBACK_WITH_ACTION( name ) void name( int action )
 
-#endif			/* #ifdef UI_GTK */
+#endif // #ifdef UI_GTK
 
 #define MENU_DETAIL( name ) const char* name( void )
 
@@ -182,4 +182,4 @@ int menu_select_roms_with_title( const char *title, size_t start,
 scaler_type menu_get_scaler( scaler_available_fn selector );
 int menu_check_media_changed( void );
 
-#endif				/* #ifndef FUSE_MENU_H */
+#endif // #ifndef FUSE_MENU_H
