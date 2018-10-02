@@ -30,11 +30,11 @@
 double
 compat_timer_get_time(void)
 {
-  return GetTickCount() / 1000.0;
+    return GetTickCount() / 1000.0;
 }
 
 void
 compat_timer_sleep(int ms)
 {
-  Sleep(ms);
+    Sleep(ms);
 }

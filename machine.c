@@ -55,7 +55,7 @@ fuse_machine_info **machine_types = NULL; // Array of available machines
 int machine_count = 0;
 
 fuse_machine_info *machine_current = NULL; // The currently selected machine
-static int machine_location;	// Where is the current machine in machine_types[...]?
+static int machine_location;    // Where is the current machine in machine_types[...]?
 
 static int machine_add_machine(int (*init_function)(fuse_machine_info *machine));
 static int machine_select_machine(fuse_machine_info *machine);
@@ -183,16 +183,16 @@ int machine_select(libspectrum_machine type)
 
             // If we couldn't select the new machine type, try falling back to plain old 48K
             if (type != LIBSPECTRUM_MACHINE_48) {
-	              error = machine_select(LIBSPECTRUM_MACHINE_48);
+                  error = machine_select(LIBSPECTRUM_MACHINE_48);
             }
 
             // If that still didn't work, give up
             if (error) {
-	              ui_error(UI_ERROR_ERROR, "can't select 48K machine. Giving up.");
-	              fuse_abort();
+                  ui_error(UI_ERROR_ERROR, "can't select 48K machine. Giving up.");
+                  fuse_abort();
             } else {
-	              ui_error(UI_ERROR_INFO, "selecting 48K machine");
-	              return 0;
+                  ui_error(UI_ERROR_INFO, "selecting 48K machine");
+                  return 0;
             }
             return 0;
         }
@@ -334,10 +334,10 @@ static int machine_load_rom_bank_from_file(memory_page *bank_map,
 
     if (rom.length != expected_length) {
         ui_error(UI_ERROR_ERROR,
-	               "ROM '%s' is %ld bytes long; expected %ld bytes",
-	               filename,
+                   "ROM '%s' is %ld bytes long; expected %ld bytes",
+                   filename,
                  (unsigned long)rom.length,
-	               (unsigned long)expected_length);
+                   (unsigned long)expected_length);
         utils_close_file(&rom);
         return 1;
     }

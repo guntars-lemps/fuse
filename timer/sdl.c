@@ -30,11 +30,11 @@
 double
 timer_get_time(void)
 {
-  return SDL_GetTicks() / 1000.0;
+    return SDL_GetTicks() / 1000.0;
 }
 
 void
 timer_sleep(int ms)
 {
-  SDL_Delay(ms);
+    SDL_Delay(ms);
 }

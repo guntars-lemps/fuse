@@ -45,55 +45,55 @@ static int svgakeyboard_keyrelease(int keysym);
 
 int svgakeyboard_init(void)
 {
-  keyboard_init();
-  keyboard_seteventhandler(svgakeyboard_keystroke);
-  return 0;
+    keyboard_init();
+    keyboard_seteventhandler(svgakeyboard_keystroke);
+    return 0;
 }
 
 static void svgakeyboard_keystroke(int scancode, int press)  {
-  if (press) {
+    if (press) {
     svgakeyboard_keypress(scancode);
-  } else {
+    } else {
     svgakeyboard_keyrelease(scancode);
-  }
+    }
 }
 
 static int
 svgakeyboard_keypress(int keysym)
 {
-  input_key fuse_keysym;
-  input_event_t fuse_event;
+    input_key fuse_keysym;
+    input_event_t fuse_event;
 
-  fuse_keysym = keysyms_remap(keysym);
+    fuse_keysym = keysyms_remap(keysym);
 
-  if (fuse_keysym == INPUT_KEY_NONE) return 0;
+    if (fuse_keysym == INPUT_KEY_NONE) return 0;
 
-  fuse_event.type = INPUT_EVENT_KEYPRESS;
-  fuse_event.types.key.native_key = fuse_keysym;
-  fuse_event.types.key.spectrum_key = fuse_keysym;
+    fuse_event.type = INPUT_EVENT_KEYPRESS;
+    fuse_event.types.key.native_key = fuse_keysym;
+    fuse_event.types.key.spectrum_key = fuse_keysym;
 
-  return input_event(&fuse_event);
+    return input_event(&fuse_event);
 }
 
 static int
 svgakeyboard_keyrelease(int keysym)
 {
-  input_key fuse_keysym;
-  input_event_t fuse_event;
+    input_key fuse_keysym;
+    input_event_t fuse_event;
 
-  fuse_keysym = keysyms_remap(keysym);
+    fuse_keysym = keysyms_remap(keysym);
 
-  if (fuse_keysym == INPUT_KEY_NONE) return 0;
+    if (fuse_keysym == INPUT_KEY_NONE) return 0;
 
-  fuse_event.type = INPUT_EVENT_KEYRELEASE;
-  fuse_event.types.key.native_key = fuse_keysym;
-  fuse_event.types.key.spectrum_key = fuse_keysym;
+    fuse_event.type = INPUT_EVENT_KEYRELEASE;
+    fuse_event.types.key.native_key = fuse_keysym;
+    fuse_event.types.key.spectrum_key = fuse_keysym;
 
-  return input_event(&fuse_event);
+    return input_event(&fuse_event);
 }
 
 int svgakeyboard_end(void)
 {
-  keyboard_close();
-  return 0;
+    keyboard_close();
+    return 0;
 }

@@ -33,11 +33,11 @@
 #include "ui/ui.h"
 
 typedef struct registered_module_t {
-  startup_manager_module module;
-  GArray *dependencies;
-  startup_manager_init_fn init_fn;
-  void *init_context;
-  startup_manager_end_fn end_fn;
+    startup_manager_module module;
+    GArray *dependencies;
+    startup_manager_init_fn init_fn;
+    void *init_context;
+    startup_manager_end_fn end_fn;
 } registered_module_t;
 
 static GArray *registered_modules;
@@ -47,57 +47,57 @@ static GArray *end_functions;
 void
 startup_manager_init(void)
 {
-  registered_modules =
+    registered_modules =
     g_array_new(FALSE, FALSE, sizeof(registered_module_t));
-  end_functions =
+    end_functions =
     g_array_new(FALSE, FALSE, sizeof(startup_manager_end_fn));
 }
 
 void
 startup_manager_end(void)
 {
-  g_array_free(registered_modules, TRUE);
-  registered_modules = NULL;
+    g_array_free(registered_modules, TRUE);
+    registered_modules = NULL;
 
-  g_array_free(end_functions, TRUE);
-  end_functions = NULL;
+    g_array_free(end_functions, TRUE);
+    end_functions = NULL;
 }
 
 void
 startup_manager_register(
-  startup_manager_module module, startup_manager_module *dependencies,
-  size_t dependency_count, startup_manager_init_fn init_fn,
-  void *init_context, startup_manager_end_fn end_fn)
+    startup_manager_module module, startup_manager_module *dependencies,
+    size_t dependency_count, startup_manager_init_fn init_fn,
+    void *init_context, startup_manager_end_fn end_fn)
 {
-  registered_module_t registered_module;
+    registered_module_t registered_module;
 
-  registered_module.module = module;
-  registered_module.dependencies =
+    registered_module.module = module;
+    registered_module.dependencies =
     g_array_sized_new(FALSE, FALSE, sizeof(startup_manager_module),
                        dependency_count);
-  g_array_append_vals(registered_module.dependencies, dependencies,
+    g_array_append_vals(registered_module.dependencies, dependencies,
                        dependency_count);
-  registered_module.init_fn = init_fn;
-  registered_module.init_context = init_context;
-  registered_module.end_fn = end_fn;
+    registered_module.init_fn = init_fn;
+    registered_module.init_context = init_context;
+    registered_module.end_fn = end_fn;
 
-  g_array_append_val(registered_modules, registered_module);
+    g_array_append_val(registered_modules, registered_module);
 }
 
 void
 startup_manager_register_no_dependencies(
-  startup_manager_module module, startup_manager_init_fn init_fn,
-  void *init_context, startup_manager_end_fn end_fn)
+    startup_manager_module module, startup_manager_init_fn init_fn,
+    void *init_context, startup_manager_end_fn end_fn)
 {
-  startup_manager_register(module, NULL, 0, init_fn, init_context, end_fn);
+    startup_manager_register(module, NULL, 0, init_fn, init_context, end_fn);
 }
 
 static void
 remove_dependency(startup_manager_module module)
 {
-  guint i, j;
+    guint i, j;
 
-  for (i = 0; i < registered_modules->len; i++) {
+    for (i = 0; i < registered_modules->len; i++) {
     registered_module_t *registered_module =
       &g_array_index(registered_modules, registered_module_t, i);
     GArray *dependencies = registered_module->dependencies;
@@ -111,20 +111,20 @@ remove_dependency(startup_manager_module module)
         break;
       }
     }
-  }
+    }
 }
 
 int
 startup_manager_run(void)
 {
-  int progress_made;
-  guint i;
-  int error;
+    int progress_made;
+    guint i;
+    int error;
 
-  /* Loop until we can't make any more progress; this will either be because
+    /* Loop until we can't make any more progress; this will either be because
      we've called every function (good!) or because there's a logical error
      in the dependency graph (bad!) */
-  do {
+    do {
     i = 0;
     progress_made = 0;
 
@@ -154,30 +154,30 @@ startup_manager_run(void)
         i++;
       }
     }
-  } while (progress_made && registered_modules->len);
+    } while (progress_made && registered_modules->len);
 
-  // If there are still any modules left to be called, then that's bad
-  if (registered_modules->len) {
+    // If there are still any modules left to be called, then that's bad
+    if (registered_modules->len) {
     ui_error(UI_ERROR_ERROR, "%u startup modules could not be called",
               registered_modules->len);
     return 1;
-  }
+    }
 
-  return 0;
+    return 0;
 }
 
 void
 startup_manager_run_end(void)
 {
-  guint i;
+    guint i;
 
-  for (i = end_functions->len; i-- != 0;)
-  {
+    for (i = end_functions->len; i-- != 0;)
+    {
     startup_manager_end_fn end_fn =
       g_array_index(end_functions, startup_manager_end_fn, i);
 
     end_fn();
-  }
+    }
 
-  startup_manager_end();
+    startup_manager_end();
 }

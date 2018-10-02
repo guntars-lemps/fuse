@@ -44,14 +44,14 @@ static void print_rom(int which);
 int
 widget_roms_draw(void *data)
 {
-  int i;
-  char buffer[32];
-  char key[] = "\x0A ";
+    int i;
+    char buffer[32];
+    char key[] = "\x0A ";
 
-  if (data) info = data;
+    if (data) info = data;
 
-  // Get a copy of the current settings
-  if (!info->initialised) {
+    // Get a copy of the current settings
+    if (!info->initialised) {
 
     widget_settings = malloc(sizeof(settings_info));
     if (!widget_settings) {
@@ -63,19 +63,19 @@ widget_roms_draw(void *data)
     settings_copy(widget_settings, &settings_current);
 
     info->initialised = 1;
-  }
+    }
 
-  first_rom = info->start;
-  rom_count = info->count;
-  is_peripheral = info->is_peripheral;
+    first_rom = info->start;
+    rom_count = info->count;
+    is_peripheral = info->is_peripheral;
 
-  // Blank the main display area
-  widget_dialog_with_border(1, 2, 30, rom_count + 2);
+    // Blank the main display area
+    widget_dialog_with_border(1, 2, 30, rom_count + 2);
 
-  widget_printstring(10, 16, WIDGET_COLOUR_TITLE, info->title);
-  widget_display_lines(2, rom_count + 2);
+    widget_printstring(10, 16, WIDGET_COLOUR_TITLE, info->title);
+    widget_display_lines(2, rom_count + 2);
 
-  for (i=0; i < info->count; i++) {
+    for (i=0; i < info->count; i++) {
 
     snprintf(buffer, sizeof(buffer), "ROM %d:", i);
     key[1] = 'A' + i;
@@ -83,54 +83,54 @@ widget_roms_draw(void *data)
     widget_printstring(28, i*8+24, WIDGET_COLOUR_FOREGROUND, buffer);
 
     print_rom(i);
-  }
+    }
 
-  return 0;
+    return 0;
 }
 
 static void
 print_rom(int which)
 {
-  const char *setting;
+    const char *setting;
 
-  setting = *(settings_get_rom_setting(widget_settings,
-					 which + first_rom, is_peripheral));
-  while (widget_stringwidth(setting) >= 232 - 68)
+    setting = *(settings_get_rom_setting(widget_settings,
+                     which + first_rom, is_peripheral));
+    while (widget_stringwidth(setting) >= 232 - 68)
     ++setting;
 
-  widget_rectangle(68, which * 8 + 24, 232 - 68, 8,
-		    WIDGET_COLOUR_BACKGROUND);
-  widget_printstring (68, which * 8 + 24,
-				   WIDGET_COLOUR_FOREGROUND, setting);
-  widget_display_rasters(which * 8 + 24, 8);
+    widget_rectangle(68, which * 8 + 24, 232 - 68, 8,
+            WIDGET_COLOUR_BACKGROUND);
+    widget_printstring (68, which * 8 + 24,
+                   WIDGET_COLOUR_FOREGROUND, setting);
+    widget_display_rasters(which * 8 + 24, 8);
 }
 
 void
 widget_roms_keyhandler(input_key key)
 {
-  switch (key) {
+    switch (key) {
 
 #if 0
-  case INPUT_KEY_Resize: // Fake keypress used on window resize
+    case INPUT_KEY_Resize: // Fake keypress used on window resize
     widget_roms_draw(NULL);
     break;
 #endif
 
-  case INPUT_KEY_Escape:
+    case INPUT_KEY_Escape:
     widget_end_widget(WIDGET_FINISHED_CANCEL);
     return;
 
-  case INPUT_KEY_Return:
-  case INPUT_KEY_KP_Enter:
+    case INPUT_KEY_Return:
+    case INPUT_KEY_KP_Enter:
     widget_end_all(WIDGET_FINISHED_OK);
     return;
 
-  default: // Keep gcc happy
+    default: // Keep gcc happy
     break;
 
-  }
+    }
 
-  if (key >= INPUT_KEY_a && key <= INPUT_KEY_z &&
+    if (key >= INPUT_KEY_a && key <= INPUT_KEY_z &&
       key - INPUT_KEY_a < (ptrdiff_t)rom_count) {
 
     char **setting;
@@ -147,20 +147,20 @@ widget_roms_keyhandler(input_key key)
     if (!widget_filesel_name) return;
 
     setting = settings_get_rom_setting(widget_settings, key + first_rom,
-					is_peripheral);
+                    is_peripheral);
     settings_set_string(setting, widget_filesel_name);
 
     print_rom(key);
-  }
+    }
 }
 
 int
 widget_roms_finish(widget_finish_state finished)
 {
-  if (finished == WIDGET_FINISHED_OK) {
+    if (finished == WIDGET_FINISHED_OK) {
     settings_copy(&settings_current, widget_settings);
-  }
+    }
 
-  settings_free(widget_settings); free(widget_settings);
-  return 0;
+    settings_free(widget_settings); free(widget_settings);
+    return 0;
 }

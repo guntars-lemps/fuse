@@ -47,11 +47,11 @@
 #include <ogc/ipc.h>
 
 typedef struct {
-  u32 msgtype;
-  u32 unknown1;
-  u8 modifiers;
-  u8 unknown2;
-  u8 keys[6];
+    u32 msgtype;
+    u32 unknown1;
+    u8 modifiers;
+    u8 unknown2;
+    u8 keys[6];
 } wii_kbd_event;
 
 static s32 kbd = -1;
@@ -66,33 +66,33 @@ static int releasequeuepos = 0;
 
 static int
 post_modifier(input_event_t* event,
-	       u8 old, u8 new, u8 modifier, input_key spectrum_key)
+           u8 old, u8 new, u8 modifier, input_key spectrum_key)
 {
-  if ((old & modifier) && !(new & modifier)) {
+    if ((old & modifier) && !(new & modifier)) {
     event->type = INPUT_EVENT_KEYRELEASE;
     event->types.key.native_key = modifier;
     event->types.key.spectrum_key = spectrum_key;
     return 0;
-  } else if (!(old & modifier) && (new & modifier)) {
+    } else if (!(old & modifier) && (new & modifier)) {
     event->type = INPUT_EVENT_KEYPRESS;
     event->types.key.native_key = modifier;
     event->types.key.spectrum_key = spectrum_key;
     return 0;
-  }
+    }
 
-  return 1;
+    return 1;
 }
 
 static void*
 kbdthread_fn(void *arg)
 {
-  wii_kbd_event event, oldevent;
-  int i, j, found;
+    wii_kbd_event event, oldevent;
+    int i, j, found;
 
-  memset(&event, 0, sizeof(event));
-  memset(&oldevent, 0, sizeof(oldevent));
+    memset(&event, 0, sizeof(event));
+    memset(&oldevent, 0, sizeof(oldevent));
 
-  while (kbd != -1) {
+    while (kbd != -1) {
     IOS_Ioctl(kbd, 0, NULL, 0, &event, sizeof(event));
 
     // skip connect (0) and disconnect (1) events
@@ -104,10 +104,10 @@ kbdthread_fn(void *arg)
 
 #define POSTMODIFIER(wiikey, speckey) \
       if (queuepos < QUEUELEN) \
-	if (post_modifier(queue + queuepos,		   \
-			 oldevent.modifiers, event.modifiers,	\
-			 wiikey, speckey) == 0) \
-	  queuepos++
+    if (post_modifier(queue + queuepos,           \
+             oldevent.modifiers, event.modifiers,    \
+             wiikey, speckey) == 0) \
+      queuepos++
 
     POSTMODIFIER(0x01, INPUT_KEY_Control_L);
     POSTMODIFIER(0x02, INPUT_KEY_Shift_L);
@@ -126,19 +126,19 @@ kbdthread_fn(void *arg)
       if (oldevent.keys[i] == 0) break;
       found = 0;
       for (j=0; j<6; j++) {
-	if (event.keys[j] == oldevent.keys[i]) {
-	  found = 1;
-	  break;
-	}
+    if (event.keys[j] == oldevent.keys[i]) {
+      found = 1;
+      break;
+    }
       }
       if (!found) {
         fuse_event.types.key.spectrum_key = keysyms_remap(oldevent.keys[i]);
         fuse_event.types.key.native_key = fuse_event.types.key.spectrum_key;
 
         if (queuepos >= QUEUELEN) {
-	  ui_error(UI_ERROR_WARNING, "%s: keyboard queue full", __func__);
-	  continue;
-	}
+      ui_error(UI_ERROR_WARNING, "%s: keyboard queue full", __func__);
+      continue;
+    }
         queue[queuepos++] = fuse_event;
         continue;
       }
@@ -150,66 +150,66 @@ kbdthread_fn(void *arg)
       found = 0;
       for (j=0; j<6; j++) {
         if (oldevent.keys[j] == event.keys[i]) {
-	  found = 1;
-	  break;
-	}
+      found = 1;
+      break;
+    }
       }
       if (!found) {
         fuse_event.types.key.spectrum_key = keysyms_remap(event.keys[i]);
         fuse_event.types.key.native_key = fuse_event.types.key.spectrum_key;
 
         if (queuepos >= QUEUELEN) {
-	  ui_error(UI_ERROR_WARNING, "%s: keyboard queue full", __func__);
-	  continue;
-	}
+      ui_error(UI_ERROR_WARNING, "%s: keyboard queue full", __func__);
+      continue;
+    }
         queue[queuepos++] = fuse_event;
       }
     }
 
     LWP_MutexUnlock(kbdmutex);
     oldevent = event;
-  }
+    }
 
-  return NULL;
+    return NULL;
 }
 
 int
 wiikeyboard_init(void)
 {
-  kbd = IOS_Open("/dev/usb/kbd", IPC_OPEN_RW);
-  if (kbd < 0) return kbd;
+    kbd = IOS_Open("/dev/usb/kbd", IPC_OPEN_RW);
+    if (kbd < 0) return kbd;
 
-  if (LWP_MutexInit(&kbdmutex, 0) != 0 ||
+    if (LWP_MutexInit(&kbdmutex, 0) != 0 ||
       LWP_CreateThread(&kbdthread, kbdthread_fn, NULL, NULL, 0, 80) != 0) {
     IOS_Close(kbd);
     return 1;
-  }
+    }
 
-  return 0;
+    return 0;
 }
 
 int wiikeyboard_end(void)
 {
-  if (kbd >= 0) IOS_Close(kbd);
-  kbd = -1;
-  return 0;
+    if (kbd >= 0) IOS_Close(kbd);
+    kbd = -1;
+    return 0;
 }
 
 void
 keyboard_update(void)
 {
-  int i;
+    int i;
 
-  for (i=0; i<releasequeuepos; i++) input_event(&(releasequeue[i]));
-  releasequeuepos = 0;
+    for (i=0; i<releasequeuepos; i++) input_event(&(releasequeue[i]));
+    releasequeuepos = 0;
 
-  LWP_MutexLock(kbdmutex);
-  for (i=0; i<queuepos; i++) {
+    LWP_MutexLock(kbdmutex);
+    for (i=0; i<queuepos; i++) {
     if (queue[i].type == INPUT_EVENT_KEYRELEASE)
       releasequeue[releasequeuepos++] = queue[i];
     else
       input_event(&(queue[i]));
-  }
-  queuepos = 0;
-  LWP_MutexUnlock(kbdmutex);
+    }
+    queuepos = 0;
+    LWP_MutexUnlock(kbdmutex);
 }

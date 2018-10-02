@@ -41,42 +41,42 @@
 static void
 atexit_proc(void)
 {
-  SDL_ShowCursor(SDL_ENABLE);
-  SDL_Quit();
+    SDL_ShowCursor(SDL_ENABLE);
+    SDL_Quit();
 }
 
 int
 ui_init(int *argc, char ***argv)
 {
-  int error;
+    int error;
 
-  if (ui_widget_init()) return 1;
+    if (ui_widget_init()) return 1;
 
 /* Comment out to Work around a bug in OS X 10.1 related to OpenGL in windowed
    mode */
-  atexit(atexit_proc);
+    atexit(atexit_proc);
 
-  error = SDL_Init(SDL_INIT_VIDEO);
-  if (error)
+    error = SDL_Init(SDL_INIT_VIDEO);
+    if (error)
     return error;
 
 #ifndef __MORPHOS__
-  SDL_EnableUNICODE(1);
+    SDL_EnableUNICODE(1);
 #endif // #ifndef __MORPHOS__
 
-  sdlkeyboard_init();
+    sdlkeyboard_init();
 
-  ui_mouse_present = 1;
+    ui_mouse_present = 1;
 
-  return 0;
+    return 0;
 }
 
 int
 ui_event(void)
 {
-  SDL_Event event;
+    SDL_Event event;
 
-  while (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
     switch (event.type) {
     case SDL_KEYDOWN:
       sdlkeyboard_keypress(&(event.key));
@@ -126,76 +126,76 @@ ui_event(void)
       break;
     case SDL_ACTIVEEVENT:
       if (event.active.state & SDL_APPINPUTFOCUS) {
-	if (event.active.gain) ui_mouse_resume(); else ui_mouse_suspend();
+    if (event.active.gain) ui_mouse_resume(); else ui_mouse_suspend();
       }
       break;
     default:
       break;
     }
-  }
+    }
 
-  return 0;
+    return 0;
 }
 
 int
 ui_end(void)
 {
-  int error;
+    int error;
 
-  error = uidisplay_end();
-  if (error)
+    error = uidisplay_end();
+    if (error)
     return error;
 
-  sdlkeyboard_end();
+    sdlkeyboard_end();
 
-  SDL_Quit();
+    SDL_Quit();
 
-  ui_widget_end();
+    ui_widget_end();
 
-  return 0;
+    return 0;
 }
 
 int
 ui_statusbar_update_speed(float speed)
 {
-  char buffer[15];
-  const char fuse[] = "Fuse";
+    char buffer[15];
+    const char fuse[] = "Fuse";
 
-  snprintf(buffer, 15, "%s - %3.0f%%", fuse, speed);
+    snprintf(buffer, 15, "%s - %3.0f%%", fuse, speed);
 
-  // FIXME: Icon caption should be snapshot name?
-  SDL_WM_SetCaption(buffer, fuse);
+    // FIXME: Icon caption should be snapshot name?
+    SDL_WM_SetCaption(buffer, fuse);
 
-  return 0;
+    return 0;
 }
 
 int
 ui_mouse_grab(int startup)
 {
-  if (settings_current.full_screen) {
+    if (settings_current.full_screen) {
     SDL_WarpMouse(128, 128);
     return 1;
-  }
-  if (startup) return 0;
+    }
+    if (startup) return 0;
 
-  switch (SDL_WM_GrabInput(SDL_GRAB_ON)) {
-  case SDL_GRAB_ON:
-  case SDL_GRAB_FULLSCREEN:
+    switch (SDL_WM_GrabInput(SDL_GRAB_ON)) {
+    case SDL_GRAB_ON:
+    case SDL_GRAB_FULLSCREEN:
     SDL_ShowCursor(SDL_DISABLE);
     SDL_WarpMouse(128, 128);
     return 1;
-  default:
+    default:
     ui_error(UI_ERROR_WARNING, "Mouse grab failed");
     return 0;
-  }
+    }
 }
 
 int
 ui_mouse_release(int suspend)
 {
-  if (settings_current.full_screen) return !suspend;
+    if (settings_current.full_screen) return !suspend;
 
-  SDL_WM_GrabInput(SDL_GRAB_OFF);
-  SDL_ShowCursor(SDL_ENABLE);
-  return 0;
+    SDL_WM_GrabInput(SDL_GRAB_OFF);
+    SDL_ShowCursor(SDL_ENABLE);
+    return 0;
 }

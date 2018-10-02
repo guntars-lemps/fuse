@@ -43,32 +43,32 @@
 static void
 get_keysyms(XKeyEvent *event, input_event_t *fuse_event)
 {
-  KeySym native, spectrum;
+    KeySym native, spectrum;
 
-  // Get keysyms taking into account Shift, Caps_Lock, Mode_switch modifiers
-  XLookupString(event, NULL, 0, &native, NULL);
-  fuse_event->types.key.native_key = keysyms_remap(native);
+    // Get keysyms taking into account Shift, Caps_Lock, Mode_switch modifiers
+    XLookupString(event, NULL, 0, &native, NULL);
+    fuse_event->types.key.native_key = keysyms_remap(native);
 
-  spectrum = XLookupKeysym(event, 0);
-  fuse_event->types.key.spectrum_key = keysyms_remap(spectrum);
+    spectrum = XLookupKeysym(event, 0);
+    fuse_event->types.key.spectrum_key = keysyms_remap(spectrum);
 }
 
 void xkeyboard_keypress(XKeyEvent *event)
 {
-  input_event_t fuse_event;
+    input_event_t fuse_event;
 
-  fuse_event.type = INPUT_EVENT_KEYPRESS;
-  get_keysyms(event, &fuse_event);
+    fuse_event.type = INPUT_EVENT_KEYPRESS;
+    get_keysyms(event, &fuse_event);
 
-  input_event(&fuse_event);
+    input_event(&fuse_event);
 }
 
 void xkeyboard_keyrelease(XKeyEvent *event)
 {
-  input_event_t fuse_event;
+    input_event_t fuse_event;
 
-  fuse_event.type = INPUT_EVENT_KEYRELEASE;
-  get_keysyms(event, &fuse_event);
+    fuse_event.type = INPUT_EVENT_KEYRELEASE;
+    get_keysyms(event, &fuse_event);
 
-  input_event(&fuse_event);
+    input_event(&fuse_event);
 }

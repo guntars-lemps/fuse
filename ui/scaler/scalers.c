@@ -66,23 +66,23 @@ static libspectrum_dword blueMask;
 static int green6bit;
 
 static const libspectrum_word dotmatrix_565[16] = {
-  0x01E0, 0x0007, 0x3800, 0x0000,
-  0x39E7, 0x0000, 0x39E7, 0x0000,
-  0x3800, 0x0000, 0x01E0, 0x0007,
-  0x39E7, 0x0000, 0x39E7, 0x0000
+    0x01E0, 0x0007, 0x3800, 0x0000,
+    0x39E7, 0x0000, 0x39E7, 0x0000,
+    0x3800, 0x0000, 0x01E0, 0x0007,
+    0x39E7, 0x0000, 0x39E7, 0x0000
 };
 static const libspectrum_word dotmatrix_555[16] = {
-  0x00E0, 0x0007, 0x1C00, 0x0000,
-  0x1CE7, 0x0000, 0x1CE7, 0x0000,
-  0x1C00, 0x0000, 0x00E0, 0x0007,
-  0x1CE7, 0x0000, 0x1CE7, 0x0000
+    0x00E0, 0x0007, 0x1C00, 0x0000,
+    0x1CE7, 0x0000, 0x1CE7, 0x0000,
+    0x1C00, 0x0000, 0x00E0, 0x0007,
+    0x1CE7, 0x0000, 0x1CE7, 0x0000
 };
 static const libspectrum_word *dotmatrix;
 
 int
 scaler_select_bitformat(libspectrum_dword BitFormat)
 {
-  switch (BitFormat) {
+    switch (BitFormat) {
 
     /* FIXME(?): there is an assumption here that our colour fields
        are (*) xxxx|xyyy|yyyz|zzzz for the 565 mode
@@ -94,7 +94,7 @@ scaler_select_bitformat(libspectrum_dword BitFormat)
        about endianness) if we ever use the "interpolating" scalers
        from another user interface */
 
-  case 565:
+    case 565:
     colorMask = 0x0000F7DE;
     lowPixelMask = 0x00000821;
     qcolorMask = 0x0000E79C;
@@ -111,7 +111,7 @@ scaler_select_bitformat(libspectrum_dword BitFormat)
     dotmatrix = dotmatrix_565;
     break;
 
-  case 555:
+    case 555:
     colorMask = 0x00007BDE;
     lowPixelMask = 0x00000421;
     qcolorMask = 0x0000739C;
@@ -128,13 +128,13 @@ scaler_select_bitformat(libspectrum_dword BitFormat)
     dotmatrix = dotmatrix_555;
     break;
 
-  default:
+    default:
     ui_error(UI_ERROR_ERROR, "unknown bitformat %d", BitFormat);
     return 1;
 
-  }
+    }
 
-  return 0;
+    return 0;
 }
 
 #elif SCALER_DATA_SIZE == 4 // #if SCALER_DATA_SIZE == 2
@@ -163,10 +163,10 @@ static const libspectrum_dword green8_Mask = 0x008F0700;
 static const libspectrum_dword green16_Mask = 0x000FF000;
 
 static const libspectrum_dword dotmatrix[16] = {
-  0x003F0000, 0x00003F00, 0x3F000000, 0x00000000,
-  0x3F3F3F00, 0x00000000, 0x3F3F3F00, 0x00000000,
-  0x3F000000, 0x00000000, 0x003F0000, 0x00003F00,
-  0x3F3F3F00, 0x00000000, 0x3F3F3F00, 0x00000000
+    0x003F0000, 0x00003F00, 0x3F000000, 0x00000000,
+    0x3F3F3F00, 0x00000000, 0x3F3F3F00, 0x00000000,
+    0x3F000000, 0x00000000, 0x003F0000, 0x00003F00,
+    0x3F3F3F00, 0x00000000, 0x3F3F3F00, 0x00000000
 };
 
 #else // #ifdef WORDS_BIGENDIAN
@@ -185,10 +185,10 @@ static const libspectrum_dword green8_Mask = 0x0007F800;
 static const libspectrum_dword green16_Mask = 0x000FF000;
 
 static const libspectrum_dword dotmatrix[16] = {
-  0x00003F00, 0x003F0000, 0x0000003F, 0x00000000,
-  0x003F3F3F, 0x00000000, 0x003F3F3F, 0x00000000,
-  0x0000003F, 0x00000000, 0x00003F00, 0x003F0000,
-  0x003F3F3F, 0x00000000, 0x003F3F3F, 0x00000000
+    0x00003F00, 0x003F0000, 0x0000003F, 0x00000000,
+    0x003F3F3F, 0x00000000, 0x003F3F3F, 0x00000000,
+    0x0000003F, 0x00000000, 0x00003F00, 0x003F0000,
+    0x003F3F3F, 0x00000000, 0x003F3F3F, 0x00000000
 };
 
 #endif // #ifdef WORDS_BIGENDIAN
@@ -199,46 +199,46 @@ static const libspectrum_dword dotmatrix[16] = {
 
 static inline int
 GetResult(libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
-	   libspectrum_dword D)
+       libspectrum_dword D)
 {
-  const int ac = (A==C);
-  const int bc = (B==C);
-  const int x1 = ac;
-  const int y1 = (bc & !ac);
-  const int ad = (A==D);
-  const int bd = (B==D);
-  const int x2 = ad;
-  const int y2 = (bd & !ad);
-  const int x = x1+x2;
-  const int y = y1+y2;
-  static const int rmap[3][3] = {
+    const int ac = (A==C);
+    const int bc = (B==C);
+    const int x1 = ac;
+    const int y1 = (bc & !ac);
+    const int ad = (A==D);
+    const int bd = (B==D);
+    const int x2 = ad;
+    const int y2 = (bd & !ad);
+    const int x = x1+x2;
+    const int y = y1+y2;
+    static const int rmap[3][3] = {
       {0, 0, -1},
       {0, 0, -1},
       {1, 1,  0}
     };
-  return rmap[y][x];
+    return rmap[y][x];
 }
 
 static inline libspectrum_dword
 INTERPOLATE(libspectrum_dword A, libspectrum_dword B)
 {
-  if (A != B) {
+    if (A != B) {
     return (((A & colorMask) >> 1) + ((B & colorMask) >> 1) + (A & B & lowPixelMask));
-  } else
+    } else
     return A;
 }
 
 static inline libspectrum_dword
 Q_INTERPOLATE(libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
-	       libspectrum_dword D)
+           libspectrum_dword D)
 {
-  register libspectrum_dword x = ((A & qcolorMask) >> 2) +
-  ((B & qcolorMask) >> 2) + ((C & qcolorMask) >> 2) + ((D & qcolorMask) >> 2);
-  register libspectrum_dword y = (A & qlowpixelMask) +
-  (B & qlowpixelMask) + (C & qlowpixelMask) + (D & qlowpixelMask);
+    register libspectrum_dword x = ((A & qcolorMask) >> 2) +
+    ((B & qcolorMask) >> 2) + ((C & qcolorMask) >> 2) + ((D & qcolorMask) >> 2);
+    register libspectrum_dword y = (A & qlowpixelMask) +
+    (B & qlowpixelMask) + (C & qlowpixelMask) + (D & qlowpixelMask);
 
-  y = (y >> 2) & qlowpixelMask;
-  return x + y;
+    y = (y >> 2) & qlowpixelMask;
+    return x + y;
 }
 
 // HQ scalers
@@ -249,7 +249,7 @@ Q_INTERPOLATE(libspectrum_dword A, libspectrum_dword B, libspectrum_dword C,
 static inline libspectrum_dword
 HQ_INTERPOLATE_3(libspectrum_dword A, libspectrum_dword B)
 {
-  return ((((A & greenMask) * 7 + (B & greenMask)) & green8_Mask) +
+    return ((((A & greenMask) * 7 + (B & greenMask)) & green8_Mask) +
          (((A & redblueMask) * 7 + (B & redblueMask)) & redblue8_Mask)
 ) >> 3;
 }
@@ -258,10 +258,10 @@ static inline libspectrum_dword
 HQ_INTERPOLATE_4(libspectrum_dword A, libspectrum_dword B,
                   libspectrum_dword C)
 {
-  return ((((A & greenMask) * 2 + ((B & greenMask) +
-		(C & greenMask)) * 7) & green16_Mask) +
+    return ((((A & greenMask) * 2 + ((B & greenMask) +
+        (C & greenMask)) * 7) & green16_Mask) +
          (((A & redblueMask) * 2 + ((B & redblueMask) +
-		(C & redblueMask)) * 7) & redblue16_Mask)) >> 4;
+        (C & redblueMask)) * 7) & redblue16_Mask)) >> 4;
 }
 
 #define HQ_INTERPOLATE_5(A,B) INTERPOLATE(A,B)
@@ -270,40 +270,40 @@ static inline libspectrum_dword
 HQ_INTERPOLATE_6(libspectrum_dword A, libspectrum_dword B,
                   libspectrum_dword C)
 {
-  return ((((A & greenMask) * 5 + (B & greenMask) * 2 +
-		(C & greenMask)) & green8_Mask) +
+    return ((((A & greenMask) * 5 + (B & greenMask) * 2 +
+        (C & greenMask)) & green8_Mask) +
          (((A & redblueMask) * 5 + (B & redblueMask) * 2 +
-		(C & redblueMask)) & redblue8_Mask)) >> 3;
+        (C & redblueMask)) & redblue8_Mask)) >> 3;
 }
 
 static inline libspectrum_dword
 HQ_INTERPOLATE_7(libspectrum_dword A, libspectrum_dword B,
                   libspectrum_dword C)
 {
-  return ((((A & greenMask) * 6 + (B & greenMask) +
-		(C & greenMask)) & green8_Mask) +
+    return ((((A & greenMask) * 6 + (B & greenMask) +
+        (C & greenMask)) & green8_Mask) +
          (((A & redblueMask) * 6 + (B & redblueMask) +
-		(C & redblueMask)) & redblue8_Mask)) >> 3;
+        (C & redblueMask)) & redblue8_Mask)) >> 3;
 }
 
 static inline libspectrum_dword
 HQ_INTERPOLATE_9(libspectrum_dword A, libspectrum_dword B,
                   libspectrum_dword C)
 {
-  return ((((A & greenMask) * 2 + ((B & greenMask) +
-		(C & greenMask)) * 3) & green8_Mask) +
+    return ((((A & greenMask) * 2 + ((B & greenMask) +
+        (C & greenMask)) * 3) & green8_Mask) +
          (((A & redblueMask) * 2 + ((B & redblueMask) +
-		(C & redblueMask)) * 3) & redblue8_Mask)) >> 3;
+        (C & redblueMask)) * 3) & redblue8_Mask)) >> 3;
 }
 
 static inline libspectrum_dword
 HQ_INTERPOLATE_10(libspectrum_dword A, libspectrum_dword B,
                    libspectrum_dword C)
 {
-  return ((((A & greenMask) * 14 + (B & greenMask) +
-		(C & greenMask)) & green16_Mask) +
+    return ((((A & greenMask) * 14 + (B & greenMask) +
+        (C & greenMask)) & green16_Mask) +
          (((A & redblueMask) * 14 + (B & redblueMask) +
-		(C & redblueMask)) & redblue16_Mask)) >> 4;
+        (C & redblueMask)) & redblue16_Mask)) >> 4;
 }
 
 // dstPtr
@@ -419,21 +419,21 @@ HQ_INTERPOLATE_10(libspectrum_dword A, libspectrum_dword B,
 #define HQ_trV 0x00000006
 
 #define HQ_YUVDIFF(y1,u1,v1,y2,u2,v2) \
-  ((ABS(y1 - y2) > HQ_trY) || \
+    ((ABS(y1 - y2) > HQ_trY) || \
     (ABS(u1 - u2) > HQ_trU) || \
     (ABS(v1 - v2) > HQ_trV))
 
 void
 FUNCTION(scaler_Super2xSaI)(const libspectrum_byte *srcPtr,
-			       libspectrum_dword srcPitch,
-			       libspectrum_byte *dstPtr,
-			       libspectrum_dword dstPitch,
-			       int width, int height)
+                   libspectrum_dword srcPitch,
+                   libspectrum_byte *dstPtr,
+                   libspectrum_dword dstPitch,
+                   int width, int height)
 {
-  const scaler_data_type *bP;
-  scaler_data_type *dP;
+    const scaler_data_type *bP;
+    scaler_data_type *dP;
 
-  {
+    {
     const libspectrum_dword nextlineSrc = srcPitch / sizeof(scaler_data_type);
     libspectrum_dword nextDstLine = dstPitch / sizeof(scaler_data_type);
     size_t i;
@@ -443,115 +443,115 @@ FUNCTION(scaler_Super2xSaI)(const libspectrum_byte *srcPtr,
       dP = (scaler_data_type*)dstPtr;
 
       for (i = 0; i < width; ++i) {
-	libspectrum_dword color4, color5, color6;
-	libspectrum_dword color1, color2, color3;
-	libspectrum_dword colorA0, colorA1, colorA2, colorA3, colorB0, colorB1, colorB2,
-	 colorB3, colorS1, colorS2;
-	libspectrum_dword product1a, product1b, product2a, product2b;
+    libspectrum_dword color4, color5, color6;
+    libspectrum_dword color1, color2, color3;
+    libspectrum_dword colorA0, colorA1, colorA2, colorA3, colorB0, colorB1, colorB2,
+     colorB3, colorS1, colorS2;
+    libspectrum_dword product1a, product1b, product2a, product2b;
 
 /*---------------------------------------    B1 B2
                                            4  5  6 S2
                                            1  2  3 S1
-	                                     A1 A2
+                                         A1 A2
 */
 
         colorB0 = *(bP - nextlineSrc - 1);
-	colorB1 = *(bP - nextlineSrc);
-	colorB2 = *(bP - nextlineSrc + 1);
-	colorB3 = *(bP - nextlineSrc + 2);
+    colorB1 = *(bP - nextlineSrc);
+    colorB2 = *(bP - nextlineSrc + 1);
+    colorB3 = *(bP - nextlineSrc + 2);
 
-	color4 = *(bP - 1);
-	color5 = *(bP);
-	color6 = *(bP + 1);
-	colorS2 = *(bP + 2);
+    color4 = *(bP - 1);
+    color5 = *(bP);
+    color6 = *(bP + 1);
+    colorS2 = *(bP + 2);
 
-	color1 = *(bP + nextlineSrc - 1);
-	color2 = *(bP + nextlineSrc);
-	color3 = *(bP + nextlineSrc + 1);
-	colorS1 = *(bP + nextlineSrc + 2);
+    color1 = *(bP + nextlineSrc - 1);
+    color2 = *(bP + nextlineSrc);
+    color3 = *(bP + nextlineSrc + 1);
+    colorS1 = *(bP + nextlineSrc + 2);
 
-	colorA0 = *(bP + 2 * nextlineSrc - 1);
-	colorA1 = *(bP + 2 * nextlineSrc);
-	colorA2 = *(bP + 2 * nextlineSrc + 1);
-	colorA3 = *(bP + 2 * nextlineSrc + 2);
+    colorA0 = *(bP + 2 * nextlineSrc - 1);
+    colorA1 = *(bP + 2 * nextlineSrc);
+    colorA2 = *(bP + 2 * nextlineSrc + 1);
+    colorA3 = *(bP + 2 * nextlineSrc + 2);
 
 // --------------------------------------
-	if (color2 == color6 && color5 != color3) {
-	  product2b = product1b = color2;
-	} else if (color5 == color3 && color2 != color6) {
-	  product2b = product1b = color5;
-	} else if (color5 == color3 && color2 == color6) {
-	  register int r = 0;
+    if (color2 == color6 && color5 != color3) {
+      product2b = product1b = color2;
+    } else if (color5 == color3 && color2 != color6) {
+      product2b = product1b = color5;
+    } else if (color5 == color3 && color2 == color6) {
+      register int r = 0;
 
-	  r += GetResult(color6, color5, color1, colorA1);
-	  r += GetResult(color6, color5, color4, colorB1);
-	  r += GetResult(color6, color5, colorA2, colorS1);
-	  r += GetResult(color6, color5, colorB2, colorS2);
+      r += GetResult(color6, color5, color1, colorA1);
+      r += GetResult(color6, color5, color4, colorB1);
+      r += GetResult(color6, color5, colorA2, colorS1);
+      r += GetResult(color6, color5, colorB2, colorS2);
 
-	  if (r > 0)
-	    product2b = product1b = color6;
-	  else if (r < 0)
-	    product2b = product1b = color5;
-	  else {
-	    product2b = product1b = INTERPOLATE(color5, color6);
-	  }
-	} else {
-	  if (color6 == color3 && color3 == colorA1 && color2 != colorA2 && color3 != colorA0)
-	    product2b = Q_INTERPOLATE(color3, color3, color3, color2);
-	  else if (color5 == color2 && color2 == colorA2 && colorA1 != color3 && color2 != colorA3)
-	    product2b = Q_INTERPOLATE(color2, color2, color2, color3);
-	  else
-	    product2b = INTERPOLATE(color2, color3);
+      if (r > 0)
+        product2b = product1b = color6;
+      else if (r < 0)
+        product2b = product1b = color5;
+      else {
+        product2b = product1b = INTERPOLATE(color5, color6);
+      }
+    } else {
+      if (color6 == color3 && color3 == colorA1 && color2 != colorA2 && color3 != colorA0)
+        product2b = Q_INTERPOLATE(color3, color3, color3, color2);
+      else if (color5 == color2 && color2 == colorA2 && colorA1 != color3 && color2 != colorA3)
+        product2b = Q_INTERPOLATE(color2, color2, color2, color3);
+      else
+        product2b = INTERPOLATE(color2, color3);
 
-	  if (color6 == color3 && color6 == colorB1 && color5 != colorB2 && color6 != colorB0)
-	    product1b = Q_INTERPOLATE(color6, color6, color6, color5);
-	  else if (color5 == color2 && color5 == colorB2 && colorB1 != color6 && color5 != colorB3)
-	    product1b = Q_INTERPOLATE(color6, color5, color5, color5);
-	  else
-	    product1b = INTERPOLATE(color5, color6);
-	}
+      if (color6 == color3 && color6 == colorB1 && color5 != colorB2 && color6 != colorB0)
+        product1b = Q_INTERPOLATE(color6, color6, color6, color5);
+      else if (color5 == color2 && color5 == colorB2 && colorB1 != color6 && color5 != colorB3)
+        product1b = Q_INTERPOLATE(color6, color5, color5, color5);
+      else
+        product1b = INTERPOLATE(color5, color6);
+    }
 
-	if (color5 == color3 && color2 != color6 && color4 == color5 && color5 != colorA2)
-	  product2a = INTERPOLATE(color2, color5);
-	else if (color5 == color1 && color6 == color5 && color4 != color2 && color5 != colorA0)
-	  product2a = INTERPOLATE(color2, color5);
-	else
-	  product2a = color2;
+    if (color5 == color3 && color2 != color6 && color4 == color5 && color5 != colorA2)
+      product2a = INTERPOLATE(color2, color5);
+    else if (color5 == color1 && color6 == color5 && color4 != color2 && color5 != colorA0)
+      product2a = INTERPOLATE(color2, color5);
+    else
+      product2a = color2;
 
-	if (color2 == color6 && color5 != color3 && color1 == color2 && color2 != colorB2)
-	  product1a = INTERPOLATE(color2, color5);
-	else if (color4 == color2 && color3 == color2 && color1 != color5 && color2 != colorB0)
-	  product1a = INTERPOLATE(color2, color5);
-	else
-	  product1a = color5;
+    if (color2 == color6 && color5 != color3 && color1 == color2 && color2 != colorB2)
+      product1a = INTERPOLATE(color2, color5);
+    else if (color4 == color2 && color3 == color2 && color1 != color5 && color2 != colorB0)
+      product1a = INTERPOLATE(color2, color5);
+    else
+      product1a = color5;
 
-	*dP = (scaler_data_type)product1a;
-	*(dP+nextDstLine) = (scaler_data_type)product2a;
-	dP++;
-	*dP = (scaler_data_type)product1b;
-	*(dP+nextDstLine) = (scaler_data_type)product2b;
-	dP++;
+    *dP = (scaler_data_type)product1a;
+    *(dP+nextDstLine) = (scaler_data_type)product2a;
+    dP++;
+    *dP = (scaler_data_type)product1b;
+    *(dP+nextDstLine) = (scaler_data_type)product2b;
+    dP++;
 
-	bP++;
+    bP++;
       }
 
       srcPtr += srcPitch;
       dstPtr += dstPitch * 2;
     }
-  }
+    }
 }
 
 void
 FUNCTION(scaler_SuperEagle)(const libspectrum_byte *srcPtr,
-			       libspectrum_dword srcPitch,
-			       libspectrum_byte *dstPtr,
-			       libspectrum_dword dstPitch,
-			       int width, int height)
+                   libspectrum_dword srcPitch,
+                   libspectrum_byte *dstPtr,
+                   libspectrum_dword dstPitch,
+                   int width, int height)
 {
-  const scaler_data_type *bP;
-  scaler_data_type *dP;
+    const scaler_data_type *bP;
+    scaler_data_type *dP;
 
-  {
+    {
     size_t i;
     const libspectrum_dword nextlineSrc = srcPitch / sizeof(scaler_data_type);
     libspectrum_dword nextDstLine = dstPitch / sizeof(scaler_data_type);
@@ -560,28 +560,28 @@ FUNCTION(scaler_SuperEagle)(const libspectrum_byte *srcPtr,
       bP = (const scaler_data_type*)srcPtr;
       dP = (scaler_data_type*)dstPtr;
       for (i = 0; i < width; ++i) {
-	libspectrum_dword color4, color5, color6;
-	libspectrum_dword color1, color2, color3;
-	libspectrum_dword colorA1, colorA2, colorB1, colorB2, colorS1, colorS2;
-	libspectrum_dword product1a, product1b, product2a, product2b;
+    libspectrum_dword color4, color5, color6;
+    libspectrum_dword color1, color2, color3;
+    libspectrum_dword colorA1, colorA2, colorB1, colorB2, colorS1, colorS2;
+    libspectrum_dword product1a, product1b, product2a, product2b;
 
-	colorB1 = *(bP - nextlineSrc);
-	colorB2 = *(bP - nextlineSrc + 1);
+    colorB1 = *(bP - nextlineSrc);
+    colorB2 = *(bP - nextlineSrc + 1);
 
-	color4 = *(bP - 1);
-	color5 = *(bP);
-	color6 = *(bP + 1);
-	colorS2 = *(bP + 2);
+    color4 = *(bP - 1);
+    color5 = *(bP);
+    color6 = *(bP + 1);
+    colorS2 = *(bP + 2);
 
-	color1 = *(bP + nextlineSrc - 1);
-	color2 = *(bP + nextlineSrc);
-	color3 = *(bP + nextlineSrc + 1);
-	colorS1 = *(bP + nextlineSrc + 2);
+    color1 = *(bP + nextlineSrc - 1);
+    color2 = *(bP + nextlineSrc);
+    color3 = *(bP + nextlineSrc + 1);
+    colorS1 = *(bP + nextlineSrc + 2);
 
-	colorA1 = *(bP + 2 * nextlineSrc);
-	colorA2 = *(bP + 2 * nextlineSrc + 1);
+    colorA1 = *(bP + 2 * nextlineSrc);
+    colorA2 = *(bP + 2 * nextlineSrc + 1);
 
-	// --------------------------------------
+    // --------------------------------------
         if (color5 != color3)
         {
           if (color2 == color6)
@@ -653,34 +653,34 @@ FUNCTION(scaler_SuperEagle)(const libspectrum_byte *srcPtr,
               product1b = product2a = color2;
             }
           }
-	}
+    }
 
-	*dP = (scaler_data_type)product1a;
-	*(dP+nextDstLine) = (scaler_data_type)product2a;
-	dP++;
-	*dP = (scaler_data_type)product1b;
-	*(dP+nextDstLine) = (scaler_data_type)product2b;
-	dP++;
+    *dP = (scaler_data_type)product1a;
+    *(dP+nextDstLine) = (scaler_data_type)product2a;
+    dP++;
+    *dP = (scaler_data_type)product1b;
+    *(dP+nextDstLine) = (scaler_data_type)product2b;
+    dP++;
 
-	bP++;
+    bP++;
       }
 
       srcPtr += srcPitch;
       dstPtr += dstPitch * 2;
     }
-  }
+    }
 }
 
 void
 FUNCTION(scaler_2xSaI)(const libspectrum_byte *srcPtr,
-			  libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
-			  libspectrum_dword dstPitch,
-			  int width, int height)
+              libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
+              libspectrum_dword dstPitch,
+              int width, int height)
 {
-  const scaler_data_type *bP;
-  scaler_data_type *dP;
+    const scaler_data_type *bP;
+    scaler_data_type *dP;
 
-  {
+    {
     libspectrum_dword nextlineSrc = srcPitch / sizeof(scaler_data_type);
     libspectrum_dword nextDstLine = dstPitch / sizeof(scaler_data_type);
 
@@ -691,10 +691,10 @@ FUNCTION(scaler_2xSaI)(const libspectrum_byte *srcPtr,
 
       for (i = 0; i < width; ++i) {
 
-	register libspectrum_dword colorA, colorB;
-	libspectrum_dword colorC, colorD, colorE, colorF, colorG, colorH,
-	  colorI, colorJ, colorK, colorL, colorM, colorN, colorO;
-	libspectrum_dword product, product1, product2;
+    register libspectrum_dword colorA, colorB;
+    libspectrum_dword colorC, colorD, colorE, colorF, colorG, colorH,
+      colorI, colorJ, colorK, colorL, colorM, colorN, colorO;
+    libspectrum_dword product, product1, product2;
 
 /*---------------------------------------
    Map of the pixels:                    I|E F|J
@@ -704,137 +704,137 @@ FUNCTION(scaler_2xSaI)(const libspectrum_byte *srcPtr,
 
    Note that P does not contribute to the algorithm
 */
-	colorI = *(bP - nextlineSrc - 1);
-	colorE = *(bP - nextlineSrc);
-	colorF = *(bP - nextlineSrc + 1);
-	colorJ = *(bP - nextlineSrc + 2);
+    colorI = *(bP - nextlineSrc - 1);
+    colorE = *(bP - nextlineSrc);
+    colorF = *(bP - nextlineSrc + 1);
+    colorJ = *(bP - nextlineSrc + 2);
 
-	colorG = *(bP - 1);
-	colorA = *(bP);
-	colorB = *(bP + 1);
-	colorK = *(bP + 2);
+    colorG = *(bP - 1);
+    colorA = *(bP);
+    colorB = *(bP + 1);
+    colorK = *(bP + 2);
 
-	colorH = *(bP + nextlineSrc - 1);
-	colorC = *(bP + nextlineSrc);
-	colorD = *(bP + nextlineSrc + 1);
-	colorL = *(bP + nextlineSrc + 2);
+    colorH = *(bP + nextlineSrc - 1);
+    colorC = *(bP + nextlineSrc);
+    colorD = *(bP + nextlineSrc + 1);
+    colorL = *(bP + nextlineSrc + 2);
 
-	colorM = *(bP + 2 * nextlineSrc - 1);
-	colorN = *(bP + 2 * nextlineSrc);
-	colorO = *(bP + 2 * nextlineSrc + 1);
+    colorM = *(bP + 2 * nextlineSrc - 1);
+    colorN = *(bP + 2 * nextlineSrc);
+    colorO = *(bP + 2 * nextlineSrc + 1);
 
-	if ((colorA == colorD) && (colorB != colorC)) {
-	  if (((colorA == colorE) && (colorB == colorL)) ||
+    if ((colorA == colorD) && (colorB != colorC)) {
+      if (((colorA == colorE) && (colorB == colorL)) ||
               ((colorA == colorC) && (colorA == colorF) && (colorB != colorE) && (colorB == colorJ))) {
-	    product = colorA;
-	  } else {
-	    product = INTERPOLATE(colorA, colorB);
-	  }
+        product = colorA;
+      } else {
+        product = INTERPOLATE(colorA, colorB);
+      }
 
-	  if (((colorA == colorG) && (colorC == colorO)) ||
+      if (((colorA == colorG) && (colorC == colorO)) ||
               ((colorA == colorB) && (colorA == colorH) && (colorG != colorC) && (colorC == colorM))) {
-	    product1 = colorA;
-	  } else {
-	    product1 = INTERPOLATE(colorA, colorC);
-	  }
-	  product2 = colorA;
-	} else if ((colorB == colorC) && (colorA != colorD)) {
-	  if (((colorB == colorF) && (colorA == colorH)) ||
+        product1 = colorA;
+      } else {
+        product1 = INTERPOLATE(colorA, colorC);
+      }
+      product2 = colorA;
+    } else if ((colorB == colorC) && (colorA != colorD)) {
+      if (((colorB == colorF) && (colorA == colorH)) ||
               ((colorB == colorE) && (colorB == colorD) && (colorA != colorF) && (colorA == colorI))) {
-	    product = colorB;
-	  } else {
-	    product = INTERPOLATE(colorA, colorB);
-	  }
+        product = colorB;
+      } else {
+        product = INTERPOLATE(colorA, colorB);
+      }
 
-	  if (((colorC == colorH) && (colorA == colorF)) ||
+      if (((colorC == colorH) && (colorA == colorF)) ||
               ((colorC == colorG) && (colorC == colorD) && (colorA != colorH) && (colorA == colorI))) {
-	    product1 = colorC;
-	  } else {
-	    product1 = INTERPOLATE(colorA, colorC);
-	  }
-	  product2 = colorB;
-	} else if ((colorA == colorD) && (colorB == colorC)) {
-	  if (colorA == colorB) {
-	    product = colorA;
-	    product1 = colorA;
-	    product2 = colorA;
-	  } else {
-	    register int r = 0;
+        product1 = colorC;
+      } else {
+        product1 = INTERPOLATE(colorA, colorC);
+      }
+      product2 = colorB;
+    } else if ((colorA == colorD) && (colorB == colorC)) {
+      if (colorA == colorB) {
+        product = colorA;
+        product1 = colorA;
+        product2 = colorA;
+      } else {
+        register int r = 0;
 
-	    product1 = INTERPOLATE(colorA, colorC);
-	    product = INTERPOLATE(colorA, colorB);
+        product1 = INTERPOLATE(colorA, colorC);
+        product = INTERPOLATE(colorA, colorB);
 
-	    r += GetResult(colorA, colorB, colorG, colorE);
-	    r -= GetResult(colorB, colorA, colorK, colorF);
-	    r -= GetResult(colorB, colorA, colorH, colorN);
-	    r += GetResult(colorA, colorB, colorL, colorO);
+        r += GetResult(colorA, colorB, colorG, colorE);
+        r -= GetResult(colorB, colorA, colorK, colorF);
+        r -= GetResult(colorB, colorA, colorH, colorN);
+        r += GetResult(colorA, colorB, colorL, colorO);
 
-	    if (r > 0)
-	      product2 = colorA;
-	    else if (r < 0)
-	      product2 = colorB;
-	    else {
-	      product2 = Q_INTERPOLATE(colorA, colorB, colorC, colorD);
-	    }
-	  }
-	} else {
-	  product2 = Q_INTERPOLATE(colorA, colorB, colorC, colorD);
+        if (r > 0)
+          product2 = colorA;
+        else if (r < 0)
+          product2 = colorB;
+        else {
+          product2 = Q_INTERPOLATE(colorA, colorB, colorC, colorD);
+        }
+      }
+    } else {
+      product2 = Q_INTERPOLATE(colorA, colorB, colorC, colorD);
 
-	  if ((colorA == colorC) && (colorA == colorF)
-	      && (colorB != colorE) && (colorB == colorJ)) {
-	    product = colorA;
-	  } else if ((colorB == colorE) && (colorB == colorD)
-		     && (colorA != colorF) && (colorA == colorI)) {
-	    product = colorB;
-	  } else {
-	    product = INTERPOLATE(colorA, colorB);
-	  }
+      if ((colorA == colorC) && (colorA == colorF)
+          && (colorB != colorE) && (colorB == colorJ)) {
+        product = colorA;
+      } else if ((colorB == colorE) && (colorB == colorD)
+             && (colorA != colorF) && (colorA == colorI)) {
+        product = colorB;
+      } else {
+        product = INTERPOLATE(colorA, colorB);
+      }
 
-	  if ((colorA == colorB) && (colorA == colorH)
-	      && (colorG != colorC) && (colorC == colorM)) {
-	    product1 = colorA;
-	  } else if ((colorC == colorG) && (colorC == colorD)
-		     && (colorA != colorH) && (colorA == colorI)) {
-	    product1 = colorC;
-	  } else {
-	    product1 = INTERPOLATE(colorA, colorC);
-	  }
-	}
+      if ((colorA == colorB) && (colorA == colorH)
+          && (colorG != colorC) && (colorC == colorM)) {
+        product1 = colorA;
+      } else if ((colorC == colorG) && (colorC == colorD)
+             && (colorA != colorH) && (colorA == colorI)) {
+        product1 = colorC;
+      } else {
+        product1 = INTERPOLATE(colorA, colorC);
+      }
+    }
 
-	*dP = (scaler_data_type)colorA;
-	*(dP+nextDstLine) = (scaler_data_type)product1;
-	dP++;
-	*dP = (scaler_data_type)product;
-	*(dP+nextDstLine) = (scaler_data_type)product2;
-	dP++;
+    *dP = (scaler_data_type)colorA;
+    *(dP+nextDstLine) = (scaler_data_type)product1;
+    dP++;
+    *dP = (scaler_data_type)product;
+    *(dP+nextDstLine) = (scaler_data_type)product2;
+    dP++;
 
-	bP++;
+    bP++;
       }
 
       srcPtr += srcPitch;
       dstPtr += dstPitch * 2;
     }
-  }
+    }
 }
 
 void
 FUNCTION(scaler_AdvMame2x)(const libspectrum_byte *srcPtr,
-			      libspectrum_dword srcPitch,
-			      libspectrum_byte *dstPtr,
-			      libspectrum_dword dstPitch,
-			      int width, int height)
+                  libspectrum_dword srcPitch,
+                  libspectrum_byte *dstPtr,
+                  libspectrum_dword dstPitch,
+                  int width, int height)
 {
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p = (const scaler_data_type*) srcPtr;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p = (const scaler_data_type*) srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q = (scaler_data_type*) dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q = (scaler_data_type*) dstPtr;
 
-  scaler_data_type /* A, */ B, C;
-  scaler_data_type D, E, F;
-  scaler_data_type /* G, */ H, I;
+    scaler_data_type /* A, */ B, C;
+    scaler_data_type D, E, F;
+    scaler_data_type /* G, */ H, I;
 
-  while (height--) {
+    while (height--) {
     int i;
 
     // B = *(p - 1 - nextlineSrc);
@@ -858,27 +858,27 @@ FUNCTION(scaler_AdvMame2x)(const libspectrum_byte *srcPtr,
     }
     p += nextlineSrc - width;
     q += (nextlineDst - width) << 1;
-  }
+    }
 }
 
 void
 FUNCTION(scaler_AdvMame3x)(const libspectrum_byte *srcPtr,
-			      libspectrum_dword srcPitch,
-			      libspectrum_byte *dstPtr,
-			      libspectrum_dword dstPitch,
-			      int width, int height)
+                  libspectrum_dword srcPitch,
+                  libspectrum_byte *dstPtr,
+                  libspectrum_dword dstPitch,
+                  int width, int height)
 {
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p = (const scaler_data_type*) srcPtr;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p = (const scaler_data_type*) srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q = (scaler_data_type*) dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q = (scaler_data_type*) dstPtr;
 
-  scaler_data_type /* A, */ B, C;
-  scaler_data_type D, E, F;
-  scaler_data_type /* G, */ H, I;
+    scaler_data_type /* A, */ B, C;
+    scaler_data_type D, E, F;
+    scaler_data_type /* G, */ H, I;
 
-  while (height--) {
+    while (height--) {
     int i;
 
     // B = *(p - 1 - nextlineSrc);
@@ -907,18 +907,18 @@ FUNCTION(scaler_AdvMame3x)(const libspectrum_byte *srcPtr,
     }
     p += nextlineSrc - width;
     q += (nextlineDst - width) * 3;
-  }
+    }
 }
 
 void
 FUNCTION(scaler_Half)(const libspectrum_byte *srcPtr,
-			 libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
-			 libspectrum_dword dstPitch,
-			 int width, int height)
+             libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
+             libspectrum_dword dstPitch,
+             int width, int height)
 {
-  scaler_data_type *r;
+    scaler_data_type *r;
 
-  while (height--) {
+    while (height--) {
     int i;
     r = (scaler_data_type*) dstPtr;
 
@@ -933,19 +933,19 @@ FUNCTION(scaler_Half)(const libspectrum_byte *srcPtr,
     }
 
     srcPtr += srcPitch;
-  }
+    }
 }
 
 void
 FUNCTION(scaler_HalfSkip)(const libspectrum_byte *srcPtr,
-			     libspectrum_dword srcPitch,
-			     libspectrum_byte *dstPtr,
-			     libspectrum_dword dstPitch,
-			     int width, int height)
+                 libspectrum_dword srcPitch,
+                 libspectrum_byte *dstPtr,
+                 libspectrum_dword dstPitch,
+                 int width, int height)
 {
-  scaler_data_type *r;
+    scaler_data_type *r;
 
-  while (height--) {
+    while (height--) {
     int i;
     r = (scaler_data_type*) dstPtr;
 
@@ -957,60 +957,60 @@ FUNCTION(scaler_HalfSkip)(const libspectrum_byte *srcPtr,
     }
 
     srcPtr += srcPitch;
-  }
+    }
 }
 
 void
 FUNCTION(scaler_Normal1x)(const libspectrum_byte *srcPtr,
-			     libspectrum_dword srcPitch,
-			     libspectrum_byte *dstPtr,
-			     libspectrum_dword dstPitch,
-			     int width, int height)
+                 libspectrum_dword srcPitch,
+                 libspectrum_byte *dstPtr,
+                 libspectrum_dword dstPitch,
+                 int width, int height)
 {
-  while (height--) {
+    while (height--) {
     memcpy(dstPtr, srcPtr, SCALER_DATA_SIZE * width);
     srcPtr += srcPitch;
     dstPtr += dstPitch;
-  }
+    }
 }
 
 void
 FUNCTION(scaler_Normal2x)(const libspectrum_byte *srcPtr,
-			     libspectrum_dword srcPitch,
-			     libspectrum_byte *dstPtr,
-			     libspectrum_dword dstPitch,
-			     int width, int height)
+                 libspectrum_dword srcPitch,
+                 libspectrum_byte *dstPtr,
+                 libspectrum_dword dstPitch,
+                 int width, int height)
 {
-  const scaler_data_type *s;
-  scaler_data_type i, *d, *d2;
+    const scaler_data_type *s;
+    scaler_data_type i, *d, *d2;
 
-  while (height--) {
+    while (height--) {
 
     for (i = 0, s = (const scaler_data_type*)srcPtr,
-	   d = (scaler_data_type*)dstPtr,
-	   d2 = (scaler_data_type*)(dstPtr + dstPitch);
-	 i < width;
-	 i++) {
+       d = (scaler_data_type*)dstPtr,
+       d2 = (scaler_data_type*)(dstPtr + dstPitch);
+     i < width;
+     i++) {
       *d++ = *d2++ = *s; *d++ = *d2++ = *s++;
     }
 
     srcPtr += srcPitch;
     dstPtr += dstPitch << 1;
-  }
+    }
 }
 
 void
 FUNCTION(scaler_Normal3x)(const libspectrum_byte *srcPtr,
-			     libspectrum_dword srcPitch,
-			     libspectrum_byte *dstPtr,
-			     libspectrum_dword dstPitch,
-			     int width, int height)
+                 libspectrum_dword srcPitch,
+                 libspectrum_byte *dstPtr,
+                 libspectrum_dword dstPitch,
+                 int width, int height)
 {
-  libspectrum_byte *r;
-  libspectrum_dword dstPitch2 = dstPitch * 2;
-  libspectrum_dword dstPitch3 = dstPitch * 3;
+    libspectrum_byte *r;
+    libspectrum_dword dstPitch2 = dstPitch * 2;
+    libspectrum_dword dstPitch3 = dstPitch * 3;
 
-  while (height--) {
+    while (height--) {
     int i;
     r = dstPtr;
     for (i = 0; i < width; ++i, r += 3 * SCALER_DATA_SIZE) {
@@ -1028,7 +1028,7 @@ FUNCTION(scaler_Normal3x)(const libspectrum_byte *srcPtr,
     }
     srcPtr += srcPitch;
     dstPtr += dstPitch3;
-  }
+    }
 }
 
 void
@@ -1038,11 +1038,11 @@ FUNCTION(scaler_Timex1_5x)(const libspectrum_byte *srcPtr,
            libspectrum_dword dstPitch,
            int width, int height)
 {
-  libspectrum_byte *r;
-  libspectrum_dword dstPitch2 = dstPitch * 2;
-  libspectrum_dword dstPitch3 = dstPitch * 3;
+    libspectrum_byte *r;
+    libspectrum_dword dstPitch2 = dstPitch * 2;
+    libspectrum_dword dstPitch3 = dstPitch * 3;
 
-  while (height--) {
+    while (height--) {
     int i;
     r = dstPtr;
     if ((height & 1) == 0) {
@@ -1065,23 +1065,23 @@ FUNCTION(scaler_Timex1_5x)(const libspectrum_byte *srcPtr,
       dstPtr += dstPitch3;
     }
     srcPtr += srcPitch;
-  }
+    }
 }
 
 void
 FUNCTION(scaler_TV2x)(const libspectrum_byte *srcPtr,
-			 libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
-			 libspectrum_dword dstPitch,
-			 int width, int height)
+             libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
+             libspectrum_dword dstPitch,
+             int width, int height)
 {
-  int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p = (const scaler_data_type*)srcPtr;
+    int i, j;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p = (const scaler_data_type*)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q = (scaler_data_type*)dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q = (scaler_data_type*)dstPtr;
 
-  while (height--) {
+    while (height--) {
     for (i = 0, j = 0; i < width; ++i, j += 2) {
       scaler_data_type p1 = *(p + i);
       scaler_data_type pi;
@@ -1096,7 +1096,7 @@ FUNCTION(scaler_TV2x)(const libspectrum_byte *srcPtr,
     }
     p += nextlineSrc;
     q += nextlineDst << 1;
-  }
+    }
 }
 
 void
@@ -1105,14 +1105,14 @@ FUNCTION(scaler_TV3x)(const libspectrum_byte *srcPtr,
                          libspectrum_dword dstPitch,
                          int width, int height)
 {
-  int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p = (const scaler_data_type*)srcPtr;
+    int i, j;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p = (const scaler_data_type*)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q = (scaler_data_type*)dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q = (scaler_data_type*)dstPtr;
 
-  while (height--) {
+    while (height--) {
     for (i = 0, j = 0; i < width; ++i, j += 3) {
       scaler_data_type p1 = *(p + i);
       scaler_data_type pi;
@@ -1134,31 +1134,31 @@ FUNCTION(scaler_TV3x)(const libspectrum_byte *srcPtr,
     }
     p += nextlineSrc;
     q += nextlineDst * 3;
-  }
+    }
 }
 
 void
 FUNCTION(scaler_TimexTV)(const libspectrum_byte *srcPtr,
-			    libspectrum_dword srcPitch,
-			    libspectrum_byte *dstPtr,
-			    libspectrum_dword dstPitch,
-			    int width, int height)
+                libspectrum_dword srcPitch,
+                libspectrum_byte *dstPtr,
+                libspectrum_dword dstPitch,
+                int width, int height)
 {
-  int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p = (const scaler_data_type *)srcPtr;
+    int i, j;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q = (scaler_data_type *)dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q = (scaler_data_type *)dstPtr;
 
-  while (height--) {
+    while (height--) {
     if ((height & 1) == 0) {
       for (i = 0, j = 0; i < width; ++i, j++) {
         scaler_data_type p1 = *(p + i);
         scaler_data_type pi;
 
-	pi  = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
-	pi |= (((p1 & greenMask) * 7) >> 3) & greenMask;
+    pi  = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
+    pi |= (((p1 & greenMask) * 7) >> 3) & greenMask;
 
         *(q + j) = p1;
         *(q + j + nextlineDst) = pi;
@@ -1166,28 +1166,28 @@ FUNCTION(scaler_TimexTV)(const libspectrum_byte *srcPtr,
       q += nextlineDst << 1;
     }
     p += nextlineSrc;
-  }
+    }
 }
 
 static inline scaler_data_type DOT_16(scaler_data_type c, int j, int i) {
-  return c - ((c >> 2) & *(dotmatrix + ((j & 3) << 2) + (i & 3)));
+    return c - ((c >> 2) & *(dotmatrix + ((j & 3) << 2) + (i & 3)));
 }
 
 void
 FUNCTION(scaler_DotMatrix)(const libspectrum_byte *srcPtr,
-			      libspectrum_dword srcPitch,
-			      libspectrum_byte *dstPtr,
-			      libspectrum_dword dstPitch,
-			      int width, int height)
+                  libspectrum_dword srcPitch,
+                  libspectrum_byte *dstPtr,
+                  libspectrum_dword dstPitch,
+                  int width, int height)
 {
-  int i, j, ii, jj;
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p = (const scaler_data_type *)srcPtr;
+    int i, j, ii, jj;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q = (scaler_data_type *)dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q = (scaler_data_type *)dstPtr;
 
-  for (j = 0, jj = 0; j < height; ++j, jj += 2) {
+    for (j = 0, jj = 0; j < height; ++j, jj += 2) {
     for (i = 0, ii = 0; i < width; ++i, ii += 2) {
       scaler_data_type c = *(p + i);
       *(q + ii) = DOT_16(c, jj, ii);
@@ -1197,7 +1197,7 @@ FUNCTION(scaler_DotMatrix)(const libspectrum_byte *srcPtr,
     }
     p += nextlineSrc;
     q += nextlineDst << 1;
-  }
+    }
 }
 
 /*
@@ -1255,18 +1255,18 @@ FUNCTION(scaler_PalTV)(const libspectrum_byte *srcPtr,
    3.a. YUV => RGB
    3.b  255,255,255 RGB => RGB
 */
-  int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
+    int i, j;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
 
-  libspectrum_byte  r0, g0, b0,
+    libspectrum_byte  r0, g0, b0,
                     r1, g1, b1,
                     r2, g2, b2,
                     r3, g3, b3;
-  libspectrum_signed_word y1, y2, u1, u2, v1, v2;
+    libspectrum_signed_word y1, y2, u1, u2, v1, v2;
 
 /*
  422 cosited
@@ -1278,7 +1278,7 @@ FUNCTION(scaler_PalTV)(const libspectrum_byte *srcPtr,
     always 3 sample/proc
 
 */
-  for (j = height; j; j--) {
+    for (j = height; j; j--) {
     p = p0 - 1; q = q0;
 #if SCALER_DATA_SIZE == 2
     // 1.a. RGB => RGB
@@ -1371,7 +1371,7 @@ FUNCTION(scaler_PalTV)(const libspectrum_byte *srcPtr,
     }
     p0 += nextlineSrc;
     q0 += nextlineDst;
-  }
+    }
 }
 
 void
@@ -1388,17 +1388,17 @@ FUNCTION(scaler_PalTV2x)(const libspectrum_byte *srcPtr,
    3.a. YUV => RGB
    3.b  255,255,255 RGB => RGB
 */
-  int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
+    int i, j;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
 
-  libspectrum_byte  r0, g0, b0,
+    libspectrum_byte  r0, g0, b0,
                     r1, g1, b1,
                     rx, gx, bx;
-  libspectrum_signed_dword y1, y2, u1, v1, u2, v2;
+    libspectrum_signed_dword y1, y2, u1, v1, u2, v2;
 
 /*
  422 cosited
@@ -1410,7 +1410,7 @@ FUNCTION(scaler_PalTV2x)(const libspectrum_byte *srcPtr,
     always 3 sample/proc
 
 */
-  for (j = height; j; j--) {
+    for (j = height; j; j--) {
     p = p0 - 1; q = q0;
 #if SCALER_DATA_SIZE == 2
     r0 = R_TO_R(*p);
@@ -1503,7 +1503,7 @@ FUNCTION(scaler_PalTV2x)(const libspectrum_byte *srcPtr,
     }
     p0 += nextlineSrc;
     q0 += nextlineDst << 1;
-  }
+    }
 }
 
 void
@@ -1520,18 +1520,18 @@ FUNCTION(scaler_PalTV3x)(const libspectrum_byte *srcPtr,
    3.a. YUV => RGB
    3.b  255,255,255 RGB => RGB
 */
-  int i, j;
-  unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
+    int i, j;
+    unsigned int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
 
-  unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
+    unsigned int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q, *q0 = (scaler_data_type *)dstPtr;
 
-  libspectrum_byte  r0, g0, b0,
+    libspectrum_byte  r0, g0, b0,
                     r1, g1, b1,
                     r2, g2, b2,
                     rx, gx, bx;
-  libspectrum_signed_dword y1, y2, u1, v1, u2, v2;
+    libspectrum_signed_dword y1, y2, u1, v1, u2, v2;
 
 /*
  422 cosited
@@ -1543,7 +1543,7 @@ FUNCTION(scaler_PalTV3x)(const libspectrum_byte *srcPtr,
     always 3 sample/proc
 
 */
-  for (j = height; j; j--) {
+    for (j = height; j; j--) {
     p = p0 - 1; q = q0;
 #if SCALER_DATA_SIZE == 2
     r0 = R_TO_R(*p);
@@ -1667,20 +1667,20 @@ FUNCTION(scaler_PalTV3x)(const libspectrum_byte *srcPtr,
     }
     p0 += nextlineSrc;
     q0 += (nextlineDst << 1) + nextlineDst;
-  }
+    }
 }
 
 #define prevline (-nextlineSrc)
 #define nextline nextlineSrc
 #define MOVE_B_TO_A(A,B) \
-		w[A] = w[B]; y[A] = y[B]; u[A] = u[B]; v[A] = v[B];
+        w[A] = w[B]; y[A] = y[B]; u[A] = u[B]; v[A] = v[B];
 #define MOVE_P_RIGHT \
-	MOVE_B_TO_A(1,2) \
-	MOVE_B_TO_A(4,5) \
-	MOVE_B_TO_A(7,8) \
-	MOVE_B_TO_A(2,3) \
-	MOVE_B_TO_A(5,6) \
-	MOVE_B_TO_A(8,9)
+    MOVE_B_TO_A(1,2) \
+    MOVE_B_TO_A(4,5) \
+    MOVE_B_TO_A(7,8) \
+    MOVE_B_TO_A(2,3) \
+    MOVE_B_TO_A(5,6) \
+    MOVE_B_TO_A(8,9)
 
 void
 FUNCTION(scaler_HQ2x) (const libspectrum_byte *srcPtr,
@@ -1689,17 +1689,17 @@ FUNCTION(scaler_HQ2x) (const libspectrum_byte *srcPtr,
                           libspectrum_dword dstPitch,
                           int width, int height)
 {
-  int i, j, k, pattern;
-  int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
-  int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q, *q1, *qN, *qN1, *q0 = (scaler_data_type *)dstPtr;
-  libspectrum_qword w[10];
+    int i, j, k, pattern;
+    int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
+    int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q, *q1, *qN, *qN1, *q0 = (scaler_data_type *)dstPtr;
+    libspectrum_qword w[10];
 
-  libspectrum_byte  r, g, b;
-  libspectrum_signed_dword y[10], u[10], v[10];
+    libspectrum_byte  r, g, b;
+    libspectrum_signed_dword y[10], u[10], v[10];
 
-  /*   +----+----+----+
+    /*   +----+----+----+
        |    |    |    |
        | w1 | w2 | w3 |
        +----+----+----+
@@ -1709,7 +1709,7 @@ FUNCTION(scaler_HQ2x) (const libspectrum_byte *srcPtr,
        |    |    |    |
        | w7 | w8 | w9 |
        +----+----+----+ */
-  for (j = 0; j < height; j++) {
+    for (j = 0; j < height; j++) {
     p = p0;
     q = q0; q1 = q + 1;
     qN = q + nextlineDst; qN1 = qN + 1;
@@ -1774,7 +1774,7 @@ FUNCTION(scaler_HQ2x) (const libspectrum_byte *srcPtr,
     }
     p0 += nextlineSrc;
     q0 += nextlineDst << 1;
-  }
+    }
 }
 
 void
@@ -1784,18 +1784,18 @@ FUNCTION(scaler_HQ3x) (const libspectrum_byte *srcPtr,
                           libspectrum_dword dstPitch,
                           int width, int height)
 {
-  int i, j, k, pattern;
-  int nextlineSrc = srcPitch / sizeof(scaler_data_type);
-  const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
-  int nextlineDst = dstPitch / sizeof(scaler_data_type);
-  scaler_data_type *q, *qN, *qNN, *q1, *qN1, *qNN1, *q2, *qN2, *qNN2,
-		   *q0 = (scaler_data_type *)dstPtr;
-  libspectrum_qword w[10];
+    int i, j, k, pattern;
+    int nextlineSrc = srcPitch / sizeof(scaler_data_type);
+    const scaler_data_type *p, *p0 = (const scaler_data_type *)srcPtr;
+    int nextlineDst = dstPitch / sizeof(scaler_data_type);
+    scaler_data_type *q, *qN, *qNN, *q1, *qN1, *qNN1, *q2, *qN2, *qNN2,
+           *q0 = (scaler_data_type *)dstPtr;
+    libspectrum_qword w[10];
 
-  libspectrum_byte  r, g, b;
-  libspectrum_signed_dword y[10], u[10], v[10];
+    libspectrum_byte  r, g, b;
+    libspectrum_signed_dword y[10], u[10], v[10];
 
-  /*   +----+----+----+
+    /*   +----+----+----+
        |    |    |    |
        | w1 | w2 | w3 |
        +----+----+----+
@@ -1805,7 +1805,7 @@ FUNCTION(scaler_HQ3x) (const libspectrum_byte *srcPtr,
        |    |    |    |
        | w7 | w8 | w9 |
        +----+----+----+ */
-  for (j = 0; j < height; j++) {
+    for (j = 0; j < height; j++) {
     if (j == height - 1) nextline = 0;
 
     p = p0;
@@ -1876,5 +1876,5 @@ FUNCTION(scaler_HQ3x) (const libspectrum_byte *srcPtr,
     }
     p0 += nextlineSrc;
     q0 += (nextlineDst << 1) + nextlineDst;
-  }
+    }
 }

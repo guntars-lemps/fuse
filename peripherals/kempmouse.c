@@ -39,59 +39,59 @@ static void kempmouse_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t kempmouse_module_info = {
 
-  /* .reset = */ NULL,
-  /* .romcs = */ NULL,
-  /* .snapshot_enabled = */ kempmouse_snapshot_enabled,
-  /* .snapshot_from = */ NULL,
-  /* .snapshot_to = */ kempmouse_to_snapshot,
+    /* .reset = */ NULL,
+    /* .romcs = */ NULL,
+    /* .snapshot_enabled = */ kempmouse_snapshot_enabled,
+    /* .snapshot_from = */ NULL,
+    /* .snapshot_to = */ kempmouse_to_snapshot,
 
 };
 
 static struct {
-  struct { libspectrum_byte x, y; } pos;
-  libspectrum_byte buttons;
+    struct { libspectrum_byte x, y; } pos;
+    libspectrum_byte buttons;
 } kempmouse = { {0, 0}, 255 };
 
 #define READ(name,item) \
-  static libspectrum_byte \
-  read_##name(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached) \
-  { \
+    static libspectrum_byte \
+    read_##name(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached) \
+    { \
     *attached = 0xff; /* TODO: check this */ \
     return kempmouse.item; \
-  }
+    }
 
 READ(buttons, buttons);
 READ(x_pos, pos.x);
 READ(y_pos, pos.y);
 
 static const periph_port_t kempmouse_ports[] = {
-  // _we_ require b0 set
-  { 0x0121, 0x0001, read_buttons, NULL },
-  { 0x0521, 0x0101, read_x_pos, NULL },
-  { 0x0521, 0x0501, read_y_pos, NULL },
+    // _we_ require b0 set
+    { 0x0121, 0x0001, read_buttons, NULL },
+    { 0x0521, 0x0101, read_x_pos, NULL },
+    { 0x0521, 0x0501, read_y_pos, NULL },
 };
 
 static const periph_t kempmouse_periph = {
-  /* .option = */ &settings_current.kempston_mouse,
-  /* .ports = */ kempmouse_ports,
-  /* .hard_reset = */ 1,
-  /* .activate = */ NULL,
+    /* .option = */ &settings_current.kempston_mouse,
+    /* .ports = */ kempmouse_ports,
+    /* .hard_reset = */ 1,
+    /* .activate = */ NULL,
 };
 
 static int
 kempmouse_init(void *context)
 {
-  module_register(&kempmouse_module_info);
-  periph_register(PERIPH_TYPE_KEMPSTON_MOUSE, &kempmouse_periph);
+    module_register(&kempmouse_module_info);
+    periph_register(PERIPH_TYPE_KEMPSTON_MOUSE, &kempmouse_periph);
 
-  return 0;
+    return 0;
 }
 
 void
 kempmouse_register_startup(void)
 {
-  startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register(STARTUP_MANAGER_MODULE_KEMPMOUSE, dependencies,
+    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_register(STARTUP_MANAGER_MODULE_KEMPMOUSE, dependencies,
                             ARRAY_SIZE(dependencies), kempmouse_init, NULL,
                             NULL);
 }
@@ -99,26 +99,26 @@ kempmouse_register_startup(void)
 void
 kempmouse_update(int dx, int dy, int btn, int down)
 {
-  kempmouse.pos.x += dx;
-  kempmouse.pos.y -= dy;
-  if (btn != -1) {
+    kempmouse.pos.x += dx;
+    kempmouse.pos.y -= dy;
+    if (btn != -1) {
     if (down)
       kempmouse.buttons &= ~(1 << btn);
     else
       kempmouse.buttons |= 1 << btn;
-  }
+    }
 }
 
 static void
 kempmouse_snapshot_enabled(libspectrum_snap *snap)
 {
-  if (libspectrum_snap_kempston_mouse_active(snap))
+    if (libspectrum_snap_kempston_mouse_active(snap))
     settings_current.kempston_mouse = 1;
 }
 
 static void
 kempmouse_to_snapshot(libspectrum_snap *snap)
 {
-  libspectrum_snap_set_kempston_mouse_active(snap,
+    libspectrum_snap_set_kempston_mouse_active(snap,
                                               settings_current.kempston_mouse);
 }

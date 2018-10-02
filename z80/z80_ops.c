@@ -86,12 +86,12 @@ static void z80_ddfdcbxx(libspectrum_byte opcode3);
 #ifdef __GNUC__
 
 #define SETUP_CHECK(label, condition) \
-  pos_##label,
+    pos_##label,
 #define SETUP_NEXT(label)
 
 enum {
 #include "z80_checks.h"
-  numchecks
+    numchecks
 };
 
 #define CHECK(label, condition) goto *cgoto[ pos_##label ]; label:
@@ -113,32 +113,32 @@ void
 z80_do_opcodes(void)
 {
 #ifdef HAVE_ENOUGH_MEMORY
-  libspectrum_byte opcode = 0x00;
+    libspectrum_byte opcode = 0x00;
 #endif
-  libspectrum_byte last_Q;
+    libspectrum_byte last_Q;
 
-  int even_m1 =
+    int even_m1 =
     machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_EVEN_M1;
 
 #ifdef __GNUC__
 
 #undef SETUP_CHECK
 #define SETUP_CHECK(label, condition) \
-  if (condition) { cgoto[ next ] = &&label; next = pos_##label + 1; } \
-  check++;
+    if (condition) { cgoto[ next ] = &&label; next = pos_##label + 1; } \
+    check++;
 
 #undef SETUP_NEXT
 #define SETUP_NEXT(label) \
-  if (next != check) { cgoto[ next ] = &&label; } \
-  next = check;
+    if (next != check) { cgoto[ next ] = &&label; } \
+    next = check;
 
-  void *cgoto[ numchecks ]; size_t next = 0; size_t check = 0;
+    void *cgoto[ numchecks ]; size_t next = 0; size_t check = 0;
 
 #include "z80_checks.h"
 
 #endif // #ifdef __GNUC__
 
-  while (tstates < event_next_event) {
+    while (tstates < event_next_event) {
 
     // Profiler
     CHECK(profile, profile_active)
@@ -152,8 +152,8 @@ z80_do_opcodes(void)
 
     if (R + rzx_instructions_offset >= rzx_instruction_count) {
       event_add(tstates, spectrum_frame_event);
-      break;		/* And break out of the execution loop to let
-			   the interrupt happen */
+      break;        /* And break out of the execution loop to let
+               the interrupt happen */
     }
 
     END_CHECK
@@ -174,7 +174,7 @@ z80_do_opcodes(void)
 
     if (beta_active) {
       if (NOT_128_TYPE_OR_IS_48_TYPE && PC >= 16384) {
-	beta_unpage();
+    beta_unpage();
       }
     } else if ((PC & beta_pc_mask) == beta_pc_value &&
                NOT_128_TYPE_OR_IS_48_TYPE) {
@@ -260,7 +260,7 @@ z80_do_opcodes(void)
 
     END_CHECK
 
-  opcode_delay:
+    opcode_delay:
 
     contend_read(PC, 4);
 
@@ -269,13 +269,13 @@ z80_do_opcodes(void)
 
     if (tstates & 1) {
       if (++tstates == event_next_event) {
-	break;
+    break;
       }
     }
 
     END_CHECK
 
-  run_opcode:
+    run_opcode:
     /* Do the instruction fetch; readbyte_internal used here to avoid
        triggering read breakpoints */
     opcode = readbyte_internal(PC);
@@ -352,7 +352,7 @@ z80_do_opcodes(void)
 
     END_CHECK
 
-  end_opcode:
+    end_opcode:
     PC++; R++;
     last_Q = Q; // keep Q value from previous opcode for SCF and CCF
     Q = 0; // preempt Q value assuming next opcode doesn't set flags
@@ -361,7 +361,7 @@ z80_do_opcodes(void)
 #include "z80/opcodes_base.c"
     }
 
-  }
+    }
 
 }
 
@@ -370,16 +370,16 @@ z80_do_opcodes(void)
 static int
 z80_cbxx(libspectrum_byte opcode2)
 {
-  switch(opcode2) {
+    switch(opcode2) {
 #include "z80/z80_cb.c"
-  }
-  return 0;
+    }
+    return 0;
 }
 
 static int
 z80_ddxx(libspectrum_byte opcode2)
 {
-  switch(opcode2) {
+    switch(opcode2) {
 #define REGISTER  IX
 #define REGISTERL IXL
 #define REGISTERH IXH
@@ -387,23 +387,23 @@ z80_ddxx(libspectrum_byte opcode2)
 #undef REGISTERH
 #undef REGISTERL
 #undef REGISTER
-  }
-  return 0;
+    }
+    return 0;
 }
 
 static int
 z80_edxx(libspectrum_byte opcode2)
 {
-  switch(opcode2) {
+    switch(opcode2) {
 #include "z80/z80_ed.c"
-  }
-  return 0;
+    }
+    return 0;
 }
 
 static int
 z80_fdxx(libspectrum_byte opcode2)
 {
-  switch(opcode2) {
+    switch(opcode2) {
 #define REGISTER  IY
 #define REGISTERL IYL
 #define REGISTERH IYH
@@ -411,16 +411,16 @@ z80_fdxx(libspectrum_byte opcode2)
 #undef REGISTERH
 #undef REGISTERL
 #undef REGISTER
-  }
-  return 0;
+    }
+    return 0;
 }
 
 static void
 z80_ddfdcbxx(libspectrum_byte opcode3)
 {
-  switch(opcode3) {
+    switch(opcode3) {
 #include "z80/z80_ddfdcb.c"
-  }
+    }
 }
 
 #endif // #ifndef HAVE_ENOUGH_MEMORY

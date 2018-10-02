@@ -116,8 +116,8 @@ void display_refresh_all(void);
 #define display_get_offset(x, y) display_line_start[(y)] + (x)
 
 #define display_get_addr(x, y) \
-  scld_last_dec.name.altdfile ? display_get_offset((x), (y)) + ALTDFILE_OFFSET : \
-  display_get_offset((x), (y))
+    scld_last_dec.name.altdfile ? display_get_offset((x), (y)) + ALTDFILE_OFFSET : \
+    display_get_offset((x), (y))
 int display_getpixel(int x, int y);
 
 void display_update_critical(int x, int y);

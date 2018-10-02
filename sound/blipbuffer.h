@@ -58,16 +58,16 @@ typedef unsigned long blip_resampled_time_t;
 # define BLIP_BUFFER_DEF_ENTIRE_BUFF 1
 
 typedef struct Blip_Buffer_s {
-  unsigned long factor_;
-  blip_resampled_time_t offset_;
-  buf_t_ *buffer_;
-  long buffer_size_;
-  long reader_accum;
-  int bass_shift;
-  long sample_rate_;
-  long clock_rate_;
-  int bass_freq_;
-  int length_;
+    unsigned long factor_;
+    blip_resampled_time_t offset_;
+    buf_t_ *buffer_;
+    long buffer_size_;
+    long reader_accum;
+    int bass_shift;
+    long sample_rate_;
+    long clock_rate_;
+    int bass_freq_;
+    int length_;
 } Blip_Buffer;
 
 Blip_Buffer *new_Blip_Buffer(void);
@@ -149,13 +149,13 @@ blip_resampled_time_t blip_buffer_clock_rate_factor(Blip_Buffer * buff,
 struct blip_eq_s;
 
 typedef struct Blip_Synth_s_ {
-  double volume_unit_;
-  short *impulses;
-  long kernel_unit;
+    double volume_unit_;
+    short *impulses;
+    long kernel_unit;
 
-  Blip_Buffer *buf;
-  int last_amp;
-  int delta_factor;
+    Blip_Buffer *buf;
+    int last_amp;
+    int delta_factor;
 } Blip_Synth_;
 
 int _blip_synth_impulses_size(Blip_Synth_ * synth_);
@@ -178,8 +178,8 @@ void _blip_synth_volume_unit(Blip_Synth_ * synth_, double v);
 typedef short imp_t;
 
 typedef struct Blip_Synth_s {
-  imp_t *impulses;
-  Blip_Synth_ impl;
+    imp_t *impulses;
+    Blip_Synth_ impl;
 } Blip_Synth;
 
 void blip_synth_set_volume(Blip_Synth * synth, double v);
@@ -208,10 +208,10 @@ void delete_Blip_Synth(Blip_Synth ** synth);
 // Low-pass equalization parameters
 
 typedef struct blip_eq_s {
-  double treble;
-  long rolloff_freq;
-  long sample_rate;
-  long cutoff_freq;
+    double treble;
+    long rolloff_freq;
+    long sample_rate;
+    long cutoff_freq;
 } blip_eq_t;
 
 #define BLIP_SAMPLE_BITS 30

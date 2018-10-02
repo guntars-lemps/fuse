@@ -29,80 +29,80 @@
 int
 trdos_read_spec(trdos_spec_t *spec, const libspectrum_byte *src)
 {
-  if (*src) return -1;
+    if (*src) return -1;
 
-  spec->first_free_sector   = src[225];
-  spec->first_free_track    = src[226];
-  spec->disk_type           = src[227];
-  spec->file_count          = src[228];
-  spec->free_sectors        = src[229] + src[230] * 0x100;
-  spec->id                  = src[231];
-  if (spec->id != 16) return -1;
+    spec->first_free_sector   = src[225];
+    spec->first_free_track    = src[226];
+    spec->disk_type           = src[227];
+    spec->file_count          = src[228];
+    spec->free_sectors        = src[229] + src[230] * 0x100;
+    spec->id                  = src[231];
+    if (spec->id != 16) return -1;
 
-  memcpy(spec->password, src + 234, 9);
-  spec->deleted_files       = src[244];
-  memcpy(spec->disk_label, src + 245, 8);
+    memcpy(spec->password, src + 234, 9);
+    spec->deleted_files       = src[244];
+    memcpy(spec->disk_label, src + 245, 8);
 
-  return 0;
+    return 0;
 }
 
 void
 trdos_write_spec(libspectrum_byte *dest, const trdos_spec_t *spec)
 {
-  memset(dest, 0, 256);
-  dest[225] = spec->first_free_sector;
-  dest[226] = spec->first_free_track;
-  dest[227] = spec->disk_type;
-  dest[228] = spec->file_count;
-  dest[229] = spec->free_sectors & 0xff;
-  dest[230] = spec->free_sectors >> 8;
-  dest[231] = spec->id;
-  memcpy(dest + 234, spec->password, 9);
-  dest[244] = spec->deleted_files;
-  memcpy(dest + 245, spec->disk_label, 8);
+    memset(dest, 0, 256);
+    dest[225] = spec->first_free_sector;
+    dest[226] = spec->first_free_track;
+    dest[227] = spec->disk_type;
+    dest[228] = spec->file_count;
+    dest[229] = spec->free_sectors & 0xff;
+    dest[230] = spec->free_sectors >> 8;
+    dest[231] = spec->id;
+    memcpy(dest + 234, spec->password, 9);
+    dest[244] = spec->deleted_files;
+    memcpy(dest + 245, spec->disk_label, 8);
 }
 
 int
 trdos_read_dirent(trdos_dirent_t *entry, const libspectrum_byte *src)
 {
-  memcpy(entry->filename, src, 8);
-  entry->file_extension = src[8];
-  entry->param1         = src[9]  + src[10] * 0x100;
-  entry->param2         = src[11] + src[12] * 0x100;
-  entry->file_length    = src[13];
-  entry->start_sector   = src[14];
-  entry->start_track    = src[15];
+    memcpy(entry->filename, src, 8);
+    entry->file_extension = src[8];
+    entry->param1         = src[9]  + src[10] * 0x100;
+    entry->param2         = src[11] + src[12] * 0x100;
+    entry->file_length    = src[13];
+    entry->start_sector   = src[14];
+    entry->start_track    = src[15];
 
-  return entry->filename[0]? 0 : 1;
+    return entry->filename[0]? 0 : 1;
 }
 
 void
 trdos_write_dirent(libspectrum_byte *dest, const trdos_dirent_t *entry)
 {
-  memcpy(dest, entry->filename, 8);
-  dest[8]  = entry->file_extension;
-  dest[9]  = entry->param1 & 0xff;
-  dest[10] = entry->param1 >> 8;
-  dest[11] = entry->param2 & 0xff;
-  dest[12] = entry->param2 >> 8;
-  dest[13] = entry->file_length;
-  dest[14] = entry->start_sector;
-  dest[15] = entry->start_track;
+    memcpy(dest, entry->filename, 8);
+    dest[8]  = entry->file_extension;
+    dest[9]  = entry->param1 & 0xff;
+    dest[10] = entry->param1 >> 8;
+    dest[11] = entry->param2 & 0xff;
+    dest[12] = entry->param2 >> 8;
+    dest[13] = entry->file_length;
+    dest[14] = entry->start_sector;
+    dest[15] = entry->start_track;
 }
 
 int
 trdos_read_fat(trdos_boot_info_t *info, const libspectrum_byte *sectors,
                 unsigned int seclen)
 {
-  int i, j, error;
-  trdos_dirent_t entry;
-  const libspectrum_byte *sector;
+    int i, j, error;
+    trdos_dirent_t entry;
+    const libspectrum_byte *sector;
 
-  info->have_boot_file = 0;
-  info->basic_files_count = 0;
+    info->have_boot_file = 0;
+    info->basic_files_count = 0;
 
-  // FAT sectors
-  for (i = 0; i < 8; i++) {
+    // FAT sectors
+    for (i = 0; i < 8; i++) {
     sector = sectors + i * seclen * 2; // interleaved
 
     /* Note: some TR-DOS versions like 5.04T have a turbo format with
@@ -134,7 +134,7 @@ trdos_read_fat(trdos_boot_info_t *info, const libspectrum_byte *sectors,
         info->basic_files_count++;
       }
     }
-  }
+    }
 
-  return 0;
+    return 0;
 }

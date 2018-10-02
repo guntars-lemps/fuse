@@ -29,7 +29,7 @@
 #include <libspectrum.h>
 
 typedef struct covox_info {
-  libspectrum_byte covox_dac; // Current byte in the Covox 8bit DAC
+    libspectrum_byte covox_dac; // Current byte in the Covox 8bit DAC
 } covox_info;
 
 void covox_register_startup(void);

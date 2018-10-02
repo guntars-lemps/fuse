@@ -63,53 +63,53 @@
 
 typedef struct
 {
-  unsigned altmembank : 1; // ALTMEMBANK : 0 = cartridge, 1 = exrom
-  unsigned intdisable : 1; // INTDISABLE
-  unsigned b5  : 1; //
-  unsigned b4  : 1; //
-  unsigned b3  : 1; //
-  unsigned hires  : 1; // SCLD HIRES mode
-  unsigned b1     : 1; //
-  unsigned altdfile : 1; // SCLD use ALTDFILE
+    unsigned altmembank : 1; // ALTMEMBANK : 0 = cartridge, 1 = exrom
+    unsigned intdisable : 1; // INTDISABLE
+    unsigned b5  : 1; //
+    unsigned b4  : 1; //
+    unsigned b3  : 1; //
+    unsigned hires  : 1; // SCLD HIRES mode
+    unsigned b1     : 1; //
+    unsigned altdfile : 1; // SCLD use ALTDFILE
 } scld_names;
 
 typedef struct
 {
-  unsigned b7  : 1; //
-  unsigned b6  : 1; //
-  unsigned hirescol  : 3; // HIRESCOLMASK
-  unsigned scrnmode  : 3; // SCRNMODEMASK
+    unsigned b7  : 1; //
+    unsigned b6  : 1; //
+    unsigned hirescol  : 3; // HIRESCOLMASK
+    unsigned scrnmode  : 3; // SCRNMODEMASK
 } scld_masks;
 
 #else // #ifdef WORDS_BIGENDIAN
 
 typedef struct
 {
-  unsigned altdfile : 1; // SCLD use ALTDFILE
-  unsigned b1     : 1; //
-  unsigned hires  : 1; // SCLD HIRES mode
-  unsigned b3  : 1; //
-  unsigned b4  : 1; //
-  unsigned b5  : 1; //
-  unsigned intdisable : 1; // INTDISABLE
-  unsigned altmembank : 1; // ALTMEMBANK : 0 = cartridge, 1 = exrom
+    unsigned altdfile : 1; // SCLD use ALTDFILE
+    unsigned b1     : 1; //
+    unsigned hires  : 1; // SCLD HIRES mode
+    unsigned b3  : 1; //
+    unsigned b4  : 1; //
+    unsigned b5  : 1; //
+    unsigned intdisable : 1; // INTDISABLE
+    unsigned altmembank : 1; // ALTMEMBANK : 0 = cartridge, 1 = exrom
 } scld_names;
 
 typedef struct
 {
-  unsigned scrnmode  : 3; // SCRNMODEMASK
-  unsigned hirescol  : 3; // HIRESCOLMASK
-  unsigned b6  : 1; //
-  unsigned b7  : 1; //
+    unsigned scrnmode  : 3; // SCRNMODEMASK
+    unsigned hirescol  : 3; // HIRESCOLMASK
+    unsigned b6  : 1; //
+    unsigned b7  : 1; //
 } scld_masks;
 
 #endif // #ifdef WORDS_BIGENDIAN
 
 typedef union
 {
-  libspectrum_byte byte;
-  scld_masks mask;
-  scld_names name;
+    libspectrum_byte byte;
+    scld_masks mask;
+    scld_names name;
 } scld;
 
 extern scld scld_last_dec; // The last byte sent to Timex DEC port

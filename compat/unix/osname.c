@@ -32,17 +32,17 @@
 
 int compat_osname(char *buffer, size_t length)
 {
-  struct utsname osname;
-  int error;
+    struct utsname osname;
+    int error;
 
-  error = uname(&osname);
-  if (error < 0) {
+    error = uname(&osname);
+    if (error < 0) {
     ui_error(UI_ERROR_ERROR, "error getting system information: %s",
-	      strerror(errno));
+          strerror(errno));
     return 1;
-  }
+    }
 
-  snprintf(buffer, length, "%s %s %s", osname.sysname, osname.machine,
-	    osname.release);
-  return 0;
+    snprintf(buffer, length, "%s %s %s", osname.sysname, osname.machine,
+        osname.release);
+    return 0;
 }

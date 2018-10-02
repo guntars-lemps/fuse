@@ -39,53 +39,53 @@ static int specplus2a_reset(void);
 int
 specplus2a_init(fuse_machine_info *machine)
 {
-  machine->machine = LIBSPECTRUM_MACHINE_PLUS2A;
-  machine->id = "plus2a";
+    machine->machine = LIBSPECTRUM_MACHINE_PLUS2A;
+    machine->id = "plus2a";
 
-  machine->reset = specplus2a_reset;
+    machine->reset = specplus2a_reset;
 
-  machine->timex = 0;
-  machine->ram.port_from_ula	     = specplus3_port_from_ula;
-  machine->ram.contend_delay	     = spectrum_contend_delay_76543210;
-  machine->ram.contend_delay_no_mreq = spectrum_contend_delay_none;
-  machine->ram.valid_pages	     = 8;
+    machine->timex = 0;
+    machine->ram.port_from_ula         = specplus3_port_from_ula;
+    machine->ram.contend_delay         = spectrum_contend_delay_76543210;
+    machine->ram.contend_delay_no_mreq = spectrum_contend_delay_none;
+    machine->ram.valid_pages         = 8;
 
-  machine->unattached_port = spectrum_unattached_port_none;
+    machine->unattached_port = spectrum_unattached_port_none;
 
-  machine->shutdown = NULL;
+    machine->shutdown = NULL;
 
-  machine->memory_map = specplus3_memory_map;
+    machine->memory_map = specplus3_memory_map;
 
-  return 0;
+    return 0;
 }
 
 static int
 specplus2a_reset(void)
 {
-  int error;
+    int error;
 
-  error = machine_load_rom(0, settings_current.rom_plus2a_0,
+    error = machine_load_rom(0, settings_current.rom_plus2a_0,
                             settings_default.rom_plus2a_0, 0x4000);
-  if (error) return error;
-  error = machine_load_rom(1, settings_current.rom_plus2a_1,
+    if (error) return error;
+    error = machine_load_rom(1, settings_current.rom_plus2a_1,
                             settings_default.rom_plus2a_1, 0x4000);
-  if (error) return error;
-  error = machine_load_rom(2, settings_current.rom_plus2a_2,
+    if (error) return error;
+    error = machine_load_rom(2, settings_current.rom_plus2a_2,
                             settings_default.rom_plus2a_2, 0x4000);
-  if (error) return error;
-  error = machine_load_rom(3, settings_current.rom_plus2a_3,
+    if (error) return error;
+    error = machine_load_rom(3, settings_current.rom_plus2a_3,
                             settings_default.rom_plus2a_3, 0x4000);
-  if (error) return error;
+    if (error) return error;
 
-  error = specplus3_plus2a_common_reset();
-  if (error) return error;
+    error = specplus3_plus2a_common_reset();
+    if (error) return error;
 
-  periph_clear();
-  machines_periph_plus3();
-  periph_update();
+    periph_clear();
+    machines_periph_plus3();
+    periph_update();
 
-  spec48_common_display_setup();
+    spec48_common_display_setup();
 
-  return 0;
+    return 0;
 }
 

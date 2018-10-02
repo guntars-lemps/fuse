@@ -30,8 +30,8 @@
 #define AY_REGISTERS 16
 
 typedef struct ayinfo {
-  int current_register;
-  libspectrum_byte registers[ AY_REGISTERS ];
+    int current_register;
+    libspectrum_byte registers[ AY_REGISTERS ];
 } ayinfo;
 
 void ay_register_startup(void);

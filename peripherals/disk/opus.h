@@ -31,9 +31,9 @@
 #include "fdd.h"
 
 typedef enum opus_drive_number {
-  OPUS_DRIVE_1 = 0,
-  OPUS_DRIVE_2,
-  OPUS_NUM_DRIVES,
+    OPUS_DRIVE_1 = 0,
+    OPUS_DRIVE_2,
+    OPUS_NUM_DRIVES,
 } opus_drive_number;
 
 extern int opus_available; // Is the Opus available for use?
@@ -48,7 +48,7 @@ libspectrum_byte opus_read(libspectrum_word address);
 void opus_write(libspectrum_word address, libspectrum_byte b);
 
 int opus_disk_insert(opus_drive_number which, const char *filename,
-		       int autoload);
+               int autoload);
 int opus_disk_eject(opus_drive_number which);
 int opus_disk_save(opus_drive_number which, int saveas);
 int opus_disk_write(opus_drive_number which, const char *filename);

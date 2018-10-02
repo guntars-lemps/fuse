@@ -40,7 +40,7 @@ int debugger_breakpoint_clear(libspectrum_word address);
 int debugger_breakpoint_exit(void);
 int debugger_breakpoint_ignore(size_t id, size_t ignore);
 int debugger_breakpoint_set_condition(size_t id,
-				       debugger_expression *condition);
+                       debugger_expression *condition);
 int debugger_breakpoint_set_commands(size_t id, const char *commands);
 int debugger_breakpoint_trigger(debugger_breakpoint *bp);
 
@@ -57,18 +57,18 @@ void yyerror(const char *s);
 
 typedef enum debugger_token {
 
-  // Chosen to match up with Unicode values
-  DEBUGGER_TOKEN_LOGICAL_AND = 0x2227,
-  DEBUGGER_TOKEN_LOGICAL_OR = 0x2228,
+    // Chosen to match up with Unicode values
+    DEBUGGER_TOKEN_LOGICAL_AND = 0x2227,
+    DEBUGGER_TOKEN_LOGICAL_OR = 0x2228,
 
-  DEBUGGER_TOKEN_EQUAL_TO = 0x225f,
-  DEBUGGER_TOKEN_NOT_EQUAL_TO = 0x2260,
+    DEBUGGER_TOKEN_EQUAL_TO = 0x225f,
+    DEBUGGER_TOKEN_NOT_EQUAL_TO = 0x2260,
 
-  DEBUGGER_TOKEN_LESS_THAN_OR_EQUAL_TO = 0x2264,
-  DEBUGGER_TOKEN_GREATER_THAN_OR_EQUAL_TO = 0x2265,
+    DEBUGGER_TOKEN_LESS_THAN_OR_EQUAL_TO = 0x2264,
+    DEBUGGER_TOKEN_GREATER_THAN_OR_EQUAL_TO = 0x2265,
 
-  // No real significance to this value
-  DEBUGGER_TOKEN_DEREFERENCE = 0x1000,
+    // No real significance to this value
+    DEBUGGER_TOKEN_DEREFERENCE = 0x1000,
 
 } debugger_token;
 
@@ -80,7 +80,7 @@ debugger_expression*
 debugger_expression_new_unaryop(int operation, debugger_expression *operand, int pool);
 debugger_expression*
 debugger_expression_new_binaryop(int operation, debugger_expression *operand1,
-				  debugger_expression *operand2, int pool);
+                  debugger_expression *operand2, int pool);
 debugger_expression*
 debugger_expression_new_system_variable(const char *type, const char *detail,
                                          int pool);

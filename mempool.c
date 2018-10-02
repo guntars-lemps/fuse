@@ -42,105 +42,105 @@ const int MEMPOOL_UNTRACKED = -1;
 static int
 mempool_init(void *context)
 {
-  memory_pools = g_array_new(FALSE, FALSE, sizeof(GArray*));
+    memory_pools = g_array_new(FALSE, FALSE, sizeof(GArray*));
 
-  return 0;
+    return 0;
 }
 
 int
 mempool_register_pool(void)
 {
-  GArray *pool = g_array_new(FALSE, FALSE, sizeof(void*));
+    GArray *pool = g_array_new(FALSE, FALSE, sizeof(void*));
 
-  g_array_append_val(memory_pools, pool);
+    g_array_append_val(memory_pools, pool);
 
-  return memory_pools->len - 1;
+    return memory_pools->len - 1;
 }
 
 void*
 mempool_malloc(int pool, size_t size)
 {
-  void *ptr;
+    void *ptr;
 
-  if (pool == MEMPOOL_UNTRACKED) return libspectrum_malloc(size);
+    if (pool == MEMPOOL_UNTRACKED) return libspectrum_malloc(size);
 
-  if (pool < 0 || pool >= memory_pools->len) return NULL;
+    if (pool < 0 || pool >= memory_pools->len) return NULL;
 
-  ptr = libspectrum_malloc(size);
-  if (!ptr) return NULL;
+    ptr = libspectrum_malloc(size);
+    if (!ptr) return NULL;
 
-  g_array_append_val(g_array_index(memory_pools, GArray*, pool), ptr);
+    g_array_append_val(g_array_index(memory_pools, GArray*, pool), ptr);
 
-  return ptr;
+    return ptr;
 }
 
 void *
 mempool_malloc_n(int pool, size_t nmemb, size_t size)
 {
-  void *ptr;
+    void *ptr;
 
-  if (pool == MEMPOOL_UNTRACKED) return libspectrum_malloc_n(nmemb, size);
+    if (pool == MEMPOOL_UNTRACKED) return libspectrum_malloc_n(nmemb, size);
 
-  if (pool < 0 || pool >= memory_pools->len) return NULL;
+    if (pool < 0 || pool >= memory_pools->len) return NULL;
 
-  ptr = libspectrum_malloc_n(nmemb, size);
-  if (!ptr) return NULL;
+    ptr = libspectrum_malloc_n(nmemb, size);
+    if (!ptr) return NULL;
 
-  g_array_append_val(g_array_index(memory_pools, GArray*, pool), ptr);
+    g_array_append_val(g_array_index(memory_pools, GArray*, pool), ptr);
 
-  return ptr;
+    return ptr;
 }
 
 char*
 mempool_strdup(int pool, const char *string)
 {
-  size_t length = strlen(string) + 1;
+    size_t length = strlen(string) + 1;
 
-  char *ptr = mempool_malloc(pool, length);
-  if (!ptr) return NULL;
+    char *ptr = mempool_malloc(pool, length);
+    if (!ptr) return NULL;
 
-  memcpy(ptr, string, length);
+    memcpy(ptr, string, length);
 
-  return ptr;
+    return ptr;
 }
 
 void
 mempool_free(int pool)
 {
-  size_t i;
+    size_t i;
 
-  GArray *p = g_array_index(memory_pools, GArray*, pool);
+    GArray *p = g_array_index(memory_pools, GArray*, pool);
 
-  for (i = 0; i < p->len; i++)
+    for (i = 0; i < p->len; i++)
     libspectrum_free(g_array_index(p, void*, i));
 
-  g_array_set_size(p, 0);
+    g_array_set_size(p, 0);
 }
 
 // Tidy-up function called at end of emulation
 static void
 mempool_end(void)
 {
-  int i;
-  GArray *pool;
+    int i;
+    GArray *pool;
 
-  if (!memory_pools) return;
+    if (!memory_pools) return;
 
-  for (i = 0; i < memory_pools->len; i++) {
+    for (i = 0; i < memory_pools->len; i++) {
     pool = g_array_index(memory_pools, GArray *, i);
 
     g_array_free(pool, TRUE);
-  }
+    }
 
-  g_array_free(memory_pools, TRUE);
-  memory_pools = NULL;
+    g_array_free(memory_pools, TRUE);
+    memory_pools = NULL;
 }
 
 void
 mempool_register_startup(void)
 {
-  startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register(STARTUP_MANAGER_MODULE_MEMPOOL, dependencies,
+    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_register(STARTUP_MANAGER_MODULE_MEMPOOL, dependencies,
                             ARRAY_SIZE(dependencies), mempool_init, NULL,
                             mempool_end);
 }
@@ -150,11 +150,11 @@ mempool_register_startup(void)
 int
 mempool_get_pools(void)
 {
-  return memory_pools->len;
+    return memory_pools->len;
 }
 
 int
 mempool_get_pool_size(int pool)
 {
-  return g_array_index(memory_pools, GArray*, pool)->len;
+    return g_array_index(memory_pools, GArray*, pool)->len;
 }

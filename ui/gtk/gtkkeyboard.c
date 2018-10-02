@@ -39,14 +39,14 @@
 static guint
 unshift_keysym(guint keycode, gint group)
 {
-  GdkKeymapKey *maps;
-  guint *keyvals, i, r = GDK_KEY_VoidSymbol, r2 = GDK_KEY_VoidSymbol;
-  gint count;
+    GdkKeymapKey *maps;
+    guint *keyvals, i, r = GDK_KEY_VoidSymbol, r2 = GDK_KEY_VoidSymbol;
+    gint count;
 
-  gdk_keymap_get_entries_for_keycode(gdk_keymap_get_default(), keycode,
+    gdk_keymap_get_entries_for_keycode(gdk_keymap_get_default(), keycode,
                                       &maps, &keyvals, &count);
 
-  for (i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
     if (maps[i].group == group && maps[i].level == 0) {
       r = keyvals[i];
       break;
@@ -54,53 +54,53 @@ unshift_keysym(guint keycode, gint group)
     if (maps[i].group == 0 && maps[i].level == 0) {
       r2 = keyvals[i];
     }
-  }
-  if (i == count)
-	  r = r2;
+    }
+    if (i == count)
+      r = r2;
 
-  g_free(keyvals); g_free(maps);
+    g_free(keyvals); g_free(maps);
 
-  return r;
+    return r;
 }
 
 static void
 get_keysyms(input_event_t *event, guint keycode, guint keysym, gint group)
 {
-  guint unshifted;
+    guint unshifted;
 
-  /* The GTK+ UI doesn't actually use the native keysym for anything,
+    /* The GTK+ UI doesn't actually use the native keysym for anything,
      but we may as well set it up anyway as we've got it */
-  event->types.key.native_key = keysyms_remap(keysym);
+    event->types.key.native_key = keysyms_remap(keysym);
 
-  unshifted = unshift_keysym(keycode, group);
-  event->types.key.spectrum_key = keysyms_remap(unshifted);
+    unshifted = unshift_keysym(keycode, group);
+    event->types.key.spectrum_key = keysyms_remap(unshifted);
 }
 
 int
 gtkkeyboard_keypress(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
-		      gpointer data GCC_UNUSED)
+              gpointer data GCC_UNUSED)
 {
-  input_event_t fuse_event;
+    input_event_t fuse_event;
 
-  if (event->key.keyval == GDK_KEY_F1 && event->key.state == 0)
+    if (event->key.keyval == GDK_KEY_F1 && event->key.state == 0)
     ui_mouse_suspend();
 
-  fuse_event.type = INPUT_EVENT_KEYPRESS;
-  get_keysyms(&fuse_event, event->key.hardware_keycode, event->key.keyval, event->key.group);
+    fuse_event.type = INPUT_EVENT_KEYPRESS;
+    get_keysyms(&fuse_event, event->key.hardware_keycode, event->key.keyval, event->key.group);
 
-  return input_event(&fuse_event);
+    return input_event(&fuse_event);
 
-  // FIXME: handle F1 to deal with the pop-up menu
+    // FIXME: handle F1 to deal with the pop-up menu
 }
 
 int
 gtkkeyboard_keyrelease(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
-			gpointer data GCC_UNUSED)
+            gpointer data GCC_UNUSED)
 {
-  input_event_t fuse_event;
+    input_event_t fuse_event;
 
-  fuse_event.type = INPUT_EVENT_KEYRELEASE;
-  get_keysyms(&fuse_event, event->key.hardware_keycode, event->key.keyval, event->key.group);
+    fuse_event.type = INPUT_EVENT_KEYRELEASE;
+    get_keysyms(&fuse_event, event->key.hardware_keycode, event->key.keyval, event->key.group);
 
-  return input_event(&fuse_event);
+    return input_event(&fuse_event);
 }

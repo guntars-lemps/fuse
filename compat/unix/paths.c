@@ -38,42 +38,42 @@ void get_relative_directory(char *buffer, size_t bufsize);
 const char*
 compat_get_temp_path(void)
 {
-  const char *dir;
+    const char *dir;
 
-  // Use TMPDIR if specified, if not /tmp
-  dir = getenv("TMPDIR"); if (dir) return dir;
-  return "/tmp";
+    // Use TMPDIR if specified, if not /tmp
+    dir = getenv("TMPDIR"); if (dir) return dir;
+    return "/tmp";
 }
 
 const char*
 compat_get_config_path(void)
 {
-  const char *dir;
-  dir = getenv("HOME"); if (dir) return dir;
-  return ".";
+    const char *dir;
+    dir = getenv("HOME"); if (dir) return dir;
+    return ".";
 }
 
 int
 compat_is_absolute_path(const char *path)
 {
-  return path[0] == '/';
+    return path[0] == '/';
 }
 
 int
 compat_get_next_path(path_context *ctx)
 {
-  char buffer[ PATH_MAX ];
-  const char *path_segment, *path2;
+    char buffer[ PATH_MAX ];
+    const char *path_segment, *path2;
 
-  switch ((ctx->state)++) {
+    switch ((ctx->state)++) {
 
     // First look relative to the current directory
-  case 0:
+    case 0:
     strncpy(ctx->path, ".", PATH_MAX);
     return 1;
 
     // Then relative to the Fuse executable
-  case 1:
+    case 1:
 
     switch (ctx->type) {
     case UTILS_AUXILIARY_LIB: path_segment = "lib"; break;
@@ -98,7 +98,7 @@ compat_get_next_path(path_context *ctx)
     return 1;
 
     // Then where we may have installed the data files
-  case 2:
+    case 2:
 
 #ifndef ROMSDIR
     path2 = FUSEDATADIR;
@@ -108,8 +108,8 @@ compat_get_next_path(path_context *ctx)
     strncpy(ctx->path, path2, PATH_MAX); buffer[ PATH_MAX - 1 ] = '\0';
     return 1;
 
-  case 3: return 0;
-  }
-  ui_error(UI_ERROR_ERROR, "unknown path_context state %d", ctx->state);
-  fuse_abort();
+    case 3: return 0;
+    }
+    ui_error(UI_ERROR_ERROR, "unknown path_context state %d", ctx->state);
+    fuse_abort();
 }

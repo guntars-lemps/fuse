@@ -165,7 +165,7 @@ libspectrum_byte readbyte(libspectrum_word address);
 #ifndef CORETEST
 
 #define readbyte_internal(address) \
-  memory_map_read[(libspectrum_word)(address) >> MEMORY_PAGE_SIZE_LOGARITHM].page[(address) & MEMORY_PAGE_SIZE_MASK]
+    memory_map_read[(libspectrum_word)(address) >> MEMORY_PAGE_SIZE_LOGARITHM].page[(address) & MEMORY_PAGE_SIZE_MASK]
 
 #else // #ifndef CORETEST
 

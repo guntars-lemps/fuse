@@ -31,16 +31,16 @@
 #include <wiiuse/wpad.h>
 
 typedef enum {
-  WII_JOYSTICK_SIDEWAYS_RH, // sideways config (fire on the right)
-  WII_JOYSTICK_SIDEWAYS_LH, // sideways config (fire on the left)
-  WII_JOYSTICK_NUNCHUK, // nunchuk for directions, A+B for fire
-  WII_JOYSTICK_CLASSIC, // classic controller
+    WII_JOYSTICK_SIDEWAYS_RH, // sideways config (fire on the right)
+    WII_JOYSTICK_SIDEWAYS_LH, // sideways config (fire on the left)
+    WII_JOYSTICK_NUNCHUK, // nunchuk for directions, A+B for fire
+    WII_JOYSTICK_CLASSIC, // classic controller
 } WiiJoystickConfig;
 
 int
 ui_joystick_init(void)
 {
-  return 4;
+    return 4;
 }
 
 void
@@ -51,32 +51,32 @@ ui_joystick_end(void)
 void
 ui_joystick_poll(void)
 {
-  input_event_t fuse_event;
-  int ctrlr; // Which controller
-  u32 wm_down; // Wii Remote buttons that are down
-  u32 wm_up; // Wii Remote buttons that are up
-  ubyte nunchuck_down; // Nunchuck buttons that are down
-  ubyte nunchuck_up; // Nunchuck buttons that are up
-  WPADData *wpad;
-  joystick_t js;
+    input_event_t fuse_event;
+    int ctrlr; // Which controller
+    u32 wm_down; // Wii Remote buttons that are down
+    u32 wm_up; // Wii Remote buttons that are up
+    ubyte nunchuck_down; // Nunchuck buttons that are down
+    ubyte nunchuck_up; // Nunchuck buttons that are up
+    WPADData *wpad;
+    joystick_t js;
 
-  if (fuse_emulation_paused) return;
+    if (fuse_emulation_paused) return;
 
-#define POST_JOYPRESS(number, pressed) do {	  \
+#define POST_JOYPRESS(number, pressed) do {      \
     fuse_event.type = INPUT_EVENT_JOYSTICK_PRESS; \
     fuse_event.types.joystick.which = number; \
     fuse_event.types.joystick.button = pressed; \
     input_event(&fuse_event); \
-  } while (0)
+    } while (0)
 
-#define POST_JOYRELEASE(number, pressed) do {	    \
+#define POST_JOYRELEASE(number, pressed) do {        \
     fuse_event.type = INPUT_EVENT_JOYSTICK_RELEASE; \
     fuse_event.types.joystick.which = number; \
     fuse_event.types.joystick.button = pressed; \
     input_event(&fuse_event); \
-  } while (0)
+    } while (0)
 
-  for (ctrlr = 0; ctrlr < 2; ctrlr++) {
+    for (ctrlr = 0; ctrlr < 2; ctrlr++) {
 
     wpad = WPAD_Data(ctrlr);
     if (!wpad) continue;
@@ -193,5 +193,5 @@ ui_joystick_poll(void)
         if (!right_held) POST_JOYRELEASE(ctrlr, INPUT_JOYSTICK_RIGHT);
       }
     }
-  }
+    }
 }

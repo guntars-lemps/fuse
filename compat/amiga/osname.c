@@ -36,9 +36,9 @@ struct ExpansionIFace *IExpansion;
 
 int compat_osname(char *buffer, size_t length)
 {
-  STRPTR machine;
+    STRPTR machine;
 
-  if (ExpansionBase = IExec->OpenLibrary("expansion.library", 52)) {
+    if (ExpansionBase = IExec->OpenLibrary("expansion.library", 52)) {
     if (IExpansion = (struct ExpansionIFace *) IExec->GetInterface(ExpansionBase,"main",1,NULL)) {
 
       IExpansion->GetMachineInfoTags(GMIT_MachineString, &machine,
@@ -49,11 +49,11 @@ int compat_osname(char *buffer, size_t length)
       IExec->DropInterface((struct Interface *)IExpansion);
     }
     IExec->CloseLibrary(ExpansionBase);
-  }
-  else
-  {
+    }
+    else
+    {
     return 1;
-  }
+    }
 
-  return 0;
+    return 0;
 }

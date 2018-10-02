@@ -29,8 +29,8 @@
 #endif
 
 extern Display *display; // Which display are we connected to?
-extern int xui_screenNum;	/* Which screen are we using on our
-				   X server? */
+extern int xui_screenNum;    /* Which screen are we using on our
+                   X server? */
 extern Window xui_mainWindow; // Window ID for the main Fuse window
 
 #endif // #ifndef FUSE_XUI_H

@@ -33,58 +33,58 @@
 int
 win32ui_confirm(const char *string)
 {
-  int confirm;
-  int result;
+    int confirm;
+    int result;
 
-  /* Return value isn't an error code, but signifies whether to undertake
+    /* Return value isn't an error code, but signifies whether to undertake
      the action */
-  if (!settings_current.confirm_actions) return 1;
+    if (!settings_current.confirm_actions) return 1;
 
-  fuse_emulation_pause();
+    fuse_emulation_pause();
 
-  confirm = 0;
+    confirm = 0;
 
-  result = MessageBox(fuse_hWnd, string, "Fuse - Confirm",
+    result = MessageBox(fuse_hWnd, string, "Fuse - Confirm",
                        MB_OKCANCEL | MB_ICONQUESTION);
-  if (result == IDOK) confirm = 1;
+    if (result == IDOK) confirm = 1;
 
-  fuse_emulation_unpause();
+    fuse_emulation_unpause();
 
-  return confirm;
+    return confirm;
 }
 
 ui_confirm_save_t
 ui_confirm_save_specific(const char *message)
 {
-  ui_confirm_save_t confirm;
-  int result;
+    ui_confirm_save_t confirm;
+    int result;
 
-  if (!settings_current.confirm_actions) return UI_CONFIRM_SAVE_DONTSAVE;
+    if (!settings_current.confirm_actions) return UI_CONFIRM_SAVE_DONTSAVE;
 
-  fuse_emulation_pause();
+    fuse_emulation_pause();
 
-  confirm = UI_CONFIRM_SAVE_CANCEL;
+    confirm = UI_CONFIRM_SAVE_CANCEL;
 
-  result = MessageBox(fuse_hWnd, message, "Fuse - Confirm",
+    result = MessageBox(fuse_hWnd, message, "Fuse - Confirm",
                        MB_YESNOCANCEL | MB_ICONQUESTION);
-  switch (result)
-  {
-  case IDYES:
+    switch (result)
+    {
+    case IDYES:
     confirm = UI_CONFIRM_SAVE_SAVE;
     break;
-  case IDNO:
+    case IDNO:
     confirm = UI_CONFIRM_SAVE_DONTSAVE;
     break;
-  }
+    }
 
-  fuse_emulation_unpause();
+    fuse_emulation_unpause();
 
-  return confirm;
+    return confirm;
 }
 
 int
 ui_query(const char *message)
 {
-  return win32ui_confirm(message);
+    return win32ui_confirm(message);
 }
 

@@ -33,7 +33,7 @@ extern libspectrum_byte keyboard_return_values[8];
 
 // A numeric identifier for each Spectrum key. Chosen to map to ASCII in most cases
 typedef enum keyboard_key_name {
-    KEYBOARD_NONE = 0x00,		// No key
+    KEYBOARD_NONE = 0x00,        // No key
     KEYBOARD_space = 0x20,
     KEYBOARD_0 = 0x30,
     KEYBOARD_1,

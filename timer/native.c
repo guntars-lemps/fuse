@@ -29,12 +29,12 @@
 double
 timer_get_time(void)
 {
-  return compat_timer_get_time();
+    return compat_timer_get_time();
 }
 
 void
 timer_sleep(int ms)
 {
-  compat_timer_sleep(ms);
+    compat_timer_sleep(ms);
 }
 

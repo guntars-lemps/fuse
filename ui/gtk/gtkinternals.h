@@ -41,11 +41,11 @@ void gtkdisplay_update_geometry(void);
  */
 
 int gtkkeyboard_keypress(GtkWidget *widget, GdkEvent *event,
-			  gpointer data);
+              gpointer data);
 int gtkkeyboard_keyrelease(GtkWidget *widget, GdkEvent *event,
-			    gpointer data);
+                gpointer data);
 int gtkkeyboard_release_all(GtkWidget *widget, GdkEvent *event,
-			     gpointer data);
+                 gpointer data);
 
 /*
  * Mouse routines (gtkmouse.c)
@@ -76,15 +76,15 @@ GtkAccelGroup* gtkstock_add_accel_group(GtkWidget *widget);
  * For either, GDK_KEY_VoidSymbol means "no accel key".
  */
 typedef struct gtkstock_button {
-  const gchar *label;
-  GCallback action; // "clicked" func; data is actiondata.
-  gpointer actiondata;
-  GCallback destroy; // "clicked" func; data is parent widget
-  guint shortcut;
-  GdkModifierType modifier; // primary shortcut
-  guint shortcut_alt;
-  GdkModifierType modifier_alt; // secondary shortcut
-  gint response_id; // response id for dialog
+    const gchar *label;
+    GCallback action; // "clicked" func; data is actiondata.
+    gpointer actiondata;
+    GCallback destroy; // "clicked" func; data is parent widget
+    guint shortcut;
+    GdkModifierType modifier; // primary shortcut
+    guint shortcut_alt;
+    GdkModifierType modifier_alt; // secondary shortcut
+    gint response_id; // response id for dialog
 } gtkstock_button;
 
 /* GTK1: create a simple button with the given label.
@@ -99,20 +99,20 @@ typedef struct gtkstock_button {
  * g_signal_connect, is used to connect the action function.
  */
 GtkWidget* gtkstock_create_button(GtkWidget *widget, GtkAccelGroup *accel,
-				   const gtkstock_button *btn);
+                   const gtkstock_button *btn);
 GtkAccelGroup*
 gtkstock_create_buttons(GtkWidget *widget, GtkAccelGroup *accel,
-			 const gtkstock_button *buttons, size_t count);
+             const gtkstock_button *buttons, size_t count);
 GtkAccelGroup* gtkstock_create_ok_cancel(GtkWidget *widget,
-					  GtkAccelGroup *accel,
-	/* for OK button -> */	          GCallback action,
-				          gpointer actiondata,
-	/* for both buttons -> */         GCallback destroy_ok,
-	                                  GCallback destroy_cancel);
+                      GtkAccelGroup *accel,
+    /* for OK button -> */              GCallback action,
+                          gpointer actiondata,
+    /* for both buttons -> */         GCallback destroy_ok,
+                                      GCallback destroy_cancel);
 GtkAccelGroup* gtkstock_create_close(GtkWidget *widget, GtkAccelGroup *accel,
-				      GCallback destroy,
-				      gboolean esconly);
-	// destroy==NULL => use DEFAULT_DESTROY
+                      GCallback destroy,
+                      gboolean esconly);
+    // destroy==NULL => use DEFAULT_DESTROY
 
 #define DEFAULT_DESTROY (G_CALLBACK(gtkui_destroy_widget_and_quit))
 

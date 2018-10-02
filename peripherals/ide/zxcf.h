@@ -1,6 +1,6 @@
 /* zxcf.h: ZXCF interface routines
    Copyright (c) 2003-2004 Garry Lancaster,
-		 2004 Philip Kendall
+         2004 Philip Kendall
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

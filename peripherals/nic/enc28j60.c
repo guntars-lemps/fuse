@@ -104,63 +104,63 @@
 
 struct nic_enc28j60_t {
 
-  // Reserve 6 bytes before the Ethernet frame for next pointer + RSV
-  libspectrum_byte eth_rx_buf[ETH_STATUS_LENGTH + ETH_MAX];
+    // Reserve 6 bytes before the Ethernet frame for next pointer + RSV
+    libspectrum_byte eth_rx_buf[ETH_STATUS_LENGTH + ETH_MAX];
 
-  libspectrum_byte sram[0x2000];
-  libspectrum_byte registers[4][32];
+    libspectrum_byte sram[0x2000];
+    libspectrum_byte registers[4][32];
 
-  // Current register for RCR and WCR commands
-  libspectrum_byte curr_register;
-  libspectrum_byte curr_register_bank;
+    // Current register for RCR and WCR commands
+    libspectrum_byte curr_register;
+    libspectrum_byte curr_register_bank;
 
-  // TAP file descriptor
-  int tap_fd;
+    // TAP file descriptor
+    int tap_fd;
 
-  /* ---------------------------------------------------------------------------
+    /* ---------------------------------------------------------------------------
    * SPI state
    * ------------------------------------------------------------------------ */
 
-  // Number of valid bits currently held in MISO/MOSI shift registers (0..7)
-  libspectrum_byte miso_bits;
-  libspectrum_byte miso_valid_bits;
+    // Number of valid bits currently held in MISO/MOSI shift registers (0..7)
+    libspectrum_byte miso_bits;
+    libspectrum_byte miso_valid_bits;
 
-  libspectrum_byte mosi_bits;
-  libspectrum_byte mosi_valid_bits;
+    libspectrum_byte mosi_bits;
+    libspectrum_byte mosi_valid_bits;
 
-  nic_enc28j60_spi_state spi_state;
+    nic_enc28j60_spi_state spi_state;
 
 };
 
 nic_enc28j60_t*
 nic_enc28j60_alloc(void)
 {
-  nic_enc28j60_t *self = libspectrum_new(nic_enc28j60_t, 1);
+    nic_enc28j60_t *self = libspectrum_new(nic_enc28j60_t, 1);
 
-  self->tap_fd = -1;
-  self->spi_state = SPI_IDLE;
-  return self;
+    self->tap_fd = -1;
+    self->spi_state = SPI_IDLE;
+    return self;
 }
 
 void
 nic_enc28j60_init(nic_enc28j60_t *self)
 {
-  self->tap_fd = compat_get_tap(settings_current.speccyboot_tap);
+    self->tap_fd = compat_get_tap(settings_current.speccyboot_tap);
 }
 
 void
 nic_enc28j60_free(nic_enc28j60_t *self)
 {
-  libspectrum_free(self);
+    libspectrum_free(self);
 }
 
 // Poll for received frames.
 void
 nic_enc28j60_poll(nic_enc28j60_t *self)
 {
-  ssize_t n;
+    ssize_t n;
 
-  if ((ECON1(self) & ECON1_RXEN) // Ethernet RX enabled?
+    if ((ECON1(self) & ECON1_RXEN) // Ethernet RX enabled?
        && self->tap_fd > 0
        && (n = read(self->tap_fd,
                      self->eth_rx_buf + ETH_STATUS_LENGTH,
@@ -197,14 +197,14 @@ nic_enc28j60_poll(nic_enc28j60_t *self)
     SET_PTR_REG(self, ERXWRPT, next_addr);
 
     ++EPKTCNT(self);
-  }
+    }
 }
 
 // Writing to some registers produces special side effects.
 static void
 perform_side_effects_for_write(nic_enc28j60_t *self)
 {
-  if (ECON1(self) & ECON1_TXRTS) { // TXRTS: transmission request
+    if (ECON1(self) & ECON1_TXRTS) { // TXRTS: transmission request
     libspectrum_word frame_start = (GET_PTR_REG(self, ETXST) & 0x1fff) + 1;
     libspectrum_word frame_end   = GET_PTR_REG(self, ETXND) & 0x1fff;
 
@@ -215,41 +215,41 @@ perform_side_effects_for_write(nic_enc28j60_t *self)
     }
 
     ECON1(self) &= ~ECON1_TXRTS;
-  }
+    }
 
-  if (ECON2(self) & ECON2_PKTDEC) { // PKTDEC: decrease EPKTCNT
+    if (ECON2(self) & ECON2_PKTDEC) { // PKTDEC: decrease EPKTCNT
     --EPKTCNT(self);
     ECON2(self) &= ~ECON2_PKTDEC;
-  }
+    }
 }
 
 void
 nic_enc28j60_set_spi_state(nic_enc28j60_t *self, nic_enc28j60_spi_state new_state)
 {
-  self->spi_state = new_state;
-  self->miso_valid_bits = self->mosi_valid_bits = 0;
+    self->spi_state = new_state;
+    self->miso_valid_bits = self->mosi_valid_bits = 0;
 }
 
 void
 nic_enc28j60_reset(nic_enc28j60_t *self)
 {
-  nic_enc28j60_set_spi_state(self, SPI_IDLE);
+    nic_enc28j60_set_spi_state(self, SPI_IDLE);
 
-  memset(self->registers, 0, sizeof(self->registers));
+    memset(self->registers, 0, sizeof(self->registers));
 
-  MIRDH(self) = PHSTAT2_HI_LSTAT; // Assume PHSTAT2 is mapped to MIRDH
-  ESTAT(self) = ESTAT_CLKRDY;
+    MIRDH(self) = PHSTAT2_HI_LSTAT; // Assume PHSTAT2 is mapped to MIRDH
+    ESTAT(self) = ESTAT_CLKRDY;
 }
 
 // Produce one bit for MISO for the next IN I/O operation
 int
 nic_enc28j60_spi_produce_bit(nic_enc28j60_t *self)
 {
-  int bit;
+    int bit;
 
-  libspectrum_word erdpt = GET_PTR_REG(self, ERDPT);
+    libspectrum_word erdpt = GET_PTR_REG(self, ERDPT);
 
-  if (self->miso_valid_bits-- == 0) { // Load another byte
+    if (self->miso_valid_bits-- == 0) { // Load another byte
     switch (self->spi_state) {
 
     case SPI_RCR:
@@ -269,21 +269,21 @@ nic_enc28j60_spi_produce_bit(nic_enc28j60_t *self)
     }
 
     self->miso_valid_bits = 7; // 8 bits in total, one shifted out below
-  }
+    }
 
-  bit = self->miso_bits & 0x80 ? 1 : 0;
-  self->miso_bits <<= 1;
+    bit = self->miso_bits & 0x80 ? 1 : 0;
+    self->miso_bits <<= 1;
 
-  return bit;
+    return bit;
 }
 
 // Consume one bit from MOSI
 void
 nic_enc28j60_spi_consume_bit(nic_enc28j60_t *self, int bit)
 {
-  self->mosi_bits = (self->mosi_bits << 1) | bit;
+    self->mosi_bits = (self->mosi_bits << 1) | bit;
 
-  if (++self->mosi_valid_bits == 8) {
+    if (++self->mosi_valid_bits == 8) {
     libspectrum_word ewrpt = GET_PTR_REG(self, EWRPT);
 
     switch (self->spi_state) {
@@ -326,5 +326,5 @@ nic_enc28j60_spi_consume_bit(nic_enc28j60_t *self, int bit)
     }
 
     self->mosi_valid_bits = 0;
-  }
+    }
 }

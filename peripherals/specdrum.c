@@ -45,40 +45,40 @@ static void specdrum_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t specdrum_module_info = {
 
-  /* .reset = */ specdrum_reset,
-  /* .romcs = */ NULL,
-  /* .snapshot_enabled = */ specdrum_enabled_snapshot,
-  /* .snapshot_from = */ specdrum_from_snapshot,
-  /* .snapshot_to = */ specdrum_to_snapshot,
+    /* .reset = */ specdrum_reset,
+    /* .romcs = */ NULL,
+    /* .snapshot_enabled = */ specdrum_enabled_snapshot,
+    /* .snapshot_from = */ specdrum_from_snapshot,
+    /* .snapshot_to = */ specdrum_to_snapshot,
 
 };
 
 static const periph_port_t specdrum_ports[] = {
-  { 0x00ff, 0x00df, NULL, sound_specdrum_write },
-  { 0, 0, NULL, NULL }
+    { 0x00ff, 0x00df, NULL, sound_specdrum_write },
+    { 0, 0, NULL, NULL }
 };
 
 static const periph_t specdrum_periph = {
-  /* .option = */ &settings_current.specdrum,
-  /* .ports = */ specdrum_ports,
-  /* .hard_reset = */ 1,
-  /* .activate = */ NULL,
+    /* .option = */ &settings_current.specdrum,
+    /* .ports = */ specdrum_ports,
+    /* .hard_reset = */ 1,
+    /* .activate = */ NULL,
 };
 
 static int
 specdrum_init(void *context)
 {
-  module_register(&specdrum_module_info);
-  periph_register(PERIPH_TYPE_SPECDRUM, &specdrum_periph);
+    module_register(&specdrum_module_info);
+    periph_register(PERIPH_TYPE_SPECDRUM, &specdrum_periph);
 
-  return 0;
+    return 0;
 }
 
 void
 specdrum_register_startup(void)
 {
-  startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register(STARTUP_MANAGER_MODULE_SPECDRUM, dependencies,
+    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_register(STARTUP_MANAGER_MODULE_SPECDRUM, dependencies,
                             ARRAY_SIZE(dependencies), specdrum_init, NULL,
                             NULL);
 }
@@ -86,32 +86,32 @@ specdrum_register_startup(void)
 static void
 specdrum_reset(int hard_reset GCC_UNUSED)
 {
-  machine_current->specdrum.specdrum_dac = 0;
+    machine_current->specdrum.specdrum_dac = 0;
 }
 
 static void
 specdrum_enabled_snapshot(libspectrum_snap *snap)
 {
-  settings_current.specdrum = libspectrum_snap_specdrum_active(snap);
+    settings_current.specdrum = libspectrum_snap_specdrum_active(snap);
 }
 
 static void
 specdrum_from_snapshot(libspectrum_snap *snap)
 {
-  if (!libspectrum_snap_specdrum_active(snap)) return;
+    if (!libspectrum_snap_specdrum_active(snap)) return;
 
-  /* We just set the internal machine status to the last read specdrum_dac
+    /* We just set the internal machine status to the last read specdrum_dac
    * instead of trying to write to the sound routines, as at this stage
    * sound isn't initialised so there is no synth to write to
    */
 
-  machine_current->specdrum.specdrum_dac = libspectrum_snap_specdrum_dac(snap);
+    machine_current->specdrum.specdrum_dac = libspectrum_snap_specdrum_dac(snap);
 }
 
 static void specdrum_to_snapshot(libspectrum_snap *snap)
 {
-  if (!periph_is_active(PERIPH_TYPE_SPECDRUM)) return;
+    if (!periph_is_active(PERIPH_TYPE_SPECDRUM)) return;
 
-  libspectrum_snap_set_specdrum_active(snap, 1);
-  libspectrum_snap_set_specdrum_dac(snap, machine_current->specdrum.specdrum_dac);
+    libspectrum_snap_set_specdrum_active(snap, 1);
+    libspectrum_snap_set_specdrum_dac(snap, machine_current->specdrum.specdrum_dac);
 }

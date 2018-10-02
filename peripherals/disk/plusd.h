@@ -27,9 +27,9 @@
 #define FUSE_PLUSD_H
 
 typedef enum plusd_drive_number {
-  PLUSD_DRIVE_1 = 0,
-  PLUSD_DRIVE_2,
-  PLUSD_NUM_DRIVES,
+    PLUSD_DRIVE_1 = 0,
+    PLUSD_DRIVE_2,
+    PLUSD_NUM_DRIVES,
 } plusd_drive_number;
 
 #include <libspectrum.h>
@@ -45,7 +45,7 @@ void plusd_page(void);
 void plusd_unpage(void);
 
 int plusd_disk_insert(plusd_drive_number which, const char *filename,
-		       int autoload);
+               int autoload);
 int plusd_disk_eject(plusd_drive_number which);
 int plusd_disk_save(plusd_drive_number which, int saveas);
 int plusd_disk_write(plusd_drive_number which, const char *filename);

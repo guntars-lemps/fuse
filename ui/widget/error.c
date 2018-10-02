@@ -36,72 +36,72 @@ widget_error_t *error_info;
 int
 ui_error_specific(ui_error_level severity, const char *message)
 {
-  widget_error_t error_info;
-  // Can't output widgets if we don't have a display yet
-  if (!display_ui_initialised) return 0;
+    widget_error_t error_info;
+    // Can't output widgets if we don't have a display yet
+    if (!display_ui_initialised) return 0;
 
 
-  error_info.severity = severity;
-  error_info.message  = message;
+    error_info.severity = severity;
+    error_info.message  = message;
 
-  fuse_emulation_pause();
-  widget_do_error(&error_info);
-  fuse_emulation_unpause();
+    fuse_emulation_pause();
+    widget_do_error(&error_info);
+    fuse_emulation_unpause();
 
-  return 0;
+    return 0;
 }
 
 int widget_error_draw(void *data)
 {
-  char **lines; size_t count;
-  size_t i;
+    char **lines; size_t count;
+    size_t i;
 
-  error_info = (widget_error_t*)data;
-  if (split_message(error_info->message, &lines, &count, 28)) return 1;
+    error_info = (widget_error_t*)data;
+    if (split_message(error_info->message, &lines, &count, 28)) return 1;
 
-  widget_dialog_with_border(1, 2, 30, count+2);
+    widget_dialog_with_border(1, 2, 30, count+2);
 
-  switch (error_info->severity) {
-  case UI_ERROR_INFO:
+    switch (error_info->severity) {
+    case UI_ERROR_INFO:
     widget_printstring(10, 16, WIDGET_COLOUR_TITLE, "Info");
     break;
-  case UI_ERROR_WARNING:
+    case UI_ERROR_WARNING:
     widget_printstring(10, 16, WIDGET_COLOUR_TITLE, "Warning");
     break;
-  case UI_ERROR_ERROR:
+    case UI_ERROR_ERROR:
     widget_printstring(10, 16, WIDGET_COLOUR_TITLE, "Error");
     break;
-  default:
+    default:
     widget_printstring(10, 16, WIDGET_COLOUR_TITLE, "(Unknown message)");
     break;
-  }
+    }
 
-  for (i=0; i<count; i++) {
+    for (i=0; i<count; i++) {
     widget_printstring(17, i*8+24, WIDGET_COLOUR_FOREGROUND, lines[i]);
     free(lines[i]);
-  }
+    }
 
-  free(lines);
+    free(lines);
 
-  widget_display_lines(2, count + 3);
+    widget_display_lines(2, count + 3);
 
-  return 0;
+    return 0;
 }
 
 int
 split_message(const char *message, char ***lines, size_t *count,
-	       size_t line_length)
+           size_t line_length)
 {
-  const char *ptr = message;
-  int position;
+    const char *ptr = message;
+    int position;
 
-  line_length *= 8;
+    line_length *= 8;
 
-  /* Setup so we'll allocate the first line as soon as we get the first
+    /* Setup so we'll allocate the first line as soon as we get the first
      word */
-  *lines = NULL; *count = 0; position = line_length;
+    *lines = NULL; *count = 0; position = line_length;
 
-  while (*ptr) {
+    while (*ptr) {
 
     // Skip any whitespace
     while (*ptr && isspace(*ptr)) ptr++;
@@ -118,7 +118,7 @@ split_message(const char *message, char ***lines, size_t *count,
 
     // Check we've got room for the word, plus some prefixing space
     if (position + widget_substringwidth(message, ptr - message) + 4
- 	>= line_length) {
+     >= line_length) {
 
       char **new_lines; size_t i;
 
@@ -127,17 +127,17 @@ split_message(const char *message, char ***lines, size_t *count,
 
       new_lines = realloc((*lines), (*count + 1) * sizeof(char*));
       if (new_lines == NULL) {
-	for (i=0; i<*count; i++) free((*lines)[i]);
-	if (*lines) free((*lines));
-	return 1;
+    for (i=0; i<*count; i++) free((*lines)[i]);
+    if (*lines) free((*lines));
+    return 1;
       }
       (*lines) = new_lines;
 
       (*lines)[*count] = malloc((line_length+1));
       if ((*lines)[*count] == NULL) {
-	for (i=0; i<*count; i++) free((*lines)[i]);
-	free((*lines));
-	return 1;
+    for (i=0; i<*count; i++) free((*lines)[i]);
+    free((*lines));
+    return 1;
       }
 
       strncpy((*lines)[*count], message, ptr - message);
@@ -155,27 +155,27 @@ split_message(const char *message, char ***lines, size_t *count,
 
     }
 
-  }
+    }
 
-  return 0;
+    return 0;
 }
 
 void
 widget_error_keyhandler(input_key key)
 {
-  switch (key) {
+    switch (key) {
 
-  case INPUT_KEY_Escape:
+    case INPUT_KEY_Escape:
     widget_end_widget(WIDGET_FINISHED_CANCEL);
     return;
 
-  case INPUT_KEY_Return:
-  case INPUT_KEY_KP_Enter:
+    case INPUT_KEY_Return:
+    case INPUT_KEY_KP_Enter:
     widget_end_widget(WIDGET_FINISHED_OK);
     return;
 
-  default: // Keep gcc happy
+    default: // Keep gcc happy
     break;
 
-  }
+    }
 }

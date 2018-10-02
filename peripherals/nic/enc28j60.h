@@ -33,16 +33,16 @@
 #define FUSE_ENC28J60_H
 
 typedef enum nic_enc28j60_spi_state {
-  SPI_IDLE = -2,
-  SPI_CMD  = -1, // expect a command byte
+    SPI_IDLE = -2,
+    SPI_CMD  = -1, // expect a command byte
 
-  SPI_RCR  = 0, // read command register
-  SPI_RBM  = 1, // read buffer memory
-  SPI_WCR  = 2, // write command register
-  SPI_WBM  = 3, // write buffer memory
-  SPI_BFS  = 4, // bit-field set
-  SPI_BFC  = 5, // bit-field clear
-  SPI_SRC  = 7 // system reset command
+    SPI_RCR  = 0, // read command register
+    SPI_RBM  = 1, // read buffer memory
+    SPI_WCR  = 2, // write command register
+    SPI_WBM  = 3, // write buffer memory
+    SPI_BFS  = 4, // bit-field set
+    SPI_BFC  = 5, // bit-field clear
+    SPI_SRC  = 7 // system reset command
 } nic_enc28j60_spi_state;
 
 typedef struct nic_enc28j60_t nic_enc28j60_t;

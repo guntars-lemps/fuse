@@ -35,10 +35,8 @@
 #include "compat.h"
 #include <gtk/gtk.h>
 
-#define MENU_CALLBACK(name) \
-  void name(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
-#define MENU_CALLBACK_WITH_ACTION(name) \
-  void name(GtkAction *gtk_action GCC_UNUSED, guint action)
+#define MENU_CALLBACK(name) void name(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
+#define MENU_CALLBACK_WITH_ACTION(name) void name(GtkAction *gtk_action GCC_UNUSED, guint action)
 
 #else // #ifdef UI_GTK
 
@@ -174,11 +172,9 @@ MENU_CALLBACK(menu_machine_memorybrowser);
 MENU_CALLBACK(menu_help_keyboard);
 MENU_CALLBACK(menu_help_about);
 
-/* Called from elsewhere (generally from one of the routines defined
-   in menu.c) */
+// Called from elsewhere (generally from one of the routines defined in menu.c)
 
-int menu_select_roms_with_title(const char *title, size_t start,
-				 size_t count, int is_peripheral);
+int menu_select_roms_with_title(const char *title, size_t start, size_t count, int is_peripheral);
 scaler_type menu_get_scaler(scaler_available_fn selector);
 int menu_check_media_changed(void);
 

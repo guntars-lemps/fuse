@@ -37,9 +37,9 @@
 // The current state of the debugger
 enum debugger_mode_t
 {
-  DEBUGGER_MODE_INACTIVE, // No breakpoint set
-  DEBUGGER_MODE_ACTIVE, // Breakpoint set, but emulator running
-  DEBUGGER_MODE_HALTED, // Execution not happening
+    DEBUGGER_MODE_INACTIVE, // No breakpoint set
+    DEBUGGER_MODE_ACTIVE, // Breakpoint set, but emulator running
+    DEBUGGER_MODE_HALTED, // Execution not happening
 };
 
 extern enum debugger_mode_t debugger_mode;
@@ -60,7 +60,7 @@ int debugger_run(void); // Set debugger_mode so that emulation will occur
 /* Disassemble the instruction at 'address', returning its length in
    '*length' */
 void debugger_disassemble(char *buffer, size_t buflen, size_t *length,
-			   libspectrum_word address);
+               libspectrum_word address);
 
 // Get an instruction relative to a specific address
 libspectrum_word debugger_search_instruction(libspectrum_word address,
@@ -71,7 +71,7 @@ void debugger_command_evaluate(const char *command);
 
 // Get a deparsed expression
 int debugger_expression_deparse(char *buffer, size_t length,
-				 const debugger_expression *exp);
+                 const debugger_expression *exp);
 
 // Register an event type with the debugger
 int debugger_event_register(const char *type, const char *detail);
@@ -90,9 +90,9 @@ typedef libspectrum_dword (*debugger_get_system_variable_fn_t)(void);
 typedef void (*debugger_set_system_variable_fn_t)(libspectrum_dword value);
 
 void debugger_system_variable_register(
-  const char *type, const char *detail,
-  debugger_get_system_variable_fn_t get,
-  debugger_set_system_variable_fn_t set);
+    const char *type, const char *detail,
+    debugger_get_system_variable_fn_t get,
+    debugger_set_system_variable_fn_t set);
 
 // Unit tests
 int debugger_disassemble_unittest(void);

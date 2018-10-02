@@ -32,66 +32,66 @@
 #define SIZE_OF_FLASH_PAGE 0x4000 // 16kB
 
 typedef enum am29f010_flash_state {
-  FLASH_STATE_RESET,
-  FLASH_STATE_CYCLE2,
-  FLASH_STATE_CYCLE3,
-  FLASH_STATE_CYCLE4,
-  FLASH_STATE_CYCLE5,
-  FLASH_STATE_CYCLE6,
-  FLASH_STATE_PROGRAM,
+    FLASH_STATE_RESET,
+    FLASH_STATE_CYCLE2,
+    FLASH_STATE_CYCLE3,
+    FLASH_STATE_CYCLE4,
+    FLASH_STATE_CYCLE5,
+    FLASH_STATE_CYCLE6,
+    FLASH_STATE_PROGRAM,
 } am29f010_flash_state;
 
 struct flash_am29f010_t {
-  am29f010_flash_state flash_state;
-  libspectrum_byte *memory;
+    am29f010_flash_state flash_state;
+    libspectrum_byte *memory;
 };
 
 flash_am29f010_t*
 flash_am29f010_alloc(void)
 {
-  return libspectrum_new(flash_am29f010_t, 1);
+    return libspectrum_new(flash_am29f010_t, 1);
 }
 
 void
 flash_am29f010_free(flash_am29f010_t *self)
 {
-  libspectrum_free(self);
+    libspectrum_free(self);
 }
 
 void
 flash_am29f010_init(flash_am29f010_t *self, libspectrum_byte *memory)
 {
-  self->flash_state = FLASH_STATE_RESET;
-  self->memory = memory;
+    self->flash_state = FLASH_STATE_RESET;
+    self->memory = memory;
 }
 
 static void
 flash_am29f010_chip_erase(flash_am29f010_t *self)
 {
-  memset(self->memory, 0xff, SIZE_OF_FLASH_ROM);
+    memset(self->memory, 0xff, SIZE_OF_FLASH_ROM);
 }
 
 static void
 flash_am29f010_sector_erase(flash_am29f010_t *self, libspectrum_byte page)
 {
-  memset(self->memory + (page * SIZE_OF_FLASH_PAGE), 0xff, SIZE_OF_FLASH_PAGE);
+    memset(self->memory + (page * SIZE_OF_FLASH_PAGE), 0xff, SIZE_OF_FLASH_PAGE);
 }
 
 static void
 flash_am29f010_program(flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b)
 {
-  libspectrum_dword flash_offset = page * SIZE_OF_FLASH_PAGE + address;
-  self->memory[ flash_offset ] = b;
+    libspectrum_dword flash_offset = page * SIZE_OF_FLASH_PAGE + address;
+    self->memory[ flash_offset ] = b;
 }
 
 void
 flash_am29f010_write(flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b)
 {
-  libspectrum_word flash_address = address & 0xfff;
+    libspectrum_word flash_address = address & 0xfff;
 
-  /* We implement only the reset, program, chip erase and sector erase
+    /* We implement only the reset, program, chip erase and sector erase
      commands for now */
-  switch (self->flash_state) {
+    switch (self->flash_state) {
     case FLASH_STATE_RESET:
       if (flash_address == 0x555 && b == 0xaa)
         self->flash_state = FLASH_STATE_CYCLE2;
@@ -129,8 +129,8 @@ flash_am29f010_write(flash_am29f010_t *self, libspectrum_byte page, libspectrum_
       flash_am29f010_program(self, page, address, b);
       self->flash_state = FLASH_STATE_RESET;
       break;
-  }
+    }
 
-  if (b == 0x0f)
+    if (b == 0x0f)
     self->flash_state = FLASH_STATE_RESET;
 }

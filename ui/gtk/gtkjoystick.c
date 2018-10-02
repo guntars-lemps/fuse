@@ -49,41 +49,41 @@
 
 enum
 {
-  COL_TEXT = 0,
-  COL_KEY,
-  NUM_COLS
+    COL_TEXT = 0,
+    COL_KEY,
+    NUM_COLS
 };
 
 struct button_info {
-  int *setting;
-  char name[80];
-  GtkWidget *label;
-  keyboard_key_name key;
+    int *setting;
+    char name[80];
+    GtkWidget *label;
+    keyboard_key_name key;
 };
 
 struct joystick_info {
 
-  int *type;
-  GtkWidget *radio[ JOYSTICK_TYPE_COUNT ];
+    int *type;
+    GtkWidget *radio[ JOYSTICK_TYPE_COUNT ];
 
-  struct button_info button[NUM_JOY_BUTTONS];
+    struct button_info button[NUM_JOY_BUTTONS];
 };
 
 typedef enum key_item_t {
-  ITEM = 0,
-  GROUP,
-  SUBITEM,
+    ITEM = 0,
+    GROUP,
+    SUBITEM,
 } key_item_t;
 
 typedef struct key_menu_t {
-  key_item_t item;
-  const gchar *text;
-  keyboard_key_name key;
+    key_item_t item;
+    const gchar *text;
+    keyboard_key_name key;
 } key_menu_t;
 
 static void setup_info(struct joystick_info *info, int callback_action);
 static void create_joystick_type_selector(struct joystick_info *info,
-					   GtkBox *parent);
+                       GtkBox *parent);
 static void
 create_fire_button_selector(const char *title, struct button_info *info,
                              GtkBox *parent, GtkTreeModel *model);
@@ -149,13 +149,13 @@ static key_menu_t key_menu[] = {
 static GtkTreeModel *
 create_joystick_options_store(void)
 {
-  GtkTreeIter iter, iter2;
-  GtkTreeStore *store;
-  guint i;
+    GtkTreeIter iter, iter2;
+    GtkTreeStore *store;
+    guint i;
 
-  store = gtk_tree_store_new(NUM_COLS, G_TYPE_STRING, G_TYPE_INT);
+    store = gtk_tree_store_new(NUM_COLS, G_TYPE_STRING, G_TYPE_INT);
 
-  for (i = 0; i < ARRAY_SIZE(key_menu); i++) {
+    for (i = 0; i < ARRAY_SIZE(key_menu); i++) {
 
     switch (key_menu[i].item) {
 
@@ -178,39 +178,39 @@ create_joystick_options_store(void)
 
     }
 
-  }
+    }
 
-  return GTK_TREE_MODEL(store);
+    return GTK_TREE_MODEL(store);
 }
 
 void
 menu_options_joysticks_select(GtkAction *gtk_action GCC_UNUSED,
                                guint callback_action)
 {
-  GtkWidget *dialog, *hbox, *vbox, *content_area;
-  GtkTreeModel *model;
-  struct joystick_info info;
-  int i;
+    GtkWidget *dialog, *hbox, *vbox, *content_area;
+    GtkTreeModel *model;
+    struct joystick_info info;
+    int i;
 
-  fuse_emulation_pause();
+    fuse_emulation_pause();
 
-  setup_info(&info, callback_action);
+    setup_info(&info, callback_action);
 
-  dialog = gtkstock_dialog_new("Fuse - Configure Joystick", NULL);
-  content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    dialog = gtkstock_dialog_new("Fuse - Configure Joystick", NULL);
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
-  hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-  gtk_container_set_border_width(GTK_CONTAINER(hbox), 4);
-  gtk_box_pack_start(GTK_BOX(content_area), hbox, FALSE, FALSE, 0);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+    gtk_container_set_border_width(GTK_CONTAINER(hbox), 4);
+    gtk_box_pack_start(GTK_BOX(content_area), hbox, FALSE, FALSE, 0);
 
-  create_joystick_type_selector(&info, GTK_BOX(hbox));
+    create_joystick_type_selector(&info, GTK_BOX(hbox));
 
-  vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-  gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 0);
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+    gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 0);
 
-  model = create_joystick_options_store();
+    model = create_joystick_options_store();
 
-  for (i = 0; i < NUM_JOY_BUTTONS; i += 5) {
+    for (i = 0; i < NUM_JOY_BUTTONS; i += 5) {
 
     int j;
 
@@ -222,29 +222,29 @@ menu_options_joysticks_select(GtkAction *gtk_action GCC_UNUSED,
         create_fire_button_selector(info.button[j].name, &(info.button[j]),
                                      GTK_BOX(vbox), model);
       }
-  }
+    }
 
-  g_object_unref(model);
+    g_object_unref(model);
 
-  gtkstock_create_ok_cancel(dialog, NULL, G_CALLBACK(joystick_done),
+    gtkstock_create_ok_cancel(dialog, NULL, G_CALLBACK(joystick_done),
                              &info, DEFAULT_DESTROY, DEFAULT_DESTROY);
 
-  gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+    gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
 
-  gtk_widget_show_all(dialog);
-  gtk_main();
+    gtk_widget_show_all(dialog);
+    gtk_main();
 
-  fuse_emulation_unpause();
+    fuse_emulation_unpause();
 }
 
 static void
 setup_info(struct joystick_info *info, int callback_action)
 {
-  size_t i;
+    size_t i;
 
-  switch (callback_action) {
+    switch (callback_action) {
 
-  case 1:
+    case 1:
     info->type = &(settings_current.joystick_1_output);
     info->button[0].setting = &(settings_current.joystick_1_fire_1);
     info->button[1].setting = &(settings_current.joystick_1_fire_2);
@@ -265,7 +265,7 @@ setup_info(struct joystick_info *info, int callback_action)
       snprintf(info->button[i].name, 80, "Button %lu", (unsigned long)i + 1);
     break;
 
-  case 2:
+    case 2:
     info->type = &(settings_current.joystick_2_output);
     info->button[0].setting = &(settings_current.joystick_2_fire_1);
     info->button[1].setting = &(settings_current.joystick_2_fire_2);
@@ -286,7 +286,7 @@ setup_info(struct joystick_info *info, int callback_action)
       snprintf(info->button[i].name, 80, "Button %lu", (unsigned long)i + 1);
     break;
 
-  case 3:
+    case 3:
     info->type = &(settings_current.joystick_keyboard_output);
     info->button[0].setting = &(settings_current.joystick_keyboard_up);
     snprintf(info->button[0].name, 80, "Button for UP");
@@ -301,25 +301,25 @@ setup_info(struct joystick_info *info, int callback_action)
     for (i = 5; i < NUM_JOY_BUTTONS; i++) info->button[i].setting = NULL;
     break;
 
-  }
+    }
 }
 
 static void
 create_joystick_type_selector(struct joystick_info *info, GtkBox *parent)
 {
-  GtkWidget *frame, *box;
-  GSList *button_group;
-  int i;
+    GtkWidget *frame, *box;
+    GSList *button_group;
+    int i;
 
-  frame = gtk_frame_new("Joystick type");
-  gtk_box_pack_start(parent, frame, FALSE, FALSE, 0);
+    frame = gtk_frame_new("Joystick type");
+    gtk_box_pack_start(parent, frame, FALSE, FALSE, 0);
 
-  box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-  gtk_container_add(GTK_CONTAINER(frame), box);
+    box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_container_add(GTK_CONTAINER(frame), box);
 
-  button_group = NULL;
+    button_group = NULL;
 
-  for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
+    for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
     info->radio[ i ] =
       gtk_radio_button_new_with_label(button_group, joystick_name[ i ]);
@@ -328,9 +328,9 @@ create_joystick_type_selector(struct joystick_info *info, GtkBox *parent)
     gtk_box_pack_start(GTK_BOX(box), info->radio[ i ], FALSE, FALSE, 0);
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(info->radio[ i ]),
-				  i == *(info->type));
+                  i == *(info->type));
 
-  }
+    }
 
 }
 
@@ -339,37 +339,37 @@ set_entry_properties(GtkCellLayout *cell_layout GCC_UNUSED,
                       GtkCellRenderer *cell, GtkTreeModel *tree_model,
                       GtkTreeIter *iter, gpointer data  GCC_UNUSED)
 {
-  gboolean sensitive;
+    gboolean sensitive;
 
-  sensitive = !gtk_tree_model_iter_has_child(tree_model, iter);
+    sensitive = !gtk_tree_model_iter_has_child(tree_model, iter);
 
-  g_object_set(cell, "sensitive", sensitive, NULL);
+    g_object_set(cell, "sensitive", sensitive, NULL);
 
-  g_object_set(cell, "xpad", 10, NULL);
+    g_object_set(cell, "xpad", 10, NULL);
 }
 
 static void
 create_fire_button_selector(const char *title, struct button_info *info,
                              GtkBox *parent, GtkTreeModel *model)
 {
-  GtkWidget *frame, *box, *combo;
-  GtkCellRenderer *renderer;
-  GtkTreeIter iter;
-  GtkTreePath *path;
-  size_t i;
+    GtkWidget *frame, *box, *combo;
+    GtkCellRenderer *renderer;
+    GtkTreeIter iter;
+    GtkTreePath *path;
+    size_t i;
 
-  frame = gtk_frame_new(title);
-  gtk_box_pack_start(parent, frame, TRUE, TRUE, 0);
+    frame = gtk_frame_new(title);
+    gtk_box_pack_start(parent, frame, TRUE, TRUE, 0);
 
-  box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-  gtk_container_set_border_width(GTK_CONTAINER(box), 2);
-  gtk_container_add(GTK_CONTAINER(frame), box);
+    box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+    gtk_container_set_border_width(GTK_CONTAINER(box), 2);
+    gtk_container_add(GTK_CONTAINER(frame), box);
 
-  // Create label
-  info->key = *info->setting;
-  info->label = gtk_label_new("");
+    // Create label
+    info->key = *info->setting;
+    info->label = gtk_label_new("");
 
-  for (i = 0; i < ARRAY_SIZE(key_menu); i++) {
+    for (i = 0; i < ARRAY_SIZE(key_menu); i++) {
 
     keyboard_key_name key;
 
@@ -380,79 +380,79 @@ create_fire_button_selector(const char *title, struct button_info *info,
       break;
     }
 
-  }
+    }
 
-  gtk_box_pack_start(GTK_BOX(box), info->label, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(box), info->label, TRUE, TRUE, 0);
 
-  // Create combobox
-  combo = gtk_combo_box_new_with_model(model);
-  renderer = gtk_cell_renderer_text_new();
-  gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, TRUE);
-  gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer,
+    // Create combobox
+    combo = gtk_combo_box_new_with_model(model);
+    renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer,
                                   "text", 0, NULL);
-  gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(combo), renderer,
+    gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(combo), renderer,
                                       set_entry_properties, NULL, NULL);
 
-  // Select first item
-  path = gtk_tree_path_new_from_indices(0, -1);
-  gtk_tree_model_get_iter(model, &iter, path);
-  gtk_tree_path_free(path);
-  gtk_combo_box_set_active_iter(GTK_COMBO_BOX(combo), &iter);
+    // Select first item
+    path = gtk_tree_path_new_from_indices(0, -1);
+    gtk_tree_model_get_iter(model, &iter, path);
+    gtk_tree_path_free(path);
+    gtk_combo_box_set_active_iter(GTK_COMBO_BOX(combo), &iter);
 
-  gtk_box_pack_start(GTK_BOX(box), combo, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(box), combo, TRUE, TRUE, 0);
 
-  g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(key_callback),
+    g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(key_callback),
                     info);
 }
 
 static void
 set_key_text(GtkWidget *label, keyboard_key_name key)
 {
-  const char *text;
-  char buffer[40];
+    const char *text;
+    char buffer[40];
 
-  text = keyboard_key_text(key);
+    text = keyboard_key_text(key);
 
-  snprintf(buffer, 40, "%s", text);
+    snprintf(buffer, 40, "%s", text);
 
-  gtk_label_set_text(GTK_LABEL(label), buffer);
+    gtk_label_set_text(GTK_LABEL(label), buffer);
 }
 
 static void
 key_callback(GtkComboBox *widget, gpointer user_data)
 {
-  GtkTreeIter iter;
-  GValue value;
-  struct button_info *info = user_data;
-  keyboard_key_name key;
-  GtkTreeModel *model;
+    GtkTreeIter iter;
+    GValue value;
+    struct button_info *info = user_data;
+    keyboard_key_name key;
+    GtkTreeModel *model;
 
-  // Get current selection
-  gtk_combo_box_get_active_iter(GTK_COMBO_BOX(widget), &iter);
-  memset(&value, 0, sizeof(value));
-  model = gtk_combo_box_get_model(GTK_COMBO_BOX(widget));
-  gtk_tree_model_get_value(model, &iter, COL_KEY, &value);
-  key = g_value_get_int(&value);
-  g_value_unset(&value);
+    // Get current selection
+    gtk_combo_box_get_active_iter(GTK_COMBO_BOX(widget), &iter);
+    memset(&value, 0, sizeof(value));
+    model = gtk_combo_box_get_model(GTK_COMBO_BOX(widget));
+    gtk_tree_model_get_value(model, &iter, COL_KEY, &value);
+    key = g_value_get_int(&value);
+    g_value_unset(&value);
 
-  // Store and display selection
-  info->key = key;
-  set_key_text(info->label, info->key);
+    // Store and display selection
+    info->key = key;
+    set_key_text(info->label, info->key);
 }
 
 static void
 joystick_done(GtkButton *button GCC_UNUSED, gpointer user_data)
 {
-  struct joystick_info *info = user_data;
+    struct joystick_info *info = user_data;
 
-  int i;
-  GtkToggleButton *toggle;
+    int i;
+    GtkToggleButton *toggle;
 
-  for (i = 0; i < NUM_JOY_BUTTONS; i++)
+    for (i = 0; i < NUM_JOY_BUTTONS; i++)
     if (info->button[i].setting)
       *info->button[i].setting = info->button[i].key;
 
-  for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
+    for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
     toggle = GTK_TOGGLE_BUTTON(info->radio[ i ]);
 
@@ -461,6 +461,6 @@ joystick_done(GtkButton *button GCC_UNUSED, gpointer user_data)
       return;
     }
 
-  }
+    }
 
 }

@@ -38,44 +38,44 @@
 const char*
 compat_get_temp_path(void)
 {
-  return "/tmp";
+    return "/tmp";
 }
 
 const char*
 compat_get_config_path(void)
 {
-  return "sd:/apps/fuse";
+    return "sd:/apps/fuse";
 }
 
 int
 compat_is_absolute_path(const char *path)
 {
-  if (strlen(path) >= 1 && path[0] == '/')
+    if (strlen(path) >= 1 && path[0] == '/')
     return 1;
-  if (strlen(path) >= strlen("fat:/") &&
+    if (strlen(path) >= strlen("fat:/") &&
      strncmp(path, "fat:/", strlen("fat:/")) == 0)
     return 1;
-  if (strlen(path) >= strlen("sd:/") &&
+    if (strlen(path) >= strlen("sd:/") &&
      strncmp(path, "sd:/", strlen("sd:/")) == 0)
     return 1;
-  return 0;
+    return 0;
 }
 
 int
 compat_get_next_path(path_context *ctx)
 {
-  char buffer[ PATH_MAX ];
-  const char *path_segment, *path2;
+    char buffer[ PATH_MAX ];
+    const char *path_segment, *path2;
 
-  switch ((ctx->state)++) {
+    switch ((ctx->state)++) {
 
     // First look relative to the current directory
-  case 0:
+    case 0:
     strncpy(ctx->path, ".", PATH_MAX);
     return 1;
 
     // Then relative to the Fuse executable
-  case 1:
+    case 1:
 
     switch (ctx->type) {
     case UTILS_AUXILIARY_LIB: path_segment = "lib"; break;
@@ -95,7 +95,7 @@ compat_get_next_path(path_context *ctx)
       len = PATH_MAX - strlen(fuse_progname) - strlen(FUSE_DIR_SEP_STR);
       if (!getcwd(buffer, len)) {
         ui_error(UI_ERROR_ERROR, "error getting current working directory: %s",
-	          strerror(errno));
+              strerror(errno));
         return 0;
       }
       strcat(buffer, FUSE_DIR_SEP_STR);
@@ -108,14 +108,14 @@ compat_get_next_path(path_context *ctx)
     return 1;
 
     // Then where we may have installed the data files
-  case 2:
+    case 2:
 
     path2 = "sd:/apps/fuse";
     strncpy(ctx->path, path2, PATH_MAX); buffer[ PATH_MAX - 1 ] = '\0';
     return 1;
 
-  case 3: return 0;
-  }
-  ui_error(UI_ERROR_ERROR, "unknown path_context state %d", ctx->state);
-  fuse_abort();
+    case 3: return 0;
+    }
+    ui_error(UI_ERROR_ERROR, "unknown path_context state %d", ctx->state);
+    fuse_abort();
 }

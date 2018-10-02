@@ -49,36 +49,36 @@ int dck_active = 0;
 int
 dck_insert(const char *filename)
 {
-  if (!(libspectrum_machine_capabilities(machine_current->machine) &
-	  LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK)) {
+    if (!(libspectrum_machine_capabilities(machine_current->machine) &
+      LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK)) {
     ui_error(UI_ERROR_ERROR, "This machine does not support the dock");
     return 1;
-  }
+    }
 
-  settings_set_string(&settings_current.dck_file, filename);
+    settings_set_string(&settings_current.dck_file, filename);
 
-  machine_reset(0);
+    machine_reset(0);
 
-  return 0;
+    return 0;
 }
 
 void
 dck_eject(void)
 {
-  if (!(libspectrum_machine_capabilities(machine_current->machine) &
-	  LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK)) {
+    if (!(libspectrum_machine_capabilities(machine_current->machine) &
+      LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK)) {
     ui_error(UI_ERROR_ERROR, "This machine does not support the dock");
     return;
-  }
+    }
 
-  if (settings_current.dck_file) libspectrum_free(settings_current.dck_file);
-  settings_current.dck_file = NULL;
+    if (settings_current.dck_file) libspectrum_free(settings_current.dck_file);
+    settings_current.dck_file = NULL;
 
-  dck_active = 0;
+    dck_active = 0;
 
-  ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_DOCK_EJECT, 0);
+    ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_DOCK_EJECT, 0);
 
-  machine_reset(0);
+    machine_reset(0);
 }
 
 static memory_page *
@@ -99,32 +99,32 @@ dck_get_memory_page(libspectrum_dck_bank bank, size_t index)
 int
 dck_reset(void)
 {
-  utils_file file;
-  size_t num_block = 0;
-  libspectrum_dck *dck;
-  int error;
+    utils_file file;
+    size_t num_block = 0;
+    libspectrum_dck *dck;
+    int error;
 
-  dck_active = 0;
+    dck_active = 0;
 
-  if (!settings_current.dck_file) {
+    if (!settings_current.dck_file) {
     ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_DOCK_EJECT, 0);
     return 0;
-  }
+    }
 
-  dck = libspectrum_dck_alloc();
+    dck = libspectrum_dck_alloc();
 
-  error = utils_read_file(settings_current.dck_file, &file);
-  if (error) { libspectrum_dck_free(dck, 0); return error; }
+    error = utils_read_file(settings_current.dck_file, &file);
+    if (error) { libspectrum_dck_free(dck, 0); return error; }
 
-  error = libspectrum_dck_read2(dck, file.buffer, file.length,
+    error = libspectrum_dck_read2(dck, file.buffer, file.length,
                                  settings_current.dck_file);
-  if (error) {
+    if (error) {
     utils_close_file(&file); libspectrum_dck_free(dck, 0); return error;
-  }
+    }
 
-  utils_close_file(&file);
+    utils_close_file(&file);
 
-  while (dck->dck[num_block] != NULL) {
+    while (dck->dck[num_block] != NULL) {
     memory_page *page;
     int i;
     libspectrum_dck_bank dck_bank = dck->dck[num_block]->bank;
@@ -133,7 +133,7 @@ dck_reset(void)
         dck_bank != LIBSPECTRUM_DCK_BANK_DOCK &&
         dck_bank != LIBSPECTRUM_DCK_BANK_EXROM) {
       ui_error(UI_ERROR_INFO, "Sorry, bank ID %i is unsupported",
-		dck->dck[num_block]->bank);
+        dck->dck[num_block]->bank);
       libspectrum_dck_free(dck, 0);
       return 1;
     }
@@ -150,7 +150,7 @@ dck_reset(void)
 
       case LIBSPECTRUM_DCK_PAGE_ROM:
         data = memory_pool_allocate(0x2000);
-	memcpy(data, dck->dck[num_block]->pages[i], 0x2000);
+    memcpy(data, dck->dck[num_block]->pages[i], 0x2000);
         for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
           page = dck_get_memory_page(dck_bank, i * MEMORY_PAGES_IN_8K + j);
           page->offset = j * MEMORY_PAGE_SIZE;
@@ -162,11 +162,11 @@ dck_reset(void)
 
       case LIBSPECTRUM_DCK_PAGE_RAM_EMPTY:
       case LIBSPECTRUM_DCK_PAGE_RAM:
-	/* Because the scr and snapshot code depends on the standard
-	   memory map being in the RAM[] array, we just copy RAM
-	   blocks from the HOME bank into the appropriate page; in
-	   other cases, we allocate ourselves a new page to store the
-	   contents in */
+    /* Because the scr and snapshot code depends on the standard
+       memory map being in the RAM[] array, we just copy RAM
+       blocks from the HOME bank into the appropriate page; in
+       other cases, we allocate ourselves a new page to store the
+       contents in */
         if (dck_bank == LIBSPECTRUM_DCK_BANK_HOME && i>1) {
           for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
             page = dck_get_memory_page(dck_bank, i * MEMORY_PAGES_IN_8K + j);
@@ -198,15 +198,15 @@ dck_reset(void)
       }
     }
     num_block++;
-  }
+    }
 
-  dck_active = 1;
+    dck_active = 1;
 
-  // Reset contention for pages
-  scld_set_exrom_dock_contention();
+    // Reset contention for pages
+    scld_set_exrom_dock_contention();
 
-  // Make the menu item to eject the cartridge active
-  ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_DOCK_EJECT, 1);
+    // Make the menu item to eject the cartridge active
+    ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_DOCK_EJECT, 1);
 
-  return libspectrum_dck_free(dck, 0);
+    return libspectrum_dck_free(dck, 0);
 }

@@ -39,16 +39,16 @@ static GdkCursor *nullpointer = NULL;
 static void
 gtkmouse_reset_pointer(void)
 {
-  /* Ugh. GDK doesn't have its own move-pointer function :-|
+    /* Ugh. GDK doesn't have its own move-pointer function :-|
    * Framebuffer users and win32 users will have to make their own
    * arrangements here.
    *
    * For Win32, use SetCursorPos() -- see sdpGtkWarpPointer() at
    * http://k3d.cvs.sourceforge.net/k3d/projects/sdplibs/sdpgtk/sdpgtkutility.cpp?view=markup
    */
-  GdkWindow *window = gtk_widget_get_window(gtkui_drawing_area);
+    GdkWindow *window = gtk_widget_get_window(gtkui_drawing_area);
 
-  XWarpPointer(GDK_WINDOW_XDISPLAY(window), None,
+    XWarpPointer(GDK_WINDOW_XDISPLAY(window), None,
                 GDK_WINDOW_XID(window), 0, 0, 0, 0, 128, 128);
 }
 
@@ -56,77 +56,77 @@ gboolean
 gtkmouse_position(GtkWidget *widget GCC_UNUSED,
                    GdkEventMotion *event, gpointer data GCC_UNUSED)
 {
-  if (!ui_mouse_grabbed) return TRUE;
+    if (!ui_mouse_grabbed) return TRUE;
 
-  if (event->x != 128 || event->y != 128)
+    if (event->x != 128 || event->y != 128)
     gtkmouse_reset_pointer();
-  ui_mouse_motion(event->x - 128, event->y - 128);
-  return TRUE;
+    ui_mouse_motion(event->x - 128, event->y - 128);
+    return TRUE;
 }
 
 gboolean
 gtkmouse_button(GtkWidget *widget GCC_UNUSED, GdkEventButton *event,
-		 gpointer data GCC_UNUSED)
+         gpointer data GCC_UNUSED)
 {
-  if (event->type == GDK_BUTTON_PRESS || event->type == GDK_2BUTTON_PRESS
+    if (event->type == GDK_BUTTON_PRESS || event->type == GDK_2BUTTON_PRESS
       || event->type == GDK_3BUTTON_PRESS)
     ui_mouse_button(event->button, 1);
-  else
+    else
     ui_mouse_button(event->button, 0);
-  return TRUE;
+    return TRUE;
 }
 
 int
 ui_mouse_grab(int startup)
 {
-  GdkWindow *window;
-  GdkGrabStatus status;
+    GdkWindow *window;
+    GdkGrabStatus status;
 
-  if (startup) return 0;
+    if (startup) return 0;
 
-  window = gtk_widget_get_window(gtkui_drawing_area);
+    window = gtk_widget_get_window(gtkui_drawing_area);
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
 
-  if (!nullpointer) {
+    if (!nullpointer) {
     nullpointer = gdk_cursor_new(GDK_BLANK_CURSOR);
-  }
+    }
 
-  status = gdk_pointer_grab(window, FALSE,
+    status = gdk_pointer_grab(window, FALSE,
                              GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK |
                              GDK_BUTTON_RELEASE_MASK,
                              window, nullpointer, GDK_CURRENT_TIME);
 
 #else
 
-  GdkDisplay *display;
-  GdkDeviceManager *device_manager;
-  GdkDevice *pointer;
+    GdkDisplay *display;
+    GdkDeviceManager *device_manager;
+    GdkDevice *pointer;
 
-  display = gdk_window_get_display(window);
+    display = gdk_window_get_display(window);
 
-  if (!nullpointer) {
+    if (!nullpointer) {
     nullpointer = gdk_cursor_new_for_display(display, GDK_BLANK_CURSOR);
-  }
+    }
 
-  device_manager = gdk_display_get_device_manager(display);
-  pointer = gdk_device_manager_get_client_pointer(device_manager);
+    device_manager = gdk_display_get_device_manager(display);
+    pointer = gdk_device_manager_get_client_pointer(device_manager);
 
-  status = gdk_device_grab(pointer, window, GDK_OWNERSHIP_WINDOW, FALSE,
+    status = gdk_device_grab(pointer, window, GDK_OWNERSHIP_WINDOW, FALSE,
                             GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK |
                             GDK_BUTTON_RELEASE_MASK,
                             nullpointer, GDK_CURRENT_TIME);
 
 #endif // #if !GTK_CHECK_VERSION(3, 0, 0)
 
-  if (status == GDK_GRAB_SUCCESS) {
+    if (status == GDK_GRAB_SUCCESS) {
     gtkmouse_reset_pointer();
     ui_statusbar_update(UI_STATUSBAR_ITEM_MOUSE, UI_STATUSBAR_STATE_ACTIVE);
     return 1;
-  }
+    }
 
-  ui_error(UI_ERROR_WARNING, "Mouse grab failed");
-  return 0;
+    ui_error(UI_ERROR_WARNING, "Mouse grab failed");
+    return 0;
 }
 
 int
@@ -134,22 +134,22 @@ ui_mouse_release(int suspend GCC_UNUSED)
 {
 #if !GTK_CHECK_VERSION(3, 0, 0)
 
-  gdk_pointer_ungrab(GDK_CURRENT_TIME);
+    gdk_pointer_ungrab(GDK_CURRENT_TIME);
 
 #else
 
-  GdkDisplay *display;
-  GdkDeviceManager *device_manager;
-  GdkDevice *pointer;
+    GdkDisplay *display;
+    GdkDeviceManager *device_manager;
+    GdkDevice *pointer;
 
-  display = gtk_widget_get_display(gtkui_drawing_area);
-  device_manager = gdk_display_get_device_manager(display);
-  pointer = gdk_device_manager_get_client_pointer(device_manager);
+    display = gtk_widget_get_display(gtkui_drawing_area);
+    device_manager = gdk_display_get_device_manager(display);
+    pointer = gdk_device_manager_get_client_pointer(device_manager);
 
-  gdk_device_ungrab(pointer, GDK_CURRENT_TIME);
+    gdk_device_ungrab(pointer, GDK_CURRENT_TIME);
 
 #endif                /* #if !GTK_CHECK_VERSION(3, 0, 0) */
 
-  ui_statusbar_update(UI_STATUSBAR_ITEM_MOUSE, UI_STATUSBAR_STATE_INACTIVE);
-  return 0;
+    ui_statusbar_update(UI_STATUSBAR_ITEM_MOUSE, UI_STATUSBAR_STATE_INACTIVE);
+    return 0;
 }

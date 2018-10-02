@@ -42,8 +42,8 @@
 
 // The ways of finishing a widget
 typedef enum widget_finish_state {
-  WIDGET_FINISHED_OK = 1,
-  WIDGET_FINISHED_CANCEL,
+    WIDGET_FINISHED_OK = 1,
+    WIDGET_FINISHED_CANCEL,
 } widget_finish_state;
 
 // A function to draw a widget
@@ -51,9 +51,9 @@ typedef int (*widget_draw_fn)(void *data);
 
 // The information we need to store for each widget
 typedef struct widget_t {
-  widget_draw_fn draw; // Draw this widget
-  int (*finish)(widget_finish_state finished); // Post-widget processing
-  widget_keyhandler_fn keyhandler; // Keyhandler
+    widget_draw_fn draw; // Draw this widget
+    int (*finish)(widget_finish_state finished); // Post-widget processing
+    widget_keyhandler_fn keyhandler; // Keyhandler
 } widget_t;
 
 int widget_end_widget(widget_finish_state state);
@@ -92,18 +92,18 @@ int widget_dialog(int x, int y, int width, int height);
 int widget_dialog_with_border(int x, int y, int width, int height);
 
 int split_message(const char *message, char ***lines, size_t *count,
-		   const size_t line_length);
+           const size_t line_length);
 
 // File selector
 
 typedef struct widget_dirent {
-  int mode;
-  char *name;
+    int mode;
+    char *name;
 } widget_dirent;
 
 typedef struct widget_filesel_data {
-  int exit_all_widgets;
-  const char *title;
+    int exit_all_widgets;
+    const char *title;
 } widget_filesel_data;
 
 extern struct widget_dirent **widget_filenames;
@@ -135,9 +135,9 @@ void widget_machine_keyhandler(input_key key);
 // Keyboard picture
 
 typedef struct widget_picture_data {
-  const char *filename;
-  libspectrum_byte *screen;
-  int border;
+    const char *filename;
+    libspectrum_byte *screen;
+    int border;
 } widget_picture_data;
 
 int widget_picture_draw(void* data);
@@ -160,13 +160,13 @@ scaler_type widget_select_scaler(int (*selector)(scaler_type));
 
 typedef struct widget_select_t {
 
-  const char *title; // Dialog title
-  const char * const *options; // The available options
-  size_t count; // The number of options
-  size_t current; // Which option starts active?
+    const char *title; // Dialog title
+    const char * const *options; // The available options
+    size_t count; // The number of options
+    size_t current; // Which option starts active?
 
-  int result; // What was selected? (-1 if dialog cancelled)
-  int finish_all; // close all widget or not
+    int result; // What was selected? (-1 if dialog cancelled)
+    int finish_all; // close all widget or not
 
 } widget_select_t;
 
@@ -183,17 +183,17 @@ int widget_browse_finish(widget_finish_state finished);
 // The text entry widget
 
 typedef enum widget_text_input_allow {
-  WIDGET_INPUT_ASCII,
-  WIDGET_INPUT_DIGIT,
-  WIDGET_INPUT_ALPHA,
-  WIDGET_INPUT_ALNUM
+    WIDGET_INPUT_ASCII,
+    WIDGET_INPUT_DIGIT,
+    WIDGET_INPUT_ALPHA,
+    WIDGET_INPUT_ALNUM
 } widget_text_input_allow;
 
 typedef struct widget_text_t {
-  const char *title;
-  widget_text_input_allow allow;
-  unsigned int max_length;
-  char text[40];
+    const char *title;
+    widget_text_input_allow allow;
+    unsigned int max_length;
+    char text[40];
 } widget_text_t;
 
 int widget_text_draw(void* data);
@@ -240,11 +240,11 @@ void widget_about_keyhandler(input_key key);
 
 typedef struct widget_roms_info {
 
-  int initialised;
+    int initialised;
 
-  const char *title;
-  size_t start, count;
-  int is_peripheral;
+    const char *title;
+    size_t start, count;
+    int is_peripheral;
 
 } widget_roms_info;
 
@@ -255,8 +255,8 @@ int widget_roms_finish(widget_finish_state finished);
 // The query widgets
 
 typedef union {
-  int confirm;
-  ui_confirm_save_t save;
+    int confirm;
+    ui_confirm_save_t save;
 } widget_query_t;
 
 extern widget_query_t widget_query;

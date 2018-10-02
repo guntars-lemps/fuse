@@ -57,9 +57,9 @@ static INT_PTR CALLBACK
 win32ui_pokefinder_proc(HWND hWnd GCC_UNUSED, UINT msg,
                 WPARAM wParam, LPARAM lParam)
 {
-  int height;
+    int height;
 
-  switch (msg) {
+    switch (msg) {
 
     case WM_COMMAND:
       switch (LOWORD(wParam)) {
@@ -102,43 +102,43 @@ win32ui_pokefinder_proc(HWND hWnd GCC_UNUSED, UINT msg,
           return TRUE; // The return value for this notification is not used
       }
       break;
-  }
-  return FALSE;
+    }
+    return FALSE;
 }
 
 void
 move_button(int button, int dlg_height)
 {
-  HWND ctrl_hWnd;
-  RECT rect;
-  int x, y;
+    HWND ctrl_hWnd;
+    RECT rect;
+    int x, y;
 
-  ctrl_hWnd = GetDlgItem(fuse_hPFWnd, button);
-  GetWindowRect(ctrl_hWnd, &rect);
-  MapWindowPoints(0, fuse_hPFWnd, (POINT *)&rect, 2);
-  x = rect.left;
-  y = dlg_height - (rect.bottom - rect.top) - 10;
-  SetWindowPos(ctrl_hWnd, 0, x, y, 0, 0,
+    ctrl_hWnd = GetDlgItem(fuse_hPFWnd, button);
+    GetWindowRect(ctrl_hWnd, &rect);
+    MapWindowPoints(0, fuse_hPFWnd, (POINT *)&rect, 2);
+    x = rect.left;
+    y = dlg_height - (rect.bottom - rect.top) - 10;
+    SetWindowPos(ctrl_hWnd, 0, x, y, 0, 0,
                 SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
 static void
 update_pokefinder(void)
 {
-  size_t page, offset, bank, bank_offset;
-  TCHAR buffer[256], *possible_text[2] = { &buffer[0], &buffer[128] };
-  int rcx, rcy;
-  DWORD dw_res;
+    size_t page, offset, bank, bank_offset;
+    TCHAR buffer[256], *possible_text[2] = { &buffer[0], &buffer[128] };
+    int rcx, rcy;
+    DWORD dw_res;
 
-  // clear the listview
-  SendDlgItemMessage(fuse_hPFWnd, IDC_PF_LIST, LVM_DELETEALLITEMS, 0, 0);
+    // clear the listview
+    SendDlgItemMessage(fuse_hPFWnd, IDC_PF_LIST, LVM_DELETEALLITEMS, 0, 0);
 
-  // display suspected locations if < 20
-  int i = 0;
-  LV_ITEM lvi;
-  lvi.mask = LVIF_TEXT;
+    // display suspected locations if < 20
+    int i = 0;
+    LV_ITEM lvi;
+    lvi.mask = LVIF_TEXT;
 
-  if (pokefinder_count && pokefinder_count <= MAX_POSSIBLE) {
+    if (pokefinder_count && pokefinder_count <= MAX_POSSIBLE) {
 
     size_t which = 0;
 
@@ -147,15 +147,15 @@ update_pokefinder(void)
       bank = mapping->page_num;
 
       for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++)
-	if (! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7))) {
-	  bank_offset = mapping->offset + offset;
+    if (! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7))) {
+      bank_offset = mapping->offset + offset;
 
-	  possible_page[ which ] = bank;
-	  possible_offset[ which ] = bank_offset;
-	  which++;
+      possible_page[ which ] = bank;
+      possible_offset[ which ] = bank_offset;
+      which++;
 
-	  _sntprintf(possible_text[0], 128, "%d", (unsigned)bank);
-	  _sntprintf(possible_text[1], 128, "0x%04X", (unsigned)bank_offset);
+      _sntprintf(possible_text[0], 128, "%d", (unsigned)bank);
+      _sntprintf(possible_text[1], 128, "0x%04X", (unsigned)bank_offset);
 
           // set new count of items
           SendDlgItemMessage(fuse_hPFWnd, IDC_PF_LIST, LVM_SETITEMCOUNT,
@@ -189,32 +189,32 @@ update_pokefinder(void)
 
     rcx = initial_width;
     rcy += initial_height + 10;
-  } else {
+    } else {
     // hide the listview
     ShowWindow(lv_hWnd, SW_HIDE);
 
     rcx = initial_width;
     rcy = initial_height;
-  }
+    }
 
-  // change the size of the dialog
-  SetWindowPos(fuse_hPFWnd, NULL, 0, 0, rcx, rcy,
+    // change the size of the dialog
+    SetWindowPos(fuse_hPFWnd, NULL, 0, 0, rcx, rcy,
                 SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 
-  // print possible locations
-  _sntprintf(buffer, 256, "Possible locations: %lu",
+    // print possible locations
+    _sntprintf(buffer, 256, "Possible locations: %lu",
               (unsigned long)pokefinder_count);
-  SendDlgItemMessage(fuse_hPFWnd, IDC_PF_LOCATIONS, WM_SETTEXT, 0,
+    SendDlgItemMessage(fuse_hPFWnd, IDC_PF_LOCATIONS, WM_SETTEXT, 0,
                       (LPARAM) buffer);
 }
 
 void
 menu_machine_pokefinder(int action GCC_UNUSED)
 {
-  RECT rect;
-  int cx;
+    RECT rect;
+    int cx;
 
-  if (fuse_hPFWnd == NULL) {
+    if (fuse_hPFWnd == NULL) {
     // FIXME: Implement accelerators for this dialog
     fuse_hPFWnd = CreateDialog(fuse_hInstance,
                                 MAKEINTRESOURCE(IDD_POKEFINDER),
@@ -265,106 +265,106 @@ menu_machine_pokefinder(int action GCC_UNUSED)
     // store listview width
     GetWindowRect(lv_hWnd, &rect);
     lv_width = rect.right - rect.left;
-  } else {
+    } else {
     SetActiveWindow(fuse_hPFWnd);
-  }
-  update_pokefinder();
+    }
+    update_pokefinder();
 }
 
 static void
 win32ui_pokefinder_incremented(void)
 {
-  pokefinder_incremented();
-  update_pokefinder();
+    pokefinder_incremented();
+    update_pokefinder();
 }
 
 static void
 win32ui_pokefinder_decremented(void)
 {
-  pokefinder_decremented();
-  update_pokefinder();
+    pokefinder_decremented();
+    update_pokefinder();
 }
 
 static void
 win32ui_pokefinder_search(void)
 {
-  long value;
-  TCHAR *buffer, *endptr;
-  int buffer_size, base;
-  HWND hwnd_control;
+    long value;
+    TCHAR *buffer, *endptr;
+    int buffer_size, base;
+    HWND hwnd_control;
 
-  // poll the size of the value in Search box first
-  buffer_size = SendDlgItemMessage(fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXTLENGTH,
+    // poll the size of the value in Search box first
+    buffer_size = SendDlgItemMessage(fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXTLENGTH,
                                    (WPARAM) 0, (LPARAM) 0);
-  buffer = malloc((buffer_size + 1) * sizeof(TCHAR));
-  if (buffer == NULL) {
+    buffer = malloc((buffer_size + 1) * sizeof(TCHAR));
+    if (buffer == NULL) {
     ui_error(UI_ERROR_ERROR, "Out of memory in %s.", __func__);
     return;
-  }
+    }
 
-  // get the value in Search box first
-  if (SendDlgItemMessage(fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXT,
+    // get the value in Search box first
+    if (SendDlgItemMessage(fuse_hPFWnd, IDC_PF_EDIT, WM_GETTEXT,
                           (WPARAM) (buffer_size + 1),
                           (LPARAM) buffer) != buffer_size) {
     ui_error(UI_ERROR_ERROR, "Couldn't get the content of the Search text box");
     return;
-  }
+    }
 
-  errno = 0;
-  base = (!_tcsncmp(_T("0x"), buffer, strlen(_T("0x"))))? 16 : 10;
-  value = _tcstol(buffer, &endptr, base);
+    errno = 0;
+    base = (!_tcsncmp(_T("0x"), buffer, strlen(_T("0x"))))? 16 : 10;
+    value = _tcstol(buffer, &endptr, base);
 
-  if (errno || value < 0 || value > 255 || endptr == buffer) {
+    if (errno || value < 0 || value > 255 || endptr == buffer) {
     free(buffer);
     ui_error(UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 255");
     hwnd_control = GetDlgItem(fuse_hPFWnd, IDC_PF_EDIT);
     SendMessage(fuse_hPFWnd, WM_NEXTDLGCTL, (WPARAM) hwnd_control, TRUE);
     return;
-  }
-  free(buffer);
+    }
+    free(buffer);
 
-  pokefinder_search(value);
-  update_pokefinder();
+    pokefinder_search(value);
+    update_pokefinder();
 }
 
 static void
 win32ui_pokefinder_reset(void)
 {
-  pokefinder_clear();
-  update_pokefinder();
+    pokefinder_clear();
+    update_pokefinder();
 }
 
 static void
 win32ui_pokefinder_close(void)
 {
-  DestroyWindow(fuse_hPFWnd);
-  fuse_hPFWnd = NULL;
+    DestroyWindow(fuse_hPFWnd);
+    fuse_hPFWnd = NULL;
 }
 
 static void
 possible_click(LPNMITEMACTIVATE lpnmitem)
 {
-  // FIXME: implement equivalent of GTK's select-via-keyboard to enter here
+    // FIXME: implement equivalent of GTK's select-via-keyboard to enter here
 
-  int error;
-  libspectrum_word row;
+    int error;
+    libspectrum_word row;
 
-  if (lpnmitem->iItem < 0) return;
+    if (lpnmitem->iItem < 0) return;
 
-  row = lpnmitem->iItem;
+    row = lpnmitem->iItem;
 
-  error = debugger_breakpoint_add_address(
+    error = debugger_breakpoint_add_address(
     DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[ row ],
     possible_offset[ row ], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
 );
-  if (error) return;
+    if (error) return;
 
-  ui_debugger_update();
+    ui_debugger_update();
 }
 
 void
 win32ui_pokefinder_clear(void)
 {
-  pokefinder_clear();
-  if (fuse_hPFWnd != NULL) update_pokefinder();
+    pokefinder_clear();
+    if (fuse_hPFWnd != NULL) update_pokefinder();
 }

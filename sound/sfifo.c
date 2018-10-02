@@ -1,6 +1,6 @@
 /*
 ------------------------------------------------------------
-	SFIFO 1.3
+    SFIFO 1.3
 ------------------------------------------------------------
  * Simple portable lock-free FIFO
  * (c) 2000-2002, David Olofson
@@ -11,25 +11,25 @@
  * version 2, or any later version
 -----------------------------------------------------------
 TODO:
-	* Is there a way to avoid losing one byte of buffer
-	  space to avoid extra variables or locking?
+    * Is there a way to avoid losing one byte of buffer
+      space to avoid extra variables or locking?
 
-	* Test more compilers and environments.
+    * Test more compilers and environments.
 -----------------------------------------------------------
  */
 
 #include <config.h>
 
 #ifdef __KERNEL__
-#	include	<linux/string.h>
-#	include	<asm/uaccess.h>
-#	include	<linux/malloc.h>
-#	define	malloc(x)	kmalloc(x, GFP_KERNEL)
-#	define	free(x, y)	kfree_s(x, y)
+#    include    <linux/string.h>
+#    include    <asm/uaccess.h>
+#    include    <linux/malloc.h>
+#    define    malloc(x)    kmalloc(x, GFP_KERNEL)
+#    define    free(x, y)    kfree_s(x, y)
 #else
-#	include	<string.h>
-#	include	<stdlib.h>
-#	define	free(x, y)	free(x)
+#    include    <string.h>
+#    include    <stdlib.h>
+#    define    free(x, y)    free(x)
 #endif
 
 #include "sfifo.h"
@@ -38,8 +38,8 @@ TODO:
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
-#define DBG(x)	/*(x)*/
-#define TEST_BUFSIZE	10
+#define DBG(x)    /*(x)*/
+#define TEST_BUFSIZE    10
 #else
 #define DBG(x)
 #endif
@@ -50,30 +50,30 @@ TODO:
  */
 int sfifo_init(sfifo_t *f, int size)
 {
-	memset(f, 0, sizeof(sfifo_t));
+    memset(f, 0, sizeof(sfifo_t));
 
-	if (size > SFIFO_MAX_BUFFER_SIZE)
-		return -EINVAL;
+    if (size > SFIFO_MAX_BUFFER_SIZE)
+        return -EINVAL;
 
-	/*
-	 * Set sufficient power-of-2 size.
-	 *
-	 * No, there's no bug. If you need
-	 * room for N bytes, the buffer must
-	 * be at least N+1 bytes. (The fifo
-	 * can't tell 'empty' from 'full'
-	 * without unsafe index manipulations
-	 * otherwise.)
-	 */
-	f->size = 1;
-	for (; f->size <= size; f->size <<= 1)
-		;
+    /*
+     * Set sufficient power-of-2 size.
+     *
+     * No, there's no bug. If you need
+     * room for N bytes, the buffer must
+     * be at least N+1 bytes. (The fifo
+     * can't tell 'empty' from 'full'
+     * without unsafe index manipulations
+     * otherwise.)
+     */
+    f->size = 1;
+    for (; f->size <= size; f->size <<= 1)
+        ;
 
-	// Get buffer
-	if (0 == (f->buffer = malloc(f->size)))
-		return -ENOMEM;
+    // Get buffer
+    if (0 == (f->buffer = malloc(f->size)))
+        return -ENOMEM;
 
-	return 0;
+    return 0;
 }
 
 /*
@@ -81,8 +81,8 @@ int sfifo_init(sfifo_t *f, int size)
  */
 void sfifo_close(sfifo_t *f)
 {
-	if (f->buffer)
-		free(f->buffer, f->size);
+    if (f->buffer)
+        free(f->buffer, f->size);
 }
 
 /*
@@ -90,9 +90,9 @@ void sfifo_close(sfifo_t *f)
  */
 void sfifo_flush(sfifo_t *f)
 {
-	// Reset positions
-	f->readpos = 0;
-	f->writepos = 0;
+    // Reset positions
+    f->readpos = 0;
+    f->writepos = 0;
 }
 
 /*
@@ -101,33 +101,33 @@ void sfifo_flush(sfifo_t *f)
  */
 int sfifo_write(sfifo_t *f, const void *_buf, int len)
 {
-	int total;
-	int i;
-	const char *buf = (const char *)_buf;
+    int total;
+    int i;
+    const char *buf = (const char *)_buf;
 
-	if (!f->buffer)
-		return -ENODEV; // No buffer!
+    if (!f->buffer)
+        return -ENODEV; // No buffer!
 
-	// total = len = min(space, len)
-	total = sfifo_space(f);
-	DBG(printf("sfifo_space() = %d\n",total));
-	if (len > total)
-		len = total;
-	else
-		total = len;
+    // total = len = min(space, len)
+    total = sfifo_space(f);
+    DBG(printf("sfifo_space() = %d\n",total));
+    if (len > total)
+        len = total;
+    else
+        total = len;
 
-	i = f->writepos;
-	if (i + len > f->size)
-	{
-		memcpy(f->buffer + i, buf, f->size - i);
-		buf += f->size - i;
-		len -= f->size - i;
-		i = 0;
-	}
-	memcpy(f->buffer + i, buf, len);
-	f->writepos = i + len;
+    i = f->writepos;
+    if (i + len > f->size)
+    {
+        memcpy(f->buffer + i, buf, f->size - i);
+        buf += f->size - i;
+        len -= f->size - i;
+        i = 0;
+    }
+    memcpy(f->buffer + i, buf, len);
+    f->writepos = i + len;
 
-	return total;
+    return total;
 }
 
 #ifdef __KERNEL__
@@ -137,36 +137,36 @@ int sfifo_write(sfifo_t *f, const void *_buf, int len)
  */
 int sfifo_write_user(sfifo_t *f, const void *buf, int len)
 {
-	int total;
-	int i;
+    int total;
+    int i;
 
-	if (!f->buffer)
-		return -ENODEV; // No buffer!
+    if (!f->buffer)
+        return -ENODEV; // No buffer!
 
-	// total = len = min(space, len)
-	total = sfifo_space(f);
-	if (len > total)
-		len = total;
-	else
-		total = len;
+    // total = len = min(space, len)
+    total = sfifo_space(f);
+    if (len > total)
+        len = total;
+    else
+        total = len;
 
-	i = f->writepos;
-	if (i + len > f->size)
-	{
-		if (f->size - i)
-		{
-			if (copy_from_user(f->buffer + i, buf, f->size - i))
-				return -EFAULT;
-			buf += f->size - i;
-			len -= f->size - i;
-		}
-		i = 0;
-	}
-	if (copy_from_user(f->buffer + i, buf, len))
-		return -EFAULT;
-	f->writepos = i + len;
+    i = f->writepos;
+    if (i + len > f->size)
+    {
+        if (f->size - i)
+        {
+            if (copy_from_user(f->buffer + i, buf, f->size - i))
+                return -EFAULT;
+            buf += f->size - i;
+            len -= f->size - i;
+        }
+        i = 0;
+    }
+    if (copy_from_user(f->buffer + i, buf, len))
+        return -EFAULT;
+    f->writepos = i + len;
 
-	return total;
+    return total;
 }
 #endif
 
@@ -176,33 +176,33 @@ int sfifo_write_user(sfifo_t *f, const void *buf, int len)
  */
 int sfifo_read(sfifo_t *f, void *_buf, int len)
 {
-	int total;
-	int i;
-	char *buf = (char *)_buf;
+    int total;
+    int i;
+    char *buf = (char *)_buf;
 
-	if (!f->buffer)
-		return -ENODEV; // No buffer!
+    if (!f->buffer)
+        return -ENODEV; // No buffer!
 
-	// total = len = min(used, len)
-	total = sfifo_used(f);
-	DBG(printf("sfifo_used() = %d\n",total));
-	if (len > total)
-		len = total;
-	else
-		total = len;
+    // total = len = min(used, len)
+    total = sfifo_used(f);
+    DBG(printf("sfifo_used() = %d\n",total));
+    if (len > total)
+        len = total;
+    else
+        total = len;
 
-	i = f->readpos;
-	if (i + len > f->size)
-	{
-		memcpy(buf, f->buffer + i, f->size - i);
-		buf += f->size - i;
-		len -= f->size - i;
-		i = 0;
-	}
-	memcpy(buf, f->buffer + i, len);
-	f->readpos = i + len;
+    i = f->readpos;
+    if (i + len > f->size)
+    {
+        memcpy(buf, f->buffer + i, f->size - i);
+        buf += f->size - i;
+        len -= f->size - i;
+        i = 0;
+    }
+    memcpy(buf, f->buffer + i, len);
+    f->readpos = i + len;
 
-	return total;
+    return total;
 }
 
 #ifdef __KERNEL__
@@ -212,119 +212,119 @@ int sfifo_read(sfifo_t *f, void *_buf, int len)
  */
 int sfifo_read_user(sfifo_t *f, void *buf, int len)
 {
-	int total;
-	int i;
+    int total;
+    int i;
 
-	if (!f->buffer)
-		return -ENODEV; // No buffer!
+    if (!f->buffer)
+        return -ENODEV; // No buffer!
 
-	// total = len = min(used, len)
-	total = sfifo_used(f);
-	if (len > total)
-		len = total;
-	else
-		total = len;
+    // total = len = min(used, len)
+    total = sfifo_used(f);
+    if (len > total)
+        len = total;
+    else
+        total = len;
 
-	i = f->readpos;
-	if (i + len > f->size)
-	{
-		if (f->size - i)
-		{
-			if (copy_to_user(buf, f->buffer + i, f->size - i))
-				return -EFAULT;
-			buf += f->size - i;
-			len -= f->size - i;
-		}
-		i = 0;
-	}
-	if (copy_to_user(buf, f->buffer + i, len))
-		return -EFAULT;
-	f->readpos = i + len;
+    i = f->readpos;
+    if (i + len > f->size)
+    {
+        if (f->size - i)
+        {
+            if (copy_to_user(buf, f->buffer + i, f->size - i))
+                return -EFAULT;
+            buf += f->size - i;
+            len -= f->size - i;
+        }
+        i = 0;
+    }
+    if (copy_to_user(buf, f->buffer + i, len))
+        return -EFAULT;
+    f->readpos = i + len;
 
-	return total;
+    return total;
 }
 #endif
 
 #ifdef _SFIFO_TEST_
 void *sender(void *arg)
 {
-	char buf[TEST_BUFSIZE*2];
-	int i,j;
-	int cnt = 0;
-	int res;
-	sfifo_t *sf = (sfifo_t *)arg;
-	while (1)
-	{
-		j = sfifo_space(sf);
-		for (i = 0; i < j; ++i)
-		{
-			++cnt;
-			buf[i] = cnt;
-		}
-		res = sfifo_write(sf, &buf, j);
-		if (res != j)
-		{
-			printf("Write failed!\n");
-			sleep(1);
-		} else if (res)
-			printf("Wrote %d\n", res);
-	}
+    char buf[TEST_BUFSIZE*2];
+    int i,j;
+    int cnt = 0;
+    int res;
+    sfifo_t *sf = (sfifo_t *)arg;
+    while (1)
+    {
+        j = sfifo_space(sf);
+        for (i = 0; i < j; ++i)
+        {
+            ++cnt;
+            buf[i] = cnt;
+        }
+        res = sfifo_write(sf, &buf, j);
+        if (res != j)
+        {
+            printf("Write failed!\n");
+            sleep(1);
+        } else if (res)
+            printf("Wrote %d\n", res);
+    }
 }
 int main()
 {
-	sfifo_t sf;
-	char last = 0;
-	pthread_t thread;
-	char buf[100] = "---------------------------------------";
+    sfifo_t sf;
+    char last = 0;
+    pthread_t thread;
+    char buf[100] = "---------------------------------------";
 
-	printf("sfifo_init(&sf, %d) = %d\n",
-			TEST_BUFSIZE, sfifo_init(&sf, TEST_BUFSIZE)
-		);
+    printf("sfifo_init(&sf, %d) = %d\n",
+            TEST_BUFSIZE, sfifo_init(&sf, TEST_BUFSIZE)
+        );
 
 #if 0
-	printf("sfifo_write(&sf,\"0123456789\",7) = %d\n",
-		sfifo_write(&sf,"0123456789",7));
+    printf("sfifo_write(&sf,\"0123456789\",7) = %d\n",
+        sfifo_write(&sf,"0123456789",7));
 
-	printf("sfifo_write(&sf,\"abcdefghij\",7) = %d\n",
-		sfifo_write(&sf,"abcdefghij",7));
+    printf("sfifo_write(&sf,\"abcdefghij\",7) = %d\n",
+        sfifo_write(&sf,"abcdefghij",7));
 
-	printf("sfifo_read(&sf,buf,8) = %d\n",
-		sfifo_read(&sf,buf,8));
+    printf("sfifo_read(&sf,buf,8) = %d\n",
+        sfifo_read(&sf,buf,8));
 
-	buf[20] = 0;
-	printf("buf =\"%s\"\n",buf);
+    buf[20] = 0;
+    printf("buf =\"%s\"\n",buf);
 
-	printf("sfifo_write(&sf,\"0123456789\",7) = %d\n",
-		sfifo_write(&sf,"0123456789",7));
+    printf("sfifo_write(&sf,\"0123456789\",7) = %d\n",
+        sfifo_write(&sf,"0123456789",7));
 
-	printf("sfifo_read(&sf,buf,10) = %d\n",
-		sfifo_read(&sf,buf,10));
+    printf("sfifo_read(&sf,buf,10) = %d\n",
+        sfifo_read(&sf,buf,10));
 
-	buf[20] = 0;
-	printf("buf =\"%s\"\n",buf);
+    buf[20] = 0;
+    printf("buf =\"%s\"\n",buf);
 #else
-	pthread_create(&thread, NULL, sender, &sf);
+    pthread_create(&thread, NULL, sender, &sf);
 
-	while (1)
-	{
-		static int c = 0;
-		++last;
-		while (sfifo_read(&sf,buf,1) != 1)
-			/*sleep(1)*/;
-		if (last != buf[0])
-		{
-			printf("Error %d!\n", buf[0]-last);
-			last = buf[0];
-		}
-		else
-			printf("Ok. (%d)\n",++c);
-	}
+    while (1)
+    {
+        static int c = 0;
+        ++last;
+        while (sfifo_read(&sf,buf,1) != 1)
+            /*sleep(1)*/;
+        if (last != buf[0])
+        {
+            printf("Error %d!\n", buf[0]-last);
+            last = buf[0];
+        }
+        else
+            printf("Ok. (%d)\n",++c);
+    }
 #endif
 
-	sfifo_close(&sf);
-	printf("sfifo_close(&sf)\n");
+    sfifo_close(&sf);
+    printf("sfifo_close(&sf)\n");
 
-	return 0;
+    return 0;
 }
 
 #endif

@@ -48,22 +48,22 @@ int yywrap(void);
 void
 debugger_command_evaluate(const char *command)
 {
-  if (!command) return;
+    if (!command) return;
 
-  if (command_buffer) libspectrum_free(command_buffer);
+    if (command_buffer) libspectrum_free(command_buffer);
 
-  command_buffer = utils_safe_strdup(command);
+    command_buffer = utils_safe_strdup(command);
 
-  // Start parsing at the start of the given command
-  command_ptr = command_buffer;
+    // Start parsing at the start of the given command
+    command_ptr = command_buffer;
 
-  // Parse the command
-  yyparse();
+    // Parse the command
+    yyparse();
 
-  // And free any memory we allocated while parsing
-  mempool_free(debugger_memory_pool);
+    // And free any memory we allocated while parsing
+    mempool_free(debugger_memory_pool);
 
-  ui_debugger_update();
+    ui_debugger_update();
 }
 
 // Utility functions called from the flex scanner
@@ -71,26 +71,26 @@ debugger_command_evaluate(const char *command)
 int
 yywrap(void)
 {
-  return 1;
+    return 1;
 }
 
 // Called to get up to 'max_size' bytes of the command to be parsed
 int
 debugger_command_input(char *buf, int *result, int max_size)
 {
-  size_t length = strlen(command_ptr);
+    size_t length = strlen(command_ptr);
 
-  if (!length) {
+    if (!length) {
     return 0;
-  } else if (length < (size_t)max_size) {
+    } else if (length < (size_t)max_size) {
     memcpy(buf, command_ptr, length);
     *result = length; command_ptr += length;
     return 1;
-  } else {
+    } else {
     memcpy(buf, command_ptr, max_size);
     *result = max_size; command_ptr += max_size;
     return 1;
-  }
+    }
 }
 
 // Utility functions called by the bison parser
@@ -99,5 +99,5 @@ debugger_command_input(char *buf, int *result, int max_size)
 void
 yyerror(const char *s)
 {
-  ui_error(UI_ERROR_ERROR, "Invalid debugger command: %s", s);
+    ui_error(UI_ERROR_ERROR, "Invalid debugger command: %s", s);
 }

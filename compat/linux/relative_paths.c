@@ -33,11 +33,11 @@
 void
 get_relative_directory(char *buffer, size_t bufsize)
 {
-  ssize_t retval = readlink("/proc/self/exe", buffer, bufsize - 1);
-  if (retval < 0) {
+    ssize_t retval = readlink("/proc/self/exe", buffer, bufsize - 1);
+    if (retval < 0) {
     ui_error(UI_ERROR_ERROR, "error getting current working directory: %s",
               strerror(-errno));
     fuse_abort();
-  }
-  buffer[ retval ] = '\0';
+    }
+    buffer[ retval ] = '\0';
 }

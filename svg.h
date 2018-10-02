@@ -29,8 +29,8 @@
 extern int svg_capture_active; // SVG capture enabled?
 
 typedef enum svg_capture_type {
-  SVG_CAPTURE_DOTS,
-  SVG_CAPTURE_LINES,
+    SVG_CAPTURE_DOTS,
+    SVG_CAPTURE_LINES,
 } svg_capture_type;
 
 void svg_startcapture(const char *name, svg_capture_type mode);

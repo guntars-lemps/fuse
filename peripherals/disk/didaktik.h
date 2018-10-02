@@ -29,9 +29,9 @@
 #include "fdd.h"
 
 typedef enum didaktik80_drive_number {
-  DIDAKTIK80_DRIVE_A = 0,
-  DIDAKTIK80_DRIVE_B,
-  DIDAKTIK80_NUM_DRIVES,
+    DIDAKTIK80_DRIVE_A = 0,
+    DIDAKTIK80_DRIVE_B,
+    DIDAKTIK80_NUM_DRIVES,
 } didaktik80_drive_number;
 
 extern int didaktik80_available; // Is the D80/40 available for use?
@@ -44,7 +44,7 @@ void didaktik80_page(void);
 void didaktik80_unpage(void);
 
 int didaktik80_disk_insert(didaktik80_drive_number which, const char *filename,
-		       int autoload);
+               int autoload);
 fdd_t *didaktik80_get_fdd(didaktik80_drive_number which);
 
 int didaktik80_unittest(void);

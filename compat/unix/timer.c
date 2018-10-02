@@ -34,20 +34,20 @@
 double
 compat_timer_get_time(void)
 {
-  struct timeval tv;
-  int error;
+    struct timeval tv;
+    int error;
 
-  error = gettimeofday(&tv, NULL);
-  if (error) {
+    error = gettimeofday(&tv, NULL);
+    if (error) {
     ui_error(UI_ERROR_ERROR, "%s: error getting time: %s", __func__, strerror(errno));
     return -1;
-  }
+    }
 
-  return tv.tv_sec + tv.tv_usec / 1000000.0;
+    return tv.tv_sec + tv.tv_usec / 1000000.0;
 }
 
 void
 compat_timer_sleep(int ms)
 {
-  usleep(ms * 1000);
+    usleep(ms * 1000);
 }

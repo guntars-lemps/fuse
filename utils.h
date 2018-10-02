@@ -30,13 +30,13 @@
 
 typedef struct utils_file {
 
-  unsigned char *buffer;
-  size_t length;
+    unsigned char *buffer;
+    size_t length;
 
 } utils_file;
 
 int utils_open_file(const char *filename, int autoload,
-		     libspectrum_id_t *type);
+             libspectrum_id_t *type);
 int utils_open_snap(void);
 int utils_read_auxiliary_file(const char *filename, utils_file *file,
                                utils_aux_type type);
@@ -46,7 +46,7 @@ int utils_read_fd(compat_fd fd, const char *filename, utils_file *file);
 void utils_close_file(utils_file *file);
 
 int utils_write_file(const char *filename, const unsigned char *buffer,
-		      size_t length);
+              size_t length);
 
 int utils_find_file_path(const char *filename, char *path,
                           utils_aux_type type);

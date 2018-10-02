@@ -41,13 +41,13 @@ static libspectrum_word memaddr = 0;
 int
 widget_memory_draw(void *data)
 {
-  int x, y;
-  char pbuf[36];
+    int x, y;
+    char pbuf[36];
 
-  widget_rectangle(LC(0), LR(0), 40 * 8, 16 * 8 + 4, 1);
-  widget_rectangle(LC(0), LR(16) + 2, 320, 1, 7);
+    widget_rectangle(LC(0), LR(0), 40 * 8, 16 * 8 + 4, 1);
+    widget_rectangle(LC(0), LR(16) + 2, 320, 1, 7);
 
-  for (y = 0; y < 16; ++y) {
+    for (y = 0; y < 16; ++y) {
     libspectrum_word addr = memaddr + y * 8;
 
     sprintf(pbuf, "%04X:", addr);
@@ -60,40 +60,40 @@ widget_memory_draw(void *data)
       sprintf(pbuf + x * 3, "%02X ", b);
     }
     widget_printstring_fixed(LC(5) / 8, LR(y) / 8, 7 - (y & 1), pbuf);
-  }
+    }
 
-  widget_display_lines(LR(0) / 8, 17);
+    widget_display_lines(LR(0) / 8, 17);
 
-  return 0;
+    return 0;
 }
 
 void
 widget_memory_keyhandler(input_key key)
 {
-  switch (key) {
-  case INPUT_KEY_Escape: // Close widget
+    switch (key) {
+    case INPUT_KEY_Escape: // Close widget
     widget_end_widget(WIDGET_FINISHED_CANCEL);
     break;
 
-  case INPUT_KEY_Return: // Close widget
-  case INPUT_KEY_KP_Enter:
+    case INPUT_KEY_Return: // Close widget
+    case INPUT_KEY_KP_Enter:
     widget_end_all(WIDGET_FINISHED_OK);
     break;
 
-  // Address selection
-  case INPUT_KEY_Up:
+    // Address selection
+    case INPUT_KEY_Up:
     memaddr -= 16;    widget_memory_draw(NULL); break;
-  case INPUT_KEY_Down:
+    case INPUT_KEY_Down:
     memaddr += 16;    widget_memory_draw(NULL); break;
-  case INPUT_KEY_Page_Up:
+    case INPUT_KEY_Page_Up:
     memaddr -= 128;   widget_memory_draw(NULL); break;
-  case INPUT_KEY_Page_Down:
+    case INPUT_KEY_Page_Down:
     memaddr += 128;   widget_memory_draw(NULL); break;
-  case INPUT_KEY_Home:
+    case INPUT_KEY_Home:
     memaddr = 0;      widget_memory_draw(NULL); break;
-  case INPUT_KEY_End:
+    case INPUT_KEY_End:
     memaddr = 0xFF80; widget_memory_draw(NULL); break;
 
-  default:;
-  }
+    default:;
+    }
 }

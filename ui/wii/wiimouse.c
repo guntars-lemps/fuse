@@ -57,65 +57,65 @@ static u8 last_nunchuck[ 2 ]; // for 2 controllers
 int
 wiimouse_init(void)
 {
-  WPAD_Init();
-  WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);
-  WPAD_SetIdleTimeout(60);
+    WPAD_Init();
+    WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);
+    WPAD_SetIdleTimeout(60);
 
-  memset(&paddata, 0, sizeof(paddata));
-  memset(&oldpaddata, 0, sizeof(oldpaddata));
-  ui_mouse_present = 1;
-  return 0;
+    memset(&paddata, 0, sizeof(paddata));
+    memset(&oldpaddata, 0, sizeof(oldpaddata));
+    ui_mouse_present = 1;
+    return 0;
 }
 
 int
 wiimouse_end(void)
 {
-  return 0;
+    return 0;
 }
 
 void
 wiimouse_get_position(int *x, int *y)
 {
-  if (paddata.ir.state == 0) *x = *y = -1;
+    if (paddata.ir.state == 0) *x = *y = -1;
 
-  *x = paddata.ir.x;
-  *y = paddata.ir.y;
+    *x = paddata.ir.x;
+    *y = paddata.ir.y;
 }
 
 void
 mouse_update(void)
 {
-  /* do this ONLY here. wiijoystick depends on it as well, but
+    /* do this ONLY here. wiijoystick depends on it as well, but
      mouse_update is called regardless of whether the emulation is
      running or not, ui_joystick_poll only if running. So we do this
      here and risk lagging 1 frame behind on the joystick
      FIXME: A function that does this only once depending on the
      current frame counter would be better */
 
-  int ctrlr; // Which controller
-  u32 wm_down; // Wii Remote buttons that are down
-  WPADData *wpad;
-  joystick_t js;
+    int ctrlr; // Which controller
+    u32 wm_down; // Wii Remote buttons that are down
+    WPADData *wpad;
+    joystick_t js;
 
-  WPAD_ScanPads();
+    WPAD_ScanPads();
 
-#define POST_KEYPRESS(pressed) do {		\
+#define POST_KEYPRESS(pressed) do {        \
     input_event_t fuse_event; \
     fuse_event.type = INPUT_EVENT_KEYPRESS; \
     fuse_event.types.key.native_key = pressed; \
     fuse_event.types.key.spectrum_key = pressed; \
     input_event(&fuse_event); \
-  } while (0)
+    } while (0)
 
-#define POST_KEYRELEASE(pressed) do {	    \
+#define POST_KEYRELEASE(pressed) do {        \
     input_event_t fuse_event; \
     fuse_event.type = INPUT_EVENT_KEYRELEASE; \
     fuse_event.types.key.native_key = pressed; \
     fuse_event.types.key.spectrum_key = pressed; \
     input_event(&fuse_event); \
-  } while (0)
+    } while (0)
 
-  for (ctrlr = 0; ctrlr < 2; ctrlr++) {
+    for (ctrlr = 0; ctrlr < 2; ctrlr++) {
 
     wpad = WPAD_Data(ctrlr);
     if (!wpad) continue;
@@ -182,24 +182,24 @@ mouse_update(void)
       if (wm_down & WPAD_BUTTON_HOME)
         POST_KEYPRESS(INPUT_KEY_F1);
     }
-  }
+    }
 
-  WPAD_ReadEvent(0, &paddata);
+    WPAD_ReadEvent(0, &paddata);
 
-  if (paddata.ir.state == 0)
+    if (paddata.ir.state == 0)
     wiidisplay_showmouse(-1, -1);
-  else
+    else
     wiidisplay_showmouse(paddata.ir.x/560.0f, paddata.ir.y/420.0f);
 }
 
 int
 ui_mouse_grab(int startup GCC_UNUSED)
 {
-  return 1;
+    return 1;
 }
 
 int
 ui_mouse_release(int suspend)
 {
-  return !suspend;
+    return !suspend;
 }

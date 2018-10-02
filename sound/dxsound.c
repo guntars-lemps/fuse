@@ -45,124 +45,124 @@ int
 sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
 
-  WAVEFORMATEX pcmwf; /* waveformat struct */
-  DSBUFFERDESC dsbd; // buffer description
+    WAVEFORMATEX pcmwf; /* waveformat struct */
+    DSBUFFERDESC dsbd; // buffer description
 
-  // Initialize COM
-  CoInitialize(NULL);
+    // Initialize COM
+    CoInitialize(NULL);
 
-  // create DirectSound object
-  if (CoCreateInstance(&CLSID_DirectSound, NULL, CLSCTX_INPROC_SERVER,
-			&IID_IDirectSound, (void**)&lpDS) != DS_OK) {
+    // create DirectSound object
+    if (CoCreateInstance(&CLSID_DirectSound, NULL, CLSCTX_INPROC_SERVER,
+            &IID_IDirectSound, (void**)&lpDS) != DS_OK) {
     settings_current.sound = 0;
     ui_error(UI_ERROR_ERROR, "Couldn't create DirectSound object.");
     CoUninitialize();
     return 1;
-  }
+    }
 
-  // initialize it
-  if (IDirectSound_Initialize(lpDS, NULL) != DS_OK) {
+    // initialize it
+    if (IDirectSound_Initialize(lpDS, NULL) != DS_OK) {
     settings_current.sound = 0;
     ui_error(UI_ERROR_ERROR, "Couldn't initialize DirectSound.");
     CoUninitialize();
     return 1;
-  }
+    }
 
-  // set normal cooperative level
-  if (IDirectSound_SetCooperativeLevel(lpDS, GetDesktopWindow(),
-					DSSCL_NORMAL) != DS_OK) {
+    // set normal cooperative level
+    if (IDirectSound_SetCooperativeLevel(lpDS, GetDesktopWindow(),
+                    DSSCL_NORMAL) != DS_OK) {
     settings_current.sound = 0;
     ui_error(UI_ERROR_ERROR, "Couldn't set DirectSound cooperation level.");
     IDirectSound_Release(lpDS);
     CoUninitialize();
     return 1;
-  }
+    }
 
-  // create wave format description
-  memset(&pcmwf, 0, sizeof(WAVEFORMATEX));
+    // create wave format description
+    memset(&pcmwf, 0, sizeof(WAVEFORMATEX));
 
-  pcmwf.cbSize = 0;
-  if (settings_current.sound_force_8bit) {
+    pcmwf.cbSize = 0;
+    if (settings_current.sound_force_8bit) {
     pcmwf.wBitsPerSample = 8;
     sixteenbit = 0;
-  } else {
+    } else {
     pcmwf.wBitsPerSample = 16;
     sixteenbit = 1;
-  }
-  pcmwf.nChannels = *stereoptr ? 2 : 1;
-  pcmwf.nBlockAlign = pcmwf.nChannels * (sixteenbit ? 2 : 1);
-  pcmwf.nSamplesPerSec = *freqptr;
+    }
+    pcmwf.nChannels = *stereoptr ? 2 : 1;
+    pcmwf.nBlockAlign = pcmwf.nChannels * (sixteenbit ? 2 : 1);
+    pcmwf.nSamplesPerSec = *freqptr;
 
-  pcmwf.nAvgBytesPerSec = pcmwf.nSamplesPerSec * pcmwf.nBlockAlign;
+    pcmwf.nAvgBytesPerSec = pcmwf.nSamplesPerSec * pcmwf.nBlockAlign;
 
-  pcmwf.wFormatTag = WAVE_FORMAT_PCM;
+    pcmwf.wFormatTag = WAVE_FORMAT_PCM;
 
-  // create sound buffer description
-  memset(&dsbd, 0, sizeof(DSBUFFERDESC));
-  dsbd.dwBufferBytes = MAX_AUDIO_BUFFER;
+    // create sound buffer description
+    memset(&dsbd, 0, sizeof(DSBUFFERDESC));
+    dsbd.dwBufferBytes = MAX_AUDIO_BUFFER;
 
-  dsbd.dwFlags = DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLVOLUME |
+    dsbd.dwFlags = DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLVOLUME |
                  DSBCAPS_CTRLFREQUENCY | DSBCAPS_STATIC | DSBCAPS_LOCSOFTWARE;
 
-  dsbd.dwSize = sizeof(DSBUFFERDESC);
-  dsbd.lpwfxFormat = &pcmwf;
+    dsbd.dwSize = sizeof(DSBUFFERDESC);
+    dsbd.lpwfxFormat = &pcmwf;
 
-  // attempt to create the buffer
-  if (IDirectSound_CreateSoundBuffer(lpDS, &dsbd, &lpDSBuffer, NULL)
+    // attempt to create the buffer
+    if (IDirectSound_CreateSoundBuffer(lpDS, &dsbd, &lpDSBuffer, NULL)
       != DS_OK) {
     settings_current.sound = 0;
     ui_error(UI_ERROR_ERROR, "Couldn't create DirectSound buffer.");
     IDirectSound_Release(lpDS);
     CoUninitialize();
     return 1;
-  }
+    }
 
-  // play buffer
-  if (IDirectSoundBuffer_Play(lpDSBuffer, 0, 0, DSBPLAY_LOOPING) != DS_OK) {
+    // play buffer
+    if (IDirectSoundBuffer_Play(lpDSBuffer, 0, 0, DSBPLAY_LOOPING) != DS_OK) {
     settings_current.sound = 0;
     ui_error(UI_ERROR_ERROR, "Couldn't play sound.");
     IDirectSoundBuffer_Release(lpDSBuffer);
     IDirectSound_Release(lpDS);
     CoUninitialize();
     return 1;
-  }
+    }
 
-  nextpos = 0;
+    nextpos = 0;
 
-  return 0;
+    return 0;
 }
 
 void
 sound_lowlevel_end(void)
 {
-  if (IDirectSoundBuffer_Stop(lpDSBuffer) != DS_OK) {
+    if (IDirectSoundBuffer_Stop(lpDSBuffer) != DS_OK) {
     settings_current.sound = 0;
     ui_error(UI_ERROR_ERROR, "Couldn't stop sound.");
-  }
+    }
 
-  IDirectSoundBuffer_Release(lpDSBuffer);
-  IDirectSound_Release(lpDS);
-  CoUninitialize();
+    IDirectSoundBuffer_Release(lpDSBuffer);
+    IDirectSound_Release(lpDS);
+    CoUninitialize();
 }
 
 // Copying data to the buffer
 void
 sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
-  HRESULT hres;
-  int i1, i2;
-  int lsb = 1;
+    HRESULT hres;
+    int i1, i2;
+    int lsb = 1;
 
-  // two pair because of circular buffer
-  UCHAR *ucbuffer1, *ucbuffer2;
-  DWORD length1, length2;
-  DWORD playcursor;
-  long cursordiff;
+    // two pair because of circular buffer
+    UCHAR *ucbuffer1, *ucbuffer2;
+    DWORD length1, length2;
+    DWORD playcursor;
+    long cursordiff;
 
-  if (sixteenbit)
+    if (sixteenbit)
     len *= 2;
 
-  while (len) {
+    while (len) {
     while (1) {
       IDirectSoundBuffer_GetCurrentPosition(lpDSBuffer, &playcursor, NULL);
 
@@ -226,5 +226,5 @@ sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 
     // unlock the buffer
     IDirectSoundBuffer_Unlock(lpDSBuffer, ucbuffer1, i1, ucbuffer2, i2);
-  }
+    }
 }

@@ -52,9 +52,9 @@ extern int sound_framesiz;
  *  * CAB, BCA and CBA don't get many search results.
  */
 
-#define SOUND_STEREO_AY_NONE	0
-#define SOUND_STEREO_AY_ACB	1
-#define SOUND_STEREO_AY_ABC	2
+#define SOUND_STEREO_AY_NONE    0
+#define SOUND_STEREO_AY_ACB    1
+#define SOUND_STEREO_AY_ABC    2
 
 extern int sound_stereo_ay;
 

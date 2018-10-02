@@ -27,37 +27,37 @@
 // Union allowing a register pair to be accessed as bytes or as a word
 typedef union {
 #ifdef WORDS_BIGENDIAN
-  struct { libspectrum_byte h,l; } b;
+    struct { libspectrum_byte h,l; } b;
 #else
-  struct { libspectrum_byte l,h; } b;
+    struct { libspectrum_byte l,h; } b;
 #endif
-  libspectrum_word w;
+    libspectrum_word w;
 } regpair;
 
 // What's stored in the main processor
 typedef struct {
-  regpair af,bc,de,hl;
-  regpair af_,bc_,de_,hl_;
-  regpair ix,iy;
-  libspectrum_byte i;
-  libspectrum_word r;	/* The low seven bits of the R register. 16 bits long
-			   so it can also act as an RZX instruction counter */
-  libspectrum_byte r7; // The high bit of the R register
-  regpair sp,pc;
-  regpair memptr; // The hidden register
-  int iff2_read;
-  libspectrum_byte iff1, iff2, im;
-  int halted;
+    regpair af,bc,de,hl;
+    regpair af_,bc_,de_,hl_;
+    regpair ix,iy;
+    libspectrum_byte i;
+    libspectrum_word r;    /* The low seven bits of the R register. 16 bits long
+               so it can also act as an RZX instruction counter */
+    libspectrum_byte r7; // The high bit of the R register
+    regpair sp,pc;
+    regpair memptr; // The hidden register
+    int iff2_read;
+    libspectrum_byte iff1, iff2, im;
+    int halted;
 
-  /* Presumably, internal register where Z80 assembles the new content of the
+    /* Presumably, internal register where Z80 assembles the new content of the
      F register, before moving it back to F. The behaviour is deterministic in
      Zilog Z80 and nondeterministic in NEC Z80.
      https://www.worldofspectrum.org/forums/discussion/41704/ */
-  libspectrum_byte q;
+    libspectrum_byte q;
 
-  /* Interrupts were enabled at this time; do not accept any interrupts
+    /* Interrupts were enabled at this time; do not accept any interrupts
      until tstates > this value */
-  libspectrum_signed_dword interrupts_enabled_at;
+    libspectrum_signed_dword interrupts_enabled_at;
 
 } processor;
 

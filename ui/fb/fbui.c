@@ -41,74 +41,74 @@ static void fb_end(void);
 int
 ui_init(int *argc, char ***argv)
 {
-  struct sigaction handler;
-  int error;
+    struct sigaction handler;
+    int error;
 
-  if (ui_widget_init()) return 1;
+    if (ui_widget_init()) return 1;
 
-  error = atexit(fb_end);
-  if (error) {
+    error = atexit(fb_end);
+    if (error) {
     ui_error(UI_ERROR_ERROR, "ui_init: couldn't set atexit function");
     return 1;
-  }
+    }
 
-  handler.sa_handler = end_handler;
+    handler.sa_handler = end_handler;
 
-  error = sigaction(SIGTERM, &handler, NULL);
-  if (error) {
+    error = sigaction(SIGTERM, &handler, NULL);
+    if (error) {
     ui_error(UI_ERROR_ERROR, "ui_init: couldn't set SIGTERM handler: %s",
-	      strerror(errno));
+          strerror(errno));
     return 1;
-  }
+    }
 
-  error = sigaction(SIGHUP, &handler, NULL);
-  if (error) {
+    error = sigaction(SIGHUP, &handler, NULL);
+    if (error) {
     ui_error(UI_ERROR_ERROR, "ui_init: couldn't set SIGHUP handler: %s",
-	      strerror(errno));
+          strerror(errno));
     return 1;
-  }
+    }
 
-  error = fbkeyboard_init();
-  if (error) return error;
+    error = fbkeyboard_init();
+    if (error) return error;
 
-  error = fbmouse_init();
-  if (error) return error;
+    error = fbmouse_init();
+    if (error) return error;
 
-  error = fbdisplay_init();
-  if (error) return error;
+    error = fbdisplay_init();
+    if (error) return error;
 
-  return 0;
+    return 0;
 }
 
 int ui_event(void)
 {
-  keyboard_update();
-  mouse_update();
-  return 0;
+    keyboard_update();
+    mouse_update();
+    return 0;
 }
 
 int ui_end(void)
 {
-  // Cleanup handled by atexit function
-  int error;
+    // Cleanup handled by atexit function
+    int error;
 
-  error = fbkeyboard_end(); if (error) return error;
-  error = fbdisplay_end(); if (error) return error;
+    error = fbkeyboard_end(); if (error) return error;
+    error = fbdisplay_end(); if (error) return error;
 
-  ui_widget_end();
+    ui_widget_end();
 
-  return 0;
+    return 0;
 }
 
 static void
 end_handler(int signo)
 {
-  fb_end();
+    fb_end();
 }
 
 static void
 fb_end(void)
 {
-  fbkeyboard_end();
-  uidisplay_end();
+    fbkeyboard_end();
+    uidisplay_end();
 }

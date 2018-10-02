@@ -48,7 +48,7 @@ static LRESULT WINAPI picture_wnd_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 int
 win32ui_picture(const char *filename, int border)
 {
-  if (!hDialogPicture) {
+    if (!hDialogPicture) {
     hDialogPicture = CreateDialog(fuse_hInstance,
                                    MAKEINTRESOURCE(IDD_PICTURE),
                                    fuse_hWnd, (DLGPROC)picture_wnd_proc);
@@ -90,15 +90,15 @@ win32ui_picture(const char *filename, int border)
     ReleaseDC(hDialogPicture, dc);
 
     ShowWindow(hDialogPicture, SW_SHOW);
-  }
+    }
 
-  return 0;
+    return 0;
 }
 
 static LRESULT WINAPI
 picture_wnd_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-  switch (msg) {
+    switch (msg) {
     case WM_PAINT:
     {
       PAINTSTRUCT ps;
@@ -133,17 +133,17 @@ picture_wnd_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
       DestroyWindow(hWnd);
       return 0;
     }
-  }
-  return FALSE;
+    }
+    return FALSE;
 }
 
 static void
 draw_screen(libspectrum_byte *screen, int border)
 {
-  int i, x, y, ink, paper;
-  libspectrum_byte attr, data;
+    int i, x, y, ink, paper;
+    libspectrum_byte attr, data;
 
-  for (y=0; y < DISPLAY_BORDER_HEIGHT; y++) {
+    for (y=0; y < DISPLAY_BORDER_HEIGHT; y++) {
     for (x=0; x < DISPLAY_ASPECT_WIDTH; x++) {
       *(libspectrum_dword*)(picture + y * picture_pitch + 4 * x) =
         win32display_colours[border];
@@ -153,9 +153,9 @@ draw_screen(libspectrum_byte *screen, int border)
           4 * x
 ) = win32display_colours[ border ];
     }
-  }
+    }
 
-  for (y=0; y<DISPLAY_HEIGHT; y++) {
+    for (y=0; y<DISPLAY_HEIGHT; y++) {
 
     for (x=0; x < DISPLAY_BORDER_ASPECT_WIDTH; x++) {
       *(libspectrum_dword*)
@@ -195,5 +195,5 @@ draw_screen(libspectrum_byte *screen, int border)
       }
     }
 
-  }
+    }
 }

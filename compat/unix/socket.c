@@ -35,69 +35,69 @@ const compat_socket_t compat_socket_invalid = -1;
 const int compat_socket_EBADF = EBADF;
 
 struct compat_socket_selfpipe_t {
-  int read_fd;
-  int write_fd;
+    int read_fd;
+    int write_fd;
 };
 
 void
 compat_socket_networking_init(void)
 {
-  // No action necessary
+    // No action necessary
 }
 
 void
 compat_socket_networking_end(void)
 {
-  // No action necessary
+    // No action necessary
 }
 
 int
 compat_socket_close(compat_socket_t fd)
 {
-  return close(fd);
+    return close(fd);
 }
 
 int compat_socket_get_error(void)
 {
-  return errno;
+    return errno;
 }
 
 const char *
 compat_socket_get_strerror(void)
 {
-  return strerror(errno);
+    return strerror(errno);
 }
 
 compat_socket_selfpipe_t* compat_socket_selfpipe_alloc(void)
 {
-  int error;
-  int pipefd[2];
+    int error;
+    int pipefd[2];
 
-  compat_socket_selfpipe_t *self =
+    compat_socket_selfpipe_t *self =
     libspectrum_new(compat_socket_selfpipe_t, 1);
 
-  error = pipe(pipefd);
-  if (error) {
+    error = pipe(pipefd);
+    if (error) {
     ui_error(UI_ERROR_ERROR, "%s: %d: error %d creating pipe", __FILE__, __LINE__, error);
     fuse_abort();
-  }
+    }
 
-  self->read_fd = pipefd[0];
-  self->write_fd = pipefd[1];
+    self->read_fd = pipefd[0];
+    self->write_fd = pipefd[1];
 
-  return self;
+    return self;
 }
 
 void compat_socket_selfpipe_free(compat_socket_selfpipe_t *self)
 {
-  close(self->read_fd);
-  close(self->write_fd);
-  libspectrum_free(self);
+    close(self->read_fd);
+    close(self->write_fd);
+    libspectrum_free(self);
 }
 
 compat_socket_t compat_socket_selfpipe_get_read_fd(compat_socket_selfpipe_t *self)
 {
-  return self->read_fd;
+    return self->read_fd;
 }
 
 void compat_socket_selfpipe_wake(compat_socket_selfpipe_t *self)
@@ -108,15 +108,15 @@ void compat_socket_selfpipe_wake(compat_socket_selfpipe_t *self)
 
 void compat_socket_selfpipe_discard_data(compat_socket_selfpipe_t *self)
 {
-  char bitbucket;
-  ssize_t bytes_read;
+    char bitbucket;
+    ssize_t bytes_read;
 
-  do {
+    do {
     bytes_read = read(self->read_fd, &bitbucket, 1);
     if (bytes_read == -1 && errno != EINTR) {
       ui_error(UI_ERROR_ERROR,
                 "%s: %d: unexpected error %d (%s) reading from pipe", __FILE__,
                 __LINE__, errno, strerror(errno));
     }
-  } while (bytes_read < 0);
+    } while (bytes_read < 0);
 }

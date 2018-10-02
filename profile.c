@@ -45,27 +45,27 @@ static void profile_from_snapshot(libspectrum_snap *snap GCC_UNUSED);
 
 static module_info_t profile_module_info = {
 
-  NULL,
-  NULL,
-  NULL,
-  profile_from_snapshot,
-  NULL,
+    NULL,
+    NULL,
+    NULL,
+    profile_from_snapshot,
+    NULL,
 
 };
 
 static int
 profile_init(void *context)
 {
-  module_register(&profile_module_info);
+    module_register(&profile_module_info);
 
-  return 0;
+    return 0;
 }
 
 void
 profile_register_startup(void)
 {
-  startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register(STARTUP_MANAGER_MODULE_PROFILE, dependencies,
+    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_register(STARTUP_MANAGER_MODULE_PROFILE, dependencies,
                             ARRAY_SIZE(dependencies), profile_init, NULL,
                             NULL);
 }
@@ -73,39 +73,39 @@ profile_register_startup(void)
 static void
 init_profiling_counters(void)
 {
-  profile_last_pc = z80.pc.w;
-  profile_last_tstates = tstates;
+    profile_last_pc = z80.pc.w;
+    profile_last_tstates = tstates;
 }
 
 void
 profile_start(void)
 {
-  memset(total_tstates, 0, sizeof(total_tstates));
+    memset(total_tstates, 0, sizeof(total_tstates));
 
-  profile_active = 1;
-  init_profiling_counters();
+    profile_active = 1;
+    init_profiling_counters();
 
-  /* Schedule an event to ensure that the main z80 emulation loop recognises
+    /* Schedule an event to ensure that the main z80 emulation loop recognises
      profiling is turned on; otherwise problems occur if we started while
      the debugger was active (bug #54) */
-  event_add(tstates, event_type_null);
+    event_add(tstates, event_type_null);
 
-  ui_menu_activate(UI_MENU_ITEM_MACHINE_PROFILER, 1);
+    ui_menu_activate(UI_MENU_ITEM_MACHINE_PROFILER, 1);
 }
 
 void
 profile_map(libspectrum_word pc)
 {
-  total_tstates[ profile_last_pc ] += tstates - profile_last_tstates;
+    total_tstates[ profile_last_pc ] += tstates - profile_last_tstates;
 
-  profile_last_pc = z80.pc.w;
-  profile_last_tstates = tstates;
+    profile_last_pc = z80.pc.w;
+    profile_last_tstates = tstates;
 }
 
 void
 profile_frame(libspectrum_dword frame_length)
 {
-  profile_last_tstates -= frame_length;
+    profile_last_tstates -= frame_length;
 }
 
 /* On snapshot load, PC and the tstate counter will jump so reset our
@@ -113,37 +113,37 @@ profile_frame(libspectrum_dword frame_length)
 static void
 profile_from_snapshot(libspectrum_snap *snap GCC_UNUSED)
 {
-  init_profiling_counters();
+    init_profiling_counters();
 }
 
 void
 profile_finish(const char *filename)
 {
-  FILE *f;
-  size_t i;
+    FILE *f;
+    size_t i;
 
-  f = fopen(filename, "w");
-  if (!f) {
+    f = fopen(filename, "w");
+    if (!f) {
     ui_error(UI_ERROR_ERROR, "unable to open profile map '%s' for writing",
-	      filename);
+          filename);
     return;
-  }
+    }
 
-  for (i = 0; i < 0x10000; i++) {
+    for (i = 0; i < 0x10000; i++) {
 
     if (!total_tstates[ i ]) continue;
 
     fprintf(f, "0x%04lx,%d\n", (unsigned long)i, total_tstates[ i ]);
 
-  }
+    }
 
-  fclose(f);
+    fclose(f);
 
-  profile_active = 0;
+    profile_active = 0;
 
-  /* Again, schedule an event to ensure this change is picked up by
+    /* Again, schedule an event to ensure this change is picked up by
      the main loop */
-  event_add(tstates, event_type_null);
+    event_add(tstates, event_type_null);
 
-  ui_menu_activate(UI_MENU_ITEM_MACHINE_PROFILER, 0);
+    ui_menu_activate(UI_MENU_ITEM_MACHINE_PROFILER, 0);
 }

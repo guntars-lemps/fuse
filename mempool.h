@@ -34,7 +34,7 @@ char* mempool_strdup(int pool, const char *string);
 void mempool_free(int pool);
 
 #define mempool_new(pool, type, count) \
-  ((type *) mempool_malloc_n((pool), (count), sizeof(type)))
+    ((type *) mempool_malloc_n((pool), (count), sizeof(type)))
 
 // Unit test helper routines
 

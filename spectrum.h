@@ -39,32 +39,32 @@ extern libspectrum_dword tstates;
 extern libspectrum_byte RAM[ SPECTRUM_RAM_PAGES ][0x4000];
 
 typedef int
-  (*spectrum_port_from_ula_function)(libspectrum_word port);
+    (*spectrum_port_from_ula_function)(libspectrum_word port);
 typedef libspectrum_byte
-  (*spectrum_contention_delay_function)(libspectrum_dword time);
+    (*spectrum_contention_delay_function)(libspectrum_dword time);
 
 typedef struct spectrum_raminfo {
 
-  // Is this port result supplied by the ULA?
-  spectrum_port_from_ula_function port_from_ula;
+    // Is this port result supplied by the ULA?
+    spectrum_port_from_ula_function port_from_ula;
 
-  // What's the actual delay at the current tstate with MREQ active
-  spectrum_contention_delay_function contend_delay;
+    // What's the actual delay at the current tstate with MREQ active
+    spectrum_contention_delay_function contend_delay;
 
-  // And without MREQ
-  spectrum_contention_delay_function contend_delay_no_mreq;
+    // And without MREQ
+    spectrum_contention_delay_function contend_delay_no_mreq;
 
-  int locked; // Is the memory configuration locked?
-  int current_page, current_rom; // Current paged memory
+    int locked; // Is the memory configuration locked?
+    int current_page, current_rom; // Current paged memory
 
-  libspectrum_byte last_byte; // The last byte sent to the 128K port
-  libspectrum_byte last_byte2; // The last byte sent to +3 port
+    libspectrum_byte last_byte; // The last byte sent to the 128K port
+    libspectrum_byte last_byte2; // The last byte sent to +3 port
 
-  int special; // Is a +3 special config in use?
+    int special; // Is a +3 special config in use?
 
-  int romcs; // Is the /ROMCS line low?
+    int romcs; // Is the /ROMCS line low?
 
-  int valid_pages; // Available RAM
+    int valid_pages; // Available RAM
 
 } spectrum_raminfo;
 

@@ -33,67 +33,67 @@
 static char *
 __memrchr (char *s, int c, size_t n)
 {
-  for (s += n - 1; n; n--, s--)
+    for (s += n - 1; n; n--, s--)
     if (*s == c)
       return s;
 
-  return NULL;
+    return NULL;
 }
 
 char *
 dirname (char *path)
 {
-  static const char dot[] = ".";
-  char *last_slash;
+    static const char dot[] = ".";
+    char *last_slash;
 
-  // Find last '/'.
-  last_slash = path != NULL ? strrchr (path, FUSE_DIR_SEP_CHR) : NULL;
+    // Find last '/'.
+    last_slash = path != NULL ? strrchr (path, FUSE_DIR_SEP_CHR) : NULL;
 
-  if (last_slash != NULL && last_slash != path && last_slash[1] == '\0')
+    if (last_slash != NULL && last_slash != path && last_slash[1] == '\0')
     {
       // Determine whether all remaining characters are slashes.
       char *runp;
 
       for (runp = last_slash; runp != path; --runp)
-	if (runp[-1] != FUSE_DIR_SEP_CHR)
-	  break;
+    if (runp[-1] != FUSE_DIR_SEP_CHR)
+      break;
 
       // The '/' is the last character, we have to look further.
       if (runp != path)
-	last_slash = __memrchr (path, FUSE_DIR_SEP_CHR, runp - path);
+    last_slash = __memrchr (path, FUSE_DIR_SEP_CHR, runp - path);
     }
 
-  if (last_slash != NULL)
+    if (last_slash != NULL)
     {
       // Determine whether all remaining characters are slashes.
       char *runp;
 
       for (runp = last_slash; runp != path; --runp)
-	if (runp[-1] != FUSE_DIR_SEP_CHR)
-	  break;
+    if (runp[-1] != FUSE_DIR_SEP_CHR)
+      break;
 
       // Terminate the path.
       if (runp == path)
-	{
-	  /* The last slash is the first character in the string.  We have to
-	     return "/".  As a special case we have to return "//" if there
-	     are exactly two slashes at the beginning of the string.  See
-	     XBD 4.10 Path Name Resolution for more information.  */
-	  if (last_slash == path + 1)
-	    ++last_slash;
-	  else
-	    last_slash = path + 1;
-	}
+    {
+      /* The last slash is the first character in the string.  We have to
+         return "/".  As a special case we have to return "//" if there
+         are exactly two slashes at the beginning of the string.  See
+         XBD 4.10 Path Name Resolution for more information.  */
+      if (last_slash == path + 1)
+        ++last_slash;
       else
-	last_slash = runp;
+        last_slash = path + 1;
+    }
+      else
+    last_slash = runp;
 
       last_slash[0] = '\0';
     }
-  else
+    else
     /* This assignment is ill-designed but the XPG specs require to
        return a string containing "." in any case no directory part is
        found and so a static and constant string is required.  */
     path = (char *) dot;
 
-  return path;
+    return path;
 }

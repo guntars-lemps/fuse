@@ -40,44 +40,44 @@ static int spec48_ntsc_reset(void);
 
 int spec48_ntsc_init(fuse_machine_info *machine)
 {
-  machine->machine = LIBSPECTRUM_MACHINE_48_NTSC;
-  machine->id = "48_ntsc";
+    machine->machine = LIBSPECTRUM_MACHINE_48_NTSC;
+    machine->id = "48_ntsc";
 
-  machine->reset = spec48_ntsc_reset;
+    machine->reset = spec48_ntsc_reset;
 
-  machine->timex = 0;
-  machine->ram.port_from_ula         = spec48_port_from_ula;
-  machine->ram.contend_delay	     = spectrum_contend_delay_65432100;
-  machine->ram.contend_delay_no_mreq = spectrum_contend_delay_65432100;
-  machine->ram.valid_pages	     = 3;
+    machine->timex = 0;
+    machine->ram.port_from_ula         = spec48_port_from_ula;
+    machine->ram.contend_delay         = spectrum_contend_delay_65432100;
+    machine->ram.contend_delay_no_mreq = spectrum_contend_delay_65432100;
+    machine->ram.valid_pages         = 3;
 
-  machine->unattached_port = spectrum_unattached_port;
+    machine->unattached_port = spectrum_unattached_port;
 
-  machine->shutdown = NULL;
+    machine->shutdown = NULL;
 
-  machine->memory_map = spec48_memory_map;
+    machine->memory_map = spec48_memory_map;
 
-  return 0;
+    return 0;
 
 }
 
 static int
 spec48_ntsc_reset(void)
 {
-  int error;
+    int error;
 
-  error = machine_load_rom(0, settings_current.rom_48,
+    error = machine_load_rom(0, settings_current.rom_48,
                             settings_default.rom_48, 0x4000);
-  if (error) return error;
+    if (error) return error;
 
-  periph_clear();
-  machines_periph_48();
-  periph_update();
+    periph_clear();
+    machines_periph_48();
+    periph_update();
 
-  memory_current_screen = 5;
-  memory_screen_mask = 0xffff;
+    memory_current_screen = 5;
+    memory_screen_mask = 0xffff;
 
-  spec48_common_display_setup();
+    spec48_common_display_setup();
 
-  return spec48_common_reset();
+    return spec48_common_reset();
 }

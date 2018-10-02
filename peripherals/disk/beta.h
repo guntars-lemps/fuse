@@ -64,11 +64,11 @@ libspectrum_byte beta_sp_read(libspectrum_word port, libspectrum_byte *attached)
 void beta_sp_write(libspectrum_word port, libspectrum_byte b);
 
 typedef enum beta_drive_number {
-  BETA_DRIVE_A = 0,
-  BETA_DRIVE_B,
-  BETA_DRIVE_C,
-  BETA_DRIVE_D,
-  BETA_NUM_DRIVES,
+    BETA_DRIVE_A = 0,
+    BETA_DRIVE_B,
+    BETA_DRIVE_C,
+    BETA_DRIVE_D,
+    BETA_NUM_DRIVES,
 } beta_drive_number;
 
 int beta_disk_insert(beta_drive_number which, const char *filename,

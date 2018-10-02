@@ -44,11 +44,11 @@ xerror_handler(Display *display, XErrorEvent *error);
 int
 xerror_handler(Display *display, XErrorEvent *error)
 {
-  /* If we were expecting an error to occur, just set a flag. Otherwise,
+    /* If we were expecting an error to occur, just set a flag. Otherwise,
      exit in a fairly spectacular fashion */
-  if (xerror_expecting) {
+    if (xerror_expecting) {
     xerror_error = error->error_code;
-  } else {
+    } else {
 
     char message[64];
 
@@ -58,7 +58,7 @@ xerror_handler(Display *display, XErrorEvent *error)
 
     exit(1);
 
-  }
+    }
 
-  return 0;
+    return 0;
 }

@@ -91,223 +91,223 @@ libspectrum_byte palette[16][3] = {
 static int
 svg_attribute(const char *name, const char *value, const char *element)
 {
-  if (xmlTextWriterWriteAttribute(writer, BAD_CAST name, BAD_CAST value) < 0)
+    if (xmlTextWriterWriteAttribute(writer, BAD_CAST name, BAD_CAST value) < 0)
     return 1;
 
-  return 0;
+    return 0;
 }
 
 static const char*
 timestring(void)
 {
-  time_t tm;
-  char *tmstr;
-  static char ts[25];
+    time_t tm;
+    char *tmstr;
+    static char ts[25];
 
-  time(&tm);
-  tmstr = ctime(&tm);
+    time(&tm);
+    tmstr = ctime(&tm);
 
-  snprintf(ts, 25, "%.24s", tmstr);
+    snprintf(ts, 25, "%.24s", tmstr);
 
-  return ts;
+    return ts;
 }
 
 static int
 svg_write_metadata(void)
 {
-  if (xmlTextWriterStartElement(writer, BAD_CAST "metadata") < 0)
+    if (xmlTextWriterStartElement(writer, BAD_CAST "metadata") < 0)
     return 1;
 
-  if (xmlTextWriterStartElement(writer, BAD_CAST "creator") < 0)
+    if (xmlTextWriterStartElement(writer, BAD_CAST "creator") < 0)
     return 1;
 
-  if (svg_attribute("name", "fuse", "creator") != 0)
+    if (svg_attribute("name", "fuse", "creator") != 0)
     return 1;
 
-  if (svg_attribute("version", VERSION, "creator") != 0)
+    if (svg_attribute("version", VERSION, "creator") != 0)
     return 1;
 
-  if (xmlTextWriterEndElement(writer) < 0)
+    if (xmlTextWriterEndElement(writer) < 0)
     return 1;
 
-  if (xmlTextWriterStartElement(writer, BAD_CAST "created") < 0)
+    if (xmlTextWriterStartElement(writer, BAD_CAST "created") < 0)
     return 1;
 
-  if (svg_attribute("date", timestring(), "created") != 0)
+    if (svg_attribute("date", timestring(), "created") != 0)
     return 1;
 
-  if (xmlTextWriterEndElement(writer) < 0)
+    if (xmlTextWriterEndElement(writer) < 0)
     return 1;
 
-  if (xmlTextWriterEndElement(writer) < 0)
+    if (xmlTextWriterEndElement(writer) < 0)
     return 1;
 
-  return 0;
+    return 0;
 }
 
 void
 svg_openfile(void)
 {
-  int err;
+    int err;
 
-  if ((buffer = xmlBufferCreate()) == NULL) {
+    if ((buffer = xmlBufferCreate()) == NULL) {
     ui_error(UI_ERROR_ERROR, "error creating the XML buffer");
     return;
-  }
+    }
 
-  if ((writer = xmlNewTextWriterMemory(buffer, 0)) == NULL) {
+    if ((writer = xmlNewTextWriterMemory(buffer, 0)) == NULL) {
     ui_error(UI_ERROR_ERROR, "error allocating the XML writer");
     return;
-  }
+    }
 
-  /*
-  we free the writer at the start of each of
-  these branches since this must be done before
-  using the buffer
-  */
+    /*
+    we free the writer at the start of each of
+    these branches since this must be done before
+    using the buffer
+    */
 
-  // start xml
+    // start xml
 
-  if (xmlTextWriterStartDocument(writer, NULL, ENCODING, NULL) < 0) {
+    if (xmlTextWriterStartDocument(writer, NULL, ENCODING, NULL) < 0) {
     ui_error(UI_ERROR_ERROR, "error on SVG document start");
     return;
-  }
+    }
 
-  // svg
+    // svg
 
-  if (xmlTextWriterStartElement(writer, BAD_CAST "svg") < 0) {
+    if (xmlTextWriterStartElement(writer, BAD_CAST "svg") < 0) {
     ui_error(UI_ERROR_ERROR, "error on SVG open");
     return;
-  }
+    }
 
-  err = 0;
-  err += (svg_attribute("version", "1.1", "svg") != 0);
-  err += (svg_attribute("xmlns", "http://www.w3.org/2000/svg", "svg") != 0);
+    err = 0;
+    err += (svg_attribute("version", "1.1", "svg") != 0);
+    err += (svg_attribute("xmlns", "http://www.w3.org/2000/svg", "svg") != 0);
 
-  if (err) {
+    if (err) {
     ui_error(UI_ERROR_ERROR, "error setting the SVG attributes");
     return;
-  }
+    }
 }
 
 void
 svg_rect(int xpos, int ypos, const char *xsize, const char *ysize,
           const char *opacity, const char *color)
 {
-  char path_element[ BUFSZ ];
-  int err;
+    char path_element[ BUFSZ ];
+    int err;
 
-  if (xmlTextWriterStartElement(writer, BAD_CAST "rect") < 0) {
+    if (xmlTextWriterStartElement(writer, BAD_CAST "rect") < 0) {
     ui_error(UI_ERROR_ERROR, "error creating a box in the SVG file");
     return;
-  }
+    }
 
-  err = 0;
-  snprintf(path_element, BUFSZ, "%d", xpos);
-  err += (svg_attribute("x", path_element, "rect") != 0);
-  snprintf(path_element, BUFSZ, "%d", ypos);
-  err += (svg_attribute("y", path_element, "rect") != 0);
-  err += (svg_attribute("width", xsize, "rect") != 0);
-  err += (svg_attribute("height", ysize, "rect") != 0);
-  err += (svg_attribute("opacity", opacity, "rect") != 0);
-  err += (svg_attribute("stroke", "none", "rect") != 0);
-  err += (svg_attribute("fill", color, "rect") != 0);
+    err = 0;
+    snprintf(path_element, BUFSZ, "%d", xpos);
+    err += (svg_attribute("x", path_element, "rect") != 0);
+    snprintf(path_element, BUFSZ, "%d", ypos);
+    err += (svg_attribute("y", path_element, "rect") != 0);
+    err += (svg_attribute("width", xsize, "rect") != 0);
+    err += (svg_attribute("height", ysize, "rect") != 0);
+    err += (svg_attribute("opacity", opacity, "rect") != 0);
+    err += (svg_attribute("stroke", "none", "rect") != 0);
+    err += (svg_attribute("fill", color, "rect") != 0);
 
-  if (err) {
+    if (err) {
     ui_error(UI_ERROR_ERROR, "error setting box coordinates in the SVG file");
     return;
-  }
+    }
 
-  if (xmlTextWriterEndElement(writer) < 0) {
+    if (xmlTextWriterEndElement(writer) < 0) {
     ui_error(UI_ERROR_ERROR,
               "error finishing a box creation in the SVG file");
     return;
-  }
+    }
 }
 
 void
 svg_openpath(void)
 {
-  int err;
-  char svgcolor[ BUFSZ ];
+    int err;
+    char svgcolor[ BUFSZ ];
 
-  static int svg_paper;
-  static int svg_ink;
+    static int svg_paper;
+    static int svg_ink;
 
-  // Background
-  svg_paper = ((readbyte_internal(0x5c8d) >> 3) & 15); // ATTR_P
-  snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
+    // Background
+    svg_paper = ((readbyte_internal(0x5c8d) >> 3) & 15); // ATTR_P
+    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
                                               palette[ svg_paper ][1],
                                               palette[ svg_paper ][2]);
 
-  svg_rect(0, 0, "512", "368", "1", svgcolor);
+    svg_rect(0, 0, "512", "368", "1", svgcolor);
 
-  if (xmlTextWriterStartElement(writer, BAD_CAST "g") < 0) {
+    if (xmlTextWriterStartElement(writer, BAD_CAST "g") < 0) {
     ui_error(UI_ERROR_ERROR, "error opening the SVG element");
     return;
-  }
+    }
 
-  svg_ink = (readbyte_internal(0x5c8d) & 7) +
+    svg_ink = (readbyte_internal(0x5c8d) & 7) +
             ((readbyte_internal(0x5c8d) >> 3) & 8); // ATTR_P
 
-  err = 0;
-  snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_ink ][0],
+    err = 0;
+    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_ink ][0],
                                               palette[ svg_ink ][1],
                                               palette[ svg_ink ][2]);
-  err += (svg_attribute("stroke", svgcolor, "g") != 0);
-  err += (svg_attribute("stroke-width", "1.7", "g") != 0);
+    err += (svg_attribute("stroke", svgcolor, "g") != 0);
+    err += (svg_attribute("stroke-width", "1.7", "g") != 0);
 
-  if (err) {
+    if (err) {
     ui_error(UI_ERROR_ERROR, "error setting the SVG element attributes");
     return;
-  }
+    }
 }
 
 void
 svg_closepath(void)
 {
-  if (xmlTextWriterEndElement(writer) < 0) {
+    if (xmlTextWriterEndElement(writer) < 0) {
     ui_error(UI_ERROR_ERROR, "error on SVG element close");
     return;
-  }
+    }
 }
 
 void
 svg_closefile(void)
 {
-  FILE *fp;
+    FILE *fp;
 
-  if (svg_write_metadata() != 0) {
+    if (svg_write_metadata() != 0) {
     ui_error(UI_ERROR_ERROR, "error writing the SVG metadata");
     return;
-  }
+    }
 
-  if (xmlTextWriterEndElement(writer) < 0) {
+    if (xmlTextWriterEndElement(writer) < 0) {
     ui_error(UI_ERROR_ERROR, "error on SVG close");
     return;
-  }
+    }
 
-  if (xmlTextWriterEndDocument(writer) < 0) {
+    if (xmlTextWriterEndDocument(writer) < 0) {
     ui_error(UI_ERROR_ERROR, "error on SVG document end");
     return;
-  }
+    }
 
-  xmlFreeTextWriter(writer);
+    xmlFreeTextWriter(writer);
 
-  svg_fname = libspectrum_new(char, strlen(svg_fnameroot) + BUFSIZ);
-  snprintf(svg_fname, strlen(svg_fnameroot) + BUFSIZ, "%s%d.svg",
+    svg_fname = libspectrum_new(char, strlen(svg_fnameroot) + BUFSIZ);
+    snprintf(svg_fname, strlen(svg_fnameroot) + BUFSIZ, "%s%d.svg",
             svg_fnameroot, svg_filecount++);
 
-  if ((fp = fopen(svg_fname, "w")) != NULL) {
+    if ((fp = fopen(svg_fname, "w")) != NULL) {
     fprintf(fp, "%s", buffer->content);
 
     if (fclose(fp) != 0) {
       ui_error(UI_ERROR_ERROR, "error closing SVG file '%s': %s", svg_fname,
                 strerror(errno));
     }
-  }
+    }
 
-  libspectrum_free(svg_fname);
+    libspectrum_free(svg_fname);
 }
 
 
@@ -316,7 +316,7 @@ svg_closefile(void)
 void
 svg_startcapture(const char *name, svg_capture_type mode)
 {
-  if (!svg_capture_active) {
+    if (!svg_capture_active) {
 
     svg_capture_mode = mode;
 
@@ -333,45 +333,45 @@ svg_startcapture(const char *name, svg_capture_type mode)
 
     svg_openfile();
     svg_openpath();
-  }
+    }
 }
 
 void
 svg_stopcapture(void)
 {
-  if (svg_capture_active) {
+    if (svg_capture_active) {
     svg_closepath();
     svg_closefile();
 
     libspectrum_free(svg_fnameroot);
 
     svg_capture_active = 0;
-  }
+    }
 }
 
 void
 svg_capture_draw(void)
 {
-  char path_element[ BUFSZ ];
-  char svgcolor[ BUFSZ ];
-  int err;
-  int dx,dy;
-  int svg_ink;
+    char path_element[ BUFSZ ];
+    char svgcolor[ BUFSZ ];
+    int err;
+    int dx,dy;
+    int svg_ink;
 
-  dx = z80.bc.b.l;
-  dy = z80.bc.b.h;
-  if (z80.de.b.l == 255)
+    dx = z80.bc.b.l;
+    dy = z80.bc.b.h;
+    if (z80.de.b.l == 255)
     dx = -dx;
-  if (z80.de.b.h == 255)
+    if (z80.de.b.h == 255)
     dy = -dy;
 
-  svg_ink = (readbyte_internal(0x5c8f) & 7) +
+    svg_ink = (readbyte_internal(0x5c8f) & 7) +
             ((readbyte_internal(0x5c8f) >> 3) & 8); // ATTR_T
-  snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_ink ][0],
+    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_ink ][0],
                                               palette[ svg_ink ][1],
                                               palette[ svg_ink ][2]);
 
-  if ((svg_capture_mode == SVG_CAPTURE_LINES) &&
+    if ((svg_capture_mode == SVG_CAPTURE_LINES) &&
       ((z80.pc.w == 0x24ba) || (z80.pc.w == 0x2813))) {
     // DRAW
     if (xmlTextWriterStartElement(writer, BAD_CAST "line") < 0) {
@@ -393,7 +393,7 @@ svg_capture_draw(void)
     err += (svg_attribute("y2", path_element, "line") != 0);
     err += (svg_attribute("stroke", svgcolor, "line") != 0);
 
-  } else {
+    } else {
     // PLOT
     if (xmlTextWriterStartElement(writer, BAD_CAST "line") < 0) {
       ui_error(UI_ERROR_ERROR, "error creating the SVG DOT");
@@ -408,32 +408,32 @@ svg_capture_draw(void)
     snprintf(path_element, BUFSZ, "%d", ((svg_y_size - dy) * 2) - 2);
     err += (svg_attribute("y2", path_element, "line") != 0);
     err += (svg_attribute("stroke", svgcolor, "line") != 0);
-  }
+    }
 
-  if (err) {
+    if (err) {
     ui_error(UI_ERROR_ERROR, "error setting the SVG element coordinates");
     return;
-  }
+    }
 
-  if (xmlTextWriterEndElement(writer) < 0) {
+    if (xmlTextWriterEndElement(writer) < 0) {
     ui_error(UI_ERROR_ERROR,
               "error finishing the creation of the SVG element");
     return;
-  }
+    }
 
-  svg_flag = 1;
+    svg_flag = 1;
 
-  return;
+    return;
 }
 
 void
 svg_byte(int xpos, int ypos, int udg_byte, char *color)
 {
-  int i;
-  char path_element[ BUFSZ ];
-  int err = 0;
+    int i;
+    char path_element[ BUFSZ ];
+    int err = 0;
 
-  for (i = 7; i >= 0; i--) {
+    for (i = 7; i >= 0; i--) {
     if (udg_byte & 1) {
       if (xmlTextWriterStartElement(writer, BAD_CAST "circle") < 0) {
         ui_error(UI_ERROR_ERROR, "error creating an UDG dot in the SVG file");
@@ -459,22 +459,22 @@ svg_byte(int xpos, int ypos, int udg_byte, char *color)
       }
     }
     udg_byte /= 2;
-  }
+    }
 }
 
 void
 svg_capture_char(void)
 {
-  char path_element[ BUFSZ ];
-  char svgcolor_ink[ BUFSZ ];
-  char svgcolor_paper[ BUFSZ ];
-  int i, err;
-  int svg_ink;
-  int svg_paper;
-  int x_pos, y_pos;
-  int svg_char, udg_ptr;
+    char path_element[ BUFSZ ];
+    char svgcolor_ink[ BUFSZ ];
+    char svgcolor_paper[ BUFSZ ];
+    int i, err;
+    int svg_ink;
+    int svg_paper;
+    int x_pos, y_pos;
+    int svg_char, udg_ptr;
 
-  if ((z80.de.b.l == 188) ||
+    if ((z80.de.b.l == 188) ||
       ((z80.de.b.l == 70) &&
         ((machine_current->machine == LIBSPECTRUM_MACHINE_TS2068) ||
           (machine_current->machine == LIBSPECTRUM_MACHINE_TC2068)))) {
@@ -588,53 +588,53 @@ svg_capture_char(void)
     }
 
     svg_flag = 1;
-  }
+    }
 
-  return;
+    return;
 }
 
 void
 svg_capture_cls(void)
 {
-  if (svg_flag) {
+    if (svg_flag) {
     svg_closepath();
     svg_closefile();
     svg_openfile();
     svg_openpath();
-  } else {
+    } else {
     /* This trick could load empty fake paths into the SVG file when CLS
        happens */
     svg_closepath();
     svg_openpath();
-  }
+    }
 
-  svg_flag = 0;
-  svg_y_size = 176;
+    svg_flag = 0;
+    svg_y_size = 176;
 
-  return;
+    return;
 }
 
 void
 svg_capture_scroll(void)
 {
-  char svgcolor[ BUFSZ ];
-  static int svg_paper;
+    char svgcolor[ BUFSZ ];
+    static int svg_paper;
 
-  // Background
-  svg_paper = ((readbyte_internal(0x5c8d) >> 3) & 15); // ATTR_P
-  snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
+    // Background
+    svg_paper = ((readbyte_internal(0x5c8d) >> 3) & 15); // ATTR_P
+    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
                                               palette[ svg_paper ][1],
                                               palette[ svg_paper ][2]);
 
-  svg_y_size += 8;
-  svg_rect(0, svg_y_size * 2, "512", "16", "1", svgcolor);
+    svg_y_size += 8;
+    svg_rect(0, svg_y_size * 2, "512", "16", "1", svgcolor);
     return;
 }
 
 void
 svg_capture(void)
 {
-  if (trap_check_rom(CHECK_48K_ROM)) {
+    if (trap_check_rom(CHECK_48K_ROM)) {
 
     if ((machine_current->machine == LIBSPECTRUM_MACHINE_TS2068) ||
         (machine_current->machine == LIBSPECTRUM_MACHINE_TC2068)) {
@@ -676,8 +676,8 @@ svg_capture(void)
 void
 svg_capture_end(void)
 {
-  svg_stopcapture();
-  return;
+    svg_stopcapture();
+    return;
 }
 
 #else // !HAVE_LIB_XML2
@@ -685,13 +685,13 @@ svg_capture_end(void)
 void
 svg_capture(void)
 {
-  return;
+    return;
 }
 
 void
 svg_capture_end(void)
 {
-  return;
+    return;
 }
 
 #endif // HAVE_LIB_XML2

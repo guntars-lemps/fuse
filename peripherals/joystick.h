@@ -38,15 +38,15 @@ void joystick_register_startup(void);
 
 typedef enum joystick_type_t {
 
-  JOYSTICK_TYPE_NONE = 0,
+    JOYSTICK_TYPE_NONE = 0,
 
-  JOYSTICK_TYPE_CURSOR,
-  JOYSTICK_TYPE_KEMPSTON,
-  JOYSTICK_TYPE_SINCLAIR_1,
-  JOYSTICK_TYPE_SINCLAIR_2,
-  JOYSTICK_TYPE_TIMEX_1,
-  JOYSTICK_TYPE_TIMEX_2,
-  JOYSTICK_TYPE_FULLER,
+    JOYSTICK_TYPE_CURSOR,
+    JOYSTICK_TYPE_KEMPSTON,
+    JOYSTICK_TYPE_SINCLAIR_1,
+    JOYSTICK_TYPE_SINCLAIR_2,
+    JOYSTICK_TYPE_TIMEX_1,
+    JOYSTICK_TYPE_TIMEX_2,
+    JOYSTICK_TYPE_FULLER,
 
 } joystick_type_t;
 
@@ -58,11 +58,11 @@ extern const char *joystick_connection[];
 
 typedef enum joystick_button {
 
-  JOYSTICK_BUTTON_LEFT = 0,
-  JOYSTICK_BUTTON_RIGHT,
-  JOYSTICK_BUTTON_UP,
-  JOYSTICK_BUTTON_DOWN,
-  JOYSTICK_BUTTON_FIRE,
+    JOYSTICK_BUTTON_LEFT = 0,
+    JOYSTICK_BUTTON_RIGHT,
+    JOYSTICK_BUTTON_UP,
+    JOYSTICK_BUTTON_DOWN,
+    JOYSTICK_BUTTON_FIRE,
 
 } joystick_button;
 
@@ -72,10 +72,10 @@ int joystick_press(int which, joystick_button button, int press);
 
 // Interface-specific read functions
 libspectrum_byte joystick_kempston_read (libspectrum_word port,
-					  libspectrum_byte *attached);
+                      libspectrum_byte *attached);
 libspectrum_byte joystick_timex_read (libspectrum_word port,
-				       libspectrum_byte which);
+                       libspectrum_byte which);
 libspectrum_byte joystick_fuller_read (libspectrum_word port,
-					libspectrum_byte *attached);
+                    libspectrum_byte *attached);
 
 #endif // #ifndef FUSE_JOYSTICK_H

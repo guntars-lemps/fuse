@@ -40,61 +40,61 @@ static void melodik_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t melodik_module_info = {
 
-  /* .reset = */ NULL,
-  /* .romcs = */ NULL,
-  /* .snapshot_enabled = */ melodik_enabled_snapshot,
-  /* .snapshot_from = */ melodik_from_snapshot,
-  /* .snapshot_to = */ melodik_to_snapshot,
+    /* .reset = */ NULL,
+    /* .romcs = */ NULL,
+    /* .snapshot_enabled = */ melodik_enabled_snapshot,
+    /* .snapshot_from = */ melodik_from_snapshot,
+    /* .snapshot_to = */ melodik_to_snapshot,
 
 };
 
 static const periph_port_t melodik_ports[] = {
-  { 0xc002, 0xc000, ay_registerport_read, ay_registerport_write },
-  { 0xc002, 0x8000, NULL, ay_dataport_write },
-  { 0, 0, NULL, NULL }
+    { 0xc002, 0xc000, ay_registerport_read, ay_registerport_write },
+    { 0xc002, 0x8000, NULL, ay_dataport_write },
+    { 0, 0, NULL, NULL }
 };
 
 static const periph_t melodik_periph = {
-  /* .option = */ &settings_current.melodik,
-  /* .ports = */ melodik_ports,
-  /* .hard_reset = */ 1,
-  /* .activate = */ NULL,
+    /* .option = */ &settings_current.melodik,
+    /* .ports = */ melodik_ports,
+    /* .hard_reset = */ 1,
+    /* .activate = */ NULL,
 };
 
 static void
 melodik_enabled_snapshot(libspectrum_snap *snap)
 {
-  settings_current.melodik = libspectrum_snap_melodik_active(snap);
+    settings_current.melodik = libspectrum_snap_melodik_active(snap);
 }
 
 static void
 melodik_from_snapshot(libspectrum_snap *snap)
 {
-  if (periph_is_active(PERIPH_TYPE_MELODIK))
+    if (periph_is_active(PERIPH_TYPE_MELODIK))
     ay_state_from_snapshot(snap);
 }
 
 static void
 melodik_to_snapshot(libspectrum_snap *snap)
 {
-  int active = periph_is_active(PERIPH_TYPE_MELODIK);
-  libspectrum_snap_set_melodik_active(snap, active);
+    int active = periph_is_active(PERIPH_TYPE_MELODIK);
+    libspectrum_snap_set_melodik_active(snap, active);
 }
 
 static int
 melodik_init(void *context)
 {
-  module_register(&melodik_module_info);
-  periph_register(PERIPH_TYPE_MELODIK, &melodik_periph);
+    module_register(&melodik_module_info);
+    periph_register(PERIPH_TYPE_MELODIK, &melodik_periph);
 
-  return 0;
+    return 0;
 }
 
 void
 melodik_register_startup(void)
 {
-  startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
-  startup_manager_register(STARTUP_MANAGER_MODULE_MELODIK, dependencies,
+    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_register(STARTUP_MANAGER_MODULE_MELODIK, dependencies,
                             ARRAY_SIZE(dependencies), melodik_init, NULL,
                             NULL);
 }

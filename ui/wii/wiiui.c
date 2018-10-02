@@ -39,54 +39,54 @@ static void wii_end(void);
 int
 ui_init(int *argc, char ***argv)
 {
-  int error;
+    int error;
 
 #ifdef USE_WIDGET
-  if (ui_widget_init()) return 1;
+    if (ui_widget_init()) return 1;
 #endif // #ifdef USE_WIDGET
 
-  error = atexit(wii_end);
-  if (error) {
+    error = atexit(wii_end);
+    if (error) {
     ui_error(UI_ERROR_ERROR, "%s: couldn't set atexit function", __func__);
     return 1;
-  }
+    }
 
-  error = wiidisplay_init();
-  if (error) return error;
-  error = wiikeyboard_init();
-  if (error) return error;
-  error = wiimouse_init();
-  if (error) return error;
+    error = wiidisplay_init();
+    if (error) return error;
+    error = wiikeyboard_init();
+    if (error) return error;
+    error = wiimouse_init();
+    if (error) return error;
 
-  return 0;
+    return 0;
 }
 
 int
 ui_event(void)
 {
-  keyboard_update();
-  mouse_update();
-  return 0;
+    keyboard_update();
+    mouse_update();
+    return 0;
 }
 
 int ui_end(void)
 {
-  // Cleanup handled by atexit function
-  int error;
+    // Cleanup handled by atexit function
+    int error;
 
-  error = wiikeyboard_end(); if (error) return error;
-  error = wiidisplay_end(); if (error) return error;
+    error = wiikeyboard_end(); if (error) return error;
+    error = wiidisplay_end(); if (error) return error;
 
 #ifdef USE_WIDGET
-  ui_widget_end();
+    ui_widget_end();
 #endif // #ifdef USE_WIDGET
 
-  return 0;
+    return 0;
 }
 
 static void
 wii_end(void)
 {
-  wiikeyboard_end();
-  uidisplay_end();
+    wiikeyboard_end();
+    uidisplay_end();
 }

@@ -37,36 +37,36 @@
 const char*
 compat_get_temp_path(void)
 {
-  return "T:";
+    return "T:";
 }
 
 const char*
 compat_get_config_path(void)
 {
-  return "PROGDIR:settings";
+    return "PROGDIR:settings";
 }
 
 int
 compat_is_absolute_path(const char *path)
 {
-  return strchr(path,':');
+    return strchr(path,':');
 }
 
 int
 compat_get_next_path(path_context *ctx)
 {
-  char buffer[ PATH_MAX ];
-  const char *path_segment, *path2;
+    char buffer[ PATH_MAX ];
+    const char *path_segment, *path2;
 
-  switch ((ctx->state)++) {
+    switch ((ctx->state)++) {
 
     // First look relative to the current directory
-  case 0:
+    case 0:
     strncpy(ctx->path, "PROGDIR:", PATH_MAX);
     return 1;
 
     // Then relative to the Fuse executable
-  case 1:
+    case 1:
 
     switch (ctx->type) {
     case UTILS_AUXILIARY_LIB: strncpy(ctx->path, "PROGDIR:lib/", PATH_MAX); return 1;
@@ -86,7 +86,7 @@ compat_get_next_path(path_context *ctx)
       len = PATH_MAX - strlen(fuse_progname) - strlen(FUSE_DIR_SEP_STR);
       if (!getcwd(buffer, len)) {
         ui_error(UI_ERROR_ERROR, "error getting current working directory: %s",
-	          strerror(errno));
+              strerror(errno));
         return 0;
       }
       strcat(buffer, FUSE_DIR_SEP_STR);
@@ -99,7 +99,7 @@ compat_get_next_path(path_context *ctx)
     return 1;
 
     // Then where we may have installed the data files
-  case 2:
+    case 2:
 
 #ifndef ROMSDIR
     path2 = FUSEDATADIR;
@@ -109,8 +109,8 @@ compat_get_next_path(path_context *ctx)
     strncpy(ctx->path, path2, PATH_MAX); buffer[ PATH_MAX - 1 ] = '\0';
     return 1;
 
-  case 3: return 0;
-  }
-  ui_error(UI_ERROR_ERROR, "unknown path_context state %d", ctx->state);
-  fuse_abort();
+    case 3: return 0;
+    }
+    ui_error(UI_ERROR_ERROR, "unknown path_context state %d", ctx->state);
+    fuse_abort();
 }
