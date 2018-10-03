@@ -431,7 +431,7 @@ void entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
     for (i = 0; i < length; i++) {
     if (!isdigit(text[i])) continue;
 
-    result[count++ ] = text[i];
+    result[count++] = text[i];
     }
 
     // Insert only validated text
@@ -496,7 +496,7 @@ void entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
     result = g_new(gchar, length);
 
     for (i = 0; i < length && i + prev_length < max_length; i++) {
-      result[count++ ] = text[i];
+      result[count++] = text[i];
     }
     }
 

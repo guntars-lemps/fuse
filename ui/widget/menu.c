@@ -401,7 +401,7 @@ menu_get_scaler(scaler_available_fn selector)
     for (i = 0; i < SCALER_NUM; i++)
     if (selector(i)) {
       if (current_scaler == i) info.current = count;
-      options[count++ ] = scaler_name(i);
+      options[count++] = scaler_name(i);
     }
 
     info.title = "Select scaler";

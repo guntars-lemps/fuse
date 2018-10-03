@@ -168,10 +168,10 @@ static int id_read(disk_t *d, int *head, int *track, int *sector, int *length)
     (bitmap_test(d->clocks, d->i) || // 0xfe with clock
       a1mark)) { // or 0xfe with 0xa1
       d->i++;
-      *track  = d->track[d->i++ ];
-      *head   = d->track[d->i++ ];
-      *sector = d->track[d->i++ ];
-      *length = d->track[d->i++ ];
+      *track  = d->track[d->i++];
+      *head   = d->track[d->i++];
+      *sector = d->track[d->i++];
+      *length = d->track[d->i++];
       d->i += 2; // skip CRC
       return 1;
     } else {
@@ -448,7 +448,7 @@ static int preindex_add(disk_t *d, int gaptype) // preindex gap and index mark
 // ------------------------------     mark     ------------------------------
     if (g->mark < 0) // FM
     bitmap_set(d->clocks, d->i); // set clock mark
-    d->track[d->i++ ] = 0xfc; // index mark
+    d->track[d->i++] = 0xfc; // index mark
     return 0;
 }
 
@@ -513,18 +513,18 @@ static int id_add(disk_t *d, int h, int t, int s, int l, int gaptype, int crc_er
 // ------------------------------     mark     ------------------------------
     if (g->mark < 0) // FM
     bitmap_set(d->clocks, d->i); // set clock mark
-    d->track[d->i++ ] = 0xfe; // ID mark
+    d->track[d->i++] = 0xfe; // ID mark
     crc = crc_fdc(crc, 0xfe);
 // ------------------------------     header     ------------------------------
-    d->track[d->i++ ] = t; crc = crc_fdc(crc, t);
-    d->track[d->i++ ] = h; crc = crc_fdc(crc, h);
-    d->track[d->i++ ] = s; crc = crc_fdc(crc, s);
-    d->track[d->i++ ] = l; crc = crc_fdc(crc, l);
-    d->track[d->i++ ] = crc >> 8;
+    d->track[d->i++] = t; crc = crc_fdc(crc, t);
+    d->track[d->i++] = h; crc = crc_fdc(crc, h);
+    d->track[d->i++] = s; crc = crc_fdc(crc, s);
+    d->track[d->i++] = l; crc = crc_fdc(crc, l);
+    d->track[d->i++] = crc >> 8;
     if (crc_error) {
-    d->track[d->i++ ] = (~crc) & 0xff; // record a CRC error
+    d->track[d->i++] = (~crc) & 0xff; // record a CRC error
     } else {
-    d->track[d->i++ ] = crc & 0xff; // CRC
+    d->track[d->i++] = crc & 0xff; // CRC
     }
 // ------------------------------     GAP II     ------------------------------
     return gap_add(d, 2, gaptype);
@@ -552,7 +552,7 @@ static int datamark_add(disk_t *d, int ddam, int gaptype)
 // ------------------------------     mark     ------------------------------
     if (g->mark < 0) // FM
     bitmap_set(d->clocks, d->i); // set clock mark
-    d->track[d->i++ ] = ddam ? 0xf8 : 0xfb; // DATA mark 0xf8 -> deleted data
+    d->track[d->i++] = ddam ? 0xf8 : 0xfb; // DATA mark 0xf8 -> deleted data
     return 0;
 }
 
@@ -607,7 +607,7 @@ static int data_add(disk_t *d, buffer_t *buffer, unsigned char *data, int len, i
     length++;
     }
     if (crc_error) crc ^= 1; // mess up CRC
-    d->track[d->i++ ] = crc >> 8; d->track[d->i++ ] = crc & 0xff; // CRC
+    d->track[d->i++] = crc >> 8; d->track[d->i++] = crc & 0xff; // CRC
 // ------------------------------     GAP III    ------------------------------
 header_crc_error:
     return (gap_add(d, 3, gaptype));

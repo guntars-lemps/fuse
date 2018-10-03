@@ -29,6 +29,7 @@
 #include "machine.h"
 #include "ui/uidisplay.h"
 
+
 void uidisplay_spectrum_screen(const libspectrum_byte *screen, int border)
 {
     int x,y;
@@ -36,38 +37,34 @@ void uidisplay_spectrum_screen(const libspectrum_byte *screen, int border)
 
     int scale = machine_current->timex ? 2 : 1;
 
-    for (y=0; y < DISPLAY_BORDER_HEIGHT; y++) {
-    for (x=0; x < DISPLAY_ASPECT_WIDTH; x++) {
-      uidisplay_putpixel(x, y, border);
-      uidisplay_putpixel(x, y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT,
-              border);
-    }
-    }
-
-    for (y=0; y<DISPLAY_HEIGHT; y++) {
-
-    for (x=0; x < DISPLAY_BORDER_WIDTH; x++) {
-      uidisplay_putpixel(x, y + DISPLAY_BORDER_HEIGHT, border);
-      uidisplay_putpixel(x + DISPLAY_ASPECT_WIDTH - DISPLAY_BORDER_ASPECT_WIDTH,
-              y + DISPLAY_BORDER_HEIGHT, border);
+    for (y = 0; y < DISPLAY_BORDER_HEIGHT; y++) {
+        for (x = 0; x < DISPLAY_ASPECT_WIDTH; x++) {
+            uidisplay_putpixel(x, y, border);
+            uidisplay_putpixel(x, y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT, border);
+        }
     }
 
-    for (x=0; x < DISPLAY_WIDTH_COLS; x++) {
+    for (y = 0; y < DISPLAY_HEIGHT; y++) {
 
-      // Get the attribute byte
-      attr = screen[display_attr_start[y] + x];
+        for (x = 0; x < DISPLAY_BORDER_WIDTH; x++) {
+            uidisplay_putpixel(x, y + DISPLAY_BORDER_HEIGHT, border);
+            uidisplay_putpixel(x + DISPLAY_ASPECT_WIDTH - DISPLAY_BORDER_ASPECT_WIDTH, y + DISPLAY_BORDER_HEIGHT, border);
+        }
 
-      // Split it into (possibly bright) INK and PAPER
-      ink = (attr & 0x07) + ((attr & 0x40) >> 3);
-      paper = (attr & (0x0f << 3)) >> 3;
+        for (x = 0; x < DISPLAY_WIDTH_COLS; x++) {
 
-      data = screen[display_line_start[y]+x];
+            // Get the attribute byte
+            attr = screen[display_attr_start[y] + x];
 
-      uidisplay_plot8(x + DISPLAY_BORDER_WIDTH_COLS, y + DISPLAY_BORDER_HEIGHT,
-                       data, ink, paper);
+            // Split it into (possibly bright) INK and PAPER
+            ink = (attr & 0x07) + ((attr & 0x40) >> 3);
+            paper = (attr & (0x0f << 3)) >> 3;
+
+            data = screen[display_line_start[y] + x];
+
+            uidisplay_plot8(x + DISPLAY_BORDER_WIDTH_COLS, y + DISPLAY_BORDER_HEIGHT, data, ink, paper);
+        }
     }
-    }
 
-    uidisplay_area(0, 0, scale * DISPLAY_ASPECT_WIDTH,
-          scale * DISPLAY_SCREEN_HEIGHT);
+    uidisplay_area(0, 0, scale * DISPLAY_ASPECT_WIDTH, scale * DISPLAY_SCREEN_HEIGHT);
 }

@@ -305,7 +305,7 @@ void nic_enc28j60_spi_consume_bit(nic_enc28j60_t *self, int bit)
       break;
 
     case SPI_WBM:
-      self->sram[ewrpt++ ] = self->mosi_bits; // Assume ECON2:AUTOINC to be set
+      self->sram[ewrpt++] = self->mosi_bits; // Assume ECON2:AUTOINC to be set
       SET_PTR_REG(self, EWRPT, ewrpt);
       break;
 

@@ -320,7 +320,7 @@ static int read_test(FILE *f, libspectrum_dword *end_tstates)
 
       if (byte >= 0x100) break;
 
-      memory[address++ ] = byte;
+      memory[address++] = byte;
 
     }
     }
@@ -351,7 +351,7 @@ static void dump_memory_state(void)
     printf("%04x ", (unsigned)i);
 
     while (i < 0x10000 && memory[i] != initial_memory[i])
-      printf("%02x ", memory[i++ ]);
+      printf("%02x ", memory[i++]);
 
     printf("-1\n");
     }
