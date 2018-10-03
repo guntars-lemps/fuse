@@ -32,12 +32,12 @@
 #include "pokefinder.h"
 #include "spectrum.h"
 
-libspectrum_byte pokefinder_possible[ MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES ][ MEMORY_PAGE_SIZE ];
-libspectrum_byte pokefinder_impossible[ MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES ][ MEMORY_PAGE_SIZE / 8 ];
+libspectrum_byte pokefinder_possible[MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES][MEMORY_PAGE_SIZE];
+libspectrum_byte pokefinder_impossible[MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES][MEMORY_PAGE_SIZE / 8];
 size_t pokefinder_count;
 
-void
-pokefinder_clear(void)
+
+void pokefinder_clear(void)
 {
     size_t page, max_page;
 
@@ -52,13 +52,13 @@ pokefinder_clear(void)
       memset(pokefinder_impossible[page], 255, MEMORY_PAGE_SIZE / 8);
 }
 
-int
-pokefinder_search(libspectrum_byte value)
+
+int pokefinder_search(libspectrum_byte value)
 {
     size_t page, offset;
 
     for (page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; page++) {
-    memory_page *mapping = &memory_map_ram[ page ];
+    memory_page *mapping = &memory_map_ram[page];
 
     for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
       if (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) continue;
@@ -73,13 +73,13 @@ pokefinder_search(libspectrum_byte value)
     return 0;
 }
 
-int
-pokefinder_incremented(void)
+
+int pokefinder_incremented(void)
 {
     size_t page, offset;
 
     for (page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; page++) {
-    memory_page *mapping = &memory_map_ram[ page ];
+    memory_page *mapping = &memory_map_ram[page];
 
     for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
       if (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) continue;
@@ -97,13 +97,13 @@ pokefinder_incremented(void)
     return 0;
 }
 
-int
-pokefinder_decremented(void)
+
+int pokefinder_decremented(void)
 {
     size_t page, offset;
 
     for (page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; page++) {
-    memory_page *mapping = &memory_map_ram[ page ];
+    memory_page *mapping = &memory_map_ram[page];
 
     for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
       if (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) continue;

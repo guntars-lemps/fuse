@@ -52,8 +52,8 @@ HWND hwnd_edit = NULL;
 int item_edit, subitem_edit;
 BOOL cancel_edit = FALSE;
 
-void
-menu_machine_pokememory(int action GCC_UNUSED)
+
+void menu_machine_pokememory(int action GCC_UNUSED)
 {
     fuse_emulation_pause();
 
@@ -65,8 +65,8 @@ menu_machine_pokememory(int action GCC_UNUSED)
     fuse_emulation_unpause();
 }
 
-void
-ui_pokemem_selector(const char *filename)
+
+void ui_pokemem_selector(const char *filename)
 {
     fuse_emulation_pause();
 
@@ -345,8 +345,8 @@ edit_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return CallWindowProc(orig_proc, hWnd, msg, wParam, lParam);
 }
 
-void
-initialize_dialog(HWND hwnd_dialog)
+
+void initialize_dialog(HWND hwnd_dialog)
 {
     HWND hwnd_list;
     RECT rect;
@@ -405,8 +405,8 @@ initialize_dialog(HWND hwnd_dialog)
     }
 }
 
-void
-trainer_add(gpointer data, gpointer user_data)
+
+void trainer_add(gpointer data, gpointer user_data)
 {
     trainer_t *trainer = data;
     HWND hwnd_list = (HWND) user_data;
@@ -454,8 +454,8 @@ trainer_add(gpointer data, gpointer user_data)
     SendMessage(hwnd_list, LVM_SETITEMSTATE, i, (LPARAM) &lvi);
 }
 
-void
-create_custom_edit(HWND parent, int item, int subitem)
+
+void create_custom_edit(HWND parent, int item, int subitem)
 {
     RECT subitemrect;
     int width, height;
@@ -499,8 +499,8 @@ create_custom_edit(HWND parent, int item, int subitem)
     cancel_edit = FALSE;
 }
 
-void
-move_custom_edit(HWND hwnd_c_edit, HWND hwnd_parent)
+
+void move_custom_edit(HWND hwnd_c_edit, HWND hwnd_parent)
 {
     HWND hwnd_header;
     RECT header_rect, item_rect;
@@ -531,8 +531,8 @@ move_custom_edit(HWND hwnd_c_edit, HWND hwnd_parent)
     }
 }
 
-void
-pokemem_update_list(void)
+
+void pokemem_update_list(void)
 {
     int i, items;
 
@@ -545,8 +545,8 @@ pokemem_update_list(void)
     }
 }
 
-void
-pokemem_update_trainer(int index)
+
+void pokemem_update_trainer(int index)
 {
     int selected;
     trainer_t *trainer;
@@ -568,8 +568,8 @@ pokemem_update_trainer(int index)
     }
 }
 
-void
-pokemem_add_custom_poke(void)
+
+void pokemem_add_custom_poke(void)
 {
     long b, a, v;
     TCHAR buffer[8];

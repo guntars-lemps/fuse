@@ -42,7 +42,7 @@
 
 /* An 8 KiB memory chunk accessible by the Z80 when /ROMCS is low
  * (mirrored in the second 8 KiB when active) */
-static memory_page usource_memory_map_romcs[ MEMORY_PAGES_IN_8K ];
+static memory_page usource_memory_map_romcs[MEMORY_PAGES_IN_8K];
 static int usource_memory_source;
 
 int usource_active = 0;
@@ -70,9 +70,9 @@ static module_info_t usource_module_info = {
 };
 
 static const periph_port_t usource_ports[] = {
-    { 0xffff, 0x2bae, usource_toggle_read, usource_toggle_write },
+    {0xffff, 0x2bae, usource_toggle_read, usource_toggle_write},
 
-    { 0, 0, NULL, NULL }
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t usource_periph = {
@@ -82,8 +82,8 @@ static const periph_t usource_periph = {
     /* .activate = */ NULL,
 };
 
-static int
-usource_init(void *context)
+
+static int usource_init(void *context)
 {
     int i;
 
@@ -98,14 +98,14 @@ usource_init(void *context)
     return 0;
 }
 
-static void
-usource_end(void)
+
+static void usource_end(void)
 {
     usource_available = 0;
 }
 
-void
-usource_register_startup(void)
+
+void usource_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_MEMORY,
@@ -116,8 +116,8 @@ usource_register_startup(void)
                             usource_end);
 }
 
-static void
-usource_reset(int hard_reset GCC_UNUSED)
+
+static void usource_reset(int hard_reset GCC_UNUSED)
 {
     usource_active = 0;
     usource_available = 0;
@@ -138,16 +138,16 @@ usource_reset(int hard_reset GCC_UNUSED)
     usource_available = 1;
 }
 
-void
-usource_toggle(void)
+
+void usource_toggle(void)
 {
     usource_active = !usource_active;
     machine_current->ram.romcs = usource_active;
     machine_current->memory_map();
 }
 
-static void
-usource_memory_map(void)
+
+static void usource_memory_map(void)
 {
     if (!usource_active) return;
 
@@ -155,8 +155,8 @@ usource_memory_map(void)
     memory_map_romcs_8k(0x2000, usource_memory_map_romcs);
 }
 
-static libspectrum_byte
-usource_toggle_read(libspectrum_word port GCC_UNUSED,
+
+static libspectrum_byte usource_toggle_read(libspectrum_word port GCC_UNUSED,
              libspectrum_byte *attached GCC_UNUSED)
 {
     usource_toggle();
@@ -164,14 +164,14 @@ usource_toggle_read(libspectrum_word port GCC_UNUSED,
     return 0xff;
 }
 
-static void
-usource_toggle_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
+
+static void usource_toggle_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
 {
     usource_toggle();
 }
 
-int
-usource_unittest(void)
+
+int usource_unittest(void)
 {
     int r = 0;
 
@@ -192,14 +192,14 @@ usource_unittest(void)
     return r;
 }
 
-static void
-usource_enabled_snapshot(libspectrum_snap *snap)
+
+static void usource_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.usource = libspectrum_snap_usource_active(snap);
 }
 
-static void
-usource_from_snapshot(libspectrum_snap *snap)
+
+static void usource_from_snapshot(libspectrum_snap *snap)
 {
     if (!libspectrum_snap_usource_active(snap)) return;
 
@@ -218,8 +218,8 @@ usource_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-usource_to_snapshot(libspectrum_snap *snap)
+
+static void usource_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte *buffer;
     size_t rom_length;

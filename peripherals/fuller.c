@@ -49,10 +49,10 @@ static module_info_t fuller_module_info = {
 };
 
 static const periph_port_t fuller_ports[] = {
-    { 0x00ff, 0x003f, ay_registerport_read, ay_registerport_write },
-    { 0x00ff, 0x005f, NULL, ay_dataport_write },
-    { 0x00ff, 0x007f, joystick_fuller_read, NULL },
-    { 0, 0, NULL, NULL },
+    {0x00ff, 0x003f, ay_registerport_read, ay_registerport_write},
+    {0x00ff, 0x005f, NULL, ay_dataport_write},
+    {0x00ff, 0x007f, joystick_fuller_read, NULL},
+    {0, 0, NULL, NULL},
 };
 
 static const periph_t fuller_periph = {
@@ -62,28 +62,28 @@ static const periph_t fuller_periph = {
     /* .activate = */ NULL,
 };
 
-static void
-fuller_enabled_snapshot(libspectrum_snap *snap)
+
+static void fuller_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.fuller = libspectrum_snap_fuller_box_active(snap);
 }
 
-static void
-fuller_from_snapshot(libspectrum_snap *snap)
+
+static void fuller_from_snapshot(libspectrum_snap *snap)
 {
     if (periph_is_active(PERIPH_TYPE_FULLER))
     ay_state_from_snapshot(snap);
 }
 
-static void
-fuller_to_snapshot(libspectrum_snap *snap)
+
+static void fuller_to_snapshot(libspectrum_snap *snap)
 {
     int active = periph_is_active(PERIPH_TYPE_FULLER);
     libspectrum_snap_set_fuller_box_active(snap, active);
 }
 
-static int
-fuller_init(void *context)
+
+static int fuller_init(void *context)
 {
     module_register(&fuller_module_info);
     periph_register(PERIPH_TYPE_FULLER, &fuller_periph);
@@ -91,10 +91,10 @@ fuller_init(void *context)
     return 0;
 }
 
-void
-fuller_register_startup(void)
+
+void fuller_register_startup(void)
 {
-    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_FULLER, dependencies,
                             ARRAY_SIZE(dependencies), fuller_init, NULL,
                             NULL);

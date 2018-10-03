@@ -44,8 +44,8 @@ static GArray *registered_modules;
 
 static GArray *end_functions;
 
-void
-startup_manager_init(void)
+
+void startup_manager_init(void)
 {
     registered_modules =
     g_array_new(FALSE, FALSE, sizeof(registered_module_t));
@@ -53,8 +53,8 @@ startup_manager_init(void)
     g_array_new(FALSE, FALSE, sizeof(startup_manager_end_fn));
 }
 
-void
-startup_manager_end(void)
+
+void startup_manager_end(void)
 {
     g_array_free(registered_modules, TRUE);
     registered_modules = NULL;
@@ -63,8 +63,8 @@ startup_manager_end(void)
     end_functions = NULL;
 }
 
-void
-startup_manager_register(
+
+void startup_manager_register(
     startup_manager_module module, startup_manager_module *dependencies,
     size_t dependency_count, startup_manager_init_fn init_fn,
     void *init_context, startup_manager_end_fn end_fn)
@@ -84,16 +84,16 @@ startup_manager_register(
     g_array_append_val(registered_modules, registered_module);
 }
 
-void
-startup_manager_register_no_dependencies(
+
+void startup_manager_register_no_dependencies(
     startup_manager_module module, startup_manager_init_fn init_fn,
     void *init_context, startup_manager_end_fn end_fn)
 {
     startup_manager_register(module, NULL, 0, init_fn, init_context, end_fn);
 }
 
-static void
-remove_dependency(startup_manager_module module)
+
+static void remove_dependency(startup_manager_module module)
 {
     guint i, j;
 
@@ -114,8 +114,8 @@ remove_dependency(startup_manager_module module)
     }
 }
 
-int
-startup_manager_run(void)
+
+int startup_manager_run(void)
 {
     int progress_made;
     guint i;
@@ -166,8 +166,8 @@ startup_manager_run(void)
     return 0;
 }
 
-void
-startup_manager_run_end(void)
+
+void startup_manager_run_end(void)
 {
     guint i;
 

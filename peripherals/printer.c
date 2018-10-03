@@ -88,8 +88,8 @@ static module_info_t printer_zxp_module_info = {
 };
 
 static const periph_port_t printer_zxp_ports[] = {
-    { 0x0004, 0x0000, printer_zxp_read, printer_zxp_write },
-    { 0, 0, NULL, NULL }
+    {0x0004, 0x0000, printer_zxp_read, printer_zxp_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t printer_zxp_periph = {
@@ -100,8 +100,8 @@ static const periph_t printer_zxp_periph = {
 };
 
 static const periph_port_t printer_zxp_ports_full_decode[] = {
-    { 0x00ff, 0x00fb, printer_zxp_read, printer_zxp_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x00fb, printer_zxp_read, printer_zxp_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t printer_zxp_periph_full_decode = {
@@ -112,8 +112,8 @@ static const periph_t printer_zxp_periph_full_decode = {
 };
 
 static const periph_port_t printer_parallel_ports[] = {
-    { 0xf002, 0x0000, printer_parallel_read, printer_parallel_write },
-    { 0, 0, NULL, NULL }
+    {0xf002, 0x0000, printer_parallel_read, printer_parallel_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t printer_parallel_periph = {
@@ -707,8 +707,8 @@ if (!settings_current.printer)
 parallel_data=b;
 }
 
-static int
-printer_init(void *context)
+
+static int printer_init(void *context)
 {
     printer_graphics_enabled=printer_text_enabled = 1;
     printer_graphics_file=printer_text_file = NULL;
@@ -719,15 +719,15 @@ printer_init(void *context)
     return 0;
 }
 
-static void
-printer_end(void)
+
+static void printer_end(void)
 {
     printer_text_end();
     printer_zxp_end();
 }
 
-void
-printer_register_startup(void)
+
+void printer_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_MACHINE,

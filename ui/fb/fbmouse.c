@@ -50,18 +50,18 @@ static typeof (&zero) gpmflag = &zero;
 #endif
 
 static int mouse_fd = -1;
-static enum { PS2, ImPS2, ExPS2 } mouse_mode = PS2;
+static enum {PS2, ImPS2, ExPS2} mouse_mode = PS2;
 static int packet_size = 3;
 
 static int try_open(const char *);
 static int try_mouse_mode(unsigned char, unsigned char);
 
-int
-fbmouse_init(void)
+
+int fbmouse_init(void)
 {
     int i;
 #ifdef HAVE_GPM_H
-    static Gpm_Connect conn = { ~0/*GPM_MOVE | GPM_DOWN | GPM_UP*/, 0, 0, ~0 };
+    static Gpm_Connect conn = { ~0/*GPM_MOVE | GPM_DOWN | GPM_UP*/, 0, 0, ~0};
 
     libgpm = dlopen("libgpm.so", RTLD_LAZY);
 
@@ -119,8 +119,8 @@ fbmouse_init(void)
     return 0;
 }
 
-int
-fbmouse_end(void)
+
+int fbmouse_end(void)
 {
 #ifdef HAVE_GPM_H
     if (*gpmflag) {
@@ -139,8 +139,8 @@ fbmouse_end(void)
 static void mouse_update_gpm(void);
 static void mouse_update_ps2(void);
 
-void
-mouse_update(void)
+
+void mouse_update(void)
 {
     if (*gpmflag)
     mouse_update_gpm();
@@ -148,8 +148,8 @@ mouse_update(void)
     mouse_update_ps2();
 }
 
-static void
-mouse_update_gpm(void)
+
+static void mouse_update_gpm(void)
 {
     Gpm_Event event;
     int db;
@@ -163,7 +163,7 @@ mouse_update_gpm(void)
     }
 
     for (;;) {
-    struct pollfd ufd = { gpmfd, POLLIN | POLLPRI };
+    struct pollfd ufd = {gpmfd, POLLIN | POLLPRI};
     if (poll(&ufd, 1, 0) < 1) break;
 
     gpm_getevent(&event);
@@ -187,11 +187,11 @@ mouse_update_gpm(void)
  * plain PS/2: e.g. ImPS/2, ExPS/2 but not PS2++.
  */
 #ifdef HAVE_GPM_H
-static void
-mouse_update_ps2(void)
+
+static void mouse_update_ps2(void)
 #else
-void
-mouse_update(void)
+
+void mouse_update(void)
 #endif
 {
     static int btn_state = 0;
@@ -226,8 +226,8 @@ mouse_update(void)
 }
 
 // Try to open the specified device. Return 0 on success.
-static int
-try_open(const char *dev)
+
+static int try_open(const char *dev)
 {
     mouse_fd = open(dev, O_RDWR);
     if (mouse_fd == -1 && errno == EACCES)
@@ -238,12 +238,12 @@ try_open(const char *dev)
 /* Try to set the mouse to the requested mode (100 = ImPS/2, 200 = ExPS/2).
  * Return 0 on success.
  */
-static int
-try_mouse_mode(unsigned char mode, unsigned char response)
+
+static int try_mouse_mode(unsigned char mode, unsigned char response)
 {
-    struct pollfd ufd = { mouse_fd, POLLIN | POLLPRI };
+    struct pollfd ufd = {mouse_fd, POLLIN | POLLPRI};
     int ret = 0;
-    unsigned char buf[] = { 0xF3, 200, 0xF3, mode, 0xF3, 80, 0xF2 };
+    unsigned char buf[] = {0xF3, 200, 0xF3, mode, 0xF3, 80, 0xF2};
     if (write(mouse_fd, buf, sizeof(buf)) < sizeof(buf))
     return 1;
     while (poll(&ufd, 1, 10) == 1)
@@ -251,14 +251,14 @@ try_mouse_mode(unsigned char mode, unsigned char response)
     return ret < 1 || buf[ret - 1] != response;
 }
 
-int
-ui_mouse_grab(int startup GCC_UNUSED)
+
+int ui_mouse_grab(int startup GCC_UNUSED)
 {
     return 1;
 }
 
-int
-ui_mouse_release(int suspend)
+
+int ui_mouse_release(int suspend)
 {
     return !suspend;
 }

@@ -65,8 +65,8 @@ void widget_pokemem_ask_value(trainer_t *trainer);
 int  widget_pokemem_add_custom_poke(void);
 void widget_pokemem_apply_pokes(void);
 
-void
-ui_pokemem_selector(const char *filename)
+
+void ui_pokemem_selector(const char *filename)
 {
     fuse_emulation_pause();
 
@@ -92,8 +92,8 @@ int widget_pokemem_finish(widget_finish_state finished)
     return 0;
 }
 
-int
-widget_pokemem_draw(void *data GCC_UNUSED)
+
+int widget_pokemem_draw(void *data GCC_UNUSED)
 {
     if (!store) {
     pokemem_autoload_pokfile();
@@ -145,8 +145,8 @@ widget_pokemem_calculate_width(void)
     return width;
 }
 
-void
-widget_pokemem_print_list(unsigned int left_edge, unsigned int width)
+
+void widget_pokemem_print_list(unsigned int left_edge, unsigned int width)
 {
     char buf[32];
     unsigned int i, page_limit;
@@ -174,8 +174,8 @@ widget_pokemem_print_list(unsigned int left_edge, unsigned int width)
     widget_display_lines(3, page_size);
 }
 
-int
-widget_pokemem_print_trainer(unsigned int left_edge, unsigned int width,
+
+int widget_pokemem_print_trainer(unsigned int left_edge, unsigned int width,
                               int number, int disabled, int checked,
                               const char *string)
 {
@@ -215,8 +215,8 @@ widget_pokemem_print_trainer(unsigned int left_edge, unsigned int width,
     return 0;
 }
 
-void
-widget_pokemem_update_line(unsigned int left_edge, unsigned int width,
+
+void widget_pokemem_update_line(unsigned int left_edge, unsigned int width,
                             int index)
 {
     char buf[32];
@@ -242,8 +242,8 @@ widget_pokemem_update_line(unsigned int left_edge, unsigned int width,
     widget_down_arrow(left_edge, page_size + 2, WIDGET_COLOUR_FOREGROUND);
 }
 
-void
-widget_pokemem_keyhandler(input_key key)
+
+void widget_pokemem_keyhandler(input_key key)
 {
     int new_selected;
 
@@ -328,8 +328,8 @@ widget_pokemem_keyhandler(input_key key)
     }
 }
 
-void
-widget_pokemem_store_new(void)
+
+void widget_pokemem_store_new(void)
 {
     if (!trainer_list) return;
 
@@ -353,8 +353,8 @@ widget_pokemem_store_new(void)
     }
 }
 
-void
-widget_pokemem_store_add(gpointer data, gpointer user_data GCC_UNUSED)
+
+void widget_pokemem_store_add(gpointer data, gpointer user_data GCC_UNUSED)
 {
     trainer_t *trainer = data;
     entry_t entry;
@@ -367,8 +367,8 @@ widget_pokemem_store_add(gpointer data, gpointer user_data GCC_UNUSED)
     g_array_append_vals(store, &entry, 1);
 }
 
-void
-widget_pokemem_apply_pokes(void)
+
+void widget_pokemem_apply_pokes(void)
 {
     entry_t *entry;
     trainer_t *trainer;
@@ -388,8 +388,8 @@ widget_pokemem_apply_pokes(void)
     }
 }
 
-int
-widget_pokemem_trainer_click(int index)
+
+int widget_pokemem_trainer_click(int index)
 {
     entry_t *entry;
     trainer_t *trainer;
@@ -413,8 +413,8 @@ widget_pokemem_trainer_click(int index)
     return 0;
 }
 
-void
-widget_pokemem_ask_value(trainer_t *trainer)
+
+void widget_pokemem_ask_value(trainer_t *trainer)
 {
     int value;
     widget_text_t text_data;
@@ -431,8 +431,8 @@ widget_pokemem_ask_value(trainer_t *trainer)
     }
 }
 
-int
-widget_pokemem_add_custom_poke(void)
+
+int widget_pokemem_add_custom_poke(void)
 {
     long b, a, v;
     trainer_t *trainer;

@@ -37,19 +37,19 @@ typedef enum {
     WII_JOYSTICK_CLASSIC, // classic controller
 } WiiJoystickConfig;
 
-int
-ui_joystick_init(void)
+
+int ui_joystick_init(void)
 {
     return 4;
 }
 
-void
-ui_joystick_end(void)
+
+void ui_joystick_end(void)
 {
 }
 
-void
-ui_joystick_poll(void)
+
+void ui_joystick_poll(void)
 {
     input_event_t fuse_event;
     int ctrlr; // Which controller

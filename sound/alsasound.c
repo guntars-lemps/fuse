@@ -55,16 +55,16 @@ static snd_pcm_uframes_t exact_periodsize, exact_bsize;
 
 static snd_output_t *output = NULL;
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
 // Stop PCM device and drop pending frames
     snd_pcm_drop(pcm_handle);
     snd_pcm_close(pcm_handle);
 }
 
-int
-sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
+
+int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
     unsigned int exact_rate, periods;
     unsigned int val, n;
@@ -362,8 +362,8 @@ sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 
 
 
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     int ret = 0;
     len /= ch; // now in frames

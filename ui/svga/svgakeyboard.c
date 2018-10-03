@@ -58,8 +58,8 @@ static void svgakeyboard_keystroke(int scancode, int press)  {
     }
 }
 
-static int
-svgakeyboard_keypress(int keysym)
+
+static int svgakeyboard_keypress(int keysym)
 {
     input_key fuse_keysym;
     input_event_t fuse_event;
@@ -75,8 +75,8 @@ svgakeyboard_keypress(int keysym)
     return input_event(&fuse_event);
 }
 
-static int
-svgakeyboard_keyrelease(int keysym)
+
+static int svgakeyboard_keyrelease(int keysym)
 {
     input_key fuse_keysym;
     input_event_t fuse_event;

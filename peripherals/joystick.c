@@ -46,19 +46,19 @@ int joysticks_supported = 0;
    as the ordering of buttons in joystick.h:joystick_button (left,
    right, up, down, fire) */
 static const libspectrum_byte kempston_mask[5] =
-    { 0x02, 0x01, 0x08, 0x04, 0x10 };
+    {0x02, 0x01, 0x08, 0x04, 0x10};
 static const libspectrum_byte timex_mask[5] =
-    { 0x04, 0x08, 0x01, 0x02, 0x80 };
+    {0x04, 0x08, 0x01, 0x02, 0x80};
 
 // The keys used by the Cursor joystick
 static const keyboard_key_name cursor_key[5] =
-    { KEYBOARD_5, KEYBOARD_8, KEYBOARD_7, KEYBOARD_6, KEYBOARD_0 };
+    {KEYBOARD_5, KEYBOARD_8, KEYBOARD_7, KEYBOARD_6, KEYBOARD_0};
 
 // The keys used by the two Sinclair joysticks
 static const keyboard_key_name sinclair1_key[5] =
-    { KEYBOARD_6, KEYBOARD_7, KEYBOARD_9, KEYBOARD_8, KEYBOARD_0 };
+    {KEYBOARD_6, KEYBOARD_7, KEYBOARD_9, KEYBOARD_8, KEYBOARD_0};
 static const keyboard_key_name sinclair2_key[5] =
-    { KEYBOARD_1, KEYBOARD_2, KEYBOARD_4, KEYBOARD_3, KEYBOARD_5 };
+    {KEYBOARD_1, KEYBOARD_2, KEYBOARD_4, KEYBOARD_3, KEYBOARD_5};
 
 // The current values for the joysticks we can emulate
 static libspectrum_byte kempston_value;
@@ -68,7 +68,7 @@ static libspectrum_byte fuller_value;
 
 /* The names of the joysticks we can emulate. Order must correspond to
    that of joystick.h:joystick_type_t */
-const char *joystick_name[ JOYSTICK_TYPE_COUNT ] = {
+const char *joystick_name[JOYSTICK_TYPE_COUNT] = {
     "None",
     "Cursor",
     "Kempston",
@@ -77,7 +77,7 @@ const char *joystick_name[ JOYSTICK_TYPE_COUNT ] = {
     "Fuller"
 };
 
-const char *joystick_connection[ JOYSTICK_CONN_COUNT ] = {
+const char *joystick_connection[JOYSTICK_CONN_COUNT] = {
     "None",
     "Keyboard",
     "Joystick 1",
@@ -98,8 +98,8 @@ static module_info_t joystick_module_info = {
 };
 
 static const periph_port_t kempston_strict_decoding[] = {
-    { 0x00e0, 0x0000, joystick_kempston_read, NULL },
-    { 0, 0, NULL, NULL }
+    {0x00e0, 0x0000, joystick_kempston_read, NULL},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t kempston_strict_periph = {
@@ -110,8 +110,8 @@ static const periph_t kempston_strict_periph = {
 };
 
 static const periph_port_t kempston_loose_decoding[] = {
-    { 0x0020, 0x0000, joystick_kempston_read, NULL },
-    { 0, 0, NULL, NULL }
+    {0x0020, 0x0000, joystick_kempston_read, NULL},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t kempston_loose_periph = {
@@ -123,8 +123,8 @@ static const periph_t kempston_loose_periph = {
 
 // Init/shutdown functions. Errors aren't important here
 
-int
-joystick_init(void *context)
+
+int joystick_init(void *context)
 {
     joysticks_supported = ui_joystick_init();
     kempston_value = timex1_value = timex2_value = 0x00;
@@ -137,14 +137,14 @@ joystick_init(void *context)
     return 0;
 }
 
-void
-joystick_end(void)
+
+void joystick_end(void)
 {
     ui_joystick_end();
 }
 
-void
-joystick_register_startup(void)
+
+void joystick_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_LIBSPECTRUM,
@@ -155,8 +155,8 @@ joystick_register_startup(void)
                             joystick_end, NULL);
 }
 
-int
-joystick_press(int which, joystick_button button, int press)
+
+int joystick_press(int which, joystick_button button, int press)
 {
     joystick_type_t type;
 
@@ -175,57 +175,57 @@ joystick_press(int which, joystick_button button, int press)
 
     case JOYSTICK_TYPE_CURSOR:
     if (press) {
-      keyboard_press(cursor_key[ button ]);
+      keyboard_press(cursor_key[button]);
     } else {
-      keyboard_release(cursor_key[ button ]);
+      keyboard_release(cursor_key[button]);
     }
     return 1;
 
     case JOYSTICK_TYPE_KEMPSTON:
     if (press) {
-      kempston_value |=  kempston_mask[ button ];
+      kempston_value |=  kempston_mask[button];
     } else {
-      kempston_value &= ~kempston_mask[ button ];
+      kempston_value &= ~kempston_mask[button];
     }
     return 1;
 
     case JOYSTICK_TYPE_SINCLAIR_1:
     if (press) {
-      keyboard_press(sinclair1_key[ button ]);
+      keyboard_press(sinclair1_key[button]);
     } else {
-      keyboard_release(sinclair1_key[ button ]);
+      keyboard_release(sinclair1_key[button]);
     }
     return 1;
 
     case JOYSTICK_TYPE_SINCLAIR_2:
     if (press) {
-      keyboard_press(sinclair2_key[ button ]);
+      keyboard_press(sinclair2_key[button]);
     } else {
-      keyboard_release(sinclair2_key[ button ]);
+      keyboard_release(sinclair2_key[button]);
     }
     return 1;
 
     case JOYSTICK_TYPE_TIMEX_1:
     if (press) {
-      timex1_value |=  timex_mask[ button ];
+      timex1_value |=  timex_mask[button];
     } else {
-      timex1_value &= ~timex_mask[ button ];
+      timex1_value &= ~timex_mask[button];
     }
     return 1;
 
     case JOYSTICK_TYPE_TIMEX_2:
     if (press) {
-      timex2_value |=  timex_mask[ button ];
+      timex2_value |=  timex_mask[button];
     } else {
-      timex2_value &= ~timex_mask[ button ];
+      timex2_value &= ~timex_mask[button];
     }
     return 1;
 
     case JOYSTICK_TYPE_FULLER:
     if (press) {
-      fuller_value &= ~timex_mask[ button ];
+      fuller_value &= ~timex_mask[button];
     } else {
-      fuller_value |=  timex_mask[ button ];
+      fuller_value |=  timex_mask[button];
     }
     return 1;
 
@@ -239,28 +239,28 @@ joystick_press(int which, joystick_button button, int press)
 
 // Read functions for specific interfaces
 
-libspectrum_byte
-joystick_kempston_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte joystick_kempston_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
     return kempston_value;
 }
 
-libspectrum_byte
-joystick_timex_read(libspectrum_word port GCC_UNUSED, libspectrum_byte which)
+
+libspectrum_byte joystick_timex_read(libspectrum_word port GCC_UNUSED, libspectrum_byte which)
 {
     return which ? timex2_value : timex1_value;
 }
 
-libspectrum_byte
-joystick_fuller_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte joystick_fuller_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
     return fuller_value;
 }
 
-static void
-joystick_from_snapshot(libspectrum_snap *snap)
+
+static void joystick_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
     size_t num_joysticks = libspectrum_snap_joystick_active_count(snap);
@@ -323,8 +323,8 @@ joystick_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-add_joystick(libspectrum_snap *snap, joystick_type_t fuse_type, int inputs)
+
+static void add_joystick(libspectrum_snap *snap, joystick_type_t fuse_type, int inputs)
 {
     size_t i;
     size_t num_joysticks = libspectrum_snap_joystick_active_count(snap);
@@ -371,8 +371,8 @@ add_joystick(libspectrum_snap *snap, joystick_type_t fuse_type, int inputs)
     libspectrum_snap_set_joystick_active_count(snap, num_joysticks + 1);
 }
 
-static void
-joystick_to_snapshot(libspectrum_snap *snap)
+
+static void joystick_to_snapshot(libspectrum_snap *snap)
 {
     if (settings_current.joy_kempston) {
     add_joystick(snap, JOYSTICK_TYPE_KEMPSTON,

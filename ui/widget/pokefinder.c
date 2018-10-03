@@ -38,8 +38,8 @@
 #define FEW_ENOUGH() (pokefinder_count && pokefinder_count <= MAX_POSSIBLE)
 
 static int value = 0;
-static int possible_page[ MAX_POSSIBLE ];
-static libspectrum_word possible_offset[ MAX_POSSIBLE ];
+static int possible_page[MAX_POSSIBLE];
+static libspectrum_word possible_offset[MAX_POSSIBLE];
 static int selected = 0;
 
 static void update_possible(void);
@@ -48,8 +48,8 @@ static void display_value(void);
 
 static const char * const title = "Poke finder";
 
-int
-widget_pokefinder_draw(void *data)
+
+int widget_pokefinder_draw(void *data)
 {
     widget_dialog_with_border(1, 2, 30, 12);
     widget_printstring(10, 16, WIDGET_COLOUR_TITLE, title);
@@ -69,8 +69,8 @@ widget_pokefinder_draw(void *data)
     return 0;
 }
 
-static void
-update_possible(void)
+
+static void update_possible(void)
 {
     size_t page, offset, bank, bank_offset, i = 0;
 
@@ -95,10 +95,10 @@ update_possible(void)
     }
 }
 
-static void
-display_possible(void)
+
+static void display_possible(void)
 {
-    char buf[ 32 ];
+    char buf[32];
 
     widget_rectangle(96,  24,  48,  8, WIDGET_COLOUR_BACKGROUND);
     widget_rectangle(16,  48, 128, 32, WIDGET_COLOUR_BACKGROUND);
@@ -134,8 +134,8 @@ display_possible(void)
     widget_display_lines(3, 10);
 }
 
-static void
-display_value(void)
+
+static void display_value(void)
 {
     char buf[16];
 
@@ -145,8 +145,8 @@ display_value(void)
     widget_display_lines(4, 1);
 }
 
-static void
-scroll(int step)
+
+static void scroll(int step)
 {
     if (!FEW_ENOUGH()) return;
 
@@ -159,8 +159,8 @@ scroll(int step)
     display_possible();
 }
 
-void
-widget_pokefinder_keyhandler(input_key key)
+
+void widget_pokefinder_keyhandler(input_key key)
 {
     switch (key) {
     case INPUT_KEY_Escape: // Close widget

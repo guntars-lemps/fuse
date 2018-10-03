@@ -116,8 +116,8 @@ static void rzx_sentinel(libspectrum_dword ts, int type,
 
 static int sentinel_event;
 
-static int
-rzx_init(void *context)
+
+static int rzx_init(void *context)
 {
     rzx_recording = rzx_playback = 0;
 
@@ -132,8 +132,8 @@ rzx_init(void *context)
     return 0;
 }
 
-static int
-rzx_add_snap(libspectrum_rzx *to_rzx, int automatic)
+
+static int rzx_add_snap(libspectrum_rzx *to_rzx, int automatic)
 {
     int error;
     libspectrum_snap *snap = libspectrum_snap_alloc();
@@ -303,8 +303,8 @@ int rzx_start_playback(const char *filename, int check_snapshot)
     return 0;
 }
 
-int
-rzx_start_playback_from_buffer(const unsigned char *buffer, size_t length)
+
+int rzx_start_playback_from_buffer(const unsigned char *buffer, size_t length)
 {
     int error;
     libspectrum_snap* snap;
@@ -334,8 +334,8 @@ rzx_start_playback_from_buffer(const unsigned char *buffer, size_t length)
     return 0;
 }
 
-static int
-start_playback(libspectrum_rzx *from_rzx)
+
+static int start_playback(libspectrum_rzx *from_rzx)
 {
     int error;
     libspectrum_snap *snap;
@@ -410,8 +410,8 @@ int rzx_stop_playback(int add_interrupt)
     return 0;
 }
 
-static void
-start_recording(libspectrum_rzx *to_rzx, int competition_mode)
+
+static void start_recording(libspectrum_rzx *to_rzx, int competition_mode)
 {
     libspectrum_rzx_start_input(to_rzx, tstates);
 
@@ -440,8 +440,8 @@ start_recording(libspectrum_rzx *to_rzx, int competition_mode)
     }
 }
 
-int
-rzx_continue_recording(const char *filename)
+
+int rzx_continue_recording(const char *filename)
 {
     utils_file file;
     libspectrum_error libspec_error; int error;
@@ -484,8 +484,8 @@ rzx_continue_recording(const char *filename)
     return 0;
 }
 
-int
-rzx_finalise_recording(const char *filename)
+
+int rzx_finalise_recording(const char *filename)
 {
     libspectrum_byte *buffer; size_t length;
     libspectrum_error libspec_error; int error;
@@ -550,8 +550,8 @@ typedef struct prune_info_t {
     size_t frames;
 } prune_info_t;
 
-static void
-autosave_prune(void)
+
+static void autosave_prune(void)
 {
     GArray *autosaves = g_array_new(FALSE, FALSE, sizeof(prune_info_t));
     libspectrum_rzx_iterator it;
@@ -570,7 +570,7 @@ autosave_prune(void)
 
     case LIBSPECTRUM_RZX_SNAPSHOT_BLOCK:
       if (libspectrum_rzx_iterator_snap_is_automatic(it)) {
-        prune_info_t info = { it, frames };
+        prune_info_t info = {it, frames};
     g_array_append_val(autosaves, info);
       }
       break;
@@ -602,8 +602,8 @@ autosave_prune(void)
     g_array_free(autosaves, TRUE);
 }
 
-static void
-autosave_frame(void)
+
+static void autosave_frame(void)
 {
     if (++autosave_frame_count % AUTOSAVE_INTERVAL) return;
 
@@ -614,8 +614,8 @@ autosave_frame(void)
     autosave_prune();
 }
 
-static void
-autosave_reset(void)
+
+static void autosave_reset(void)
 {
     libspectrum_rzx_iterator it;
     size_t frames = 0;
@@ -739,20 +739,20 @@ int rzx_store_byte(libspectrum_byte value)
     rzx_in_allocated = new_allocated;
     }
 
-    rzx_in_bytes[ rzx_in_count++ ] = value;
+    rzx_in_bytes[rzx_in_count++ ] = value;
 
     return 0;
 }
 
-static void
-rzx_end(void)
+
+static void rzx_end(void)
 {
     if (rzx_recording) rzx_stop_recording();
     if (rzx_playback) rzx_stop_playback(0);
 }
 
-void
-rzx_register_startup(void)
+
+void rzx_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -804,8 +804,8 @@ get_rollback_list(libspectrum_rzx *from_rzx)
     return rollback_points;
 }
 
-static int
-start_after_rollback(libspectrum_snap *snap)
+
+static int start_after_rollback(libspectrum_snap *snap)
 {
     int error;
 
@@ -823,8 +823,8 @@ start_after_rollback(libspectrum_snap *snap)
     return 0;
 }
 
-int
-rzx_rollback(void)
+
+int rzx_rollback(void)
 {
     libspectrum_snap *snap;
     int error;
@@ -838,8 +838,8 @@ rzx_rollback(void)
     return 0;
 }
 
-int
-rzx_rollback_to(void)
+
+int rzx_rollback_to(void)
 {
     GSList *rollback_points;
     libspectrum_snap *snap;
@@ -860,8 +860,8 @@ rzx_rollback_to(void)
     return 0;
 }
 
-static void
-rzx_sentinel(libspectrum_dword ts GCC_UNUSED, int type GCC_UNUSED,
+
+static void rzx_sentinel(libspectrum_dword ts GCC_UNUSED, int type GCC_UNUSED,
               void *user_data GCC_UNUSED)
 {
     if (!sentinel_warning) {

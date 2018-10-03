@@ -38,7 +38,7 @@
 #include "ui/uidisplay.h"
 #include "utils.h"
 
-static int scaler_supported[ SCALER_NUM ] = {0};
+static int scaler_supported[SCALER_NUM] = {0};
 
 int scalers_registered = 0;
 
@@ -74,45 +74,45 @@ static void expand_dotmatrix(int *x, int *y, int *w, int *h,
    in the same order as scaler.h:scaler_type */
 static const struct scaler_info available_scalers[] = {
 
-    { "Timex Half (smoothed)", "half", SCALER_FLAGS_NONE,           0.5,
+    {"Timex Half (smoothed)", "half", SCALER_FLAGS_NONE,           0.5,
     scaler_Half_16,       scaler_Half_32,       NULL                },
-    { "Timex Half (skipping)", "halfskip", SCALER_FLAGS_NONE,    0.5,
+    {"Timex Half (skipping)", "halfskip", SCALER_FLAGS_NONE,    0.5,
     scaler_HalfSkip_16,   scaler_HalfSkip_32,   NULL                },
-    { "Normal",           "normal",     SCALER_FLAGS_NONE,           1.0,
+    {"Normal",           "normal",     SCALER_FLAGS_NONE,           1.0,
     scaler_Normal1x_16,   scaler_Normal1x_32,   NULL                },
-    { "Double size",     "2x",         SCALER_FLAGS_NONE,           2.0,
+    {"Double size",     "2x",         SCALER_FLAGS_NONE,           2.0,
     scaler_Normal2x_16,   scaler_Normal2x_32,   NULL                },
-    { "Triple size",     "3x",         SCALER_FLAGS_NONE,           3.0,
+    {"Triple size",     "3x",         SCALER_FLAGS_NONE,           3.0,
     scaler_Normal3x_16,   scaler_Normal3x_32,   NULL            },
-    { "2xSaI",           "2xsai",         SCALER_FLAGS_EXPAND,      2.0,
+    {"2xSaI",           "2xsai",         SCALER_FLAGS_EXPAND,      2.0,
     scaler_2xSaI_16,      scaler_2xSaI_32,      expand_sai          },
-    { "Super 2xSaI",     "super2xsai", SCALER_FLAGS_EXPAND,      2.0,
+    {"Super 2xSaI",     "super2xsai", SCALER_FLAGS_EXPAND,      2.0,
     scaler_Super2xSaI_16, scaler_Super2xSaI_32, expand_sai          },
-    { "SuperEagle",      "supereagle", SCALER_FLAGS_EXPAND,      2.0,
+    {"SuperEagle",      "supereagle", SCALER_FLAGS_EXPAND,      2.0,
     scaler_SuperEagle_16, scaler_SuperEagle_32, expand_sai          },
-    { "AdvMAME 2x",      "advmame2x",  SCALER_FLAGS_EXPAND,      2.0,
+    {"AdvMAME 2x",      "advmame2x",  SCALER_FLAGS_EXPAND,      2.0,
     scaler_AdvMame2x_16,  scaler_AdvMame2x_32,  expand_1            },
-    { "AdvMAME 3x",      "advmame3x",  SCALER_FLAGS_EXPAND,      3.0,
+    {"AdvMAME 3x",      "advmame3x",  SCALER_FLAGS_EXPAND,      3.0,
     scaler_AdvMame3x_16,  scaler_AdvMame3x_32,  expand_1            },
-    { "TV 2x",           "tv2x",         SCALER_FLAGS_NONE,        2.0,
+    {"TV 2x",           "tv2x",         SCALER_FLAGS_NONE,        2.0,
     scaler_TV2x_16,       scaler_TV2x_32,       NULL                },
-    { "TV 3x",           "tv3x",         SCALER_FLAGS_NONE,        3.0,
+    {"TV 3x",           "tv3x",         SCALER_FLAGS_NONE,        3.0,
     scaler_TV3x_16,       scaler_TV3x_32,       NULL                },
-    { "Timex TV",           "timextv",    SCALER_FLAGS_NONE,        1.0,
+    {"Timex TV",           "timextv",    SCALER_FLAGS_NONE,        1.0,
     scaler_TimexTV_16,    scaler_TimexTV_32,    NULL                },
-    { "Dot Matrix",      "dotmatrix",  SCALER_FLAGS_EXPAND,      2.0,
+    {"Dot Matrix",      "dotmatrix",  SCALER_FLAGS_EXPAND,      2.0,
     scaler_DotMatrix_16,  scaler_DotMatrix_32,  expand_dotmatrix    },
-    { "Timex 1.5x",      "timex15x",   SCALER_FLAGS_NONE,        1.5,
+    {"Timex 1.5x",      "timex15x",   SCALER_FLAGS_NONE,        1.5,
     scaler_Timex1_5x_16,  scaler_Timex1_5x_32,  NULL                },
-    { "PAL TV",           "paltv",     SCALER_FLAGS_EXPAND,       1.0,
+    {"PAL TV",           "paltv",     SCALER_FLAGS_EXPAND,       1.0,
     scaler_PalTV_16,        scaler_PalTV_32,      expand_pal1         },
-    { "PAL TV 2x",       "paltv2x",   SCALER_FLAGS_EXPAND,       2.0,
+    {"PAL TV 2x",       "paltv2x",   SCALER_FLAGS_EXPAND,       2.0,
     scaler_PalTV2x_16,    scaler_PalTV2x_32,    expand_pal          },
-    { "PAL TV 3x",       "paltv3x",   SCALER_FLAGS_EXPAND,       3.0,
+    {"PAL TV 3x",       "paltv3x",   SCALER_FLAGS_EXPAND,       3.0,
     scaler_PalTV3x_16,    scaler_PalTV3x_32,    expand_pal          },
-    { "HQ 2x",           "hq2x",      SCALER_FLAGS_EXPAND,       2.0,
+    {"HQ 2x",           "hq2x",      SCALER_FLAGS_EXPAND,       2.0,
     scaler_HQ2x_16,       scaler_HQ2x_32,       expand_1            },
-    { "HQ 3x",           "hq3x",      SCALER_FLAGS_EXPAND,       3.0,
+    {"HQ 3x",           "hq3x",      SCALER_FLAGS_EXPAND,       3.0,
     scaler_HQ3x_16,       scaler_HQ3x_32,       expand_1            },
 };
 
@@ -121,8 +121,8 @@ ScalerProc *scaler_proc16, *scaler_proc32;
 scaler_flags_t scaler_flags;
 scaler_expand_fn *scaler_expander;
 
-int
-scaler_select_scaler(scaler_type scaler)
+
+int scaler_select_scaler(scaler_type scaler)
 {
     if (!scaler_is_supported(scaler)) return 1;
 
@@ -142,8 +142,8 @@ scaler_select_scaler(scaler_type scaler)
     return uidisplay_hotswap_gfx_mode();
 }
 
-int
-scaler_select_id(const char *id)
+
+int scaler_select_id(const char *id)
 {
     scaler_type i;
 
@@ -158,23 +158,23 @@ scaler_select_id(const char *id)
     return 1;
 }
 
-void
-scaler_register_clear(void)
+
+void scaler_register_clear(void)
 {
     scalers_registered = 0;
     memset(scaler_supported, 0, sizeof(int) * SCALER_NUM);
 }
 
-void
-scaler_register(scaler_type scaler)
+
+void scaler_register(scaler_type scaler)
 {
     if (scaler_supported[scaler] == 1) return;
     scalers_registered++;
     scaler_supported[scaler] = 1;
 }
 
-int
-scaler_is_supported(scaler_type scaler)
+
+int scaler_is_supported(scaler_type scaler)
 {
     return (scaler >= SCALER_NUM ? 0 : scaler_supported[scaler]);
 }
@@ -221,31 +221,31 @@ scaler_get_expander(scaler_type scaler)
 static inline void
 clip(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
-    if (*x < 0) { *w += *x; *x=0; }
-    if (*y < 0) { *h += *y; *y=0; }
+    if (*x < 0) { *w += *x; *x=0;}
+    if (*y < 0) { *h += *y; *y=0;}
     if (*w > image_width - *x) *w = image_width - *x;
     if (*h > image_height - *y) *h = image_height - *y;
 }
 
 // Expand one pixel in all directions
-static void
-expand_1(int *x, int *y, int *w, int *h, int image_width, int image_height)
+
+static void expand_1(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
     (*x)--; (*y)--; (*w)+=2; (*h)+=2;
     clip(x, y, w, h, image_width, image_height);
 }
 
 // Expand two pixels up and left and one pixel down and right
-static void
-expand_sai(int *x, int *y, int *w, int *h, int image_width, int image_height)
+
+static void expand_sai(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
     (*x)-=2; (*y)-=2; (*w)+=3; (*h)+=3;
     clip(x, y, w, h, image_width, image_height);
 }
 
 // Expand two pixels left and right
-static void
-expand_pal1(int *x, int *y, int *w, int *h, int image_width, int image_height)
+
+static void expand_pal1(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
     int w_mod = (*w) % 2;
     (*x)-=2; (*w)+=4;
@@ -254,16 +254,16 @@ expand_pal1(int *x, int *y, int *w, int *h, int image_width, int image_height)
 }
 
 // Expand one pixels left and right
-static void
-expand_pal(int *x, int *y, int *w, int *h, int image_width, int image_height)
+
+static void expand_pal(int *x, int *y, int *w, int *h, int image_width, int image_height)
 {
     (*x)-=1; (*w)+=2;
     clip(x, y, w, h, image_width, image_height);
 }
 
 // Expand to a even y co-ord
-static void
-expand_dotmatrix(int *x GCC_UNUSED, int *y GCC_UNUSED, int *w GCC_UNUSED,
+
+static void expand_dotmatrix(int *x GCC_UNUSED, int *y GCC_UNUSED, int *w GCC_UNUSED,
           int *h, int image_width GCC_UNUSED,
           int image_height GCC_UNUSED)
 {

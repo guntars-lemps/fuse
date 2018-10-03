@@ -56,8 +56,8 @@ static module_info_t pentagon_module_info = {
 
 static int pentagon_reset(void);
 
-libspectrum_byte
-pentagon_select_1f_read(libspectrum_word port, libspectrum_byte *attached)
+
+libspectrum_byte pentagon_select_1f_read(libspectrum_word port, libspectrum_byte *attached)
 {
     libspectrum_byte data;
     libspectrum_byte tmpattached = 0x00;
@@ -76,8 +76,8 @@ pentagon_select_1f_read(libspectrum_word port, libspectrum_byte *attached)
     return 0xff;
 }
 
-libspectrum_byte
-pentagon_select_ff_read(libspectrum_word port, libspectrum_byte *attached)
+
+libspectrum_byte pentagon_select_ff_read(libspectrum_word port, libspectrum_byte *attached)
 {
     libspectrum_byte data;
     libspectrum_byte tmpattached = 0x00;
@@ -92,15 +92,15 @@ pentagon_select_ff_read(libspectrum_word port, libspectrum_byte *attached)
     return data;
 }
 
-int
-pentagon_port_from_ula(libspectrum_word port GCC_UNUSED)
+
+int pentagon_port_from_ula(libspectrum_word port GCC_UNUSED)
 {
     // No contended ports
     return 0;
 }
 
-int
-pentagon_init(fuse_machine_info *machine)
+
+int pentagon_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_PENT;
     machine->id = "pentagon";
@@ -124,8 +124,8 @@ pentagon_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-pentagon_reset(void)
+
+static int pentagon_reset(void)
 {
     int error;
 
@@ -164,8 +164,8 @@ pentagon_reset(void)
     return 0;
 }
 
-static void
-pentagon_from_snapshot(libspectrum_snap *snap)
+
+static void pentagon_from_snapshot(libspectrum_snap *snap)
 {
     /* During init we set beta_active to true unconditionally to bootstrap into
      the TR-DOS ROM, but during snapshot loading we should repect the paging

@@ -41,8 +41,8 @@ static char *filename = NULL;
 static const char * const default_filename = "fuse-sound.ao";
 static int first_init = 1;
 
-static void
-driver_error(void)
+
+static void driver_error(void)
 {
     switch (errno) {
     case AO_ENODRIVER:
@@ -78,8 +78,8 @@ driver_error(void)
     }
 }
 
-static int
-parse_driver_options(const char *device, int *driver_id, ao_option **options)
+
+static int parse_driver_options(const char *device, int *driver_id, ao_option **options)
 {
     char *mutable, *option, *key, *value;
 
@@ -122,13 +122,13 @@ parse_driver_options(const char *device, int *driver_id, ao_option **options)
     return 0;
 }
 
-int
-sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
+
+int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
     ao_option *options = NULL;
     ao_info *driver_info = NULL;
     int driver_id = -1;
-    static ao_sample_format format = { .bits = 0 };
+    static ao_sample_format format = { .bits = 0};
 
     // To prevent recursive errors
     static int sound_lowlevel_init_in_progress = 0;
@@ -199,16 +199,16 @@ sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     return 0;
 }
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
     if (filename != default_filename) libspectrum_free(filename);
     ao_close(dev_for_ao);
     ao_shutdown();
 }
 
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     static signed char buf8[4096];
     void *data8 = data;

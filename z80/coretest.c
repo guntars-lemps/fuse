@@ -62,7 +62,7 @@ libspectrum_dword tstates;
 libspectrum_dword event_next_event;
 
 // 64Kb of RAM
-static libspectrum_byte initial_memory[ 0x10000 ], memory[ 0x10000 ];
+static libspectrum_byte initial_memory[0x10000], memory[0x10000];
 
 libspectrum_byte readbyte(libspectrum_word address);
 libspectrum_byte readbyte_internal(libspectrum_word address);
@@ -76,8 +76,8 @@ static int read_test(FILE *f, libspectrum_dword *end_tstates);
 static void dump_z80_state(void);
 static void dump_memory_state(void);
 
-int
-main(int argc, char **argv)
+
+int main(int argc, char **argv)
 {
     FILE *f;
 
@@ -115,58 +115,58 @@ main(int argc, char **argv)
     return 0;
 }
 
-libspectrum_byte
-readbyte(libspectrum_word address)
+
+libspectrum_byte readbyte(libspectrum_word address)
 {
     printf("%5d MC %04x\n", tstates, address);
     tstates += 3;
     return readbyte_internal(address);
 }
 
-libspectrum_byte
-readbyte_internal(libspectrum_word address)
+
+libspectrum_byte readbyte_internal(libspectrum_word address)
 {
-    printf("%5d MR %04x %02x\n", tstates, address, memory[ address ]);
-    return memory[ address ];
+    printf("%5d MR %04x %02x\n", tstates, address, memory[address]);
+    return memory[address];
 }
 
-void
-writebyte(libspectrum_word address, libspectrum_byte b)
+
+void writebyte(libspectrum_word address, libspectrum_byte b)
 {
     printf("%5d MC %04x\n", tstates, address);
     tstates += 3;
     writebyte_internal(address, b);
 }
 
-void
-writebyte_internal(libspectrum_word address, libspectrum_byte b)
+
+void writebyte_internal(libspectrum_word address, libspectrum_byte b)
 {
     printf("%5d MW %04x %02x\n", tstates, address, b);
-    memory[ address ] = b;
+    memory[address] = b;
 }
 
-void
-contend_read(libspectrum_word address, libspectrum_dword time)
+
+void contend_read(libspectrum_word address, libspectrum_dword time)
 {
     printf("%5d MC %04x\n", tstates, address);
     tstates += time;
 }
 
-void
-contend_read_no_mreq(libspectrum_word address, libspectrum_dword time)
+
+void contend_read_no_mreq(libspectrum_word address, libspectrum_dword time)
 {
     contend_read(address, time);
 }
 
-void
-contend_write_no_mreq(libspectrum_word address, libspectrum_dword time)
+
+void contend_write_no_mreq(libspectrum_word address, libspectrum_dword time)
 {
     printf("%5d MC %04x\n", tstates, address);
     tstates += time;
 }
 
-static void
-contend_port_preio(libspectrum_word port)
+
+static void contend_port_preio(libspectrum_word port)
 {
     if ((port & 0xc000) == 0x4000) {
     printf("%5d PC %04x\n", tstates, port);
@@ -175,8 +175,8 @@ contend_port_preio(libspectrum_word port)
     tstates++;
 }
 
-static void
-contend_port_postio(libspectrum_word port)
+
+static void contend_port_postio(libspectrum_word port)
 {
     if (port & 0x0001) {
 
@@ -195,8 +195,8 @@ contend_port_postio(libspectrum_word port)
     }
 }
 
-libspectrum_byte
-readport(libspectrum_word port)
+
+libspectrum_byte readport(libspectrum_word port)
 {
     libspectrum_byte r = port >> 8;
 
@@ -209,8 +209,8 @@ readport(libspectrum_word port)
     return r;
 }
 
-void
-writeport(libspectrum_word port, libspectrum_byte b)
+
+void writeport(libspectrum_word port, libspectrum_byte b)
 {
     contend_port_preio(port);
 
@@ -219,16 +219,16 @@ writeport(libspectrum_word port, libspectrum_byte b)
     contend_port_postio(port);
 }
 
-static int
-run_test(FILE *f)
+
+static int run_test(FILE *f)
 {
     size_t i;
 
     // Get ourselves into a known state
     z80_reset(1); tstates = 0;
     for (i = 0; i < 0x10000; i += 4) {
-    memory[ i     ] = 0xde; memory[ i + 1 ] = 0xad;
-    memory[ i + 2 ] = 0xbe; memory[ i + 3 ] = 0xef;
+    memory[i     ] = 0xde; memory[i + 1] = 0xad;
+    memory[i + 2] = 0xbe; memory[i + 3] = 0xef;
     }
 
     if (read_test(f, &event_next_event)) return 0;
@@ -247,14 +247,14 @@ run_test(FILE *f)
     return 1;
 }
 
-static int
-read_test(FILE *f, libspectrum_dword *end_tstates)
+
+static int read_test(FILE *f, libspectrum_dword *end_tstates)
 {
     unsigned af, bc, de, hl, af_, bc_, de_, hl_, ix, iy, sp, pc, memptr;
     unsigned i, r, iff1, iff2, im;
     unsigned end_tstates2;
     unsigned address;
-    char test_name[ 80 ];
+    char test_name[80];
 
     do {
 
@@ -314,7 +314,7 @@ read_test(FILE *f, libspectrum_dword *end_tstates)
 
       if (byte >= 0x100) break;
 
-      memory[ address++ ] = byte;
+      memory[address++ ] = byte;
 
     }
     }
@@ -324,8 +324,8 @@ read_test(FILE *f, libspectrum_dword *end_tstates)
     return 0;
 }
 
-static void
-dump_z80_state(void)
+
+static void dump_z80_state(void)
 {
     printf("%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x\n",
       AF, BC, DE, HL, AF_, BC_, DE_, HL_, IX, IY, SP, PC, z80.memptr.w);
@@ -333,19 +333,19 @@ dump_z80_state(void)
       IFF1, IFF2, IM, z80.halted, tstates);
 }
 
-static void
-dump_memory_state(void)
+
+static void dump_memory_state(void)
 {
     size_t i;
 
     for (i = 0; i < 0x10000; i++) {
 
-    if (memory[ i ] == initial_memory[ i ]) continue;
+    if (memory[i] == initial_memory[i]) continue;
 
     printf("%04x ", (unsigned)i);
 
-    while (i < 0x10000 && memory[ i ] != initial_memory[ i ])
-      printf("%02x ", memory[ i++ ]);
+    while (i < 0x10000 && memory[i] != initial_memory[i])
+      printf("%02x ", memory[i++ ]);
 
     printf("-1\n");
     }
@@ -353,14 +353,14 @@ dump_memory_state(void)
 
 // Error 'handing': dump core as these should never be called
 
-void
-fuse_abort(void)
+
+void fuse_abort(void)
 {
     abort();
 }
 
-int
-ui_error(ui_error_level severity GCC_UNUSED, const char *format, ...)
+
+int ui_error(ui_error_level severity GCC_UNUSED, const char *format, ...)
 {
     va_list ap;
 
@@ -384,15 +384,15 @@ ui_error(ui_error_level severity GCC_UNUSED, const char *format, ...)
 libspectrum_byte *slt[256];
 size_t slt_length[256];
 
-int
-tape_load_trap(void)
+
+int tape_load_trap(void)
 {
     // Should never be called
     abort();
 }
 
-int
-tape_save_trap(void)
+
+int tape_save_trap(void)
 {
     // Should never be called
     abort();
@@ -410,18 +410,18 @@ libspectrum_byte **ROM = NULL;
 memory_page memory_map[8];
 memory_page *memory_map_home[MEMORY_PAGES_IN_64K];
 memory_page memory_map_rom[SPECTRUM_ROM_PAGES * MEMORY_PAGES_IN_16K];
-int memory_contended[8] = { 1 };
-libspectrum_byte spectrum_contention[ 80000 ] = { 0 };
+int memory_contended[8] = {1};
+libspectrum_byte spectrum_contention[80000] = {0};
 int profile_active = 0;
 
-void
-profile_map(libspectrum_word pc GCC_UNUSED)
+
+void profile_map(libspectrum_word pc GCC_UNUSED)
 {
     abort();
 }
 
-int
-debugger_check(debugger_breakpoint_type type GCC_UNUSED, libspectrum_dword value GCC_UNUSED)
+
+int debugger_check(debugger_breakpoint_type type GCC_UNUSED, libspectrum_dword value GCC_UNUSED)
 {
     abort();
 }
@@ -433,14 +433,14 @@ void debugger_system_variable_register(
 {
 }
 
-int
-debugger_trap(void)
+
+int debugger_trap(void)
 {
     abort();
 }
 
-int
-slt_trap(libspectrum_word address GCC_UNUSED, libspectrum_byte level GCC_UNUSED)
+
+int slt_trap(libspectrum_word address GCC_UNUSED, libspectrum_byte level GCC_UNUSED)
 {
     return 0;
 }
@@ -449,22 +449,22 @@ int beta_available = 0;
 int beta_active = 0;
 int if1_available = 0;
 
-void
-beta_page(void)
+
+void beta_page(void)
 {
     abort();
 }
 
-void
-beta_unpage(void)
+
+void beta_unpage(void)
 {
     abort();
 }
 
 int spectrum_frame_event = 0;
 
-int
-event_register(event_fn_t fn GCC_UNUSED, const char *string GCC_UNUSED)
+
+int event_register(event_fn_t fn GCC_UNUSED, const char *string GCC_UNUSED)
 {
     return 0;
 }
@@ -472,14 +472,14 @@ event_register(event_fn_t fn GCC_UNUSED, const char *string GCC_UNUSED)
 int opus_available = 0;
 int opus_active = 0;
 
-void
-opus_page(void)
+
+void opus_page(void)
 {
     abort();
 }
 
-void
-opus_unpage(void)
+
+void opus_unpage(void)
 {
     abort();
 }
@@ -487,8 +487,8 @@ opus_unpage(void)
 int plusd_available = 0;
 int plusd_active = 0;
 
-void
-plusd_page(void)
+
+void plusd_page(void)
 {
     abort();
 }
@@ -496,8 +496,8 @@ plusd_page(void)
 int disciple_available = 0;
 int disciple_active = 0;
 
-void
-disciple_page(void)
+
+void disciple_page(void)
 {
     abort();
 }
@@ -506,14 +506,14 @@ int didaktik80_available = 0;
 int didaktik80_active = 0;
 int didaktik80_snap = 0;
 
-void
-didaktik80_page(void)
+
+void didaktik80_page(void)
 {
     abort();
 }
 
-void
-didaktik80_unpage(void)
+
+void didaktik80_unpage(void)
 {
     abort();
 }
@@ -521,77 +521,77 @@ didaktik80_unpage(void)
 int usource_available = 0;
 int usource_active = 0;
 
-void
-usource_toggle(void)
+
+void usource_toggle(void)
 {
     abort();
 }
 
-void
-if1_page(void)
+
+void if1_page(void)
 {
     abort();
 }
 
-void
-if1_unpage(void)
+
+void if1_unpage(void)
 {
     abort();
 }
 
 int multiface_activated = 0;
 
-void
-multiface_setic8(void)
+
+void multiface_setic8(void)
 {
     abort();
 }
 
-void
-divide_set_automap(int state GCC_UNUSED)
+
+void divide_set_automap(int state GCC_UNUSED)
 {
     abort();
 }
 
-void
-divmmc_set_automap(int state GCC_UNUSED)
+
+void divmmc_set_automap(int state GCC_UNUSED)
 {
     abort();
 }
 
 int spectranet_available = 0;
 
-void
-spectranet_page(int via_io GCC_UNUSED)
+
+void spectranet_page(int via_io GCC_UNUSED)
 {
     abort();
 }
 
-void
-spectranet_nmi(void)
+
+void spectranet_nmi(void)
 {
     abort();
 }
 
-void
-spectranet_unpage(void)
+
+void spectranet_unpage(void)
 {
     abort();
 }
 
-void
-spectranet_retn(void)
+
+void spectranet_retn(void)
 {
 }
 
-int
-spectranet_nmi_flipflop(void)
+
+int spectranet_nmi_flipflop(void)
 {
     return 0;
 }
 
-void
-startup_manager_register(startup_manager_module module,
+
+void startup_manager_register(startup_manager_module module,
     startup_manager_module *dependencies, size_t dependency_count,
     startup_manager_init_fn init_fn, void *init_context,
     startup_manager_end_fn end_fn)
@@ -600,39 +600,39 @@ startup_manager_register(startup_manager_module module,
 
 int svg_capture_active = 0; // SVG capture enabled?
 
-void
-svg_capture(void)
+
+void svg_capture(void)
 {
     abort();
 }
 
-int
-rzx_frame(void)
+
+int rzx_frame(void)
 {
     abort();
 }
 
-void
-writeport_internal(libspectrum_word port GCC_UNUSED, libspectrum_byte b GCC_UNUSED)
+
+void writeport_internal(libspectrum_word port GCC_UNUSED, libspectrum_byte b GCC_UNUSED)
 {
     abort();
 }
 
-void
-event_add_with_data(libspectrum_dword event_time GCC_UNUSED,
+
+void event_add_with_data(libspectrum_dword event_time GCC_UNUSED,
              int type GCC_UNUSED, void *user_data GCC_UNUSED)
 {
     // Do nothing
 }
 
-int
-module_register(module_info_t *module GCC_UNUSED)
+
+int module_register(module_info_t *module GCC_UNUSED)
 {
     return 0;
 }
 
-void
-z80_debugger_variables_init(void)
+
+void z80_debugger_variables_init(void)
 {
 }
 
@@ -649,13 +649,13 @@ libspectrum_word spectranet_programmable_trap;
 
 /* Initialise the dummy variables such that we're running on a clean a
    machine as possible */
-static int
-init_dummies(void)
+
+static int init_dummies(void)
 {
     size_t i;
 
     for (i = 0; i < 8; i++) {
-    memory_map[i].page = &memory[ i * MEMORY_PAGE_SIZE ];
+    memory_map[i].page = &memory[i * MEMORY_PAGE_SIZE];
     }
 
     debugger_mode = DEBUGGER_MODE_INACTIVE;

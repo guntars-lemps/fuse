@@ -86,11 +86,11 @@ static void zxatasp_activate(void);
 // Data
 
 static const periph_port_t zxatasp_ports[] = {
-    { 0x039f, 0x009f, zxatasp_portA_read, zxatasp_portA_write },
-    { 0x039f, 0x019f, zxatasp_portB_read, zxatasp_portB_write },
-    { 0x039f, 0x029f, zxatasp_portC_read, zxatasp_portC_write },
-    { 0x039f, 0x039f, zxatasp_control_read, zxatasp_control_write },
-    { 0, 0, NULL, NULL }
+    {0x039f, 0x009f, zxatasp_portA_read, zxatasp_portA_write},
+    {0x039f, 0x019f, zxatasp_portB_read, zxatasp_portB_write},
+    {0x039f, 0x029f, zxatasp_portC_read, zxatasp_portC_write},
+    {0x039f, 0x039f, zxatasp_control_read, zxatasp_control_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t zxatasp_periph = {
@@ -111,7 +111,7 @@ static libspectrum_ide_channel *zxatasp_idechn1;
 
 #define ZXATASP_PAGES 32
 #define ZXATASP_PAGE_LENGTH 0x4000
-static libspectrum_byte *ZXATASPMEM[ ZXATASP_PAGES ];
+static libspectrum_byte *ZXATASPMEM[ZXATASP_PAGES];
 static int memory_allocated = 0;
 
 static const size_t ZXATASP_NOT_PAGED = 0xff;
@@ -167,8 +167,8 @@ static module_info_t zxatasp_module_info = {
 
 // Housekeeping functions
 
-static int
-zxatasp_init(void *context)
+
+static int zxatasp_init(void *context)
 {
     int error, i;
 
@@ -195,15 +195,15 @@ zxatasp_init(void *context)
     return 0;
 }
 
-static void
-zxatasp_end(void)
+
+static void zxatasp_end(void)
 {
     libspectrum_ide_free(zxatasp_idechn0);
     libspectrum_ide_free(zxatasp_idechn1);
 }
 
-void
-zxatasp_register_startup(void)
+
+void zxatasp_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -216,8 +216,8 @@ zxatasp_register_startup(void)
                             zxatasp_end);
 }
 
-static void
-zxatasp_reset(int hard_reset GCC_UNUSED)
+
+static void zxatasp_reset(int hard_reset GCC_UNUSED)
 {
     if (!settings_current.zxatasp_active) return;
 
@@ -234,8 +234,8 @@ zxatasp_reset(int hard_reset GCC_UNUSED)
     libspectrum_ide_reset(zxatasp_idechn1);
 }
 
-int
-zxatasp_insert(const char *filename, libspectrum_ide_unit unit)
+
+int zxatasp_insert(const char *filename, libspectrum_ide_unit unit)
 {
     return ide_master_slave_insert(
     zxatasp_idechn0, unit, filename,
@@ -245,8 +245,8 @@ zxatasp_insert(const char *filename, libspectrum_ide_unit unit)
     UI_MENU_ITEM_MEDIA_IDE_ZXATASP_SLAVE_EJECT);
 }
 
-int
-zxatasp_commit(libspectrum_ide_unit unit)
+
+int zxatasp_commit(libspectrum_ide_unit unit)
 {
     int error;
 
@@ -255,8 +255,8 @@ zxatasp_commit(libspectrum_ide_unit unit)
     return error;
 }
 
-int
-zxatasp_eject(libspectrum_ide_unit unit)
+
+int zxatasp_eject(libspectrum_ide_unit unit)
 {
     return ide_master_slave_eject(
     zxatasp_idechn0, unit,
@@ -268,44 +268,44 @@ zxatasp_eject(libspectrum_ide_unit unit)
 
 // Port read/writes
 
-libspectrum_byte
-zxatasp_portA_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte zxatasp_portA_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
 
     return zxatasp_portA;
 }
 
-static void
-zxatasp_portA_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void zxatasp_portA_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     if (!(zxatasp_control & MC8255_PORT_A_IO)) zxatasp_portA = data;
 }
 
-libspectrum_byte
-zxatasp_portB_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte zxatasp_portB_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
 
     return zxatasp_portB;
 }
 
-static void
-zxatasp_portB_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void zxatasp_portB_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     if (!(zxatasp_control & MC8255_PORT_B_IO)) zxatasp_portB = data;
 }
 
-libspectrum_byte
-zxatasp_portC_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte zxatasp_portC_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
 
     return zxatasp_portC;
 }
 
-static void
-zxatasp_portC_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void zxatasp_portC_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     libspectrum_byte oldC = zxatasp_portC;
     libspectrum_byte newC;
@@ -368,16 +368,16 @@ zxatasp_portC_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
     }
 }
 
-libspectrum_byte
-zxatasp_control_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte zxatasp_control_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
 
     return zxatasp_control;
 }
 
-static void
-zxatasp_control_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void zxatasp_control_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     if (data & MC8255_SETMODE) {
     // Set the control word and reset the ports
@@ -400,8 +400,8 @@ zxatasp_control_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
     }
 }
 
-static void
-zxatasp_resetports(void)
+
+static void zxatasp_resetports(void)
 {
     /* In input mode, ports will return 0xff unless IDE is active,
      which it won't be just after a reset. Output ports are always
@@ -413,8 +413,8 @@ zxatasp_resetports(void)
     zxatasp_portC |= (zxatasp_control & MC8255_PORT_C_HI_IO) ? 0xf0 : 0x00;
 }
 
-static void
-set_zxatasp_bank(int bank)
+
+static void set_zxatasp_bank(int bank)
 {
     memory_page *page;
     size_t i, offset;
@@ -424,7 +424,7 @@ set_zxatasp_bank(int bank)
     page = &zxatasp_memory_map_romcs[i];
     offset = i * MEMORY_PAGE_SIZE;
 
-    page->page = &ZXATASPMEM[ bank ][ offset ];
+    page->page = &ZXATASPMEM[bank][offset];
     page->writable = !settings_current.zxatasp_wp;
     page->contended = 0;
 
@@ -435,8 +435,8 @@ set_zxatasp_bank(int bank)
 
 // IDE access
 
-static void
-zxatasp_readide(libspectrum_ide_channel *chn,
+
+static void zxatasp_readide(libspectrum_ide_channel *chn,
                 libspectrum_ide_register idereg)
 {
     libspectrum_byte dataHi, dataLo;
@@ -453,8 +453,8 @@ zxatasp_readide(libspectrum_ide_channel *chn,
     if (zxatasp_control & MC8255_PORT_B_IO) zxatasp_portB = dataHi;
 }
 
-static void
-zxatasp_writeide(libspectrum_ide_channel *chn,
+
+static void zxatasp_writeide(libspectrum_ide_channel *chn,
                  libspectrum_ide_register idereg)
 {
     libspectrum_byte dataHi, dataLo;
@@ -468,8 +468,8 @@ zxatasp_writeide(libspectrum_ide_channel *chn,
     libspectrum_ide_write(chn, idereg, dataHi);
 }
 
-static void
-zxatasp_memory_map(void)
+
+static void zxatasp_memory_map(void)
 {
     int i, writable, map_read;
 
@@ -489,14 +489,14 @@ zxatasp_memory_map(void)
     memory_map_16k_read_write(0x000, zxatasp_memory_map_romcs, 0, map_read, 1);
 }
 
-static void
-zxatasp_snapshot_enabled(libspectrum_snap *snap)
+
+static void zxatasp_snapshot_enabled(libspectrum_snap *snap)
 {
     settings_current.zxatasp_active = libspectrum_snap_zxatasp_active(snap);
 }
 
-static void
-zxatasp_from_snapshot(libspectrum_snap *snap)
+
+static void zxatasp_from_snapshot(libspectrum_snap *snap)
 {
     size_t i, page;
 
@@ -519,14 +519,14 @@ zxatasp_from_snapshot(libspectrum_snap *snap)
 
     for (i = 0; i < libspectrum_snap_zxatasp_pages(snap); i++)
     if (libspectrum_snap_zxatasp_ram(snap, i))
-      memcpy(ZXATASPMEM[ i ], libspectrum_snap_zxatasp_ram(snap, i),
+      memcpy(ZXATASPMEM[i], libspectrum_snap_zxatasp_ram(snap, i),
           ZXATASP_PAGE_LENGTH);
 
     machine_current->memory_map();
 }
 
-static void
-zxatasp_to_snapshot(libspectrum_snap *snap)
+
+static void zxatasp_to_snapshot(libspectrum_snap *snap)
 {
     size_t i;
     libspectrum_byte *buffer;
@@ -550,13 +550,13 @@ zxatasp_to_snapshot(libspectrum_snap *snap)
 
     buffer = libspectrum_new(libspectrum_byte, ZXATASP_PAGE_LENGTH);
 
-    memcpy(buffer, ZXATASPMEM[ i ], ZXATASP_PAGE_LENGTH);
+    memcpy(buffer, ZXATASPMEM[i], ZXATASP_PAGE_LENGTH);
     libspectrum_snap_set_zxatasp_ram(snap, i, buffer);
     }
 }
 
-static void
-zxatasp_activate(void)
+
+static void zxatasp_activate(void)
 {
     if (!memory_allocated) {
     int i;
@@ -568,8 +568,8 @@ zxatasp_activate(void)
     }
 }
 
-int
-zxatasp_unittest(void)
+
+int zxatasp_unittest(void)
 {
     int r = 0;
     int old_setting = settings_current.zxatasp_active;

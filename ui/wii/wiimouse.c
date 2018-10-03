@@ -52,10 +52,10 @@ static WPADData oldpaddata;
 #define RIGHT 2
 #define UP    3
 #define DOWN  4
-static u8 last_nunchuck[ 2 ]; // for 2 controllers
+static u8 last_nunchuck[2]; // for 2 controllers
 
-int
-wiimouse_init(void)
+
+int wiimouse_init(void)
 {
     WPAD_Init();
     WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);
@@ -67,14 +67,14 @@ wiimouse_init(void)
     return 0;
 }
 
-int
-wiimouse_end(void)
+
+int wiimouse_end(void)
 {
     return 0;
 }
 
-void
-wiimouse_get_position(int *x, int *y)
+
+void wiimouse_get_position(int *x, int *y)
 {
     if (paddata.ir.state == 0) *x = *y = -1;
 
@@ -82,8 +82,8 @@ wiimouse_get_position(int *x, int *y)
     *y = paddata.ir.y;
 }
 
-void
-mouse_update(void)
+
+void mouse_update(void)
 {
     /* do this ONLY here. wiijoystick depends on it as well, but
      mouse_update is called regardless of whether the emulation is
@@ -148,35 +148,35 @@ mouse_update(void)
         if (js.mag >= 0.5) {
           // left
           if (js.ang >= 270-45 && js.ang <= 270+45) {
-            if (last_nunchuck[ ctrlr ] != LEFT) {
+            if (last_nunchuck[ctrlr] != LEFT) {
               POST_KEYPRESS(INPUT_JOYSTICK_LEFT);
-              last_nunchuck[ ctrlr ] = LEFT;
+              last_nunchuck[ctrlr] = LEFT;
             }
           }
           // right
           else if (js.ang >= 90-45 && js.ang <= 90+45) {
-            if (last_nunchuck[ ctrlr ] != RIGHT) {
+            if (last_nunchuck[ctrlr] != RIGHT) {
               POST_KEYPRESS(INPUT_JOYSTICK_RIGHT);
-              last_nunchuck[ ctrlr ] = RIGHT;
+              last_nunchuck[ctrlr] = RIGHT;
             }
           }
           // up
           else if (js.ang >= 360-45 || js.ang <= 45) {
-            if (last_nunchuck[ ctrlr ] != UP) {
+            if (last_nunchuck[ctrlr] != UP) {
               POST_KEYPRESS(INPUT_JOYSTICK_UP);
-              last_nunchuck[ ctrlr ] = UP;
+              last_nunchuck[ctrlr] = UP;
             }
           }
           // down
           else if (js.ang >= 180-45 && js.ang <= 180+45) {
-            if (last_nunchuck[ ctrlr ] != DOWN) {
+            if (last_nunchuck[ctrlr] != DOWN) {
               POST_KEYPRESS(INPUT_JOYSTICK_DOWN);
-              last_nunchuck[ ctrlr ] = DOWN;
+              last_nunchuck[ctrlr] = DOWN;
             }
           }
         }
         else
-          last_nunchuck[ ctrlr ] = 0;
+          last_nunchuck[ctrlr] = 0;
       }
     } else {
       if (wm_down & WPAD_BUTTON_HOME)
@@ -192,14 +192,14 @@ mouse_update(void)
     wiidisplay_showmouse(paddata.ir.x/560.0f, paddata.ir.y/420.0f);
 }
 
-int
-ui_mouse_grab(int startup GCC_UNUSED)
+
+int ui_mouse_grab(int startup GCC_UNUSED)
 {
     return 1;
 }
 
-int
-ui_mouse_release(int suspend)
+
+int ui_mouse_release(int suspend)
 {
     return !suspend;
 }

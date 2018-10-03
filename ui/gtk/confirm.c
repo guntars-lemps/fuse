@@ -37,8 +37,8 @@ static void set_confirmed(GtkButton *button, gpointer user_data);
 static void set_save(GtkButton *button, gpointer user_data);
 static void set_dont_save(GtkButton *button, gpointer user_data);
 
-int
-gtkui_confirm(const char *string)
+
+int gtkui_confirm(const char *string)
 {
     GtkWidget *dialog, *label, *content_area;
     int confirm;
@@ -70,8 +70,8 @@ gtkui_confirm(const char *string)
     return confirm;
 }
 
-static void
-set_confirmed(GtkButton *button GCC_UNUSED, gpointer user_data)
+
+static void set_confirmed(GtkButton *button GCC_UNUSED, gpointer user_data)
 {
     int *ptr = user_data;
 
@@ -98,9 +98,9 @@ ui_confirm_save_specific(const char *message)
 
     {
     static gtkstock_button btn[] = {
-      { "_No", G_CALLBACK(set_dont_save), NULL, DEFAULT_DESTROY, 0, 0, 0, 0, GTK_RESPONSE_NO },
-      { "_Cancel", NULL, NULL, DEFAULT_DESTROY, GDK_KEY_Escape, 0, 0, 0, GTK_RESPONSE_CANCEL },
-      { "_Save", G_CALLBACK(set_save), NULL, DEFAULT_DESTROY, 0, 0, 0, 0, GTK_RESPONSE_YES }
+      {"_No", G_CALLBACK(set_dont_save), NULL, DEFAULT_DESTROY, 0, 0, 0, 0, GTK_RESPONSE_NO},
+      {"_Cancel", NULL, NULL, DEFAULT_DESTROY, GDK_KEY_Escape, 0, 0, 0, GTK_RESPONSE_CANCEL},
+      {"_Save", G_CALLBACK(set_save), NULL, DEFAULT_DESTROY, 0, 0, 0, 0, GTK_RESPONSE_YES}
     };
     btn[0].actiondata = btn[2].actiondata = &confirm;
     gtkstock_create_buttons(dialog, NULL, btn, ARRAY_SIZE(btn));
@@ -116,22 +116,22 @@ ui_confirm_save_specific(const char *message)
     return confirm;
 }
 
-int
-ui_query(const char *message)
+
+int ui_query(const char *message)
 {
     return gtkui_confirm(message);
 }
 
-static void
-set_save(GtkButton *button GCC_UNUSED, gpointer user_data)
+
+static void set_save(GtkButton *button GCC_UNUSED, gpointer user_data)
 {
     ui_confirm_save_t *ptr = user_data;
 
     *ptr = UI_CONFIRM_SAVE_SAVE;
 }
 
-static void
-set_dont_save(GtkButton *button GCC_UNUSED, gpointer user_data)
+
+static void set_dont_save(GtkButton *button GCC_UNUSED, gpointer user_data)
 {
     ui_confirm_save_t *ptr = user_data;
 

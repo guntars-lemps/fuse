@@ -36,8 +36,8 @@
 
 static GdkCursor *nullpointer = NULL;
 
-static void
-gtkmouse_reset_pointer(void)
+
+static void gtkmouse_reset_pointer(void)
 {
     /* Ugh. GDK doesn't have its own move-pointer function :-|
    * Framebuffer users and win32 users will have to make their own
@@ -76,8 +76,8 @@ gtkmouse_button(GtkWidget *widget GCC_UNUSED, GdkEventButton *event,
     return TRUE;
 }
 
-int
-ui_mouse_grab(int startup)
+
+int ui_mouse_grab(int startup)
 {
     GdkWindow *window;
     GdkGrabStatus status;
@@ -129,8 +129,8 @@ ui_mouse_grab(int startup)
     return 0;
 }
 
-int
-ui_mouse_release(int suspend GCC_UNUSED)
+
+int ui_mouse_release(int suspend GCC_UNUSED)
 {
 #if !GTK_CHECK_VERSION(3, 0, 0)
 

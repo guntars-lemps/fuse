@@ -67,8 +67,8 @@ int ui_init(int *argc, char ***argv)
     return 0;
 }
 
-int
-ui_event(void)
+
+int ui_event(void)
 {
     int x, y, b, bd;
 
@@ -111,14 +111,14 @@ int ui_end(void)
     return 0;
 }
 
-int
-ui_mouse_grab(int startup GCC_UNUSED)
+
+int ui_mouse_grab(int startup GCC_UNUSED)
 {
     return 1;
 }
 
-int
-ui_mouse_release(int suspend)
+
+int ui_mouse_release(int suspend)
 {
     return !suspend;
 }

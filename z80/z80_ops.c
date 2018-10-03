@@ -94,13 +94,13 @@ enum {
     numchecks
 };
 
-#define CHECK(label, condition) goto *cgoto[ pos_##label ]; label:
+#define CHECK(label, condition) goto *cgoto[pos_##label]; label:
 #define END_CHECK
 
 #else // #ifdef __GNUC__
 
 #define CHECK(label, condition) if (condition) {
-#define END_CHECK }
+#define END_CHECK}
 
 #endif // #ifdef __GNUC__
 
@@ -109,8 +109,8 @@ static libspectrum_byte opcode = 0x00;
 #endif
 
 // Execute Z80 opcodes until the next event
-void
-z80_do_opcodes(void)
+
+void z80_do_opcodes(void)
 {
 #ifdef HAVE_ENOUGH_MEMORY
     libspectrum_byte opcode = 0x00;
@@ -124,15 +124,15 @@ z80_do_opcodes(void)
 
 #undef SETUP_CHECK
 #define SETUP_CHECK(label, condition) \
-    if (condition) { cgoto[ next ] = &&label; next = pos_##label + 1; } \
+    if (condition) {cgoto[next] = &&label; next = pos_##label + 1;} \
     check++;
 
 #undef SETUP_NEXT
 #define SETUP_NEXT(label) \
-    if (next != check) { cgoto[ next ] = &&label; } \
+    if (next != check) {cgoto[next] = &&label;} \
     next = check;
 
-    void *cgoto[ numchecks ]; size_t next = 0; size_t check = 0;
+    void *cgoto[numchecks]; size_t next = 0; size_t check = 0;
 
 #include "z80_checks.h"
 
@@ -367,8 +367,8 @@ z80_do_opcodes(void)
 
 #ifndef HAVE_ENOUGH_MEMORY
 
-static int
-z80_cbxx(libspectrum_byte opcode2)
+
+static int z80_cbxx(libspectrum_byte opcode2)
 {
     switch(opcode2) {
 #include "z80/z80_cb.c"
@@ -376,8 +376,8 @@ z80_cbxx(libspectrum_byte opcode2)
     return 0;
 }
 
-static int
-z80_ddxx(libspectrum_byte opcode2)
+
+static int z80_ddxx(libspectrum_byte opcode2)
 {
     switch(opcode2) {
 #define REGISTER  IX
@@ -391,8 +391,8 @@ z80_ddxx(libspectrum_byte opcode2)
     return 0;
 }
 
-static int
-z80_edxx(libspectrum_byte opcode2)
+
+static int z80_edxx(libspectrum_byte opcode2)
 {
     switch(opcode2) {
 #include "z80/z80_ed.c"
@@ -400,8 +400,8 @@ z80_edxx(libspectrum_byte opcode2)
     return 0;
 }
 
-static int
-z80_fdxx(libspectrum_byte opcode2)
+
+static int z80_fdxx(libspectrum_byte opcode2)
 {
     switch(opcode2) {
 #define REGISTER  IY
@@ -415,8 +415,8 @@ z80_fdxx(libspectrum_byte opcode2)
     return 0;
 }
 
-static void
-z80_ddfdcbxx(libspectrum_byte opcode3)
+
+static void z80_ddfdcbxx(libspectrum_byte opcode3)
 {
     switch(opcode3) {
 #include "z80/z80_ddfdcb.c"

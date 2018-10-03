@@ -90,11 +90,11 @@ static int win32ui_window_paint(HWND hWnd, WPARAM wParam, LPARAM lParam);
 static int win32ui_window_resize(HWND hWnd, WPARAM wParam, LPARAM lParam);
 static BOOL win32ui_window_resizing(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
-static int
-selector_dialog(win32ui_select_info *items);
 
-static void
-handle_drop(HDROP hDrop)
+static int selector_dialog(win32ui_select_info *items);
+
+
+static void handle_drop(HDROP hDrop)
 {
     size_t bufsize;
     char *namebuf;
@@ -306,8 +306,8 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
     // FIXME: how do deal with returning wParam
 }
 
-int
-ui_init(int *argc, char ***argv)
+
+int ui_init(int *argc, char ***argv)
 {
     // register window class
     WNDCLASS wc;
@@ -380,8 +380,8 @@ ui_init(int *argc, char ***argv)
     return 0;
 }
 
-static BOOL
-win32ui_make_menu(void)
+
+static BOOL win32ui_make_menu(void)
 {
     // Start various menus in the 'off' state
     ui_menu_activate(UI_MENU_ITEM_AY_LOGGING, 0);
@@ -396,16 +396,16 @@ win32ui_make_menu(void)
     return FALSE;
 }
 
-int
-ui_event(void)
+
+int ui_event(void)
 {
     win32ui_process_messages(1);
 
     return 0;
 }
 
-int
-ui_end(void)
+
+int ui_end(void)
 {
     int error;
 
@@ -423,8 +423,8 @@ ui_end(void)
 }
 
 // Create a dialog box with the given error message
-int
-ui_error_specific(ui_error_level severity, const char *message)
+
+int ui_error_specific(ui_error_level severity, const char *message)
 {
     // If we don't have a UI yet, we can't output widgets
     if (!display_ui_initialised) return 0;
@@ -452,24 +452,24 @@ ui_error_specific(ui_error_level severity, const char *message)
 
 // The callbacks used by various routines
 
-static int
-win32ui_lose_focus(HWND hWnd, WPARAM wParam, LPARAM lParam)
+
+static int win32ui_lose_focus(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     keyboard_release_all();
     ui_mouse_suspend();
     return 0;
 }
 
-static int
-win32ui_gain_focus(HWND hWnd, WPARAM wParam, LPARAM lParam)
+
+static int win32ui_gain_focus(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     ui_mouse_resume();
     return 0;
 }
 
 // Called by the menu when File/Exit selected
-void
-menu_file_exit(int action)
+
+void menu_file_exit(int action)
 {
  // FIXME: this should really be sending WM_CLOSE, not duplicate code
     if (win32ui_confirm("Exit Fuse?")) {
@@ -508,7 +508,7 @@ menu_get_scaler(scaler_available_fn selector)
 
     if (!selector(scaler)) continue;
 
-    items.labels[ count ] = scaler_name(scaler);
+    items.labels[count] = scaler_name(scaler);
 
     if (current_scaler == scaler) {
       items.selected = count;
@@ -541,8 +541,8 @@ menu_get_scaler(scaler_available_fn selector)
 }
 
 // Machine/Pause
-void
-menu_machine_pause(int action)
+
+void menu_machine_pause(int action)
 {
     if (paused) {
     paused = 0;
@@ -565,8 +565,8 @@ menu_machine_pause(int action)
 }
 
 // Called by the menu when Machine/Reset selected
-void
-menu_machine_reset(int action)
+
+void menu_machine_reset(int action)
 {
     int hard_reset = action;
     const char *message = "Reset?";
@@ -590,8 +590,8 @@ menu_machine_reset(int action)
 }
 
 // Called by the menu when Machine/Select selected
-void
-menu_machine_select(int action)
+
+void menu_machine_select(int action)
 {
     // FIXME: choosing spectrum SE crashes Fuse sound_frame () at sound.c:477 "ay_change[f].ofs = (ay_change[f].tstates * sfreq) / cpufreq;"
     // FIXME: choosing some Timexes crashes (win32) fuse as well
@@ -621,8 +621,8 @@ menu_machine_select(int action)
     selected_machine = selector_dialog(&items);
 
     if (selected_machine >= 0 &&
-      machine_types[ selected_machine ] != machine_current) {
-    machine_select(machine_types[ selected_machine ]->machine);
+      machine_types[selected_machine] != machine_current) {
+    machine_select(machine_types[selected_machine]->machine);
     }
 
     free(items.labels);
@@ -631,30 +631,30 @@ menu_machine_select(int action)
     fuse_emulation_unpause();
 }
 
-void
-menu_machine_debugger(int action)
+
+void menu_machine_debugger(int action)
 {
     debugger_mode = DEBUGGER_MODE_HALTED;
     if (paused) ui_debugger_activate();
 }
 
 // Called on machine selection
-int
-ui_widgets_reset(void)
+
+int ui_widgets_reset(void)
 {
     win32ui_pokefinder_clear();
     return 0;
 }
 
-void
-menu_help_keyboard(int action)
+
+void menu_help_keyboard(int action)
 {
     win32ui_picture("keyboard.scr", 0);
 }
 
 // Functions to activate and deactivate certain menu items
-static int
-set_active(HMENU menu, const char *path, int active)
+
+static int set_active(HMENU menu, const char *path, int active)
 {
     int i, menu_count;
     char menu_text[255];
@@ -696,8 +696,8 @@ set_active(HMENU menu, const char *path, int active)
     return 1;
 }
 
-int
-ui_menu_item_set_active(const char *path, int active)
+
+int ui_menu_item_set_active(const char *path, int active)
 {
     return set_active(GetMenu(fuse_hWnd), path, active);
 }
@@ -706,7 +706,7 @@ ui_confirm_joystick_t
 ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
 {
     win32ui_select_info items;
-    TCHAR title[ 80 ];
+    TCHAR title[80];
     int i, selection;
     int selected_joystick;
 
@@ -730,7 +730,7 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
     items.length = JOYSTICK_CONN_COUNT;
 
     for (i=0; i<JOYSTICK_CONN_COUNT; i++) {
-    items.labels[i] = joystick_connection[ i ];
+    items.labels[i] = joystick_connection[i];
     }
 
     items.selected = UI_CONFIRM_JOYSTICK_NONE;
@@ -752,8 +752,8 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
  * Font code
  */
 
-int
-win32ui_get_monospaced_font(HFONT *font)
+
+int win32ui_get_monospaced_font(HFONT *font)
 {
     if (! monospaced_font) {
     // Get font height in pixels for current DPI resolution
@@ -776,8 +776,8 @@ win32ui_get_monospaced_font(HFONT *font)
     return 0;
 }
 
-int
-window_recommended_width(HWND hwndDlg, LPCTSTR title)
+
+int window_recommended_width(HWND hwndDlg, LPCTSTR title)
 {
     HDC dc;
     SIZE sz;
@@ -831,14 +831,14 @@ window_recommended_width(HWND hwndDlg, LPCTSTR title)
     return width;
 }
 
-void
-win32ui_set_font(HWND hDlg, int nIDDlgItem, HFONT font)
+
+void win32ui_set_font(HWND hDlg, int nIDDlgItem, HFONT font)
 {
     SendDlgItemMessage(hDlg, nIDDlgItem , WM_SETFONT, (WPARAM) font, FALSE);
 }
 
-static void
-selector_dialog_build(HWND hwndDlg, win32ui_select_info *items)
+
+static void selector_dialog_build(HWND hwndDlg, win32ui_select_info *items)
 {
     int i, left, caption_width, decor_width, decor_height;
     int window_width, window_height, client_width, client_height;
@@ -987,8 +987,8 @@ selector_dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 
-static int
-selector_dialog(win32ui_select_info *items)
+
+static int selector_dialog(win32ui_select_info *items)
 {
     /* selector_dialog will display a modal dialog, with a list of grouped
      radiobuttons, OK and Cancel buttons. The radiobuttons' labels, their count,
@@ -1001,8 +1001,8 @@ selector_dialog(win32ui_select_info *items)
                          fuse_hWnd, selector_dialog_proc, (LPARAM)items);
 }
 
-void
-win32_verror(int is_error)
+
+void win32_verror(int is_error)
 {
     if (!is_error) return;
 
@@ -1018,16 +1018,16 @@ win32_verror(int is_error)
 
 /* Handler for the main window's WM_PAINT notification.
    The handler is an equivalent of GTK's expose_event */
-static int
-win32ui_window_paint(HWND hWnd, WPARAM wParam, LPARAM lParam)
+
+static int win32ui_window_paint(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     blit();
     return 0;
 }
 
 // Handler for the main window's WM_SIZE notification
-static int
-win32ui_window_resize(HWND hWnd, WPARAM wParam, LPARAM lParam)
+
+static int win32ui_window_resize(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     if (wParam == SIZE_MINIMIZED) {
     if (!size_paused) {
@@ -1058,8 +1058,8 @@ win32ui_window_resize(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 /* Handler for the main window's WM_SIZING notification.
    The handler is an equivalent of setting window geometry in GTK */
-static BOOL
-win32ui_window_resizing(HWND hWnd, WPARAM wParam, LPARAM lParam)
+
+static BOOL win32ui_window_resizing(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     RECT *selr, wr, cr, statr, or;
     int width, height, w_ofs, h_ofs, w_max, h_max;
@@ -1141,8 +1141,8 @@ win32ui_window_resizing(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 /* The function is an equivalent of GTK's gtk_window_resize,
    take care of resizing main window into visible screen */
-void
-win32ui_fuse_resize(int width, int height)
+
+void win32ui_fuse_resize(int width, int height)
 {
     RECT wr, cr, statr, or;
     int w_ofs, h_ofs;
@@ -1179,12 +1179,12 @@ win32ui_fuse_resize(int width, int height)
  * With process_queue_once = 0 it processes the messages until it receives
  *   WM_USER_EXIT_PROCESS_MESSAGES message.
  */
-void
-win32ui_process_messages(int process_queue_once)
+
+void win32ui_process_messages(int process_queue_once)
 {
     MSG msg;
     int i, processMsg;
-    HWND hModelessDlgs[] = { fuse_hPFWnd, fuse_hDBGWnd, fuse_hABOWnd };
+    HWND hModelessDlgs[] = {fuse_hPFWnd, fuse_hDBGWnd, fuse_hABOWnd};
 
     while (1) {
     while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {

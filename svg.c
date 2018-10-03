@@ -65,31 +65,31 @@ xmlBuffer* buffer;
 xmlTextWriter* writer;
 
 
-static const
-libspectrum_byte palette[16][3] = {
+
+static const libspectrum_byte palette[16][3] = {
                                     // R    G    B
-                                    {   0,   0,   0 },
-                                    {   0,   0, 192 },
-                                    { 192,   0,   0 },
-                                    { 192,   0, 192 },
-                                    {   0, 192,   0 },
-                                    {   0, 192, 192 },
-                                    { 200, 200,   0 },
-                                    { 220, 220, 220 },
-                                    {   0,   0,   0 },
-                                    {   0,   0, 255 },
-                                    { 255,   0,   0 },
-                                    { 255,   0, 255 },
-                                    {   0, 255,   0 },
-                                    {   0, 255, 255 },
-                                    { 255, 255,   0 },
-                                    { 255, 255, 255 } };
+                                    {   0,   0,   0},
+                                    {   0,   0, 192},
+                                    {192,   0,   0},
+                                    {192,   0, 192},
+                                    {   0, 192,   0},
+                                    {   0, 192, 192},
+                                    {200, 200,   0},
+                                    {220, 220, 220},
+                                    {   0,   0,   0},
+                                    {   0,   0, 255},
+                                    {255,   0,   0},
+                                    {255,   0, 255},
+                                    {   0, 255,   0},
+                                    {   0, 255, 255},
+                                    {255, 255,   0},
+                                    {255, 255, 255}};
 
 
 // handle error messages setting attributes
 
-static int
-svg_attribute(const char *name, const char *value, const char *element)
+
+static int svg_attribute(const char *name, const char *value, const char *element)
 {
     if (xmlTextWriterWriteAttribute(writer, BAD_CAST name, BAD_CAST value) < 0)
     return 1;
@@ -112,8 +112,8 @@ timestring(void)
     return ts;
 }
 
-static int
-svg_write_metadata(void)
+
+static int svg_write_metadata(void)
 {
     if (xmlTextWriterStartElement(writer, BAD_CAST "metadata") < 0)
     return 1;
@@ -145,8 +145,8 @@ svg_write_metadata(void)
     return 0;
 }
 
-void
-svg_openfile(void)
+
+void svg_openfile(void)
 {
     int err;
 
@@ -190,11 +190,11 @@ svg_openfile(void)
     }
 }
 
-void
-svg_rect(int xpos, int ypos, const char *xsize, const char *ysize,
+
+void svg_rect(int xpos, int ypos, const char *xsize, const char *ysize,
           const char *opacity, const char *color)
 {
-    char path_element[ BUFSZ ];
+    char path_element[BUFSZ];
     int err;
 
     if (xmlTextWriterStartElement(writer, BAD_CAST "rect") < 0) {
@@ -225,20 +225,20 @@ svg_rect(int xpos, int ypos, const char *xsize, const char *ysize,
     }
 }
 
-void
-svg_openpath(void)
+
+void svg_openpath(void)
 {
     int err;
-    char svgcolor[ BUFSZ ];
+    char svgcolor[BUFSZ];
 
     static int svg_paper;
     static int svg_ink;
 
     // Background
     svg_paper = ((readbyte_internal(0x5c8d) >> 3) & 15); // ATTR_P
-    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
-                                              palette[ svg_paper ][1],
-                                              palette[ svg_paper ][2]);
+    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[svg_paper][0],
+                                              palette[svg_paper][1],
+                                              palette[svg_paper][2]);
 
     svg_rect(0, 0, "512", "368", "1", svgcolor);
 
@@ -251,9 +251,9 @@ svg_openpath(void)
             ((readbyte_internal(0x5c8d) >> 3) & 8); // ATTR_P
 
     err = 0;
-    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_ink ][0],
-                                              palette[ svg_ink ][1],
-                                              palette[ svg_ink ][2]);
+    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[svg_ink][0],
+                                              palette[svg_ink][1],
+                                              palette[svg_ink][2]);
     err += (svg_attribute("stroke", svgcolor, "g") != 0);
     err += (svg_attribute("stroke-width", "1.7", "g") != 0);
 
@@ -263,8 +263,8 @@ svg_openpath(void)
     }
 }
 
-void
-svg_closepath(void)
+
+void svg_closepath(void)
 {
     if (xmlTextWriterEndElement(writer) < 0) {
     ui_error(UI_ERROR_ERROR, "error on SVG element close");
@@ -272,8 +272,8 @@ svg_closepath(void)
     }
 }
 
-void
-svg_closefile(void)
+
+void svg_closefile(void)
 {
     FILE *fp;
 
@@ -313,8 +313,8 @@ svg_closefile(void)
 
 
 // some init, open file (name)
-void
-svg_startcapture(const char *name, svg_capture_type mode)
+
+void svg_startcapture(const char *name, svg_capture_type mode)
 {
     if (!svg_capture_active) {
 
@@ -336,8 +336,8 @@ svg_startcapture(const char *name, svg_capture_type mode)
     }
 }
 
-void
-svg_stopcapture(void)
+
+void svg_stopcapture(void)
 {
     if (svg_capture_active) {
     svg_closepath();
@@ -349,11 +349,11 @@ svg_stopcapture(void)
     }
 }
 
-void
-svg_capture_draw(void)
+
+void svg_capture_draw(void)
 {
-    char path_element[ BUFSZ ];
-    char svgcolor[ BUFSZ ];
+    char path_element[BUFSZ];
+    char svgcolor[BUFSZ];
     int err;
     int dx,dy;
     int svg_ink;
@@ -367,9 +367,9 @@ svg_capture_draw(void)
 
     svg_ink = (readbyte_internal(0x5c8f) & 7) +
             ((readbyte_internal(0x5c8f) >> 3) & 8); // ATTR_T
-    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_ink ][0],
-                                              palette[ svg_ink ][1],
-                                              palette[ svg_ink ][2]);
+    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[svg_ink][0],
+                                              palette[svg_ink][1],
+                                              palette[svg_ink][2]);
 
     if ((svg_capture_mode == SVG_CAPTURE_LINES) &&
       ((z80.pc.w == 0x24ba) || (z80.pc.w == 0x2813))) {
@@ -426,11 +426,11 @@ svg_capture_draw(void)
     return;
 }
 
-void
-svg_byte(int xpos, int ypos, int udg_byte, char *color)
+
+void svg_byte(int xpos, int ypos, int udg_byte, char *color)
 {
     int i;
-    char path_element[ BUFSZ ];
+    char path_element[BUFSZ];
     int err = 0;
 
     for (i = 7; i >= 0; i--) {
@@ -462,12 +462,12 @@ svg_byte(int xpos, int ypos, int udg_byte, char *color)
     }
 }
 
-void
-svg_capture_char(void)
+
+void svg_capture_char(void)
 {
-    char path_element[ BUFSZ ];
-    char svgcolor_ink[ BUFSZ ];
-    char svgcolor_paper[ BUFSZ ];
+    char path_element[BUFSZ];
+    char svgcolor_ink[BUFSZ];
+    char svgcolor_paper[BUFSZ];
     int i, err;
     int svg_ink;
     int svg_paper;
@@ -493,12 +493,12 @@ svg_capture_char(void)
       svg_ink = svg_char;
     }
 
-    snprintf(svgcolor_paper, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
-                                                      palette[ svg_paper ][1],
-                                                      palette[ svg_paper ][2]);
-    snprintf(svgcolor_ink, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_ink ][0],
-                                                    palette[ svg_ink ][1],
-                                                    palette[ svg_ink ][2]);
+    snprintf(svgcolor_paper, BUFSZ, "rgb(%u,%u,%u)", palette[svg_paper][0],
+                                                      palette[svg_paper][1],
+                                                      palette[svg_paper][2]);
+    snprintf(svgcolor_ink, BUFSZ, "rgb(%u,%u,%u)", palette[svg_ink][0],
+                                                    palette[svg_ink][1],
+                                                    palette[svg_ink][2]);
     svg_char = z80.af.b.h;
 
 
@@ -593,8 +593,8 @@ svg_capture_char(void)
     return;
 }
 
-void
-svg_capture_cls(void)
+
+void svg_capture_cls(void)
 {
     if (svg_flag) {
     svg_closepath();
@@ -614,25 +614,25 @@ svg_capture_cls(void)
     return;
 }
 
-void
-svg_capture_scroll(void)
+
+void svg_capture_scroll(void)
 {
-    char svgcolor[ BUFSZ ];
+    char svgcolor[BUFSZ];
     static int svg_paper;
 
     // Background
     svg_paper = ((readbyte_internal(0x5c8d) >> 3) & 15); // ATTR_P
-    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[ svg_paper ][0],
-                                              palette[ svg_paper ][1],
-                                              palette[ svg_paper ][2]);
+    snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[svg_paper][0],
+                                              palette[svg_paper][1],
+                                              palette[svg_paper][2]);
 
     svg_y_size += 8;
     svg_rect(0, svg_y_size * 2, "512", "16", "1", svgcolor);
     return;
 }
 
-void
-svg_capture(void)
+
+void svg_capture(void)
 {
     if (trap_check_rom(CHECK_48K_ROM)) {
 
@@ -673,8 +673,8 @@ svg_capture(void)
     }
 }
 
-void
-svg_capture_end(void)
+
+void svg_capture_end(void)
 {
     svg_stopcapture();
     return;
@@ -682,14 +682,14 @@ svg_capture_end(void)
 
 #else // !HAVE_LIB_XML2
 
-void
-svg_capture(void)
+
+void svg_capture(void)
 {
     return;
 }
 
-void
-svg_capture_end(void)
+
+void svg_capture_end(void)
 {
     return;
 }

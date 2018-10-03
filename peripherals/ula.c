@@ -46,8 +46,8 @@
 
 static libspectrum_byte last_byte;
 
-libspectrum_byte ula_contention[ ULA_CONTENTION_SIZE ];
-libspectrum_byte ula_contention_no_mreq[ ULA_CONTENTION_SIZE ];
+libspectrum_byte ula_contention[ULA_CONTENTION_SIZE];
+libspectrum_byte ula_contention_no_mreq[ULA_CONTENTION_SIZE];
 
 /* What to return if no other input pressed; depends on the last byte
    output to the ULA; see CSS FAQ | Technical Information | Port #FE
@@ -70,8 +70,8 @@ static module_info_t ula_module_info = {
 };
 
 static const periph_port_t ula_ports[] = {
-    { 0x0001, 0x0000, ula_read, ula_write },
-    { 0, 0, NULL, NULL }
+    {0x0001, 0x0000, ula_read, ula_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t ula_periph = {
@@ -82,8 +82,8 @@ static const periph_t ula_periph = {
 };
 
 static const periph_port_t ula_ports_full_decode[] = {
-    { 0x00ff, 0x00fe, ula_read, ula_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x00fe, ula_read, ula_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t ula_periph_full_decode = {
@@ -101,50 +101,50 @@ static const char * const mem7ffd_detail_string = "mem7ffd";
 static const char * const mem1ffd_detail_string = "mem1ffd";
 
 // Adapter just to get the return type to be what the debugger is expecting
-static libspectrum_dword
-get_last_byte(void)
+
+static libspectrum_dword get_last_byte(void)
 {
     return ula_last_byte();
 }
 
-static libspectrum_dword
-get_tstates(void)
+
+static libspectrum_dword get_tstates(void)
 {
     return tstates;
 }
 
-static void
-set_tstates(libspectrum_dword value)
+
+static void set_tstates(libspectrum_dword value)
 {
     tstates = value;
 }
 
-static libspectrum_dword
-get_7ffd(void)
+
+static libspectrum_dword get_7ffd(void)
 {
     return machine_current->ram.last_byte;
 }
 
-static void
-set_7ffd(libspectrum_dword value)
+
+static void set_7ffd(libspectrum_dword value)
 {
     spec128_memoryport_write(0, value);
 }
 
-static libspectrum_dword
-get_1ffd(void)
+
+static libspectrum_dword get_1ffd(void)
 {
     return machine_current->ram.last_byte2;
 }
 
-static void
-set_1ffd(libspectrum_dword value)
+
+static void set_1ffd(libspectrum_dword value)
 {
     specplus3_memoryport2_write_internal(0, value);
 }
 
-static int
-ula_init(void *context)
+
+static int ula_init(void *context)
 {
     module_register(&ula_module_info);
 
@@ -165,8 +165,8 @@ ula_init(void *context)
     return 0;
 }
 
-void
-ula_register_startup(void)
+
+void ula_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -177,8 +177,8 @@ ula_register_startup(void)
                             NULL);
 }
 
-static libspectrum_byte
-ula_read(libspectrum_word port, libspectrum_byte *attached)
+
+static libspectrum_byte ula_read(libspectrum_word port, libspectrum_byte *attached)
 {
     libspectrum_byte r = ula_default_value;
 
@@ -195,8 +195,8 @@ ula_read(libspectrum_word port, libspectrum_byte *attached)
 }
 
 // What happens when we write to the ULA?
-static void
-ula_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void ula_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     last_byte = b;
 
@@ -228,56 +228,56 @@ ula_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 
 }
 
-libspectrum_byte
-ula_last_byte(void)
+
+libspectrum_byte ula_last_byte(void)
 {
     return last_byte;
 }
 
-libspectrum_byte
-ula_tape_level(void)
+
+libspectrum_byte ula_tape_level(void)
 {
     return last_byte & 0x8;
 }
 
-static void
-ula_from_snapshot(libspectrum_snap *snap)
+
+static void ula_from_snapshot(libspectrum_snap *snap)
 {
     ula_write(0x00fe, libspectrum_snap_out_ula(snap));
     tstates = libspectrum_snap_tstates(snap);
     settings_current.issue2 = libspectrum_snap_issue2(snap);
 }
 
-static void
-ula_to_snapshot(libspectrum_snap *snap)
+
+static void ula_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_snap_set_out_ula(snap, last_byte);
     libspectrum_snap_set_tstates(snap, tstates);
     libspectrum_snap_set_issue2(snap, settings_current.issue2);
 }
 
-void
-ula_contend_port_early(libspectrum_word port)
+
+void ula_contend_port_early(libspectrum_word port)
 {
-    if (memory_map_read[ port >> MEMORY_PAGE_SIZE_LOGARITHM ].contended)
-    tstates += ula_contention_no_mreq[ tstates ];
+    if (memory_map_read[port >> MEMORY_PAGE_SIZE_LOGARITHM].contended)
+    tstates += ula_contention_no_mreq[tstates];
 
     tstates++;
 }
 
-void
-ula_contend_port_late(libspectrum_word port)
+
+void ula_contend_port_late(libspectrum_word port)
 {
     if (machine_current->ram.port_from_ula(port)) {
 
-    tstates += ula_contention_no_mreq[ tstates ]; tstates += 2;
+    tstates += ula_contention_no_mreq[tstates]; tstates += 2;
 
     } else {
 
-    if (memory_map_read[ port >> MEMORY_PAGE_SIZE_LOGARITHM ].contended) {
-      tstates += ula_contention_no_mreq[ tstates ]; tstates++;
-      tstates += ula_contention_no_mreq[ tstates ]; tstates++;
-      tstates += ula_contention_no_mreq[ tstates ];
+    if (memory_map_read[port >> MEMORY_PAGE_SIZE_LOGARITHM].contended) {
+      tstates += ula_contention_no_mreq[tstates]; tstates++;
+      tstates += ula_contention_no_mreq[tstates]; tstates++;
+      tstates += ula_contention_no_mreq[tstates];
     } else {
       tstates += 2;
     }

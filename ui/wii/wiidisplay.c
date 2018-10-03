@@ -52,12 +52,12 @@ libspectrum_word display_image[2 * DISPLAY_SCREEN_HEIGHT][DISPLAY_SCREEN_WIDTH];
 
 /* An RGB image of the Spectrum screen; slightly bigger than the real
    screen to handle the smoothing filters which read around each pixel */
-static unsigned char rgb_image[ 4 * 2 * (DISPLAY_SCREEN_HEIGHT + 4) *
+static unsigned char rgb_image[4 * 2 * (DISPLAY_SCREEN_HEIGHT + 4) *
                                         (DISPLAY_SCREEN_WIDTH  + 3)   ];
 static const int rgb_pitch = (DISPLAY_SCREEN_WIDTH + 3) * 4;
 
 // The scaled image
-static unsigned char scaled_image[ 4 * 3 * DISPLAY_SCREEN_HEIGHT *
+static unsigned char scaled_image[4 * 3 * DISPLAY_SCREEN_HEIGHT *
                                   (size_t)(1.5 * DISPLAY_SCREEN_WIDTH) ];
 static const ptrdiff_t scaled_pitch = 4 * 1.5 * DISPLAY_SCREEN_WIDTH;
 
@@ -103,15 +103,15 @@ static u32 bw_colours[16];
 #define MOUSEHOTX 4
 #define MOUSEHOTY 4
 static int mousecursor[MOUSESIZEY][MOUSESIZEX] = {
-    { 0xff, 0xff, 0xff, 0x0f, 0x0f, 0x0f, 0xff, 0xff, 0xff },
-    { 0xff, 0xff, 0xff, 0x0f, 0x00, 0x0f, 0xff, 0xff, 0xff },
-    { 0xff, 0xff, 0xff, 0x0f, 0x00, 0x0f, 0xff, 0xff, 0xff },
-    { 0x0f, 0x0f, 0x0f, 0x0f, 0x00, 0x0f, 0x0f, 0x0f, 0x0f },
-    { 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f },
-    { 0x0f, 0x0f, 0x0f, 0x0f, 0x00, 0x0f, 0x0f, 0x0f, 0x0f },
-    { 0xff, 0xff, 0xff, 0x0f, 0x00, 0x0f, 0xff, 0xff, 0xff },
-    { 0xff, 0xff, 0xff, 0x0f, 0x00, 0x0f, 0xff, 0xff, 0xff },
-    { 0xff, 0xff, 0xff, 0x0f, 0x0f, 0x0f, 0xff, 0xff, 0xff }
+    {0xff, 0xff, 0xff, 0x0f, 0x0f, 0x0f, 0xff, 0xff, 0xff},
+    {0xff, 0xff, 0xff, 0x0f, 0x00, 0x0f, 0xff, 0xff, 0xff},
+    {0xff, 0xff, 0xff, 0x0f, 0x00, 0x0f, 0xff, 0xff, 0xff},
+    {0x0f, 0x0f, 0x0f, 0x0f, 0x00, 0x0f, 0x0f, 0x0f, 0x0f},
+    {0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f},
+    {0x0f, 0x0f, 0x0f, 0x0f, 0x00, 0x0f, 0x0f, 0x0f, 0x0f},
+    {0xff, 0xff, 0xff, 0x0f, 0x00, 0x0f, 0xff, 0xff, 0xff},
+    {0xff, 0xff, 0xff, 0x0f, 0x00, 0x0f, 0xff, 0xff, 0xff},
+    {0xff, 0xff, 0xff, 0x0f, 0x0f, 0x0f, 0xff, 0xff, 0xff}
 };
 static int mousecache[MOUSESIZEY][MOUSESIZEX];
 static int mousex = 0, mousey = 0;
@@ -156,8 +156,8 @@ static int get_pixel(int x, int y)
     return display_image[y][x];
 }
 
-static int
-init_colours(void)
+
+static int init_colours(void)
 {
     size_t i;
 
@@ -203,8 +203,8 @@ int uidisplay_init(int width, int height)
     return 0;
 }
 
-static int
-register_scalers(void)
+
+static int register_scalers(void)
 {
     scaler_register_clear();
 
@@ -317,14 +317,14 @@ int wiidisplay_init(void)
     return 0;
 }
 
-int
-uidisplay_hotswap_gfx_mode(void)
+
+int uidisplay_hotswap_gfx_mode(void)
 {
     return 0;
 }
 
-void
-uidisplay_frame_end(void)
+
+void uidisplay_frame_end(void)
 {
     VIDEO_WaitVSync();
     if (rmode->viTVMode & VI_NON_INTERLACE) VIDEO_WaitVSync();
@@ -374,8 +374,8 @@ void wiidisplay_showmouse(float x, float y)
     uidisplay_area(mousex, mousey, MOUSESIZEX, MOUSESIZEY);
 }
 
-void
-uidisplay_area(int x, int y, int w, int h)
+
+void uidisplay_area(int x, int y, int w, int h)
 {
     float scale = (float)wiidisplay_current_size / image_scale;
     int scaled_x, scaled_y, i, yy;
@@ -400,13 +400,13 @@ uidisplay_area(int x, int y, int w, int h)
 
     display = &display_image[yy][x];
 
-    for (i = 0; i < w; i++, rgb++, display++) *rgb = palette[ *display ];
+    for (i = 0; i < w; i++, rgb++, display++) *rgb = palette[ *display];
     }
 
     // Create scaled image
     scaler_proc32(&rgb_image[ (y + 2) * rgb_pitch + 4 * (x + 1) ],
                  rgb_pitch,
-                 &scaled_image[ scaled_y * scaled_pitch + 4 * scaled_x ],
+                 &scaled_image[scaled_y * scaled_pitch + 4 * scaled_x],
                  scaled_pitch, w, h);
 
     w *= scale; h *= scale;
@@ -436,13 +436,13 @@ uidisplay_area(int x, int y, int w, int h)
 
       rgb_t rgb1, rgb2;
 
-      rgb1.b = scaled_image[ ofs + 2 ]; // blue
-      rgb1.g = scaled_image[ ofs + 1 ]; // green
-      rgb1.r = scaled_image[ ofs + 0 ]; // red
+      rgb1.b = scaled_image[ofs + 2]; // blue
+      rgb1.g = scaled_image[ofs + 1]; // green
+      rgb1.r = scaled_image[ofs + 0]; // red
 
-      rgb2.b = scaled_image[ ofs + 2 + 4 ]; // blue
-      rgb2.g = scaled_image[ ofs + 1 + 4 ]; // green
-      rgb2.r = scaled_image[ ofs + 0 + 4 ]; // red
+      rgb2.b = scaled_image[ofs + 2 + 4]; // blue
+      rgb2.g = scaled_image[ofs + 1 + 4]; // green
+      rgb2.r = scaled_image[ofs + 0 + 4]; // red
 
       *dest = convert_rgb(rgb1, rgb2);
 
@@ -452,30 +452,30 @@ uidisplay_area(int x, int y, int w, int h)
     }
 }
 
-int
-uidisplay_end(void)
+
+int uidisplay_end(void)
 {
     display_ui_initialised = 0;
     return 0;
 }
 
-int
-wiidisplay_end(void)
+
+int wiidisplay_end(void)
 {
     return 0;
 }
 
 // Set one pixel in the display
-void
-uidisplay_putpixel(int x, int y, int colour)
+
+void uidisplay_putpixel(int x, int y, int colour)
 {
     put_pixel(x, y, colour, 0);
 }
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((8*x) , y) */
-void
-uidisplay_plot8(int x, int y, libspectrum_byte data,
+
+void uidisplay_plot8(int x, int y, libspectrum_byte data,
                  libspectrum_byte ink, libspectrum_byte paper)
 {
     x <<= 3;
@@ -516,22 +516,22 @@ uidisplay_plot8(int x, int y, libspectrum_byte data,
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((16*x) , y) */
-void
-uidisplay_plot16(int x, int y, libspectrum_word data,
+
+void uidisplay_plot16(int x, int y, libspectrum_word data,
                   libspectrum_byte ink, libspectrum_byte paper)
 {
     // FIXME: what should this do?
     return;
 }
 
-void
-uidisplay_frame_save(void)
+
+void uidisplay_frame_save(void)
 {
     // FIXME: implement
 }
 
-void
-uidisplay_frame_restore(void)
+
+void uidisplay_frame_restore(void)
 {
     // FIXME: implement
 }

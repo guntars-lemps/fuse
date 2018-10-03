@@ -69,8 +69,8 @@ static const periph_t if2_periph = {
     /* .activate = */ NULL,
 };
 
-static int
-if2_init(void *context)
+
+static int if2_init(void *context)
 {
     int i;
     int if2_source;
@@ -86,8 +86,8 @@ if2_init(void *context)
     return 0;
 }
 
-void
-if2_register_startup(void)
+
+void if2_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_MEMORY,
@@ -97,8 +97,8 @@ if2_register_startup(void)
                             ARRAY_SIZE(dependencies), if2_init, NULL, NULL);
 }
 
-int
-if2_insert(const char *filename)
+
+int if2_insert(const char *filename)
 {
     if (!periph_is_active(PERIPH_TYPE_INTERFACE2)) {
     ui_error(UI_ERROR_ERROR,
@@ -113,8 +113,8 @@ if2_insert(const char *filename)
     return 0;
 }
 
-void
-if2_eject(void)
+
+void if2_eject(void)
 {
     if (!periph_is_active(PERIPH_TYPE_INTERFACE2)) {
     ui_error(UI_ERROR_ERROR,
@@ -132,8 +132,8 @@ if2_eject(void)
     machine_reset(0);
 }
 
-static void
-if2_reset(int hard_reset GCC_UNUSED)
+
+static void if2_reset(int hard_reset GCC_UNUSED)
 {
     if2_active = 0;
 
@@ -157,16 +157,16 @@ if2_reset(int hard_reset GCC_UNUSED)
     ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_IF2_EJECT, 1);
 }
 
-static void
-if2_memory_map(void)
+
+static void if2_memory_map(void)
 {
     if (!if2_active) return;
 
     memory_map_romcs_full(if2_memory_map_romcs);
 }
 
-static void
-if2_from_snapshot(libspectrum_snap *snap)
+
+static void if2_from_snapshot(libspectrum_snap *snap)
 {
     if (!libspectrum_snap_interface2_active(snap)) return;
 
@@ -186,8 +186,8 @@ if2_from_snapshot(libspectrum_snap *snap)
     machine_current->memory_map();
 }
 
-static void
-if2_to_snapshot(libspectrum_snap *snap)
+
+static void if2_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte *buffer;
     int i;
@@ -204,8 +204,8 @@ if2_to_snapshot(libspectrum_snap *snap)
     libspectrum_snap_set_interface2_rom(snap, 0, buffer);
 }
 
-int
-if2_unittest(void)
+
+int if2_unittest(void)
 {
     int r = 0;
 

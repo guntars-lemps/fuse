@@ -38,8 +38,8 @@
 static void end_handler(int signo);
 static void fb_end(void);
 
-int
-ui_init(int *argc, char ***argv)
+
+int ui_init(int *argc, char ***argv)
 {
     struct sigaction handler;
     int error;
@@ -100,14 +100,14 @@ int ui_end(void)
     return 0;
 }
 
-static void
-end_handler(int signo)
+
+static void end_handler(int signo)
 {
     fb_end();
 }
 
-static void
-fb_end(void)
+
+static void fb_end(void)
 {
     fbkeyboard_end();
     uidisplay_end();

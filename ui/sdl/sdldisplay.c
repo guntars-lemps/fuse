@@ -57,22 +57,22 @@ static int tmp_screen_width;
 static Uint32 colour_values[16];
 
 static SDL_Color colour_palette[] = {
-    {   0,   0,   0,   0 },
-    {   0,   0, 192,   0 },
-    { 192,   0,   0,   0 },
-    { 192,   0, 192,   0 },
-    {   0, 192,   0,   0 },
-    {   0, 192, 192,   0 },
-    { 192, 192,   0,   0 },
-    { 192, 192, 192,   0 },
-    {   0,   0,   0,   0 },
-    {   0,   0, 255,   0 },
-    { 255,   0,   0,   0 },
-    { 255,   0, 255,   0 },
-    {   0, 255,   0,   0 },
-    {   0, 255, 255,   0 },
-    { 255, 255,   0,   0 },
-    { 255, 255, 255,   0 }
+    {   0,   0,   0,   0},
+    {   0,   0, 192,   0},
+    {192,   0,   0,   0},
+    {192,   0, 192,   0},
+    {   0, 192,   0,   0},
+    {   0, 192, 192,   0},
+    {192, 192,   0,   0},
+    {192, 192, 192,   0},
+    {   0,   0,   0,   0},
+    {   0,   0, 255,   0},
+    {255,   0,   0,   0},
+    {255,   0, 255,   0},
+    {   0, 255,   0,   0},
+    {   0, 255, 255,   0},
+    {255, 255,   0,   0},
+    {255, 255, 255,   0}
 };
 
 static Uint32 bw_values[16];
@@ -106,8 +106,8 @@ static int sdldisplay_allocate_colours(int numColours, Uint32 *colour_values,
 
 static int sdldisplay_load_gfx_mode(void);
 
-static void
-init_scalers(void)
+
+static void init_scalers(void)
 {
     scaler_register_clear();
 
@@ -142,13 +142,13 @@ init_scalers(void)
     }
 }
 
-static int
-sdl_convert_icon(SDL_Surface *source, SDL_Surface **icon, int red)
+
+static int sdl_convert_icon(SDL_Surface *source, SDL_Surface **icon, int red)
 {
     SDL_Surface *copy; // Copy with altered palette
     int i;
 
-    SDL_Color colors[ source->format->palette->ncolors ];
+    SDL_Color colors[source->format->palette->ncolors];
 
     copy = SDL_ConvertSurface(source, source->format, SDL_SWSURFACE);
 
@@ -183,10 +183,10 @@ sdl_convert_icon(SDL_Surface *source, SDL_Surface **icon, int red)
     return 0;
 }
 
-static int
-sdl_load_status_icon(const char*filename, SDL_Surface **red, SDL_Surface **green)
+
+static int sdl_load_status_icon(const char*filename, SDL_Surface **red, SDL_Surface **green)
 {
-    char path[ PATH_MAX ];
+    char path[PATH_MAX];
     SDL_Surface *temp; // Copy of image as loaded
 
     if (utils_find_file_path(filename, path, UTILS_AUXILIARY_LIB)) {
@@ -213,8 +213,8 @@ sdl_load_status_icon(const char*filename, SDL_Surface **red, SDL_Surface **green
     return 0;
 }
 
-int
-uidisplay_init(int width, int height)
+
+int uidisplay_init(int width, int height)
 {
     SDL_Rect **modes;
     int no_modes;
@@ -302,8 +302,8 @@ uidisplay_init(int width, int height)
     return 0;
 }
 
-static int
-sdldisplay_allocate_colours(int numColours, Uint32 *colour_values,
+
+static int sdldisplay_allocate_colours(int numColours, Uint32 *colour_values,
                              Uint32 *bw_values)
 {
     int i;
@@ -325,8 +325,8 @@ sdldisplay_allocate_colours(int numColours, Uint32 *colour_values,
     return 0;
 }
 
-static void
-sdldisplay_find_best_fullscreen_scaler(void)
+
+static void sdldisplay_find_best_fullscreen_scaler(void)
 {
     static int windowed_scaler = -1;
     static int searching_fullscreen_scaler = 0;
@@ -364,8 +364,8 @@ sdldisplay_find_best_fullscreen_scaler(void)
     }
 }
 
-static int
-sdldisplay_load_gfx_mode(void)
+
+static int sdldisplay_load_gfx_mode(void)
 {
     Uint16 *tmp_screen_pixels;
 
@@ -440,8 +440,8 @@ sdldisplay_load_gfx_mode(void)
     return 0;
 }
 
-int
-uidisplay_hotswap_gfx_mode(void)
+
+int uidisplay_hotswap_gfx_mode(void)
 {
     fuse_emulation_pause();
 
@@ -473,8 +473,8 @@ uidisplay_hotswap_gfx_mode(void)
 
 SDL_Surface *saved = NULL;
 
-void
-uidisplay_frame_save(void)
+
+void uidisplay_frame_save(void)
 {
     if (saved) {
     SDL_FreeSurface(saved);
@@ -485,8 +485,8 @@ uidisplay_frame_save(void)
                               SDL_SWSURFACE);
 }
 
-void
-uidisplay_frame_restore(void)
+
+void uidisplay_frame_restore(void)
 {
     if (saved) {
     SDL_BlitSurface(saved, NULL, tmp_screen, NULL);
@@ -494,8 +494,8 @@ uidisplay_frame_restore(void)
     }
 }
 
-static void
-sdl_blit_icon(SDL_Surface **icon,
+
+static void sdl_blit_icon(SDL_Surface **icon,
                SDL_Rect *r, Uint32 tmp_screen_pitch,
                Uint32 dstPitch)
 {
@@ -551,10 +551,10 @@ sdl_blit_icon(SDL_Surface **icon,
     num_rects++;
 }
 
-static void
-sdl_icon_overlay(Uint32 tmp_screen_pitch, Uint32 dstPitch)
+
+static void sdl_icon_overlay(Uint32 tmp_screen_pitch, Uint32 dstPitch)
 {
-    SDL_Rect r = { 243, 218, red_disk[0]->w, red_disk[0]->h };
+    SDL_Rect r = {243, 218, red_disk[0]->w, red_disk[0]->h};
 
     switch (sdl_disk_state) {
     case UI_STATUSBAR_STATE_ACTIVE:
@@ -602,14 +602,14 @@ sdl_icon_overlay(Uint32 tmp_screen_pitch, Uint32 dstPitch)
 }
 
 // Set one pixel in the display
-void
-uidisplay_putpixel(int x, int y, int colour)
+
+void uidisplay_putpixel(int x, int y, int colour)
 {
     libspectrum_word *dest_base, *dest;
     Uint32 *palette_values = settings_current.bw_tv ? bw_values :
                            colour_values;
 
-    Uint32 palette_colour = palette_values[ colour ];
+    Uint32 palette_colour = palette_values[colour];
 
     if (machine_current->timex) {
     x <<= 1; y <<= 1;
@@ -636,16 +636,16 @@ uidisplay_putpixel(int x, int y, int colour)
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((8*x) , y) */
-void
-uidisplay_plot8(int x, int y, libspectrum_byte data,
+
+void uidisplay_plot8(int x, int y, libspectrum_byte data,
              libspectrum_byte ink, libspectrum_byte paper)
 {
     libspectrum_word *dest;
     Uint32 *palette_values = settings_current.bw_tv ? bw_values :
                            colour_values;
 
-    Uint32 palette_ink = palette_values[ ink ];
-    Uint32 palette_paper = palette_values[ paper ];
+    Uint32 palette_ink = palette_values[ink];
+    Uint32 palette_paper = palette_values[paper];
 
     if (machine_current->timex) {
     int i;
@@ -702,16 +702,16 @@ uidisplay_plot8(int x, int y, libspectrum_byte data,
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((16*x) , y) */
-void
-uidisplay_plot16(int x, int y, libspectrum_word data,
+
+void uidisplay_plot16(int x, int y, libspectrum_word data,
           libspectrum_byte ink, libspectrum_byte paper)
 {
     libspectrum_word *dest_base, *dest;
     int i;
     Uint32 *palette_values = settings_current.bw_tv ? bw_values :
                            colour_values;
-    Uint32 palette_ink = palette_values[ ink ];
-    Uint32 palette_paper = palette_values[ paper ];
+    Uint32 palette_ink = palette_values[ink];
+    Uint32 palette_paper = palette_values[paper];
     x <<= 4; y <<= 1;
 
     dest_base =
@@ -744,8 +744,8 @@ uidisplay_plot16(int x, int y, libspectrum_word data,
     }
 }
 
-void
-uidisplay_frame_end(void)
+
+void uidisplay_frame_end(void)
 {
     SDL_Rect *r;
     Uint32 tmp_screen_pitch, dstPitch;
@@ -817,8 +817,8 @@ uidisplay_frame_end(void)
     sdldisplay_force_full_refresh = 0;
 }
 
-void
-uidisplay_area(int x, int y, int width, int height)
+
+void uidisplay_area(int x, int y, int width, int height)
 {
     if (sdldisplay_force_full_refresh)
     return;
@@ -841,8 +841,8 @@ uidisplay_area(int x, int y, int width, int height)
     num_rects++;
 }
 
-int
-uidisplay_end(void)
+
+int uidisplay_end(void)
 {
     int i;
 
@@ -882,8 +882,8 @@ uidisplay_end(void)
 }
 
 // The statusbar handling function
-int
-ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
+
+int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
 {
     switch (item) {
 

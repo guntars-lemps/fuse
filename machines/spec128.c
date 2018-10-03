@@ -62,8 +62,8 @@ int spec128_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-spec128_reset(void)
+
+static int spec128_reset(void)
 {
     int error;
 
@@ -88,8 +88,8 @@ spec128_reset(void)
     return 0;
 }
 
-int
-spec128_common_reset(int contention)
+
+int spec128_common_reset(int contention)
 {
     size_t i;
 
@@ -119,8 +119,8 @@ spec128_common_reset(int contention)
     return 0;
 }
 
-void
-spec128_memoryport_write(libspectrum_word port GCC_UNUSED,
+
+void spec128_memoryport_write(libspectrum_word port GCC_UNUSED,
               libspectrum_byte b)
 {
     if (machine_current->ram.locked) return;
@@ -132,22 +132,22 @@ spec128_memoryport_write(libspectrum_word port GCC_UNUSED,
     machine_current->ram.locked = b & 0x20;
 }
 
-void
-spec128_select_rom(int rom)
+
+void spec128_select_rom(int rom)
 {
     memory_map_16k(0x0000, memory_map_rom, rom);
     machine_current->ram.current_rom = rom;
 }
 
-void
-spec128_select_page(int page)
+
+void spec128_select_page(int page)
 {
     memory_map_16k(0xc000, memory_map_ram, page);
     machine_current->ram.current_page = page;
 }
 
-int
-spec128_memory_map(void)
+
+int spec128_memory_map(void)
 {
     int page, screen, rom;
 

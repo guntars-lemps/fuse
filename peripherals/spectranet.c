@@ -90,8 +90,8 @@ static int spectranet_source;
 static const char * const event_type_string = "spectranet";
 static int page_event, unpage_event;
 
-void
-spectranet_page(int via_io)
+
+void spectranet_page(int via_io)
 {
     if (spectranet_paged)
     return;
@@ -103,15 +103,15 @@ spectranet_page(int via_io)
     debugger_event(page_event);
 }
 
-void
-spectranet_nmi(void)
+
+void spectranet_nmi(void)
 {
     nmi_flipflop = 1;
     spectranet_page(0);
 }
 
-void
-spectranet_unpage(void)
+
+void spectranet_unpage(void)
 {
     if (!spectranet_paged)
     return;
@@ -123,20 +123,20 @@ spectranet_unpage(void)
     debugger_event(unpage_event);
 }
 
-void
-spectranet_retn(void)
+
+void spectranet_retn(void)
 {
     nmi_flipflop = 0;
 }
 
-int
-spectranet_nmi_flipflop(void)
+
+int spectranet_nmi_flipflop(void)
 {
     return nmi_flipflop;
 }
 
-static void
-spectranet_map_page(int dest, int source)
+
+static void spectranet_map_page(int dest, int source)
 {
     int i;
     int w5100_page = source >= 0x40 && source < 0x48;
@@ -152,8 +152,8 @@ spectranet_map_page(int dest, int source)
     }
 }
 
-static void
-spectranet_hard_reset(void)
+
+static void spectranet_hard_reset(void)
 {
     spectranet_map_page(1, 0xff); // Map something into 0x1000 to 0x1fff
     spectranet_map_page(2, 0xff); // And 0x2000 to 0x2fff
@@ -165,8 +165,8 @@ spectranet_hard_reset(void)
     nmi_flipflop = 0;
 }
 
-static void
-spectranet_reset(int hard_reset)
+
+static void spectranet_reset(int hard_reset)
 {
     if (!periph_is_active(PERIPH_TYPE_SPECTRANET)) {
     spectranet_available = 0;
@@ -188,16 +188,16 @@ spectranet_reset(int hard_reset)
     nic_w5100_reset(w5100);
 }
 
-static void
-spectranet_memory_map(void)
+
+static void spectranet_memory_map(void)
 {
     if (!spectranet_paged) return;
 
     memory_map_romcs_full(spectranet_current_map);
 }
 
-static void
-spectranet_activate(void)
+
+static void spectranet_activate(void)
 {
     if (!spectranet_memory_allocated) {
 
@@ -260,14 +260,14 @@ spectranet_activate(void)
     }
 }
 
-static void
-spectranet_enabled_snapshot(libspectrum_snap *snap)
+
+static void spectranet_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.spectranet = libspectrum_snap_spectranet_active(snap);
 }
 
-static void
-spectranet_from_snapshot(libspectrum_snap *snap)
+
+static void spectranet_from_snapshot(libspectrum_snap *snap)
 {
     if (!libspectrum_snap_spectranet_active(snap))
     return;
@@ -308,8 +308,8 @@ spectranet_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-spectranet_to_snapshot(libspectrum_snap *snap)
+
+static void spectranet_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte *snap_buffer, *src;
 
@@ -363,29 +363,29 @@ static module_info_t spectranet_module_info = {
 
 };
 
-static void
-spectranet_page_a(libspectrum_word port, libspectrum_byte data)
+
+static void spectranet_page_a(libspectrum_word port, libspectrum_byte data)
 {
     spectranet_map_page(1, data);
     memory_map_romcs_full(spectranet_current_map);
 }
 
-static void
-spectranet_page_b(libspectrum_word port, libspectrum_byte data)
+
+static void spectranet_page_b(libspectrum_word port, libspectrum_byte data)
 {
     spectranet_map_page(2, data);
     memory_map_romcs_full(spectranet_current_map);
 }
 
-static libspectrum_byte
-spectranet_cpld_version(libspectrum_word port, libspectrum_byte *attached)
+
+static libspectrum_byte spectranet_cpld_version(libspectrum_word port, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
     return SPECTRANET_CPLD_VERSION;
 }
 
-static void
-spectranet_trap(libspectrum_word port, libspectrum_byte data)
+
+static void spectranet_trap(libspectrum_word port, libspectrum_byte data)
 {
     if (trap_write_msb)
     spectranet_programmable_trap =
@@ -397,8 +397,8 @@ spectranet_trap(libspectrum_word port, libspectrum_byte data)
     trap_write_msb = !trap_write_msb;
 }
 
-static libspectrum_byte
-spectranet_control_read(libspectrum_word port, libspectrum_byte *attached)
+
+static libspectrum_byte spectranet_control_read(libspectrum_word port, libspectrum_byte *attached)
 {
     libspectrum_byte b = ula_last_byte() & 0x07;
     if (spectranet_programmable_trap_active)
@@ -413,8 +413,8 @@ spectranet_control_read(libspectrum_word port, libspectrum_byte *attached)
     return b;
 }
 
-static void
-spectranet_control_write(libspectrum_word port, libspectrum_byte data)
+
+static void spectranet_control_write(libspectrum_word port, libspectrum_byte data)
 {
     if (data & 0x01)
     spectranet_page(1);
@@ -425,11 +425,11 @@ spectranet_control_write(libspectrum_word port, libspectrum_byte data)
 }
 
 static const periph_port_t spectranet_ports[] = {
-    { 0xffff, 0x003b, NULL, spectranet_page_a },
-    { 0xffff, 0x013b, NULL, spectranet_page_b },
-    { 0xffff, 0x023b, spectranet_cpld_version, spectranet_trap },
-    { 0xffff, 0x033b, spectranet_control_read, spectranet_control_write },
-    { 0, 0, NULL, NULL }
+    {0xffff, 0x003b, NULL, spectranet_page_a},
+    {0xffff, 0x013b, NULL, spectranet_page_b},
+    {0xffff, 0x023b, spectranet_cpld_version, spectranet_trap},
+    {0xffff, 0x033b, spectranet_control_read, spectranet_control_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t spectranet_periph = {
@@ -439,8 +439,8 @@ static const periph_t spectranet_periph = {
     /* .activate = */ spectranet_activate,
 };
 
-static int
-spectranet_init(void *context)
+
+static int spectranet_init(void *context)
 {
     module_register(&spectranet_module_info);
     spectranet_source = memory_source_register("Spectranet");
@@ -454,15 +454,15 @@ spectranet_init(void *context)
     return 0;
 }
 
-static void
-spectranet_end(void)
+
+static void spectranet_end(void)
 {
     nic_w5100_free(w5100);
     flash_am29f010_free(flash_rom);
 }
 
-void
-spectranet_register_startup(void)
+
+void spectranet_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -474,8 +474,8 @@ spectranet_register_startup(void)
                             spectranet_end);
 }
 
-static libspectrum_word
-get_w5100_register(memory_page *page, libspectrum_word address)
+
+static libspectrum_word get_w5100_register(memory_page *page, libspectrum_word address)
 {
     libspectrum_word base_address =
     (page->page_num - SPECTRANET_BUFFER_BASE) * SPECTRANET_PAGE_LENGTH;
@@ -483,21 +483,21 @@ get_w5100_register(memory_page *page, libspectrum_word address)
 }
 
 
-libspectrum_byte
-spectranet_w5100_read(memory_page *page, libspectrum_word address)
+
+libspectrum_byte spectranet_w5100_read(memory_page *page, libspectrum_word address)
 {
     return nic_w5100_read(w5100, get_w5100_register(page, address));
 }
 
-void
-spectranet_w5100_write(memory_page *page, libspectrum_word address, libspectrum_byte b)
+
+void spectranet_w5100_write(memory_page *page, libspectrum_word address, libspectrum_byte b)
 {
     address &= 0xfff;
     nic_w5100_write(w5100, get_w5100_register(page, address), b);
 }
 
-void
-spectranet_flash_rom_write(libspectrum_word address, libspectrum_byte b)
+
+void spectranet_flash_rom_write(libspectrum_word address, libspectrum_byte b)
 {
     int pageb_page = spectranet_current_map[2 * MEMORY_PAGES_IN_4K].page_num;
 
@@ -514,53 +514,53 @@ spectranet_flash_rom_write(libspectrum_word address, libspectrum_byte b)
 
 // No spectranet support
 
-void
-spectranet_register_startup(void)
+
+void spectranet_register_startup(void)
 {
 }
 
-void
-spectranet_page(int via_io)
+
+void spectranet_page(int via_io)
 {
 }
 
-void
-spectranet_nmi(void)
+
+void spectranet_nmi(void)
 {
 }
 
-void
-spectranet_unpage(void)
+
+void spectranet_unpage(void)
 {
 }
 
-void
-spectranet_retn(void)
+
+void spectranet_retn(void)
 {
 }
 
-int
-spectranet_nmi_flipflop(void)
+
+int spectranet_nmi_flipflop(void)
 {
     return 0;
 }
 
-libspectrum_byte
-spectranet_w5100_read(memory_page *page GCC_UNUSED,
+
+libspectrum_byte spectranet_w5100_read(memory_page *page GCC_UNUSED,
                        libspectrum_word address GCC_UNUSED)
 {
     return 0xff;
 }
 
-void
-spectranet_w5100_write(memory_page *page GCC_UNUSED,
+
+void spectranet_w5100_write(memory_page *page GCC_UNUSED,
                         libspectrum_word address GCC_UNUSED,
                         libspectrum_byte b GCC_UNUSED)
 {
 }
 
-void
-spectranet_flash_rom_write(libspectrum_word address GCC_UNUSED,
+
+void spectranet_flash_rom_write(libspectrum_word address GCC_UNUSED,
                             libspectrum_byte b GCC_UNUSED)
 {
 }

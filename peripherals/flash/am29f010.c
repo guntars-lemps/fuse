@@ -52,40 +52,40 @@ flash_am29f010_alloc(void)
     return libspectrum_new(flash_am29f010_t, 1);
 }
 
-void
-flash_am29f010_free(flash_am29f010_t *self)
+
+void flash_am29f010_free(flash_am29f010_t *self)
 {
     libspectrum_free(self);
 }
 
-void
-flash_am29f010_init(flash_am29f010_t *self, libspectrum_byte *memory)
+
+void flash_am29f010_init(flash_am29f010_t *self, libspectrum_byte *memory)
 {
     self->flash_state = FLASH_STATE_RESET;
     self->memory = memory;
 }
 
-static void
-flash_am29f010_chip_erase(flash_am29f010_t *self)
+
+static void flash_am29f010_chip_erase(flash_am29f010_t *self)
 {
     memset(self->memory, 0xff, SIZE_OF_FLASH_ROM);
 }
 
-static void
-flash_am29f010_sector_erase(flash_am29f010_t *self, libspectrum_byte page)
+
+static void flash_am29f010_sector_erase(flash_am29f010_t *self, libspectrum_byte page)
 {
     memset(self->memory + (page * SIZE_OF_FLASH_PAGE), 0xff, SIZE_OF_FLASH_PAGE);
 }
 
-static void
-flash_am29f010_program(flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b)
+
+static void flash_am29f010_program(flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b)
 {
     libspectrum_dword flash_offset = page * SIZE_OF_FLASH_PAGE + address;
-    self->memory[ flash_offset ] = b;
+    self->memory[flash_offset] = b;
 }
 
-void
-flash_am29f010_write(flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b)
+
+void flash_am29f010_write(flash_am29f010_t *self, libspectrum_byte page, libspectrum_word address, libspectrum_byte b)
 {
     libspectrum_word flash_address = address & 0xfff;
 

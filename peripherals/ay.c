@@ -38,7 +38,7 @@
 
 /* Unused bits in the AY registers are silently zeroed out; these masks
    accomplish this */
-static const libspectrum_byte mask[ AY_REGISTERS ] = {
+static const libspectrum_byte mask[AY_REGISTERS] = {
 
     0xff, 0x0f, 0xff, 0x0f, 0xff, 0x0f, 0x1f, 0xff,
     0x1f, 0x1f, 0x1f, 0xff, 0xff, 0x0f, 0xff, 0xff,
@@ -62,9 +62,9 @@ static module_info_t ay_module_info = {
 };
 
 static periph_port_t ay_ports[] = {
-    { 0xc002, 0xc000, ay_registerport_read, ay_registerport_write },
-    { 0xc002, 0x8000, NULL, ay_dataport_write },
-    { 0, 0, NULL, NULL }
+    {0xc002, 0xc000, ay_registerport_read, ay_registerport_write},
+    {0xc002, 0x8000, NULL, ay_dataport_write},
+    {0, 0, NULL, NULL}
 };
 
 static periph_t ay_periph = {
@@ -75,9 +75,9 @@ static periph_t ay_periph = {
 };
 
 static periph_port_t ay_ports_plus3[] = {
-    { 0xc002, 0xc000, ay_registerport_read, ay_registerport_write },
-    { 0xc002, 0x8000, ay_registerport_read, ay_dataport_write },
-    { 0, 0, NULL, NULL }
+    {0xc002, 0xc000, ay_registerport_read, ay_registerport_write},
+    {0xc002, 0x8000, ay_registerport_read, ay_dataport_write},
+    {0, 0, NULL, NULL}
 };
 
 static periph_t ay_periph_plus3 = {
@@ -88,9 +88,9 @@ static periph_t ay_periph_plus3 = {
 };
 
 static periph_port_t ay_ports_full_decode[] = {
-    { 0xffff, 0xfffd, ay_registerport_read, ay_registerport_write },
-    { 0xffff, 0xbffd, NULL, ay_dataport_write },
-    { 0, 0, NULL, NULL }
+    {0xffff, 0xfffd, ay_registerport_read, ay_registerport_write},
+    {0xffff, 0xbffd, NULL, ay_dataport_write},
+    {0, 0, NULL, NULL}
 };
 
 static periph_t ay_periph_full_decode = {
@@ -101,9 +101,9 @@ static periph_t ay_periph_full_decode = {
 };
 
 static periph_port_t ay_ports_timex[] = {
-    { 0x00ff, 0x00f5, ay_registerport_read, ay_registerport_write },
-    { 0x00ff, 0x00f6, NULL, ay_dataport_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x00f5, ay_registerport_read, ay_registerport_write},
+    {0x00ff, 0x00f6, NULL, ay_dataport_write},
+    {0, 0, NULL, NULL}
 };
 
 static periph_t ay_periph_timex = {
@@ -117,8 +117,8 @@ static periph_t ay_periph_timex = {
 static const char * const debugger_type_string = "ay";
 static const char * const current_register_detail_string = "current";
 
-static int
-ay_init(void *context)
+
+static int ay_init(void *context)
 {
     module_register(&ay_module_info);
     periph_register(PERIPH_TYPE_AY, &ay_periph);
@@ -133,8 +133,8 @@ ay_init(void *context)
     return 0;
 }
 
-void
-ay_register_startup(void)
+
+void ay_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -144,8 +144,8 @@ ay_register_startup(void)
                             ARRAY_SIZE(dependencies), ay_init, NULL, NULL);
 }
 
-static void
-ay_reset(int hard_reset GCC_UNUSED)
+
+static void ay_reset(int hard_reset GCC_UNUSED)
 {
     ayinfo *ay = &machine_current->ay;
 
@@ -155,8 +155,8 @@ ay_reset(int hard_reset GCC_UNUSED)
 
 /* What happens when the AY register port (traditionally 0xfffd on the 128K
    machines) is read from */
-libspectrum_byte
-ay_registerport_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte ay_registerport_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     int current;
     const libspectrum_byte port_input = 0xbf; // always allow serial output
@@ -183,12 +183,12 @@ ay_registerport_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attache
     return 0xff;
 
     // Otherwise return register value, appropriately masked
-    return machine_current->ay.registers[ current ] & mask[ current ];
+    return machine_current->ay.registers[current] & mask[current];
 }
 
 // And when it's written to
-void
-ay_registerport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void ay_registerport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     set_current_register(b);
 }
@@ -196,22 +196,22 @@ ay_registerport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 /* What happens when the AY data port (traditionally 0xbffd on the 128K
    machines) is written to; no corresponding read function as this
    always returns 0xff */
-void
-ay_dataport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void ay_dataport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     int current;
 
     current = machine_current->ay.current_register;
 
-    machine_current->ay.registers[ current ] = b & mask[ current ];
+    machine_current->ay.registers[current] = b & mask[current];
     sound_ay_write(current, b, tstates);
     if (psg_recording) psg_write_register(current, b);
 
     if (current == 14) printer_serial_write(b);
 }
 
-void
-ay_state_from_snapshot(libspectrum_snap *snap)
+
+void ay_state_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
@@ -225,16 +225,16 @@ ay_state_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-ay_from_snapshot(libspectrum_snap *snap)
+
+static void ay_from_snapshot(libspectrum_snap *snap)
 {
     if (machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY) {
     ay_state_from_snapshot(snap);
     }
 }
 
-static void
-ay_to_snapshot(libspectrum_snap *snap)
+
+static void ay_to_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
@@ -247,14 +247,14 @@ ay_to_snapshot(libspectrum_snap *snap)
                        machine_current->ay.registers[i]);
 }
 
-static libspectrum_dword
-get_current_register(void)
+
+static libspectrum_dword get_current_register(void)
 {
     return machine_current->ay.current_register;
 }
 
-static void
-set_current_register(libspectrum_dword value)
+
+static void set_current_register(libspectrum_dword value)
 {
     machine_current->ay.current_register = (value & 0x0f);
 }

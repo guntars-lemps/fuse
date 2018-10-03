@@ -42,8 +42,8 @@ gtkstock_add_accel_group(GtkWidget *widget)
     return accel;
 }
 
-static void
-add_click(GtkWidget *btn, const gtkstock_button *button, GtkAccelGroup *accel,
+
+static void add_click(GtkWidget *btn, const gtkstock_button *button, GtkAccelGroup *accel,
        guint key1, GdkModifierType mod1, guint key2, GdkModifierType mod2)
 {
     if (button->shortcut) {
@@ -147,8 +147,8 @@ gtkstock_create_ok_cancel(GtkWidget *widget, GtkAccelGroup *accel,
                            GCallback destroy_ok, GCallback destroy_cancel)
 {
     gtkstock_button btn[] = {
-    { "_Cancel", NULL, NULL, NULL, GDK_KEY_Escape, 0, 0, 0, GTK_RESPONSE_CANCEL},
-    { "_OK", NULL, NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_OK},
+    {"_Cancel", NULL, NULL, NULL, GDK_KEY_Escape, 0, 0, 0, GTK_RESPONSE_CANCEL},
+    {"_OK", NULL, NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_OK},
     };
     btn[0].destroy = destroy_cancel ? destroy_cancel : NULL;
     btn[1].destroy = destroy_ok ? destroy_ok : NULL;

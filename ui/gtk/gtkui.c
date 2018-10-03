@@ -101,7 +101,7 @@ static void menu_machine_select_done(GtkWidget *widget, gpointer user_data);
 
 static const GtkTargetEntry drag_types[] =
 {
-    { (gchar *)"text/uri-list", GTK_TARGET_OTHER_APP, 0 }
+    { (gchar *)"text/uri-list", GTK_TARGET_OTHER_APP, 0}
 };
 
 static void gtkui_drag_data_received(GtkWidget *widget GCC_UNUSED,
@@ -146,8 +146,8 @@ static void gtkui_drag_data_received(GtkWidget *widget GCC_UNUSED,
     gtk_drag_finish(drag_context, FALSE, FALSE, timestamp);
 }
 
-int
-ui_init(int *argc, char ***argv)
+
+int ui_init(int *argc, char ***argv)
 {
     GtkWidget *box;
     GtkAccelGroup *accel_group;
@@ -239,15 +239,15 @@ ui_init(int *argc, char ***argv)
     return 0;
 }
 
-static void
-gtkui_menu_deactivate(GtkMenuShell *menu GCC_UNUSED,
+
+static void gtkui_menu_deactivate(GtkMenuShell *menu GCC_UNUSED,
                gpointer data GCC_UNUSED)
 {
     ui_mouse_resume();
 }
 
-static gboolean
-gtkui_make_menu(GtkAccelGroup **accel_group,
+
+static gboolean gtkui_make_menu(GtkAccelGroup **accel_group,
                 GtkWidget **menu_bar,
                 GtkActionEntry *menu_data,
                 guint menu_data_size)
@@ -255,7 +255,7 @@ gtkui_make_menu(GtkAccelGroup **accel_group,
     *accel_group = NULL;
     *menu_bar = NULL;
     GError *error = NULL;
-    char ui_file[ PATH_MAX ];
+    char ui_file[PATH_MAX];
 
     ui_manager_menu = gtk_ui_manager_new();
 
@@ -300,16 +300,16 @@ gtkui_make_menu(GtkAccelGroup **accel_group,
     return FALSE;
 }
 
-int
-ui_event(void)
+
+int ui_event(void)
 {
     while (gtk_events_pending())
     gtk_main_iteration();
     return 0;
 }
 
-int
-ui_end(void)
+
+int ui_end(void)
 {
     // Don't display the window whilst doing all this!
     gtk_widget_hide(gtkui_window);
@@ -320,8 +320,8 @@ ui_end(void)
 }
 
 // Create a dialog box with the given error message
-int
-ui_error_specific(ui_error_level severity, const char *message)
+
+int ui_error_specific(ui_error_level severity, const char *message)
 {
     GtkWidget *dialog, *label, *vbox, *content_area;
     const gchar *title;
@@ -363,8 +363,8 @@ ui_error_specific(ui_error_level severity, const char *message)
 
 // The callbacks used by various routines
 
-static gboolean
-gtkui_lose_focus(GtkWidget *widget GCC_UNUSED,
+
+static gboolean gtkui_lose_focus(GtkWidget *widget GCC_UNUSED,
           GdkEvent *event GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     keyboard_release_all();
@@ -372,8 +372,8 @@ gtkui_lose_focus(GtkWidget *widget GCC_UNUSED,
     return TRUE;
 }
 
-static gboolean
-gtkui_gain_focus(GtkWidget *widget GCC_UNUSED,
+
+static gboolean gtkui_gain_focus(GtkWidget *widget GCC_UNUSED,
           GdkEvent *event GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     ui_mouse_resume();
@@ -381,8 +381,8 @@ gtkui_gain_focus(GtkWidget *widget GCC_UNUSED,
 }
 
 // Called by the main window on a "delete-event"
-static gboolean
-gtkui_delete(GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED,
+
+static gboolean gtkui_delete(GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED,
               gpointer data GCC_UNUSED)
 {
     menu_file_exit(NULL, NULL);
@@ -390,8 +390,8 @@ gtkui_delete(GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED,
 }
 
 // Called by the menu when File/Exit selected
-void
-menu_file_exit(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
+
+void menu_file_exit(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     if (gtkui_confirm("Exit Fuse?")) {
 
@@ -445,15 +445,15 @@ menu_get_scaler(scaler_available_fn selector)
 
     if (!selector(scaler)) continue;
 
-    dialog.buttons[ count ] =
+    dialog.buttons[count] =
       gtk_radio_button_new_with_label(button_group, scaler_name(scaler));
     button_group =
-      gtk_radio_button_get_group(GTK_RADIO_BUTTON(dialog.buttons[ count ]));
+      gtk_radio_button_get_group(GTK_RADIO_BUTTON(dialog.buttons[count]));
 
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dialog.buttons[ count ]),
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dialog.buttons[count]),
                   current_scaler == scaler);
 
-    gtk_container_add(GTK_CONTAINER(content_area), dialog.buttons[ count ]);
+    gtk_container_add(GTK_CONTAINER(content_area), dialog.buttons[count]);
 
     count++;
     }
@@ -476,8 +476,8 @@ menu_get_scaler(scaler_available_fn selector)
 }
 
 // Callback used by the filter selection dialog
-static void
-menu_options_filter_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
+
+static void menu_options_filter_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
 {
     int i, count;
     gtkui_select_info *ptr = (gtkui_select_info*)user_data;
@@ -489,7 +489,7 @@ menu_options_filter_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
     if (!ptr->selector(i)) continue;
 
     if (gtk_toggle_button_get_active(
-      GTK_TOGGLE_BUTTON(ptr->buttons[ count ])
+      GTK_TOGGLE_BUTTON(ptr->buttons[count])
     )
 ) {
       ptr->selected = i;
@@ -502,16 +502,16 @@ menu_options_filter_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
     gtk_main_quit();
 }
 
-static gboolean
-gtkui_run_main_loop(gpointer user_data GCC_UNUSED)
+
+static gboolean gtkui_run_main_loop(gpointer user_data GCC_UNUSED)
 {
     gtk_main();
     return FALSE;
 }
 
 // Machine/Pause
-void
-menu_machine_pause(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
+
+void menu_machine_pause(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     int error;
 
@@ -539,8 +539,8 @@ menu_machine_pause(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 }
 
 // Called by the menu when Machine/Reset selected
-void
-menu_machine_reset(GtkAction *gtk_action GCC_UNUSED, guint action)
+
+void menu_machine_reset(GtkAction *gtk_action GCC_UNUSED, guint action)
 {
     int hard_reset = action;
     const char *message = "Reset?";
@@ -564,8 +564,8 @@ menu_machine_reset(GtkAction *gtk_action GCC_UNUSED, guint action)
 }
 
 // Called by the menu when Machine/Select selected
-void
-menu_machine_select(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_machine_select(GtkAction *gtk_action GCC_UNUSED,
                      gpointer data GCC_UNUSED)
 {
     GtkWidget *content_area;
@@ -625,8 +625,8 @@ menu_machine_select(GtkAction *gtk_action GCC_UNUSED,
 }
 
 // Callback used by the machine selection dialog
-static void
-menu_machine_select_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
+
+static void menu_machine_select_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
 {
     int i;
     gtkui_select_info *ptr = user_data;
@@ -644,8 +644,8 @@ menu_machine_select_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
     gtk_main_quit();
 }
 
-void
-menu_machine_debugger(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_machine_debugger(GtkAction *gtk_action GCC_UNUSED,
                        gpointer data GCC_UNUSED)
 {
     debugger_mode = DEBUGGER_MODE_HALTED;
@@ -653,21 +653,21 @@ menu_machine_debugger(GtkAction *gtk_action GCC_UNUSED,
 }
 
 // Called on machine selection
-int
-ui_widgets_reset(void)
+
+int ui_widgets_reset(void)
 {
     gtkui_pokefinder_clear();
     return 0;
 }
 
-void
-menu_help_keyboard(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
+
+void menu_help_keyboard(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     gtkui_picture("keyboard.scr", 0);
 }
 
-void
-menu_help_about(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
+
+void menu_help_about(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     // TODO: show Fuse icon
     gtk_show_about_dialog(GTK_WINDOW(gtkui_window),
@@ -681,8 +681,8 @@ menu_help_about(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 }
 
 // Generic `tidy-up' callback
-void
-gtkui_destroy_widget_and_quit(GtkWidget *widget, gpointer data GCC_UNUSED)
+
+void gtkui_destroy_widget_and_quit(GtkWidget *widget, gpointer data GCC_UNUSED)
 {
     gtk_widget_destroy(widget);
     gtk_main_quit();
@@ -690,8 +690,8 @@ gtkui_destroy_widget_and_quit(GtkWidget *widget, gpointer data GCC_UNUSED)
 
 // Functions to activate and deactivate certain menu items
 
-int
-ui_menu_item_set_active(const char *path, int active)
+
+int ui_menu_item_set_active(const char *path, int active)
 {
     GtkWidget *menu_item;
 
@@ -711,15 +711,15 @@ ui_menu_item_set_active(const char *path, int active)
     return 0;
 }
 
-static void
-confirm_joystick_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
+
+static void confirm_joystick_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
 {
     int i;
     gtkui_select_info *ptr = user_data;
 
     for (i = 0; i < JOYSTICK_CONN_COUNT; i++) {
 
-    GtkToggleButton *button = GTK_TOGGLE_BUTTON(ptr->buttons[ i ]);
+    GtkToggleButton *button = GTK_TOGGLE_BUTTON(ptr->buttons[i]);
 
     if (gtk_toggle_button_get_active(button)) {
       ptr->joystick = i;
@@ -737,7 +737,7 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type,
 {
     GtkWidget *content_area;
     gtkui_select_info dialog;
-    char title[ 80 ];
+    char title[80];
     int i;
     GSList *group = NULL;
 
@@ -762,10 +762,10 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type,
 
     for (i = 0; i < JOYSTICK_CONN_COUNT; i++) {
 
-    GtkWidget **button = &(dialog.buttons[ i ]);
+    GtkWidget **button = &(dialog.buttons[i]);
 
     *button =
-      gtk_radio_button_new_with_label(group, joystick_connection[ i ]);
+      gtk_radio_button_new_with_label(group, joystick_connection[i]);
     group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(*button));
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(*button), i == 0);
@@ -797,8 +797,8 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type,
  * Font code
  */
 
-int
-gtkui_get_monospaced_font(gtkui_font *font)
+
+int gtkui_get_monospaced_font(gtkui_font *font)
 {
     *font = pango_font_description_from_string("Monospace 10");
     if (!(*font)) {
@@ -809,20 +809,20 @@ gtkui_get_monospaced_font(gtkui_font *font)
     return 0;
 }
 
-void
-gtkui_free_font(gtkui_font font)
+
+void gtkui_free_font(gtkui_font font)
 {
     pango_font_description_free(font);
 }
 
-void
-gtkui_set_font(GtkWidget *widget, gtkui_font font)
+
+void gtkui_set_font(GtkWidget *widget, gtkui_font font)
 {
     gtk_widget_override_font(widget, font);
 }
 
-void
-gtkui_list_set_cursor(GtkTreeView *list, int row)
+
+void gtkui_list_set_cursor(GtkTreeView *list, int row)
 {
     GtkTreePath *path;
 
@@ -833,8 +833,8 @@ gtkui_list_set_cursor(GtkTreeView *list, int row)
     }
 }
 
-int
-gtkui_list_get_cursor(GtkTreeView *list)
+
+int gtkui_list_get_cursor(GtkTreeView *list)
 {
     GtkTreePath *path;
     GtkTreeViewColumn *focus_column;
@@ -852,8 +852,8 @@ gtkui_list_get_cursor(GtkTreeView *list)
     return row;
 }
 
-static gboolean
-key_press(GtkTreeView *list, GdkEventKey *event, gpointer user_data)
+
+static gboolean key_press(GtkTreeView *list, GdkEventKey *event, gpointer user_data)
 {
     GtkAdjustment *adjustment = user_data;
     gdouble base, oldbase, base_limit;
@@ -921,8 +921,8 @@ key_press(GtkTreeView *list, GdkEventKey *event, gpointer user_data)
     return FALSE;
 }
 
-static gboolean
-wheel_scroll_event(GtkTreeView *list, GdkEvent *event, gpointer user_data)
+
+static gboolean wheel_scroll_event(GtkTreeView *list, GdkEvent *event, gpointer user_data)
 {
     GtkAdjustment *adjustment = user_data;
     gdouble base, oldbase, base_limit;
@@ -982,8 +982,8 @@ wheel_scroll_event(GtkTreeView *list, GdkEvent *event, gpointer user_data)
     return TRUE;
 }
 
-void
-gtkui_scroll_connect(GtkTreeView *list, GtkAdjustment *adj)
+
+void gtkui_scroll_connect(GtkTreeView *list, GtkAdjustment *adj)
 {
     g_signal_connect(list, "key-press-event",
                     G_CALLBACK(key_press), adj);
@@ -991,8 +991,8 @@ gtkui_scroll_connect(GtkTreeView *list, GtkAdjustment *adj)
                     G_CALLBACK(wheel_scroll_event), adj);
 }
 
-int
-gtkui_menubar_get_height(void)
+
+int gtkui_menubar_get_height(void)
 {
     GtkAllocation alloc;
 

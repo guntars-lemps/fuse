@@ -38,8 +38,8 @@ static INT_PTR CALLBACK dialog_proc(HWND hwndDlg, UINT uMsg,
 
 static HFONT hBoldFont;
 
-void
-menu_help_about(int action)
+
+void menu_help_about(int action)
 {
     // Firstly, stop emulation
     fuse_emulation_pause();
@@ -48,7 +48,7 @@ menu_help_about(int action)
     fuse_hABOWnd = CreateDialog(fuse_hInstance,
                                  MAKEINTRESOURCE(IDD_ABOUT),
                                  fuse_hWnd, dialog_proc);
-    if (fuse_hABOWnd == NULL) { fuse_emulation_unpause(); return; }
+    if (fuse_hABOWnd == NULL) {fuse_emulation_unpause(); return;}
     }
 
     ShowWindow(fuse_hABOWnd, SW_SHOW);
@@ -57,8 +57,8 @@ menu_help_about(int action)
     fuse_emulation_unpause();
 }
 
-static void
-dialog_init(HWND hwndDlg)
+
+static void dialog_init(HWND hwndDlg)
 {
     HDC hdc;
     long lfHeight;

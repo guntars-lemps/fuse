@@ -67,8 +67,8 @@ enum w5100_registers {
     W5100_TMSR,
 };
 
-void
-nic_w5100_reset(nic_w5100_t *self)
+
+void nic_w5100_reset(nic_w5100_t *self)
 {
     size_t i;
 
@@ -168,8 +168,8 @@ nic_w5100_alloc(void)
     return self;
 }
 
-void
-nic_w5100_free(nic_w5100_t *self)
+
+void nic_w5100_free(nic_w5100_t *self)
 {
     int i;
 
@@ -190,8 +190,8 @@ nic_w5100_free(nic_w5100_t *self)
     }
 }
 
-libspectrum_byte
-nic_w5100_read(nic_w5100_t *self, libspectrum_word reg)
+
+libspectrum_byte nic_w5100_read(nic_w5100_t *self, libspectrum_word reg)
 {
     libspectrum_byte b;
 
@@ -251,8 +251,8 @@ nic_w5100_read(nic_w5100_t *self, libspectrum_word reg)
     return b;
 }
 
-static void
-w5100_write_mr(nic_w5100_t *self, libspectrum_byte b)
+
+static void w5100_write_mr(nic_w5100_t *self, libspectrum_byte b)
 {
     nic_w5100_debug("w5100: writing 0x%02x to MR\n", b);
 
@@ -264,8 +264,8 @@ w5100_write_mr(nic_w5100_t *self, libspectrum_byte b)
                      "w5100: unsupported value 0x%02x written to MR\n", b);
 }
 
-static void
-w5100_write_imr(nic_w5100_t *self, libspectrum_byte b)
+
+static void w5100_write_imr(nic_w5100_t *self, libspectrum_byte b)
 {
     nic_w5100_debug("w5100: writing 0x%02x to IMR\n", b);
 
@@ -275,8 +275,8 @@ w5100_write_imr(nic_w5100_t *self, libspectrum_byte b)
 }
 
 
-static void
-w5100_write__msr(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b)
+
+static void w5100_write__msr(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b)
 {
     const char *regname = reg == W5100_RMSR ? "RMSR" : "TMSR";
 
@@ -288,8 +288,8 @@ w5100_write__msr(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b)
                      b, regname);
 }
 
-void
-nic_w5100_write(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b)
+
+void nic_w5100_write(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b)
 {
     if (reg < 0x030) {
     switch (reg) {
@@ -337,8 +337,8 @@ nic_w5100_write(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b)
                      b, reg);
 }
 
-void
-nic_w5100_from_snapshot(nic_w5100_t *self, libspectrum_byte *data)
+
+void nic_w5100_from_snapshot(nic_w5100_t *self, libspectrum_byte *data)
 {
     int i;
 
@@ -358,8 +358,8 @@ nic_w5100_to_snapshot(nic_w5100_t *self)
     return data;
 }
 
-void
-nic_w5100_debug(const char *format, ...)
+
+void nic_w5100_debug(const char *format, ...)
 {
     if (W5100_DEBUG) {
     va_list ap;
@@ -369,16 +369,16 @@ nic_w5100_debug(const char *format, ...)
     }
 }
 
-void
-nic_w5100_vdebug(const char *format, va_list ap)
+
+void nic_w5100_vdebug(const char *format, va_list ap)
 {
     if (W5100_DEBUG) {
     vprintf(format, ap);
     }
 }
 
-void
-nic_w5100_error(int severity, const char *format, ...)
+
+void nic_w5100_error(int severity, const char *format, ...)
 {
     va_list ap;
 

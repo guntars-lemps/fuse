@@ -41,8 +41,8 @@ compat_readdir(compat_dir directory, char *path, size_t length)
     return done ? COMPAT_DIR_RESULT_END : COMPAT_DIR_RESULT_OK;
 }
 
-int
-compat_closedir(compat_dir directory)
+
+int compat_closedir(compat_dir directory)
 {
     return dirclose(directory);
 }

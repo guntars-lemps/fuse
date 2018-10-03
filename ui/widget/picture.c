@@ -39,8 +39,8 @@ int widget_picture_draw(void* data)
     return 0;
 }
 
-void
-widget_picture_keyhandler(input_key key)
+
+void widget_picture_keyhandler(input_key key)
 {
     switch (key) {
 

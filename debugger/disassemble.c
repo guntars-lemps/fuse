@@ -37,7 +37,7 @@
 #include "ui/ui.h"
 
 // Used to flag whether we're after a DD or FD prefix
-enum hl_type { USE_HL, USE_IX, USE_IY };
+enum hl_type {USE_HL, USE_IX, USE_IY};
 
 static void disassemble_main(libspectrum_word address, char *buffer,
                   size_t buflen, size_t *length,
@@ -95,16 +95,16 @@ static const char *bit_op(libspectrum_byte b);
 static int bit_op_bit(libspectrum_byte b);
 
 // A very thin wrapper to avoid exposing the USE_HL constant
-void
-debugger_disassemble(char *buffer, size_t buflen, size_t *length,
+
+void debugger_disassemble(char *buffer, size_t buflen, size_t *length,
               libspectrum_word address)
 {
     disassemble_main(address, buffer, buflen, length, USE_HL);
 }
 
 // Disassemble one instruction
-static void
-disassemble_main(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_main(libspectrum_word address, char *buffer, size_t buflen,
           size_t *length, enum hl_type use_hl)
 {
     libspectrum_byte b;
@@ -157,8 +157,8 @@ disassemble_main(libspectrum_word address, char *buffer, size_t buflen,
 }
 
 // Disassemble something of the form 00xxxxxx
-static void
-disassemble_00xxxxxx(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_00xxxxxx(libspectrum_word address, char *buffer, size_t buflen,
               size_t *length, enum hl_type use_hl)
 {
     const char *opcode_00xxx000[] = {
@@ -175,10 +175,10 @@ disassemble_00xxxxxx(libspectrum_word address, char *buffer, size_t buflen,
 
     case 0x00: case 0x08:
     if (b <= 0x08) {
-      snprintf(buffer, buflen, "%s", opcode_00xxx000[ b >> 3 ]); *length = 1;
+      snprintf(buffer, buflen, "%s", opcode_00xxx000[b >> 3]); *length = 1;
     } else {
       get_offset(buffer2, 40, address + 2, readbyte_internal(address + 1));
-      snprintf(buffer, buflen, "%s%s", opcode_00xxx000[ b >> 3 ], buffer2);
+      snprintf(buffer, buflen, "%s%s", opcode_00xxx000[b >> 3], buffer2);
       *length = 2;
     }
     break;
@@ -214,7 +214,7 @@ disassemble_00xxxxxx(libspectrum_word address, char *buffer, size_t buflen,
     break;
 
     case 0x07: case 0x0f:
-    snprintf(buffer, buflen, "%s", opcode_00xxx111[ b >> 3 ]); *length = 1;
+    snprintf(buffer, buflen, "%s", opcode_00xxx111[b >> 3]); *length = 1;
     break;
 
     case 0x09:
@@ -236,8 +236,8 @@ disassemble_00xxxxxx(libspectrum_word address, char *buffer, size_t buflen,
 }
 
 // Disassemble something of the form 00xxx010
-static void
-disassemble_00xxx010(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_00xxx010(libspectrum_word address, char *buffer, size_t buflen,
               size_t *length, enum hl_type use_hl)
 {
     char buffer2[40];
@@ -264,8 +264,8 @@ disassemble_00xxx010(libspectrum_word address, char *buffer, size_t buflen,
 }
 
 // Disassemble something of the form 00xxx110
-static void
-disassemble_00xxx110(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_00xxx110(libspectrum_word address, char *buffer, size_t buflen,
               size_t *length, enum hl_type use_hl)
 {
     char buffer2[40];
@@ -292,8 +292,8 @@ disassemble_00xxx110(libspectrum_word address, char *buffer, size_t buflen,
 }
 
 // Disassemble something of the form 11xxxxxx
-static void
-disassemble_11xxxxxx(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_11xxxxxx(libspectrum_word address, char *buffer, size_t buflen,
               size_t *length, enum hl_type use_hl)
 {
     char buffer2[40];
@@ -343,8 +343,8 @@ disassemble_11xxxxxx(libspectrum_word address, char *buffer, size_t buflen,
 }
 
 // Disassemble something for the form 11xxx001
-static void
-disassemble_11xxx001(libspectrum_byte b, char *buffer, size_t buflen,
+
+static void disassemble_11xxx001(libspectrum_byte b, char *buffer, size_t buflen,
               size_t *length, enum hl_type use_hl)
 {
     switch ((b >> 3) - 0x18) {
@@ -369,8 +369,8 @@ disassemble_11xxx001(libspectrum_byte b, char *buffer, size_t buflen,
 }
 
 // Disassemble something for the form 11xxx011
-static void
-disassemble_11xxx011(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_11xxx011(libspectrum_word address, char *buffer, size_t buflen,
               size_t *length, enum hl_type use_hl)
 {
     char buffer2[40];
@@ -424,8 +424,8 @@ disassemble_11xxx011(libspectrum_word address, char *buffer, size_t buflen,
 }
 
 // Disassemble something for the form 11xxx101
-static void
-disassemble_11xxx101(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_11xxx101(libspectrum_word address, char *buffer, size_t buflen,
               size_t *length, enum hl_type use_hl)
 {
     char buffer2[40];
@@ -461,8 +461,8 @@ disassemble_11xxx101(libspectrum_word address, char *buffer, size_t buflen,
 }
 
 // Disassemble an instruction after a CB prefix
-static void
-disassemble_cb(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_cb(libspectrum_word address, char *buffer, size_t buflen,
         size_t *length)
 {
     char buffer2[40];
@@ -481,8 +481,8 @@ disassemble_cb(libspectrum_word address, char *buffer, size_t buflen,
 }
 
 // Disassemble an instruction after an ED prefix
-static void
-disassemble_ed(libspectrum_word address, char *buffer, size_t buflen,
+
+static void disassemble_ed(libspectrum_word address, char *buffer, size_t buflen,
         size_t *length)
 {
     libspectrum_byte b;
@@ -501,7 +501,7 @@ disassemble_ed(libspectrum_word address, char *buffer, size_t buflen,
     };
 
     // The order in which the IM x instructions appear
-    const int im_modes[] = { 0, 0, 1, 2 };
+    const int im_modes[] = {0, 0, 1, 2};
 
     b = readbyte_internal(address);
 
@@ -553,12 +553,12 @@ disassemble_ed(libspectrum_word address, char *buffer, size_t buflen,
       break;
 
     case 0x06: case 0x0e:
-      snprintf(buffer, buflen, "IM %d", im_modes[ (b >> 3) & 0x03 ]);
+      snprintf(buffer, buflen, "IM %d", im_modes[ (b >> 3) & 0x03]);
       *length = 1;
       break;
 
     case 0x07: case 0x0f:
-      snprintf(buffer, buflen, "%s", opcode_01xxx111[ (b >> 3) & 0x07 ]);
+      snprintf(buffer, buflen, "%s", opcode_01xxx111[ (b >> 3) & 0x07]);
       *length = 1;
       break;
 
@@ -578,13 +578,13 @@ disassemble_ed(libspectrum_word address, char *buffer, size_t buflen,
     snprintf(buffer, buflen, "NOPD"); *length = 1;
     } else {
     // Note: 0xbc to 0xbf already removed
-    snprintf(buffer, buflen, "%s", opcode_101xxxxx[ b & 0x1f ]); *length = 1;
+    snprintf(buffer, buflen, "%s", opcode_101xxxxx[b & 0x1f]); *length = 1;
     }
 }
 
 // Disassemble an instruction after DD/FD CB prefixes
-static void
-disassemble_ddfd_cb(libspectrum_word address, char offset,
+
+static void disassemble_ddfd_cb(libspectrum_word address, char offset,
              enum hl_type use_hl, char *buffer, size_t buflen,
              size_t *length)
 {
@@ -623,15 +623,15 @@ disassemble_ddfd_cb(libspectrum_word address, char offset,
 }
 
 // Get a text representation of a one-byte number
-static void
-get_byte(char *buffer, size_t buflen, libspectrum_byte b)
+
+static void get_byte(char *buffer, size_t buflen, libspectrum_byte b)
 {
     snprintf(buffer, buflen, debugger_output_base == 10 ? "%d" : "%02X", b);
 }
 
 // Get a text representation of an (LSB) two-byte number
-static void
-get_word(char *buffer, size_t buflen, libspectrum_word address)
+
+static void get_word(char *buffer, size_t buflen, libspectrum_word address)
 {
     libspectrum_word w;
 
@@ -642,8 +642,8 @@ get_word(char *buffer, size_t buflen, libspectrum_word address)
 }
 
 // Get a text representation of ('address' + 'offset')
-static void
-get_offset(char *buffer, size_t buflen, libspectrum_word address,
+
+static void get_offset(char *buffer, size_t buflen, libspectrum_word address,
         libspectrum_byte offset)
 {
     address += (offset >= 0x80 ? offset-0x100 : offset);
@@ -678,8 +678,8 @@ hl_ix_iy(enum hl_type use_hl)
 }
 
 // Get a text representation of '(IX+03)' or similar things
-static void
-ix_iy_offset(char *buffer, size_t buflen, enum hl_type use_hl,
+
+static void ix_iy_offset(char *buffer, size_t buflen, enum hl_type use_hl,
           libspectrum_byte offset)
 {
     if (offset < 0x80) {
@@ -694,8 +694,8 @@ ix_iy_offset(char *buffer, size_t buflen, enum hl_type use_hl,
 }
 
 // Get an 8-bit register, based on bits 0-2 of the opcode at 'address'
-static int
-source_reg(libspectrum_word address, enum hl_type use_hl, char *buffer,
+
+static int source_reg(libspectrum_word address, enum hl_type use_hl, char *buffer,
         size_t buflen)
 {
     return single_reg(readbyte_internal(address) & 0x07, use_hl,
@@ -703,8 +703,8 @@ source_reg(libspectrum_word address, enum hl_type use_hl, char *buffer,
 }
 
 // Get an 8-bit register, based on bits 3-5 of the opcode at 'address'
-static int
-dest_reg(libspectrum_word address, enum hl_type use_hl, char *buffer,
+
+static int dest_reg(libspectrum_word address, enum hl_type use_hl, char *buffer,
       size_t buflen)
 {
     return single_reg((readbyte_internal(address) >> 3) & 0x07, use_hl,
@@ -713,8 +713,8 @@ dest_reg(libspectrum_word address, enum hl_type use_hl, char *buffer,
 
 /* Get an 8-bit register name, including (HL). Also substitutes
    IXh, IXl and (IX+nn) and the IY versions if appropriate */
-static int
-single_reg(int i, enum hl_type use_hl, libspectrum_byte offset,
+
+static int single_reg(int i, enum hl_type use_hl, libspectrum_byte offset,
         char *buffer, size_t buflen)
 {
     char buffer2[40];
@@ -730,7 +730,7 @@ single_reg(int i, enum hl_type use_hl, libspectrum_byte offset,
     snprintf(buffer, buflen, "%s", buffer2);
     return 1;
     } else {
-    const char *regs[] = { "B", "C", "D", "E", "H", "L", "(HL)", "A" };
+    const char *regs[] = {"B", "C", "D", "E", "H", "L", "(HL)", "A"};
     snprintf(buffer, buflen, "%s", regs[i]);
     return 0;
     }
@@ -745,9 +745,9 @@ single_reg(int i, enum hl_type use_hl, libspectrum_byte offset,
 static const char *
 addition_op(libspectrum_byte b)
 {
-    const char *ops[] = { "ADD A,%s", "ADC A,%s", "SUB %s", "SBC A,%s",
+    const char *ops[] = {"ADD A,%s", "ADC A,%s", "SUB %s", "SBC A,%s",
             "AND %s",   "XOR %s",   "OR %s",  "CP %s"     };
-    return ops[ (b >> 3) & 0x07 ];
+    return ops[ (b >> 3) & 0x07];
 }
 
 /* Conditions for jumps, etc:
@@ -758,8 +758,8 @@ addition_op(libspectrum_byte b)
 static const char *
 condition(libspectrum_byte b)
 {
-    const char *conds[] = { "NZ", "Z", "NC", "C", "PO", "PE", "P", "M" };
-    return conds[ (b >> 3) & 0x07 ];
+    const char *conds[] = {"NZ", "Z", "NC", "C", "PO", "PE", "P", "M"};
+    return conds[ (b >> 3) & 0x07];
 }
 
 /* Shift/rotate operations:
@@ -770,8 +770,8 @@ condition(libspectrum_byte b)
 static const char *
 rotate_op(libspectrum_byte b)
 {
-    const char *ops[] = { "RLC", "RRC", "RL", "RR", "SLA", "SRA", "SLL", "SRL" };
-    return ops[ b >> 3 ];
+    const char *ops[] = {"RLC", "RRC", "RL", "RR", "SLA", "SRA", "SLL", "SRL"};
+    return ops[b >> 3];
 }
 
 /* Bit operations:
@@ -784,20 +784,20 @@ rotate_op(libspectrum_byte b)
 static const char *
 bit_op(libspectrum_byte b)
 {
-    const char *ops[] = { "BIT", "RES", "SET" };
-    return ops[ (b >> 6) - 1 ];
+    const char *ops[] = {"BIT", "RES", "SET"};
+    return ops[ (b >> 6) - 1];
 }
 
 // Which bit is used by a BIT, RES or SET with this opcode (bits 3-5)
-static int
-bit_op_bit(libspectrum_byte b)
+
+static int bit_op_bit(libspectrum_byte b)
 {
     return (b >> 3) & 0x07;
 }
 
 // Get an instruction relative to a specific address
-libspectrum_word
-debugger_search_instruction(libspectrum_word address, int delta)
+
+libspectrum_word debugger_search_instruction(libspectrum_word address, int delta)
 {
     size_t j, length, longest;
     int i;
@@ -831,31 +831,31 @@ debugger_search_instruction(libspectrum_word address, int delta)
 // Unit tests
 
 // Disassembly test data
-libspectrum_byte test1_data[] = { 0x00 };
+libspectrum_byte test1_data[] = {0x00};
 
-libspectrum_byte test2_data[] = { 0xdd, 0x00 };
-libspectrum_byte test3_data[] = { 0xdd, 0x09 };
-libspectrum_byte test4_data[] = { 0xdd, 0xdd, 0x00 };
-libspectrum_byte test5_data[] = { 0xdd, 0xcb, 0x55, 0x06 };
+libspectrum_byte test2_data[] = {0xdd, 0x00};
+libspectrum_byte test3_data[] = {0xdd, 0x09};
+libspectrum_byte test4_data[] = {0xdd, 0xdd, 0x00};
+libspectrum_byte test5_data[] = {0xdd, 0xcb, 0x55, 0x06};
 
-libspectrum_byte test6_data[] = { 0xfd, 0x00 };
-libspectrum_byte test7_data[] = { 0xfd, 0x09 };
-libspectrum_byte test8_data[] = { 0xfd, 0xfd, 0x00 };
-libspectrum_byte test9_data[] = { 0xfd, 0xcb, 0x55, 0x06 };
+libspectrum_byte test6_data[] = {0xfd, 0x00};
+libspectrum_byte test7_data[] = {0xfd, 0x09};
+libspectrum_byte test8_data[] = {0xfd, 0xfd, 0x00};
+libspectrum_byte test9_data[] = {0xfd, 0xcb, 0x55, 0x06};
 
-libspectrum_byte test10_data[] = { 0xdd, 0xfd, 0x09 };
-libspectrum_byte test11_data[] = { 0xfd, 0xdd, 0x09 };
+libspectrum_byte test10_data[] = {0xdd, 0xfd, 0x09};
+libspectrum_byte test11_data[] = {0xfd, 0xdd, 0x09};
 
-libspectrum_byte test12_data[] = { 0xdd, 0xfd, 0xdd, 0xfd, 0xdd, 0xfd, 0xdd,
-                                   0xfd, 0xdd, 0xfd, 0xdd, 0xfd, 0x09 };
-libspectrum_byte test13_data[] = { 0xfd, 0xdd, 0xfd, 0xdd, 0xfd, 0xdd, 0xfd,
-                                   0xdd, 0xfd, 0xdd, 0xfd, 0xdd, 0x09 };
+libspectrum_byte test12_data[] = {0xdd, 0xfd, 0xdd, 0xfd, 0xdd, 0xfd, 0xdd,
+                                   0xfd, 0xdd, 0xfd, 0xdd, 0xfd, 0x09};
+libspectrum_byte test13_data[] = {0xfd, 0xdd, 0xfd, 0xdd, 0xfd, 0xdd, 0xfd,
+                                   0xdd, 0xfd, 0xdd, 0xfd, 0xdd, 0x09};
 
-libspectrum_byte test14_data[] = { 0x7e };
-libspectrum_byte test15_data[] = { 0xdd, 0x7e, 0x55 };
+libspectrum_byte test14_data[] = {0x7e};
+libspectrum_byte test15_data[] = {0xdd, 0x7e, 0x55};
 
-static int
-run_test(libspectrum_byte *data, size_t data_length, const char *expected)
+
+static int run_test(libspectrum_byte *data, size_t data_length, const char *expected)
 {
     char disassembly[16];
     size_t length;
@@ -870,8 +870,8 @@ run_test(libspectrum_byte *data, size_t data_length, const char *expected)
     return 0;
 }
 
-int
-debugger_disassemble_unittest(void)
+
+int debugger_disassemble_unittest(void)
 {
     int r = 0;
 

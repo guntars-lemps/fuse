@@ -46,9 +46,9 @@ static void zxmmc_mmc_write(libspectrum_word port, libspectrum_byte data);
 // Data
 
 static const periph_port_t zxmmc_ports[] = {
-    { 0x00ff, 0x001f, NULL, zxmmc_card_select },
-    { 0x00ff, 0x003f, zxmmc_mmc_read, zxmmc_mmc_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x001f, NULL, zxmmc_card_select},
+    {0x00ff, 0x003f, zxmmc_mmc_read, zxmmc_mmc_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t zxmmc_periph = {
@@ -83,8 +83,8 @@ static const ui_menu_item eject_menu_item = UI_MENU_ITEM_MEDIA_IDE_ZXMMC_EJECT;
 
 // Housekeeping functions
 
-static int
-zxmmc_init(void *context)
+
+static int zxmmc_init(void *context)
 {
     card = libspectrum_mmc_alloc();
 
@@ -108,14 +108,14 @@ zxmmc_init(void *context)
     return 0;
 }
 
-static void
-zxmmc_end(void)
+
+static void zxmmc_end(void)
 {
     libspectrum_mmc_free(card);
 }
 
-void
-zxmmc_register_startup(void)
+
+void zxmmc_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -127,34 +127,34 @@ zxmmc_register_startup(void)
                             zxmmc_end);
 }
 
-static void
-zxmmc_reset(int hard_reset)
+
+static void zxmmc_reset(int hard_reset)
 {
     libspectrum_mmc_reset(card);
 }
 
-static int
-dirty_fn_wrapper(void *context)
+
+static int dirty_fn_wrapper(void *context)
 {
     return libspectrum_mmc_dirty((libspectrum_mmc_card*)context);
 }
 
-static libspectrum_error
-commit_fn_wrapper(void *context)
+
+static libspectrum_error commit_fn_wrapper(void *context)
 {
     libspectrum_mmc_commit((libspectrum_mmc_card*)context);
     return LIBSPECTRUM_ERROR_NONE;
 }
 
-static libspectrum_error
-eject_fn_wrapper(void *context)
+
+static libspectrum_error eject_fn_wrapper(void *context)
 {
     libspectrum_mmc_eject((libspectrum_mmc_card*)context);
     return LIBSPECTRUM_ERROR_NONE;
 }
 
-static int
-mmc_eject(libspectrum_mmc_card *card)
+
+static int mmc_eject(libspectrum_mmc_card *card)
 {
     return ide_eject_mass_storage(dirty_fn_wrapper, commit_fn_wrapper,
       eject_fn_wrapper, card,
@@ -163,8 +163,8 @@ mmc_eject(libspectrum_mmc_card *card)
       eject_menu_item);
 }
 
-int
-zxmmc_insert(const char *filename)
+
+int zxmmc_insert(const char *filename)
 {
     int error;
 
@@ -181,22 +181,22 @@ zxmmc_insert(const char *filename)
     return ui_menu_activate(eject_menu_item, 1);
 }
 
-void
-zxmmc_commit(void)
+
+void zxmmc_commit(void)
 {
     libspectrum_mmc_commit(card);
 }
 
-int
-zxmmc_eject(void)
+
+int zxmmc_eject(void)
 {
     return mmc_eject(card);
 }
 
 // Port read/writes
 
-static void
-zxmmc_card_select(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void zxmmc_card_select(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     /* D0 = MMC0, D1 = MMC1, active LOW
      somehow logic prevents enabling both cards at the same time */
@@ -214,29 +214,29 @@ zxmmc_card_select(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
     }
 }
 
-static libspectrum_byte
-zxmmc_mmc_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte zxmmc_mmc_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
 
     return current_card ? libspectrum_mmc_read(card) : 0xff;
 }
 
-static void
-zxmmc_mmc_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void zxmmc_mmc_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     if (current_card) libspectrum_mmc_write(card, data);
 }
 
-static void
-zxmmc_enabled_snapshot(libspectrum_snap *snap)
+
+static void zxmmc_enabled_snapshot(libspectrum_snap *snap)
 {
     if (libspectrum_snap_zxmmc_active(snap))
     settings_current.zxmmc_enabled = 1;
 }
 
-static void
-zxmmc_to_snapshot(libspectrum_snap *snap)
+
+static void zxmmc_to_snapshot(libspectrum_snap *snap)
 {
     if (!settings_current.zxmmc_enabled) return;
     libspectrum_snap_set_zxmmc_active(snap, 1);

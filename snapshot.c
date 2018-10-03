@@ -41,7 +41,7 @@ int snapshot_read(const char *filename)
     int error;
 
     error = utils_read_file(filename, &file);
-    if (error) { libspectrum_snap_free(snap); return error; }
+    if (error) {libspectrum_snap_free(snap); return error;}
 
     error = libspectrum_snap_read(snap, file.buffer, file.length,
                  LIBSPECTRUM_ID_UNKNOWN, filename);
@@ -53,33 +53,33 @@ int snapshot_read(const char *filename)
     utils_close_file(&file);
 
     error = snapshot_copy_from(snap);
-    if (error) { libspectrum_snap_free(snap); return error; }
+    if (error) {libspectrum_snap_free(snap); return error;}
 
     error = libspectrum_snap_free(snap); if (error) return error;
 
     return 0;
 }
 
-int
-snapshot_read_buffer(const unsigned char *buffer, size_t length,
+
+int snapshot_read_buffer(const unsigned char *buffer, size_t length,
               libspectrum_id_t type)
 {
     libspectrum_snap *snap = libspectrum_snap_alloc();
     int error;
 
     error = libspectrum_snap_read(snap, buffer, length, type, NULL);
-    if (error) { libspectrum_snap_free(snap); return error; }
+    if (error) {libspectrum_snap_free(snap); return error;}
 
     error = snapshot_copy_from(snap);
-    if (error) { libspectrum_snap_free(snap); return error; }
+    if (error) {libspectrum_snap_free(snap); return error;}
 
     error = libspectrum_snap_free(snap); if (error) return error;
 
     return 0;
 }
 
-int
-snapshot_copy_from(libspectrum_snap *snap)
+
+int snapshot_copy_from(libspectrum_snap *snap)
 {
     int error;
     libspectrum_machine machine;
@@ -133,14 +133,14 @@ int snapshot_write(const char *filename)
     snap = libspectrum_snap_alloc();
 
     error = snapshot_copy_to(snap);
-    if (error) { libspectrum_snap_free(snap); return error; }
+    if (error) {libspectrum_snap_free(snap); return error;}
 
     flags = 0;
     length = 0;
     buffer = NULL;
     error = libspectrum_snap_write(&buffer, &length, &flags, snap, type,
                   fuse_creator, 0);
-    if (error) { libspectrum_snap_free(snap); return error; }
+    if (error) {libspectrum_snap_free(snap); return error;}
 
     if (flags & LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS) {
     ui_error(
@@ -155,10 +155,10 @@ int snapshot_write(const char *filename)
     }
 
     error = libspectrum_snap_free(snap);
-    if (error) { libspectrum_free(buffer); return 1; }
+    if (error) {libspectrum_free(buffer); return 1;}
 
     error = utils_write_file(filename, buffer, length);
-    if (error) { libspectrum_free(buffer); return error; }
+    if (error) {libspectrum_free(buffer); return error;}
 
     libspectrum_free(buffer);
 
@@ -166,8 +166,8 @@ int snapshot_write(const char *filename)
 
 }
 
-int
-snapshot_copy_to(libspectrum_snap *snap)
+
+int snapshot_copy_to(libspectrum_snap *snap)
 {
     libspectrum_snap_set_machine(snap, machine_current->machine);
     libspectrum_snap_set_late_timings(snap, settings_current.late_timings);

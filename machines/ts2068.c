@@ -41,8 +41,8 @@
 
 static int ts2068_reset(void);
 
-int
-ts2068_init(fuse_machine_info *machine)
+
+int ts2068_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_TS2068;
     machine->id = "ts2068";
@@ -64,8 +64,8 @@ ts2068_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-ts2068_reset(void)
+
+static int ts2068_reset(void)
 {
     size_t i, j;
     int error;

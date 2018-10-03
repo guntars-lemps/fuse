@@ -141,21 +141,21 @@ static module_info_t multiface_module_info = {
 
 static const periph_port_t multiface_ports_1[] = {
 // ---- ----  x001 --1-
-    { 0x0072, 0x0012, multiface_port_in1, multiface_port_out1 },
-    { 0, 0, NULL, NULL }
+    {0x0072, 0x0012, multiface_port_in1, multiface_port_out1},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_port_t multiface_ports_128[] = {
 // ---- ----  x011 --1-
-    { 0x0072, 0x0032, multiface_port_in128, multiface_port_out128 },
-    { 0, 0, NULL, NULL }
+    {0x0072, 0x0032, multiface_port_in128, multiface_port_out128},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_port_t multiface_ports_3[] = {
 // ---- ----  x011 --1-
-    { 0x0072, 0x0032, multiface_port_in3, multiface_port_out3 },
-    { 0x90ff, 0x10fd, NULL, multiface_port_xffd_write },
-    { 0, 0, NULL, NULL }
+    {0x0072, 0x0032, multiface_port_in3, multiface_port_out3},
+    {0x90ff, 0x10fd, NULL, multiface_port_xffd_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t multiface_periph_1 = {
@@ -179,8 +179,8 @@ static const periph_t multiface_periph_3 = {
     NULL
 };
 
-void
-multiface_register_startup(void)
+
+void multiface_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -192,8 +192,8 @@ multiface_register_startup(void)
                             NULL);
 }
 
-static int
-multiface_init(void *context GCC_UNUSED)
+
+static int multiface_init(void *context GCC_UNUSED)
 {
     int i;
 
@@ -232,8 +232,8 @@ multiface_init(void *context GCC_UNUSED)
     return 0;
 }
 
-static void
-multiface_reset_real(int idx, int hard_reset)
+
+static void multiface_reset_real(int idx, int hard_reset)
 {
     int i;
 
@@ -270,8 +270,8 @@ multiface_reset_real(int idx, int hard_reset)
         than have to works this stuff properly...
 */
     for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
-    struct memory_page *page = &multiface_memory_map_romcs_ram[ i ];
-    page->page = &mf[idx].ram[ i * MEMORY_PAGE_SIZE ];
+    struct memory_page *page = &multiface_memory_map_romcs_ram[i];
+    page->page = &mf[idx].ram[i * MEMORY_PAGE_SIZE];
     page->offset = i * MEMORY_PAGE_SIZE;
     page->writable = 1;
     }
@@ -282,8 +282,8 @@ multiface_reset_real(int idx, int hard_reset)
     ui_menu_activate(UI_MENU_ITEM_MACHINE_MULTIFACE, 1);
 }
 
-static void
-multiface_reset(int hard_reset)
+
+static void multiface_reset(int hard_reset)
 {
     multiface_reset_real(MF_1, hard_reset);
     multiface_reset_real(MF_128, hard_reset);
@@ -292,8 +292,8 @@ multiface_reset(int hard_reset)
                                   (multiface_available ? 1 : 0));
 }
 
-void
-multiface_status_update(void)
+
+void multiface_status_update(void)
 {
     int i;
 
@@ -311,8 +311,8 @@ multiface_status_update(void)
     }
 }
 
-static void
-multiface_page(int idx)
+
+static void multiface_page(int idx)
 {
     if (IS(multiface_active, idx)) return;
     SET(multiface_active, idx, 1);
@@ -324,8 +324,8 @@ multiface_page(int idx)
     mf[idx].J2 = 1;
 }
 
-static void
-multiface_unpage(int idx)
+
+static void multiface_unpage(int idx)
 {
     if (!IS(multiface_active, idx)) return;
     SET(multiface_active, idx, 0);
@@ -334,8 +334,8 @@ multiface_unpage(int idx)
     debugger_event(unpage_event);
 }
 
-static void
-multiface_memory_map(void)
+
+static void multiface_memory_map(void)
 {
     if (!multiface_active)
     return;
@@ -344,8 +344,8 @@ multiface_memory_map(void)
     memory_map_romcs_8k(0x2000, multiface_memory_map_romcs_ram);
 }
 
-static libspectrum_byte
-multiface_port_in1(libspectrum_word port, libspectrum_byte *attached)
+
+static libspectrum_byte multiface_port_in1(libspectrum_word port, libspectrum_byte *attached)
 {
     libspectrum_byte ret = 0xff;
     int a7;
@@ -382,8 +382,8 @@ multiface_port_in1(libspectrum_word port, libspectrum_byte *attached)
     return ret;
 }
 
-static libspectrum_byte
-multiface_port_in128(libspectrum_word port, libspectrum_byte *attached)
+
+static libspectrum_byte multiface_port_in128(libspectrum_word port, libspectrum_byte *attached)
 {
     libspectrum_byte ret = 0xff;
     int a7;
@@ -417,8 +417,8 @@ multiface_port_in128(libspectrum_word port, libspectrum_byte *attached)
     return ret;
 }
 
-static libspectrum_byte
-multiface_port_in3(libspectrum_word port, libspectrum_byte *attached)
+
+static libspectrum_byte multiface_port_in3(libspectrum_word port, libspectrum_byte *attached)
 {
     libspectrum_byte ret = 0xff;
     int a7;
@@ -446,13 +446,13 @@ multiface_port_in3(libspectrum_word port, libspectrum_byte *attached)
 
     // Return last data written to port 0x1ffd, 0x3ffd, 0x5ffd or 0x7ffd
     if (mf[MF_3].J2)
-    ret = mf[MF_3].xfdd_reg[ (port & 0x6000) >> 13 ] | 0xf0;
+    ret = mf[MF_3].xfdd_reg[ (port & 0x6000) >> 13] | 0xf0;
 
     return ret;
 }
 
-static void
-multiface_port_out1(libspectrum_word port GCC_UNUSED,
+
+static void multiface_port_out1(libspectrum_word port GCC_UNUSED,
                      libspectrum_byte val GCC_UNUSED)
 {
     if (!IS(multiface_available, MF_1)) return;
@@ -462,8 +462,8 @@ multiface_port_out1(libspectrum_word port GCC_UNUSED,
     mf[MF_1].IC8b_Q = 1;
 }
 
-static void
-multiface_port_out128_3(int idx, libspectrum_word port)
+
+static void multiface_port_out128_3(int idx, libspectrum_word port)
 {
     if (!IS(multiface_available, idx)) return;
 
@@ -473,26 +473,26 @@ multiface_port_out128_3(int idx, libspectrum_word port)
     mf[idx].IC8b_Q = 1;
 }
 
-static void
-multiface_port_out128(libspectrum_word port, libspectrum_byte val GCC_UNUSED)
+
+static void multiface_port_out128(libspectrum_word port, libspectrum_byte val GCC_UNUSED)
 {
     multiface_port_out128_3(MF_128, port);
 }
 
-static void
-multiface_port_out3(libspectrum_word port, libspectrum_byte val GCC_UNUSED)
+
+static void multiface_port_out3(libspectrum_word port, libspectrum_byte val GCC_UNUSED)
 {
     multiface_port_out128_3(MF_3, port);
 }
 
-static void
-multiface_port_xffd_write(libspectrum_word port, libspectrum_byte val)
+
+static void multiface_port_xffd_write(libspectrum_word port, libspectrum_byte val)
 {
-    mf[MF_3].xfdd_reg[ (port & 0x6000) >> 13 ] = val & 0x0f;
+    mf[MF_3].xfdd_reg[ (port & 0x6000) >> 13] = val & 0x0f;
 }
 
-void
-multiface_red_button(void)
+
+void multiface_red_button(void)
 {
     int i;
 /*
@@ -516,8 +516,8 @@ multiface_red_button(void)
     }
 }
 
-void
-multiface_setic8(void)
+
+void multiface_setic8(void)
 {
     int i;
 /*
@@ -533,8 +533,8 @@ multiface_setic8(void)
     }
 }
 
-int
-multiface_unittest(void)
+
+int multiface_unittest(void)
 {
     int r = 0;
 
@@ -553,8 +553,8 @@ multiface_unittest(void)
     return r;
 }
 
-static void
-multiface_enabled_snapshot(libspectrum_snap *snap)
+
+static void multiface_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.multiface1 = 0;
     settings_current.multiface128 = 0;
@@ -570,8 +570,8 @@ multiface_enabled_snapshot(libspectrum_snap *snap)
     settings_current.multiface3 = 1;
 }
 
-static void
-multiface_from_snapshot(libspectrum_snap *snap)
+
+static void multiface_from_snapshot(libspectrum_snap *snap)
 {
     int idx;
 
@@ -625,15 +625,15 @@ multiface_from_snapshot(libspectrum_snap *snap)
 
     // Multiface 3 - 4x4 bit register
     if (idx == MF_3) {
-    mf[MF_3].xfdd_reg[ 0 ] =
+    mf[MF_3].xfdd_reg[0] =
       libspectrum_snap_out_plus3_memoryport(snap) & 0x0f;
-    mf[MF_3].xfdd_reg[ 3 ] =
+    mf[MF_3].xfdd_reg[3] =
       libspectrum_snap_out_128_memoryport(snap) & 0x0f;
     }
 }
 
-static void
-multiface_to_snapshot(libspectrum_snap *snap)
+
+static void multiface_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte *buffer;
     int idx, i;

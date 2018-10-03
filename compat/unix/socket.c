@@ -39,20 +39,20 @@ struct compat_socket_selfpipe_t {
     int write_fd;
 };
 
-void
-compat_socket_networking_init(void)
+
+void compat_socket_networking_init(void)
 {
     // No action necessary
 }
 
-void
-compat_socket_networking_end(void)
+
+void compat_socket_networking_end(void)
 {
     // No action necessary
 }
 
-int
-compat_socket_close(compat_socket_t fd)
+
+int compat_socket_close(compat_socket_t fd)
 {
     return close(fd);
 }

@@ -65,8 +65,8 @@ static void poll_joystick(int which);
 static void do_axis(int which, double position, input_key negative,
              input_key positive);
 
-static int
-init_stick(int which, const char *const device,
+
+static int init_stick(int which, const char *const device,
         const char *const calibration)
 {
     switch (JSInit(&jsd[which], device, calibration, JSFlagNonBlocking)) {
@@ -121,7 +121,7 @@ init_stick(int which, const char *const device,
 static
 int open_joystick(int which, const char *device, const char *calibration)
 {
-    char path[ PATH_MAX ];
+    char path[PATH_MAX];
 
     /* If we were given an explicit device to use for this joystick, try
      only that */
@@ -138,8 +138,8 @@ int open_joystick(int which, const char *device, const char *calibration)
     return 1;
 }
 
-int
-ui_joystick_init(void)
+
+int ui_joystick_init(void)
 {
     const char *cfgdir;
     char *calibration;
@@ -178,23 +178,23 @@ ui_joystick_init(void)
     return 2;
 }
 
-void
-ui_joystick_end(void)
+
+void ui_joystick_end(void)
 {
     int i;
     for (i = 0; i < joysticks_supported; i++) JSClose(&jsd[i]);
 }
 
-void
-ui_joystick_poll(void)
+
+void ui_joystick_poll(void)
 {
     int i;
 
     for (i = 0; i < joysticks_supported; i++) poll_joystick(i);
 }
 
-static void
-poll_joystick(int which)
+
+static void poll_joystick(int which)
 {
     js_data_struct *joystick;
     double position;
@@ -237,8 +237,8 @@ poll_joystick(int which)
 
 }
 
-static void
-do_axis(int which, double position, input_key negative, input_key positive)
+
+static void do_axis(int which, double position, input_key negative, input_key positive)
 {
     input_event_t event1, event2;
 
@@ -266,19 +266,19 @@ do_axis(int which, double position, input_key negative, input_key positive)
 
 // No joystick library
 
-int
-ui_joystick_init(void)
+
+int ui_joystick_init(void)
 {
     return 0;
 }
 
-void
-ui_joystick_end(void)
+
+void ui_joystick_end(void)
 {
 }
 
-void
-ui_joystick_poll(void)
+
+void ui_joystick_poll(void)
 {
 }
 

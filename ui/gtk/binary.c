@@ -56,8 +56,8 @@ static void load_data(GtkEntry *entry, gpointer user_data);
 static void change_save_filename(GtkButton *button, gpointer user_data);
 static void save_data(GtkEntry *entry, gpointer user_data);
 
-static void
-create_binary_dialog(struct binary_info *info, const char *title)
+
+static void create_binary_dialog(struct binary_info *info, const char *title)
 {
     GtkWidget *table, *button, *content_area;
     GtkWidget *label_filename, *label_start, *label_length;
@@ -148,8 +148,8 @@ create_binary_dialog(struct binary_info *info, const char *title)
                              DEFAULT_DESTROY, DEFAULT_DESTROY);
 }
 
-void
-menu_file_loadbinarydata(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_file_loadbinarydata(GtkAction *gtk_action GCC_UNUSED,
                           gpointer data GCC_UNUSED)
 {
     struct binary_info info;
@@ -159,10 +159,10 @@ menu_file_loadbinarydata(GtkAction *gtk_action GCC_UNUSED,
     fuse_emulation_pause();
 
     info.filename = ui_get_open_filename("Fuse - Load Binary Data");
-    if (!info.filename) { fuse_emulation_unpause(); return; }
+    if (!info.filename) {fuse_emulation_unpause(); return;}
 
     error = utils_read_file(info.filename, &info.file);
-    if (error) { free(info.filename); fuse_emulation_unpause(); return; }
+    if (error) {free(info.filename); fuse_emulation_unpause(); return;}
 
     // Information display
     info.load = 1;
@@ -181,8 +181,8 @@ menu_file_loadbinarydata(GtkAction *gtk_action GCC_UNUSED,
     fuse_emulation_unpause();
 }
 
-static void
-change_load_filename(GtkButton *button GCC_UNUSED, gpointer user_data)
+
+static void change_load_filename(GtkButton *button GCC_UNUSED, gpointer user_data)
 {
     struct binary_info *info = user_data;
 
@@ -196,7 +196,7 @@ change_load_filename(GtkButton *button GCC_UNUSED, gpointer user_data)
     if (!new_filename) return;
 
     error = utils_read_file(new_filename, &new_file);
-    if (error) { free(new_filename); return; }
+    if (error) {free(new_filename); return;}
 
     // Remove the data for the old file
     utils_close_file(&info->file);
@@ -213,8 +213,8 @@ change_load_filename(GtkButton *button GCC_UNUSED, gpointer user_data)
     gtk_entry_set_text(GTK_ENTRY(info->length_widget), buffer);
 }
 
-static void
-load_data(GtkEntry *entry GCC_UNUSED, gpointer user_data)
+
+static void load_data(GtkEntry *entry GCC_UNUSED, gpointer user_data)
 {
     struct binary_info *info = user_data;
 
@@ -256,13 +256,13 @@ load_data(GtkEntry *entry GCC_UNUSED, gpointer user_data)
     }
 
     for (i = 0; i < length; i++)
-    writebyte_internal(start + i, info->file.buffer[ i ]);
+    writebyte_internal(start + i, info->file.buffer[i]);
 
     gtkui_destroy_widget_and_quit(info->dialog, NULL);
 }
 
-void
-menu_file_savebinarydata(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_file_savebinarydata(GtkAction *gtk_action GCC_UNUSED,
                           gpointer data GCC_UNUSED)
 {
     struct binary_info info;
@@ -270,7 +270,7 @@ menu_file_savebinarydata(GtkAction *gtk_action GCC_UNUSED,
     fuse_emulation_pause();
 
     info.filename = ui_get_save_filename("Fuse - Save Binary Data");
-    if (!info.filename) { fuse_emulation_unpause(); return; }
+    if (!info.filename) {fuse_emulation_unpause(); return;}
 
     info.activate_data = G_CALLBACK(save_data);
     info.change_filename = G_CALLBACK(change_save_filename);
@@ -287,8 +287,8 @@ menu_file_savebinarydata(GtkAction *gtk_action GCC_UNUSED,
     fuse_emulation_unpause();
 }
 
-static void
-change_save_filename(GtkButton *button GCC_UNUSED, gpointer user_data)
+
+static void change_save_filename(GtkButton *button GCC_UNUSED, gpointer user_data)
 {
     struct binary_info *info = user_data;
     char *new_filename;
@@ -303,8 +303,8 @@ change_save_filename(GtkButton *button GCC_UNUSED, gpointer user_data)
     gtk_label_set_text(GTK_LABEL(info->filename_widget), new_filename);
 }
 
-static void
-save_data(GtkEntry *entry GCC_UNUSED, gpointer user_data)
+
+static void save_data(GtkEntry *entry GCC_UNUSED, gpointer user_data)
 {
     struct binary_info *info = user_data;
 

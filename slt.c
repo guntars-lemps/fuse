@@ -58,34 +58,34 @@ static module_info_t slt_module_info = {
 
 };
 
-static int
-slt_init(void *context)
+
+static int slt_init(void *context)
 {
     module_register(&slt_module_info);
 
     return 0;
 }
 
-void
-slt_register_startup(void)
+
+void slt_register_startup(void)
 {
-    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_SLT, dependencies,
                             ARRAY_SIZE(dependencies), slt_init, NULL, NULL);
 }
 
-int
-slt_trap(libspectrum_word address, libspectrum_byte level)
+
+int slt_trap(libspectrum_word address, libspectrum_byte level)
 {
     size_t length;
     libspectrum_byte *data;
 
     if (!settings_current.slt_traps) return 0;
 
-    if (slt_length[ level ]) {
+    if (slt_length[level]) {
 
-    length = slt_length[ level ];
-    data = slt[ level ];
+    length = slt_length[level];
+    data = slt[level];
 
     while (length--) writebyte(address++, *data++);
 
@@ -94,8 +94,8 @@ slt_trap(libspectrum_word address, libspectrum_byte level)
     return 0;
 }
 
-static void
-slt_from_snapshot(libspectrum_snap *snap)
+
+static void slt_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
@@ -122,8 +122,8 @@ slt_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-slt_to_snapshot(libspectrum_snap *snap)
+
+static void slt_to_snapshot(libspectrum_snap *snap)
 {
     size_t i;
     libspectrum_byte *buffer;

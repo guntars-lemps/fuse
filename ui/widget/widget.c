@@ -60,15 +60,15 @@ typedef struct {
 static widget_font_character *widget_font[1] = {0};
 
 static const widget_font_character default_invalid = {
-    { 0x7E, 0xDF, 0x9F, 0xB5, 0xA5, 0x8F, 0xDF, 0x7E }, 0, 8, 1
+    {0x7E, 0xDF, 0x9F, 0xB5, 0xA5, 0x8F, 0xDF, 0x7E}, 0, 8, 1
 }; // "(?)" (inv)
 
 static const widget_font_character default_unknown = {
-    { 0x7C, 0xDE, 0xBE, 0xAA, 0xDE, 0x7C }, 1, 6, 1
+    {0x7C, 0xDE, 0xBE, 0xAA, 0xDE, 0x7C}, 1, 6, 1
 }; // "(?)"
 
 static const widget_font_character default_keyword = {
-    { 0x7C, 0x82, 0xEE, 0xD6, 0xBA, 0x7C }, 1, 6, 1
+    {0x7C, 0x82, 0xEE, 0xD6, 0xBA, 0x7C}, 1, 6, 1
 }; // "(K)"
 
 // The current widget keyhandler
@@ -160,11 +160,11 @@ widget_char(int pp)
     if (pp < 0 || pp >= 256) return &default_invalid;
     if (!widget_font[pp >> 8] || !widget_font[pp >> 8][pp & 255].defined)
     return &default_unknown;
-    return &widget_font[ pp >> 8 ][ pp & 255 ];
+    return &widget_font[pp >> 8][pp & 255];
 }
 
-static int
-printchar(int x, int y, int col, int ch)
+
+static int printchar(int x, int y, int col, int ch)
 {
     int mx, my;
     const widget_font_character *bitmap = widget_char(ch);
@@ -178,8 +178,8 @@ printchar(int x, int y, int col, int ch)
     return x + bitmap->width + 1;
 }
 
-int
-widget_printstring(int x, int y, int col, const char *s)
+
+int widget_printstring(int x, int y, int col, const char *s)
 {
     int c;
     int shadow = 0;
@@ -189,8 +189,8 @@ widget_printstring(int x, int y, int col, const char *s)
      && (c = *(libspectrum_byte *)s++) != 0) {
     if (col == WIDGET_COLOUR_DISABLED && c < 26) continue;
     if (col != WIDGET_COLOUR_DISABLED) {
-      if (c && c < 17) { col = c - 1; continue; }
-      if (c < 26) { shadow = c - 17; continue; }
+      if (c && c < 17) {col = c - 1; continue;}
+      if (c < 26) {shadow = c - 17; continue;}
     }
 
     if (shadow && col) {
@@ -206,8 +206,8 @@ widget_printstring(int x, int y, int col, const char *s)
     return x;
 }
 
-int
-widget_printstring_fixed(int x, int y, int col, const char *s)
+
+int widget_printstring_fixed(int x, int y, int col, const char *s)
 {
     int c;
 
@@ -221,8 +221,8 @@ widget_printstring_fixed(int x, int y, int col, const char *s)
     return x;
 }
 
-void
-widget_printchar_fixed(int x, int y, int col, int c)
+
+void widget_printchar_fixed(int x, int y, int col, int c)
 {
     int mx, my;
     int inverse = 0;
@@ -299,8 +299,8 @@ void widget_rectangle(int x, int y, int w, int h, int col)
         widget_putpixel(x + mx, y + my, col);
 }
 
-void
-widget_draw_line_horiz(int x, int y, int length, int colour)
+
+void widget_draw_line_horiz(int x, int y, int length, int colour)
 {
     int i;
 
@@ -309,8 +309,8 @@ widget_draw_line_horiz(int x, int y, int length, int colour)
     }
 }
 
-void
-widget_draw_line_vert(int x, int y, int length, int colour)
+
+void widget_draw_line_vert(int x, int y, int length, int colour)
 {
     int i;
 
@@ -319,8 +319,8 @@ widget_draw_line_vert(int x, int y, int length, int colour)
     }
 }
 
-void
-widget_draw_rectangle_outline(int x, int y, int w, int h, int colour)
+
+void widget_draw_rectangle_outline(int x, int y, int w, int h, int colour)
 {
     widget_draw_line_horiz(x, y, w, colour);
     widget_draw_line_horiz(x, y+h-1, w, colour);
@@ -328,8 +328,8 @@ widget_draw_rectangle_outline(int x, int y, int w, int h, int colour)
     widget_draw_line_vert(x+w-1, y, h, colour);
 }
 
-void
-widget_draw_rectangle_solid(int x, int y, int w, int h, int colour)
+
+void widget_draw_rectangle_solid(int x, int y, int w, int h, int colour)
 {
     int v, p;
 
@@ -357,8 +357,8 @@ widget_draw_rectangle_solid(int x, int y, int w, int h, int colour)
     }
 }
 
-void
-widget_draw_rectangle_outline_rounded(int x, int y, int w, int h, int colour)
+
+void widget_draw_rectangle_outline_rounded(int x, int y, int w, int h, int colour)
 {
     widget_draw_line_horiz(x+1, y, w-2, colour);
     widget_draw_line_horiz(x+1, y+h-1, w-2, colour);
@@ -371,8 +371,8 @@ widget_draw_rectangle_outline_rounded(int x, int y, int w, int h, int colour)
     uidisplay_putpixel(x+w-2, y+h-2, colour);
 }
 
-void
-widget_draw_submenu_arrow(int x, int y, int colour)
+
+void widget_draw_submenu_arrow(int x, int y, int colour)
 {
     widget_draw_line_vert(x + 2, y, 6, colour);
     widget_draw_line_vert(x + 3, y + 1, 4, colour);
@@ -402,8 +402,8 @@ void widget_print_checkbox(int x, int y, int colour, int value)
 }
 
 // Arrows for any scrollable widget
-void
-widget_up_arrow(int x, int y, int colour)
+
+void widget_up_arrow(int x, int y, int colour)
 {
     int i, j;
     x = x * 8 + 1;
@@ -416,8 +416,8 @@ widget_up_arrow(int x, int y, int colour)
     }
 }
 
-void
-widget_down_arrow(int x, int y, int colour)
+
+void widget_down_arrow(int x, int y, int colour)
 {
     int i, j;
     x = x * 8 + 1;
@@ -431,8 +431,8 @@ widget_down_arrow(int x, int y, int colour)
 }
 
 // Force screen rasters y to (y+h) inclusive to be redrawn
-void
-widget_display_rasters(int y, int h)
+
+void widget_display_rasters(int y, int h)
 {
     int scale = machine_current->timex ? 2 : 1;
 
@@ -507,7 +507,7 @@ int widget_do(widget_type which, void *data)
     uidisplay_frame_restore();
 
     // Draw this widget
-    widget_data[ which ].draw(data);
+    widget_data[which].draw(data);
 
     // Set up the keyhandler for this widget
     widget_keyhandler = widget_data[which].keyhandler;
@@ -539,8 +539,8 @@ int widget_do(widget_type which, void *data)
        draw it again, unless it's already finished */
     if (! widget_return[ui_widget_level].finished) {
       widget_keyhandler =
-    widget_data[ widget_return[ui_widget_level].type ].keyhandler;
-      widget_data[ widget_return[ui_widget_level].type ].draw(
+    widget_data[widget_return[ui_widget_level].type].keyhandler;
+      widget_data[widget_return[ui_widget_level].type].draw(
         widget_return[ui_widget_level].data
 );
     }
@@ -556,10 +556,10 @@ int widget_do(widget_type which, void *data)
 }
 
 // End the currently running widget
-int
-widget_end_widget(widget_finish_state state)
+
+int widget_end_widget(widget_finish_state state)
 {
-    widget_return[ ui_widget_level ].finished = state;
+    widget_return[ui_widget_level].finished = state;
     return 0;
 }
 
@@ -574,8 +574,8 @@ int widget_end_all(widget_finish_state state)
     return 0;
 }
 
-void
-widget_finish(void)
+
+void widget_finish(void)
 {
     widget_end_all(WIDGET_FINISHED_OK);
 }
@@ -586,8 +586,8 @@ int widget_dialog(int x, int y, int width, int height)
     return 0;
 }
 
-static void
-widget_draw_speccy_rainbow_bar(int x, int y)
+
+static void widget_draw_speccy_rainbow_bar(int x, int y)
 {
     int i = 0;
     int cur_x = x - 8;
@@ -603,8 +603,8 @@ widget_draw_speccy_rainbow_bar(int x, int y)
 
 const int menu_vert_external_margin = 8;
 
-int
-widget_calculate_menu_width(widget_menu_entry *menu)
+
+int widget_calculate_menu_width(widget_menu_entry *menu)
 {
     widget_menu_entry *ptr;
     int max_width=0;
@@ -651,8 +651,8 @@ int widget_dialog_with_border(int x, int y, int width, int height)
     return 0;
 }
 
-void
-widget_putpixel(int x, int y, int colour)
+
+void widget_putpixel(int x, int y, int colour)
 {
     uidisplay_putpixel(x + DISPLAY_BORDER_ASPECT_WIDTH, y + DISPLAY_BORDER_HEIGHT,
                       colour);
@@ -663,44 +663,44 @@ widget_putpixel(int x, int y, int colour)
 
 widget_t widget_data[] = {
 
-    { widget_filesel_load_draw, widget_filesel_finish, widget_filesel_keyhandler  },
-    { widget_filesel_save_draw, widget_filesel_finish, widget_filesel_keyhandler  },
-    { widget_general_draw,  widget_options_finish, widget_general_keyhandler  },
-    { widget_picture_draw,  NULL,                  widget_picture_keyhandler  },
-    { widget_about_draw,    NULL,                  widget_about_keyhandler    },
-    { widget_menu_draw,      NULL,             widget_menu_keyhandler     },
-    { widget_select_draw,   widget_select_finish,  widget_select_keyhandler   },
-    { widget_media_draw,      widget_options_finish, widget_media_keyhandler    },
-    { widget_sound_draw,      widget_options_finish, widget_sound_keyhandler    },
-    { widget_error_draw,      NULL,             widget_error_keyhandler    },
-    { widget_rzx_draw,      widget_options_finish, widget_rzx_keyhandler      },
-    { widget_movie_draw,    widget_options_finish, widget_movie_keyhandler    },
-    { widget_browse_draw,   widget_browse_finish,  widget_browse_keyhandler   },
-    { widget_text_draw,      widget_text_finish,     widget_text_keyhandler     },
-    { widget_debugger_draw, NULL,             widget_debugger_keyhandler },
-    { widget_pokefinder_draw, NULL,         widget_pokefinder_keyhandler },
-    { widget_pokemem_draw, widget_pokemem_finish,    widget_pokemem_keyhandler },
-    { widget_memory_draw,   NULL,             widget_memory_keyhandler   },
-    { widget_roms_draw,     widget_roms_finish,     widget_roms_keyhandler     },
-    { widget_peripherals_general_draw, widget_options_finish, widget_peripherals_general_keyhandler },
-    { widget_peripherals_disk_draw, widget_options_finish, widget_peripherals_disk_keyhandler },
-    { widget_query_draw,    widget_query_finish,     widget_query_keyhandler    },
-    { widget_query_save_draw,widget_query_finish,     widget_query_save_keyhandler },
-    { widget_diskoptions_draw, widget_options_finish, widget_diskoptions_keyhandler  },
+    {widget_filesel_load_draw, widget_filesel_finish, widget_filesel_keyhandler  },
+    {widget_filesel_save_draw, widget_filesel_finish, widget_filesel_keyhandler  },
+    {widget_general_draw,  widget_options_finish, widget_general_keyhandler  },
+    {widget_picture_draw,  NULL,                  widget_picture_keyhandler  },
+    {widget_about_draw,    NULL,                  widget_about_keyhandler    },
+    {widget_menu_draw,      NULL,             widget_menu_keyhandler     },
+    {widget_select_draw,   widget_select_finish,  widget_select_keyhandler   },
+    {widget_media_draw,      widget_options_finish, widget_media_keyhandler    },
+    {widget_sound_draw,      widget_options_finish, widget_sound_keyhandler    },
+    {widget_error_draw,      NULL,             widget_error_keyhandler    },
+    {widget_rzx_draw,      widget_options_finish, widget_rzx_keyhandler      },
+    {widget_movie_draw,    widget_options_finish, widget_movie_keyhandler    },
+    {widget_browse_draw,   widget_browse_finish,  widget_browse_keyhandler   },
+    {widget_text_draw,      widget_text_finish,     widget_text_keyhandler     },
+    {widget_debugger_draw, NULL,             widget_debugger_keyhandler},
+    {widget_pokefinder_draw, NULL,         widget_pokefinder_keyhandler},
+    {widget_pokemem_draw, widget_pokemem_finish,    widget_pokemem_keyhandler},
+    {widget_memory_draw,   NULL,             widget_memory_keyhandler   },
+    {widget_roms_draw,     widget_roms_finish,     widget_roms_keyhandler     },
+    {widget_peripherals_general_draw, widget_options_finish, widget_peripherals_general_keyhandler},
+    {widget_peripherals_disk_draw, widget_options_finish, widget_peripherals_disk_keyhandler},
+    {widget_query_draw,    widget_query_finish,     widget_query_keyhandler    },
+    {widget_query_save_draw,widget_query_finish,     widget_query_save_keyhandler},
+    {widget_diskoptions_draw, widget_options_finish, widget_diskoptions_keyhandler  },
 };
 
 #ifndef UI_SDL
 #ifndef UI_X
 // The statusbar handling functions
 // TODO: make these do something useful
-int
-ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
+
+int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
 {
     return 0;
 }
 
-int
-ui_statusbar_update_speed(float speed)
+
+int ui_statusbar_update_speed(float speed)
 {
     return 0;
 }
@@ -709,8 +709,8 @@ ui_statusbar_update_speed(float speed)
 
 /* Tape browser update function. The dialog box is created every time it
    is displayed, so no need to do anything here */
-int
-ui_tape_browser_update(ui_tape_browser_update_type change,
+
+int ui_tape_browser_update(ui_tape_browser_update_type change,
                         libspectrum_tape_block *block)
 {
     return 0;
@@ -726,16 +726,16 @@ ui_confirm_save_specific(const char *message)
     return widget_query.confirm;
 }
 
-int
-ui_query(const char *message)
+
+int ui_query(const char *message)
 {
     widget_do_query(message);
     return widget_query.save;
 }
 
 // FIXME: make this do something useful
-int
-ui_get_rollback_point(GSList *points)
+
+int ui_get_rollback_point(GSList *points)
 {
     return -1;
 }
@@ -764,15 +764,15 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
     return (ui_confirm_joystick_t)info.result;
 }
 
-int
-ui_widgets_reset(void)
+
+int ui_widgets_reset(void)
 {
     pokefinder_clear();
     return 0;
 }
 
-void
-ui_popup_menu(int native_key)
+
+void ui_popup_menu(int native_key)
 {
     switch (native_key) {
     case INPUT_KEY_F1:
@@ -829,8 +829,8 @@ ui_popup_menu(int native_key)
     }
 }
 
-void
-ui_widget_keyhandler(int native_key)
+
+void ui_widget_keyhandler(int native_key)
 {
     widget_keyhandler(native_key);
 }

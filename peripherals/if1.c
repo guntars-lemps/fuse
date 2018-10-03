@@ -59,7 +59,7 @@ enum {
 /*
  Microdrive cartridge
    GAP      PREAMBLE      15 byte      GAP      PREAMBLE      15 byte    512     1
- [-----][00 00 ... ff ff][BLOCK HEAD][-----][00 00 ... ff ff][REC HEAD][ DATA ][CHK]
+ [-----][00 00 ... ff ff][BLOCK HEAD][-----][00 00 ... ff ff][REC HEAD][DATA][CHK]
  Preamble = 10 * 0x00 + 2 * 0xff (12 byte)
 */
 
@@ -218,10 +218,10 @@ static module_info_t if1_module_info = {
 };
 
 static const periph_port_t if1_ports[] = {
-    { 0x0018, 0x0010, if1_port_in, if1_port_out },
-    { 0x0018, 0x0008, if1_port_in, if1_port_out },
-    { 0x0018, 0x0000, if1_port_in, if1_port_out },
-    { 0, 0, NULL, NULL }
+    {0x0018, 0x0010, if1_port_in, if1_port_out},
+    {0x0018, 0x0008, if1_port_in, if1_port_out},
+    {0x0018, 0x0000, if1_port_in, if1_port_out},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t if1_periph = {
@@ -238,8 +238,8 @@ static int if1_memory_source;
 static const char * const event_type_string = "if1";
 static int page_event, unpage_event;
 
-static void
-update_menu(enum if1_menu_item what)
+
+static void update_menu(enum if1_menu_item what)
 {
     if (what == UMENU_ALL || what == UMENU_MDRV1) {
     ui_menu_activate(UI_MENU_ITEM_MEDIA_IF1_M1_EJECT, MDR_IN(1));
@@ -301,8 +301,8 @@ update_menu(enum if1_menu_item what)
     }
 }
 
-static int
-if1_init(void *context)
+
+static int if1_init(void *context)
 {
     int m, i;
 
@@ -354,8 +354,8 @@ if1_init(void *context)
     return 0;
 }
 
-static void
-if1_end(void)
+
+static void if1_end(void)
 {
     int m;
 
@@ -366,8 +366,8 @@ if1_end(void)
     }
 }
 
-void
-if1_register_startup(void)
+
+void if1_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -379,14 +379,14 @@ if1_register_startup(void)
                             if1_end);
 }
 
-void
-if1_update_menu(void)
+
+void if1_update_menu(void)
 {
     update_menu(UMENU_ALL);
 }
 
-static void
-if1_reset(int hard_reset GCC_UNUSED)
+
+static void if1_reset(int hard_reset GCC_UNUSED)
 {
     if1_active = 0;
     if1_available = 0;
@@ -431,8 +431,8 @@ if1_reset(int hard_reset GCC_UNUSED)
     if1_available = 1;
 }
 
-void
-if1_page(void)
+
+void if1_page(void)
 {
     if1_active = 1;
     machine_current->ram.romcs = 1;
@@ -441,8 +441,8 @@ if1_page(void)
     debugger_event(page_event);
 }
 
-void
-if1_unpage(void)
+
+void if1_unpage(void)
 {
     if1_active = 0;
     machine_current->ram.romcs = 0;
@@ -451,8 +451,8 @@ if1_unpage(void)
     debugger_event(unpage_event);
 }
 
-void
-if1_memory_map(void)
+
+void if1_memory_map(void)
 {
     if (!if1_active) return;
 
@@ -460,14 +460,14 @@ if1_memory_map(void)
     memory_map_romcs_8k(0x2000, if1_memory_map_romcs);
 }
 
-static void
-if1_enabled_snapshot(libspectrum_snap *snap)
+
+static void if1_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.interface1 = libspectrum_snap_interface1_active(snap);
 }
 
-static void
-if1_from_snapshot(libspectrum_snap *snap)
+
+static void if1_from_snapshot(libspectrum_snap *snap)
 {
     if (!libspectrum_snap_interface1_active(snap)) return;
 
@@ -487,8 +487,8 @@ if1_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-if1_to_snapshot(libspectrum_snap *snap)
+
+static void if1_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte *buffer;
     int i;
@@ -513,8 +513,8 @@ if1_to_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-microdrives_reset(void)
+
+static void microdrives_reset(void)
 {
     int m;
 
@@ -552,15 +552,15 @@ decode_port(libspectrum_word port)
     }
 }
 
-static libspectrum_byte
-port_mdr_in(void)
+
+static libspectrum_byte port_mdr_in(void)
 {
     libspectrum_byte ret = 0xff;
     int m;
 
     for (m = 0; m < 8; m++) {
 
-    microdrive_t *mdr = &microdrive[ m ];
+    microdrive_t *mdr = &microdrive[m];
 
     if (mdr->motor_on && mdr->inserted) {
 
@@ -579,15 +579,15 @@ port_mdr_in(void)
     return ret;
 }
 
-static libspectrum_byte
-port_ctr_in(void)
+
+static libspectrum_byte port_ctr_in(void)
 {
     libspectrum_byte ret = 0xff;
     int m, block;
 
     for (m = 0; m < 8; m++) {
 
-    microdrive_t *mdr = &microdrive[ m ];
+    microdrive_t *mdr = &microdrive[m];
 
     if (mdr->motor_on && mdr->inserted) {
       block = mdr->head_pos / 543 + (mdr->max_bytes == 15 ? 0 : 256);
@@ -658,8 +658,8 @@ port_ctr_in(void)
     0 if nothing interesting...
 */
 
-static int
-read_rs232(void)
+
+static int read_rs232(void)
 {
     if (if1_ula.rs232_buffer <= 0xff) { // we read from the buffer
     if1_ula.data_in = if1_ula.rs232_buffer;
@@ -688,8 +688,8 @@ read_rs232(void)
     return 0;
 }
 
-static libspectrum_byte
-port_net_in(void)
+
+static libspectrum_byte port_net_in(void)
 {
     libspectrum_byte ret = 0xff;
 
@@ -780,8 +780,8 @@ no_snet_in:
     return ret;
 }
 
-static libspectrum_byte
-if1_port_in(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte if1_port_in(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     libspectrum_byte ret = 0xff;
 
@@ -798,15 +798,15 @@ if1_port_in(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
     return ret;
 }
 
-static void
-port_mdr_out(libspectrum_byte val)
+
+static void port_mdr_out(libspectrum_byte val)
 {
     int m, block;
 
     // allow access to the port only if motor 1 is ON and there's a file open
     for (m = 0; m < 8; m++) {
 
-    microdrive_t *mdr = &microdrive[ m ];
+    microdrive_t *mdr = &microdrive[m];
 
     if (mdr->motor_on && mdr->inserted) {
 #ifdef IF1_DEBUG_MDR
@@ -836,8 +836,8 @@ port_mdr_out(libspectrum_byte val)
     }
 }
 
-static void
-port_ctr_out(libspectrum_byte val)
+
+static void port_ctr_out(libspectrum_byte val)
 {
     int m;
 
@@ -917,8 +917,8 @@ port_ctr_out(libspectrum_byte val)
     microdrives_restart();
 }
 
-static void
-port_net_out(libspectrum_byte val)
+
+static void port_net_out(libspectrum_byte val)
 {
     if (if1_ula.fd_t == -1)
     return; // nothing to write
@@ -1015,8 +1015,8 @@ port_net_out(libspectrum_byte val)
     microdrives_restart();
 }
 
-static void
-if1_port_out(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
+
+static void if1_port_out(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
 {
 #ifdef IF1_DEBUG_NET_1
     fprintf(stderr, "In if1_port_out(%%%d%d%d%d%d%d%d%d => 0x%04x).\n",
@@ -1032,8 +1032,8 @@ if1_port_out(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
     }
 }
 
-static void
-increment_head(int m)
+
+static void increment_head(int m)
 {
     microdrive[m].head_pos++;
     if (microdrive[m].head_pos >=
@@ -1042,8 +1042,8 @@ increment_head(int m)
     microdrive[m].head_pos = 0;
 }
 
-static void
-microdrives_restart(void)
+
+static void microdrives_restart(void)
 {
     int m;
 
@@ -1062,8 +1062,8 @@ microdrives_restart(void)
     }
 }
 
-void
-if1_mdr_writeprotect(int drive, int wrprot)
+
+void if1_mdr_writeprotect(int drive, int wrprot)
 {
     libspectrum_microdrive_set_write_protect(microdrive[drive].cartridge,
                         wrprot ? 1 : 0);
@@ -1072,8 +1072,8 @@ if1_mdr_writeprotect(int drive, int wrprot)
     update_menu(UMENU_MDRV1 + drive);
 }
 
-static void
-if1_mdr_new(microdrive_t *mdr)
+
+static void if1_mdr_new(microdrive_t *mdr)
 {
     libspectrum_byte len;
     long int i;
@@ -1105,8 +1105,8 @@ if1_mdr_new(microdrive_t *mdr)
 
 }
 
-int
-if1_mdr_insert(int which, const char *filename)
+
+int if1_mdr_insert(int which, const char *filename)
 {
     microdrive_t *mdr;
     int m, i;
@@ -1132,7 +1132,7 @@ if1_mdr_insert(int which, const char *filename)
     return 1;
     }
 
-    mdr = &microdrive[ which ];
+    mdr = &microdrive[which];
 
     // Eject any cartridge already in the drive
     if (mdr->inserted) {
@@ -1173,15 +1173,15 @@ if1_mdr_insert(int which, const char *filename)
     return 0;
 }
 
-int
-if1_mdr_eject(int which)
+
+int if1_mdr_eject(int which)
 {
     microdrive_t *mdr;
 
     if (which >= 8)
     return 1;
 
-    mdr = &microdrive[ which ];
+    mdr = &microdrive[which];
 
     if (!mdr->inserted)
     return 0;
@@ -1216,15 +1216,15 @@ if1_mdr_eject(int which)
     return 0;
 }
 
-int
-if1_mdr_save(int which, int saveas)
+
+int if1_mdr_save(int which, int saveas)
 {
     microdrive_t *mdr;
 
     if (which >= 8)
     return 1;
 
-    mdr = &microdrive[ which ];
+    mdr = &microdrive[which];
 
     if (!mdr->inserted)
     return 0;
@@ -1235,8 +1235,8 @@ if1_mdr_save(int which, int saveas)
     return 0;
 }
 
-int
-if1_mdr_write(int which, const char *filename)
+
+int if1_mdr_write(int which, const char *filename)
 {
     microdrive_t *mdr = &microdrive[which];
 
@@ -1259,8 +1259,8 @@ if1_mdr_write(int which, const char *filename)
 #define O_NONBLOCK FNDELAY
 #endif
 
-void
-if1_plug(const char *filename, int what)
+
+void if1_plug(const char *filename, int what)
 {
     int fd = -1;
 
@@ -1304,8 +1304,8 @@ if1_plug(const char *filename, int what)
     update_menu(UMENU_RS232);
 }
 
-void
-if1_unplug(int what)
+
+void if1_unplug(int what)
 {
     switch (what) {
     case 1:
@@ -1332,8 +1332,8 @@ if1_unplug(int what)
     update_menu(UMENU_RS232);
 }
 
-int
-if1_unittest(void)
+
+int if1_unittest(void)
 {
     int r = 0;
 

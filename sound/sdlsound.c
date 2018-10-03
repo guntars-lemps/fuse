@@ -46,8 +46,8 @@ sfifo_t sound_fifo;
 // Records sound writer status information
 static int audio_output_started;
 
-int
-sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
+
+int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
     SDL_AudioSpec requested, received;
     int error;
@@ -144,8 +144,8 @@ sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     return 0;
 }
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
     SDL_PauseAudio(1);
     SDL_LockAudio();
@@ -156,8 +156,8 @@ sound_lowlevel_end(void)
 }
 
 // Copy data to fifo
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     int i = 0;
 
@@ -190,8 +190,8 @@ sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 #endif
 
 // Write len samples from fifo into stream
-void
-sdlwrite(void *userdata, Uint8 *stream, int len)
+
+void sdlwrite(void *userdata, Uint8 *stream, int len)
 {
     int f;
 

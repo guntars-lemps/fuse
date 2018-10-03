@@ -39,7 +39,7 @@
 #include "utils.h"
 
 // An RGB image of the keyboard picture
-static guchar picture[ DISPLAY_SCREEN_HEIGHT * DISPLAY_ASPECT_WIDTH * 4 ];
+static guchar picture[DISPLAY_SCREEN_HEIGHT * DISPLAY_ASPECT_WIDTH * 4];
 static const gint picture_pitch = DISPLAY_ASPECT_WIDTH * 4;
 
 static int dialog_created = 0;
@@ -48,20 +48,20 @@ static void draw_screen(libspectrum_byte *screen, int border);
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
 
-static gint
-picture_expose(GtkWidget *widget, GdkEvent *event, gpointer data);
+
+static gint picture_expose(GtkWidget *widget, GdkEvent *event, gpointer data);
 
 #else
 
-static gboolean
-picture_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data);
+
+static gboolean picture_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data);
 
 #endif // #if !GTK_CHECK_VERSION(3, 0, 0)
 
 static GtkWidget *dialog;
 
-int
-gtkui_picture(const char *filename, int border)
+
+int gtkui_picture(const char *filename, int border)
 {
     utils_file screen;
 
@@ -111,8 +111,8 @@ gtkui_picture(const char *filename, int border)
     return 0;
 }
 
-static void
-draw_screen(libspectrum_byte *screen, int border)
+
+static void draw_screen(libspectrum_byte *screen, int border)
 {
     int i, x, y, ink, paper;
     libspectrum_byte attr, data;
@@ -125,7 +125,7 @@ draw_screen(libspectrum_byte *screen, int border)
           picture +
       (y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT) * picture_pitch +
       4 * x
-    ) = gtkdisplay_colours[ border ];
+    ) = gtkdisplay_colours[border];
     }
     }
 
@@ -134,30 +134,30 @@ draw_screen(libspectrum_byte *screen, int border)
     for (x=0; x < DISPLAY_BORDER_ASPECT_WIDTH; x++) {
       *(libspectrum_dword*)
     (picture + (y + DISPLAY_BORDER_HEIGHT) * picture_pitch + 4 * x) =
-    gtkdisplay_colours[ border ];
+    gtkdisplay_colours[border];
       *(libspectrum_dword*)(
           picture +
       (y + DISPLAY_BORDER_HEIGHT) * picture_pitch +
       4 * (x+DISPLAY_ASPECT_WIDTH-DISPLAY_BORDER_ASPECT_WIDTH)
-    ) = gtkdisplay_colours[ border ];
+    ) = gtkdisplay_colours[border];
     }
 
     for (x=0; x < DISPLAY_WIDTH_COLS; x++) {
 
-      attr = screen[ display_attr_start[y] + x ];
+      attr = screen[display_attr_start[y] + x];
 
       ink = (attr & 0x07) + ((attr & 0x40) >> 3);
       paper = (attr & (0x0f << 3)) >> 3;
 
-      data = screen[ display_line_start[y]+x ];
+      data = screen[display_line_start[y]+x];
 
       for (i=0; i<8; i++) {
     *(libspectrum_dword*)(
         picture +
         (y + DISPLAY_BORDER_HEIGHT) * picture_pitch +
         4 * (8 * x + DISPLAY_BORDER_ASPECT_WIDTH + i)
-    ) = (data & 0x80) ? gtkdisplay_colours[ ink ]
-                          : gtkdisplay_colours[ paper ];
+    ) = (data & 0x80) ? gtkdisplay_colours[ink]
+                          : gtkdisplay_colours[paper];
     data <<= 1;
       }
     }
@@ -167,13 +167,13 @@ draw_screen(libspectrum_byte *screen, int border)
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
 
-static gint
-picture_expose(GtkWidget *widget, GdkEvent *event, gpointer data GCC_UNUSED)
+
+static gint picture_expose(GtkWidget *widget, GdkEvent *event, gpointer data GCC_UNUSED)
 {
     int x = event->expose.area.x, y = event->expose.area.y;
 
     gdk_draw_rgb_32_image(widget->window,
-             widget->style->fg_gc[ GTK_STATE_NORMAL ],
+             widget->style->fg_gc[GTK_STATE_NORMAL],
              x, y,
              event->expose.area.width, event->expose.area.height,
              GDK_RGB_DITHER_NONE,
@@ -184,8 +184,8 @@ picture_expose(GtkWidget *widget, GdkEvent *event, gpointer data GCC_UNUSED)
 
 #else // #if !GTK_CHECK_VERSION(3, 0, 0)
 
-static gboolean
-picture_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
+
+static gboolean picture_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
     cairo_surface_t *surface;
 

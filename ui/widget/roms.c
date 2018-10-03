@@ -41,8 +41,8 @@ int is_peripheral;
 
 static void print_rom(int which);
 
-int
-widget_roms_draw(void *data)
+
+int widget_roms_draw(void *data)
 {
     int i;
     char buffer[32];
@@ -88,8 +88,8 @@ widget_roms_draw(void *data)
     return 0;
 }
 
-static void
-print_rom(int which)
+
+static void print_rom(int which)
 {
     const char *setting;
 
@@ -105,8 +105,8 @@ print_rom(int which)
     widget_display_rasters(which * 8 + 24, 8);
 }
 
-void
-widget_roms_keyhandler(input_key key)
+
+void widget_roms_keyhandler(input_key key)
 {
     switch (key) {
 
@@ -154,8 +154,8 @@ widget_roms_keyhandler(input_key key)
     }
 }
 
-int
-widget_roms_finish(widget_finish_state finished)
+
+int widget_roms_finish(widget_finish_state finished)
 {
     if (finished == WIDGET_FINISHED_OK) {
     settings_copy(&settings_current, widget_settings);

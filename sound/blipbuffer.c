@@ -43,15 +43,15 @@ blip_buffer_samples_avail(Blip_Buffer * buff)
     return (long)(buff->offset_ >> BLIP_BUFFER_ACCURACY);
 }
 
-void
-blip_synth_set_output(Blip_Synth * synth, Blip_Buffer * b)
+
+void blip_synth_set_output(Blip_Synth * synth, Blip_Buffer * b)
 {
     synth->impl.buf = b;
     synth->impl.last_amp = 0;
 }
 
-void
-blip_synth_set_volume(Blip_Synth * synth, double v)
+
+void blip_synth_set_volume(Blip_Synth * synth, double v)
 {
     _blip_synth_volume_unit(&synth->impl,
                            v * (1.0 /
@@ -128,8 +128,8 @@ blip_synth_offset_resampled(Blip_Synth * synth, blip_resampled_time_t time,
 #undef BLIP_FWD
 #undef BLIP_REV
 
-void
-blip_synth_update(Blip_Synth * synth, blip_time_t t, int amp)
+
+void blip_synth_update(Blip_Synth * synth, blip_time_t t, int amp)
 {
     int delta = amp - synth->impl.last_amp;
 
@@ -140,16 +140,16 @@ blip_synth_update(Blip_Synth * synth, blip_time_t t, int amp)
                                synth->impl.buf);
 }
 
-int
-_blip_synth_impulses_size(Blip_Synth_ * synth_)
+
+int _blip_synth_impulses_size(Blip_Synth_ * synth_)
 {
     return BLIP_RES / 2 * BLIP_SYNTH_WIDTH + 1;
 }
 
-void
-blip_synth_set_treble_eq(Blip_Synth * synth, double treble)
+
+void blip_synth_set_treble_eq(Blip_Synth * synth, double treble)
 {
-    blip_eq_t eq = { 0.0, 0, 44100, 0 };
+    blip_eq_t eq = {0.0, 0, 44100, 0};
 
     eq.treble = treble;
 
@@ -158,8 +158,8 @@ blip_synth_set_treble_eq(Blip_Synth * synth, double treble)
 
 #define BUFFER_EXTRA (BLIP_WIDEST_IMPULSE_ + 2)
 
-static void
-blip_buffer_init(Blip_Buffer * buff)
+
+static void blip_buffer_init(Blip_Buffer * buff)
 {
     buff->factor_ = LONG_MAX;
     buff->offset_ = 0;
@@ -173,8 +173,8 @@ blip_buffer_init(Blip_Buffer * buff)
     buff->length_ = 0;
 }
 
-static void
-blip_buffer_end(Blip_Buffer * buff)
+
+static void blip_buffer_end(Blip_Buffer * buff)
 {
     if (buff->buffer_)
     free(buff->buffer_);
@@ -193,8 +193,8 @@ new_Blip_Buffer(void)
     return ret;
 }
 
-void
-delete_Blip_Buffer(Blip_Buffer ** buff)
+
+void delete_Blip_Buffer(Blip_Buffer ** buff)
 {
     if (!*buff)
     return;
@@ -204,8 +204,8 @@ delete_Blip_Buffer(Blip_Buffer ** buff)
     *buff = NULL;
 }
 
-static void
-blip_synth_init(Blip_Synth * synth)
+
+static void blip_synth_init(Blip_Synth * synth)
 {
     synth->impulses =
     malloc((BLIP_RES * (BLIP_SYNTH_QUALITY / 2) +
@@ -215,8 +215,8 @@ blip_synth_init(Blip_Synth * synth)
     }
 }
 
-static void
-blip_synth_end(Blip_Synth * synth)
+
+static void blip_synth_end(Blip_Synth * synth)
 {
     if (synth->impulses) {
     free(synth->impulses);
@@ -240,8 +240,8 @@ new_Blip_Synth(void)
     return ret;
 }
 
-void
-delete_Blip_Synth(Blip_Synth ** synth)
+
+void delete_Blip_Synth(Blip_Synth ** synth)
 {
     if (!*synth)
     return;
@@ -251,8 +251,8 @@ delete_Blip_Synth(Blip_Synth ** synth)
     *synth = NULL;
 }
 
-void
-blip_buffer_clear(Blip_Buffer * buff, int entire_buffer)
+
+void blip_buffer_clear(Blip_Buffer * buff, int entire_buffer)
 {
     buff->offset_ = 0;
     buff->reader_accum = 0;
@@ -310,8 +310,8 @@ blip_buffer_clock_rate_factor(Blip_Buffer * buff, long clock_rate)
     return (blip_resampled_time_t) factor;
 }
 
-void
-blip_buffer_set_bass_freq(Blip_Buffer * buff, int freq)
+
+void blip_buffer_set_bass_freq(Blip_Buffer * buff, int freq)
 {
     int shift = 31;
 
@@ -327,8 +327,8 @@ blip_buffer_set_bass_freq(Blip_Buffer * buff, int freq)
     buff->bass_shift = shift;
 }
 
-void
-blip_buffer_end_frame(Blip_Buffer * buff, blip_time_t t)
+
+void blip_buffer_end_frame(Blip_Buffer * buff, blip_time_t t)
 {
     buff->offset_ += t * buff->factor_;
 }
@@ -357,8 +357,8 @@ blip_buffer_remove_samples(Blip_Buffer * buff, long count)
 
 // Blip_Synth_
 
-void
-_blip_synth_init(Blip_Synth_ * synth_, short *p)
+
+void _blip_synth_init(Blip_Synth_ * synth_, short *p)
 {
     synth_->impulses = p;
     synth_->volume_unit_ = 0.0;
@@ -370,8 +370,8 @@ _blip_synth_init(Blip_Synth_ * synth_, short *p)
 
 #define PI 3.1415926535897932384626433832795029
 
-static void
-gen_sinc(float *out, int count, double oversample, double treble,
+
+static void gen_sinc(float *out, int count, double oversample, double treble,
           double cutoff)
 {
     int i;
@@ -407,8 +407,8 @@ gen_sinc(float *out, int count, double oversample, double treble,
     }
 }
 
-static void
-blip_eq_generate(blip_eq_t * eq, float *out, int count)
+
+static void blip_eq_generate(blip_eq_t * eq, float *out, int count)
 {
     /* lower cutoff freq for narrow kernels with their wider transition band
      (8 points->1.49, 16 points->1.15) */
@@ -434,8 +434,8 @@ blip_eq_generate(blip_eq_t * eq, float *out, int count)
 
 }
 
-void
-_blip_synth_adjust_impulse(Blip_Synth_ * synth_)
+
+void _blip_synth_adjust_impulse(Blip_Synth_ * synth_)
 {
     // sum pairs for each phase and add error correction to end of first half
     int size = _blip_synth_impulses_size(synth_);
@@ -458,8 +458,8 @@ _blip_synth_adjust_impulse(Blip_Synth_ * synth_)
 }
 
 
-void
-_blip_synth_treble_eq(Blip_Synth_ * synth_, blip_eq_t * eq)
+
+void _blip_synth_treble_eq(Blip_Synth_ * synth_, blip_eq_t * eq)
 {
     double total, base_unit, rescale, sum, next, vol;
 
@@ -512,15 +512,15 @@ _blip_synth_treble_eq(Blip_Synth_ * synth_, blip_eq_t * eq)
     }
 }
 
-void
-_blip_synth_volume_unit(Blip_Synth_ * synth_, double new_unit)
+
+void _blip_synth_volume_unit(Blip_Synth_ * synth_, double new_unit)
 {
     if (new_unit != synth_->volume_unit_) {
     double factor;
 
     // use default eq if it hasn't been set yet
     if (!synth_->kernel_unit) {
-      blip_eq_t eq = { -8.0, 0, 44100, 0 };
+      blip_eq_t eq = { -8.0, 0, 44100, 0};
 
       _blip_synth_treble_eq(synth_, &eq);
     }

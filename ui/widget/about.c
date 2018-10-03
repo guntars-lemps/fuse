@@ -28,8 +28,8 @@
 #include "widget.h"
 #include "widget_internals.h"
 
-int
-widget_about_draw(void *data GCC_UNUSED)
+
+int widget_about_draw(void *data GCC_UNUSED)
 {
     char buffer[80];
     int dialog_cols, string_width, margin, x, line;
@@ -69,8 +69,8 @@ widget_about_draw(void *data GCC_UNUSED)
     return 0;
 }
 
-void
-widget_about_keyhandler(input_key key)
+
+void widget_about_keyhandler(input_key key)
 {
     switch (key) {
 

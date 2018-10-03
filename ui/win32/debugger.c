@@ -129,7 +129,7 @@ static int dialog_created = 0;
 // Is the debugger window active (as opposed to the debugger itself)?
 static int debugger_active;
 
-#define STUB do { printf("STUB: %s()\n", __func__); fflush(stdout); } while (0)
+#define STUB do {printf("STUB: %s()\n", __func__); fflush(stdout);} while (0)
 
 static const TCHAR*
 format_8_bit(void)
@@ -143,8 +143,8 @@ format_16_bit(void)
     return debugger_output_base == 10 ? TEXT("%5d") : TEXT("0x%04X");
 }
 
-int
-ui_debugger_activate(void)
+
+int ui_debugger_activate(void)
 {
     int error;
 
@@ -163,14 +163,14 @@ ui_debugger_activate(void)
     return 0;
 }
 
-void
-ui_breakpoints_updated(void)
+
+void ui_breakpoints_updated(void)
 {
     // TODO: Refresh debugger list here
 }
 
-static int
-hide_hidden_panes(void)
+
+static int hide_hidden_panes(void)
 {
     debugger_pane i;
     UINT checkitem;
@@ -193,8 +193,8 @@ hide_hidden_panes(void)
     return 0;
 }
 
-static UINT
-get_pane_menu_item(debugger_pane pane)
+
+static UINT get_pane_menu_item(debugger_pane pane)
 {
     UINT menu_item_id;
 
@@ -219,8 +219,8 @@ get_pane_menu_item(debugger_pane pane)
     return menu_item_id;
 }
 
-static BOOL
-show_hide_pane(debugger_pane pane, int show)
+
+static BOOL show_hide_pane(debugger_pane pane, int show)
 {
 /* Instead of get_pane() and then hiding or showing the widget as it is done
    in gtk ui, we need to show/hide multiple widgets, hence this combined
@@ -270,8 +270,8 @@ show_hide_pane(debugger_pane pane, int show)
     return FALSE;
 }
 
-int
-ui_debugger_deactivate(int interruptable)
+
+int ui_debugger_deactivate(int interruptable)
 {
     if (debugger_active) deactivate_debugger();
 
@@ -285,8 +285,8 @@ ui_debugger_deactivate(int interruptable)
     return 0;
 }
 
-static int
-create_dialog(void)
+
+static int create_dialog(void)
 {
     int error;
     debugger_pane i;
@@ -329,8 +329,8 @@ create_dialog(void)
     return 0;
 }
 
-static void
-toggle_display(debugger_pane pane, UINT menu_item_id)
+
+static void toggle_display(debugger_pane pane, UINT menu_item_id)
 {
     MENUITEMINFO mii;
 
@@ -351,8 +351,8 @@ toggle_display(debugger_pane pane, UINT menu_item_id)
     }
 }
 
-static int
-create_register_display(HFONT font)
+
+static int create_register_display(HFONT font)
 {
     // this display is created in rc, just set the monospaced font
     size_t i;
@@ -364,12 +364,12 @@ create_register_display(HFONT font)
     return 0;
 }
 
-static int
-create_breakpoints(void)
+
+static int create_breakpoints(void)
 {
     size_t i;
 
-    LPCTSTR breakpoint_titles[] = { _T("ID"), _T("Type"), _T("Value"),
+    LPCTSTR breakpoint_titles[] = {_T("ID"), _T("Type"), _T("Value"),
                                   _T("Ignore"), _T("Life"),
                                   _T("Condition") };
     // set extended listview style to select full row, when an item is selected
@@ -397,12 +397,12 @@ create_breakpoints(void)
     return 0;
 }
 
-static int
-create_disassembly(HFONT font)
+
+static int create_disassembly(HFONT font)
 {
     size_t i;
 
-    LPCTSTR disassembly_titles[] = { TEXT("Address"), TEXT("Instruction") };
+    LPCTSTR disassembly_titles[] = {TEXT("Address"), TEXT("Instruction") };
 
     // The disassembly listview itself
 
@@ -458,12 +458,12 @@ create_disassembly(HFONT font)
     return 0;
 }
 
-static int
-create_stack_display(HFONT font)
+
+static int create_stack_display(HFONT font)
 {
     size_t i;
 
-    LPCTSTR stack_titles[] = { _T("Address"), _T("Value") };
+    LPCTSTR stack_titles[] = {_T("Address"), _T("Value") };
 
     // set extended listview style to select full row, when an item is selected
     DWORD lv_ext_style;
@@ -495,8 +495,8 @@ create_stack_display(HFONT font)
     return 0;
 }
 
-static void
-stack_click(LPNMITEMACTIVATE lpnmitem)
+
+static void stack_click(LPNMITEMACTIVATE lpnmitem)
 {
     libspectrum_word destination;
     int retval, error, row;
@@ -528,11 +528,11 @@ stack_click(LPNMITEMACTIVATE lpnmitem)
     debugger_run();
 }
 
-static int
-create_events(void)
+
+static int create_events(void)
 {
     size_t i;
-    LPCTSTR titles[] = { _T("Time"), _T("Type") };
+    LPCTSTR titles[] = {_T("Time"), _T("Type") };
 
     // set extended listview style to select full row, when an item is selected
     DWORD lv_ext_style;
@@ -562,8 +562,8 @@ create_events(void)
     return 0;
 }
 
-static void
-events_click(LPNMITEMACTIVATE lpnmitem)
+
+static void events_click(LPNMITEMACTIVATE lpnmitem)
 {
     int got_text, error, row;
     TCHAR buffer[255];
@@ -593,8 +593,8 @@ events_click(LPNMITEMACTIVATE lpnmitem)
     debugger_run();
 }
 
-static int
-activate_debugger(void)
+
+static int activate_debugger(void)
 {
     debugger_active = 1;
 
@@ -606,8 +606,8 @@ activate_debugger(void)
 }
 
 // Update the debugger's display
-int
-ui_debugger_update(void)
+
+int ui_debugger_update(void)
 {
     size_t i;
     TCHAR buffer[1024], format_string[1024];
@@ -615,7 +615,7 @@ ui_debugger_update(void)
     libspectrum_word address;
     int capabilities; size_t length;
 
-    const char *register_name[] = { TEXT("PC"), TEXT("SP"),
+    const char *register_name[] = {TEXT("PC"), TEXT("SP"),
                   TEXT("AF"), TEXT("AF'"),
                   TEXT("BC"), TEXT("BC'"),
                   TEXT("DE"), TEXT("DE'"),
@@ -754,10 +754,10 @@ ui_debugger_update(void)
     return 0;
 }
 
-static void
-update_memory_map(void)
+
+static void update_memory_map(void)
 {
-    TCHAR buffer[ 40 ];
+    TCHAR buffer[40];
     int source, page_num, writable, contended;
     libspectrum_word offset;
     size_t i, j, block, row;
@@ -819,15 +819,15 @@ update_memory_map(void)
 
 }
 
-static void
-update_breakpoints(void)
+
+static void update_breakpoints(void)
 {
     // FIXME: review this function for unicode compatibility
-    TCHAR buffer[ 1024 ],
-    *breakpoint_text[6] = { &buffer[  0], &buffer[ 40], &buffer[80],
+    TCHAR buffer[1024],
+    *breakpoint_text[6] = { &buffer[  0], &buffer[40], &buffer[80],
                 &buffer[120], &buffer[160], &buffer[200] };
     GSList *ptr;
-    TCHAR format_string[ 1024 ];
+    TCHAR format_string[1024];
 
     LV_ITEM lvi;
     lvi.mask = LVIF_TEXT;
@@ -843,7 +843,7 @@ update_breakpoints(void)
 
     _sntprintf(breakpoint_text[0], 40, "%lu", (unsigned long)bp->id);
     _sntprintf(breakpoint_text[1], 40, "%s",
-           debugger_breakpoint_type_text[ bp->type ]);
+           debugger_breakpoint_type_text[bp->type]);
 
     switch (bp->type) {
 
@@ -881,7 +881,7 @@ update_breakpoints(void)
 
     _sntprintf(breakpoint_text[3], 40, "%lu", (unsigned long)bp->ignore);
     _sntprintf(breakpoint_text[4], 40, "%s",
-            debugger_breakpoint_life_text[ bp->life ]);
+            debugger_breakpoint_life_text[bp->life]);
     if (bp->condition) {
       debugger_expression_deparse(breakpoint_text[5], 80, bp->condition);
     } else {
@@ -906,8 +906,8 @@ update_breakpoints(void)
     }
 }
 
-static void
-update_disassembly(void)
+
+static void update_disassembly(void)
 {
     size_t i, length; libspectrum_word address;
     TCHAR buffer[80];
@@ -946,8 +946,8 @@ update_disassembly(void)
     disassembly_bottom = address;
 }
 
-static void
-update_events(void)
+
+static void update_events(void)
 {
     // clear the listview
     SendDlgItemMessage(fuse_hDBGWnd, IDC_DBG_LV_EVENTS,
@@ -956,8 +956,8 @@ update_events(void)
     event_foreach(add_event, NULL);
 }
 
-static void
-add_event(gpointer data, gpointer user_data GCC_UNUSED)
+
+static void add_event(gpointer data, gpointer user_data GCC_UNUSED)
 {
     event_t *ptr = data;
 
@@ -987,8 +987,8 @@ add_event(gpointer data, gpointer user_data GCC_UNUSED)
                       (LPARAM) &lvi);
 }
 
-static int
-deactivate_debugger(void)
+
+static int deactivate_debugger(void)
 {
     PostMessage(fuse_hWnd, WM_USER_EXIT_PROCESS_MESSAGES, 0, 0);
     debugger_active = 0;
@@ -997,8 +997,8 @@ deactivate_debugger(void)
 }
 
 // Set the disassembly to start at 'address'
-int
-ui_debugger_disassemble(libspectrum_word address)
+
+int ui_debugger_disassemble(libspectrum_word address)
 {
     /* Note: the scroll bar can not cope with "upper bound - page_size" value and
      higher. PC register, key and wheel scrolling are fine with that */
@@ -1016,8 +1016,8 @@ ui_debugger_disassemble(libspectrum_word address)
 }
 
 // Called when the disassembly scrollbar is moved
-static int
-move_disassembly(WPARAM scroll_command)
+
+static int move_disassembly(WPARAM scroll_command)
 {
     libspectrum_word address;
     int cursor_row;
@@ -1081,8 +1081,8 @@ move_disassembly(WPARAM scroll_command)
 }
 
 // Evaluate the command currently in the entry box
-static void
-evaluate_command(void)
+
+static void evaluate_command(void)
 {
     TCHAR *buffer;
     int buffer_size;
@@ -1111,20 +1111,20 @@ evaluate_command(void)
     free(buffer);
 }
 
-static void
-win32ui_debugger_done_step(void)
+
+static void win32ui_debugger_done_step(void)
 {
     debugger_step();
 }
 
-static void
-win32ui_debugger_done_continue(void)
+
+static void win32ui_debugger_done_continue(void)
 {
     debugger_run();
 }
 
-static void
-win32ui_debugger_break(void)
+
+static void win32ui_debugger_break(void)
 {
     debugger_mode = DEBUGGER_MODE_HALTED;
 
@@ -1132,14 +1132,14 @@ win32ui_debugger_break(void)
     EnableWindow(GetDlgItem(fuse_hDBGWnd, IDC_DBG_BTN_BREAK), FALSE);
 }
 
-static void
-delete_dialog(void)
+
+static void delete_dialog(void)
 {
     win32ui_debugger_done_close();
 }
 
-static void
-win32ui_debugger_done_close(void)
+
+static void win32ui_debugger_done_close(void)
 {
     ShowWindow(fuse_hDBGWnd, SW_HIDE);
     win32ui_debugger_done_continue();

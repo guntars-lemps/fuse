@@ -64,8 +64,8 @@ static int networking_init_count = 0;
 
 /* Open `filename' and do something sensible with it; autoload tapes
    if `autoload' is true and return the type of file found in `type' */
-int
-utils_open_file(const char *filename, int autoload,
+
+int utils_open_file(const char *filename, int autoload,
          libspectrum_id_t *type_ptr)
 {
     utils_file file;
@@ -232,7 +232,7 @@ utils_open_file(const char *filename, int autoload,
     break;
     }
 
-    if (error) { utils_close_file(&file); return error; }
+    if (error) {utils_close_file(&file); return error;}
 
     utils_close_file(&file);
 
@@ -242,8 +242,8 @@ utils_open_file(const char *filename, int autoload,
 }
 
 // Request a snapshot file from the user and it
-int
-utils_open_snap(void)
+
+int utils_open_snap(void)
 {
     char *filename;
     int error;
@@ -258,12 +258,12 @@ utils_open_snap(void)
 
 /* Find the auxiliary file called `filename'; returns a fd for the
    file on success, -1 if it couldn't find the file */
-static compat_fd
-utils_find_auxiliary_file(const char *filename, utils_aux_type type)
+
+static compat_fd utils_find_auxiliary_file(const char *filename, utils_aux_type type)
 {
     compat_fd fd;
 
-    char path[ PATH_MAX ];
+    char path[PATH_MAX];
 
     // If given an absolute path, just look there
     if (compat_is_absolute_path(filename))
@@ -283,8 +283,8 @@ utils_find_auxiliary_file(const char *filename, utils_aux_type type)
 }
 
 
-int
-utils_find_file_path(const char *filename, char *ret_path,
+
+int utils_find_file_path(const char *filename, char *ret_path,
               utils_aux_type type)
 {
     path_context ctx;
@@ -292,7 +292,7 @@ utils_find_file_path(const char *filename, char *ret_path,
     // If given an absolute path, just look there
     if (compat_is_absolute_path(filename)) {
     strncpy(ret_path, filename, PATH_MAX);
-    ret_path[ PATH_MAX - 1 ] = '\0';
+    ret_path[PATH_MAX - 1] = '\0';
     return 0;
     }
 
@@ -317,15 +317,15 @@ utils_find_file_path(const char *filename, char *ret_path,
    http://www.chiark.greenend.org.uk/~sgtatham/coroutines.html was
    _very_ tempting here...
 */
-static void
-init_path_context(path_context *ctx, utils_aux_type type)
+
+static void init_path_context(path_context *ctx, utils_aux_type type)
 {
     ctx->state = 0;
     ctx->type = type;
 }
 
-int
-utils_read_file(const char *filename, utils_file *file)
+
+int utils_read_file(const char *filename, utils_file *file)
 {
     compat_fd fd;
 
@@ -344,8 +344,8 @@ utils_read_file(const char *filename, utils_file *file)
     return 0;
 }
 
-int
-utils_read_fd(compat_fd fd, const char *filename, utils_file *file)
+
+int utils_read_fd(compat_fd fd, const char *filename, utils_file *file)
 {
     file->length = compat_file_get_length(fd);
     if (file->length == -1) return 1;
@@ -368,8 +368,8 @@ utils_read_fd(compat_fd fd, const char *filename, utils_file *file)
     return 0;
 }
 
-void
-utils_close_file(utils_file *file)
+
+void utils_close_file(utils_file *file)
 {
     libspectrum_free(file->buffer);
 }
@@ -396,8 +396,8 @@ int utils_write_file(const char *filename, const unsigned char *buffer,
     return 0;
 }
 
-int
-utils_read_auxiliary_file(const char *filename, utils_file *file,
+
+int utils_read_auxiliary_file(const char *filename, utils_file *file,
                            utils_aux_type type)
 {
     int error;
@@ -412,8 +412,8 @@ utils_read_auxiliary_file(const char *filename, utils_file *file,
     return 0;
 }
 
-int
-utils_read_screen(const char *filename, utils_file *screen)
+
+int utils_read_screen(const char *filename, utils_file *screen)
 {
     int error;
 
@@ -448,8 +448,8 @@ utils_safe_strdup(const char *src)
     return dest;
 }
 
-int
-utils_save_binary(libspectrum_word start, libspectrum_word length,
+
+int utils_save_binary(libspectrum_word start, libspectrum_word length,
                    const char *filename)
 {
     libspectrum_byte *buffer;
@@ -459,7 +459,7 @@ utils_save_binary(libspectrum_word start, libspectrum_word length,
     buffer = libspectrum_new(libspectrum_byte, length);
 
     for (i = 0; i < length; i++)
-    buffer[ i ] = readbyte_internal(start + i);
+    buffer[i] = readbyte_internal(start + i);
 
     error = utils_write_file(filename, buffer, length);
 
@@ -468,8 +468,8 @@ utils_save_binary(libspectrum_word start, libspectrum_word length,
     return error;
 }
 
-void
-utils_networking_init(void)
+
+void utils_networking_init(void)
 {
 #ifdef HAVE_SOCKETS
 
@@ -481,8 +481,8 @@ utils_networking_init(void)
     networking_init_count++;
 }
 
-void
-utils_networking_end(void)
+
+void utils_networking_end(void)
 {
     networking_init_count--;
 

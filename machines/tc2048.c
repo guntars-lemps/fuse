@@ -40,8 +40,8 @@
 
 static int tc2048_reset(void);
 
-int
-tc2048_port_from_ula(libspectrum_word port)
+
+int tc2048_port_from_ula(libspectrum_word port)
 {
     // Ports F4 (HSR), FE (SCLD) and FF (DEC) supplied by ULA
     port &= 0xff;
@@ -71,8 +71,8 @@ int tc2048_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-tc2048_reset(void)
+
+static int tc2048_reset(void)
 {
     size_t i, j;
     int error;

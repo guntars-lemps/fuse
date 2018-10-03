@@ -56,18 +56,18 @@
 static int didaktik_rom_memory_source, didaktik_ram_memory_source;
 
 // Two memory chunks accessible by the Z80 when /ROMCS is low
-static memory_page didaktik_memory_map_romcs_rom[ MEMORY_PAGES_IN_14K ];
-static memory_page didaktik_memory_map_romcs_ram[ MEMORY_PAGES_IN_2K ];
+static memory_page didaktik_memory_map_romcs_rom[MEMORY_PAGES_IN_14K];
+static memory_page didaktik_memory_map_romcs_ram[MEMORY_PAGES_IN_2K];
 
 int didaktik80_available = 0;
 int didaktik80_active = 0;
 int didaktik80_snap = 0;
 
 static wd_fdc *didaktik_fdc;
-static fdd_t didaktik_drives[ DIDAKTIK80_NUM_DRIVES ];
-static ui_media_drive_info_t didaktik_ui_drives[ DIDAKTIK80_NUM_DRIVES ];
+static fdd_t didaktik_drives[DIDAKTIK80_NUM_DRIVES];
+static ui_media_drive_info_t didaktik_ui_drives[DIDAKTIK80_NUM_DRIVES];
 
-static libspectrum_byte ram[ RAM_SIZE ];
+static libspectrum_byte ram[RAM_SIZE];
 
 // AUX byte
 static libspectrum_byte aux_register;
@@ -101,21 +101,21 @@ static module_info_t didaktik_module_info = {
 
 static const periph_port_t didaktik_ports[] = {
     // ---- ---- 1000 0001
-    { 0x00ff, 0x0081, didaktik_sr_read, didaktik_cr_write },
+    {0x00ff, 0x0081, didaktik_sr_read, didaktik_cr_write},
     // ---- ---- 1000 0011
-    { 0x00ff, 0x0083, didaktik_tr_read, didaktik_tr_write },
+    {0x00ff, 0x0083, didaktik_tr_read, didaktik_tr_write},
     // ---- ---- 1000 0101
-    { 0x00ff, 0x0085, didaktik_sec_read, didaktik_sec_write },
+    {0x00ff, 0x0085, didaktik_sec_read, didaktik_sec_write},
     // ---- ---- 1000 0111
-    { 0x00ff, 0x0087, didaktik_dr_read, didaktik_dr_write },
+    {0x00ff, 0x0087, didaktik_dr_read, didaktik_dr_write},
 
     // ---- ---- 0xx- ----
-    { 0x0080, 0x0000, didaktik_8255_read, didaktik_8255_write },
+    {0x0080, 0x0000, didaktik_8255_read, didaktik_8255_write},
 
     // ---- ---- 1000 1--1
-    { 0x00f9, 0x0089, NULL, didaktik_aux_write },
+    {0x00f9, 0x0089, NULL, didaktik_aux_write},
 
-    { 0, 0, NULL, NULL }
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t didaktik_periph = {
@@ -129,8 +129,8 @@ static const periph_t didaktik_periph = {
 static const char * const event_type_string = "didaktik80";
 static int page_event, unpage_event;
 
-void
-didaktik80_page(void)
+
+void didaktik80_page(void)
 {
     didaktik80_active = 1;
     machine_current->ram.romcs = 1;
@@ -138,8 +138,8 @@ didaktik80_page(void)
     debugger_event(page_event);
 }
 
-void
-didaktik80_unpage(void)
+
+void didaktik80_unpage(void)
 {
     didaktik80_active = 0;
     machine_current->ram.romcs = 0;
@@ -147,8 +147,8 @@ didaktik80_unpage(void)
     debugger_event(unpage_event);
 }
 
-static void
-didaktik_memory_map(void)
+
+static void didaktik_memory_map(void)
 {
     if (!didaktik80_active) return;
 
@@ -160,22 +160,22 @@ didaktik_memory_map(void)
     memory_map_romcs_2k(0x3800, didaktik_memory_map_romcs_ram);
 }
 
-static void
-didaktik_set_datarq(struct wd_fdc *f)
+
+static void didaktik_set_datarq(struct wd_fdc *f)
 {
     if (aux_register & DATARQ_ENABLED)
     event_add(0, z80_nmi_event);
 }
 
-static void
-didaktik_set_intrq(struct wd_fdc *f)
+
+static void didaktik_set_intrq(struct wd_fdc *f)
 {
     if (aux_register & INTRQ_ENABLED)
     event_add(0, z80_nmi_event);
 }
 
-static int
-didaktik80_init(void *context)
+
+static int didaktik80_init(void *context)
 {
     int i;
     fdd_t *d;
@@ -183,13 +183,13 @@ didaktik80_init(void *context)
     didaktik_fdc = wd_fdc_alloc_fdc(WD2797, 0, WD_FLAG_DRQ | WD_FLAG_RDY);
 
     for (i = 0; i < DIDAKTIK80_NUM_DRIVES; i++) {
-    d = &didaktik_drives[ i ];
+    d = &didaktik_drives[i];
     fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
     d->disk.flag = DISK_FLAG_NONE;
     }
 
-    didaktik_fdc->current_drive = &didaktik_drives[ 0 ];
-    fdd_select(&didaktik_drives[ 0 ], 1);
+    didaktik_fdc->current_drive = &didaktik_drives[0];
+    fdd_select(&didaktik_drives[0], 1);
     didaktik_fdc->extra_signal = 1;
     didaktik_fdc->dden = 1;
     didaktik_fdc->set_intrq = didaktik_set_intrq;
@@ -209,8 +209,8 @@ didaktik80_init(void *context)
 
     periph_register(PERIPH_TYPE_DIDAKTIK80, &didaktik_periph);
     for (i = 0; i < DIDAKTIK80_NUM_DRIVES; i++) {
-    didaktik_ui_drives[i].fdd = &didaktik_drives[ i ];
-    ui_media_drive_register(&didaktik_ui_drives[ i ]);
+    didaktik_ui_drives[i].fdd = &didaktik_drives[i];
+    ui_media_drive_register(&didaktik_ui_drives[i]);
     }
 
     periph_register_paging_events(event_type_string, &page_event,
@@ -219,8 +219,8 @@ didaktik80_init(void *context)
     return 0;
 }
 
-static void
-didaktik_reset(int hard_reset)
+
+static void didaktik_reset(int hard_reset)
 {
     int i;
 
@@ -244,7 +244,7 @@ didaktik_reset(int hard_reset)
 
     for (i = 0; i < MEMORY_PAGES_IN_2K; i++) {
     struct memory_page *page =
-      &didaktik_memory_map_romcs_ram[ i ];
+      &didaktik_memory_map_romcs_ram[i];
     page->page = ram + i * MEMORY_PAGE_SIZE;
     page->offset = i * MEMORY_PAGE_SIZE;
     page->writable = 1;
@@ -262,26 +262,26 @@ didaktik_reset(int hard_reset)
     wd_fdc_master_reset(didaktik_fdc);
 
     for (i = 0; i < DIDAKTIK80_NUM_DRIVES; i++) {
-    ui_media_drive_update_menus(&didaktik_ui_drives[ i ],
+    ui_media_drive_update_menus(&didaktik_ui_drives[i],
                                  UI_MEDIA_DRIVE_UPDATE_ALL);
     }
 
-    didaktik_fdc->current_drive = &didaktik_drives[ 0 ];
-    fdd_select(&didaktik_drives[ 0 ], 1);
-    fdd_select(&didaktik_drives[ 1 ], 0);
+    didaktik_fdc->current_drive = &didaktik_drives[0];
+    fdd_select(&didaktik_drives[0], 1);
+    fdd_select(&didaktik_drives[1], 0);
     machine_current->memory_map();
 
 }
 
-static void
-didaktik80_end(void)
+
+static void didaktik80_end(void)
 {
     didaktik80_available = 0;
     libspectrum_free(didaktik_fdc);
 }
 
-void
-didaktik80_register_startup(void)
+
+void didaktik80_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -293,90 +293,90 @@ didaktik80_register_startup(void)
                             didaktik80_end);
 }
 
-static libspectrum_byte
-didaktik_sr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte didaktik_sr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
     return wd_fdc_sr_read(didaktik_fdc);
 }
 
-static void
-didaktik_cr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void didaktik_cr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     wd_fdc_cr_write(didaktik_fdc, b);
 }
 
-static libspectrum_byte
-didaktik_tr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte didaktik_tr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
     return wd_fdc_tr_read(didaktik_fdc);
 }
 
-static void
-didaktik_tr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void didaktik_tr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     wd_fdc_tr_write(didaktik_fdc, b);
 }
 
-static libspectrum_byte
-didaktik_sec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte didaktik_sec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
     return wd_fdc_sec_read(didaktik_fdc);
 }
 
-static void
-didaktik_sec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void didaktik_sec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     wd_fdc_sec_write(didaktik_fdc, b);
 }
 
-static libspectrum_byte
-didaktik_dr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte didaktik_dr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
     return wd_fdc_dr_read(didaktik_fdc);
 }
 
-static void
-didaktik_dr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void didaktik_dr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     wd_fdc_dr_write(didaktik_fdc, b);
 }
 
-static libspectrum_byte
-didaktik_8255_read(libspectrum_word port, libspectrum_byte *attached)
+
+static libspectrum_byte didaktik_8255_read(libspectrum_word port, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
     return 0xff;
 }
 
-static void
-didaktik_8255_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void didaktik_8255_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     return;
 }
 
-static void
-didaktik_aux_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void didaktik_aux_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     if ((b & 0x01) != (aux_register & 0x01))
-    fdd_select(&didaktik_drives[ 0 ], b & 0x01 ? 1 : 0);
+    fdd_select(&didaktik_drives[0], b & 0x01 ? 1 : 0);
     if ((b & 0x02) != (aux_register & 0x02))
-    fdd_select(&didaktik_drives[ 1 ], b & 0x02 ? 1 : 0);
-    didaktik_fdc->current_drive = &didaktik_drives[ b & 0x02 ? 1 : 0 ];
+    fdd_select(&didaktik_drives[1], b & 0x02 ? 1 : 0);
+    didaktik_fdc->current_drive = &didaktik_drives[b & 0x02 ? 1 : 0];
 
     if ((b & 0x04) != (aux_register & 0x04))
-    fdd_motoron(&didaktik_drives[ 0 ], b & 0x04 ? 1 : 0);
+    fdd_motoron(&didaktik_drives[0], b & 0x04 ? 1 : 0);
     if ((b & 0x08) != (aux_register & 0x08))
-    fdd_motoron(&didaktik_drives[ 1 ], b & 0x08 ? 1 : 0);
+    fdd_motoron(&didaktik_drives[1], b & 0x08 ? 1 : 0);
 
     aux_register = b;
 }
 
-int
-didaktik80_disk_insert(didaktik80_drive_number which, const char *filename,
+
+int didaktik80_disk_insert(didaktik80_drive_number which, const char *filename,
            int autoload)
 {
     if (which >= DIDAKTIK80_NUM_DRIVES) {
@@ -385,17 +385,17 @@ didaktik80_disk_insert(didaktik80_drive_number which, const char *filename,
     fuse_abort();
     }
 
-    return ui_media_drive_insert(&didaktik_ui_drives[ which ], filename, autoload);
+    return ui_media_drive_insert(&didaktik_ui_drives[which], filename, autoload);
 }
 
 fdd_t *
 didaktik80_get_fdd(didaktik80_drive_number which)
 {
-    return &(didaktik_drives[ which ]);
+    return &(didaktik_drives[which]);
 }
 
-int
-didaktik80_unittest(void)
+
+int didaktik80_unittest(void)
 {
     int r = 0;
 
@@ -416,8 +416,8 @@ didaktik80_unittest(void)
     return r;
 }
 
-static int
-ui_drive_is_available(void)
+
+static int ui_drive_is_available(void)
 {
     return didaktik80_available;
 }
@@ -426,16 +426,16 @@ static const fdd_params_t *
 ui_drive_get_params_a(void)
 {
     // +1 => there is no `Disabled'
-    return &fdd_params[ option_enumerate_diskoptions_drive_didaktik80a_type() + 1 ];
+    return &fdd_params[option_enumerate_diskoptions_drive_didaktik80a_type() + 1];
 }
 
 static const fdd_params_t *
 ui_drive_get_params_b(void)
 {
-    return &fdd_params[ option_enumerate_diskoptions_drive_didaktik80b_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_didaktik80b_type() ];
 }
 
-static ui_media_drive_info_t didaktik_ui_drives[ DIDAKTIK80_NUM_DRIVES ] = {
+static ui_media_drive_info_t didaktik_ui_drives[DIDAKTIK80_NUM_DRIVES] = {
     {
     /* .name = */ "Didaktik Disk A",
     /* .controller_index = */ UI_MEDIA_CONTROLLER_DIDAKTIK,
@@ -462,14 +462,14 @@ static ui_media_drive_info_t didaktik_ui_drives[ DIDAKTIK80_NUM_DRIVES ] = {
     },
 };
 
-static void
-didaktik_enabled_snapshot(libspectrum_snap *snap)
+
+static void didaktik_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.didaktik80 = libspectrum_snap_didaktik80_active(snap);
 }
 
-static void
-didaktik_from_snapshot(libspectrum_snap *snap)
+
+static void didaktik_from_snapshot(libspectrum_snap *snap)
 {
     int i;
 
@@ -510,8 +510,8 @@ didaktik_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-didaktik_to_snapshot(libspectrum_snap *snap)
+
+static void didaktik_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte *buffer;
     int drive_count = 0;

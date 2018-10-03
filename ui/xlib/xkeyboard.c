@@ -40,8 +40,8 @@
 #include "ui/ui.h"
 #include "xkeyboard.h"
 
-static void
-get_keysyms(XKeyEvent *event, input_event_t *fuse_event)
+
+static void get_keysyms(XKeyEvent *event, input_event_t *fuse_event)
 {
     KeySym native, spectrum;
 

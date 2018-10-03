@@ -46,7 +46,7 @@ compat_readdir(compat_dir directory, char *name, size_t length)
     if (dirent) {
     r = COMPAT_DIR_RESULT_OK;
     strncpy(name, dirent->d_name, length);
-    name[ length - 1 ] = 0;
+    name[length - 1] = 0;
     } else {
     r = (errno == 0 ? COMPAT_DIR_RESULT_END : COMPAT_DIR_RESULT_ERROR);
     }
@@ -54,8 +54,8 @@ compat_readdir(compat_dir directory, char *name, size_t length)
     return r;
 }
 
-int
-compat_closedir(compat_dir directory)
+
+int compat_closedir(compat_dir directory)
 {
     return closedir(directory);
 }

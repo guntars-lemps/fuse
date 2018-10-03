@@ -40,11 +40,11 @@ memorybrowser_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 static LRESULT CALLBACK
 memory_listview_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-static void
-memorybrowser_init(HWND hwndDlg);
 
-void
-menu_machine_memorybrowser(int action);
+static void memorybrowser_init(HWND hwndDlg);
+
+
+void menu_machine_memorybrowser(int action);
 
 // helper constants for memory listview's scrollbar
 static const int memorysb_min = 0x0000;
@@ -59,14 +59,14 @@ static int memorysb_page_rows = 20;
 // Address of first visible row
 static libspectrum_word memaddr = 0x0000;
 
-static void
-update_display(HWND hwndDlg, libspectrum_word base)
+
+static void update_display(HWND hwndDlg, libspectrum_word base)
 {
     int i, j;
 
-    TCHAR buffer[ 8 + 64 + 20 ];
-    TCHAR *text[] = { &buffer[0], &buffer[ 8 ], &buffer[ 8 + 64 ] };
-    TCHAR buffer2[ 8 ];
+    TCHAR buffer[8 + 64 + 20];
+    TCHAR *text[] = { &buffer[0], &buffer[8], &buffer[8 + 64] };
+    TCHAR buffer2[8];
 
     memaddr = base;
 
@@ -88,7 +88,7 @@ update_display(HWND hwndDlg, libspectrum_word base)
 
       text[2][j] = (b >= 32 && b < 127) ? b : '.';
     }
-    text[2][ 0x10 ] = '\0';
+    text[2][0x10] = '\0';
 
     // append the item
     lvi.iItem = SendDlgItemMessage(hwndDlg, IDC_MEM_LV,
@@ -108,8 +108,8 @@ update_display(HWND hwndDlg, libspectrum_word base)
     }
 }
 
-static int
-scroller(HWND hwndDlg, WPARAM scroll_command)
+
+static int scroller(HWND hwndDlg, WPARAM scroll_command)
 {
     libspectrum_word base;
     SCROLLINFO si;
@@ -178,8 +178,8 @@ scroller(HWND hwndDlg, WPARAM scroll_command)
     return 0;
 }
 
-void
-menu_machine_memorybrowser(int action GCC_UNUSED)
+
+void menu_machine_memorybrowser(int action GCC_UNUSED)
 {
     fuse_emulation_pause();
 
@@ -310,15 +310,15 @@ memory_listview_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return CallWindowProc(orig_proc, hWnd, msg, wParam, lParam);
 }
 
-static void
-memorybrowser_init(HWND hwndDlg)
+
+static void memorybrowser_init(HWND hwndDlg)
 {
     size_t i;
     int error;
     HFONT font;
 
-    const TCHAR *titles[] = { "Address", "Hex", "Data" };
-    int column_widths[] = { 62, 348, 124 };
+    const TCHAR *titles[] = {"Address", "Hex", "Data"};
+    int column_widths[] = {62, 348, 124};
 
     error = win32ui_get_monospaced_font(&font); if (error) return;
 

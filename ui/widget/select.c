@@ -49,8 +49,8 @@ static void print_item (int left_edge, int width, int index, int colour)
 
 const int select_vert_external_margin = 8;
 
-static int
-widget_calculate_select_width(const char* title)
+
+static int widget_calculate_select_width(const char* title)
 {
     int i;
     int max_width = widget_stringwidth(title)+5*8;
@@ -66,8 +66,8 @@ widget_calculate_select_width(const char* title)
     return (max_width + select_vert_external_margin * 2) / 8;
 }
 
-int
-widget_select_draw(void *data)
+
+int widget_select_draw(void *data)
 {
     int i;
     size_t width;
@@ -107,8 +107,8 @@ widget_select_draw(void *data)
     return 0;
 }
 
-void
-widget_select_keyhandler(input_key key)
+
+void widget_select_keyhandler(input_key key)
 {
     int new_highlight_line = 0;
     int cursor_pressed = 0;

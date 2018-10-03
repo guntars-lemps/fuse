@@ -56,8 +56,8 @@ int icons_part_width = 140; // will be calculated dynamically later
 int icons_part_height = 27;
 int icons_part_margin = 2;
 
-void
-win32statusbar_create(HWND hWnd)
+
+void win32statusbar_create(HWND hWnd)
 {
     DWORD dwStyle;
 
@@ -102,8 +102,8 @@ win32statusbar_create(HWND hWnd)
     SendMessage(fuse_hStatusWindow, WM_SIZE, 0, 0);
 }
 
-int
-win32statusbar_set_visibility(int visible)
+
+int win32statusbar_set_visibility(int visible)
 {
     int current_state;
 
@@ -122,27 +122,27 @@ win32statusbar_set_visibility(int visible)
     return 0;
 }
 
-void
-win32statusbar_update_machine(const char *name)
+
+void win32statusbar_update_machine(const char *name)
 {
     SendMessage(fuse_hStatusWindow, SB_SETTEXT, (WPARAM) 0, (LPARAM) name);
 }
 
-int
-ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
+
+int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
 {
     // Fix flickering on +2A, +3 and +3e machines because of high refresh rate
-    if (item == UI_STATUSBAR_ITEM_DISK && icons_status[ item ] == state) return 0;
+    if (item == UI_STATUSBAR_ITEM_DISK && icons_status[item] == state) return 0;
 
-    icons_status[ item ] = state;
+    icons_status[item] = state;
 
     SendMessage(fuse_hStatusWindow, SB_SETTEXT, 1 | SBT_OWNERDRAW, 0);
 
     return 0;
 }
 
-int
-ui_statusbar_update_speed(float speed)
+
+int ui_statusbar_update_speed(float speed)
 {
     TCHAR buffer[8];
 
@@ -153,8 +153,8 @@ ui_statusbar_update_speed(float speed)
     return 0;
 }
 
-void
-win32statusbar_redraw(HWND hWnd, LPARAM lParam)
+
+void win32statusbar_redraw(HWND hWnd, LPARAM lParam)
 {
     DRAWITEMSTRUCT* di;
     HDC src_dc, dest_dc, mask_dc;
@@ -175,9 +175,9 @@ win32statusbar_redraw(HWND hWnd, LPARAM lParam)
 
     for (i=0; i<5; i++) {
 
-    switch (icons_order[ i ]) {
+    switch (icons_order[i]) {
       case UI_STATUSBAR_ITEM_DISK:
-        switch (icons_status[ UI_STATUSBAR_ITEM_DISK ]) {
+        switch (icons_status[UI_STATUSBAR_ITEM_DISK]) {
           case UI_STATUSBAR_STATE_NOT_AVAILABLE:
             src_bmp = NULL; break;
           case UI_STATUSBAR_STATE_ACTIVE:
@@ -188,17 +188,17 @@ win32statusbar_redraw(HWND hWnd, LPARAM lParam)
         break;
 
       case UI_STATUSBAR_ITEM_MOUSE:
-        src_bmp = (icons_status[ UI_STATUSBAR_ITEM_MOUSE ] == UI_STATUSBAR_STATE_ACTIVE ?
+        src_bmp = (icons_status[UI_STATUSBAR_ITEM_MOUSE] == UI_STATUSBAR_STATE_ACTIVE ?
                     icon_mouse_active : icon_mouse_inactive);
         break;
 
       case UI_STATUSBAR_ITEM_PAUSED:
-        src_bmp = (icons_status[ UI_STATUSBAR_ITEM_PAUSED ] == UI_STATUSBAR_STATE_ACTIVE ?
+        src_bmp = (icons_status[UI_STATUSBAR_ITEM_PAUSED] == UI_STATUSBAR_STATE_ACTIVE ?
                     icon_pause_active : icon_pause_inactive);
         break;
 
       case UI_STATUSBAR_ITEM_MICRODRIVE:
-        switch (icons_status[ UI_STATUSBAR_ITEM_MICRODRIVE ]) {
+        switch (icons_status[UI_STATUSBAR_ITEM_MICRODRIVE]) {
           case UI_STATUSBAR_STATE_NOT_AVAILABLE:
             src_bmp = NULL; break;
           case UI_STATUSBAR_STATE_ACTIVE:
@@ -209,7 +209,7 @@ win32statusbar_redraw(HWND hWnd, LPARAM lParam)
         break;
 
       case UI_STATUSBAR_ITEM_TAPE:
-        src_bmp = (icons_status[ UI_STATUSBAR_ITEM_TAPE ] == UI_STATUSBAR_STATE_ACTIVE ?
+        src_bmp = (icons_status[UI_STATUSBAR_ITEM_TAPE] == UI_STATUSBAR_STATE_ACTIVE ?
                     icon_tape_active : icon_tape_inactive);
         break;
     }
@@ -262,8 +262,8 @@ win32statusbar_redraw(HWND hWnd, LPARAM lParam)
     }
 }
 
-void
-win32statusbar_resize(HWND hWnd, WPARAM wParam GCC_UNUSED, LPARAM lParam)
+
+void win32statusbar_resize(HWND hWnd, WPARAM wParam GCC_UNUSED, LPARAM lParam)
 {
     const int speed_bar_width = 70;
     RECT rcClient;

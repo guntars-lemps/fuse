@@ -32,7 +32,7 @@
  */
 
 // The colour palette in use
-extern libspectrum_dword gtkdisplay_colours[ 16 ];
+extern libspectrum_dword gtkdisplay_colours[16];
 
 void gtkdisplay_update_geometry(void);
 

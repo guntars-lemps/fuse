@@ -54,17 +54,17 @@
 static int opus_rom_memory_source, opus_ram_memory_source;
 
 // Two memory chunks accessible by the Z80 when /ROMCS is low
-static memory_page opus_memory_map_romcs_rom[ MEMORY_PAGES_IN_8K ];
-static memory_page opus_memory_map_romcs_ram[ MEMORY_PAGES_IN_2K ];
+static memory_page opus_memory_map_romcs_rom[MEMORY_PAGES_IN_8K];
+static memory_page opus_memory_map_romcs_ram[MEMORY_PAGES_IN_2K];
 
 int opus_available = 0;
 int opus_active = 0;
 
 static wd_fdc *opus_fdc;
-static fdd_t opus_drives[ OPUS_NUM_DRIVES ];
-static ui_media_drive_info_t opus_ui_drives[ OPUS_NUM_DRIVES ];
+static fdd_t opus_drives[OPUS_NUM_DRIVES];
+static ui_media_drive_info_t opus_ui_drives[OPUS_NUM_DRIVES];
 
-static libspectrum_byte opus_ram[ OPUS_RAM_SIZE ];
+static libspectrum_byte opus_ram[OPUS_RAM_SIZE];
 
 // 6821 PIA internal registers
 static libspectrum_byte data_reg_a, data_dir_a, control_a;
@@ -97,8 +97,8 @@ static const periph_t opus_periph = {
 static const char * const event_type_string = "opus";
 static int page_event, unpage_event;
 
-void
-opus_page(void)
+
+void opus_page(void)
 {
     opus_active = 1;
     machine_current->ram.romcs = 1;
@@ -106,8 +106,8 @@ opus_page(void)
     debugger_event(page_event);
 }
 
-void
-opus_unpage(void)
+
+void opus_unpage(void)
 {
     opus_active = 0;
     machine_current->ram.romcs = 0;
@@ -115,8 +115,8 @@ opus_unpage(void)
     debugger_event(unpage_event);
 }
 
-static void
-opus_memory_map(void)
+
+static void opus_memory_map(void)
 {
     if (!opus_active) return;
 
@@ -125,14 +125,14 @@ opus_memory_map(void)
     // FIXME: should we add mirroring at 0x2800, 0x3000 and/or 0x3800?
 }
 
-static void
-opus_set_datarq(struct wd_fdc *f)
+
+static void opus_set_datarq(struct wd_fdc *f)
 {
     event_add(0, z80_nmi_event);
 }
 
-static int
-opus_init(void *context)
+
+static int opus_init(void *context)
 {
     int i;
     fdd_t *d;
@@ -140,13 +140,13 @@ opus_init(void *context)
     opus_fdc = wd_fdc_alloc_fdc(WD1770, 0, WD_FLAG_DRQ);
 
     for (i = 0; i < OPUS_NUM_DRIVES; i++) {
-    d = &opus_drives[ i ];
+    d = &opus_drives[i];
     fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
     d->disk.flag = DISK_FLAG_NONE;
     }
 
-    opus_fdc->current_drive = &opus_drives[ 0 ];
-    fdd_select(&opus_drives[ 0 ], 1);
+    opus_fdc->current_drive = &opus_drives[0];
+    fdd_select(&opus_drives[0], 1);
     opus_fdc->dden = 1;
     opus_fdc->set_intrq = NULL;
     opus_fdc->reset_intrq = NULL;
@@ -164,8 +164,8 @@ opus_init(void *context)
 
     periph_register(PERIPH_TYPE_OPUS, &opus_periph);
     for (i = 0; i < OPUS_NUM_DRIVES; i++) {
-    opus_ui_drives[i].fdd = &opus_drives[ i ];
-    ui_media_drive_register(&opus_ui_drives[ i ]);
+    opus_ui_drives[i].fdd = &opus_drives[i];
+    ui_media_drive_register(&opus_ui_drives[i]);
     }
 
     periph_register_paging_events(event_type_string, &page_event,
@@ -174,15 +174,15 @@ opus_init(void *context)
     return 0;
 }
 
-static void
-opus_end(void)
+
+static void opus_end(void)
 {
     opus_available = 0;
     libspectrum_free(opus_fdc);
 }
 
-void
-opus_register_startup(void)
+
+void opus_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -194,8 +194,8 @@ opus_register_startup(void)
                             opus_end);
 }
 
-static void
-opus_reset(int hard_reset)
+
+static void opus_reset(int hard_reset)
 {
     int i;
 
@@ -216,7 +216,7 @@ opus_reset(int hard_reset)
 
     for (i = 0; i < MEMORY_PAGES_IN_2K; i++) {
     struct memory_page *page =
-      &opus_memory_map_romcs_ram[ i ];
+      &opus_memory_map_romcs_ram[i];
     page->page = opus_ram + i * MEMORY_PAGE_SIZE;
     page->offset = i * MEMORY_PAGE_SIZE;
     }
@@ -241,12 +241,12 @@ opus_reset(int hard_reset)
     wd_fdc_master_reset(opus_fdc);
 
     for (i = 0; i < OPUS_NUM_DRIVES; i++) {
-    ui_media_drive_update_menus(&opus_ui_drives[ i ],
+    ui_media_drive_update_menus(&opus_ui_drives[i],
                                  UI_MEDIA_DRIVE_UPDATE_ALL);
     }
 
-    opus_fdc->current_drive = &opus_drives[ 0 ];
-    fdd_select(&opus_drives[ 0 ], 1);
+    opus_fdc->current_drive = &opus_drives[0];
+    fdd_select(&opus_drives[0], 1);
     machine_current->memory_map();
 }
 
@@ -264,8 +264,8 @@ opus_reset(int hard_reset)
  * Mostly borrowed from EightyOne - A Windows ZX80/81/clone emulator
  */
 
-static libspectrum_byte
-opus_6821_access(libspectrum_byte reg, libspectrum_byte data,
+
+static libspectrum_byte opus_6821_access(libspectrum_byte reg, libspectrum_byte data,
                   libspectrum_byte dir)
 {
     int drive, side;
@@ -281,18 +281,18 @@ opus_6821_access(libspectrum_byte reg, libspectrum_byte data,
         side = (data & 0x10)>>4 ? 1 : 0;
 
         for (i = 0; i < OPUS_NUM_DRIVES; i++) {
-          fdd_set_head(&opus_drives[ i ], side);
+          fdd_set_head(&opus_drives[i], side);
         }
 
         fdd_select(&opus_drives[ (!drive) ], 0);
-        fdd_select(&opus_drives[ drive ], 1);
+        fdd_select(&opus_drives[drive], 1);
 
-        if (opus_fdc->current_drive != &opus_drives[ drive ]) {
+        if (opus_fdc->current_drive != &opus_drives[drive]) {
           if (opus_fdc->current_drive->motoron) { // swap motoron
             fdd_motoron(&opus_drives[ (!drive) ], 0);
-            fdd_motoron(&opus_drives[ drive ], 1);
+            fdd_motoron(&opus_drives[drive], 1);
           }
-          opus_fdc->current_drive = &opus_drives[ drive ];
+          opus_fdc->current_drive = &opus_drives[drive];
         }
       } else {
         data_dir_a = data;
@@ -349,8 +349,8 @@ opus_6821_access(libspectrum_byte reg, libspectrum_byte data,
     return 0;
 }
 
-int
-opus_disk_insert(opus_drive_number which, const char *filename,
+
+int opus_disk_insert(opus_drive_number which, const char *filename,
            int autoload)
 {
     if (which >= OPUS_NUM_DRIVES) {
@@ -359,17 +359,17 @@ opus_disk_insert(opus_drive_number which, const char *filename,
     fuse_abort();
     }
 
-    return ui_media_drive_insert(&opus_ui_drives[ which ], filename, autoload);
+    return ui_media_drive_insert(&opus_ui_drives[which], filename, autoload);
 }
 
 fdd_t *
 opus_get_fdd(opus_drive_number which)
 {
-    return &(opus_drives[ which ]);
+    return &(opus_drives[which]);
 }
 
-libspectrum_byte
-opus_read(libspectrum_word address)
+
+libspectrum_byte opus_read(libspectrum_word address)
 {
     libspectrum_byte data = 0xff;
 
@@ -396,8 +396,8 @@ opus_read(libspectrum_word address)
     return data;
 }
 
-void
-opus_write(libspectrum_word address, libspectrum_byte b)
+
+void opus_write(libspectrum_word address, libspectrum_byte b)
 {
     if (address < 0x2000) return;
     if (address >= 0x3800) return;
@@ -422,14 +422,14 @@ opus_write(libspectrum_word address, libspectrum_byte b)
     }
 }
 
-static void
-opus_enabled_snapshot(libspectrum_snap *snap)
+
+static void opus_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.opus = libspectrum_snap_opus_active(snap);
 }
 
-static void
-opus_from_snapshot(libspectrum_snap *snap)
+
+static void opus_from_snapshot(libspectrum_snap *snap)
 {
     if (!libspectrum_snap_opus_active(snap)) return;
 
@@ -471,8 +471,8 @@ opus_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-opus_to_snapshot(libspectrum_snap *snap)
+
+static void opus_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte *buffer;
     int drive_count = 0;
@@ -514,8 +514,8 @@ opus_to_snapshot(libspectrum_snap *snap)
     libspectrum_snap_set_opus_control_b (snap, control_b);
 }
 
-int
-opus_unittest(void)
+
+int opus_unittest(void)
 {
     int r = 0;
 
@@ -536,8 +536,8 @@ opus_unittest(void)
     return r;
 }
 
-static int
-ui_drive_is_available(void)
+
+static int ui_drive_is_available(void)
 {
     return opus_available;
 }
@@ -546,16 +546,16 @@ static const fdd_params_t *
 ui_drive_get_params_1(void)
 {
     // +1 => there is no `Disabled'
-    return &fdd_params[ option_enumerate_diskoptions_drive_opus1_type() + 1 ];
+    return &fdd_params[option_enumerate_diskoptions_drive_opus1_type() + 1];
 }
 
 static const fdd_params_t *
 ui_drive_get_params_2(void)
 {
-    return &fdd_params[ option_enumerate_diskoptions_drive_opus2_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_opus2_type() ];
 }
 
-static ui_media_drive_info_t opus_ui_drives[ OPUS_NUM_DRIVES ] = {
+static ui_media_drive_info_t opus_ui_drives[OPUS_NUM_DRIVES] = {
     {
     /* .name = */ "Opus Disk 1",
     /* .controller_index = */ UI_MEDIA_CONTROLLER_OPUS,

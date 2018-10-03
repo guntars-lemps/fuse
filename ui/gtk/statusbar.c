@@ -49,8 +49,8 @@ static GtkWidget
     *speed_status, // How fast are we running?
     *machine_name; // What machine is being emulated?
 
-int
-gtkstatusbar_create(GtkBox *parent)
+
+int gtkstatusbar_create(GtkBox *parent)
 {
     GtkWidget *separator;
 
@@ -115,8 +115,8 @@ gtkstatusbar_create(GtkBox *parent)
     return 0;
 }
 
-int
-gtkstatusbar_get_height(void)
+
+int gtkstatusbar_get_height(void)
 {
     GtkAllocation alloc;
 
@@ -125,8 +125,8 @@ gtkstatusbar_get_height(void)
     return alloc.height + 6; // status bar + vbox padding
 }
 
-int
-gtkstatusbar_set_visibility(int visible)
+
+int gtkstatusbar_set_visibility(int visible)
 {
     gtkdisplay_update_geometry();
 
@@ -139,14 +139,14 @@ gtkstatusbar_set_visibility(int visible)
     return 0;
 }
 
-void
-gtkstatusbar_update_machine(const char *name)
+
+void gtkstatusbar_update_machine(const char *name)
 {
     gtk_label_set_text(GTK_LABEL(machine_name), name);
 }
 
-int
-ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
+
+int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
 {
     GdkPixbuf *which;
 
@@ -211,8 +211,8 @@ ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
     return 1;
 }
 
-int
-ui_statusbar_update_speed(float speed)
+
+int ui_statusbar_update_speed(float speed)
 {
     char buffer[8];
 

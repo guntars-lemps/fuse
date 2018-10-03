@@ -80,8 +80,8 @@ static void free_breakpoint(gpointer data, gpointer user_data);
 static void add_time_event(gpointer data, gpointer user_data);
 
 // Add a breakpoint
-int
-debugger_breakpoint_add_address(debugger_breakpoint_type type, int source,
+
+int debugger_breakpoint_add_address(debugger_breakpoint_type type, int source,
                                  int page, libspectrum_word offset,
                                  size_t ignore, debugger_breakpoint_life life,
                  debugger_expression *condition)
@@ -107,8 +107,8 @@ debugger_breakpoint_add_address(debugger_breakpoint_type type, int source,
     return breakpoint_add(type, value, ignore, life, condition);
 }
 
-int
-debugger_breakpoint_add_port(debugger_breakpoint_type type,
+
+int debugger_breakpoint_add_port(debugger_breakpoint_type type,
                   libspectrum_word port, libspectrum_word mask,
                   size_t ignore, debugger_breakpoint_life life,
                   debugger_expression *condition)
@@ -132,8 +132,8 @@ debugger_breakpoint_add_port(debugger_breakpoint_type type,
     return breakpoint_add(type, value, ignore, life, condition);
 }
 
-int
-debugger_breakpoint_add_time(debugger_breakpoint_type type,
+
+int debugger_breakpoint_add_time(debugger_breakpoint_type type,
                   libspectrum_dword breakpoint_tstates,
                               size_t ignore, debugger_breakpoint_life life,
                   debugger_expression *condition)
@@ -157,8 +157,8 @@ debugger_breakpoint_add_time(debugger_breakpoint_type type,
     return breakpoint_add(type, value, ignore, life, condition);
 }
 
-int
-debugger_breakpoint_add_event(debugger_breakpoint_type type,
+
+int debugger_breakpoint_add_event(debugger_breakpoint_type type,
                    const char *type_string, const char *detail,
                    size_t ignore, debugger_breakpoint_life life,
                    debugger_expression *condition)
@@ -187,8 +187,8 @@ debugger_breakpoint_add_event(debugger_breakpoint_type type,
     return breakpoint_add(type, value, ignore, life, condition);
 }
 
-static int
-breakpoint_add(debugger_breakpoint_type type, debugger_breakpoint_value value,
+
+static int breakpoint_add(debugger_breakpoint_type type, debugger_breakpoint_value value,
         size_t ignore, debugger_breakpoint_life life,
         debugger_expression *condition)
 {
@@ -227,8 +227,8 @@ breakpoint_add(debugger_breakpoint_type type, debugger_breakpoint_value value,
 }
 
 // Check whether the debugger should become active at this point
-int
-debugger_check(debugger_breakpoint_type type, libspectrum_dword value)
+
+int debugger_check(debugger_breakpoint_type type, libspectrum_dword value)
 {
     GSList *ptr; debugger_breakpoint *bp;
     GSList *ptr_next;
@@ -270,8 +270,8 @@ debugger_check(debugger_breakpoint_type type, libspectrum_dword value)
     return (debugger_mode == DEBUGGER_MODE_HALTED);
 }
 
-void
-debugger_breakpoint_reduce_tstates(libspectrum_dword tstates)
+
+void debugger_breakpoint_reduce_tstates(libspectrum_dword tstates)
 {
     GSList *ptr;
     debugger_breakpoint *bp;
@@ -307,13 +307,13 @@ get_page(debugger_breakpoint_type type, libspectrum_word address)
     fuse_abort();
     }
 
-    return &bank[ address >> MEMORY_PAGE_SIZE_LOGARITHM ];
+    return &bank[address >> MEMORY_PAGE_SIZE_LOGARITHM];
 }
 
-int
-debugger_breakpoint_trigger(debugger_breakpoint *bp)
+
+int debugger_breakpoint_trigger(debugger_breakpoint *bp)
 {
-    if (bp->ignore) { bp->ignore--; return 0; }
+    if (bp->ignore) {bp->ignore--; return 0;}
 
     if (bp->type == DEBUGGER_BREAKPOINT_TYPE_TIME)
     bp->value.time.triggered = 1;
@@ -326,8 +326,8 @@ debugger_breakpoint_trigger(debugger_breakpoint *bp)
 
 /* Check whether 'bp' should trigger if we're looking for a breakpoint
    of 'type' with parameter 'value'. Returns non-zero if we should trigger */
-static int
-breakpoint_check(debugger_breakpoint *bp, debugger_breakpoint_type type,
+
+static int breakpoint_check(debugger_breakpoint *bp, debugger_breakpoint_type type,
           libspectrum_dword value)
 {
     if (bp->type != type) return 0;
@@ -378,8 +378,8 @@ struct remove_t {
 };
 
 // Remove breakpoint with the given ID
-int
-debugger_breakpoint_remove(size_t id)
+
+int debugger_breakpoint_remove(size_t id)
 {
     debugger_breakpoint *bp;
 
@@ -423,8 +423,8 @@ get_breakpoint_by_id(size_t id)
     return ptr->data;
 }
 
-static gint
-find_breakpoint_by_id(gconstpointer data, gconstpointer user_data)
+
+static gint find_breakpoint_by_id(gconstpointer data, gconstpointer user_data)
 {
     const debugger_breakpoint *bp = data;
     size_t id = *(const size_t*)user_data;
@@ -432,8 +432,8 @@ find_breakpoint_by_id(gconstpointer data, gconstpointer user_data)
     return bp->id - id;
 }
 
-static void
-remove_time(gpointer data, gpointer user_data)
+
+static void remove_time(gpointer data, gpointer user_data)
 {
     event_t *event;
     struct remove_t *remove;
@@ -450,8 +450,8 @@ remove_time(gpointer data, gpointer user_data)
 }
 
 // Remove all breakpoints at the given address
-int
-debugger_breakpoint_clear(libspectrum_word address)
+
+int debugger_breakpoint_clear(libspectrum_word address)
 {
     GSList *ptr;
     gpointer ptr_data;
@@ -487,8 +487,8 @@ debugger_breakpoint_clear(libspectrum_word address)
     return 0;
 }
 
-static gint
-find_breakpoint_by_address(gconstpointer data, gconstpointer user_data)
+
+static gint find_breakpoint_by_address(gconstpointer data, gconstpointer user_data)
 {
     const debugger_breakpoint *bp = data;
     libspectrum_word address = *(const libspectrum_word*)user_data;
@@ -505,8 +505,8 @@ find_breakpoint_by_address(gconstpointer data, gconstpointer user_data)
 }
 
 // Remove all breakpoints
-int
-debugger_breakpoint_remove_all(void)
+
+int debugger_breakpoint_remove_all(void)
 {
     g_slist_foreach(debugger_breakpoints, free_breakpoint, NULL);
     g_slist_free(debugger_breakpoints); debugger_breakpoints = NULL;
@@ -522,8 +522,8 @@ debugger_breakpoint_remove_all(void)
     return 0;
 }
 
-static void
-free_breakpoint(gpointer data, gpointer user_data GCC_UNUSED)
+
+static void free_breakpoint(gpointer data, gpointer user_data GCC_UNUSED)
 {
     debugger_breakpoint *bp = data;
 
@@ -550,8 +550,8 @@ free_breakpoint(gpointer data, gpointer user_data GCC_UNUSED)
 }
 
 // Ignore breakpoint 'id' the next 'ignore' times it hits
-int
-debugger_breakpoint_ignore(size_t id, size_t ignore)
+
+int debugger_breakpoint_ignore(size_t id, size_t ignore)
 {
     debugger_breakpoint *bp;
 
@@ -563,8 +563,8 @@ debugger_breakpoint_ignore(size_t id, size_t ignore)
 }
 
 // Set the breakpoint's conditional expression
-int
-debugger_breakpoint_set_condition(size_t id, debugger_expression *condition)
+
+int debugger_breakpoint_set_condition(size_t id, debugger_expression *condition)
 {
     debugger_breakpoint *bp;
 
@@ -582,8 +582,8 @@ debugger_breakpoint_set_condition(size_t id, debugger_expression *condition)
     return 0;
 }
 
-int
-debugger_breakpoint_set_commands(size_t id, const char *commands)
+
+int debugger_breakpoint_set_commands(size_t id, const char *commands)
 {
     debugger_breakpoint *bp = get_breakpoint_by_id(id);
     if (!bp) return 1;
@@ -596,15 +596,15 @@ debugger_breakpoint_set_commands(size_t id, const char *commands)
 
 /* Add events corresponding to all the time breakpoints to happen during
    this frame */
-int
-debugger_add_time_events(void)
+
+int debugger_add_time_events(void)
 {
     g_slist_foreach(debugger_breakpoints, add_time_event, NULL);
     return 0;
 }
 
-static void
-add_time_event(gpointer data, gpointer user_data GCC_UNUSED)
+
+static void add_time_event(gpointer data, gpointer user_data GCC_UNUSED)
 {
     debugger_breakpoint *bp = data;
 
@@ -615,8 +615,8 @@ add_time_event(gpointer data, gpointer user_data GCC_UNUSED)
     }
 }
 
-void
-debugger_breakpoint_time_fn(libspectrum_dword tstates, int type GCC_UNUSED,
+
+void debugger_breakpoint_time_fn(libspectrum_dword tstates, int type GCC_UNUSED,
                              void *user_data GCC_UNUSED)
 {
     debugger_check(DEBUGGER_BREAKPOINT_TYPE_TIME, 0);

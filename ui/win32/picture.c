@@ -45,8 +45,8 @@ static void draw_screen(libspectrum_byte *screen, int border);
 
 static LRESULT WINAPI picture_wnd_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-int
-win32ui_picture(const char *filename, int border)
+
+int win32ui_picture(const char *filename, int border)
 {
     if (!hDialogPicture) {
     hDialogPicture = CreateDialog(fuse_hInstance,
@@ -137,8 +137,8 @@ picture_wnd_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 
-static void
-draw_screen(libspectrum_byte *screen, int border)
+
+static void draw_screen(libspectrum_byte *screen, int border)
 {
     int i, x, y, ink, paper;
     libspectrum_byte attr, data;
@@ -151,7 +151,7 @@ draw_screen(libspectrum_byte *screen, int border)
           picture +
           (y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT) * picture_pitch +
           4 * x
-) = win32display_colours[ border ];
+) = win32display_colours[border];
     }
     }
 
@@ -160,26 +160,26 @@ draw_screen(libspectrum_byte *screen, int border)
     for (x=0; x < DISPLAY_BORDER_ASPECT_WIDTH; x++) {
       *(libspectrum_dword*)
         (picture + (y + DISPLAY_BORDER_HEIGHT) * picture_pitch + 4 * x) =
-        win32display_colours[ border ];
+        win32display_colours[border];
       *(libspectrum_dword*)(
           picture +
           (y + DISPLAY_BORDER_HEIGHT) * picture_pitch +
           4 * (x+DISPLAY_ASPECT_WIDTH-DISPLAY_BORDER_ASPECT_WIDTH)
-) = win32display_colours[ border ];
+) = win32display_colours[border];
     }
 
     for (x=0; x < DISPLAY_WIDTH_COLS; x++) {
 
-      attr = screen[ display_attr_start[y] + x ];
+      attr = screen[display_attr_start[y] + x];
 
       ink = (attr & 0x07) + ((attr & 0x40) >> 3);
       paper = (attr & (0x0f << 3)) >> 3;
 
-      data = screen[ display_line_start[y]+x ];
+      data = screen[display_line_start[y]+x];
 
       for (i=0; i<8; i++) {
         libspectrum_dword pix =
-          win32display_colours[ (data & 0x80) ? ink : paper ];
+          win32display_colours[ (data & 0x80) ? ink : paper];
 
         // rearrange pixel components
         pix = (pix & 0x0000ff00) |

@@ -44,8 +44,8 @@ static HWND dialog; // The dialog box itself
 
 static int dialog_created; // Have we created the dialog box yet?
 
-void
-menu_media_tape_browse(int action)
+
+void menu_media_tape_browse(int action)
 {
     // Firstly, stop emulation
     fuse_emulation_pause();
@@ -53,7 +53,7 @@ menu_media_tape_browse(int action)
     if (!dialog_created) {
     dialog = CreateDialog(fuse_hInstance, MAKEINTRESOURCE(IDD_BROWSE),
                            fuse_hWnd, dialog_proc);
-    if (dialog == NULL) { fuse_emulation_unpause(); return; }
+    if (dialog == NULL) {fuse_emulation_unpause(); return;}
     }
 
     if (ui_tape_browser_update(UI_TAPE_BROWSER_NEW_TAPE, NULL)) {
@@ -67,12 +67,12 @@ menu_media_tape_browse(int action)
     fuse_emulation_unpause();
 }
 
-static void
-dialog_init(HWND hwndDlg)
+
+static void dialog_init(HWND hwndDlg)
 {
     size_t i;
-    LPCTSTR titles[3] = { _T(""), _T("Block type"), _T("Data") };
-    int titles_widths[3] = { 16, 115, 150 };
+    LPCTSTR titles[3] = {_T(""), _T("Block type"), _T("Data") };
+    int titles_widths[3] = {16, 115, 150};
 
     // set extended listview style to select full row, when an item is selected
     DWORD lv_ext_style;
@@ -154,8 +154,8 @@ dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 
-int
-ui_tape_browser_update(ui_tape_browser_update_type change GCC_UNUSED,
+
+int ui_tape_browser_update(ui_tape_browser_update_type change GCC_UNUSED,
                         libspectrum_tape_block *block GCC_UNUSED)
 {
     int error, current_block;
@@ -195,8 +195,8 @@ ui_tape_browser_update(ui_tape_browser_update_type change GCC_UNUSED,
     return 0;
 }
 
-static void
-add_block_details(libspectrum_tape_block *block, void *user_data)
+
+static void add_block_details(libspectrum_tape_block *block, void *user_data)
 {
     TCHAR buffer[256];
     TCHAR *details[3] = { &buffer[0], &buffer[80], &buffer[160] };
@@ -225,8 +225,8 @@ add_block_details(libspectrum_tape_block *block, void *user_data)
 }
 
 // Called when a row is selected
-static void
-select_row(LPNMITEMACTIVATE lpnmitem)
+
+static void select_row(LPNMITEMACTIVATE lpnmitem)
 {
     int current_block, row;
 

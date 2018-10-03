@@ -55,8 +55,8 @@ static AudioUnit gOutputUnit;
 static int audio_output_started;
 
 // get the default output device for the HAL
-static int
-get_default_output_device(AudioDeviceID* device)
+
+static int get_default_output_device(AudioDeviceID* device)
 {
     OSStatus err = kAudioHardwareNoError;
     UInt32 count;
@@ -82,8 +82,8 @@ get_default_output_device(AudioDeviceID* device)
 }
 
 // get the nominal sample rate used by the supplied device
-static int
-get_default_sample_rate(AudioDeviceID device, Float64 *rate)
+
+static int get_default_sample_rate(AudioDeviceID device, Float64 *rate)
 {
     OSStatus err = kAudioHardwareNoError;
     UInt32 count;
@@ -108,8 +108,8 @@ get_default_sample_rate(AudioDeviceID device, Float64 *rate)
     return 0;
 }
 
-int
-sound_lowlevel_init(const char *dev, int *freqptr, int *stereoptr)
+
+int sound_lowlevel_init(const char *dev, int *freqptr, int *stereoptr)
 {
     OSStatus err = kAudioHardwareNoError;
     AudioDeviceID device = kAudioObjectUnknown; // the default device
@@ -220,8 +220,8 @@ sound_lowlevel_init(const char *dev, int *freqptr, int *stereoptr)
 #define __Verify_noErr((a))  verify_noerr((a))
 #endif
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
     OSStatus err;
 
@@ -243,8 +243,8 @@ sound_lowlevel_end(void)
 }
 
 // Copy data to fifo
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     int i = 0;
 

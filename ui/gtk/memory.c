@@ -53,8 +53,8 @@ static GtkTextBuffer *cursor_buffer;
 static GtkTextBuffer *buffer_address, *buffer_hex, *buffer_data;
 static GtkAdjustment *adjustment;
 
-static gboolean
-textview_wheel_scroll_event(GtkWidget *widget, GdkEvent *event, gpointer user_data)
+
+static gboolean textview_wheel_scroll_event(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
     GtkAdjustment *adjustment = user_data;
     gdouble base, oldbase, base_limit;
@@ -111,8 +111,8 @@ textview_wheel_scroll_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
     return TRUE;
 }
 
-static gboolean
-textview_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+
+static gboolean textview_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     GtkAdjustment *adjustment = user_data;
     GtkTextBuffer *text_buffer;
@@ -223,11 +223,11 @@ textview_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user_da
     return FALSE;
 }
 
-static void
-update_display(libspectrum_word base)
+
+static void update_display(libspectrum_word base)
 {
     size_t i, j;
-    char buffer2[ 8 ];
+    char buffer2[8];
     char buffer3;
     GtkTextIter iter_address, iter_hex, iter_data, start, end;
 
@@ -283,8 +283,8 @@ update_display(libspectrum_word base)
     gtk_text_buffer_apply_tag_by_name(buffer_data, "monospace", &start, &end);
 }
 
-static void
-scroller(GtkAdjustment *adjustment, gpointer user_data)
+
+static void scroller(GtkAdjustment *adjustment, gpointer user_data)
 {
     libspectrum_word base;
 
@@ -296,8 +296,8 @@ scroller(GtkAdjustment *adjustment, gpointer user_data)
 }
 
 #if GTK_CHECK_VERSION(3, 6, 0)
-static void
-goto_offset(GtkWidget *widget GCC_UNUSED, gpointer user_data GCC_UNUSED)
+
+static void goto_offset(GtkWidget *widget GCC_UNUSED, gpointer user_data GCC_UNUSED)
 {
     long offset;
     const gchar *entry;
@@ -324,8 +324,8 @@ goto_offset(GtkWidget *widget GCC_UNUSED, gpointer user_data GCC_UNUSED)
 }
 #endif
 
-void
-menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
                             gpointer data GCC_UNUSED)
 {
     GtkWidget *dialog, *content_area, *scrollbar, *label, *offset;

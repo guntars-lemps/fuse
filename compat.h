@@ -56,7 +56,7 @@
 #endif
 
 #define BUILD_BUG_ON_ZERO(e) \
-    (sizeof(struct { int:-!!(e) * 1234; }))
+    (sizeof(struct {int:-!!(e) * 1234;}))
 
 #if !GNUC_PREREQ(3, 1) || defined(__STRICT_ANSI__)
     #define MUST_BE_ARRAY(a) \

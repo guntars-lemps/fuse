@@ -54,8 +54,8 @@ static module_info_t specdrum_module_info = {
 };
 
 static const periph_port_t specdrum_ports[] = {
-    { 0x00ff, 0x00df, NULL, sound_specdrum_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x00df, NULL, sound_specdrum_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t specdrum_periph = {
@@ -65,8 +65,8 @@ static const periph_t specdrum_periph = {
     /* .activate = */ NULL,
 };
 
-static int
-specdrum_init(void *context)
+
+static int specdrum_init(void *context)
 {
     module_register(&specdrum_module_info);
     periph_register(PERIPH_TYPE_SPECDRUM, &specdrum_periph);
@@ -74,29 +74,29 @@ specdrum_init(void *context)
     return 0;
 }
 
-void
-specdrum_register_startup(void)
+
+void specdrum_register_startup(void)
 {
-    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_SPECDRUM, dependencies,
                             ARRAY_SIZE(dependencies), specdrum_init, NULL,
                             NULL);
 }
 
-static void
-specdrum_reset(int hard_reset GCC_UNUSED)
+
+static void specdrum_reset(int hard_reset GCC_UNUSED)
 {
     machine_current->specdrum.specdrum_dac = 0;
 }
 
-static void
-specdrum_enabled_snapshot(libspectrum_snap *snap)
+
+static void specdrum_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.specdrum = libspectrum_snap_specdrum_active(snap);
 }
 
-static void
-specdrum_from_snapshot(libspectrum_snap *snap)
+
+static void specdrum_from_snapshot(libspectrum_snap *snap)
 {
     if (!libspectrum_snap_specdrum_active(snap)) return;
 

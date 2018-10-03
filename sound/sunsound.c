@@ -48,8 +48,8 @@
 static int soundfd = -1;
 static int sixteenbit = 0;
 
-int
-sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
+
+int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
 #ifndef solaris
     int frag;
@@ -162,8 +162,8 @@ sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     return 0;
 }
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
 #ifdef solaris
     ioctl(soundfd, I_FLUSH, FLUSHW);
@@ -173,8 +173,8 @@ sound_lowlevel_end(void)
     close(soundfd);
 }
 
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     static unsigned char buf8[4096];
     unsigned char *data8=(unsigned char *)data;

@@ -49,8 +49,8 @@ extern const keysyms_map_t oem_keysyms_map[];
 
 static GHashTable *oem_keysyms_hash;
 
-static input_key
-oem_keysyms_remap(WPARAM wParam)
+
+static input_key oem_keysyms_remap(WPARAM wParam)
 {
     const input_key *ptr;
     unsigned int mapped_code;
@@ -65,8 +65,8 @@ oem_keysyms_remap(WPARAM wParam)
     return ptr ? *ptr : INPUT_KEY_NONE;
 }
 
-void
-win32keyboard_init(void)
+
+void win32keyboard_init(void)
 {
     keysyms_map_t *ptr3;
 
@@ -76,14 +76,14 @@ win32keyboard_init(void)
     g_hash_table_insert(oem_keysyms_hash, &(ptr3->ui), &(ptr3->fuse));
 }
 
-void
-win32keyboard_end(void)
+
+void win32keyboard_end(void)
 {
     g_hash_table_destroy(oem_keysyms_hash);
 }
 
-void
-win32keyboard_keypress(WPARAM wParam, LPARAM lParam)
+
+void win32keyboard_keypress(WPARAM wParam, LPARAM lParam)
 {
     input_key fuse_keysym;
     input_event_t fuse_event;
@@ -118,8 +118,8 @@ win32keyboard_keypress(WPARAM wParam, LPARAM lParam)
     input_event(&fuse_event);
 }
 
-void
-win32keyboard_keyrelease(WPARAM wParam, LPARAM lParam)
+
+void win32keyboard_keyrelease(WPARAM wParam, LPARAM lParam)
 {
     input_key fuse_keysym;
     input_event_t fuse_event;

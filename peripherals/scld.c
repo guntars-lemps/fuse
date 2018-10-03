@@ -69,9 +69,9 @@ static libspectrum_byte scld_dec_read(libspectrum_word port, libspectrum_byte *a
 static libspectrum_byte scld_hsr_read(libspectrum_word port, libspectrum_byte *attached);
 
 static const periph_port_t scld_ports[] = {
-    { 0x00ff, 0x00f4, scld_hsr_read, scld_hsr_write },
-    { 0x00ff, 0x00ff, scld_dec_read, scld_dec_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x00f4, scld_hsr_read, scld_hsr_write},
+    {0x00ff, 0x00ff, scld_dec_read, scld_dec_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t scld_periph = {
@@ -81,8 +81,8 @@ static const periph_t scld_periph = {
     /* .activate = */ NULL,
 };
 
-static int
-scld_init(void *context)
+
+static int scld_init(void *context)
 {
     module_register(&scld_module_info);
     periph_register(PERIPH_TYPE_SCLD, &scld_periph);
@@ -90,25 +90,25 @@ scld_init(void *context)
     return 0;
 }
 
-void
-scld_register_startup(void)
+
+void scld_register_startup(void)
 {
-    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_SCLD, dependencies,
                             ARRAY_SIZE(dependencies), scld_init, NULL,
                             NULL);
 }
 
-static libspectrum_byte
-scld_dec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte scld_dec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
 
     return scld_last_dec.byte;
 }
 
-void
-scld_dec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void scld_dec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     scld old_dec = scld_last_dec;
     scld new_dec;
@@ -143,36 +143,36 @@ scld_dec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
     display_set_hires_border(paper);
 }
 
-static void
-scld_reset(int hard_reset GCC_UNUSED)
+
+static void scld_reset(int hard_reset GCC_UNUSED)
 {
     scld_last_dec.byte = 0;
 }
 
-void
-scld_hsr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void scld_hsr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     scld_last_hsr = b;
 
     machine_current->memory_map();
 }
 
-static libspectrum_byte
-scld_hsr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte scld_hsr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
 
     return scld_last_hsr;
 }
 
-libspectrum_byte
-hires_get_attr(void)
+
+libspectrum_byte hires_get_attr(void)
 {
     return (hires_convert_dec(scld_last_dec.byte));
 }
 
-libspectrum_byte
-hires_convert_dec(libspectrum_byte attr)
+
+libspectrum_byte hires_convert_dec(libspectrum_byte attr)
 {
     scld colour;
 
@@ -191,8 +191,8 @@ hires_convert_dec(libspectrum_byte attr)
     }
 }
 
-void
-scld_memory_map(void)
+
+void scld_memory_map(void)
 {
     int i;
     memory_page *exrom_dock;
@@ -206,8 +206,8 @@ scld_memory_map(void)
 }
 
 // Initialise the memory map to point to the home bank
-void
-scld_memory_map_home(void)
+
+void scld_memory_map_home(void)
 {
     int i;
 
@@ -215,8 +215,8 @@ scld_memory_map_home(void)
     memory_map_page(timex_home, i);
 }
 
-static void
-scld_dock_exrom_from_snapshot(memory_page *dest, int page_num, int writable,
+
+static void scld_dock_exrom_from_snapshot(memory_page *dest, int page_num, int writable,
                                void *source)
 {
     int i;
@@ -225,7 +225,7 @@ scld_dock_exrom_from_snapshot(memory_page *dest, int page_num, int writable,
     memcpy(data, source, 0x2000);
 
     for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
-    memory_page *page = &dest[ page_num * MEMORY_PAGES_IN_8K + i ];
+    memory_page *page = &dest[page_num * MEMORY_PAGES_IN_8K + i];
     page->offset = i * MEMORY_PAGE_SIZE;
     page->page_num = page_num;
     page->writable = writable;
@@ -237,8 +237,8 @@ scld_dock_exrom_from_snapshot(memory_page *dest, int page_num, int writable,
     scld_set_exrom_dock_contention();
 }
 
-static void
-scld_from_snapshot(libspectrum_snap *snap)
+
+static void scld_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
     int capabilities = machine_current->capabilities;
@@ -276,8 +276,8 @@ scld_from_snapshot(libspectrum_snap *snap)
 
 }
 
-static void
-scld_to_snapshot(libspectrum_snap *snap)
+
+static void scld_to_snapshot(libspectrum_snap *snap)
 {
     size_t i;
     libspectrum_byte *buffer;
@@ -331,8 +331,8 @@ scld_to_snapshot(libspectrum_snap *snap)
 }
 
 // Map 16K of memory and record default mapping for dock
-void
-scld_home_map_16k(libspectrum_word address, memory_page source[],
+
+void scld_home_map_16k(libspectrum_word address, memory_page source[],
                    int page_num)
 {
     int i;
@@ -341,20 +341,20 @@ scld_home_map_16k(libspectrum_word address, memory_page source[],
 
     for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
     int page = (address >> MEMORY_PAGE_SIZE_LOGARITHM) + i;
-    timex_home[ page ] = &source[ page_num * MEMORY_PAGES_IN_16K + i ];
+    timex_home[page] = &source[page_num * MEMORY_PAGES_IN_16K + i];
     }
 }
 
 /* Set contention for SCLD, contended in home, Dock and Exrom in the 0x4000 -
    0x7FFF range */
-void
-scld_set_exrom_dock_contention(void)
+
+void scld_set_exrom_dock_contention(void)
 {
     int i;
     const int page_num = 1;
 
     for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
-    timex_exrom[ page_num * MEMORY_PAGES_IN_16K + i ].contended = 1;
-    timex_dock[ page_num * MEMORY_PAGES_IN_16K + i ].contended = 1;
+    timex_exrom[page_num * MEMORY_PAGES_IN_16K + i].contended = 1;
+    timex_dock[page_num * MEMORY_PAGES_IN_16K + i].contended = 1;
     }
 }

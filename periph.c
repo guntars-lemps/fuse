@@ -230,25 +230,25 @@ static void free_peripheral(gpointer data, gpointer user_data GCC_UNUSED)
     libspectrum_free(private);
 }
 
+
 // Make a peripheral as being never present on this machine
-static void
-set_type_inactive(gpointer key, gpointer value, gpointer user_data)
+static void set_type_inactive(gpointer key, gpointer value, gpointer user_data)
 {
     periph_private_t *type_data = value;
     type_data->present = PERIPH_PRESENT_NEVER;
     type_data->active = 0;
 }
 
+
 // Mark all peripherals as being never present on this machine
-static void
-set_types_inactive(void)
+static void set_types_inactive(void)
 {
     g_hash_table_foreach(peripherals, set_type_inactive, NULL);
 }
 
+
 // Empty out the list of peripherals
-void
-periph_clear(void)
+void periph_clear(void)
 {
     g_slist_foreach(ports, free_peripheral, NULL);
     g_slist_free(ports);
@@ -256,9 +256,9 @@ periph_clear(void)
     set_types_inactive();
 }
 
+
 // Tidy-up function called at end of emulation
-void
-periph_end(void)
+void periph_end(void)
 {
     g_slist_foreach(ports, free_peripheral, NULL);
     g_slist_free(ports);
@@ -268,22 +268,21 @@ periph_end(void)
     peripherals = NULL;
 }
 
+
 /*
  * The actual routines to read and write a port
  */
 
 // Internal type used for passing to read_peripheral and write_peripheral
 struct peripheral_data_t {
-
     libspectrum_word port;
-
     libspectrum_byte attached;
     libspectrum_byte value;
 };
 
+
 // Read a byte from a port, taking the appropriate time
-libspectrum_byte
-readport(libspectrum_word port)
+libspectrum_byte readport(libspectrum_word port)
 {
     libspectrum_byte b;
 
@@ -293,19 +292,20 @@ readport(libspectrum_word port)
 
     /* Very ugly to put this here, but unless anything else needs this
      "writeback" mechanism, no point producing a general framework */
-    if ((port & 0x8002) == 0 &&
-      (machine_current->machine == LIBSPECTRUM_MACHINE_128   ||
-    machine_current->machine == LIBSPECTRUM_MACHINE_PLUS2))
-    writeport_internal(0x7ffd, b);
+    if (((port & 0x8002) == 0) &&
+        ((machine_current->machine == LIBSPECTRUM_MACHINE_128) ||
+         (machine_current->machine == LIBSPECTRUM_MACHINE_PLUS2))) {
+        writeport_internal(0x7ffd, b);
+    }
 
     tstates++;
 
     return b;
 }
 
+
 // Read a byte from a specific port response
-static void
-read_peripheral(gpointer data, gpointer user_data)
+static void read_peripheral(gpointer data, gpointer user_data)
 {
     periph_port_private_t *private = data;
     struct peripheral_data_t *callback_info = user_data;
@@ -313,42 +313,38 @@ read_peripheral(gpointer data, gpointer user_data)
 
     periph_port_t *port = &(private->port);
 
-    if (port->read &&
-      ((callback_info->port & port->mask) == port->value)) {
-    last_attached = callback_info->attached;
-    callback_info->value &= (port->read(callback_info->port,
-                        &(callback_info->attached))
-                  | last_attached);
+    if (port->read && ((callback_info->port & port->mask) == port->value)) {
+        last_attached = callback_info->attached;
+        callback_info->value &= (port->read(callback_info->port, &(callback_info->attached)) | last_attached);
     }
 }
 
+
 // Read a byte from a port, taking no time
-libspectrum_byte
-readport_internal(libspectrum_word port)
+libspectrum_byte readport_internal(libspectrum_word port)
 {
     struct peripheral_data_t callback_info;
 
     // Trigger the debugger if wanted
-    if (debugger_mode != DEBUGGER_MODE_INACTIVE)
-    debugger_check(DEBUGGER_BREAKPOINT_TYPE_PORT_READ, port);
+    if (debugger_mode != DEBUGGER_MODE_INACTIVE) {
+        debugger_check(DEBUGGER_BREAKPOINT_TYPE_PORT_READ, port);
+    }
 
     // If we're doing RZX playback, get a byte from the RZX file
     if (rzx_playback) {
 
-    libspectrum_error error;
-    libspectrum_byte value;
+        libspectrum_error error;
+        libspectrum_byte value;
 
-    error = libspectrum_rzx_playback(rzx, &value);
-    if (error) {
-      rzx_stop_playback(1);
+        error = libspectrum_rzx_playback(rzx, &value);
+        if (error) {
+            rzx_stop_playback(1);
 
-      /* Add a null event to mean we pick up the RZX state change in
-     z80_do_opcodes() */
-      event_add(tstates, event_type_null);
-      return readport_internal(port);
-    }
-
-    return value;
+            // Add a null event to mean we pick up the RZX state change in z80_do_opcodes()
+            event_add(tstates, event_type_null);
+            return readport_internal(port);
+        }
+        return value;
     }
 
     // If we're not doing RZX playback, get the byte normally
@@ -358,58 +354,60 @@ readport_internal(libspectrum_word port)
 
     g_slist_foreach(ports, read_peripheral, &callback_info);
 
-    if (callback_info.attached != 0xff)
-    callback_info.value =
-      periph_merge_floating_bus(callback_info.value, callback_info.attached,
-                                 machine_current->unattached_port());
-
+    if (callback_info.attached != 0xff) {
+        callback_info.value = periph_merge_floating_bus(callback_info.value,
+                                                        callback_info.attached,
+                                                        machine_current->unattached_port());
+    }
     // If we're RZX recording, store this byte
-    if (rzx_recording) rzx_store_byte(callback_info.value);
+    if (rzx_recording) {
+        rzx_store_byte(callback_info.value);
+    }
 
     return callback_info.value;
 }
 
-/* Merge the read value with the floating bus. Deliberately doesn't take
-   a callback_info structure to enable it to be unit tested */
-libspectrum_byte
-periph_merge_floating_bus(libspectrum_byte value, libspectrum_byte attached,
-               libspectrum_byte floating_bus)
+
+// Merge the read value with the floating bus. Deliberately doesn't take
+// a callback_info structure to enable it to be unit tested
+libspectrum_byte periph_merge_floating_bus(libspectrum_byte value, libspectrum_byte attached, libspectrum_byte floating_bus)
 {
     return value & (floating_bus | attached);
 }
 
+
 // Write a byte to a port, taking the appropriate time
-void
-writeport(libspectrum_word port, libspectrum_byte b)
+void writeport(libspectrum_word port, libspectrum_byte b)
 {
     ula_contend_port_early(port);
     writeport_internal(port, b);
     ula_contend_port_late(port); tstates++;
 }
 
+
 // Write a byte to a specific port response
-static void
-write_peripheral(gpointer data, gpointer user_data)
+static void write_peripheral(gpointer data, gpointer user_data)
 {
     periph_port_private_t *private = data;
     struct peripheral_data_t *callback_info = user_data;
 
     periph_port_t *port = &(private->port);
 
-    if (port->write &&
-      ((callback_info->port & port->mask) == port->value))
-    port->write(callback_info->port, callback_info->value);
+    if (port->write && ((callback_info->port & port->mask) == port->value)) {
+        port->write(callback_info->port, callback_info->value);
+    }
 }
 
+
 // Write a byte to a port, taking no time
-void
-writeport_internal(libspectrum_word port, libspectrum_byte b)
+void writeport_internal(libspectrum_word port, libspectrum_byte b)
 {
     struct peripheral_data_t callback_info;
 
     // Trigger the debugger if wanted
-    if (debugger_mode != DEBUGGER_MODE_INACTIVE)
-    debugger_check(DEBUGGER_BREAKPOINT_TYPE_PORT_WRITE, port);
+    if (debugger_mode != DEBUGGER_MODE_INACTIVE) {
+        debugger_check(DEBUGGER_BREAKPOINT_TYPE_PORT_WRITE, port);
+    }
 
     callback_info.port = port;
     callback_info.value = b;
@@ -417,17 +415,15 @@ writeport_internal(libspectrum_word port, libspectrum_byte b)
     g_slist_foreach(ports, write_peripheral, &callback_info);
 }
 
+
 /*
  * The more Fuse-specific peripheral handling routines
  */
-
-static void
-update_cartridge_menu(void)
+static void update_cartridge_menu(void)
 {
     int cartridge, dock, if2;
 
-    dock = machine_current->capabilities &
-         LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK;
+    dock = machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK;
     if2 = periph_is_active(PERIPH_TYPE_INTERFACE2);
 
     cartridge = dock || if2;
@@ -437,8 +433,8 @@ update_cartridge_menu(void)
     ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_IF2, if2);
 }
 
-static void
-update_ide_menu(void)
+
+static void update_ide_menu(void)
 {
     int ide, simpleide, zxatasp, zxcf, divide, divmmc, zxmmc;
 
@@ -460,13 +456,11 @@ update_ide_menu(void)
     ui_menu_activate(UI_MENU_ITEM_MEDIA_IDE_ZXMMC, zxmmc);
 }
 
-static void
-update_peripherals_status(void)
+
+static void update_peripherals_status(void)
 {
-    ui_menu_activate(UI_MENU_ITEM_MEDIA_IF1,
-                    periph_is_active(PERIPH_TYPE_INTERFACE1));
-    ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_IF2,
-                    periph_is_active(PERIPH_TYPE_INTERFACE2));
+    ui_menu_activate(UI_MENU_ITEM_MEDIA_IF1, periph_is_active(PERIPH_TYPE_INTERFACE1));
+    ui_menu_activate(UI_MENU_ITEM_MEDIA_CARTRIDGE_IF2, periph_is_active(PERIPH_TYPE_INTERFACE2));
 
     update_cartridge_menu();
     update_ide_menu();
@@ -475,11 +469,11 @@ update_peripherals_status(void)
     specplus3_765_update_fdd();
 }
 
-void
-periph_disable_optional(void)
+
+void periph_disable_optional(void)
 {
     if (ui_mouse_present && ui_mouse_grabbed) {
-    ui_mouse_grabbed = ui_mouse_release(1);
+        ui_mouse_grabbed = ui_mouse_release(1);
     }
 
     g_hash_table_foreach(peripherals, disable_optional, NULL);
@@ -487,17 +481,17 @@ periph_disable_optional(void)
     update_peripherals_status();
 }
 
-int
-periph_update(void)
+
+int periph_update(void)
 {
     int needs_hard_reset = 0;
 
     if (ui_mouse_present) {
-    if (settings_current.kempston_mouse) {
-      if (!ui_mouse_grabbed) ui_mouse_grabbed = ui_mouse_grab(1);
-    } else {
-      if (ui_mouse_grabbed) ui_mouse_grabbed = ui_mouse_release(1);
-    }
+        if (settings_current.kempston_mouse) {
+            if (!ui_mouse_grabbed) ui_mouse_grabbed = ui_mouse_grab(1);
+        } else {
+            if (ui_mouse_grabbed) ui_mouse_grabbed = ui_mouse_release(1);
+        }
     }
 
     g_hash_table_foreach(peripherals, set_activity, &needs_hard_reset);
@@ -508,16 +502,16 @@ periph_update(void)
     return needs_hard_reset;
 }
 
-void
-periph_posthook(void)
+
+void periph_posthook(void)
 {
     if (periph_update()) {
-    machine_reset(1);
+        machine_reset(1);
     }
 }
 
-int
-periph_postcheck(void)
+
+int periph_postcheck(void)
 {
     int needs_hard_reset = 0;
 
@@ -527,9 +521,9 @@ periph_postcheck(void)
     return needs_hard_reset;
 }
 
+
 // Register debugger page/unpage events for a peripheral
-void periph_register_paging_events(const char *type_string, int *page_event,
-                   int *unpage_event)
+void periph_register_paging_events(const char *type_string, int *page_event,  int *unpage_event)
 {
     *page_event = debugger_event_register(type_string, page_event_string);
     *unpage_event = debugger_event_register(type_string, unpage_event_string);

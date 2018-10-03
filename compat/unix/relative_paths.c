@@ -30,8 +30,8 @@
 #include "fuse.h"
 #include "ui/ui.h"
 
-void
-get_relative_directory(char *buffer, size_t bufsize)
+
+void get_relative_directory(char *buffer, size_t bufsize)
 {
     size_t len = bufsize - strlen(fuse_progname) - strlen(FUSE_DIR_SEP_STR);
     if (!getcwd(buffer, len)) {

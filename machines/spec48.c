@@ -39,8 +39,8 @@
 
 static int spec48_reset(void);
 
-int
-spec48_port_from_ula(libspectrum_word port)
+
+int spec48_port_from_ula(libspectrum_word port)
 {
     // All even ports supplied by ULA
     return !(port & 0x0001);
@@ -68,8 +68,8 @@ int spec48_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-spec48_reset(void)
+
+static int spec48_reset(void)
 {
     int error;
 
@@ -91,8 +91,8 @@ spec48_reset(void)
     return spec48_common_reset();
 }
 
-void
-spec48_common_display_setup(void)
+
+void spec48_common_display_setup(void)
 {
     display_dirty = display_dirty_sinclair;
     display_write_if_dirty = display_write_if_dirty_sinclair;
@@ -101,8 +101,8 @@ spec48_common_display_setup(void)
     memory_display_dirty = memory_display_dirty_sinclair;
 }
 
-int
-spec48_common_reset(void)
+
+int spec48_common_reset(void)
 {
     // 0x0000: ROM 0
     memory_map_16k(0x0000, memory_map_rom, 0);
@@ -119,8 +119,8 @@ spec48_common_reset(void)
     return 0;
 }
 
-int
-spec48_memory_map(void)
+
+int spec48_memory_map(void)
 {
     memory_map_16k(0x0000, memory_map_rom, 0);
     memory_romcs_map();

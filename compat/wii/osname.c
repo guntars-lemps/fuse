@@ -29,8 +29,8 @@
 
 #include "ui/ui.h"
 
-int
-compat_osname(char *buffer, size_t length)
+
+int compat_osname(char *buffer, size_t length)
 {
     snprintf(buffer, length, "Wii");
     return 0;

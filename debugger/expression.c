@@ -99,8 +99,8 @@ static int deparse_unaryop(char *buffer, size_t length,
                 const struct unaryop_type *unaryop);
 static int deparse_binaryop(char *buffer, size_t length,
                  const struct binaryop_type *binaryop);
-static int
-brackets_necessary(int top_operation, debugger_expression *operand);
+
+static int brackets_necessary(int top_operation, debugger_expression *operand);
 static int is_non_associative(int operation);
 
 static enum precedence_t
@@ -233,8 +233,8 @@ debugger_expression_new_variable(const char *name, int pool)
     return exp;
 }
 
-void
-debugger_expression_delete(debugger_expression *exp)
+
+void debugger_expression_delete(debugger_expression *exp)
 {
     switch (exp->type) {
 
@@ -314,8 +314,8 @@ debugger_expression_copy(debugger_expression *src)
     return dest;
 }
 
-libspectrum_dword
-debugger_expression_evaluate(debugger_expression *exp)
+
+libspectrum_dword debugger_expression_evaluate(debugger_expression *exp)
 {
     switch (exp->type) {
 
@@ -340,8 +340,8 @@ debugger_expression_evaluate(debugger_expression *exp)
     fuse_abort();
 }
 
-static libspectrum_dword
-evaluate_unaryop(struct unaryop_type *unary)
+
+static libspectrum_dword evaluate_unaryop(struct unaryop_type *unary)
 {
     switch (unary->operation) {
 
@@ -358,8 +358,8 @@ evaluate_unaryop(struct unaryop_type *unary)
     fuse_abort();
 }
 
-static libspectrum_dword
-evaluate_binaryop(struct binaryop_type *binary)
+
+static libspectrum_dword evaluate_binaryop(struct binaryop_type *binary)
 {
     switch (binary->operation) {
 
@@ -426,8 +426,8 @@ evaluate_binaryop(struct binaryop_type *binary)
     fuse_abort();
 }
 
-int
-debugger_expression_deparse(char *buffer, size_t length,
+
+int debugger_expression_deparse(char *buffer, size_t length,
                  const debugger_expression *exp)
 {
     switch (exp->type) {
@@ -460,8 +460,8 @@ debugger_expression_deparse(char *buffer, size_t length,
     fuse_abort();
 }
 
-static int
-deparse_unaryop(char *buffer, size_t length,
+
+static int deparse_unaryop(char *buffer, size_t length,
          const struct unaryop_type *unaryop)
 {
     char *operand_buffer; const char *operation_string = NULL;
@@ -474,7 +474,7 @@ deparse_unaryop(char *buffer, size_t length,
     operand_buffer = libspectrum_new(char, length);
 
     error = debugger_expression_deparse(operand_buffer, length, unaryop->op);
-    if (error) { libspectrum_free(operand_buffer); return error; }
+    if (error) {libspectrum_free(operand_buffer); return error;}
 
     switch (unaryop->operation) {
     case '!': operation_string = "!"; break;
@@ -505,8 +505,8 @@ deparse_unaryop(char *buffer, size_t length,
     return 0;
 }
 
-static int
-deparse_binaryop(char *buffer, size_t length,
+
+static int deparse_binaryop(char *buffer, size_t length,
           const struct binaryop_type *binaryop)
 {
     char *operand1_buffer, *operand2_buffer; const char *operation_string = NULL;
@@ -515,15 +515,15 @@ deparse_binaryop(char *buffer, size_t length,
     int error;
 
     operand1_buffer = libspectrum_new(char, 2 * length);
-    operand2_buffer = &operand1_buffer[ length ];
+    operand2_buffer = &operand1_buffer[length];
 
     error = debugger_expression_deparse(operand1_buffer, length,
                        binaryop->op1);
-    if (error) { libspectrum_free(operand1_buffer); return error; }
+    if (error) {libspectrum_free(operand1_buffer); return error;}
 
     error = debugger_expression_deparse(operand2_buffer, length,
                        binaryop->op2);
-    if (error) { libspectrum_free(operand1_buffer); return error; }
+    if (error) {libspectrum_free(operand1_buffer); return error;}
 
     switch (binaryop->operation) {
     case    '+': operation_string = "+";  break;
@@ -567,8 +567,8 @@ deparse_binaryop(char *buffer, size_t length,
 
 /* When deparsing, do we need to put brackets around `operand' when
    being used as an operand of the binary operation `top_operation'? */
-static int
-brackets_necessary(int top_operation, debugger_expression *operand)
+
+static int brackets_necessary(int top_operation, debugger_expression *operand)
 {
     enum precedence_t top_precedence, bottom_precedence;
 
@@ -612,8 +612,8 @@ brackets_necessary(int top_operation, debugger_expression *operand)
 }
 
 // Is a binary operator non-associative?
-static int
-is_non_associative(int operation)
+
+static int is_non_associative(int operation)
 {
     switch (operation) {
 

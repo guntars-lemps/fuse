@@ -52,21 +52,21 @@
 widget_menu_entry *menu;
 static size_t highlight_line = 0;
 static size_t count;
-static int *current_settings[ 16 ];
+static int *current_settings[16];
 
 #define GET_SET_KEY_FUNCTIONS(which) \
 \
 static void \
 set_key_for_button_ ## which (int action) \
 { \
-    *current_settings[ which ] = action; \
+    *current_settings[which] = action; \
     widget_end_all(WIDGET_FINISHED_OK); \
 } \
 \
 static const char* \
 get_key_name_for_button_ ## which (void) \
 { \
-    return keyboard_key_text(*current_settings[ which ]); \
+    return keyboard_key_text(*current_settings[which]); \
 }
 
 GET_SET_KEY_FUNCTIONS(1)
@@ -92,68 +92,68 @@ GET_SET_KEY_FUNCTIONS(15)
 #define SUBMENU_KEY_SELECTIONS(which) \
 \
 static widget_menu_entry submenu_select_number_for_button_ ## which [] = { \
-    { "Select a key" }, \
-    { "\0120\011", INPUT_KEY_0, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_0 }, \
-    { "\0121\011", INPUT_KEY_1, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_1 }, \
-    { "\0122\011", INPUT_KEY_2, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_2 }, \
-    { "\0123\011", INPUT_KEY_3, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_3 }, \
-    { "\0124\011", INPUT_KEY_4, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_4 }, \
-    { "\0125\011", INPUT_KEY_5, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_5 }, \
-    { "\0126\011", INPUT_KEY_6, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_6 }, \
-    { "\0127\011", INPUT_KEY_7, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_7 }, \
-    { "\0128\011", INPUT_KEY_8, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_8 }, \
-    { "\0129\011", INPUT_KEY_9, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_9 }, \
-    { NULL } \
+    {"Select a key"}, \
+    {"\0120\011", INPUT_KEY_0, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_0}, \
+    {"\0121\011", INPUT_KEY_1, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_1}, \
+    {"\0122\011", INPUT_KEY_2, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_2}, \
+    {"\0123\011", INPUT_KEY_3, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_3}, \
+    {"\0124\011", INPUT_KEY_4, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_4}, \
+    {"\0125\011", INPUT_KEY_5, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_5}, \
+    {"\0126\011", INPUT_KEY_6, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_6}, \
+    {"\0127\011", INPUT_KEY_7, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_7}, \
+    {"\0128\011", INPUT_KEY_8, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_8}, \
+    {"\0129\011", INPUT_KEY_9, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_9}, \
+    {NULL} \
 }; \
 \
 static widget_menu_entry submenu_select_letters1_for_button_ ## which [] = { \
-    { "Select a key" }, \
-    { "\012A\011", INPUT_KEY_a, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_a }, \
-    { "\012B\011", INPUT_KEY_b, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_b }, \
-    { "\012C\011", INPUT_KEY_c, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_c }, \
-    { "\012D\011", INPUT_KEY_d, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_d }, \
-    { "\012E\011", INPUT_KEY_e, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_e }, \
-    { "\012F\011", INPUT_KEY_f, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_f }, \
-    { "\012G\011", INPUT_KEY_g, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_g }, \
-    { "\012H\011", INPUT_KEY_h, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_h }, \
-    { "\012I\011", INPUT_KEY_i, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_i }, \
-    { "\012J\011", INPUT_KEY_j, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_j }, \
-    { "\012K\011", INPUT_KEY_k, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_k }, \
-    { "\012L\011", INPUT_KEY_l, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_l }, \
-    { "\012M\011", INPUT_KEY_m, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_m }, \
-    { NULL } \
+    {"Select a key"}, \
+    {"\012A\011", INPUT_KEY_a, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_a}, \
+    {"\012B\011", INPUT_KEY_b, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_b}, \
+    {"\012C\011", INPUT_KEY_c, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_c}, \
+    {"\012D\011", INPUT_KEY_d, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_d}, \
+    {"\012E\011", INPUT_KEY_e, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_e}, \
+    {"\012F\011", INPUT_KEY_f, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_f}, \
+    {"\012G\011", INPUT_KEY_g, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_g}, \
+    {"\012H\011", INPUT_KEY_h, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_h}, \
+    {"\012I\011", INPUT_KEY_i, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_i}, \
+    {"\012J\011", INPUT_KEY_j, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_j}, \
+    {"\012K\011", INPUT_KEY_k, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_k}, \
+    {"\012L\011", INPUT_KEY_l, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_l}, \
+    {"\012M\011", INPUT_KEY_m, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_m}, \
+    {NULL} \
 }; \
 \
 static widget_menu_entry submenu_select_letters2_for_button_ ## which [] = { \
-    { "Select a key" }, \
-    { "\012N\011", INPUT_KEY_n, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_n }, \
-    { "\012O\011", INPUT_KEY_o, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_o }, \
-    { "\012P\011", INPUT_KEY_p, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_p }, \
-    { "\012Q\011", INPUT_KEY_q, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_q }, \
-    { "\012R\011", INPUT_KEY_r, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_r }, \
-    { "\012S\011", INPUT_KEY_s, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_s }, \
-    { "\012T\011", INPUT_KEY_t, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_t }, \
-    { "\012U\011", INPUT_KEY_u, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_u }, \
-    { "\012V\011", INPUT_KEY_v, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_v }, \
-    { "\012W\011", INPUT_KEY_w, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_w }, \
-    { "\012X\011", INPUT_KEY_x, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_x }, \
-    { "\012Y\011", INPUT_KEY_y, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_y }, \
-    { "\012Z\011", INPUT_KEY_z, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_z }, \
-    { NULL } \
+    {"Select a key"}, \
+    {"\012N\011", INPUT_KEY_n, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_n}, \
+    {"\012O\011", INPUT_KEY_o, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_o}, \
+    {"\012P\011", INPUT_KEY_p, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_p}, \
+    {"\012Q\011", INPUT_KEY_q, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_q}, \
+    {"\012R\011", INPUT_KEY_r, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_r}, \
+    {"\012S\011", INPUT_KEY_s, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_s}, \
+    {"\012T\011", INPUT_KEY_t, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_t}, \
+    {"\012U\011", INPUT_KEY_u, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_u}, \
+    {"\012V\011", INPUT_KEY_v, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_v}, \
+    {"\012W\011", INPUT_KEY_w, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_w}, \
+    {"\012X\011", INPUT_KEY_x, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_x}, \
+    {"\012Y\011", INPUT_KEY_y, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_y}, \
+    {"\012Z\011", INPUT_KEY_z, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_z}, \
+    {NULL} \
 }; \
 \
 static widget_menu_entry submenu_select_key_for_button_ ## which [] = { \
-    { "Select a key" }, \
-    { "\012J\011oystick fire", INPUT_KEY_j, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_JOYSTICK_FIRE }, \
-    { "\012N\011umbers...", INPUT_KEY_n, submenu_select_number_for_button_ ## which , NULL, NULL, 0 }, \
-    { "\012A\011-M...", INPUT_KEY_a, submenu_select_letters1_for_button_ ## which , NULL, NULL, 0 }, \
-    { "N-\012Z\011...", INPUT_KEY_z, submenu_select_letters2_for_button_ ## which , NULL, NULL, 0 }, \
-    { "\012S\011pace", INPUT_KEY_s, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_space }, \
-    { "\012E\011nter", INPUT_KEY_e, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_Enter }, \
-    { "\012C\011aps Shift", INPUT_KEY_c, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_Caps }, \
-    { "S\012y\011mbol Shift", INPUT_KEY_y, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_Symbol }, \
-    { "N\012o\011thing", INPUT_KEY_o, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_NONE }, \
-    { NULL } \
+    {"Select a key"}, \
+    {"\012J\011oystick fire", INPUT_KEY_j, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_JOYSTICK_FIRE}, \
+    {"\012N\011umbers...", INPUT_KEY_n, submenu_select_number_for_button_ ## which , NULL, NULL, 0}, \
+    {"\012A\011-M...", INPUT_KEY_a, submenu_select_letters1_for_button_ ## which , NULL, NULL, 0}, \
+    {"N-\012Z\011...", INPUT_KEY_z, submenu_select_letters2_for_button_ ## which , NULL, NULL, 0}, \
+    {"\012S\011pace", INPUT_KEY_s, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_space}, \
+    {"\012E\011nter", INPUT_KEY_e, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_Enter}, \
+    {"\012C\011aps Shift", INPUT_KEY_c, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_Caps}, \
+    {"S\012y\011mbol Shift", INPUT_KEY_y, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_Symbol}, \
+    {"N\012o\011thing", INPUT_KEY_o, NULL, set_key_for_button_ ## which, NULL, KEYBOARD_NONE}, \
+    {NULL} \
 };
 
 SUBMENU_KEY_SELECTIONS(1)
@@ -178,60 +178,60 @@ SUBMENU_KEY_SELECTIONS(15)
 
 #ifdef USE_JOYSTICK
 static widget_menu_entry submenu_joystick_buttons[] = {
-    { "Select joystick button" },
+    {"Select joystick button"},
 #ifndef GEKKO
-    { "Button \0121\011", INPUT_KEY_1, submenu_select_key_for_button_1, NULL, get_key_name_for_button_1, 0 },
-    { "Button \0122\011", INPUT_KEY_2, submenu_select_key_for_button_2, NULL, get_key_name_for_button_2, 0 },
-    { "Button \0123\011", INPUT_KEY_3, submenu_select_key_for_button_3, NULL, get_key_name_for_button_3, 0 },
-    { "Button \0124\011", INPUT_KEY_4, submenu_select_key_for_button_4, NULL, get_key_name_for_button_4, 0 },
-    { "Button \0125\011", INPUT_KEY_5, submenu_select_key_for_button_5, NULL, get_key_name_for_button_5, 0 },
-    { "Button \0126\011", INPUT_KEY_6, submenu_select_key_for_button_6, NULL, get_key_name_for_button_6, 0 },
-    { "Button \0127\011", INPUT_KEY_7, submenu_select_key_for_button_7, NULL, get_key_name_for_button_7, 0 },
-    { "Button \0128\011", INPUT_KEY_8, submenu_select_key_for_button_8, NULL, get_key_name_for_button_8, 0 },
-    { "Button \0129\011", INPUT_KEY_9, submenu_select_key_for_button_9, NULL, get_key_name_for_button_9, 0 },
-    { "Button 1\0120\011", INPUT_KEY_0, submenu_select_key_for_button_10, NULL, get_key_name_for_button_10, 0 },
-    { "Button 11(\012a\011)", INPUT_KEY_a, submenu_select_key_for_button_11, NULL, get_key_name_for_button_11, 0 },
-    { "Button 12(\012b\011)", INPUT_KEY_b, submenu_select_key_for_button_12, NULL, get_key_name_for_button_12, 0 },
-    { "Button 13(\012c\011)", INPUT_KEY_c, submenu_select_key_for_button_13, NULL, get_key_name_for_button_13, 0 },
-    { "Button 14(\012d\011)", INPUT_KEY_d, submenu_select_key_for_button_14, NULL, get_key_name_for_button_14, 0 },
-    { "Button 15(\012e\011)", INPUT_KEY_e, submenu_select_key_for_button_15, NULL, get_key_name_for_button_15, 0 },
+    {"Button \0121\011", INPUT_KEY_1, submenu_select_key_for_button_1, NULL, get_key_name_for_button_1, 0},
+    {"Button \0122\011", INPUT_KEY_2, submenu_select_key_for_button_2, NULL, get_key_name_for_button_2, 0},
+    {"Button \0123\011", INPUT_KEY_3, submenu_select_key_for_button_3, NULL, get_key_name_for_button_3, 0},
+    {"Button \0124\011", INPUT_KEY_4, submenu_select_key_for_button_4, NULL, get_key_name_for_button_4, 0},
+    {"Button \0125\011", INPUT_KEY_5, submenu_select_key_for_button_5, NULL, get_key_name_for_button_5, 0},
+    {"Button \0126\011", INPUT_KEY_6, submenu_select_key_for_button_6, NULL, get_key_name_for_button_6, 0},
+    {"Button \0127\011", INPUT_KEY_7, submenu_select_key_for_button_7, NULL, get_key_name_for_button_7, 0},
+    {"Button \0128\011", INPUT_KEY_8, submenu_select_key_for_button_8, NULL, get_key_name_for_button_8, 0},
+    {"Button \0129\011", INPUT_KEY_9, submenu_select_key_for_button_9, NULL, get_key_name_for_button_9, 0},
+    {"Button 1\0120\011", INPUT_KEY_0, submenu_select_key_for_button_10, NULL, get_key_name_for_button_10, 0},
+    {"Button 11(\012a\011)", INPUT_KEY_a, submenu_select_key_for_button_11, NULL, get_key_name_for_button_11, 0},
+    {"Button 12(\012b\011)", INPUT_KEY_b, submenu_select_key_for_button_12, NULL, get_key_name_for_button_12, 0},
+    {"Button 13(\012c\011)", INPUT_KEY_c, submenu_select_key_for_button_13, NULL, get_key_name_for_button_13, 0},
+    {"Button 14(\012d\011)", INPUT_KEY_d, submenu_select_key_for_button_14, NULL, get_key_name_for_button_14, 0},
+    {"Button 15(\012e\011)", INPUT_KEY_e, submenu_select_key_for_button_15, NULL, get_key_name_for_button_15, 0},
 #else // #ifndef GEKKO
-    { "Button \0121\011", INPUT_KEY_1, submenu_select_key_for_button_1, NULL, get_key_name_for_button_1, 0 },
-    { "Button \0122\011", INPUT_KEY_2, submenu_select_key_for_button_2, NULL, get_key_name_for_button_2, 0 },
-    { "Button \012A\011", INPUT_KEY_a, submenu_select_key_for_button_3, NULL, get_key_name_for_button_3, 0 },
-    { "Button \012B\011", INPUT_KEY_b, submenu_select_key_for_button_4, NULL, get_key_name_for_button_4, 0 },
-    { "Button \012P\011lus", INPUT_KEY_p, submenu_select_key_for_button_5, NULL, get_key_name_for_button_5, 0 },
-    { "Button \012M\011inus", INPUT_KEY_m, submenu_select_key_for_button_6, NULL, get_key_name_for_button_6, 0 },
-    { "Button \012Z\011 on Nunchuck", INPUT_KEY_z, submenu_select_key_for_button_7, NULL, get_key_name_for_button_7, 0 },
-    { "Button \012C\011 on Nunchuck", INPUT_KEY_c, submenu_select_key_for_button_8, NULL, get_key_name_for_button_8, 0 },
+    {"Button \0121\011", INPUT_KEY_1, submenu_select_key_for_button_1, NULL, get_key_name_for_button_1, 0},
+    {"Button \0122\011", INPUT_KEY_2, submenu_select_key_for_button_2, NULL, get_key_name_for_button_2, 0},
+    {"Button \012A\011", INPUT_KEY_a, submenu_select_key_for_button_3, NULL, get_key_name_for_button_3, 0},
+    {"Button \012B\011", INPUT_KEY_b, submenu_select_key_for_button_4, NULL, get_key_name_for_button_4, 0},
+    {"Button \012P\011lus", INPUT_KEY_p, submenu_select_key_for_button_5, NULL, get_key_name_for_button_5, 0},
+    {"Button \012M\011inus", INPUT_KEY_m, submenu_select_key_for_button_6, NULL, get_key_name_for_button_6, 0},
+    {"Button \012Z\011 on Nunchuck", INPUT_KEY_z, submenu_select_key_for_button_7, NULL, get_key_name_for_button_7, 0},
+    {"Button \012C\011 on Nunchuck", INPUT_KEY_c, submenu_select_key_for_button_8, NULL, get_key_name_for_button_8, 0},
 #endif // #ifndef GEKKO
-    { NULL }
+    {NULL}
 };
 #endif // #ifdef USE_JOYSTICK
 
 static widget_menu_entry submenu_keyboard_buttons[] = {
-    { "Select keyboard key" },
-    { "Button \012U\011p", INPUT_KEY_u, submenu_select_key_for_button_1, NULL, get_key_name_for_button_1, 0 },
-    { "Button \012D\011own", INPUT_KEY_d, submenu_select_key_for_button_2, NULL, get_key_name_for_button_2, 0 },
-    { "Button \012L\011eft", INPUT_KEY_l, submenu_select_key_for_button_3, NULL, get_key_name_for_button_3, 0 },
-    { "Button \012R\011ight", INPUT_KEY_r, submenu_select_key_for_button_4, NULL,    get_key_name_for_button_4, 0 },
-    { "Button \012F\011ire", INPUT_KEY_f, submenu_select_key_for_button_5, NULL, get_key_name_for_button_5, 0 },
-    { NULL }
+    {"Select keyboard key"},
+    {"Button \012U\011p", INPUT_KEY_u, submenu_select_key_for_button_1, NULL, get_key_name_for_button_1, 0},
+    {"Button \012D\011own", INPUT_KEY_d, submenu_select_key_for_button_2, NULL, get_key_name_for_button_2, 0},
+    {"Button \012L\011eft", INPUT_KEY_l, submenu_select_key_for_button_3, NULL, get_key_name_for_button_3, 0},
+    {"Button \012R\011ight", INPUT_KEY_r, submenu_select_key_for_button_4, NULL,    get_key_name_for_button_4, 0},
+    {"Button \012F\011ire", INPUT_KEY_f, submenu_select_key_for_button_5, NULL, get_key_name_for_button_5, 0},
+    {NULL}
 };
 
 #define MAX_JOYSTICK_TYPES 8
 // joystick types + title of the window + NULL
-static widget_menu_entry submenu_types[ MAX_JOYSTICK_TYPES + 2 ];
-static char joystick_names[ MAX_JOYSTICK_TYPES ][ 100 ];
+static widget_menu_entry submenu_types[MAX_JOYSTICK_TYPES + 2];
+static char joystick_names[MAX_JOYSTICK_TYPES][100];
 void set_joystick_type(int action);
 
 #define SUBMENU_DEVICE_SELECTIONS(device) \
 \
 static widget_menu_entry submenu_type_and_mapping_for_ ## device [] = { \
-    { "Select type or map buttons" }, \
-    { "\012T\011ype", INPUT_KEY_t, submenu_types, NULL, NULL, 0 }, \
-    { "\012B\011utton Mapping", INPUT_KEY_b, submenu_ ## device ## _buttons, NULL, NULL, 0 }, \
-    { NULL } \
+    {"Select type or map buttons"}, \
+    {"\012T\011ype", INPUT_KEY_t, submenu_types, NULL, NULL, 0}, \
+    {"\012B\011utton Mapping", INPUT_KEY_b, submenu_ ## device ## _buttons, NULL, NULL, 0}, \
+    {NULL} \
 };
 
 #ifdef USE_JOYSTICK
@@ -239,8 +239,8 @@ SUBMENU_DEVICE_SELECTIONS(joystick)
 #endif // #ifdef USE_JOYSTICK
 SUBMENU_DEVICE_SELECTIONS(keyboard)
 
-static void
-print_items(void)
+
+static void print_items(void)
 {
     int i;
     char buffer[128];
@@ -250,7 +250,7 @@ print_items(void)
 
     for (i = 0; i < count; i++) {
     int colour;
-    if (!menu[i+1].text[0]) { height += 4; continue; }
+    if (!menu[i+1].text[0]) {height += 4; continue;}
 
     snprintf(buffer, sizeof (buffer), "%s", menu[i+1].text);
     colour = menu[i+1].inactive ?
@@ -310,8 +310,8 @@ int widget_menu_draw(void *data)
     return 0;
 }
 
-void
-widget_menu_keyhandler(input_key key)
+
+void widget_menu_keyhandler(input_key key)
 {
     widget_menu_entry *ptr;
     int new_highlight_line = 0;
@@ -392,7 +392,7 @@ scaler_type
 menu_get_scaler(scaler_available_fn selector)
 {
     size_t count, i;
-    const char *options[ SCALER_NUM ];
+    const char *options[SCALER_NUM];
     widget_select_t info;
     int error;
 
@@ -401,7 +401,7 @@ menu_get_scaler(scaler_available_fn selector)
     for (i = 0; i < SCALER_NUM; i++)
     if (selector(i)) {
       if (current_scaler == i) info.current = count;
-      options[ count++ ] = scaler_name(i);
+      options[count++ ] = scaler_name(i);
     }
 
     info.title = "Select scaler";
@@ -421,8 +421,8 @@ menu_get_scaler(scaler_available_fn selector)
     fuse_abort();
 }
 
-void
-menu_file_exit(int action)
+
+void menu_file_exit(int action)
 {
     static int menu_exit_open = 0;
 
@@ -445,56 +445,56 @@ menu_file_exit(int action)
     widget_end_all(WIDGET_FINISHED_OK);
 }
 
-void
-menu_options_general(int action)
+
+void menu_options_general(int action)
 {
     widget_do_general();
 }
 
-void
-menu_options_media(int action)
+
+void menu_options_media(int action)
 {
     widget_do_media();
 }
 
-void
-menu_options_peripherals_general(int action)
+
+void menu_options_peripherals_general(int action)
 {
     widget_do_peripherals_general();
 }
 
-void
-menu_options_peripherals_disk(int action)
+
+void menu_options_peripherals_disk(int action)
 {
     widget_do_peripherals_disk();
 }
 
-void
-menu_options_sound(int action)
+
+void menu_options_sound(int action)
 {
     widget_do_sound();
 }
 
-void
-menu_options_rzx(int action)
+
+void menu_options_rzx(int action)
 {
     widget_do_rzx();
 }
 
-void
-menu_options_movie(int action)
+
+void menu_options_movie(int action)
 {
     widget_do_movie();
 }
 
-void
-menu_options_diskoptions(int action)
+
+void menu_options_diskoptions(int action)
 {
     widget_do_diskoptions();
 }
 
-void
-menu_options_joysticks_select(int action)
+
+void menu_options_joysticks_select(int action)
 {
     int error = 0;
     int i;
@@ -503,53 +503,53 @@ menu_options_joysticks_select(int action)
 
 #ifdef USE_JOYSTICK
     case 0:
-    current_settings[ 0 ] = &(settings_current.joystick_1_output);
-    current_settings[ 1 ] = &(settings_current.joystick_1_fire_1);
-    current_settings[ 2 ] = &(settings_current.joystick_1_fire_2);
-    current_settings[ 3 ] = &(settings_current.joystick_1_fire_3);
-    current_settings[ 4 ] = &(settings_current.joystick_1_fire_4);
-    current_settings[ 5 ] = &(settings_current.joystick_1_fire_5);
-    current_settings[ 6 ] = &(settings_current.joystick_1_fire_6);
-    current_settings[ 7 ] = &(settings_current.joystick_1_fire_7);
-    current_settings[ 8 ] = &(settings_current.joystick_1_fire_8);
-    current_settings[ 9 ] = &(settings_current.joystick_1_fire_9);
-    current_settings[ 10 ] = &(settings_current.joystick_1_fire_10);
-    current_settings[ 11 ] = &(settings_current.joystick_1_fire_11);
-    current_settings[ 12 ] = &(settings_current.joystick_1_fire_12);
-    current_settings[ 13 ] = &(settings_current.joystick_1_fire_13);
-    current_settings[ 14 ] = &(settings_current.joystick_1_fire_14);
-    current_settings[ 15 ] = &(settings_current.joystick_1_fire_15);
-    submenu_type_and_mapping_for_joystick[ 1 ].detail = menu_joystick_1_detail;
+    current_settings[0] = &(settings_current.joystick_1_output);
+    current_settings[1] = &(settings_current.joystick_1_fire_1);
+    current_settings[2] = &(settings_current.joystick_1_fire_2);
+    current_settings[3] = &(settings_current.joystick_1_fire_3);
+    current_settings[4] = &(settings_current.joystick_1_fire_4);
+    current_settings[5] = &(settings_current.joystick_1_fire_5);
+    current_settings[6] = &(settings_current.joystick_1_fire_6);
+    current_settings[7] = &(settings_current.joystick_1_fire_7);
+    current_settings[8] = &(settings_current.joystick_1_fire_8);
+    current_settings[9] = &(settings_current.joystick_1_fire_9);
+    current_settings[10] = &(settings_current.joystick_1_fire_10);
+    current_settings[11] = &(settings_current.joystick_1_fire_11);
+    current_settings[12] = &(settings_current.joystick_1_fire_12);
+    current_settings[13] = &(settings_current.joystick_1_fire_13);
+    current_settings[14] = &(settings_current.joystick_1_fire_14);
+    current_settings[15] = &(settings_current.joystick_1_fire_15);
+    submenu_type_and_mapping_for_joystick[1].detail = menu_joystick_1_detail;
     break;
     case 1:
-    current_settings[ 0 ] = &(settings_current.joystick_2_output);
-    current_settings[ 1 ] = &(settings_current.joystick_2_fire_1);
-    current_settings[ 2 ] = &(settings_current.joystick_2_fire_2);
-    current_settings[ 3 ] = &(settings_current.joystick_2_fire_3);
-    current_settings[ 4 ] = &(settings_current.joystick_2_fire_4);
-    current_settings[ 5 ] = &(settings_current.joystick_2_fire_5);
-    current_settings[ 6 ] = &(settings_current.joystick_2_fire_6);
-    current_settings[ 7 ] = &(settings_current.joystick_2_fire_7);
-    current_settings[ 8 ] = &(settings_current.joystick_2_fire_8);
-    current_settings[ 9 ] = &(settings_current.joystick_2_fire_9);
-    current_settings[ 10 ] = &(settings_current.joystick_2_fire_10);
-    current_settings[ 11 ] = &(settings_current.joystick_2_fire_11);
-    current_settings[ 12 ] = &(settings_current.joystick_2_fire_12);
-    current_settings[ 13 ] = &(settings_current.joystick_2_fire_13);
-    current_settings[ 14 ] = &(settings_current.joystick_2_fire_14);
-    current_settings[ 15 ] = &(settings_current.joystick_2_fire_15);
-    submenu_type_and_mapping_for_joystick[ 1 ].detail = menu_joystick_2_detail;
+    current_settings[0] = &(settings_current.joystick_2_output);
+    current_settings[1] = &(settings_current.joystick_2_fire_1);
+    current_settings[2] = &(settings_current.joystick_2_fire_2);
+    current_settings[3] = &(settings_current.joystick_2_fire_3);
+    current_settings[4] = &(settings_current.joystick_2_fire_4);
+    current_settings[5] = &(settings_current.joystick_2_fire_5);
+    current_settings[6] = &(settings_current.joystick_2_fire_6);
+    current_settings[7] = &(settings_current.joystick_2_fire_7);
+    current_settings[8] = &(settings_current.joystick_2_fire_8);
+    current_settings[9] = &(settings_current.joystick_2_fire_9);
+    current_settings[10] = &(settings_current.joystick_2_fire_10);
+    current_settings[11] = &(settings_current.joystick_2_fire_11);
+    current_settings[12] = &(settings_current.joystick_2_fire_12);
+    current_settings[13] = &(settings_current.joystick_2_fire_13);
+    current_settings[14] = &(settings_current.joystick_2_fire_14);
+    current_settings[15] = &(settings_current.joystick_2_fire_15);
+    submenu_type_and_mapping_for_joystick[1].detail = menu_joystick_2_detail;
     break;
 #endif // #ifdef USE_JOYSTICK
 
     case JOYSTICK_KEYBOARD:
-    current_settings[ 0 ] = &(settings_current.joystick_keyboard_output);
-    current_settings[ 1 ] = &(settings_current.joystick_keyboard_up);
-    current_settings[ 2 ] = &(settings_current.joystick_keyboard_down);
-    current_settings[ 3 ] = &(settings_current.joystick_keyboard_left);
-    current_settings[ 4 ] = &(settings_current.joystick_keyboard_right);
-    current_settings[ 5 ] = &(settings_current.joystick_keyboard_fire);
-    submenu_type_and_mapping_for_keyboard[ 1 ].detail = menu_keyboard_joystick_detail;
+    current_settings[0] = &(settings_current.joystick_keyboard_output);
+    current_settings[1] = &(settings_current.joystick_keyboard_up);
+    current_settings[2] = &(settings_current.joystick_keyboard_down);
+    current_settings[3] = &(settings_current.joystick_keyboard_left);
+    current_settings[4] = &(settings_current.joystick_keyboard_right);
+    current_settings[5] = &(settings_current.joystick_keyboard_fire);
+    submenu_type_and_mapping_for_keyboard[1].detail = menu_keyboard_joystick_detail;
     break;
     }
 
@@ -557,17 +557,17 @@ menu_options_joysticks_select(int action)
     if (JOYSTICK_TYPE_COUNT > MAX_JOYSTICK_TYPES)
     ui_error(UI_ERROR_ERROR, "Not all joystick types are displayed");
 
-    submenu_types[ 0 ].text = "Select joystick type";
+    submenu_types[0].text = "Select joystick type";
     for (i = 0; (i < JOYSTICK_TYPE_COUNT) && (i < MAX_JOYSTICK_TYPES); i++) {
-    char shortcut[ 2 ] = { 'A' + i, '\0' };
-    snprintf((char *) joystick_names[ i ], 100, "\012%s\011 %s", shortcut,
-              joystick_name[ i ]);
-    submenu_types[ i + 1 ].text = joystick_names[ i ];
-    submenu_types[ i + 1 ].key = INPUT_KEY_a + i;
-    submenu_types[ i + 1 ].callback = set_joystick_type;
-    submenu_types[ i + 1 ].action = i;
+    char shortcut[2] = { 'A' + i, '\0' };
+    snprintf((char *) joystick_names[i], 100, "\012%s\011 %s", shortcut,
+              joystick_name[i]);
+    submenu_types[i + 1].text = joystick_names[i];
+    submenu_types[i + 1].key = INPUT_KEY_a + i;
+    submenu_types[i + 1].callback = set_joystick_type;
+    submenu_types[i + 1].action = i;
     }
-    submenu_types[ i + 1 ].text = NULL;
+    submenu_types[i + 1].text = NULL;
 
     if (action - 1 == JOYSTICK_KEYBOARD)
     error = widget_do_menu(submenu_type_and_mapping_for_keyboard);
@@ -580,16 +580,16 @@ menu_options_joysticks_select(int action)
     if (error) return;
 }
 
-void
-set_joystick_type(int action)
+
+void set_joystick_type(int action)
 {
-    *current_settings[ 0 ] = action;
+    *current_settings[0] = action;
     widget_end_all(WIDGET_FINISHED_OK);
 }
 
 // Options/Select ROMs/<type>
-int
-menu_select_roms_with_title(const char *title, size_t start, size_t count,
+
+int menu_select_roms_with_title(const char *title, size_t start, size_t count,
                  int is_peripheral)
 {
     widget_roms_info info;
@@ -603,8 +603,8 @@ menu_select_roms_with_title(const char *title, size_t start, size_t count,
     return widget_do_rom(&info);
 }
 
-void
-menu_machine_reset(int action)
+
+void menu_machine_reset(int action)
 {
     int hard_reset = action;
     const char *message = "Reset?";
@@ -625,8 +625,8 @@ menu_machine_reset(int action)
     machine_reset(hard_reset);
 }
 
-void
-menu_machine_select(int action)
+
+void menu_machine_select(int action)
 {
     widget_select_t info;
     char **options, *buffer;
@@ -648,7 +648,7 @@ menu_machine_select(int action)
     }
 
     for (i = 0; i < machine_count; i++) {
-    options[i] = &buffer[ i * 40 ];
+    options[i] = &buffer[i * 40];
     snprintf(options[i], 40, "%s",
               libspectrum_machine_name(machine_types[i]->machine));
     if (machine_current->machine == machine_types[i]->machine)
@@ -666,44 +666,44 @@ menu_machine_select(int action)
 
     if (info.result == -1) return;
 
-    new_machine = machine_types[ info.result ]->machine;
+    new_machine = machine_types[info.result]->machine;
 
     if (machine_current->machine != new_machine) machine_select(new_machine);
 }
 
-void
-menu_machine_debugger(int action)
+
+void menu_machine_debugger(int action)
 {
     debugger_mode = DEBUGGER_MODE_HALTED;
     widget_do_debugger();
 }
 
-void
-menu_machine_pokememory(int action)
+
+void menu_machine_pokememory(int action)
 {
     widget_do_pokemem();
 }
 
-void
-menu_machine_pokefinder(int action)
+
+void menu_machine_pokefinder(int action)
 {
     widget_do_pokefinder();
 }
 
-void
-menu_machine_memorybrowser(int action)
+
+void menu_machine_memorybrowser(int action)
 {
     widget_do_memorybrowser();
 }
 
-void
-menu_media_tape_browse(int action)
+
+void menu_media_tape_browse(int action)
 {
     widget_do_browse();
 }
 
-void
-menu_help_keyboard(int action)
+
+void menu_help_keyboard(int action)
 {
     utils_file screen;
     widget_picture_data info;
@@ -723,14 +723,14 @@ menu_help_keyboard(int action)
     utils_close_file(&screen);
 }
 
-void
-menu_help_about(int action)
+
+void menu_help_about(int action)
 {
     widget_do_about();
 }
 
-static int
-set_active(struct widget_menu_entry *menu, const char *path, int active)
+
+static int set_active(struct widget_menu_entry *menu, const char *path, int active)
 {
     if (*path == '/') path++;
 
@@ -761,8 +761,8 @@ set_active(struct widget_menu_entry *menu, const char *path, int active)
     return 1;
 }
 
-int
-ui_menu_item_set_active(const char *path, int active)
+
+int ui_menu_item_set_active(const char *path, int active)
 {
     return set_active(widget_menu, path, active);
 }

@@ -60,23 +60,23 @@ static const char * const fdd_error[] = {
 };
 
 const fdd_params_t fdd_params[] = {
-    { 0, 0, 0 }, // Disabled
-    { 1, 1, 40 }, // Single-sided 40 track
-    { 1, 2, 40 }, // Double-sided 80 track
-    { 1, 1, 80 }, // Single-sided 40 track
-    { 1, 2, 80 } // Double-sided 80 track
+    {0, 0, 0}, // Disabled
+    {1, 1, 40}, // Single-sided 40 track
+    {1, 2, 40}, // Double-sided 80 track
+    {1, 1, 80}, // Single-sided 40 track
+    {1, 2, 80} // Double-sided 80 track
 };
 
-static void
-fdd_event(libspectrum_dword last_tstates, int event, void *user_data);
+
+static void fdd_event(libspectrum_dword last_tstates, int event, void *user_data);
 
 static int motor_event;
 static int index_event;
 
 static int fdd_motor = 0; // to manage 'disk' icon
 
-static int
-fdd_init_events(void *context)
+
+static int fdd_init_events(void *context)
 {
     motor_event = event_register(fdd_event, "FDD motor on");
     index_event = event_register(fdd_event, "FDD index");
@@ -87,8 +87,8 @@ fdd_init_events(void *context)
     return 0;
 }
 
-void
-fdd_register_startup(void)
+
+void fdd_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_EVENT,
@@ -104,7 +104,7 @@ fdd_strerror(int error)
 {
     if (error >= FDD_LAST_ERROR)
     error = FDD_LAST_ERROR - 1;
-    return fdd_error[ error ];
+    return fdd_error[error];
 }
 
 /*
@@ -115,8 +115,8 @@ fdd_strerror(int error)
  * UNREADABLE   0  0  1  0  1  0  0  0
  */
 
-static void
-fdd_set_data(fdd_t *d, int fact)
+
+static void fdd_set_data(fdd_t *d, int fact)
 {
     int head = d->upsidedown ? 1 - d->c_head : d->c_head;
 
@@ -148,8 +148,8 @@ fdd_set_data(fdd_t *d, int fact)
 }
 
 // initialise fdd
-int
-fdd_init(fdd_t *d, fdd_type_t type, const fdd_params_t *dt, int reinit)
+
+int fdd_init(fdd_t *d, fdd_type_t type, const fdd_params_t *dt, int reinit)
 {
     int upsidedown = d->upsidedown;
     int loaded = d->loaded;
@@ -194,8 +194,8 @@ fdd_init(fdd_t *d, fdd_type_t type, const fdd_params_t *dt, int reinit)
     return d->status = FDD_OK;
 }
 
-void
-fdd_motoron(fdd_t *d, int on)
+
+void fdd_motoron(fdd_t *d, int on)
 {
     if (!d->loaded)
     return;
@@ -235,8 +235,8 @@ fdd_motoron(fdd_t *d, int on)
     }
 }
 
-void
-fdd_head_load(fdd_t *d, int load)
+
+void fdd_head_load(fdd_t *d, int load)
 {
     if (!d->loaded)
     return;
@@ -247,8 +247,8 @@ fdd_head_load(fdd_t *d, int load)
     fdd_set_data(d, FDD_HEAD_FACT);
 }
 
-void
-fdd_select(fdd_t *d, int select)
+
+void fdd_select(fdd_t *d, int select)
 {
     d->selected = select > 0 ? 1 : 0;
     /*
@@ -263,8 +263,8 @@ fdd_select(fdd_t *d, int select)
 
 
 // load a disk into fdd
-int
-fdd_load(fdd_t *d, int upsidedown)
+
+int fdd_load(fdd_t *d, int upsidedown)
 {
     if (d->type == FDD_TYPE_NONE)
     return d->status = FDD_NONE;
@@ -302,8 +302,8 @@ fdd_load(fdd_t *d, int upsidedown)
     return d->status = FDD_OK;
 }
 
-void
-fdd_unload(fdd_t *d)
+
+void fdd_unload(fdd_t *d)
 {
     d->ready = d->loaded = d->dskchg = d->hdout = 0;
     d->index = d->wrprot = 1;
@@ -313,8 +313,8 @@ fdd_unload(fdd_t *d)
 }
 
 // change current head
-void
-fdd_set_head(fdd_t *d, int head)
+
+void fdd_set_head(fdd_t *d, int head)
 {
     if (d->fdd_heads == 1)
     return;
@@ -328,8 +328,8 @@ fdd_set_head(fdd_t *d, int head)
 }
 
 // change current track dir = 1 / -1
-void
-fdd_step(fdd_t *d, fdd_dir_t direction)
+
+void fdd_step(fdd_t *d, fdd_dir_t direction)
 {
     if (direction == FDD_STEP_OUT) {
     if (d->c_cylinder > 0)
@@ -348,8 +348,8 @@ fdd_step(fdd_t *d, fdd_dir_t direction)
 }
 
 // read/write next byte from/to sector
-static int
-fdd_read_write_data(fdd_t *d, fdd_write_t write)
+
+static int fdd_read_write_data(fdd_t *d, fdd_write_t write)
 {
     if (!d->selected || !d->ready || !d->loadhead || d->disk.track == NULL) {
     if (d->loaded && d->motoron) { // spin the disk
@@ -373,7 +373,7 @@ fdd_read_write_data(fdd_t *d, fdd_write_t write)
       d->index = d->disk.i >= d->c_bpt ? 1 : 0;
       return d->status = FDD_RDONLY;
     }
-    d->disk.track[ d->disk.i ] = d->data & 0x00ff;
+    d->disk.track[d->disk.i] = d->data & 0x00ff;
     if (d->data & 0xff00)
       bitmap_set(d->disk.clocks, d->disk.i);
     else
@@ -393,7 +393,7 @@ fdd_read_write_data(fdd_t *d, fdd_write_t write)
 #endif
     d->disk.dirty = 1;
     } else { // read
-    d->data = d->disk.track[ d->disk.i ];
+    d->data = d->disk.track[d->disk.i];
     if (bitmap_test(d->disk.clocks, d->disk.i))
       d->data |= 0xff00;
     d->marks = 0;
@@ -412,15 +412,15 @@ fdd_read_write_data(fdd_t *d, fdd_write_t write)
 }
 
 // read next byte from sector
-int
-fdd_read_data(fdd_t *d)
+
+int fdd_read_data(fdd_t *d)
 {
     return fdd_read_write_data(d, FDD_READ);
 }
 
 // write next byte to sector
-int
-fdd_write_data(fdd_t *d)
+
+int fdd_write_data(fdd_t *d)
 {
     return fdd_read_write_data(d, FDD_WRITE);
 }
@@ -434,8 +434,8 @@ void fdd_flip(fdd_t *d, int upsidedown)
     fdd_set_data(d, FDD_LOAD_FACT);
 }
 
-void
-fdd_wrprot(fdd_t *d, int wrprot)
+
+void fdd_wrprot(fdd_t *d, int wrprot)
 {
     if (!d->loaded)
     return;
@@ -443,8 +443,8 @@ fdd_wrprot(fdd_t *d, int wrprot)
     d->wrprot = d->disk.wrprot = wrprot;
 }
 
-void
-fdd_wait_index_hole(fdd_t *d)
+
+void fdd_wait_index_hole(fdd_t *d)
 {
     if (!d->selected || !d->ready)
     return;
@@ -453,8 +453,8 @@ fdd_wait_index_hole(fdd_t *d)
     d->index = 1;
 }
 
-static void
-fdd_event(libspectrum_dword last_tstates, int event,
+
+static void fdd_event(libspectrum_dword last_tstates, int event,
            void *user_data)
 {
     fdd_t *d = user_data;

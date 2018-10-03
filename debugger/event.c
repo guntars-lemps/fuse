@@ -42,14 +42,14 @@
 
 static GArray *registered_events;
 
-void
-debugger_event_init(void)
+
+void debugger_event_init(void)
 {
     registered_events = g_array_new(FALSE, FALSE, sizeof(debugger_event_t));
 }
 
-int
-debugger_event_register(const char *type, const char *detail)
+
+int debugger_event_register(const char *type, const char *detail)
 {
     debugger_event_t event;
 
@@ -61,8 +61,8 @@ debugger_event_register(const char *type, const char *detail)
     return registered_events->len - 1;
 }
 
-static int
-event_matches(debugger_event_t *event, const char *type, const char *detail)
+
+static int event_matches(debugger_event_t *event, const char *type, const char *detail)
 {
     if (strcasecmp(type, event->type)) return 0;
     if (strcmp(detail, "*") == 0) return 1;
@@ -70,8 +70,8 @@ event_matches(debugger_event_t *event, const char *type, const char *detail)
     return strcasecmp(detail, event->detail) == 0;
 }
 
-int
-debugger_event_is_registered(const char *type, const char *detail)
+
+int debugger_event_is_registered(const char *type, const char *detail)
 {
     size_t i;
 
@@ -85,8 +85,8 @@ debugger_event_is_registered(const char *type, const char *detail)
     return 0;
 }
 
-void
-debugger_event(int event_code)
+
+void debugger_event(int event_code)
 {
     debugger_event_t event;
     debugger_breakpoint *bp;
@@ -127,8 +127,8 @@ debugger_event(int event_code)
 }
 
 // Tidy-up function called at end of emulation
-void
-debugger_event_end(void)
+
+void debugger_event_end(void)
 {
     int i;
     debugger_event_t event;

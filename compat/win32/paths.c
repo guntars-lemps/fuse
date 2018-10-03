@@ -56,18 +56,18 @@ compat_get_config_path(void)
     return ".";
 }
 
-int
-compat_is_absolute_path(const char *path)
+
+int compat_is_absolute_path(const char *path)
 {
     if (path[0] == '\\') return 1;
     if (path[0] && path[1] == ':') return 1;
     return 0;
 }
 
-int
-compat_get_next_path(path_context *ctx)
+
+int compat_get_next_path(path_context *ctx)
 {
-    char buffer[ PATH_MAX ];
+    char buffer[PATH_MAX];
     const char *path_segment, *path2;
 
     switch (ctx->type) {
@@ -86,7 +86,7 @@ compat_get_next_path(path_context *ctx)
     case 0:
     if (compat_is_absolute_path(fuse_progname)) {
       strncpy(buffer, fuse_progname, PATH_MAX);
-      buffer[ PATH_MAX - 1 ] = '\0';
+      buffer[PATH_MAX - 1] = '\0';
     } else {
       DWORD retval;
       retval = GetModuleFileName(NULL, buffer, PATH_MAX);

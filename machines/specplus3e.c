@@ -35,8 +35,8 @@
 static int specplus3e_reset(void);
 extern upd_fdc *specplus3_fdc;
 
-int
-specplus3e_init(fuse_machine_info *machine)
+
+int specplus3e_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_PLUS3E;
     machine->id = "plus3e";
@@ -58,8 +58,8 @@ specplus3e_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-specplus3e_reset(void)
+
+static int specplus3e_reset(void)
 {
     int error;
 

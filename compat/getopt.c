@@ -305,8 +305,8 @@ static int nonoption_flags_len;
 static void exchange (char **);
 #endif
 
-static void
-exchange (argv)
+
+static void exchange (argv)
      char **argv;
 {
     int bottom = first_nonopt;
@@ -512,8 +512,8 @@ _getopt_initialize (argc, argv, optstring)
    If LONG_ONLY is nonzero, '-' as well as '--' can introduce
    long-named options.  */
 
-int
-_getopt_internal (argc, argv, optstring, longopts, longind, long_only)
+
+int _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
      int argc;
      char *const *argv;
      const char *optstring;
@@ -1193,8 +1193,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
     }
 }
 
-int
-getopt (argc, argv, optstring)
+
+int getopt (argc, argv, optstring)
      int argc;
      char *const *argv;
      const char *optstring;
@@ -1212,8 +1212,8 @@ getopt (argc, argv, optstring)
 /* Compile with -DTEST to make an executable for use in testing
    the above definition of `getopt'.  */
 
-int
-main (argc, argv)
+
+int main (argc, argv)
      int argc;
      char **argv;
 {

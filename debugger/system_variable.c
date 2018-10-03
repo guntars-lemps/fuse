@@ -48,14 +48,14 @@ typedef struct system_variable_t {
 
 static GArray *system_variables;
 
-void
-debugger_system_variable_init(void)
+
+void debugger_system_variable_init(void)
 {
     system_variables = g_array_new(FALSE, FALSE, sizeof(system_variable_t));
 }
 
-void
-debugger_system_variable_register(const char *type, const char *detail,
+
+void debugger_system_variable_register(const char *type, const char *detail,
                                    debugger_get_system_variable_fn_t get,
                                    debugger_set_system_variable_fn_t set)
 {
@@ -69,15 +69,15 @@ debugger_system_variable_register(const char *type, const char *detail,
     g_array_append_val(system_variables, sysvar);
 }
 
-static int
-system_variable_matches(system_variable_t *sysvar, const char *type, const char *detail)
+
+static int system_variable_matches(system_variable_t *sysvar, const char *type, const char *detail)
 {
     return strcasecmp(type, sysvar->type) == 0 &&
          strcasecmp(detail, sysvar->detail) == 0;
 }
 
-static int
-find_system_variable(const char *type, const char *detail, system_variable_t *out)
+
+static int find_system_variable(const char *type, const char *detail, system_variable_t *out)
 {
     size_t i;
 
@@ -94,14 +94,14 @@ find_system_variable(const char *type, const char *detail, system_variable_t *ou
     return -1;
 }
 
-int
-debugger_system_variable_find(const char *type, const char *detail)
+
+int debugger_system_variable_find(const char *type, const char *detail)
 {
     return find_system_variable(type, detail, NULL);
 }
 
-libspectrum_dword
-debugger_system_variable_get(int system_variable)
+
+libspectrum_dword debugger_system_variable_get(int system_variable)
 {
     system_variable_t sysvar =
     g_array_index(system_variables, system_variable_t, system_variable);
@@ -109,8 +109,8 @@ debugger_system_variable_get(int system_variable)
     return sysvar.get();
 }
 
-void
-debugger_system_variable_set(const char *type, const char *detail,
+
+void debugger_system_variable_set(const char *type, const char *detail,
                               libspectrum_dword value)
 {
     int index;
@@ -131,8 +131,8 @@ debugger_system_variable_set(const char *type, const char *detail,
     sysvar.set(value);
 }
 
-void
-debugger_system_variable_text(char *buffer, size_t length,
+
+void debugger_system_variable_text(char *buffer, size_t length,
                                int system_variable)
 {
     system_variable_t sysvar =
@@ -142,8 +142,8 @@ debugger_system_variable_text(char *buffer, size_t length,
 }
 
 // Tidy-up function called at end of emulation
-void
-debugger_system_variable_end(void)
+
+void debugger_system_variable_end(void)
 {
     int i;
     system_variable_t sysvar;

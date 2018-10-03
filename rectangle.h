@@ -27,7 +27,7 @@
 #define FUSE_RECTANGLE_H
 
 // Used for grouping screen writes together
-struct rectangle { int x,y; int w,h; };
+struct rectangle {int x,y; int w,h;};
 
 // Those rectangles which weren't modified on the last line to be displayed
 extern struct rectangle *rectangle_inactive;

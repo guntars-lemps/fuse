@@ -446,7 +446,7 @@ void memory_display_dirty_pentagon_16_col(libspectrum_word address, libspectrum_
 void memory_display_dirty_sinclair(libspectrum_word address, libspectrum_byte b)
 {
     libspectrum_word bank = address >> MEMORY_PAGE_SIZE_LOGARITHM;
-    memory_page *mapping = &memory_map_write[ bank ];
+    memory_page *mapping = &memory_map_write[bank];
     libspectrum_word offset = address & MEMORY_PAGE_SIZE_MASK;
     libspectrum_byte *memory = mapping->page;
 
@@ -455,7 +455,7 @@ void memory_display_dirty_sinclair(libspectrum_word address, libspectrum_byte b)
 
     // If this is a write to the current screen (and it actually changes the destination), redraw that bit
     if ((mapping->source == memory_source_ram) && (mapping->page_num == memory_current_screen) &&
-       ((offset2 & memory_screen_mask) < 0x1b00) && (memory[ offset ] != b)) {
+       ((offset2 & memory_screen_mask) < 0x1b00) && (memory[offset] != b)) {
         display_dirty(offset2);
     }
 }

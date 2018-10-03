@@ -48,15 +48,15 @@ enum
     NUM_COLS
 };
 
-static void
-update_display(GtkTreeModel *model, libspectrum_word base)
+
+static void update_display(GtkTreeModel *model, libspectrum_word base)
 {
     size_t i, j;
     GtkTreeIter iter;
 
-    gchar buffer[ 8 + 64 + 20 ];
-    gchar *text[] = { &buffer[0], &buffer[ 8 ], &buffer[ 8 + 64 ] };
-    char buffer2[ 8 ];
+    gchar buffer[8 + 64 + 20];
+    gchar *text[] = { &buffer[0], &buffer[8], &buffer[8 + 64] };
+    char buffer2[8];
 
     memaddr = base;
     gtk_list_store_clear(GTK_LIST_STORE(model));
@@ -74,7 +74,7 @@ update_display(GtkTreeModel *model, libspectrum_word base)
 
       text[2][j] = (b >= 32 && b < 127) ? b : '.';
     }
-    text[2][ 0x10 ] = '\0';
+    text[2][0x10] = '\0';
 
     // Append a new row and fill data
     gtk_list_store_append(GTK_LIST_STORE(model), &iter);
@@ -87,8 +87,8 @@ update_display(GtkTreeModel *model, libspectrum_word base)
 
 }
 
-static void
-scroller(GtkAdjustment *adjustment, gpointer user_data)
+
+static void scroller(GtkAdjustment *adjustment, gpointer user_data)
 {
     libspectrum_word base;
     GtkTreeModel *model = user_data;
@@ -146,8 +146,8 @@ create_mem_list(void)
     return view;
 }
 
-void
-menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
                             gpointer data GCC_UNUSED)
 {
     GtkWidget *dialog, *box, *content_area, *list, *scrollbar;

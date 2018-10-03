@@ -31,8 +31,8 @@ void tape_register_startup(void);
 
 int tape_open(const char *filename, int autoload);
 
-int
-tape_read_buffer(unsigned char *buffer, size_t length, libspectrum_id_t type,
+
+int tape_read_buffer(unsigned char *buffer, size_t length, libspectrum_id_t type,
           const char *filename, int autoload);
 
 int tape_close(void);
@@ -60,8 +60,8 @@ void tape_record_start(void);
 int tape_record_stop(void);
 
 // Call a user-supplied function for every block in the current tape
-int
-tape_foreach(void (*function)(libspectrum_tape_block *block,
+
+int tape_foreach(void (*function)(libspectrum_tape_block *block,
                 void *user_data),
           void *user_data);
 

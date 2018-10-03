@@ -49,15 +49,15 @@
 #include "settings.h"
 #include "unittests.h"
 
-static int
-contention_test(void)
+
+static int contention_test(void)
 {
     libspectrum_dword i, checksum = 0, target;
     int error = 0;
 
     for (i = 0; i < ULA_CONTENTION_SIZE; i++) {
     // Naive, but it will do for now
-    checksum += ula_contention[ i ] * (i + 1);
+    checksum += ula_contention[i] * (i + 1);
     }
 
     if (settings_current.late_timings) {
@@ -142,15 +142,15 @@ contention_test(void)
     return error;
 }
 
-static int
-floating_bus_test(void)
+
+static int floating_bus_test(void)
 {
     libspectrum_dword checksum = 0, target;
     libspectrum_word offset;
     int error = 0;
 
     for (offset = 0; offset < 8192; offset++)
-    RAM[ memory_current_screen ][ offset ] = offset % 0x100;
+    RAM[memory_current_screen][offset] = offset % 0x100;
 
     for (tstates = 0; tstates < ULA_CONTENTION_SIZE; tstates++)
     checksum += machine_current->unattached_port() * (tstates + 1);
@@ -225,10 +225,10 @@ floating_bus_test(void)
     return error;
 }
 
-#define TEST_ASSERT(x) do { if (!(x)) { printf("Test assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #x); return 1; } } while (0)
+#define TEST_ASSERT(x) do {if (!(x)) {printf("Test assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #x); return 1;}} while (0)
 
-static int
-floating_bus_merge_test(void)
+
+static int floating_bus_merge_test(void)
 {
     // If peripherals asserted all lines, should see no change
     TEST_ASSERT(periph_merge_floating_bus(0xaa, 0xff, 0x00) == 0xaa);
@@ -247,8 +247,8 @@ floating_bus_merge_test(void)
     return 0;
 }
 
-static int
-mempool_test(void)
+
+static int mempool_test(void)
 {
     int pool1, pool2;
     int initial_pools = mempool_get_pools();
@@ -308,60 +308,60 @@ mempool_test(void)
     return 0;
 }
 
-static int
-assert_page(libspectrum_word base, libspectrum_word length, int source, int page)
+
+static int assert_page(libspectrum_word base, libspectrum_word length, int source, int page)
 {
     int base_index = base / MEMORY_PAGE_SIZE;
     int i;
 
     for (i = 0; i < length / MEMORY_PAGE_SIZE; i++) {
-    TEST_ASSERT(memory_map_read[ base_index + i ].source == source);
-    TEST_ASSERT(memory_map_read[ base_index + i ].page_num == page);
-    TEST_ASSERT(memory_map_write[ base_index + i ].source == source);
-    TEST_ASSERT(memory_map_write[ base_index + i ].page_num == page);
+    TEST_ASSERT(memory_map_read[base_index + i].source == source);
+    TEST_ASSERT(memory_map_read[base_index + i].page_num == page);
+    TEST_ASSERT(memory_map_write[base_index + i].source == source);
+    TEST_ASSERT(memory_map_write[base_index + i].page_num == page);
     }
 
     return 0;
 }
 
-int
-unittests_assert_2k_page(libspectrum_word base, int source, int page)
+
+int unittests_assert_2k_page(libspectrum_word base, int source, int page)
 {
     return assert_page(base, 0x0800, source, page);
 }
 
-int
-unittests_assert_4k_page(libspectrum_word base, int source, int page)
+
+int unittests_assert_4k_page(libspectrum_word base, int source, int page)
 {
     return assert_page(base, 0x1000, source, page);
 }
 
-int
-unittests_assert_8k_page(libspectrum_word base, int source, int page)
+
+int unittests_assert_8k_page(libspectrum_word base, int source, int page)
 {
     return assert_page(base, 0x2000, source, page);
 }
 
-int
-unittests_assert_16k_page(libspectrum_word base, int source, int page)
+
+int unittests_assert_16k_page(libspectrum_word base, int source, int page)
 {
     return assert_page(base, 0x4000, source, page);
 }
 
-static int
-assert_16k_rom_page(libspectrum_word base, int page)
+
+static int assert_16k_rom_page(libspectrum_word base, int page)
 {
     return unittests_assert_16k_page(base, memory_source_rom, page);
 }
 
-int
-unittests_assert_16k_ram_page(libspectrum_word base, int page)
+
+int unittests_assert_16k_ram_page(libspectrum_word base, int page)
 {
     return unittests_assert_16k_page(base, memory_source_ram, page);
 }
 
-static int
-assert_16k_pages(int rom, int ram4000, int ram8000, int ramc000)
+
+static int assert_16k_pages(int rom, int ram4000, int ram8000, int ramc000)
 {
     int r = 0;
 
@@ -373,8 +373,8 @@ assert_16k_pages(int rom, int ram4000, int ram8000, int ramc000)
     return r;
 }
 
-static int
-assert_all_ram(int ram0000, int ram4000, int ram8000, int ramc000)
+
+static int assert_all_ram(int ram0000, int ram4000, int ram8000, int ramc000)
 {
     int r = 0;
 
@@ -386,8 +386,8 @@ assert_all_ram(int ram0000, int ram4000, int ram8000, int ramc000)
     return r;
 }
 
-static int
-paging_test_16(void)
+
+static int paging_test_16(void)
 {
     int r = 0;
 
@@ -399,8 +399,8 @@ paging_test_16(void)
     return r;
 }
 
-int
-unittests_paging_test_48(int ram8000)
+
+int unittests_paging_test_48(int ram8000)
 {
     int r = 0;
 
@@ -410,8 +410,8 @@ unittests_paging_test_48(int ram8000)
     return r;
 }
 
-static int
-paging_test_128_unlocked(int ram8000)
+
+static int paging_test_128_unlocked(int ram8000)
 {
     int r = 0;
 
@@ -438,8 +438,8 @@ paging_test_128_unlocked(int ram8000)
     return r;
 }
 
-static int
-paging_test_128_locked(int ram8000)
+
+static int paging_test_128_locked(int ram8000)
 {
     int r = 0;
 
@@ -456,8 +456,8 @@ paging_test_128_locked(int ram8000)
     return r;
 }
 
-static int
-paging_test_128(void)
+
+static int paging_test_128(void)
 {
     int r = 0;
 
@@ -467,8 +467,8 @@ paging_test_128(void)
     return r;
 }
 
-static int
-paging_test_plus3(void)
+
+static int paging_test_plus3(void)
 {
     int r = 0;
 
@@ -509,8 +509,8 @@ paging_test_plus3(void)
     return r;
 }
 
-static int
-paging_test_scorpion(void)
+
+static int paging_test_scorpion(void)
 {
     int r = 0;
 
@@ -539,8 +539,8 @@ paging_test_scorpion(void)
     return r;
 }
 
-static int
-paging_test_pentagon512_unlocked(void)
+
+static int paging_test_pentagon512_unlocked(void)
 {
     int r = 0;
 
@@ -567,8 +567,8 @@ paging_test_pentagon512_unlocked(void)
     return r;
 }
 
-static int
-paging_test_pentagon512(void)
+
+static int paging_test_pentagon512(void)
 {
     int r = 0;
 
@@ -578,8 +578,8 @@ paging_test_pentagon512(void)
     return r;
 }
 
-static int
-paging_test_pentagon1024(void)
+
+static int paging_test_pentagon1024(void)
 {
     int r = 0;
 
@@ -628,8 +628,8 @@ paging_test_pentagon1024(void)
     return r;
 }
 
-static int
-paging_test_timex(int ram8000, int dock_source, int exrom_source)
+
+static int paging_test_timex(int ram8000, int dock_source, int exrom_source)
 {
     int r = 0;
 
@@ -678,8 +678,8 @@ paging_test_timex(int ram8000, int dock_source, int exrom_source)
     return r;
 }
 
-static int
-paging_test_se(void)
+
+static int paging_test_se(void)
 {
     int r = 0;
 
@@ -700,8 +700,8 @@ paging_test_se(void)
     return r;
 }
 
-static int
-paging_test(void)
+
+static int paging_test(void)
 {
     int r = 0;
 
@@ -775,8 +775,8 @@ paging_test(void)
     return r;
 }
 
-int
-unittests_run(void)
+
+int unittests_run(void)
 {
     int r = 0;
 

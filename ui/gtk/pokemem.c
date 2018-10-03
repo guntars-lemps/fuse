@@ -76,8 +76,8 @@ static gboolean custom_value_edit(GtkTreeView *tree);
 void custom_value_changed(GtkCellRendererText *cell, gchar *path_string,
                            gchar *new_text, gpointer user_data);
 
-void
-menu_machine_pokememory(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_machine_pokememory(GtkAction *gtk_action GCC_UNUSED,
                          gpointer data GCC_UNUSED)
 {
     fuse_emulation_pause();
@@ -88,8 +88,8 @@ menu_machine_pokememory(GtkAction *gtk_action GCC_UNUSED,
     fuse_emulation_unpause();
 }
 
-void
-ui_pokemem_selector(const char *filename)
+
+void ui_pokemem_selector(const char *filename)
 {
     fuse_emulation_pause();
 
@@ -99,8 +99,8 @@ ui_pokemem_selector(const char *filename)
     fuse_emulation_unpause();
 }
 
-void
-create_dialog(void)
+
+void create_dialog(void)
 {
     GtkWidget *hbox, *vbox, *label, *scroll;
     GtkAccelGroup *accel_group;
@@ -155,8 +155,8 @@ create_dialog(void)
 
     // Create Add button for custom pokes
     static const gtkstock_button
-    add  = { "_Add", G_CALLBACK(pokemem_add_custom_poke), NULL, NULL,
-             0, 0, 0, 0, GTK_RESPONSE_NONE };
+    add  = {"_Add", G_CALLBACK(pokemem_add_custom_poke), NULL, NULL,
+             0, 0, 0, 0, GTK_RESPONSE_NONE};
     gtkstock_create_button(GTK_WIDGET(hbox), accel_group, &add);
 
     label = gtk_label_new("Choose active POKES:");
@@ -191,8 +191,8 @@ create_dialog(void)
     gtk_main();
 }
 
-void
-create_and_fill_treeview(void)
+
+void create_and_fill_treeview(void)
 {
     GtkListStore *store;
     GtkCellRenderer *renderer;
@@ -257,8 +257,8 @@ create_and_fill_treeview(void)
     g_object_unref(model);
 }
 
-static void
-trainer_add(gpointer data, gpointer user_data)
+
+static void trainer_add(gpointer data, gpointer user_data)
 {
     gchar *val = NULL;
     GtkListStore *store = user_data;
@@ -286,14 +286,14 @@ trainer_add(gpointer data, gpointer user_data)
     g_free(val);
 }
 
-static void
-pokemem_close(GtkWidget *widget, gpointer user_data GCC_UNUSED)
+
+static void pokemem_close(GtkWidget *widget, gpointer user_data GCC_UNUSED)
 {
     gtkui_destroy_widget_and_quit(widget, NULL);
 }
 
-static void
-pokemem_update_list(GtkWidget *widget GCC_UNUSED,
+
+static void pokemem_update_list(GtkWidget *widget GCC_UNUSED,
                      gpointer user_data GCC_UNUSED)
 {
     GtkTreeModel *model;
@@ -327,8 +327,8 @@ pokemem_update_trainer(GtkTreeModel *model, GtkTreePath *path GCC_UNUSED,
     return FALSE;
 }
 
-static void
-pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED,
+
+static void pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED,
                          gpointer user_data GCC_UNUSED)
 {
     long b, a, v;
@@ -419,8 +419,8 @@ pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED,
     gtk_widget_grab_focus(address);
 }
 
-void
-entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
+
+void entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
                       gint *position, gpointer data)
 {
     int i, count = 0;
@@ -431,7 +431,7 @@ entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
     for (i = 0; i < length; i++) {
     if (!isdigit(text[i])) continue;
 
-    result[ count++ ] = text[i];
+    result[count++ ] = text[i];
     }
 
     // Insert only validated text
@@ -449,8 +449,8 @@ entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
     g_free(result);
 }
 
-void
-entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
+
+void entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
                         gint *position, gpointer data)
 {
     int i, is_valid, is_hex;
@@ -496,7 +496,7 @@ entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
     result = g_new(gchar, length);
 
     for (i = 0; i < length && i + prev_length < max_length; i++) {
-      result[ count++ ] = text[i];
+      result[count++ ] = text[i];
     }
     }
 
@@ -515,8 +515,8 @@ entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
     g_free(result);
 }
 
-void
-row_toggled_callback(GtkCellRendererToggle *cell GCC_UNUSED,
+
+void row_toggled_callback(GtkCellRendererToggle *cell GCC_UNUSED,
                       gchar *path_string, gpointer user_data)
 {
     GtkTreeIter iter;
@@ -546,8 +546,8 @@ row_toggled_callback(GtkCellRendererToggle *cell GCC_UNUSED,
     }
 }
 
-static gboolean
-custom_value_edit(GtkTreeView *tree)
+
+static gboolean custom_value_edit(GtkTreeView *tree)
 {
     GtkTreePath *path;
     GtkTreeViewColumn *col, *col_current;
@@ -562,8 +562,8 @@ custom_value_edit(GtkTreeView *tree)
     return FALSE;
 }
 
-void
-custom_value_changed(GtkCellRendererText *cell GCC_UNUSED, gchar *path_string,
+
+void custom_value_changed(GtkCellRendererText *cell GCC_UNUSED, gchar *path_string,
                       gchar *new_text, gpointer user_data)
 {
     GtkTreeModel *model = (GtkTreeModel *)user_data;

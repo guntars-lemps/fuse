@@ -41,8 +41,8 @@
 static int pentagon1024_reset(void);
 static int pentagon1024_memory_map(void);
 
-int
-pentagon1024_init(fuse_machine_info *machine)
+
+int pentagon1024_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_PENT1024;
     machine->id = "pentagon1024";
@@ -64,8 +64,8 @@ pentagon1024_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-pentagon1024_reset(void)
+
+static int pentagon1024_reset(void)
 {
     int error;
 
@@ -111,8 +111,8 @@ pentagon1024_reset(void)
     return 0;
 }
 
-void
-pentagon1024_memoryport_write(libspectrum_word port GCC_UNUSED,
+
+void pentagon1024_memoryport_write(libspectrum_word port GCC_UNUSED,
                    libspectrum_byte b)
 {
     if (machine_current->ram.locked) return;
@@ -124,8 +124,8 @@ pentagon1024_memoryport_write(libspectrum_word port GCC_UNUSED,
     machine_current->ram.locked = b & 0x20;
 }
 
-void
-pentagon1024_v22_memoryport_write(libspectrum_word port GCC_UNUSED,
+
+void pentagon1024_v22_memoryport_write(libspectrum_word port GCC_UNUSED,
                    libspectrum_byte b)
 {
     if (machine_current->ram.locked) return;

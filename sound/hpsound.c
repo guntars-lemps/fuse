@@ -127,14 +127,14 @@ int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     return 0;
 }
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
     if (soundfd != -1) close(soundfd);
 }
 
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     static unsigned char buf8[4096];
     unsigned char *data8=(unsigned char *)data;

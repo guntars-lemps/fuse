@@ -36,8 +36,8 @@
 
 static int current_block;
 
-static void
-dialog_init(HWND hwndDlg)
+
+static void dialog_init(HWND hwndDlg)
 {
     // set extended listview style to select full row, when an item is selected
     DWORD lv_ext_style;
@@ -57,8 +57,8 @@ dialog_init(HWND hwndDlg)
                         (LPARAM) &lvc);
 }
 
-static int
-update_list(HWND hwndDlg, GSList *points)
+
+static int update_list(HWND hwndDlg, GSList *points)
 {
     LV_ITEM lvi;
 
@@ -69,7 +69,7 @@ update_list(HWND hwndDlg, GSList *points)
 
     while (points) {
     TCHAR buffer[256];
-    TCHAR *buffer2[1] = { buffer };
+    TCHAR *buffer2[1] = {buffer};
 
     _sntprintf(buffer, 256, "%.2f", GPOINTER_TO_INT(points->data) / 50.0);
 
@@ -115,8 +115,8 @@ dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 
-int
-ui_get_rollback_point(GSList *points)
+
+int ui_get_rollback_point(GSList *points)
 {
     int result;
 

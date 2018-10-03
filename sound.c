@@ -83,7 +83,7 @@ struct ay_change_tag
     unsigned char reg, val;
 };
 
-static struct ay_change_tag ay_change[ AY_CHANGE_MAX ];
+static struct ay_change_tag ay_change[AY_CHANGE_MAX];
 static int ay_change_count;
 
 Blip_Buffer *left_buf = NULL;
@@ -106,10 +106,10 @@ struct speaker_type_tag
 };
 
 static struct speaker_type_tag speaker_type[] =
-    { { 200, -37.0 }, { 1000, -67.0 }, { 0, 0.0 } };
+    {{200, -37.0}, {1000, -67.0}, {0, 0.0}};
 
-static double
-sound_get_volume(int volume)
+
+static double sound_get_volume(int volume)
 {
     if (volume < 0) volume = 0;
     else if (volume > 100) volume = 100;
@@ -118,15 +118,15 @@ sound_get_volume(int volume)
 }
 
 // Returns the emulation speed adjusted processor speed
-libspectrum_dword
-sound_get_effective_processor_speed(void)
+
+libspectrum_dword sound_get_effective_processor_speed(void)
 {
     return machine_current->timings.processor_speed / 100 *
            settings_current.emulation_speed;
 }
 
-static int
-sound_init_blip(Blip_Buffer **buf, Blip_Synth **synth)
+
+static int sound_init_blip(Blip_Buffer **buf, Blip_Synth **synth)
 {
     *buf = new_Blip_Buffer();
     blip_buffer_set_clock_rate(*buf, sound_get_effective_processor_speed());
@@ -144,14 +144,14 @@ sound_init_blip(Blip_Buffer **buf, Blip_Synth **synth)
     blip_synth_set_volume(*synth, sound_get_volume(settings_current.volume_beeper));
     blip_synth_set_output(*synth, *buf);
 
-    blip_buffer_set_bass_freq(*buf, speaker_type[ option_enumerate_sound_speaker_type() ].bass);
-    blip_synth_set_treble_eq(*synth, speaker_type[ option_enumerate_sound_speaker_type() ].treble);
+    blip_buffer_set_bass_freq(*buf, speaker_type[option_enumerate_sound_speaker_type() ].bass);
+    blip_synth_set_treble_eq(*synth, speaker_type[option_enumerate_sound_speaker_type() ].treble);
 
     return 1;
 }
 
-static void
-sound_ay_init(void)
+
+static void sound_ay_init(void)
 {
     /* AY output doesn't match the claimed levels; these levels are based
    * on the measurements posted to comp.sys.sinclair in Dec 2001 by
@@ -189,15 +189,15 @@ sound_ay_init(void)
 #define MAX_SPEED_PERCENTAGE 300
 #endif // #ifndef UI_WIN32
 
-static int
-is_in_sound_enabled_range(void)
+
+static int is_in_sound_enabled_range(void)
 {
     return settings_current.emulation_speed >= MIN_SPEED_PERCENTAGE &&
     settings_current.emulation_speed <= MAX_SPEED_PERCENTAGE;
 }
 
-void
-sound_init(const char *device)
+
+void sound_init(const char *device)
 {
     float hz;
     double treble;
@@ -227,7 +227,7 @@ sound_init(const char *device)
       !sound_init_blip(&right_buf, &right_beeper_synth))
     return;
 
-    treble = speaker_type[ option_enumerate_sound_speaker_type() ].treble;
+    treble = speaker_type[option_enumerate_sound_speaker_type() ].treble;
 
     ay_a_synth = new_Blip_Synth();
     blip_synth_set_volume(ay_a_synth,
@@ -331,15 +331,15 @@ sound_init(const char *device)
 
 }
 
-void
-sound_pause(void)
+
+void sound_pause(void)
 {
     if (sound_enabled)
     sound_end();
 }
 
-void
-sound_unpause(void)
+
+void sound_unpause(void)
 {
     // No sound if fastloading in progress
     if (settings_current.fastload && timer_fastloading_active())
@@ -348,8 +348,8 @@ sound_unpause(void)
     sound_init(settings_current.sound_device);
 }
 
-void
-sound_end(void)
+
+void sound_end(void)
 {
     if (sound_enabled) {
     delete_Blip_Synth(&left_beeper_synth);
@@ -378,10 +378,10 @@ sound_end(void)
     }
 }
 
-void
-sound_register_startup(void)
+
+void sound_register_startup(void)
 {
-    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_SOUND, dependencies,
                             ARRAY_SIZE(dependencies), NULL, NULL, sound_end);
 }
@@ -391,15 +391,15 @@ ay_do_tone(int level, unsigned int tone_count, int *var, int chan)
 {
     *var = 0;
 
-    ay_tone_tick[ chan ] += tone_count;
+    ay_tone_tick[chan] += tone_count;
 
-    if (ay_tone_tick[ chan ] >= ay_tone_period[ chan ]) {
-    ay_tone_tick[ chan ] -= ay_tone_period[ chan ];
-    ay_tone_high[ chan ] = !ay_tone_high[ chan ];
+    if (ay_tone_tick[chan] >= ay_tone_period[chan]) {
+    ay_tone_tick[chan] -= ay_tone_period[chan];
+    ay_tone_high[chan] = !ay_tone_high[chan];
     }
 
     if (level) {
-    if (ay_tone_high[ chan ])
+    if (ay_tone_high[chan])
       *var = level;
     else {
       *var = 0;
@@ -420,8 +420,8 @@ ay_do_tone(int level, unsigned int tone_count, int *var, int chan)
    master clock by 2 to drive the AY */
 #define AY_CLOCK_RATIO 2
 
-static void
-sound_ay_overlay(void)
+
+static void sound_ay_overlay(void)
 {
     static int rng = 1;
     static int noise_toggle = 0;
@@ -447,7 +447,7 @@ sound_ay_overlay(void)
        f+= AY_CLOCK_DIVISOR * AY_CLOCK_RATIO) {
     // update ay registers.
     while (changes_left && f >= change_ptr->tstates) {
-      sound_ay_registers[ reg = change_ptr->reg ] = change_ptr->val;
+      sound_ay_registers[reg = change_ptr->reg] = change_ptr->val;
       change_ptr++;
       changes_left--;
 
@@ -456,8 +456,8 @@ sound_ay_overlay(void)
       case 0: case 1: case 2: case 3: case 4: case 5:
         r = reg >> 1;
         // a zero-len period is the same as 1
-        ay_tone_period[r] = (sound_ay_registers[ reg & ~1 ] |
-                              (sound_ay_registers[ reg | 1 ] & 15) << 8);
+        ay_tone_period[r] = (sound_ay_registers[reg & ~1] |
+                              (sound_ay_registers[reg | 1] & 15) << 8);
         if (!ay_tone_period[r])
           ay_tone_period[r]++;
 
@@ -469,7 +469,7 @@ sound_ay_overlay(void)
         break;
       case 6:
         ay_noise_tick = 0;
-        ay_noise_period = (sound_ay_registers[ reg ] & 31);
+        ay_noise_period = (sound_ay_registers[reg] & 31);
         break;
       case 11: case 12:
         ay_env_period =
@@ -486,14 +486,14 @@ sound_ay_overlay(void)
 
     // the tone level if no enveloping is being used
     for (g = 0; g < 3; g++)
-      tone_level[g] = ay_tone_levels[ sound_ay_registers[ 8 + g ] & 15 ];
+      tone_level[g] = ay_tone_levels[sound_ay_registers[8 + g] & 15];
 
     // envelope
     envshape = sound_ay_registers[13];
-    level = ay_tone_levels[ env_counter ];
+    level = ay_tone_levels[env_counter];
 
     for (g = 0; g < 3; g++)
-      if (sound_ay_registers[ 8 + g ] & 16)
+      if (sound_ay_registers[8 + g] & 16)
         tone_level[g] = level;
 
     // envelope output counter gets incr'd every 16 AY cycles.
@@ -625,13 +625,13 @@ sound_ay_overlay(void)
 /* don't make the change immediately; record it for later,
  * to be made by sound_frame() (via sound_ay_overlay()).
  */
-void
-sound_ay_write(int reg, int val, libspectrum_dword now)
+
+void sound_ay_write(int reg, int val, libspectrum_dword now)
 {
     if (ay_change_count < AY_CHANGE_MAX) {
-    ay_change[ ay_change_count ].tstates = now;
-    ay_change[ ay_change_count ].reg = (reg & 15);
-    ay_change[ ay_change_count ].val = val;
+    ay_change[ay_change_count].tstates = now;
+    ay_change[ay_change_count].reg = (reg & 15);
+    ay_change[ay_change_count].val = val;
     ay_change_count++;
     }
 }
@@ -639,8 +639,8 @@ sound_ay_write(int reg, int val, libspectrum_dword now)
 /* no need to call this initially, but should be called
  * on reset otherwise.
  */
-void
-sound_ay_reset(void)
+
+void sound_ay_reset(void)
 {
     int f;
 
@@ -659,8 +659,8 @@ sound_ay_reset(void)
  * sound_specdrum_write - very simple routine
  * as the output is already a digitized waveform
  */
-void
-sound_specdrum_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
+
+void sound_specdrum_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
 {
     if (periph_is_active(PERIPH_TYPE_SPECDRUM)) {
     blip_synth_update(left_specdrum_synth, tstates, (val - 128) * 128);
@@ -675,8 +675,8 @@ sound_specdrum_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
  * sound_covox_write - very simple routine
  * as the output is already a digitized waveform
  */
-void
-sound_covox_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
+
+void sound_covox_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
 {
     if (periph_is_active(PERIPH_TYPE_COVOX_FB) ||
       periph_is_active(PERIPH_TYPE_COVOX_DD)) {
@@ -688,8 +688,8 @@ sound_covox_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
     }
 }
 
-void
-sound_frame(void)
+
+void sound_frame(void)
 {
     long count;
 
@@ -721,11 +721,11 @@ sound_frame(void)
     ay_change_count = 0;
 }
 
-void
-sound_beeper(libspectrum_dword at_tstates, int on)
+
+void sound_beeper(libspectrum_dword at_tstates, int on)
 {
-    static int beeper_ampl[] = { 0, AMPL_TAPE, AMPL_BEEPER,
-                               AMPL_BEEPER+AMPL_TAPE };
+    static int beeper_ampl[] = {0, AMPL_TAPE, AMPL_BEEPER,
+                               AMPL_BEEPER+AMPL_TAPE};
     int val;
 
     if (!sound_enabled) return;

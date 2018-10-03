@@ -89,28 +89,28 @@ static int tape_autoload(libspectrum_machine hardware);
 static int trap_load_block(libspectrum_tape_block *block);
 static int tape_play(int autoplay);
 static void make_name(unsigned char *name, const unsigned char *data);
-static void
-tape_event_record_sample(libspectrum_dword last_tstates, int type,
+
+static void tape_event_record_sample(libspectrum_dword last_tstates, int type,
               void *user_data);
 static void tape_stop_mic_off(libspectrum_dword last_tstates, int type,
                                void *user_data);
 
 // Function definitions
 
-static libspectrum_dword
-get_microphone(void)
+
+static libspectrum_dword get_microphone(void)
 {
     return tape_microphone;
 }
 
-static void
-next_edge(libspectrum_dword last_tstates, int type, void *user_data)
+
+static void next_edge(libspectrum_dword last_tstates, int type, void *user_data)
 {
     tape_next_edge(last_tstates, 0);
 }
 
-static int
-tape_init(void *context)
+
+static int tape_init(void *context)
 {
     tape = libspectrum_tape_alloc();
 
@@ -139,15 +139,15 @@ tape_init(void *context)
     return 0;
 }
 
-static void
-tape_end(void)
+
+static void tape_end(void)
 {
     libspectrum_tape_free(tape);
     tape = NULL;
 }
 
-void
-tape_register_startup(void)
+
+void tape_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -159,8 +159,8 @@ tape_register_startup(void)
                             tape_end);
 }
 
-int
-tape_open(const char *filename, int autoload)
+
+int tape_open(const char *filename, int autoload)
 {
     utils_file file;
     int error;
@@ -170,7 +170,7 @@ tape_open(const char *filename, int autoload)
 
     error = tape_read_buffer(file.buffer, file.length, LIBSPECTRUM_ID_UNKNOWN,
                 filename, autoload);
-    if (error) { utils_close_file(&file); return error; }
+    if (error) {utils_close_file(&file); return error;}
 
     utils_close_file(&file);
 
@@ -178,8 +178,8 @@ tape_open(const char *filename, int autoload)
 }
 
 // Use an already open tape file as the current tape
-int
-tape_read_buffer(unsigned char *buffer, size_t length, libspectrum_id_t type,
+
+int tape_read_buffer(unsigned char *buffer, size_t length, libspectrum_id_t type,
           const char *filename, int autoload)
 {
     int error;
@@ -202,8 +202,8 @@ tape_read_buffer(unsigned char *buffer, size_t length, libspectrum_id_t type,
     return 0;
 }
 
-static int
-does_tape_load_with_code(void)
+
+static int does_tape_load_with_code(void)
 {
     libspectrum_tape_block *block;
     libspectrum_tape_iterator iterator;
@@ -242,8 +242,8 @@ does_tape_load_with_code(void)
 }
 
 // Load a snap to start the current tape autoloading
-static int
-tape_autoload(libspectrum_machine hardware)
+
+static int tape_autoload(libspectrum_machine hardware)
 {
     int needs_code = does_tape_load_with_code();
     machine_reset(0);
@@ -252,8 +252,8 @@ tape_autoload(libspectrum_machine hardware)
 }
 
 // Close the active tape file
-int
-tape_close(void)
+
+int tape_close(void)
 {
     int error;
     ui_confirm_save_t confirm;
@@ -292,8 +292,8 @@ tape_close(void)
 }
 
 // Rewind to block 0, if any
-int
-tape_rewind(void)
+
+int tape_rewind(void)
 {
     if (!libspectrum_tape_present(tape)) return 0;
 
@@ -301,8 +301,8 @@ tape_rewind(void)
 }
 
 // Select the nth block on the tape; 0 => 1st block
-int
-tape_select_block(size_t n)
+
+int tape_select_block(size_t n)
 {
     int error;
 
@@ -314,15 +314,15 @@ tape_select_block(size_t n)
 }
 
 // The same, but without updating the browser display
-int
-tape_select_block_no_update(size_t n)
+
+int tape_select_block_no_update(size_t n)
 {
     return libspectrum_tape_nth_block(tape, n);
 }
 
 // Which block is current?
-int
-tape_get_current_block(void)
+
+int tape_get_current_block(void)
 {
     int n;
     libspectrum_error error;
@@ -336,8 +336,8 @@ tape_get_current_block(void)
 }
 
 // Write the current in-memory tape file out to disk
-int
-tape_write(const char* filename)
+
+int tape_write(const char* filename)
 {
     libspectrum_id_t type;
     libspectrum_class_t class;
@@ -360,7 +360,7 @@ tape_write(const char* filename)
     if (error != LIBSPECTRUM_ERROR_NONE) return error;
 
     error = utils_write_file(filename, buffer, length);
-    if (error) { libspectrum_free(buffer); return error; }
+    if (error) {libspectrum_free(buffer); return error;}
 
     tape_modified = 0;
     ui_tape_browser_update(UI_TAPE_BROWSER_MODIFIED, NULL);
@@ -379,8 +379,8 @@ int tape_can_autoload(void)
    loaded (even if it had an tape loading error or equivalent) or
    non-zero if there was an error at the emulator level, or tape traps
    are not active */
-int
-tape_load_trap(void)
+
+int tape_load_trap(void)
 {
     libspectrum_tape_block *block, *next_block;
     int error;
@@ -455,8 +455,8 @@ tape_load_trap(void)
     return 0;
 }
 
-static int
-trap_load_block(libspectrum_tape_block *block)
+
+static int trap_load_block(libspectrum_tape_block *block)
 {
     libspectrum_byte parity, *data;
     int i = 0, length, read, verify;
@@ -564,8 +564,8 @@ common_ret:
 /* Append to the current tape file in memory; returns 0 if a block was
    saved or non-zero if there was an error at the emulator level, or tape
    traps are not active */
-int
-tape_save_trap(void)
+
+int tape_save_trap(void)
 {
     libspectrum_tape_block *block;
     libspectrum_byte parity, *data;
@@ -601,7 +601,7 @@ tape_save_trap(void)
     }
 
     // And finally the parity byte
-    data[ DE+1 ] = parity;
+    data[DE+1] = parity;
 
     // Give a 1 second pause after this block
     libspectrum_tape_block_set_pause(block, 1000);
@@ -623,8 +623,8 @@ tape_save_trap(void)
 
 }
 
-static int
-tape_play(int autoplay)
+
+static int tape_play(int autoplay)
 {
     if (!libspectrum_tape_present(tape)) return 1;
 
@@ -654,8 +654,8 @@ tape_play(int autoplay)
     return 0;
 }
 
-int
-tape_do_play(int autoplay)
+
+int tape_do_play(int autoplay)
 {
     if (!tape_playing) {
     return tape_play(autoplay);
@@ -664,8 +664,8 @@ tape_do_play(int autoplay)
     }
 }
 
-int
-tape_toggle_play(int autoplay)
+
+int tape_toggle_play(int autoplay)
 {
     if (tape_playing) {
     return tape_stop();
@@ -674,8 +674,8 @@ tape_toggle_play(int autoplay)
     }
 }
 
-static void
-save_next_tape_edge(gpointer data, gpointer user_data)
+
+static void save_next_tape_edge(gpointer data, gpointer user_data)
 {
     event_t *ptr = data;
 
@@ -684,14 +684,14 @@ save_next_tape_edge(gpointer data, gpointer user_data)
     }
 }
 
-static void
-tape_save_next_edge(void)
+
+static void tape_save_next_edge(void)
 {
     event_foreach(save_next_tape_edge, NULL);
 }
 
-int
-tape_stop(void)
+
+int tape_stop(void)
 {
     if (tape_playing) {
 
@@ -716,14 +716,14 @@ tape_stop(void)
     return 0;
 }
 
-int
-tape_is_playing(void)
+
+int tape_is_playing(void)
 {
     return tape_playing;
 }
 
-int
-tape_present(void)
+
+int tape_present(void)
 {
     return libspectrum_tape_present(tape);
 }
@@ -742,8 +742,8 @@ int tape_recording = 0;
 
 static tape_rec_state rec_state;
 
-void
-tape_record_start(void)
+
+void tape_record_start(void)
 {
     // sample rate will be 44.1KHz
     rec_state.tstates_per_sample =
@@ -767,26 +767,26 @@ tape_record_start(void)
     ui_menu_activate(UI_MENU_ITEM_TAPE_RECORDING, 1);
 }
 
-static int
-write_rec_buffer(libspectrum_byte *tape_buffer,
+
+static int write_rec_buffer(libspectrum_byte *tape_buffer,
                   libspectrum_dword tape_buffer_used,
                   int last_level_count)
 {
     if (last_level_count <= 0xff) {
-    tape_buffer[ tape_buffer_used++ ] = last_level_count;
+    tape_buffer[tape_buffer_used++ ] = last_level_count;
     } else {
-    tape_buffer[ tape_buffer_used++ ] = 0;
-    tape_buffer[ tape_buffer_used++ ] = (last_level_count & 0x000000ff)      ;
-    tape_buffer[ tape_buffer_used++ ] = (last_level_count & 0x0000ff00) >>  8;
-    tape_buffer[ tape_buffer_used++ ] = (last_level_count & 0x00ff0000) >> 16;
-    tape_buffer[ tape_buffer_used++ ] = (last_level_count & 0xff000000) >> 24;
+    tape_buffer[tape_buffer_used++ ] = 0;
+    tape_buffer[tape_buffer_used++ ] = (last_level_count & 0x000000ff)      ;
+    tape_buffer[tape_buffer_used++ ] = (last_level_count & 0x0000ff00) >>  8;
+    tape_buffer[tape_buffer_used++ ] = (last_level_count & 0x00ff0000) >> 16;
+    tape_buffer[tape_buffer_used++ ] = (last_level_count & 0xff000000) >> 24;
     }
 
     return tape_buffer_used;
 }
 
-void
-tape_event_record_sample(libspectrum_dword last_tstates, int type,
+
+void tape_event_record_sample(libspectrum_dword last_tstates, int type,
               void *user_data)
 {
     if (rec_state.last_level != (ula_tape_level())) {
@@ -813,8 +813,8 @@ tape_event_record_sample(libspectrum_dword last_tstates, int type,
     event_add(last_tstates + rec_state.tstates_per_sample, record_event);
 }
 
-int
-tape_record_stop(void)
+
+int tape_record_stop(void)
 {
     libspectrum_tape_block* block;
 
@@ -850,8 +850,8 @@ tape_record_stop(void)
     return 0;
 }
 
-void
-tape_next_edge(libspectrum_dword last_tstates, int from_acceleration)
+
+void tape_next_edge(libspectrum_dword last_tstates, int from_acceleration)
 {
     libspectrum_error libspec_error;
     libspectrum_tape_block *block;
@@ -929,15 +929,15 @@ tape_next_edge(libspectrum_dword last_tstates, int from_acceleration)
     loader_set_acceleration_flags(flags, from_acceleration);
 }
 
-static void
-tape_stop_mic_off(libspectrum_dword last_tstates, int type, void *user_data)
+
+static void tape_stop_mic_off(libspectrum_dword last_tstates, int type, void *user_data)
 {
     tape_microphone = 0;
 }
 
 // Call a user-supplied function for every block in the current tape
-int
-tape_foreach(void (*function)(libspectrum_tape_block *block,
+
+int tape_foreach(void (*function)(libspectrum_tape_block *block,
                 void *user_data),
           void *user_data)
 {
@@ -952,8 +952,8 @@ tape_foreach(void (*function)(libspectrum_tape_block *block,
     return 0;
 }
 
-int
-tape_block_details(char *buffer, size_t length,
+
+int tape_block_details(char *buffer, size_t length,
             libspectrum_tape_block *block)
 {
     libspectrum_byte *data;
@@ -1074,8 +1074,8 @@ tape_block_details(char *buffer, size_t length,
     return 0;
 }
 
-static void
-make_name(unsigned char *name, const unsigned char *data)
+
+static void make_name(unsigned char *name, const unsigned char *data)
 {
     size_t i;
 

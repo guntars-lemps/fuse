@@ -47,15 +47,15 @@ menu_item_valid(ui_menu_item item)
     return item != UI_MENU_ITEM_INVALID;
 }
 
-int
-ui_media_drive_register(ui_media_drive_info_t *drive)
+
+int ui_media_drive_register(ui_media_drive_info_t *drive)
 {
     registered_drives = g_slist_append(registered_drives, drive);
     return 0;
 }
 
-void
-ui_media_drive_end(void)
+
+void ui_media_drive_end(void)
 {
     g_slist_free(registered_drives);
     registered_drives = NULL;
@@ -66,8 +66,8 @@ struct find_info {
     int drive;
 };
 
-static gint
-find_drive(gconstpointer data, gconstpointer user_data)
+
+static gint find_drive(gconstpointer data, gconstpointer user_data)
 {
     const ui_media_drive_info_t *drive = data;
     const struct find_info *info = user_data;
@@ -89,16 +89,16 @@ ui_media_drive_find(int controller, int drive)
 }
 
 
-static gint
-any_available(gconstpointer data, gconstpointer user_data)
+
+static gint any_available(gconstpointer data, gconstpointer user_data)
 {
     const ui_media_drive_info_t *drive = data;
 
     return !(drive->is_available && drive->is_available());
 }
 
-int
-ui_media_drive_any_available(void)
+
+int ui_media_drive_any_available(void)
 {
     GSList *item;
     item = g_slist_find_custom(registered_drives, NULL, any_available);
@@ -106,8 +106,8 @@ ui_media_drive_any_available(void)
 }
 
 
-static void
-update_parent_menus(gpointer data, gpointer user_data)
+
+static void update_parent_menus(gpointer data, gpointer user_data)
 {
     const ui_media_drive_info_t *drive = data;
 
@@ -115,22 +115,22 @@ update_parent_menus(gpointer data, gpointer user_data)
     ui_menu_activate(drive->menu_item_parent, drive->is_available());
 }
 
-void
-ui_media_drive_update_parent_menus(void)
+
+void ui_media_drive_update_parent_menus(void)
 {
     g_slist_foreach(registered_drives, update_parent_menus, NULL);
 }
 
-static int
-maybe_menu_activate(int id, int activate)
+
+static int maybe_menu_activate(int id, int activate)
 {
     if (!menu_item_valid(id))
     return 0;
     return ui_menu_activate(id, activate);
 }
 
-void
-ui_media_drive_update_menus(const ui_media_drive_info_t *drive,
+
+void ui_media_drive_update_menus(const ui_media_drive_info_t *drive,
                              unsigned flags)
 {
     if (!drive->fdd)
@@ -148,8 +148,8 @@ ui_media_drive_update_menus(const ui_media_drive_info_t *drive,
 }
 
 
-int
-ui_media_drive_flip(int controller, int which, int flip)
+
+int ui_media_drive_flip(int controller, int which, int flip)
 {
     ui_media_drive_info_t *drive;
 
@@ -164,8 +164,8 @@ ui_media_drive_flip(int controller, int which, int flip)
     return 0;
 }
 
-int
-ui_media_drive_writeprotect(int controller, int which, int wrprot)
+
+int ui_media_drive_writeprotect(int controller, int which, int wrprot)
 {
     ui_media_drive_info_t *drive;
 
@@ -181,8 +181,8 @@ ui_media_drive_writeprotect(int controller, int which, int wrprot)
 }
 
 
-static int
-drive_disk_write(const ui_media_drive_info_t *drive, const char *filename)
+
+static int drive_disk_write(const ui_media_drive_info_t *drive, const char *filename)
 {
     int error;
 
@@ -227,8 +227,8 @@ drive_disk_write(const ui_media_drive_info_t *drive, const char *filename)
 }
 
 
-static int
-drive_save(const ui_media_drive_info_t *drive, int saveas)
+
+static int drive_save(const ui_media_drive_info_t *drive, int saveas)
 {
     int err;
     char *filename = NULL, title[80];
@@ -260,8 +260,8 @@ drive_save(const ui_media_drive_info_t *drive, int saveas)
     return 0;
 }
 
-int
-ui_media_drive_save(int controller, int which, int saveas)
+
+int ui_media_drive_save(int controller, int which, int saveas)
 {
     ui_media_drive_info_t *drive;
 
@@ -271,8 +271,8 @@ ui_media_drive_save(int controller, int which, int saveas)
     return drive_save(drive, saveas);
 }
 
-static int
-drive_eject(const ui_media_drive_info_t *drive)
+
+static int drive_eject(const ui_media_drive_info_t *drive)
 {
     if (!drive->fdd->loaded)
     return 0;
@@ -304,8 +304,8 @@ drive_eject(const ui_media_drive_info_t *drive)
     return 0;
 }
 
-int
-ui_media_drive_eject(int controller, int which)
+
+int ui_media_drive_eject(int controller, int which)
 {
     ui_media_drive_info_t *drive;
 
@@ -315,16 +315,16 @@ ui_media_drive_eject(int controller, int which)
     return drive_eject(drive);
 }
 
-static gint
-eject_all(gconstpointer data, gconstpointer user_data)
+
+static gint eject_all(gconstpointer data, gconstpointer user_data)
 {
     const ui_media_drive_info_t *drive = data;
 
     return !drive_eject(drive);
 }
 
-int
-ui_media_drive_eject_all(void)
+
+int ui_media_drive_eject_all(void)
 {
     GSList *item;
     item = g_slist_find_custom(registered_drives, NULL, eject_all);
@@ -332,8 +332,8 @@ ui_media_drive_eject_all(void)
 }
 
 
-int
-ui_media_drive_insert(const ui_media_drive_info_t *drive,
+
+int ui_media_drive_insert(const ui_media_drive_info_t *drive,
                        const char *filename, int autoload)
 {
     int error;

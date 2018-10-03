@@ -53,16 +53,16 @@ compat_get_config_path(void)
     return ".";
 }
 
-int
-compat_is_absolute_path(const char *path)
+
+int compat_is_absolute_path(const char *path)
 {
     return path[0] == '/';
 }
 
-int
-compat_get_next_path(path_context *ctx)
+
+int compat_get_next_path(path_context *ctx)
 {
-    char buffer[ PATH_MAX ];
+    char buffer[PATH_MAX];
     const char *path_segment, *path2;
 
     switch ((ctx->state)++) {
@@ -87,7 +87,7 @@ compat_get_next_path(path_context *ctx)
 
     if (compat_is_absolute_path(fuse_progname)) {
       strncpy(buffer, fuse_progname, PATH_MAX);
-      buffer[ PATH_MAX - 1 ] = '\0';
+      buffer[PATH_MAX - 1] = '\0';
     } else {
       get_relative_directory(buffer, PATH_MAX);
     }
@@ -105,7 +105,7 @@ compat_get_next_path(path_context *ctx)
 #else // #ifndef ROMSDIR
     path2 = ctx->type == UTILS_AUXILIARY_ROM ? ROMSDIR : FUSEDATADIR;
 #endif // #ifndef ROMSDIR
-    strncpy(ctx->path, path2, PATH_MAX); buffer[ PATH_MAX - 1 ] = '\0';
+    strncpy(ctx->path, path2, PATH_MAX); buffer[PATH_MAX - 1] = '\0';
     return 1;
 
     case 3: return 0;

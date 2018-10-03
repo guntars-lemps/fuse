@@ -79,8 +79,8 @@ static const libspectrum_word dotmatrix_555[16] = {
 };
 static const libspectrum_word *dotmatrix;
 
-int
-scaler_select_bitformat(libspectrum_dword BitFormat)
+
+int scaler_select_bitformat(libspectrum_dword BitFormat)
 {
     switch (BitFormat) {
 
@@ -423,8 +423,8 @@ HQ_INTERPOLATE_10(libspectrum_dword A, libspectrum_dword B,
     (ABS(u1 - u2) > HQ_trU) || \
     (ABS(v1 - v2) > HQ_trV))
 
-void
-FUNCTION(scaler_Super2xSaI)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_Super2xSaI)(const libspectrum_byte *srcPtr,
                    libspectrum_dword srcPitch,
                    libspectrum_byte *dstPtr,
                    libspectrum_dword dstPitch,
@@ -541,8 +541,8 @@ FUNCTION(scaler_Super2xSaI)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_SuperEagle)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_SuperEagle)(const libspectrum_byte *srcPtr,
                    libspectrum_dword srcPitch,
                    libspectrum_byte *dstPtr,
                    libspectrum_dword dstPitch,
@@ -671,8 +671,8 @@ FUNCTION(scaler_SuperEagle)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_2xSaI)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_2xSaI)(const libspectrum_byte *srcPtr,
               libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
               libspectrum_dword dstPitch,
               int width, int height)
@@ -817,8 +817,8 @@ FUNCTION(scaler_2xSaI)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_AdvMame2x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_AdvMame2x)(const libspectrum_byte *srcPtr,
                   libspectrum_dword srcPitch,
                   libspectrum_byte *dstPtr,
                   libspectrum_dword dstPitch,
@@ -861,8 +861,8 @@ FUNCTION(scaler_AdvMame2x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_AdvMame3x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_AdvMame3x)(const libspectrum_byte *srcPtr,
                   libspectrum_dword srcPitch,
                   libspectrum_byte *dstPtr,
                   libspectrum_dword dstPitch,
@@ -910,8 +910,8 @@ FUNCTION(scaler_AdvMame3x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_Half)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_Half)(const libspectrum_byte *srcPtr,
              libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
              libspectrum_dword dstPitch,
              int width, int height)
@@ -936,8 +936,8 @@ FUNCTION(scaler_Half)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_HalfSkip)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_HalfSkip)(const libspectrum_byte *srcPtr,
                  libspectrum_dword srcPitch,
                  libspectrum_byte *dstPtr,
                  libspectrum_dword dstPitch,
@@ -960,8 +960,8 @@ FUNCTION(scaler_HalfSkip)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_Normal1x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_Normal1x)(const libspectrum_byte *srcPtr,
                  libspectrum_dword srcPitch,
                  libspectrum_byte *dstPtr,
                  libspectrum_dword dstPitch,
@@ -974,8 +974,8 @@ FUNCTION(scaler_Normal1x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_Normal2x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_Normal2x)(const libspectrum_byte *srcPtr,
                  libspectrum_dword srcPitch,
                  libspectrum_byte *dstPtr,
                  libspectrum_dword dstPitch,
@@ -999,8 +999,8 @@ FUNCTION(scaler_Normal2x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_Normal3x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_Normal3x)(const libspectrum_byte *srcPtr,
                  libspectrum_dword srcPitch,
                  libspectrum_byte *dstPtr,
                  libspectrum_dword dstPitch,
@@ -1031,8 +1031,8 @@ FUNCTION(scaler_Normal3x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_Timex1_5x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_Timex1_5x)(const libspectrum_byte *srcPtr,
            libspectrum_dword srcPitch,
            libspectrum_byte *dstPtr,
            libspectrum_dword dstPitch,
@@ -1068,8 +1068,8 @@ FUNCTION(scaler_Timex1_5x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_TV2x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_TV2x)(const libspectrum_byte *srcPtr,
              libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
              libspectrum_dword dstPitch,
              int width, int height)
@@ -1099,8 +1099,8 @@ FUNCTION(scaler_TV2x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_TV3x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_TV3x)(const libspectrum_byte *srcPtr,
                          libspectrum_dword srcPitch, libspectrum_byte *dstPtr,
                          libspectrum_dword dstPitch,
                          int width, int height)
@@ -1137,8 +1137,8 @@ FUNCTION(scaler_TV3x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_TimexTV)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_TimexTV)(const libspectrum_byte *srcPtr,
                 libspectrum_dword srcPitch,
                 libspectrum_byte *dstPtr,
                 libspectrum_dword dstPitch,
@@ -1173,8 +1173,8 @@ static inline scaler_data_type DOT_16(scaler_data_type c, int j, int i) {
     return c - ((c >> 2) & *(dotmatrix + ((j & 3) << 2) + (i & 3)));
 }
 
-void
-FUNCTION(scaler_DotMatrix)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_DotMatrix)(const libspectrum_byte *srcPtr,
                   libspectrum_dword srcPitch,
                   libspectrum_byte *dstPtr,
                   libspectrum_dword dstPitch,
@@ -1241,8 +1241,8 @@ FUNCTION(scaler_DotMatrix)(const libspectrum_byte *srcPtr,
         ((((b) & blueMask) >> 11) * 8424) >> 10 : \
         ((((b) & blueMask) >> 10) * 8424) >> 10)
 
-void
-FUNCTION(scaler_PalTV)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_PalTV)(const libspectrum_byte *srcPtr,
                               libspectrum_dword srcPitch,
                               libspectrum_byte *dstPtr,
                               libspectrum_dword dstPitch,
@@ -1374,8 +1374,8 @@ FUNCTION(scaler_PalTV)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_PalTV2x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_PalTV2x)(const libspectrum_byte *srcPtr,
                               libspectrum_dword srcPitch,
                               libspectrum_byte *dstPtr,
                               libspectrum_dword dstPitch,
@@ -1506,8 +1506,8 @@ FUNCTION(scaler_PalTV2x)(const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_PalTV3x)(const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_PalTV3x)(const libspectrum_byte *srcPtr,
                               libspectrum_dword srcPitch,
                               libspectrum_byte *dstPtr,
                               libspectrum_dword dstPitch,
@@ -1682,8 +1682,8 @@ FUNCTION(scaler_PalTV3x)(const libspectrum_byte *srcPtr,
     MOVE_B_TO_A(5,6) \
     MOVE_B_TO_A(8,9)
 
-void
-FUNCTION(scaler_HQ2x) (const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_HQ2x) (const libspectrum_byte *srcPtr,
                           libspectrum_dword srcPitch,
                           libspectrum_byte *dstPtr,
                           libspectrum_dword dstPitch,
@@ -1777,8 +1777,8 @@ FUNCTION(scaler_HQ2x) (const libspectrum_byte *srcPtr,
     }
 }
 
-void
-FUNCTION(scaler_HQ3x) (const libspectrum_byte *srcPtr,
+
+void FUNCTION(scaler_HQ3x) (const libspectrum_byte *srcPtr,
                           libspectrum_dword srcPitch,
                           libspectrum_byte *dstPtr,
                           libspectrum_dword dstPitch,

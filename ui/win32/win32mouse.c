@@ -29,8 +29,8 @@
 #include "ui/ui.h"
 #include "win32internals.h"
 
-static void
-win32mouse_reset_pointer(void)
+
+static void win32mouse_reset_pointer(void)
 {
     RECT rect;
     POINT point;
@@ -44,8 +44,8 @@ win32mouse_reset_pointer(void)
     SetCursorPos(point.x, point.y);
 }
 
-void
-win32mouse_position(LPARAM lParam)
+
+void win32mouse_position(LPARAM lParam)
 {
     int x,y;
 
@@ -60,16 +60,16 @@ win32mouse_position(LPARAM lParam)
     return;
 }
 
-void
-win32mouse_button(int button, int down)
+
+void win32mouse_button(int button, int down)
 // button is: 1 - left, 2 - middle, 3 - right, down is: 1 - down, 0 - up
 {
     ui_mouse_button(button, down);
     return;
 }
 
-int
-ui_mouse_grab(int startup)
+
+int ui_mouse_grab(int startup)
 {
     if (startup) return 0;
 
@@ -85,8 +85,8 @@ ui_mouse_grab(int startup)
 */
 }
 
-int
-ui_mouse_release(int suspend)
+
+int ui_mouse_release(int suspend)
 {
     ReleaseCapture();
     SetCursor(LoadCursor(NULL, IDC_ARROW));

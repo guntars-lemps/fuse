@@ -38,29 +38,29 @@
 
 static GHashTable *debugger_variables;
 
-void
-debugger_variable_init(void)
+
+void debugger_variable_init(void)
 {
     debugger_variables = g_hash_table_new_full(g_str_hash, g_str_equal,
                                               libspectrum_free, NULL);
 }
 
-void
-debugger_variable_end(void)
+
+void debugger_variable_end(void)
 {
     g_hash_table_destroy(debugger_variables);
     debugger_variables = NULL;
 }
 
-void
-debugger_variable_set(const char *name, libspectrum_dword value)
+
+void debugger_variable_set(const char *name, libspectrum_dword value)
 {
     g_hash_table_insert(debugger_variables, utils_safe_strdup(name),
                        GINT_TO_POINTER(value));
 }
 
-libspectrum_dword
-debugger_variable_get(const char *name)
+
+libspectrum_dword debugger_variable_get(const char *name)
 {
     gpointer v = g_hash_table_lookup(debugger_variables, name);
 

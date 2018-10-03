@@ -38,8 +38,8 @@ struct compat_socket_selfpipe_t {
     libspectrum_word port;
 };
 
-int
-compat_socket_close(compat_socket_t fd)
+
+int compat_socket_close(compat_socket_t fd)
 {
     return closesocket(fd);
 }
@@ -76,12 +76,12 @@ compat_socket_get_strerror(void)
     return (const char *)buffer;
 }
 
-static int
-selfpipe_test(compat_socket_selfpipe_t *self)
+
+static int selfpipe_test(compat_socket_selfpipe_t *self)
 {
     fd_set readfds;
     int active;
-    struct timeval tv = { 1, 0 };
+    struct timeval tv = {1, 0};
 
     // Send testing packet
     compat_socket_selfpipe_wake(self);
@@ -163,8 +163,8 @@ compat_socket_selfpipe_alloc(void)
     return self;
 }
 
-void
-compat_socket_selfpipe_free(compat_socket_selfpipe_t *self)
+
+void compat_socket_selfpipe_free(compat_socket_selfpipe_t *self)
 {
     compat_socket_close(self->self_socket);
     libspectrum_free(self);
@@ -176,8 +176,8 @@ compat_socket_selfpipe_get_read_fd(compat_socket_selfpipe_t *self)
     return self->self_socket;
 }
 
-void
-compat_socket_selfpipe_wake(compat_socket_selfpipe_t *self)
+
+void compat_socket_selfpipe_wake(compat_socket_selfpipe_t *self)
 {
     struct sockaddr_in sa;
 
@@ -189,8 +189,8 @@ compat_socket_selfpipe_wake(compat_socket_selfpipe_t *self)
     sendto(self->self_socket, NULL, 0, 0, (struct sockaddr*)&sa, sizeof(sa));
 }
 
-void
-compat_socket_selfpipe_discard_data(compat_socket_selfpipe_t *self)
+
+void compat_socket_selfpipe_discard_data(compat_socket_selfpipe_t *self)
 {
     ssize_t bytes_read;
     struct sockaddr_in sa;
@@ -205,8 +205,8 @@ compat_socket_selfpipe_discard_data(compat_socket_selfpipe_t *self)
 }
 
 
-void
-compat_socket_networking_init(void)
+
+void compat_socket_networking_init(void)
 {
     WORD wVersionRequested;
     WSADATA wsaData;
@@ -228,8 +228,8 @@ compat_socket_networking_init(void)
     }
 }
 
-void
-compat_socket_networking_end(void)
+
+void compat_socket_networking_end(void)
 {
     WSACleanup();
 }

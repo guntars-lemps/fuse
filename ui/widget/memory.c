@@ -38,8 +38,8 @@ static libspectrum_word memaddr = 0;
 #define LC(X) ((X)*8 - DISPLAY_BORDER_ASPECT_WIDTH)
 #define LR(Y) ((Y)*8 - DISPLAY_BORDER_HEIGHT)
 
-int
-widget_memory_draw(void *data)
+
+int widget_memory_draw(void *data)
 {
     int x, y;
     char pbuf[36];
@@ -67,8 +67,8 @@ widget_memory_draw(void *data)
     return 0;
 }
 
-void
-widget_memory_keyhandler(input_key key)
+
+void widget_memory_keyhandler(input_key key)
 {
     switch (key) {
     case INPUT_KEY_Escape: // Close widget

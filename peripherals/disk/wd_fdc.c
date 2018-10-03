@@ -50,16 +50,16 @@ static void wd_fdc_wait_index (void *fdc);
 
 static int fdc_event, motor_off_event, timeout_event;
 
-void
-wd_fdc_init_events(void)
+
+void wd_fdc_init_events(void)
 {
     fdc_event = event_register(wd_fdc_event, "WD FDC event");
     motor_off_event = event_register(wd_fdc_event, "WD FDC motor off");
     timeout_event = event_register(wd_fdc_event, "WD FDC timeout");
 }
 
-void
-wd_fdc_master_reset(wd_fdc *f)
+
+void wd_fdc_master_reset(wd_fdc *f)
 {
     fdd_t *d = f->current_drive;
 
@@ -105,16 +105,16 @@ wd_fdc_alloc_fdc(wd_type_t type, int hlt_time, unsigned int flags)
     case WD1773:
     case WD1770:
     case WD2797:
-    fdc->rates[ 0 ] = 6;
-    fdc->rates[ 1 ] = 12;
-    fdc->rates[ 2 ] = 20;
-    fdc->rates[ 3 ] = 30;
+    fdc->rates[0] = 6;
+    fdc->rates[1] = 12;
+    fdc->rates[2] = 20;
+    fdc->rates[3] = 30;
     break;
     case WD1772:
-    fdc->rates[ 0 ] = 2;
-    fdc->rates[ 1 ] = 3;
-    fdc->rates[ 2 ] = 5;
-    fdc->rates[ 3 ] = 6;
+    fdc->rates[0] = 2;
+    fdc->rates[1] = 3;
+    fdc->rates[2] = 5;
+    fdc->rates[3] = 6;
     break;
     }
     fdc->type = type;
@@ -125,8 +125,8 @@ wd_fdc_alloc_fdc(wd_type_t type, int hlt_time, unsigned int flags)
     return fdc;
 }
 
-void
-wd_fdc_set_intrq(wd_fdc *f)
+
+void wd_fdc_set_intrq(wd_fdc *f)
 {
     if ((f->type == WD1770 || f->type == WD1772) &&
       f->status_register & WD_FDC_SR_MOTORON) {
@@ -147,8 +147,8 @@ wd_fdc_set_intrq(wd_fdc *f)
     }
 }
 
-void
-wd_fdc_reset_intrq(wd_fdc *f)
+
+void wd_fdc_reset_intrq(wd_fdc *f)
 {
     if (f->intrq == 1) {
     f->intrq = 0;
@@ -156,8 +156,8 @@ wd_fdc_reset_intrq(wd_fdc *f)
     }
 }
 
-void
-wd_fdc_set_datarq(wd_fdc *f)
+
+void wd_fdc_set_datarq(wd_fdc *f)
 {
     if (f->datarq != 1) {
     f->status_register |= WD_FDC_SR_IDX_DRQ;
@@ -166,8 +166,8 @@ wd_fdc_set_datarq(wd_fdc *f)
     }
 }
 
-void
-wd_fdc_reset_datarq(wd_fdc *f)
+
+void wd_fdc_reset_datarq(wd_fdc *f)
 {
     if (f->datarq == 1) {
     f->status_register &= ~WD_FDC_SR_IDX_DRQ;
@@ -176,26 +176,26 @@ wd_fdc_reset_datarq(wd_fdc *f)
     }
 }
 
-void
-wd_fdc_set_hlt(wd_fdc *f, int hlt)
+
+void wd_fdc_set_hlt(wd_fdc *f, int hlt)
 {
     f->hlt = hlt > 0 ? 1 : 0;
 }
 
-static void
-crc_preset(wd_fdc *f)
+
+static void crc_preset(wd_fdc *f)
 {
     f->crc = 0xffff;
 }
 
-static void
-crc_add(wd_fdc *f, fdd_t *d)
+
+static void crc_add(wd_fdc *f, fdd_t *d)
 {
     f->crc = crc_fdc(f->crc, d->data & 0xff);
 }
 
-static int
-disk_ready(wd_fdc *f)
+
+static int disk_ready(wd_fdc *f)
 {
     if (f->flags & WD_FLAG_BETA128) // Beta 128, READY = HLD
     return f->head_load;
@@ -212,8 +212,8 @@ disk_ready(wd_fdc *f)
 
    what we can do, if disk not rotating, or head not loaded?
 */
-static int
-read_id(wd_fdc *f)
+
+static int read_id(wd_fdc *f)
 {
     int i = f->rev;
     fdd_t *d = f->current_drive;
@@ -285,8 +285,8 @@ read_id(wd_fdc *f)
     return 1;
 }
 
-static int
-read_datamark(wd_fdc *f)
+
+static int read_datamark(wd_fdc *f)
 {
     fdd_t *d = f->current_drive;
     int i;
@@ -366,8 +366,8 @@ read_datamark(wd_fdc *f)
     return 1;
 }
 
-libspectrum_byte
-wd_fdc_sr_read(wd_fdc *f)
+
+libspectrum_byte wd_fdc_sr_read(wd_fdc *f)
 {
     fdd_t *d = f->current_drive;
 
@@ -394,8 +394,8 @@ wd_fdc_sr_read(wd_fdc *f)
     return f->status_register;
 }
 
-static void
-wd_fdc_seek_verify_read_id(wd_fdc *f)
+
+static void wd_fdc_seek_verify_read_id(wd_fdc *f)
 {
     fdd_t *d = f->current_drive;
     int i;
@@ -429,8 +429,8 @@ wd_fdc_seek_verify_read_id(wd_fdc *f)
     f->read_id = 0;
 }
 
-static void
-wd_fdc_seek_verify(wd_fdc *f)
+
+static void wd_fdc_seek_verify(wd_fdc *f)
 {
     fdd_t *d = f->current_drive;
 
@@ -458,8 +458,8 @@ wd_fdc_seek_verify(wd_fdc *f)
     wd_fdc_seek_verify_read_id(f);
 }
 
-static void
-wd_fdc_type_i(wd_fdc *f)
+
+static void wd_fdc_type_i(wd_fdc *f)
 {
     libspectrum_byte b = f->command_register;
     fdd_t *d = f->current_drive;
@@ -500,7 +500,7 @@ type_i_noupdate:
       fdd_step(d, f->direction);
       f->state = WD_FDC_STATE_SEEK_DELAY;
       event_remove_type(fdc_event);
-      event_add_with_data(tstates + f->rates[ b & 0x03 ] *
+      event_add_with_data(tstates + f->rates[b & 0x03] *
                machine_current->timings.processor_speed / 1000,
                fdc_event, f);
       return;
@@ -550,8 +550,8 @@ type_i_verify:
     wd_fdc_set_intrq(f);
 }
 
-static void
-wd_fdc_type_ii_seek(wd_fdc *f)
+
+static void wd_fdc_type_ii_seek(wd_fdc *f)
 {
     libspectrum_byte b = f->command_register;
     fdd_t *d = f->current_drive;
@@ -639,8 +639,8 @@ wd_fdc_type_ii_seek(wd_fdc *f)
                timeout_event, f);
 }
 
-static void
-wd_fdc_type_ii(wd_fdc *f)
+
+static void wd_fdc_type_ii(wd_fdc *f)
 {
     libspectrum_byte b = f->command_register;
     fdd_t *d = f->current_drive;
@@ -678,8 +678,8 @@ wd_fdc_type_ii(wd_fdc *f)
     wd_fdc_type_ii_seek(f);
 }
 
-static void
-wd_fdc_type_iii(wd_fdc *f)
+
+static void wd_fdc_type_iii(wd_fdc *f)
 {
     int i;
     fdd_t *d = f->current_drive;
@@ -754,8 +754,8 @@ wd_fdc_type_iii(wd_fdc *f)
                timeout_event, f);
 }
 
-static void
-wd_fdc_event(libspectrum_dword last_tstates GCC_UNUSED, int event,
+
+static void wd_fdc_event(libspectrum_dword last_tstates GCC_UNUSED, int event,
           void *user_data)
 {
     wd_fdc *f = user_data;
@@ -860,8 +860,8 @@ wd_fdc_event(libspectrum_dword last_tstates GCC_UNUSED, int event,
            !
 */
 
-static int
-wd_fdc_spinup(wd_fdc *f, libspectrum_byte b)
+
+static int wd_fdc_spinup(wd_fdc *f, libspectrum_byte b)
 {
     libspectrum_dword delay = 0;
     fdd_t *d = f->current_drive;
@@ -920,8 +920,8 @@ wd_fdc_spinup(wd_fdc *f, libspectrum_byte b)
     return 0;
 }
 
-void
-wd_fdc_cr_write(wd_fdc *f, libspectrum_byte b)
+
+void wd_fdc_cr_write(wd_fdc *f, libspectrum_byte b)
 {
     fdd_t *d = f->current_drive;
 
@@ -1028,32 +1028,32 @@ wd_fdc_cr_write(wd_fdc *f, libspectrum_byte b)
     }
 }
 
-libspectrum_byte
-wd_fdc_tr_read(wd_fdc *f)
+
+libspectrum_byte wd_fdc_tr_read(wd_fdc *f)
 {
     return f->track_register;
 }
 
-void
-wd_fdc_tr_write(wd_fdc *f, libspectrum_byte b)
+
+void wd_fdc_tr_write(wd_fdc *f, libspectrum_byte b)
 {
     f->track_register = b;
 }
 
-libspectrum_byte
-wd_fdc_sec_read(wd_fdc *f)
+
+libspectrum_byte wd_fdc_sec_read(wd_fdc *f)
 {
     return f->sector_register;
 }
 
-void
-wd_fdc_sec_write(wd_fdc *f, libspectrum_byte b)
+
+void wd_fdc_sec_write(wd_fdc *f, libspectrum_byte b)
 {
     f->sector_register = b;
 }
 
-libspectrum_byte
-wd_fdc_dr_read(wd_fdc *f)
+
+libspectrum_byte wd_fdc_dr_read(wd_fdc *f)
 {
     fdd_t *d = f->current_drive;
 
@@ -1156,8 +1156,8 @@ wd_fdc_dr_read(wd_fdc *f)
     return f->data_register;
 }
 
-void
-wd_fdc_dr_write(wd_fdc *f, libspectrum_byte b)
+
+void wd_fdc_dr_write(wd_fdc *f, libspectrum_byte b)
 {
     fdd_t *d = f->current_drive;
 
@@ -1243,8 +1243,8 @@ wd_fdc_dr_write(wd_fdc *f, libspectrum_byte b)
     }
 }
 
-static void
-wd_fdc_wait_index (void *fdc)
+
+static void wd_fdc_wait_index (void *fdc)
 {
     wd_fdc *f = fdc;
     wd_fdc_set_intrq(f); // generate an interrupt

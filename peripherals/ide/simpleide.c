@@ -43,8 +43,8 @@ static void simpleide_write(libspectrum_word port, libspectrum_byte data);
 // Data
 
 static const periph_port_t simpleide_ports[] = {
-    { 0x0010, 0x0000, simpleide_read, simpleide_write },
-    { 0, 0, NULL, NULL }
+    {0x0010, 0x0000, simpleide_read, simpleide_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t simpleide_periph = {
@@ -71,8 +71,8 @@ static module_info_t simpleide_module_info = {
 
 // Housekeeping functions
 
-static int
-simpleide_init(void *context)
+
+static int simpleide_init(void *context)
 {
     int error;
 
@@ -91,14 +91,14 @@ simpleide_init(void *context)
     return 0;
 }
 
-static void
-simpleide_end(void)
+
+static void simpleide_end(void)
 {
     libspectrum_ide_free(simpleide_idechn);
 }
 
-void
-simpleide_register_startup(void)
+
+void simpleide_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DISPLAY,
@@ -109,14 +109,14 @@ simpleide_register_startup(void)
                             simpleide_end);
 }
 
-void
-simpleide_reset(int hard_reset GCC_UNUSED)
+
+void simpleide_reset(int hard_reset GCC_UNUSED)
 {
     libspectrum_ide_reset(simpleide_idechn);
 }
 
-int
-simpleide_insert(const char *filename, libspectrum_ide_unit unit)
+
+int simpleide_insert(const char *filename, libspectrum_ide_unit unit)
 {
     return ide_master_slave_insert(
     simpleide_idechn, unit, filename,
@@ -126,8 +126,8 @@ simpleide_insert(const char *filename, libspectrum_ide_unit unit)
     UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT);
 }
 
-int
-simpleide_commit(libspectrum_ide_unit unit)
+
+int simpleide_commit(libspectrum_ide_unit unit)
 {
     int error;
 
@@ -136,8 +136,8 @@ simpleide_commit(libspectrum_ide_unit unit)
     return error;
 }
 
-int
-simpleide_eject(libspectrum_ide_unit unit)
+
+int simpleide_eject(libspectrum_ide_unit unit)
 {
     return ide_master_slave_eject(
     simpleide_idechn, unit,
@@ -149,8 +149,8 @@ simpleide_eject(libspectrum_ide_unit unit)
 
 // Port read/writes
 
-static libspectrum_byte
-simpleide_read(libspectrum_word port, libspectrum_byte *attached)
+
+static libspectrum_byte simpleide_read(libspectrum_word port, libspectrum_byte *attached)
 {
     libspectrum_ide_register idereg;
 
@@ -161,8 +161,8 @@ simpleide_read(libspectrum_word port, libspectrum_byte *attached)
     return libspectrum_ide_read(simpleide_idechn, idereg);
 }
 
-static void
-simpleide_write(libspectrum_word port, libspectrum_byte data)
+
+static void simpleide_write(libspectrum_word port, libspectrum_byte data)
 {
     libspectrum_ide_register idereg;
 
@@ -171,15 +171,15 @@ simpleide_write(libspectrum_word port, libspectrum_byte data)
     libspectrum_ide_write(simpleide_idechn, idereg, data);
 }
 
-static void
-simpleide_snapshot_enabled(libspectrum_snap *snap)
+
+static void simpleide_snapshot_enabled(libspectrum_snap *snap)
 {
     if (libspectrum_snap_simpleide_active(snap))
     settings_current.simpleide_active = 1;
 }
 
-static void
-simpleide_to_snapshot(libspectrum_snap *snap)
+
+static void simpleide_to_snapshot(libspectrum_snap *snap)
 {
     if (!settings_current.simpleide_active) return;
 

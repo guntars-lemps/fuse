@@ -56,8 +56,8 @@ static int buttons[2];
 
 static void joy_handler(int ev, int number, char value, int which);
 
-static int
-init_stick(int which)
+
+static int init_stick(int which)
 {
     if (!joystick_init(which, JOY_CALIB_STDOUT)) {
     ui_error(UI_ERROR_ERROR, "failed to initialise joystick %i: %s",
@@ -78,8 +78,8 @@ init_stick(int which)
     return 0;
 }
 
-int
-ui_joystick_init(void)
+
+int ui_joystick_init(void)
 {
     int i;
 
@@ -99,14 +99,14 @@ ui_joystick_init(void)
     return sticks;
 }
 
-void
-ui_joystick_end(void)
+
+void ui_joystick_end(void)
 {
     joystick_close(-1);
 }
 
-static void
-do_axis(int which, int position, input_key negative, input_key positive)
+
+static void do_axis(int which, int position, input_key negative, input_key positive)
 {
     input_event_t event1, event2;
 
@@ -124,8 +124,8 @@ do_axis(int which, int position, input_key negative, input_key positive)
     input_event(&event2);
 }
 
-static void
-joy_handler(int ev, int number, char value, int which)
+
+static void joy_handler(int ev, int number, char value, int which)
 {
     input_event_t event;
 
@@ -151,8 +151,8 @@ joy_handler(int ev, int number, char value, int which)
     }
 }
 
-void
-ui_joystick_poll(void)
+
+void ui_joystick_poll(void)
 {
 }
 

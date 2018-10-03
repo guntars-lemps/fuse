@@ -46,8 +46,8 @@
 // Dock cart inserted?
 int dck_active = 0;
 
-int
-dck_insert(const char *filename)
+
+int dck_insert(const char *filename)
 {
     if (!(libspectrum_machine_capabilities(machine_current->machine) &
       LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK)) {
@@ -62,8 +62,8 @@ dck_insert(const char *filename)
     return 0;
 }
 
-void
-dck_eject(void)
+
+void dck_eject(void)
 {
     if (!(libspectrum_machine_capabilities(machine_current->machine) &
       LIBSPECTRUM_MACHINE_CAPABILITY_TIMEX_DOCK)) {
@@ -86,18 +86,18 @@ dck_get_memory_page(libspectrum_dck_bank bank, size_t index)
 {
     switch (bank) {
     case LIBSPECTRUM_DCK_BANK_HOME:
-      return timex_home[ index ];
+      return timex_home[index];
     case LIBSPECTRUM_DCK_BANK_DOCK:
-      return &timex_dock[ index ];
+      return &timex_dock[index];
     case LIBSPECTRUM_DCK_BANK_EXROM:
-      return &timex_exrom[ index ];
+      return &timex_exrom[index];
     default:
       return NULL;
     }
 }
 
-int
-dck_reset(void)
+
+int dck_reset(void)
 {
     utils_file file;
     size_t num_block = 0;
@@ -114,7 +114,7 @@ dck_reset(void)
     dck = libspectrum_dck_alloc();
 
     error = utils_read_file(settings_current.dck_file, &file);
-    if (error) { libspectrum_dck_free(dck, 0); return error; }
+    if (error) {libspectrum_dck_free(dck, 0); return error;}
 
     error = libspectrum_dck_read2(dck, file.buffer, file.length,
                                  settings_current.dck_file);

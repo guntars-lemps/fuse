@@ -62,8 +62,8 @@ int timer_event;
 static void timer_frame(libspectrum_dword last_tstates, int event GCC_UNUSED,
              void *user_data GCC_UNUSED);
 
-int
-timer_estimate_speed(void)
+
+int timer_estimate_speed(void)
 {
     double current_time;
 
@@ -80,12 +80,12 @@ timer_estimate_speed(void)
 
     } else {
     current_speed = 10 * 100 /
-                      (current_time - stored_times[ next_stored_time ]);
+                      (current_time - stored_times[next_stored_time]);
     }
 
     ui_statusbar_update_speed(current_speed);
 
-    stored_times[ next_stored_time ] = current_time;
+    stored_times[next_stored_time] = current_time;
 
     next_stored_time = (next_stored_time + 1) % 10;
     frames_until_update =
@@ -97,8 +97,8 @@ timer_estimate_speed(void)
     return 0;
 }
 
-int
-timer_estimate_reset(void)
+
+int timer_estimate_reset(void)
 {
     start_time = timer_get_time(); if (start_time < 0) return 1;
     samples = 0;
@@ -108,8 +108,8 @@ timer_estimate_reset(void)
     return 0;
 }
 
-static int
-timer_init(void *context)
+
+static int timer_init(void *context)
 {
     start_time = timer_get_time(); if (start_time < 0) return 1;
 
@@ -120,14 +120,14 @@ timer_init(void *context)
     return timer_estimate_reset();
 }
 
-static void
-timer_end(void)
+
+static void timer_end(void)
 {
     event_remove_type(timer_event);
 }
 
-void
-timer_register_startup(void)
+
+void timer_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_EVENT,
@@ -145,8 +145,8 @@ timer_register_startup(void)
 
 extern sfifo_t sound_fifo;
 
-static void
-timer_frame_callback_sound(libspectrum_dword last_tstates)
+
+static void timer_frame_callback_sound(libspectrum_dword last_tstates)
 {
     for (;;) {
 
@@ -166,8 +166,8 @@ timer_frame_callback_sound(libspectrum_dword last_tstates)
 #else // #ifdef SOUND_FIFO
 
 // Blocking socket-style sound based timer
-static void
-timer_frame_callback_sound(libspectrum_dword last_tstates)
+
+static void timer_frame_callback_sound(libspectrum_dword last_tstates)
 {
     event_add(last_tstates + machine_current->timings.tstates_per_frame,
              timer_event);
@@ -175,15 +175,15 @@ timer_frame_callback_sound(libspectrum_dword last_tstates)
 
 #endif // #ifdef SOUND_FIFO
 
-void
-timer_start_fastloading(void)
+
+void timer_start_fastloading(void)
 {
     // If we're fastloading, turn sound off
     if (settings_current.fastload) sound_pause();
 }
 
-void
-timer_stop_fastloading(void)
+
+void timer_stop_fastloading(void)
 {
     /* If we were fastloading, sound was off, so turn it back on, and
      reset the speed counter */
@@ -193,14 +193,14 @@ timer_stop_fastloading(void)
     }
 }
 
-int
-timer_fastloading_active(void)
+
+int timer_fastloading_active(void)
 {
     return tape_is_playing() || phantom_typist_is_active();
 }
 
-static void
-timer_frame(libspectrum_dword last_tstates, int event GCC_UNUSED,
+
+static void timer_frame(libspectrum_dword last_tstates, int event GCC_UNUSED,
          void *user_data GCC_UNUSED)
 {
     double current_time, difference;

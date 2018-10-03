@@ -42,8 +42,8 @@ static int widget_text_draw_text(void);
 static void delete_character(void);
 static void append_character(char c);
 
-int
-widget_text_draw(void *data)
+
+int widget_text_draw(void *data)
 {
     widget_text_t* text_data = data;
 
@@ -65,8 +65,8 @@ widget_text_draw(void *data)
     return widget_text_draw_text();
 }
 
-static int
-widget_text_draw_text(void)
+
+static int widget_text_draw_text(void)
 {
     int width;
     const char *tptr;
@@ -88,8 +88,8 @@ widget_text_draw_text(void)
     return 0;
 }
 
-void
-widget_text_keyhandler(input_key key)
+
+void widget_text_keyhandler(input_key key)
 {
     switch (key) {
 
@@ -141,26 +141,26 @@ widget_text_keyhandler(input_key key)
     widget_text_draw_text();
 }
 
-static void
-delete_character(void)
+
+static void delete_character(void)
 {
     size_t length = strlen(text);
 
-    if (length) text[ length - 1 ] = '\0';
+    if (length) text[length - 1] = '\0';
 }
 
-static void
-append_character(char c)
+
+static void append_character(char c)
 {
     size_t length = strlen(text);
 
     if (length < WIDGET_TEXT_LENGTH - 1 && length < max_length) {
-    text[ length ] = c; text[ length + 1 ] = '\0';
+    text[length] = c; text[length + 1] = '\0';
     }
 }
 
-int
-widget_text_finish(widget_finish_state finished)
+
+int widget_text_finish(widget_finish_state finished)
 {
     if (finished == WIDGET_FINISHED_OK) {
 

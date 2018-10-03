@@ -38,15 +38,15 @@
 #include "ui/scaler/scaler.h"
 #include "menu.h"
 
-static void
-atexit_proc(void)
+
+static void atexit_proc(void)
 {
     SDL_ShowCursor(SDL_ENABLE);
     SDL_Quit();
 }
 
-int
-ui_init(int *argc, char ***argv)
+
+int ui_init(int *argc, char ***argv)
 {
     int error;
 
@@ -71,8 +71,8 @@ ui_init(int *argc, char ***argv)
     return 0;
 }
 
-int
-ui_event(void)
+
+int ui_event(void)
 {
     SDL_Event event;
 
@@ -137,8 +137,8 @@ ui_event(void)
     return 0;
 }
 
-int
-ui_end(void)
+
+int ui_end(void)
 {
     int error;
 
@@ -155,8 +155,8 @@ ui_end(void)
     return 0;
 }
 
-int
-ui_statusbar_update_speed(float speed)
+
+int ui_statusbar_update_speed(float speed)
 {
     char buffer[15];
     const char fuse[] = "Fuse";
@@ -169,8 +169,8 @@ ui_statusbar_update_speed(float speed)
     return 0;
 }
 
-int
-ui_mouse_grab(int startup)
+
+int ui_mouse_grab(int startup)
 {
     if (settings_current.full_screen) {
     SDL_WarpMouse(128, 128);
@@ -190,8 +190,8 @@ ui_mouse_grab(int startup)
     }
 }
 
-int
-ui_mouse_release(int suspend)
+
+int ui_mouse_release(int suspend)
 {
     if (settings_current.full_screen) return !suspend;
 

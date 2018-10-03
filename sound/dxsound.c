@@ -41,8 +41,8 @@ static DWORD nextpos; // next position in circular buffer
 
 static int sixteenbit;
 
-int
-sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
+
+int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
 
     WAVEFORMATEX pcmwf; /* waveformat struct */
@@ -132,8 +132,8 @@ sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     return 0;
 }
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
     if (IDirectSoundBuffer_Stop(lpDSBuffer) != DS_OK) {
     settings_current.sound = 0;
@@ -146,8 +146,8 @@ sound_lowlevel_end(void)
 }
 
 // Copying data to the buffer
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     HRESULT hres;
     int i1, i2;
@@ -188,14 +188,14 @@ sound_lowlevel_frame(libspectrum_signed_word *data, int len)
     for (i1 = 0; i1 < length1 && len > 0; i1++) {
       if (sixteenbit) {
         if (lsb) {
-          ucbuffer1[ i1 ] = *data & 0xff;
+          ucbuffer1[i1] = *data & 0xff;
         } else {
-          ucbuffer1[ i1 ] = *data >> 8;
+          ucbuffer1[i1] = *data >> 8;
           data++;
         }
         lsb = !lsb;
       } else {
-        ucbuffer1[ i1 ] = ((*data++) >> 8) ^ 0x80;
+        ucbuffer1[i1] = ((*data++) >> 8) ^ 0x80;
       }
       nextpos++;
       len--;
@@ -206,14 +206,14 @@ sound_lowlevel_frame(libspectrum_signed_word *data, int len)
       for (i2 = 0; i2 < length2 && len > 0; i2++) {
         if (sixteenbit) {
           if (lsb) {
-            ucbuffer2[ i2 ] = *data & 0xff;
+            ucbuffer2[i2] = *data & 0xff;
           } else {
-            ucbuffer2[ i2 ] = *data >> 8;
+            ucbuffer2[i2] = *data >> 8;
             data++;
           }
           lsb = !lsb;
         } else {
-          ucbuffer2[ i2 ] = ((*data++) >> 8) ^ 0x80;
+          ucbuffer2[i2] = ((*data++) >> 8) ^ 0x80;
         }
         nextpos++;
         len--;

@@ -46,8 +46,8 @@ static void win32ui_pokefinder_close(void);
 
 #define MAX_POSSIBLE 20
 
-int possible_page[ MAX_POSSIBLE ];
-libspectrum_word possible_offset[ MAX_POSSIBLE ];
+int possible_page[MAX_POSSIBLE];
+libspectrum_word possible_offset[MAX_POSSIBLE];
 int initial_width = 0;
 int initial_height = 0;
 HWND lv_hWnd = NULL;
@@ -106,8 +106,8 @@ win32ui_pokefinder_proc(HWND hWnd GCC_UNUSED, UINT msg,
     return FALSE;
 }
 
-void
-move_button(int button, int dlg_height)
+
+void move_button(int button, int dlg_height)
 {
     HWND ctrl_hWnd;
     RECT rect;
@@ -122,8 +122,8 @@ move_button(int button, int dlg_height)
                 SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
-static void
-update_pokefinder(void)
+
+static void update_pokefinder(void)
 {
     size_t page, offset, bank, bank_offset;
     TCHAR buffer[256], *possible_text[2] = { &buffer[0], &buffer[128] };
@@ -150,8 +150,8 @@ update_pokefinder(void)
     if (! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7))) {
       bank_offset = mapping->offset + offset;
 
-      possible_page[ which ] = bank;
-      possible_offset[ which ] = bank_offset;
+      possible_page[which] = bank;
+      possible_offset[which] = bank_offset;
       which++;
 
       _sntprintf(possible_text[0], 128, "%d", (unsigned)bank);
@@ -208,8 +208,8 @@ update_pokefinder(void)
                       (LPARAM) buffer);
 }
 
-void
-menu_machine_pokefinder(int action GCC_UNUSED)
+
+void menu_machine_pokefinder(int action GCC_UNUSED)
 {
     RECT rect;
     int cx;
@@ -271,22 +271,22 @@ menu_machine_pokefinder(int action GCC_UNUSED)
     update_pokefinder();
 }
 
-static void
-win32ui_pokefinder_incremented(void)
+
+static void win32ui_pokefinder_incremented(void)
 {
     pokefinder_incremented();
     update_pokefinder();
 }
 
-static void
-win32ui_pokefinder_decremented(void)
+
+static void win32ui_pokefinder_decremented(void)
 {
     pokefinder_decremented();
     update_pokefinder();
 }
 
-static void
-win32ui_pokefinder_search(void)
+
+static void win32ui_pokefinder_search(void)
 {
     long value;
     TCHAR *buffer, *endptr;
@@ -327,22 +327,22 @@ win32ui_pokefinder_search(void)
     update_pokefinder();
 }
 
-static void
-win32ui_pokefinder_reset(void)
+
+static void win32ui_pokefinder_reset(void)
 {
     pokefinder_clear();
     update_pokefinder();
 }
 
-static void
-win32ui_pokefinder_close(void)
+
+static void win32ui_pokefinder_close(void)
 {
     DestroyWindow(fuse_hPFWnd);
     fuse_hPFWnd = NULL;
 }
 
-static void
-possible_click(LPNMITEMACTIVATE lpnmitem)
+
+static void possible_click(LPNMITEMACTIVATE lpnmitem)
 {
     // FIXME: implement equivalent of GTK's select-via-keyboard to enter here
 
@@ -354,16 +354,16 @@ possible_click(LPNMITEMACTIVATE lpnmitem)
     row = lpnmitem->iItem;
 
     error = debugger_breakpoint_add_address(
-    DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[ row ],
-    possible_offset[ row ], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
+    DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[row],
+    possible_offset[row], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
 );
     if (error) return;
 
     ui_debugger_update();
 }
 
-void
-win32ui_pokefinder_clear(void)
+
+void win32ui_pokefinder_clear(void)
 {
     pokefinder_clear();
     if (fuse_hPFWnd != NULL) update_pokefinder();

@@ -36,8 +36,8 @@
 
 static void wii_end(void);
 
-int
-ui_init(int *argc, char ***argv)
+
+int ui_init(int *argc, char ***argv)
 {
     int error;
 
@@ -61,8 +61,8 @@ ui_init(int *argc, char ***argv)
     return 0;
 }
 
-int
-ui_event(void)
+
+int ui_event(void)
 {
     keyboard_update();
     mouse_update();
@@ -84,8 +84,8 @@ int ui_end(void)
     return 0;
 }
 
-static void
-wii_end(void)
+
+static void wii_end(void)
 {
     wiikeyboard_end();
     uidisplay_end();

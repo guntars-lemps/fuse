@@ -36,8 +36,8 @@
 
 /* Given a hardware keycode, return the keyval which would have been returned if
    the key were unshifted */
-static guint
-unshift_keysym(guint keycode, gint group)
+
+static guint unshift_keysym(guint keycode, gint group)
 {
     GdkKeymapKey *maps;
     guint *keyvals, i, r = GDK_KEY_VoidSymbol, r2 = GDK_KEY_VoidSymbol;
@@ -63,8 +63,8 @@ unshift_keysym(guint keycode, gint group)
     return r;
 }
 
-static void
-get_keysyms(input_event_t *event, guint keycode, guint keysym, gint group)
+
+static void get_keysyms(input_event_t *event, guint keycode, guint keysym, gint group)
 {
     guint unshifted;
 
@@ -76,8 +76,8 @@ get_keysyms(input_event_t *event, guint keycode, guint keysym, gint group)
     event->types.key.spectrum_key = keysyms_remap(unshifted);
 }
 
-int
-gtkkeyboard_keypress(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
+
+int gtkkeyboard_keypress(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
               gpointer data GCC_UNUSED)
 {
     input_event_t fuse_event;
@@ -93,8 +93,8 @@ gtkkeyboard_keypress(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
     // FIXME: handle F1 to deal with the pop-up menu
 }
 
-int
-gtkkeyboard_keyrelease(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
+
+int gtkkeyboard_keyrelease(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
             gpointer data GCC_UNUSED)
 {
     input_event_t fuse_event;

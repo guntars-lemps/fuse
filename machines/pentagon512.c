@@ -45,8 +45,8 @@
 static int pentagon_reset(void);
 static int pentagon_memory_map(void);
 
-int
-pentagon512_init(fuse_machine_info *machine)
+
+int pentagon512_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_PENT512;
     machine->id = "pentagon512";
@@ -68,8 +68,8 @@ pentagon512_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-pentagon_reset(void)
+
+static int pentagon_reset(void)
 {
     int error;
 
@@ -111,8 +111,8 @@ pentagon_reset(void)
     return 0;
 }
 
-static int
-pentagon_memory_map(void)
+
+static int pentagon_memory_map(void)
 {
     int rom, page, screen;
 

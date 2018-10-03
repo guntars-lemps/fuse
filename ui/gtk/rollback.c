@@ -41,8 +41,8 @@ enum
     NUM_COLS
 };
 
-static void
-select_row(GtkButton *button GCC_UNUSED, gpointer user_data)
+
+static void select_row(GtkButton *button GCC_UNUSED, gpointer user_data)
 {
     GtkTreePath *path;
     GtkTreeView *view = user_data;
@@ -88,8 +88,8 @@ create_rollback_list(void)
     return view;
 }
 
-static int
-create_dialog(void)
+
+static int create_dialog(void)
 {
     GtkWidget *content_area;
 
@@ -106,8 +106,8 @@ create_dialog(void)
     return 0;
 }
 
-static int
-update_list(GSList *points)
+
+static int update_list(GSList *points)
 {
     GtkTreeIter iter;
     GtkTreeModel *model;
@@ -133,15 +133,15 @@ update_list(GSList *points)
     return 0;
 }
 
-int
-ui_get_rollback_point(GSList *points)
+
+int ui_get_rollback_point(GSList *points)
 {
     fuse_emulation_pause();
 
     if (!dialog_created)
-    if (create_dialog()) { fuse_emulation_unpause(); return -1; }
+    if (create_dialog()) {fuse_emulation_unpause(); return -1;}
 
-    if (update_list(points)) { fuse_emulation_unpause(); return -1; }
+    if (update_list(points)) {fuse_emulation_unpause(); return -1;}
 
     current_block = -1;
 

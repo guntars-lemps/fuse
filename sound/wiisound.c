@@ -40,8 +40,8 @@ sfifo_t sound_fifo;
 u8 dmabuf[BUFSIZE<<1] ATTRIBUTE_ALIGN(32);
 int dmalen = BUFSIZE;
 
-static void
-sound_dmacallback(void)
+
+static void sound_dmacallback(void)
 {
     if (sfifo_used(&sound_fifo) < 128) return;
 
@@ -52,8 +52,8 @@ sound_dmacallback(void)
     AUDIO_StartDMA();
 }
 
-int
-sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
+
+int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
     switch(*freqptr) {
     case 32000:
@@ -84,16 +84,16 @@ sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     return 0;
 }
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
     sfifo_flush(&sound_fifo);
     sfifo_close(&sound_fifo);
     AUDIO_StopDMA();
 }
 
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     int i;
 

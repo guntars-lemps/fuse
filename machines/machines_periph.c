@@ -35,8 +35,8 @@
 #include "specplus3.h"
 #include "tc2068.h"
 
-static void
-spec_se_memoryport_write(libspectrum_word port GCC_UNUSED,
+
+static void spec_se_memoryport_write(libspectrum_word port GCC_UNUSED,
               libspectrum_byte b)
 {
     machine_current->ram.last_byte = b;
@@ -44,8 +44,8 @@ spec_se_memoryport_write(libspectrum_word port GCC_UNUSED,
 }
 
 static const periph_port_t spec128_memory_ports[] = {
-    { 0x8002, 0x0000, NULL, spec128_memoryport_write },
-    { 0, 0, NULL, NULL }
+    {0x8002, 0x0000, NULL, spec128_memoryport_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t spec128_memory = {
@@ -56,9 +56,9 @@ static const periph_t spec128_memory = {
 };
 
 static const periph_port_t plus3_memory_ports[] = {
-    { 0xc002, 0x4000, NULL, spec128_memoryport_write },
-    { 0xf002, 0x1000, NULL, specplus3_memoryport2_write },
-    { 0, 0, NULL, NULL }
+    {0xc002, 0x4000, NULL, spec128_memoryport_write},
+    {0xf002, 0x1000, NULL, specplus3_memoryport2_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t plus3_memory = {
@@ -69,9 +69,9 @@ static const periph_t plus3_memory = {
 };
 
 static const periph_port_t upd765_ports[] = {
-    { 0xf002, 0x3000, specplus3_fdc_read, specplus3_fdc_write },
-    { 0xf002, 0x2000, specplus3_fdc_status, NULL },
-    { 0, 0, NULL, NULL }
+    {0xf002, 0x3000, specplus3_fdc_read, specplus3_fdc_write},
+    {0xf002, 0x2000, specplus3_fdc_status, NULL},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t upd765 = {
@@ -82,8 +82,8 @@ static const periph_t upd765 = {
 };
 
 static const periph_port_t se_memory_ports[] = {
-    { 0xffff, 0x7ffd, NULL, spec_se_memoryport_write },
-    { 0, 0, NULL, NULL }
+    {0xffff, 0x7ffd, NULL, spec_se_memoryport_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t se_memory = {
@@ -94,9 +94,9 @@ static const periph_t se_memory = {
 };
 
 static const periph_port_t tc2068_ay_ports[] = {
-    { 0x00ff, 0x00f5, tc2068_ay_registerport_read, ay_registerport_write },
-    { 0x00ff, 0x00f6, tc2068_ay_dataport_read, ay_dataport_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x00f5, tc2068_ay_registerport_read, ay_registerport_write},
+    {0x00ff, 0x00f6, tc2068_ay_dataport_read, ay_dataport_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t tc2068_ay = {
@@ -107,12 +107,12 @@ static const periph_t tc2068_ay = {
 };
 
 static const periph_port_t beta128_pentagon_ports[] = {
-    { 0x00ff, 0x001f, pentagon_select_1f_read, beta_cr_write },
-    { 0x00ff, 0x003f, beta_tr_read, beta_tr_write },
-    { 0x00ff, 0x005f, beta_sec_read, beta_sec_write },
-    { 0x00ff, 0x007f, beta_dr_read, beta_dr_write },
-    { 0x00ff, 0x00ff, pentagon_select_ff_read, beta_sp_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x001f, pentagon_select_1f_read, beta_cr_write},
+    {0x00ff, 0x003f, beta_tr_read, beta_tr_write},
+    {0x00ff, 0x005f, beta_sec_read, beta_sec_write},
+    {0x00ff, 0x007f, beta_dr_read, beta_dr_write},
+    {0x00ff, 0x00ff, pentagon_select_ff_read, beta_sp_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t beta128_pentagon = {
@@ -123,12 +123,12 @@ static const periph_t beta128_pentagon = {
 };
 
 static const periph_port_t beta128_pentagon_late_ports[] = {
-    { 0x00ff, 0x001f, pentagon_select_1f_read, beta_cr_write },
-    { 0x00ff, 0x003f, beta_tr_read, beta_tr_write },
-    { 0x00ff, 0x005f, beta_sec_read, beta_sec_write },
-    { 0x00ff, 0x007f, beta_dr_read, beta_dr_write },
-    { 0x00ff, 0x00ff, beta_sp_read, beta_sp_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x001f, pentagon_select_1f_read, beta_cr_write},
+    {0x00ff, 0x003f, beta_tr_read, beta_tr_write},
+    {0x00ff, 0x005f, beta_sec_read, beta_sec_write},
+    {0x00ff, 0x007f, beta_dr_read, beta_dr_write},
+    {0x00ff, 0x00ff, beta_sp_read, beta_sp_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t beta128_pentagon_late = {
@@ -139,9 +139,9 @@ static const periph_t beta128_pentagon_late = {
 };
 
 static const periph_port_t pentagon1024_memory_ports[] = {
-    { 0xc002, 0x4000, NULL, pentagon1024_memoryport_write  },
-    { 0xf008, 0xe000, NULL, pentagon1024_v22_memoryport_write }, // v2.2
-    { 0, 0, NULL, NULL }
+    {0xc002, 0x4000, NULL, pentagon1024_memoryport_write  },
+    {0xf008, 0xe000, NULL, pentagon1024_v22_memoryport_write}, // v2.2
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t pentagon1024_memory = {
@@ -151,8 +151,8 @@ static const periph_t pentagon1024_memory = {
     NULL
 };
 
-static int
-machines_periph_init(void *context)
+
+static int machines_periph_init(void *context)
 {
     periph_register(PERIPH_TYPE_128_MEMORY, &spec128_memory);
     periph_register(PERIPH_TYPE_PLUS3_MEMORY, &plus3_memory);
@@ -166,10 +166,10 @@ machines_periph_init(void *context)
     return 0;
 }
 
-void
-machines_periph_register_startup(void)
+
+void machines_periph_register_startup(void)
 {
-    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_MACHINES_PERIPH,
                             dependencies, ARRAY_SIZE(dependencies),
                             machines_periph_init, NULL, NULL);
@@ -177,8 +177,8 @@ machines_periph_register_startup(void)
 
 /* Peripherals generally available on all machines; the Timex machines and
    Russian clones remove some items from this list */
-static void
-base_peripherals(void)
+
+static void base_peripherals(void)
 {
     periph_set_present(PERIPH_TYPE_DIVIDE, PERIPH_PRESENT_OPTIONAL);
     periph_set_present(PERIPH_TYPE_DIVMMC, PERIPH_PRESENT_OPTIONAL);
@@ -193,8 +193,8 @@ base_peripherals(void)
 }
 
 // Peripherals available on the 48K and 128K
-static void
-base_peripherals_48_128(void)
+
+static void base_peripherals_48_128(void)
 {
     base_peripherals();
     periph_set_present(PERIPH_TYPE_BETA128, PERIPH_PRESENT_OPTIONAL);
@@ -208,8 +208,8 @@ base_peripherals_48_128(void)
 }
 
 // The set of peripherals available on the 48K and similar machines
-void
-machines_periph_48(void)
+
+void machines_periph_48(void)
 {
     base_peripherals_48_128();
     periph_set_present(PERIPH_TYPE_FULLER, PERIPH_PRESENT_OPTIONAL);
@@ -221,8 +221,8 @@ machines_periph_48(void)
 }
 
 // The set of peripherals available on the 128K and similar machines
-void
-machines_periph_128(void)
+
+void machines_periph_128(void)
 {
     base_peripherals_48_128();
     periph_set_present(PERIPH_TYPE_AY, PERIPH_PRESENT_ALWAYS);
@@ -230,8 +230,8 @@ machines_periph_128(void)
 }
 
 // The set of peripherals available on the +3 and similar machines
-void
-machines_periph_plus3(void)
+
+void machines_periph_plus3(void)
 {
     base_peripherals();
     periph_set_present(PERIPH_TYPE_AY_PLUS3, PERIPH_PRESENT_ALWAYS);
@@ -242,8 +242,8 @@ machines_periph_plus3(void)
 }
 
 // The set of peripherals available on the TC2068 and TS2068
-void
-machines_periph_timex(void)
+
+void machines_periph_timex(void)
 {
     base_peripherals();
 
@@ -263,8 +263,8 @@ machines_periph_timex(void)
 }
 
 // The set of peripherals available on the Pentagon and Scorpion
-void
-machines_periph_pentagon(void)
+
+void machines_periph_pentagon(void)
 {
     base_peripherals();
 

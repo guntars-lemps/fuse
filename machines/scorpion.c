@@ -45,8 +45,8 @@
 static int scorpion_reset(void);
 static int scorpion_memory_map(void);
 
-int
-scorpion_init(fuse_machine_info *machine)
+
+int scorpion_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_SCORP;
     machine->id = "scorpion";
@@ -68,8 +68,8 @@ scorpion_init(fuse_machine_info *machine)
     return 0;
 }
 
-int
-scorpion_reset(void)
+
+int scorpion_reset(void)
 {
     int error;
 
@@ -115,8 +115,8 @@ scorpion_reset(void)
     return 0;
 }
 
-static int
-scorpion_memory_map(void)
+
+static int scorpion_memory_map(void)
 {
     int rom, page, screen;
 

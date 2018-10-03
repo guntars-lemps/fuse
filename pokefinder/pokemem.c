@@ -68,16 +68,16 @@ static void pokemem_poke_deactivate(gpointer data, gpointer user_data);
 static libspectrum_byte pokemem_mem_value(libspectrum_word bank,
                                            libspectrum_word address);
 
-static void
-pokemem_poke_free(gpointer data, gpointer user_data GCC_UNUSED)
+
+static void pokemem_poke_free(gpointer data, gpointer user_data GCC_UNUSED)
 {
     poke_t *poke = data;
 
     libspectrum_free(poke);
 }
 
-static void
-pokemem_trainer_free(gpointer data, gpointer user_data GCC_UNUSED)
+
+static void pokemem_trainer_free(gpointer data, gpointer user_data GCC_UNUSED)
 {
     trainer_t *trainer = data;
 
@@ -94,8 +94,8 @@ pokemem_trainer_free(gpointer data, gpointer user_data GCC_UNUSED)
     libspectrum_free(trainer);
 }
 
-void
-pokemem_clear(void)
+
+void pokemem_clear(void)
 {
     if (trainer_list) {
     g_slist_foreach(trainer_list, pokemem_trainer_free, NULL);
@@ -108,14 +108,14 @@ pokemem_clear(void)
     current_trainer = NULL;
 }
 
-void
-pokemem_end(void)
+
+void pokemem_end(void)
 {
     pokemem_clear();
 }
 
-int
-pokemem_read_from_file(const char *filename)
+
+int pokemem_read_from_file(const char *filename)
 {
     utils_file file;
     int error;
@@ -134,8 +134,8 @@ pokemem_read_from_file(const char *filename)
     return 0;
 }
 
-static void
-pokemem_read_from_buffer(const libspectrum_byte *buffer, size_t length)
+
+static void pokemem_read_from_buffer(const libspectrum_byte *buffer, size_t length)
 {
     const libspectrum_byte *ptr, *end;
     libspectrum_byte id;
@@ -215,8 +215,8 @@ pokemem_read_from_buffer(const libspectrum_byte *buffer, size_t length)
     }
 }
 
-static void
-pokemem_skip_line(const libspectrum_byte **ptr,
+
+static void pokemem_skip_line(const libspectrum_byte **ptr,
                    const libspectrum_byte *end)
 {
     const libspectrum_byte *cpos = *ptr;
@@ -230,8 +230,8 @@ pokemem_skip_line(const libspectrum_byte **ptr,
     *ptr = cpos;
 }
 
-static void
-pokemem_read_trainer(const libspectrum_byte **ptr,
+
+static void pokemem_read_trainer(const libspectrum_byte **ptr,
                       const libspectrum_byte *end)
 {
     const libspectrum_byte *cpos = *ptr;
@@ -254,7 +254,7 @@ pokemem_read_trainer(const libspectrum_byte **ptr,
     title = libspectrum_new(char, length + 1);
 
     memcpy(title, *ptr, length);
-    title[ length ] = '\0';
+    title[length] = '\0';
 
     current_trainer = libspectrum_new0(trainer_t, 1);
     current_trainer->name = title;
@@ -266,8 +266,8 @@ pokemem_read_trainer(const libspectrum_byte **ptr,
     *ptr = cpos;
 }
 
-static void
-pokemem_read_poke(const libspectrum_byte **ptr, const libspectrum_byte *end)
+
+static void pokemem_read_poke(const libspectrum_byte **ptr, const libspectrum_byte *end)
 {
     int bank, address, value, restore;
     int items;
@@ -344,15 +344,15 @@ pokemem_poke_add(trainer_t *trainer, int bank, int address, int value,
     return current_poke;
 }
 
-static libspectrum_byte
-pokemem_mem_value(libspectrum_word bank, libspectrum_word address)
+
+static libspectrum_byte pokemem_mem_value(libspectrum_word bank, libspectrum_word address)
 {
     libspectrum_byte value;
 
     if (bank == 8) {
     value = readbyte_internal(address);
     } else {
-    value = RAM[ bank ][ address & 0x3fff ];
+    value = RAM[bank][address & 0x3fff];
     }
 
     return value;
@@ -379,8 +379,8 @@ pokemem_trainer_list_add(libspectrum_byte bank, libspectrum_word address,
     return current_trainer;
 }
 
-int
-pokemem_trainer_activate(trainer_t *trainer)
+
+int pokemem_trainer_activate(trainer_t *trainer)
 {
     if (!trainer || trainer->disabled || !trainer->poke_list) return 1;
 
@@ -392,8 +392,8 @@ pokemem_trainer_activate(trainer_t *trainer)
     return 0;
 }
 
-static void
-pokemem_poke_activate(gpointer data, gpointer user_data)
+
+static void pokemem_poke_activate(gpointer data, gpointer user_data)
 {
     poke_t *poke = data;
     trainer_t *trainer = user_data;
@@ -409,13 +409,13 @@ pokemem_poke_activate(gpointer data, gpointer user_data)
     writebyte_internal(address, value);
     } else {
     address &= 0x3fff;
-    poke->restore = RAM[ bank ][ address ];
-    RAM[ bank ][ address ] = value;
+    poke->restore = RAM[bank][address];
+    RAM[bank][address] = value;
     }
 }
 
-int
-pokemem_trainer_deactivate(trainer_t *trainer)
+
+int pokemem_trainer_deactivate(trainer_t *trainer)
 {
     if (!trainer || trainer->disabled || !trainer->poke_list) return 1;
 
@@ -427,8 +427,8 @@ pokemem_trainer_deactivate(trainer_t *trainer)
     return 0;
 }
 
-static void
-pokemem_poke_deactivate(gpointer data, gpointer user_data GCC_UNUSED)
+
+static void pokemem_poke_deactivate(gpointer data, gpointer user_data GCC_UNUSED)
 {
     poke_t *poke = data;
     libspectrum_word bank = poke->bank;
@@ -438,14 +438,14 @@ pokemem_poke_deactivate(gpointer data, gpointer user_data GCC_UNUSED)
     if (bank == 8) {
     writebyte_internal(address, value);
     } else {
-    RAM[ bank ][ address & 0x3fff ] = value;
+    RAM[bank][address & 0x3fff] = value;
     }
 
 }
 
 // Open or Drag'n'Drop a .pok file
-int
-pokemem_set_pokfile(const char *filename)
+
+int pokemem_set_pokfile(const char *filename)
 {
     pokemem_clear();
 
@@ -458,8 +458,8 @@ pokemem_set_pokfile(const char *filename)
 }
 
 // Automatic search after the load of snapshots or tapes
-int
-pokemem_find_pokfile(const char *path)
+
+int pokemem_find_pokfile(const char *path)
 {
     int n, has_extension, last_dot, last_slash;
     size_t length, filename_size;
@@ -510,18 +510,18 @@ pokemem_find_pokfile(const char *path)
     filename_size =
       (has_extension)? (unsigned int) (last_dot - last_slash - 1) :
                          strlen(&path[n]);
-    test_file[ n ] = '\0';
+    test_file[n] = '\0';
     strncat(test_file, "POKES", 5);
     } else {
     n = 0; // prepend directory
     filename_size = (has_extension)? (unsigned int) last_dot : length;
     strncpy(test_file, "POKES", 5);
-    test_file[ 5 ] = '\0';
+    test_file[5] = '\0';
     }
 
     // Try .pok extension
     strncat(test_file, FUSE_DIR_SEP_STR, 1);
-    strncat(test_file, &path[ n ], filename_size);
+    strncat(test_file, &path[n], filename_size);
     strncat(test_file, ".pok", 4);
 
     if (compat_file_exists(test_file)) {
@@ -532,7 +532,7 @@ pokemem_find_pokfile(const char *path)
     // Try .POK extension
     // FIXME: Is filesystem case sensitive?
     n = n + 6 + filename_size;
-    memcpy(&test_file[ n ], ".POK", 4);
+    memcpy(&test_file[n], ".POK", 4);
 
     if (compat_file_exists(test_file)) {
     pokfile = test_file;
@@ -545,8 +545,8 @@ pokemem_find_pokfile(const char *path)
 }
 
 // Finally load requested from UI
-int
-pokemem_autoload_pokfile(void)
+
+int pokemem_autoload_pokfile(void)
 {
     utils_file file;
     int error;

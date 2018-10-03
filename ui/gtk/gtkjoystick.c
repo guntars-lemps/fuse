@@ -64,7 +64,7 @@ struct button_info {
 struct joystick_info {
 
     int *type;
-    GtkWidget *radio[ JOYSTICK_TYPE_COUNT ];
+    GtkWidget *radio[JOYSTICK_TYPE_COUNT];
 
     struct button_info button[NUM_JOY_BUTTONS];
 };
@@ -84,8 +84,8 @@ typedef struct key_menu_t {
 static void setup_info(struct joystick_info *info, int callback_action);
 static void create_joystick_type_selector(struct joystick_info *info,
                        GtkBox *parent);
-static void
-create_fire_button_selector(const char *title, struct button_info *info,
+
+static void create_fire_button_selector(const char *title, struct button_info *info,
                              GtkBox *parent, GtkTreeModel *model);
 static void set_key_text(GtkWidget *label, keyboard_key_name key);
 
@@ -94,55 +94,55 @@ static void joystick_done(GtkButton *button, gpointer user_data);
 
 static key_menu_t key_menu[] = {
 
-    { ITEM, "Joystick Fire", KEYBOARD_JOYSTICK_FIRE },
+    {ITEM, "Joystick Fire", KEYBOARD_JOYSTICK_FIRE},
 
-    { GROUP, "Numbers", KEYBOARD_NONE },
-    { SUBITEM, "0", KEYBOARD_0 },
-    { SUBITEM, "1", KEYBOARD_1 },
-    { SUBITEM, "2", KEYBOARD_2 },
-    { SUBITEM, "3", KEYBOARD_3 },
-    { SUBITEM, "4", KEYBOARD_4 },
-    { SUBITEM, "5", KEYBOARD_5 },
-    { SUBITEM, "6", KEYBOARD_6 },
-    { SUBITEM, "7", KEYBOARD_7 },
-    { SUBITEM, "8", KEYBOARD_8 },
-    { SUBITEM, "9", KEYBOARD_9 },
+    {GROUP, "Numbers", KEYBOARD_NONE},
+    {SUBITEM, "0", KEYBOARD_0},
+    {SUBITEM, "1", KEYBOARD_1},
+    {SUBITEM, "2", KEYBOARD_2},
+    {SUBITEM, "3", KEYBOARD_3},
+    {SUBITEM, "4", KEYBOARD_4},
+    {SUBITEM, "5", KEYBOARD_5},
+    {SUBITEM, "6", KEYBOARD_6},
+    {SUBITEM, "7", KEYBOARD_7},
+    {SUBITEM, "8", KEYBOARD_8},
+    {SUBITEM, "9", KEYBOARD_9},
 
-    { GROUP, "A - M", KEYBOARD_NONE },
-    { SUBITEM, "A", KEYBOARD_a },
-    { SUBITEM, "B", KEYBOARD_b },
-    { SUBITEM, "C", KEYBOARD_c },
-    { SUBITEM, "D", KEYBOARD_d },
-    { SUBITEM, "E", KEYBOARD_e },
-    { SUBITEM, "F", KEYBOARD_f },
-    { SUBITEM, "G", KEYBOARD_g },
-    { SUBITEM, "H", KEYBOARD_h },
-    { SUBITEM, "I", KEYBOARD_i },
-    { SUBITEM, "J", KEYBOARD_j },
-    { SUBITEM, "K", KEYBOARD_k },
-    { SUBITEM, "L", KEYBOARD_l },
-    { SUBITEM, "M", KEYBOARD_m },
+    {GROUP, "A - M", KEYBOARD_NONE},
+    {SUBITEM, "A", KEYBOARD_a},
+    {SUBITEM, "B", KEYBOARD_b},
+    {SUBITEM, "C", KEYBOARD_c},
+    {SUBITEM, "D", KEYBOARD_d},
+    {SUBITEM, "E", KEYBOARD_e},
+    {SUBITEM, "F", KEYBOARD_f},
+    {SUBITEM, "G", KEYBOARD_g},
+    {SUBITEM, "H", KEYBOARD_h},
+    {SUBITEM, "I", KEYBOARD_i},
+    {SUBITEM, "J", KEYBOARD_j},
+    {SUBITEM, "K", KEYBOARD_k},
+    {SUBITEM, "L", KEYBOARD_l},
+    {SUBITEM, "M", KEYBOARD_m},
 
-    { GROUP, "N - Z", KEYBOARD_NONE },
-    { SUBITEM, "N", KEYBOARD_n },
-    { SUBITEM, "O", KEYBOARD_o },
-    { SUBITEM, "P", KEYBOARD_p },
-    { SUBITEM, "Q", KEYBOARD_q },
-    { SUBITEM, "R", KEYBOARD_r },
-    { SUBITEM, "S", KEYBOARD_s },
-    { SUBITEM, "T", KEYBOARD_t },
-    { SUBITEM, "U", KEYBOARD_u },
-    { SUBITEM, "V", KEYBOARD_v },
-    { SUBITEM, "W", KEYBOARD_w },
-    { SUBITEM, "X", KEYBOARD_x },
-    { SUBITEM, "Y", KEYBOARD_y },
-    { SUBITEM, "Z", KEYBOARD_z },
+    {GROUP, "N - Z", KEYBOARD_NONE},
+    {SUBITEM, "N", KEYBOARD_n},
+    {SUBITEM, "O", KEYBOARD_o},
+    {SUBITEM, "P", KEYBOARD_p},
+    {SUBITEM, "Q", KEYBOARD_q},
+    {SUBITEM, "R", KEYBOARD_r},
+    {SUBITEM, "S", KEYBOARD_s},
+    {SUBITEM, "T", KEYBOARD_t},
+    {SUBITEM, "U", KEYBOARD_u},
+    {SUBITEM, "V", KEYBOARD_v},
+    {SUBITEM, "W", KEYBOARD_w},
+    {SUBITEM, "X", KEYBOARD_x},
+    {SUBITEM, "Y", KEYBOARD_y},
+    {SUBITEM, "Z", KEYBOARD_z},
 
-    { ITEM, "Space", KEYBOARD_space },
-    { ITEM, "Enter", KEYBOARD_Enter },
-    { ITEM, "Caps Shift", KEYBOARD_Caps },
-    { ITEM, "Symbol Shift", KEYBOARD_Symbol },
-    { ITEM, "Nothing", KEYBOARD_NONE },
+    {ITEM, "Space", KEYBOARD_space},
+    {ITEM, "Enter", KEYBOARD_Enter},
+    {ITEM, "Caps Shift", KEYBOARD_Caps},
+    {ITEM, "Symbol Shift", KEYBOARD_Symbol},
+    {ITEM, "Nothing", KEYBOARD_NONE},
 
 };
 
@@ -183,8 +183,8 @@ create_joystick_options_store(void)
     return GTK_TREE_MODEL(store);
 }
 
-void
-menu_options_joysticks_select(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_options_joysticks_select(GtkAction *gtk_action GCC_UNUSED,
                                guint callback_action)
 {
     GtkWidget *dialog, *hbox, *vbox, *content_area;
@@ -237,8 +237,8 @@ menu_options_joysticks_select(GtkAction *gtk_action GCC_UNUSED,
     fuse_emulation_unpause();
 }
 
-static void
-setup_info(struct joystick_info *info, int callback_action)
+
+static void setup_info(struct joystick_info *info, int callback_action)
 {
     size_t i;
 
@@ -304,8 +304,8 @@ setup_info(struct joystick_info *info, int callback_action)
     }
 }
 
-static void
-create_joystick_type_selector(struct joystick_info *info, GtkBox *parent)
+
+static void create_joystick_type_selector(struct joystick_info *info, GtkBox *parent)
 {
     GtkWidget *frame, *box;
     GSList *button_group;
@@ -321,21 +321,21 @@ create_joystick_type_selector(struct joystick_info *info, GtkBox *parent)
 
     for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
-    info->radio[ i ] =
-      gtk_radio_button_new_with_label(button_group, joystick_name[ i ]);
+    info->radio[i] =
+      gtk_radio_button_new_with_label(button_group, joystick_name[i]);
     button_group =
-      gtk_radio_button_get_group(GTK_RADIO_BUTTON(info->radio[ i ]));
-    gtk_box_pack_start(GTK_BOX(box), info->radio[ i ], FALSE, FALSE, 0);
+      gtk_radio_button_get_group(GTK_RADIO_BUTTON(info->radio[i]));
+    gtk_box_pack_start(GTK_BOX(box), info->radio[i], FALSE, FALSE, 0);
 
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(info->radio[ i ]),
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(info->radio[i]),
                   i == *(info->type));
 
     }
 
 }
 
-static void
-set_entry_properties(GtkCellLayout *cell_layout GCC_UNUSED,
+
+static void set_entry_properties(GtkCellLayout *cell_layout GCC_UNUSED,
                       GtkCellRenderer *cell, GtkTreeModel *tree_model,
                       GtkTreeIter *iter, gpointer data  GCC_UNUSED)
 {
@@ -348,8 +348,8 @@ set_entry_properties(GtkCellLayout *cell_layout GCC_UNUSED,
     g_object_set(cell, "xpad", 10, NULL);
 }
 
-static void
-create_fire_button_selector(const char *title, struct button_info *info,
+
+static void create_fire_button_selector(const char *title, struct button_info *info,
                              GtkBox *parent, GtkTreeModel *model)
 {
     GtkWidget *frame, *box, *combo;
@@ -405,8 +405,8 @@ create_fire_button_selector(const char *title, struct button_info *info,
                     info);
 }
 
-static void
-set_key_text(GtkWidget *label, keyboard_key_name key)
+
+static void set_key_text(GtkWidget *label, keyboard_key_name key)
 {
     const char *text;
     char buffer[40];
@@ -418,8 +418,8 @@ set_key_text(GtkWidget *label, keyboard_key_name key)
     gtk_label_set_text(GTK_LABEL(label), buffer);
 }
 
-static void
-key_callback(GtkComboBox *widget, gpointer user_data)
+
+static void key_callback(GtkComboBox *widget, gpointer user_data)
 {
     GtkTreeIter iter;
     GValue value;
@@ -440,8 +440,8 @@ key_callback(GtkComboBox *widget, gpointer user_data)
     set_key_text(info->label, info->key);
 }
 
-static void
-joystick_done(GtkButton *button GCC_UNUSED, gpointer user_data)
+
+static void joystick_done(GtkButton *button GCC_UNUSED, gpointer user_data)
 {
     struct joystick_info *info = user_data;
 
@@ -454,7 +454,7 @@ joystick_done(GtkButton *button GCC_UNUSED, gpointer user_data)
 
     for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
-    toggle = GTK_TOGGLE_BUTTON(info->radio[ i ]);
+    toggle = GTK_TOGGLE_BUTTON(info->radio[i]);
 
     if (gtk_toggle_button_get_active(toggle)) {
       *(info->type) = i;

@@ -45,8 +45,8 @@ int yyparse(void);
 int yywrap(void);
 
 // Evaluate the debugger command given in 'command'
-void
-debugger_command_evaluate(const char *command)
+
+void debugger_command_evaluate(const char *command)
 {
     if (!command) return;
 
@@ -68,15 +68,15 @@ debugger_command_evaluate(const char *command)
 
 // Utility functions called from the flex scanner
 
-int
-yywrap(void)
+
+int yywrap(void)
 {
     return 1;
 }
 
 // Called to get up to 'max_size' bytes of the command to be parsed
-int
-debugger_command_input(char *buf, int *result, int max_size)
+
+int debugger_command_input(char *buf, int *result, int max_size)
 {
     size_t length = strlen(command_ptr);
 
@@ -96,8 +96,8 @@ debugger_command_input(char *buf, int *result, int max_size)
 // Utility functions called by the bison parser
 
 // The error callback if yyparse finds an error
-void
-yyerror(const char *s)
+
+void yyerror(const char *s)
 {
     ui_error(UI_ERROR_ERROR, "Invalid debugger command: %s", s);
 }

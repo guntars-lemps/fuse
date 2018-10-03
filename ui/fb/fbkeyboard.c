@@ -110,8 +110,8 @@ int fbkeyboard_end(void)
     return 0;
 }
 
-void
-keyboard_update(void)
+
+void keyboard_update(void)
 {
     unsigned char keybuf[64];
     static int ignore = 0;

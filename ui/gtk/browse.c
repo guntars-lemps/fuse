@@ -67,15 +67,15 @@ enum
     NUM_COLS
 };
 
-void
-menu_media_tape_browse(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_media_tape_browse(GtkAction *gtk_action GCC_UNUSED,
                         gpointer data GCC_UNUSED)
 {
     // Firstly, stop emulation
     fuse_emulation_pause();
 
     if (!dialog_created)
-    if (create_dialog()) { fuse_emulation_unpause(); return; }
+    if (create_dialog()) {fuse_emulation_unpause(); return;}
 
     if (ui_tape_browser_update(UI_TAPE_BROWSER_NEW_TAPE, NULL)) {
     fuse_emulation_unpause();
@@ -138,8 +138,8 @@ create_block_list(void)
     return view;
 }
 
-static int
-create_dialog(void)
+
+static int create_dialog(void)
 {
     GtkWidget *scrolled_window, *content_area;
 
@@ -177,8 +177,8 @@ create_dialog(void)
     return 0;
 }
 
-int
-ui_tape_browser_update(ui_tape_browser_update_type change GCC_UNUSED,
+
+int ui_tape_browser_update(ui_tape_browser_update_type change GCC_UNUSED,
                         libspectrum_tape_block *block GCC_UNUSED)
 {
     int error, current_block;
@@ -213,8 +213,8 @@ ui_tape_browser_update(ui_tape_browser_update_type change GCC_UNUSED,
     return 0;
 }
 
-static void
-add_block_details(libspectrum_tape_block *block, void *user_data)
+
+static void add_block_details(libspectrum_tape_block *block, void *user_data)
 {
     gchar block_type[80];
     gchar data_detail[80];
@@ -234,8 +234,8 @@ add_block_details(libspectrum_tape_block *block, void *user_data)
 }
 
 // Called when a row is selected
-static void
-select_row(GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
+
+static void select_row(GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
             GtkTreeViewColumn *col GCC_UNUSED, gpointer user_data)
 {
     int current_block;
@@ -282,8 +282,8 @@ select_row(GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
     }
 }
 
-void
-mark_row(GtkTreeModel *model, int row)
+
+void mark_row(GtkTreeModel *model, int row)
 {
     GtkTreeIter iter;
     GtkTreePath *path;
@@ -303,16 +303,16 @@ mark_row(GtkTreeModel *model, int row)
 }
 
 // Called if the OK button is clicked
-static void
-browse_done(GtkWidget *widget GCC_UNUSED, gpointer data GCC_UNUSED)
+
+static void browse_done(GtkWidget *widget GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     dialog_created = 0;
     gtk_widget_destroy(dialog);
 }
 
 // Catch attempts to delete the window and just hide it instead
-static gboolean
-delete_dialog(GtkWidget *widget, GdkEvent *event GCC_UNUSED,
+
+static gboolean delete_dialog(GtkWidget *widget, GdkEvent *event GCC_UNUSED,
            gpointer user_data GCC_UNUSED)
 {
     dialog_created = 0;

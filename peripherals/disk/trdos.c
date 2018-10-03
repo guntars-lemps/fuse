@@ -26,8 +26,8 @@
 #include <string.h>
 #include "trdos.h"
 
-int
-trdos_read_spec(trdos_spec_t *spec, const libspectrum_byte *src)
+
+int trdos_read_spec(trdos_spec_t *spec, const libspectrum_byte *src)
 {
     if (*src) return -1;
 
@@ -46,8 +46,8 @@ trdos_read_spec(trdos_spec_t *spec, const libspectrum_byte *src)
     return 0;
 }
 
-void
-trdos_write_spec(libspectrum_byte *dest, const trdos_spec_t *spec)
+
+void trdos_write_spec(libspectrum_byte *dest, const trdos_spec_t *spec)
 {
     memset(dest, 0, 256);
     dest[225] = spec->first_free_sector;
@@ -62,8 +62,8 @@ trdos_write_spec(libspectrum_byte *dest, const trdos_spec_t *spec)
     memcpy(dest + 245, spec->disk_label, 8);
 }
 
-int
-trdos_read_dirent(trdos_dirent_t *entry, const libspectrum_byte *src)
+
+int trdos_read_dirent(trdos_dirent_t *entry, const libspectrum_byte *src)
 {
     memcpy(entry->filename, src, 8);
     entry->file_extension = src[8];
@@ -76,8 +76,8 @@ trdos_read_dirent(trdos_dirent_t *entry, const libspectrum_byte *src)
     return entry->filename[0]? 0 : 1;
 }
 
-void
-trdos_write_dirent(libspectrum_byte *dest, const trdos_dirent_t *entry)
+
+void trdos_write_dirent(libspectrum_byte *dest, const trdos_dirent_t *entry)
 {
     memcpy(dest, entry->filename, 8);
     dest[8]  = entry->file_extension;
@@ -90,8 +90,8 @@ trdos_write_dirent(libspectrum_byte *dest, const trdos_dirent_t *entry)
     dest[15] = entry->start_track;
 }
 
-int
-trdos_read_fat(trdos_boot_info_t *info, const libspectrum_byte *sectors,
+
+int trdos_read_fat(trdos_boot_info_t *info, const libspectrum_byte *sectors,
                 unsigned int seclen)
 {
     int i, j, error;

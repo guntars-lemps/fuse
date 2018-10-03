@@ -48,8 +48,8 @@ static void do_axis(int which, Sint16 value, input_key negative,
              input_key positive);
 static void do_hat(int which, Uint8 value, Uint8 mask, input_key direction);
 
-int
-ui_joystick_init(void)
+
+int ui_joystick_init(void)
 {
     int error, retval;
 
@@ -103,8 +103,8 @@ ui_joystick_init(void)
     return retval;
 }
 
-void
-ui_joystick_poll(void)
+
+void ui_joystick_poll(void)
 {
     /* No action needed in SDL UI; joysticks already handled by the SDL events
      system */
@@ -134,8 +134,8 @@ ui_joystick_poll(void)
 
 }
 
-static void
-button_action(SDL_JoyButtonEvent *buttonevent, input_event_type type)
+
+static void button_action(SDL_JoyButtonEvent *buttonevent, input_event_type type)
 {
     int button;
     input_event_t event;
@@ -150,20 +150,20 @@ button_action(SDL_JoyButtonEvent *buttonevent, input_event_type type)
     input_event(&event);
 }
 
-void
-sdljoystick_buttonpress(SDL_JoyButtonEvent *buttonevent)
+
+void sdljoystick_buttonpress(SDL_JoyButtonEvent *buttonevent)
 {
     button_action(buttonevent, INPUT_EVENT_JOYSTICK_PRESS);
 }
 
-void
-sdljoystick_buttonrelease(SDL_JoyButtonEvent *buttonevent)
+
+void sdljoystick_buttonrelease(SDL_JoyButtonEvent *buttonevent)
 {
     button_action(buttonevent, INPUT_EVENT_JOYSTICK_RELEASE);
 }
 
-void
-sdljoystick_axismove(SDL_JoyAxisEvent *axisevent)
+
+void sdljoystick_axismove(SDL_JoyAxisEvent *axisevent)
 {
     if (axisevent->axis == 0) {
     do_axis(axisevent->which, axisevent->value,
@@ -174,8 +174,8 @@ sdljoystick_axismove(SDL_JoyAxisEvent *axisevent)
     }
 }
 
-static void
-do_axis(int which, Sint16 value, input_key negative, input_key positive)
+
+static void do_axis(int which, Sint16 value, input_key negative, input_key positive)
 {
     input_event_t event1, event2;
 
@@ -199,8 +199,8 @@ do_axis(int which, Sint16 value, input_key negative, input_key positive)
     input_event(&event2);
 }
 
-void
-sdljoystick_hatmove(SDL_JoyHatEvent *hatevent)
+
+void sdljoystick_hatmove(SDL_JoyHatEvent *hatevent)
 {
     int which = hatevent->which;
     Uint8 value = hatevent->value;
@@ -215,8 +215,8 @@ sdljoystick_hatmove(SDL_JoyHatEvent *hatevent)
     do_hat(which, value, SDL_HAT_LEFT, INPUT_JOYSTICK_LEFT);
 }
 
-static void
-do_hat(int which, Uint8 value, Uint8 mask, input_key direction)
+
+static void do_hat(int which, Uint8 value, Uint8 mask, input_key direction)
 {
     input_event_t event;
 
@@ -232,8 +232,8 @@ do_hat(int which, Uint8 value, Uint8 mask, input_key direction)
     }
 }
 
-void
-ui_joystick_end(void)
+
+void ui_joystick_end(void)
 {
     if (joystick1 != NULL || joystick2 != NULL) {
 

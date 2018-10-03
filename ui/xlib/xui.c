@@ -48,8 +48,8 @@ Cursor nullpointer;
 
 static Atom delete_window_atom;
 
-int
-ui_init(int *argc, char ***argv)
+
+int ui_init(int *argc, char ***argv)
 {
     char *displayName=NULL; // Use default display
     XWMHints *wmHints;
@@ -166,7 +166,7 @@ ui_init(int *argc, char ***argv)
            StructureNotifyMask | FocusChangeMask | PointerMotionMask);
 
     {
-    static XColor dummy = { 0, 0, 0, 0, 4, 0 };
+    static XColor dummy = {0, 0, 0, 0, 4, 0};
     XGCValues xgc;
     GC gc;
 
@@ -273,8 +273,8 @@ int ui_end(void)
     return 0;
 }
 
-int
-ui_mouse_grab(int startup)
+
+int ui_mouse_grab(int startup)
 {
     if (startup) return 0;
 
@@ -293,8 +293,8 @@ ui_mouse_grab(int startup)
     }
 }
 
-int
-ui_mouse_release(int suspend GCC_UNUSED)
+
+int ui_mouse_release(int suspend GCC_UNUSED)
 {
     XUngrabPointer(display, CurrentTime);
     return 0;

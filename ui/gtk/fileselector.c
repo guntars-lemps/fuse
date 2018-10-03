@@ -102,8 +102,8 @@ ui_get_save_filename(const char *title)
     return run_dialog(title, GTK_FILE_CHOOSER_ACTION_SAVE);
 }
 
-static void
-add_filter_defaults(GtkWidget *file_chooser)
+
+static void add_filter_defaults(GtkWidget *file_chooser)
 {
     GtkFileFilter *filter;
 
@@ -186,8 +186,8 @@ add_filter_defaults(GtkWidget *file_chooser)
 
 }
 
-static void
-add_filter_auxiliary_files(GtkFileFilter *filter)
+
+static void add_filter_auxiliary_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.log");
     gtk_file_filter_add_pattern(filter, "*.pok");
@@ -214,8 +214,8 @@ add_filter_auxiliary_files(GtkFileFilter *filter)
 #if defined LIBSPECTRUM_SUPPORTS_BZ2_COMPRESSION || \
     defined LIBSPECTRUM_SUPPORTS_ZLIB_COMPRESSION
 
-static void
-add_filter_compressed_files(GtkFileFilter *filter)
+
+static void add_filter_compressed_files(GtkFileFilter *filter)
 {
 #ifdef LIBSPECTRUM_SUPPORTS_ZLIB_COMPRESSION
     gtk_file_filter_add_pattern(filter, "*.gz");
@@ -232,8 +232,8 @@ add_filter_compressed_files(GtkFileFilter *filter)
 
 #endif
 
-static void
-add_filter_disk_files(GtkFileFilter *filter)
+
+static void add_filter_disk_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.d40");
     gtk_file_filter_add_pattern(filter, "*.d80");
@@ -264,8 +264,8 @@ add_filter_disk_files(GtkFileFilter *filter)
     gtk_file_filter_add_pattern(filter, "*.UDI");
 }
 
-static void
-add_filter_dock_files(GtkFileFilter *filter)
+
+static void add_filter_dock_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.dck");
     gtk_file_filter_add_pattern(filter, "*.rom");
@@ -274,40 +274,40 @@ add_filter_dock_files(GtkFileFilter *filter)
     gtk_file_filter_add_pattern(filter, "*.ROM");
 }
 
-static void
-add_filter_harddisk_files(GtkFileFilter *filter)
+
+static void add_filter_harddisk_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.hdf");
 
     gtk_file_filter_add_pattern(filter, "*.HDF");
 }
 
-static void
-add_filter_microdrive_files(GtkFileFilter *filter)
+
+static void add_filter_microdrive_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.mdr");
 
     gtk_file_filter_add_pattern(filter, "*.MDR");
 }
 
-static void
-add_filter_movie_files(GtkFileFilter *filter)
+
+static void add_filter_movie_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.fmf");
 
     gtk_file_filter_add_pattern(filter, "*.FMF");
 }
 
-static void
-add_filter_recording_files(GtkFileFilter *filter)
+
+static void add_filter_recording_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.rzx");
 
     gtk_file_filter_add_pattern(filter, "*.RZX");
 }
 
-static void
-add_filter_snapshot_files(GtkFileFilter *filter)
+
+static void add_filter_snapshot_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.mgtsnp");
     gtk_file_filter_add_pattern(filter, "*.slt");
@@ -330,8 +330,8 @@ add_filter_snapshot_files(GtkFileFilter *filter)
     gtk_file_filter_add_pattern(filter, "*.ZX-STATE");
 }
 
-static void
-add_filter_tape_files(GtkFileFilter *filter)
+
+static void add_filter_tape_files(GtkFileFilter *filter)
 {
     gtk_file_filter_add_pattern(filter, "*.csw");
     gtk_file_filter_add_pattern(filter, "*.ltp");

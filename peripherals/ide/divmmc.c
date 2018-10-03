@@ -53,10 +53,10 @@ static void set_control_register(libspectrum_dword value);
 // Data
 
 static const periph_port_t divmmc_ports[] = {
-    { 0x00ff, 0x00e3, NULL, divmmc_control_write },
-    { 0x00ff, 0x00e7, NULL, divmmc_card_select },
-    { 0x00ff, 0x00eb, divmmc_mmc_read, divmmc_mmc_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x00e3, NULL, divmmc_control_write},
+    {0x00ff, 0x00e7, NULL, divmmc_card_select},
+    {0x00ff, 0x00eb, divmmc_mmc_read, divmmc_mmc_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t divmmc_periph = {
@@ -106,8 +106,8 @@ static const ui_menu_item eject_menu_item = UI_MENU_ITEM_MEDIA_IDE_DIVMMC_EJECT;
 
 // Housekeeping functions
 
-static int
-divmmc_init(void *context)
+
+static int divmmc_init(void *context)
 {
     card = libspectrum_mmc_alloc();
 
@@ -139,15 +139,15 @@ divmmc_init(void *context)
     return 0;
 }
 
-static void
-divmmc_end(void)
+
+static void divmmc_end(void)
 {
     divxxx_free(divmmc_state);
     libspectrum_mmc_free(card);
 }
 
-void
-divmmc_register_startup(void)
+
+void divmmc_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -160,35 +160,35 @@ divmmc_register_startup(void)
                             divmmc_end);
 }
 
-static void
-divmmc_reset(int hard_reset)
+
+static void divmmc_reset(int hard_reset)
 {
     divxxx_reset(divmmc_state, hard_reset);
     libspectrum_mmc_reset(card);
 }
 
-static int
-dirty_fn_wrapper(void *context)
+
+static int dirty_fn_wrapper(void *context)
 {
     return libspectrum_mmc_dirty((libspectrum_mmc_card*)context);
 }
 
-static libspectrum_error
-commit_fn_wrapper(void *context)
+
+static libspectrum_error commit_fn_wrapper(void *context)
 {
     libspectrum_mmc_commit((libspectrum_mmc_card*)context);
     return LIBSPECTRUM_ERROR_NONE;
 }
 
-static libspectrum_error
-eject_fn_wrapper(void *context)
+
+static libspectrum_error eject_fn_wrapper(void *context)
 {
     libspectrum_mmc_eject((libspectrum_mmc_card*)context);
     return LIBSPECTRUM_ERROR_NONE;
 }
 
-static int
-mmc_eject(libspectrum_mmc_card *card)
+
+static int mmc_eject(libspectrum_mmc_card *card)
 {
     return ide_eject_mass_storage(dirty_fn_wrapper, commit_fn_wrapper,
       eject_fn_wrapper, card,
@@ -197,8 +197,8 @@ mmc_eject(libspectrum_mmc_card *card)
       eject_menu_item);
 }
 
-int
-divmmc_insert(const char *filename)
+
+int divmmc_insert(const char *filename)
 {
     int error;
 
@@ -215,28 +215,28 @@ divmmc_insert(const char *filename)
     return ui_menu_activate(eject_menu_item, 1);
 }
 
-void
-divmmc_commit(void)
+
+void divmmc_commit(void)
 {
     libspectrum_mmc_commit(card);
 }
 
-int
-divmmc_eject(void)
+
+int divmmc_eject(void)
 {
     return mmc_eject(card);
 }
 
 // Port read/writes
 
-static void
-divmmc_control_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void divmmc_control_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     divxxx_control_write(divmmc_state, data);
 }
 
-static void
-divmmc_card_select(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void divmmc_card_select(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
 //  printf("divmmc_card_select(0x%02x)\n", data);
 
@@ -256,47 +256,47 @@ divmmc_card_select(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
     }
 }
 
-static libspectrum_byte
-divmmc_mmc_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte divmmc_mmc_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
 
     return current_card ? libspectrum_mmc_read(card) : 0xff;
 }
 
-static void
-divmmc_mmc_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
+
+static void divmmc_mmc_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     if (current_card) libspectrum_mmc_write(card, data);
 }
 
-void
-divmmc_set_automap(int state)
+
+void divmmc_set_automap(int state)
 {
     divxxx_set_automap(divmmc_state, state);
 }
 
-void
-divmmc_refresh_page_state(void)
+
+void divmmc_refresh_page_state(void)
 {
     divxxx_refresh_page_state(divmmc_state);
 }
 
-void
-divmmc_memory_map(void)
+
+void divmmc_memory_map(void)
 {
     divxxx_memory_map(divmmc_state);
 }
 
-static void
-divmmc_enabled_snapshot(libspectrum_snap *snap)
+
+static void divmmc_enabled_snapshot(libspectrum_snap *snap)
 {
     if (libspectrum_snap_divmmc_active(snap))
     settings_current.divmmc_enabled = 1;
 }
 
-static void
-divmmc_from_snapshot(libspectrum_snap *snap)
+
+static void divmmc_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
@@ -324,8 +324,8 @@ divmmc_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-divmmc_to_snapshot(libspectrum_snap *snap)
+
+static void divmmc_to_snapshot(libspectrum_snap *snap)
 {
     size_t i;
     libspectrum_byte *buffer;
@@ -354,26 +354,26 @@ divmmc_to_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-divmmc_activate(void)
+
+static void divmmc_activate(void)
 {
     divxxx_activate(divmmc_state);
 }
 
-static libspectrum_dword
-get_control_register(void)
+
+static libspectrum_dword get_control_register(void)
 {
     return divxxx_get_control(divmmc_state);
 }
 
-static void
-set_control_register(libspectrum_dword value)
+
+static void set_control_register(libspectrum_dword value)
 {
     divxxx_control_write_internal(divmmc_state, value & 0xff);
 }
 
-int
-divmmc_unittest(void)
+
+int divmmc_unittest(void)
 {
     int r = 0;
     int eprom_memory_source = divxxx_get_eprom_memory_source(divmmc_state);

@@ -39,16 +39,16 @@ static GArray *memory_pools;
 
 const int MEMPOOL_UNTRACKED = -1;
 
-static int
-mempool_init(void *context)
+
+static int mempool_init(void *context)
 {
     memory_pools = g_array_new(FALSE, FALSE, sizeof(GArray*));
 
     return 0;
 }
 
-int
-mempool_register_pool(void)
+
+int mempool_register_pool(void)
 {
     GArray *pool = g_array_new(FALSE, FALSE, sizeof(void*));
 
@@ -104,8 +104,8 @@ mempool_strdup(int pool, const char *string)
     return ptr;
 }
 
-void
-mempool_free(int pool)
+
+void mempool_free(int pool)
 {
     size_t i;
 
@@ -118,8 +118,8 @@ mempool_free(int pool)
 }
 
 // Tidy-up function called at end of emulation
-static void
-mempool_end(void)
+
+static void mempool_end(void)
 {
     int i;
     GArray *pool;
@@ -136,10 +136,10 @@ mempool_end(void)
     memory_pools = NULL;
 }
 
-void
-mempool_register_startup(void)
+
+void mempool_register_startup(void)
 {
-    startup_manager_module dependencies[] = { STARTUP_MANAGER_MODULE_SETUID };
+    startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_MEMPOOL, dependencies,
                             ARRAY_SIZE(dependencies), mempool_init, NULL,
                             mempool_end);
@@ -147,14 +147,14 @@ mempool_register_startup(void)
 
 // Unit test helper routines
 
-int
-mempool_get_pools(void)
+
+int mempool_get_pools(void)
 {
     return memory_pools->len;
 }
 
-int
-mempool_get_pool_size(int pool)
+
+int mempool_get_pool_size(int pool)
 {
     return g_array_index(memory_pools, GArray*, pool)->len;
 }

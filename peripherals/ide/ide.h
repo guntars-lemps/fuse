@@ -27,34 +27,34 @@
 #include "ui/ui.h"
 
 // Insert the images into the master and slave units if appropriate
-int
-ide_init(libspectrum_ide_channel *channel,
+
+int ide_init(libspectrum_ide_channel *channel,
       char *master_setting, ui_menu_item master_menu_item,
       char *slave_setting, ui_menu_item slave_menu_item);
 
-int
-ide_master_slave_insert(
+
+int ide_master_slave_insert(
     libspectrum_ide_channel *channel, libspectrum_ide_unit unit,
     const char *filename,
     char **master_setting, ui_menu_item master_menu_item,
     char **slave_setting, ui_menu_item slave_menu_item);
 
-int
-ide_insert(const char *filename, libspectrum_ide_channel *chn,
+
+int ide_insert(const char *filename, libspectrum_ide_channel *chn,
         libspectrum_ide_unit unit, char **setting, ui_menu_item item);
 
-int
-ide_master_slave_eject(
+
+int ide_master_slave_eject(
     libspectrum_ide_channel *channel, libspectrum_ide_unit unit,
     char **master_setting, ui_menu_item master_menu_item,
     char **slave_setting, ui_menu_item slave_menu_item);
 
-int
-ide_eject(libspectrum_ide_channel *chn, libspectrum_ide_unit unit,
+
+int ide_eject(libspectrum_ide_channel *chn, libspectrum_ide_unit unit,
        char **setting, ui_menu_item item);
 
-int
-ide_eject_mass_storage(
+
+int ide_eject_mass_storage(
     int (*is_dirty_fn)(void *context),
     libspectrum_error (*commit_fn)(void *context),
     libspectrum_error (*eject_fn)(void *context),

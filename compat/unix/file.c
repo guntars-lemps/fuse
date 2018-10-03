@@ -55,8 +55,8 @@ compat_file_get_length(compat_fd fd)
     return file_info.st_size;
 }
 
-int
-compat_file_read(compat_fd fd, utils_file *file)
+
+int compat_file_read(compat_fd fd, utils_file *file)
 {
     size_t bytes = fread(file->buffer, 1, file->length, fd);
     if (bytes != file->length) {
@@ -69,8 +69,8 @@ compat_file_read(compat_fd fd, utils_file *file)
     return 0;
 }
 
-int
-compat_file_write(compat_fd fd, const unsigned char *buffer, size_t length)
+
+int compat_file_write(compat_fd fd, const unsigned char *buffer, size_t length)
 {
     size_t bytes = fwrite(buffer, 1, length, fd);
     if (bytes != length) {
@@ -83,14 +83,14 @@ compat_file_write(compat_fd fd, const unsigned char *buffer, size_t length)
     return 0;
 }
 
-int
-compat_file_close(compat_fd fd)
+
+int compat_file_close(compat_fd fd)
 {
     return fclose(fd);
 }
 
-int
-compat_file_exists(const char *path)
+
+int compat_file_exists(const char *path)
 {
     return (access(path, R_OK) != -1);
 }

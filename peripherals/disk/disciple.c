@@ -51,8 +51,8 @@
 /* Real hardware supports the use of a 16 KiB ROM, but all of the 16 KiB
  * 'ROM dumps' for the DISCiPLE actually contain a dump of GDOS (RAM).
  * Uni-DOS also uses an 8 KiB ROM. */
-static memory_page disciple_memory_map_romcs_rom[ MEMORY_PAGES_IN_8K ];
-static memory_page disciple_memory_map_romcs_ram[ MEMORY_PAGES_IN_8K ];
+static memory_page disciple_memory_map_romcs_rom[MEMORY_PAGES_IN_8K];
+static memory_page disciple_memory_map_romcs_ram[MEMORY_PAGES_IN_8K];
 
 static int disciple_memory_source_rom;
 static int disciple_memory_source_ram;
@@ -66,8 +66,8 @@ int disciple_available = 0;
 int disciple_active = 0;
 
 static wd_fdc *disciple_fdc;
-static fdd_t disciple_drives[ DISCIPLE_NUM_DRIVES ];
-static ui_media_drive_info_t disciple_ui_drives[ DISCIPLE_NUM_DRIVES ];
+static fdd_t disciple_drives[DISCIPLE_NUM_DRIVES];
+static ui_media_drive_info_t disciple_ui_drives[DISCIPLE_NUM_DRIVES];
 
 static libspectrum_byte *disciple_ram;
 static int memory_allocated = 0;
@@ -119,8 +119,8 @@ static int page_event, unpage_event;
 
 static libspectrum_byte disciple_control_register;
 
-void
-disciple_page(void)
+
+void disciple_page(void)
 {
     disciple_active = 1;
     machine_current->ram.romcs = 1;
@@ -128,8 +128,8 @@ disciple_page(void)
     debugger_event(page_event);
 }
 
-void
-disciple_unpage(void)
+
+void disciple_unpage(void)
 {
     disciple_active = 0;
     machine_current->ram.romcs = 0;
@@ -137,8 +137,8 @@ disciple_unpage(void)
     debugger_event(unpage_event);
 }
 
-void
-disciple_memory_map(void)
+
+void disciple_memory_map(void)
 {
     struct memory_page *rom_page, *lower_page, *upper_page;
 
@@ -161,26 +161,26 @@ disciple_memory_map(void)
 
 static const periph_port_t disciple_ports[] = {
     // ---- ---- 0001 1011
-    { 0x00ff, 0x001b, disciple_sr_read, disciple_cr_write },
+    {0x00ff, 0x001b, disciple_sr_read, disciple_cr_write},
     // ---- ---- 0101 1011
-    { 0x00ff, 0x005b, disciple_tr_read, disciple_tr_write },
+    {0x00ff, 0x005b, disciple_tr_read, disciple_tr_write},
     // ---- ---- 1001 1011
-    { 0x00ff, 0x009b, disciple_sec_read, disciple_sec_write },
+    {0x00ff, 0x009b, disciple_sec_read, disciple_sec_write},
     // ---- ---- 1101 1011
-    { 0x00ff, 0x00db, disciple_dr_read, disciple_dr_write },
+    {0x00ff, 0x00db, disciple_dr_read, disciple_dr_write},
 
     // ---- ---- 0001 1111
-    { 0x00ff, 0x001f, disciple_joy_read, disciple_cn_write },
+    {0x00ff, 0x001f, disciple_joy_read, disciple_cn_write},
     // ---- ---- 0011 1011
-    { 0x00ff, 0x003b, NULL, disciple_net_write },
+    {0x00ff, 0x003b, NULL, disciple_net_write},
     // ---- ---- 0111 1011
-    { 0x00ff, 0x007b, disciple_boot_read, disciple_boot_write },
+    {0x00ff, 0x007b, disciple_boot_read, disciple_boot_write},
     // ---- ---- 1011 1011
-    { 0x00ff, 0x00bb, disciple_patch_read, disciple_patch_write },
+    {0x00ff, 0x00bb, disciple_patch_read, disciple_patch_write},
     // ---- ---- 1111 1011
-    { 0x00ff, 0x00fb, NULL, disciple_printer_write },
+    {0x00ff, 0x00fb, NULL, disciple_printer_write},
 
-    { 0, 0, NULL, NULL }
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t disciple_periph = {
@@ -190,8 +190,8 @@ static const periph_t disciple_periph = {
     /* .activate = */ disciple_activate,
 };
 
-static int
-disciple_init(void *context)
+
+static int disciple_init(void *context)
 {
     int i;
     fdd_t *d;
@@ -199,13 +199,13 @@ disciple_init(void *context)
     disciple_fdc = wd_fdc_alloc_fdc(WD1770, 0, WD_FLAG_NONE);
 
     for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
-    d = &disciple_drives[ i ];
+    d = &disciple_drives[i];
     fdd_init(d, FDD_SHUGART, NULL, 0);
     d->disk.flag = DISK_FLAG_NONE;
     }
 
-    disciple_fdc->current_drive = &disciple_drives[ 0 ];
-    fdd_select(&disciple_drives[ 0 ], 1);
+    disciple_fdc->current_drive = &disciple_drives[0];
+    fdd_select(&disciple_drives[0], 1);
     disciple_fdc->dden = 1;
     disciple_fdc->set_intrq = NULL;
     disciple_fdc->reset_intrq = NULL;
@@ -232,8 +232,8 @@ disciple_init(void *context)
     periph_register(PERIPH_TYPE_DISCIPLE, &disciple_periph);
 
     for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
-    disciple_ui_drives[i].fdd = &disciple_drives[ i ];
-    ui_media_drive_register(&disciple_ui_drives[ i ]);
+    disciple_ui_drives[i].fdd = &disciple_drives[i];
+    ui_media_drive_register(&disciple_ui_drives[i]);
     }
 
     periph_register_paging_events(event_type_string, &page_event,
@@ -242,15 +242,15 @@ disciple_init(void *context)
     return 0;
 }
 
-static void
-disciple_end(void)
+
+static void disciple_end(void)
 {
     disciple_available = 0;
     libspectrum_free(disciple_fdc);
 }
 
-void
-disciple_register_startup(void)
+
+void disciple_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -262,8 +262,8 @@ disciple_register_startup(void)
                             disciple_end);
 }
 
-static void
-disciple_reset(int hard_reset)
+
+static void disciple_reset(int hard_reset)
 {
     int i;
 
@@ -284,8 +284,8 @@ disciple_reset(int hard_reset)
     }
 
     for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
-    struct memory_page *page = &disciple_memory_map_romcs_ram[ i ];
-    page->page = &disciple_ram[ i * MEMORY_PAGE_SIZE ];
+    struct memory_page *page = &disciple_memory_map_romcs_ram[i];
+    page->page = &disciple_ram[i * MEMORY_PAGE_SIZE];
     page->offset = i * MEMORY_PAGE_SIZE;
     }
 
@@ -307,77 +307,77 @@ disciple_reset(int hard_reset)
     wd_fdc_master_reset(disciple_fdc);
 
     for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
-    ui_media_drive_update_menus(&disciple_ui_drives[ i ],
+    ui_media_drive_update_menus(&disciple_ui_drives[i],
                                  UI_MEDIA_DRIVE_UPDATE_ALL);
     }
 
-    disciple_fdc->current_drive = &disciple_drives[ 0 ];
-    fdd_select(&disciple_drives[ 0 ], 1);
+    disciple_fdc->current_drive = &disciple_drives[0];
+    fdd_select(&disciple_drives[0], 1);
     machine_current->memory_map();
 
 }
 
-static void
-disciple_inhibit(void)
+
+static void disciple_inhibit(void)
 {
     // TODO: check how this affects the hardware
     disciple_inhibited = 1;
 }
 
-static libspectrum_byte
-disciple_sr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte disciple_sr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
     return wd_fdc_sr_read(disciple_fdc);
 }
 
-static void
-disciple_cr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void disciple_cr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     wd_fdc_cr_write(disciple_fdc, b);
 }
 
-static libspectrum_byte
-disciple_tr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte disciple_tr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
     return wd_fdc_tr_read(disciple_fdc);
 }
 
-static void
-disciple_tr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void disciple_tr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     wd_fdc_tr_write(disciple_fdc, b);
 }
 
-static libspectrum_byte
-disciple_sec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte disciple_sec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
     return wd_fdc_sec_read(disciple_fdc);
 }
 
-static void
-disciple_sec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void disciple_sec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     wd_fdc_sec_write(disciple_fdc, b);
 }
 
-static libspectrum_byte
-disciple_dr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte disciple_dr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff;
     return wd_fdc_dr_read(disciple_fdc);
 }
 
-static void
-disciple_dr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void disciple_dr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     wd_fdc_dr_write(disciple_fdc, b);
 }
 
-static libspectrum_byte
-disciple_joy_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte disciple_joy_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
 
@@ -388,8 +388,8 @@ disciple_joy_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
     return 0xff; // never busy
 }
 
-static void
-disciple_cn_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+static void disciple_cn_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     int drive, side;
     int i;
@@ -400,17 +400,17 @@ disciple_cn_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
     side = (b & 0x02) ? 1 : 0;
 
     for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
-    fdd_set_head(&disciple_drives[ i ], side);
-    fdd_select(&disciple_drives[ i ], drive == i);
+    fdd_set_head(&disciple_drives[i], side);
+    fdd_select(&disciple_drives[i], drive == i);
     }
 
-    if (disciple_fdc->current_drive != &disciple_drives[ drive ]) {
+    if (disciple_fdc->current_drive != &disciple_drives[drive]) {
     if (disciple_fdc->current_drive->motoron) {
       for (i = 0; i < DISCIPLE_NUM_DRIVES; i++) {
-        fdd_motoron(&disciple_drives[ i ], drive == i);
+        fdd_motoron(&disciple_drives[i], drive == i);
       }
     }
-    disciple_fdc->current_drive = &disciple_drives[ drive ];
+    disciple_fdc->current_drive = &disciple_drives[drive];
     }
 
     printer_parallel_strobe_write(b & 0x40);
@@ -422,15 +422,15 @@ disciple_cn_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
     disciple_inhibit();
 }
 
-static void
-disciple_net_write(libspectrum_word port GCC_UNUSED,
+
+static void disciple_net_write(libspectrum_word port GCC_UNUSED,
             libspectrum_byte b GCC_UNUSED)
 {
     // TODO: implement network emulation
 }
 
-static libspectrum_byte
-disciple_boot_read(libspectrum_word port GCC_UNUSED,
+
+static libspectrum_byte disciple_boot_read(libspectrum_word port GCC_UNUSED,
             libspectrum_byte *attached GCC_UNUSED)
 {
     disciple_memswap = 0;
@@ -438,37 +438,37 @@ disciple_boot_read(libspectrum_word port GCC_UNUSED,
     return 0;
 }
 
-static void
-disciple_boot_write(libspectrum_word port GCC_UNUSED,
+
+static void disciple_boot_write(libspectrum_word port GCC_UNUSED,
              libspectrum_byte b GCC_UNUSED)
 {
     disciple_memswap = 1;
     machine_current->memory_map();
 }
 
-static libspectrum_byte
-disciple_patch_read(libspectrum_word port GCC_UNUSED,
+
+static libspectrum_byte disciple_patch_read(libspectrum_word port GCC_UNUSED,
              libspectrum_byte *attached GCC_UNUSED)
 {
     disciple_page();
     return 0;
 }
 
-static void
-disciple_patch_write(libspectrum_word port GCC_UNUSED,
+
+static void disciple_patch_write(libspectrum_word port GCC_UNUSED,
             libspectrum_byte b GCC_UNUSED)
 {
     disciple_unpage();
 }
 
-static void
-disciple_printer_write(libspectrum_word port, libspectrum_byte b)
+
+static void disciple_printer_write(libspectrum_word port, libspectrum_byte b)
 {
     printer_parallel_write(port, b);
 }
 
-int
-disciple_disk_insert(disciple_drive_number which, const char *filename,
+
+int disciple_disk_insert(disciple_drive_number which, const char *filename,
               int autoload)
 {
     if (which >= DISCIPLE_NUM_DRIVES) {
@@ -477,17 +477,17 @@ disciple_disk_insert(disciple_drive_number which, const char *filename,
     fuse_abort();
     }
 
-    return ui_media_drive_insert(&disciple_ui_drives[ which ], filename, autoload);
+    return ui_media_drive_insert(&disciple_ui_drives[which], filename, autoload);
 }
 
 fdd_t *
 disciple_get_fdd(disciple_drive_number which)
 {
-    return &(disciple_drives[ which ]);
+    return &(disciple_drives[which]);
 }
 
-static void
-disciple_activate(void)
+
+static void disciple_activate(void)
 {
     if (!memory_allocated) {
     disciple_ram = memory_pool_allocate_persistent(RAM_SIZE, 1);
@@ -495,8 +495,8 @@ disciple_activate(void)
     }
 }
 
-int
-disciple_unittest(void)
+
+int disciple_unittest(void)
 {
     int r = 0;
     /* We only support the use of an 8 KiB ROM.  Change this to 1 if adding
@@ -548,8 +548,8 @@ disciple_unittest(void)
     return r;
 }
 
-static int
-ui_drive_is_available(void)
+
+static int ui_drive_is_available(void)
 {
     return disciple_available;
 }
@@ -558,16 +558,16 @@ static const fdd_params_t *
 ui_drive_get_params_1(void)
 {
     // +1 => there is no `Disabled'
-    return &fdd_params[ option_enumerate_diskoptions_drive_disciple1_type() + 1 ];
+    return &fdd_params[option_enumerate_diskoptions_drive_disciple1_type() + 1];
 }
 
 static const fdd_params_t *
 ui_drive_get_params_2(void)
 {
-    return &fdd_params[ option_enumerate_diskoptions_drive_disciple2_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_disciple2_type() ];
 }
 
-static ui_media_drive_info_t disciple_ui_drives[ DISCIPLE_NUM_DRIVES ] = {
+static ui_media_drive_info_t disciple_ui_drives[DISCIPLE_NUM_DRIVES] = {
     {
     /* .name = */ "DISCiPLE Disk 1",
     /* .controller_index = */ UI_MEDIA_CONTROLLER_DISCIPLE,
@@ -594,14 +594,14 @@ static ui_media_drive_info_t disciple_ui_drives[ DISCIPLE_NUM_DRIVES ] = {
     },
 };
 
-static void
-disciple_enabled_snapshot(libspectrum_snap *snap)
+
+static void disciple_enabled_snapshot(libspectrum_snap *snap)
 {
     settings_current.disciple = libspectrum_snap_disciple_active(snap);
 }
 
-static void
-disciple_from_snapshot(libspectrum_snap *snap)
+
+static void disciple_from_snapshot(libspectrum_snap *snap)
 {
     int i;
 
@@ -650,8 +650,8 @@ disciple_from_snapshot(libspectrum_snap *snap)
     }
 }
 
-static void
-disciple_to_snapshot(libspectrum_snap *snap)
+
+static void disciple_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte *buffer;
     int drive_count = 0;

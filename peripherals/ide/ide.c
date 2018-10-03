@@ -29,8 +29,8 @@
 #include "ui/ui.h"
 #include "settings.h"
 
-static int
-ide_insert_file(libspectrum_ide_channel *channel, libspectrum_ide_unit unit,
+
+static int ide_insert_file(libspectrum_ide_channel *channel, libspectrum_ide_unit unit,
          const char *filename, ui_menu_item menu_item)
 {
     int error;
@@ -40,8 +40,8 @@ ide_insert_file(libspectrum_ide_channel *channel, libspectrum_ide_unit unit,
     return ui_menu_activate(menu_item, 1);
 }
 
-int
-ide_init(libspectrum_ide_channel *channel,
+
+int ide_init(libspectrum_ide_channel *channel,
       char *master_setting, ui_menu_item master_menu_item,
       char *slave_setting, ui_menu_item slave_menu_item)
 {
@@ -65,8 +65,8 @@ ide_init(libspectrum_ide_channel *channel,
     return 0;
 }
 
-int
-ide_master_slave_insert(
+
+int ide_master_slave_insert(
     libspectrum_ide_channel *channel, libspectrum_ide_unit unit,
     const char *filename,
     char **master_setting, ui_menu_item master_menu_item,
@@ -93,8 +93,8 @@ ide_master_slave_insert(
     return ide_insert(filename, channel, unit, setting, item);
 }
 
-int
-ide_insert(const char *filename, libspectrum_ide_channel *chn,
+
+int ide_insert(const char *filename, libspectrum_ide_channel *chn,
         libspectrum_ide_unit unit, char **setting, ui_menu_item item)
 {
     int error;
@@ -113,8 +113,8 @@ ide_insert(const char *filename, libspectrum_ide_channel *chn,
     return 0;
 }
 
-int
-ide_master_slave_eject(
+
+int ide_master_slave_eject(
     libspectrum_ide_channel *channel, libspectrum_ide_unit unit,
     char **master_setting, ui_menu_item master_menu_item,
     char **slave_setting, ui_menu_item slave_menu_item)
@@ -139,8 +139,8 @@ ide_master_slave_eject(
     return ide_eject(channel, unit, setting, item);
 }
 
-int
-ide_eject_mass_storage(
+
+int ide_eject_mass_storage(
     int (*is_dirty_fn)(void *context),
     libspectrum_error (*commit_fn)(void *context),
     libspectrum_error (*eject_fn)(void *context),
@@ -180,32 +180,32 @@ struct eject_fn_context {
     libspectrum_ide_unit unit;
 };
 
-static int
-dirty_fn_wrapper(void *context)
+
+static int dirty_fn_wrapper(void *context)
 {
     struct eject_fn_context *ctx = (struct eject_fn_context*)context;
     return libspectrum_ide_dirty(ctx->chn, ctx->unit);
 }
 
-static libspectrum_error
-commit_fn_wrapper(void *context)
+
+static libspectrum_error commit_fn_wrapper(void *context)
 {
     struct eject_fn_context *ctx = (struct eject_fn_context*)context;
     return libspectrum_ide_commit(ctx->chn, ctx->unit);
 }
 
-static libspectrum_error
-eject_fn_wrapper(void *context)
+
+static libspectrum_error eject_fn_wrapper(void *context)
 {
     struct eject_fn_context *ctx = (struct eject_fn_context*)context;
     return libspectrum_ide_eject(ctx->chn, ctx->unit);
 }
 
-int
-ide_eject(libspectrum_ide_channel *chn, libspectrum_ide_unit unit,
+
+int ide_eject(libspectrum_ide_channel *chn, libspectrum_ide_unit unit,
        char **setting, ui_menu_item item)
 {
-    struct eject_fn_context ctx = { chn, unit };
+    struct eject_fn_context ctx = {chn, unit};
     return ide_eject_mass_storage(dirty_fn_wrapper, commit_fn_wrapper,
       eject_fn_wrapper, &ctx,
       "Hard disk has been modified.\nDo you want to save it?",

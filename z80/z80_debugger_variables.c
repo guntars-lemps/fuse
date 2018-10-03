@@ -126,68 +126,68 @@ DEBUGGER_CALLBACKS(I)
 
 DEBUGGER_CALLBACKS(Q)
 
-static libspectrum_dword
-get_R(void)
+
+static libspectrum_dword get_R(void)
 {
     return (R7 & 0x80) | (R & 0x7f);
 }
 
-static void
-set_R(libspectrum_dword value)
+
+static void set_R(libspectrum_dword value)
 {
     R = R7 = value;
 }
 
-static libspectrum_dword
-get_memptr(void)
+
+static libspectrum_dword get_memptr(void)
 {
     return z80.memptr.w;
 }
 
-static void
-set_memptr(libspectrum_dword value)
+
+static void set_memptr(libspectrum_dword value)
 {
     z80.memptr.w = value;
 }
 
-static libspectrum_dword
-get_IM(void)
+
+static libspectrum_dword get_IM(void)
 {
     return IM;
 }
 
-static void
-set_IM(libspectrum_dword value)
+
+static void set_IM(libspectrum_dword value)
 {
     if (value <= 2) IM = value;
 }
 
-static libspectrum_dword
-get_IFF1(void)
+
+static libspectrum_dword get_IFF1(void)
 {
     return IFF1;
 }
 
-static void
-set_IFF1(libspectrum_dword value)
+
+static void set_IFF1(libspectrum_dword value)
 {
     IFF1 = !!value;
 }
 
-static libspectrum_dword
-get_IFF2(void)
+
+static libspectrum_dword get_IFF2(void)
 {
     return IFF2;
 }
 
-static void
-set_IFF2(libspectrum_dword value)
+
+static void set_IFF2(libspectrum_dword value)
 {
     IFF2 = !!value;
 }
 
-void
-z80_debugger_variables_init(void)
+
+void z80_debugger_variables_init(void)
 {
     debugger_system_variable_register(debugger_type_string, a_detail_string,
                                      get_A, set_A);

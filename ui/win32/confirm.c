@@ -30,8 +30,8 @@
 #include "settings.h"
 #include "ui/ui.h"
 
-int
-win32ui_confirm(const char *string)
+
+int win32ui_confirm(const char *string)
 {
     int confirm;
     int result;
@@ -82,8 +82,8 @@ ui_confirm_save_specific(const char *message)
     return confirm;
 }
 
-int
-ui_query(const char *message)
+
+int ui_query(const char *message)
 {
     return win32ui_confirm(message);
 }

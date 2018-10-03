@@ -36,7 +36,7 @@ extern libspectrum_dword tstates;
 
 // Things relating to memory
 
-extern libspectrum_byte RAM[ SPECTRUM_RAM_PAGES ][0x4000];
+extern libspectrum_byte RAM[SPECTRUM_RAM_PAGES][0x4000];
 
 typedef int
     (*spectrum_port_from_ula_function)(libspectrum_word port);

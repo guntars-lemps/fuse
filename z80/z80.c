@@ -49,14 +49,14 @@
    third bit of the 2nd argument; the tables differ for add and subtract
    operations */
 const libspectrum_byte halfcarry_add_table[] =
-    { 0, FLAG_H, FLAG_H, FLAG_H, 0, 0, 0, FLAG_H };
+    {0, FLAG_H, FLAG_H, FLAG_H, 0, 0, 0, FLAG_H};
 const libspectrum_byte halfcarry_sub_table[] =
-    { 0, 0, FLAG_H, 0, FLAG_H, 0, FLAG_H, FLAG_H };
+    {0, 0, FLAG_H, 0, FLAG_H, 0, FLAG_H, FLAG_H};
 
 /* Similarly, overflow can be determined by looking at the 7th bits; again
    the hash into this table is r12 */
-const libspectrum_byte overflow_add_table[] = { 0, 0, 0, FLAG_V, FLAG_V, 0, 0, 0 };
-const libspectrum_byte overflow_sub_table[] = { 0, FLAG_V, 0, 0, 0, 0, FLAG_V, 0 };
+const libspectrum_byte overflow_add_table[] = {0, 0, 0, FLAG_V, FLAG_V, 0, 0, 0};
+const libspectrum_byte overflow_sub_table[] = {0, FLAG_V, 0, 0, 0, 0, FLAG_V, 0};
 
 // Some more tables; initialised in z80_init_tables()
 
@@ -86,8 +86,8 @@ static module_info_t z80_module_info = {
 
 };
 
-static void
-z80_interrupt_event_fn(libspectrum_dword event_tstates, int type,
+
+static void z80_interrupt_event_fn(libspectrum_dword event_tstates, int type,
                         void *user_data)
 {
     /* Retriggered interrupt; firstly, ignore if we're doing RZX playback
@@ -100,8 +100,8 @@ z80_interrupt_event_fn(libspectrum_dword event_tstates, int type,
 }
 
 // Set up the z80 emulation
-int
-z80_init(void *context)
+
+int z80_init(void *context)
 {
     z80_init_tables();
 
@@ -117,8 +117,8 @@ z80_init(void *context)
     return 0;
 }
 
-void
-z80_register_startup(void)
+
+void z80_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -138,7 +138,7 @@ static void z80_init_tables(void)
     for (i=0;i<0x100;i++) {
     sz53_table[i]= i & (FLAG_3 | FLAG_5 | FLAG_S);
     j=i; parity=0;
-    for (k=0;k<8;k++) { parity ^= j & 1; j >>=1; }
+    for (k=0;k<8;k++) {parity ^= j & 1; j >>=1;}
     parity_table[i]= (parity ? 0 : FLAG_P);
     sz53p_table[i] = sz53_table[i] | parity_table[i];
     }
@@ -149,8 +149,8 @@ static void z80_init_tables(void)
 }
 
 // Reset the z80
-void
-z80_reset(int hard_reset)
+
+void z80_reset(int hard_reset)
 {
     AF =AF_=0xffff;
     I=R=R7=0;
@@ -172,8 +172,8 @@ z80_reset(int hard_reset)
 }
 
 // Process a z80 maskable interrupt
-int
-z80_interrupt(void)
+
+int z80_interrupt(void)
 {
     /* An interrupt will occur if IFF1 is set and the /INT line hasn't
      gone high again. On a Timex machine, we also need the SCLD's
@@ -199,7 +199,7 @@ z80_interrupt(void)
       return 0;
     }
 
-    if (z80.halted) { PC++; z80.halted = 0; }
+    if (z80.halted) {PC++; z80.halted = 0;}
 
     IFF1=IFF2=0;
     R++; rzx_instructions_offset--;
@@ -247,14 +247,14 @@ z80_interrupt(void)
 }
 
 // Process a z80 non-maskable interrupt
-static void
-z80_nmi(libspectrum_dword ts, int type, void *user_data)
+
+static void z80_nmi(libspectrum_dword ts, int type, void *user_data)
 {
     // TODO: this isn't ideal
     if (spectranet_available && spectranet_nmi_flipflop())
     return;
 
-    if (z80.halted) { PC++; z80.halted = 0; }
+    if (z80.halted) {PC++; z80.halted = 0;}
 
     IFF1 = 0;
     R++; tstates += 5;
@@ -283,15 +283,15 @@ z80_nmi(libspectrum_dword ts, int type, void *user_data)
 }
 
 // Special peripheral processing for RETN
-void
-z80_retn(void)
+
+void z80_retn(void)
 {
     spectranet_retn();
 }
 
 // Routines for transferring the Z80 contents to and from snapshots
-static void
-z80_from_snapshot(libspectrum_snap *snap)
+
+static void z80_from_snapshot(libspectrum_snap *snap)
 {
     A  = libspectrum_snap_a (snap); F  = libspectrum_snap_f (snap);
     A_ = libspectrum_snap_a_(snap); F_ = libspectrum_snap_f_(snap);
@@ -317,8 +317,8 @@ z80_from_snapshot(libspectrum_snap *snap)
     Q = libspectrum_snap_last_instruction_set_f(snap) ? F : 0;
 }
 
-static void
-z80_to_snapshot(libspectrum_snap *snap)
+
+static void z80_to_snapshot(libspectrum_snap *snap)
 {
     libspectrum_byte r_register;
 

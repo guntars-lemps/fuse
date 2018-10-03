@@ -48,8 +48,8 @@ static void dock_exrom_reset(void);
 static int spec_se_reset(void);
 static int spec_se_memory_map(void);
 
-int
-spec_se_init(fuse_machine_info *machine)
+
+int spec_se_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_SE;
     machine->id = "se";
@@ -71,15 +71,15 @@ spec_se_init(fuse_machine_info *machine)
     return 0;
 }
 
-static void
-dock_exrom_reset(void)
+
+static void dock_exrom_reset(void)
 {
     // The dock is always active on the SE
     dck_active = 1;
 }
 
-int
-spec_se_reset(void)
+
+int spec_se_reset(void)
 {
     int error;
     size_t i, j;
@@ -185,8 +185,8 @@ spec_se_reset(void)
     return 0;
 }
 
-static int
-spec_se_memory_map(void)
+
+static int spec_se_memory_map(void)
 {
     memory_page *exrom_dock;
 

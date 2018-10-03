@@ -64,8 +64,8 @@ static int queuepos = 0;
 static input_event_t releasequeue[QUEUELEN];
 static int releasequeuepos = 0;
 
-static int
-post_modifier(input_event_t* event,
+
+static int post_modifier(input_event_t* event,
            u8 old, u8 new, u8 modifier, input_key spectrum_key)
 {
     if ((old & modifier) && !(new & modifier)) {
@@ -173,8 +173,8 @@ kbdthread_fn(void *arg)
     return NULL;
 }
 
-int
-wiikeyboard_init(void)
+
+int wiikeyboard_init(void)
 {
     kbd = IOS_Open("/dev/usb/kbd", IPC_OPEN_RW);
     if (kbd < 0) return kbd;
@@ -195,8 +195,8 @@ int wiikeyboard_end(void)
     return 0;
 }
 
-void
-keyboard_update(void)
+
+void keyboard_update(void)
 {
     int i;
 

@@ -48,39 +48,39 @@ int image_width, image_height;
 /* A copy of every pixel on the screen, replaceable by plotting directly into
    rgb_image below */
 libspectrum_word
-    gtkdisplay_image[ 2 * DISPLAY_SCREEN_HEIGHT ][ DISPLAY_SCREEN_WIDTH ];
+    gtkdisplay_image[2 * DISPLAY_SCREEN_HEIGHT][DISPLAY_SCREEN_WIDTH];
 ptrdiff_t gtkdisplay_pitch = DISPLAY_SCREEN_WIDTH * sizeof(libspectrum_word);
 
 /* An RGB image of the Spectrum screen; slightly bigger than the real
    screen to handle the smoothing filters which read around each pixel */
-static guchar rgb_image[ 4 * 2 * (DISPLAY_SCREEN_HEIGHT + 4) *
+static guchar rgb_image[4 * 2 * (DISPLAY_SCREEN_HEIGHT + 4) *
                                  (DISPLAY_SCREEN_WIDTH  + 3)   ];
 static const gint rgb_pitch = (DISPLAY_SCREEN_WIDTH + 3) * 4;
 
 // The scaled image
-static guchar scaled_image[ 3 * DISPLAY_SCREEN_HEIGHT *
-                            6 * DISPLAY_SCREEN_WIDTH ];
+static guchar scaled_image[3 * DISPLAY_SCREEN_HEIGHT *
+                            6 * DISPLAY_SCREEN_WIDTH];
 static const ptrdiff_t scaled_pitch = 6 * DISPLAY_SCREEN_WIDTH;
 
 // The colour palette
 static const guchar rgb_colours[16][3] = {
 
-    {   0,   0,   0 },
-    {   0,   0, 192 },
-    { 192,   0,   0 },
-    { 192,   0, 192 },
-    {   0, 192,   0 },
-    {   0, 192, 192 },
-    { 192, 192,   0 },
-    { 192, 192, 192 },
-    {   0,   0,   0 },
-    {   0,   0, 255 },
-    { 255,   0,   0 },
-    { 255,   0, 255 },
-    {   0, 255,   0 },
-    {   0, 255, 255 },
-    { 255, 255,   0 },
-    { 255, 255, 255 },
+    {   0,   0,   0},
+    {   0,   0, 192},
+    {192,   0,   0},
+    {192,   0, 192},
+    {   0, 192,   0},
+    {   0, 192, 192},
+    {192, 192,   0},
+    {192, 192, 192},
+    {   0,   0,   0},
+    {   0,   0, 255},
+    {255,   0,   0},
+    {255,   0, 255},
+    {   0, 255,   0},
+    {   0, 255, 255},
+    {255, 255,   0},
+    {255, 255, 255},
 
 };
 
@@ -127,8 +127,8 @@ static gboolean gtkdisplay_draw(GtkWidget *widget, cairo_t *cr,
 static gint drawing_area_resize_callback(GtkWidget *widget, GdkEvent *event,
                                           gpointer data);
 
-static int
-init_colours(colour_format_t format)
+
+static int init_colours(colour_format_t format)
 {
     size_t i;
 
@@ -177,8 +177,8 @@ init_colours(colour_format_t format)
     return 0;
 }
 
-int
-uidisplay_init(int width, int height)
+
+int uidisplay_init(int width, int height)
 {
     int x, y, error;
     libspectrum_dword black;
@@ -235,8 +235,8 @@ uidisplay_init(int width, int height)
     return 0;
 }
 
-static int
-drawing_area_resize(int width, int height, int force_scaler)
+
+static int drawing_area_resize(int width, int height, int force_scaler)
 {
     int size;
 
@@ -273,8 +273,8 @@ drawing_area_resize(int width, int height, int force_scaler)
     return 0;
 }
 
-static void
-register_scalers(int force_scaler)
+
+static void register_scalers(int force_scaler)
 {
     scaler_type scaler;
     float drawing_area_scale, scaling_factor;
@@ -328,8 +328,8 @@ register_scalers(int force_scaler)
     scaler_select_scaler(scaler);
 }
 
-void
-uidisplay_frame_end(void)
+
+void uidisplay_frame_end(void)
 {
 #if GTK_CHECK_VERSION(3, 0, 0)
     if (display_updated) {
@@ -342,8 +342,8 @@ uidisplay_frame_end(void)
     return;
 }
 
-void
-uidisplay_area(int x, int y, int w, int h)
+
+void uidisplay_area(int x, int y, int w, int h)
 {
     float scale = (float)gtkdisplay_current_size / image_scale;
     int scaled_x, scaled_y, i, yy;
@@ -368,13 +368,13 @@ uidisplay_area(int x, int y, int w, int h)
 
     display = &gtkdisplay_image[yy][x];
 
-    for (i = 0; i < w; i++, rgb++, display++) *rgb = palette[ *display ];
+    for (i = 0; i < w; i++, rgb++, display++) *rgb = palette[ *display];
     }
 
     // Create scaled image
     scaler_proc32(&rgb_image[ (y + 2) * rgb_pitch + 4 * (x + 1) ],
                  rgb_pitch,
-                 &scaled_image[ scaled_y * scaled_pitch + 4 * scaled_x ],
+                 &scaled_image[scaled_y * scaled_pitch + 4 * scaled_x],
                  scaled_pitch, w, h);
 
     w *= scale; h *= scale;
@@ -390,7 +390,7 @@ static void gtkdisplay_area(int x, int y, int width, int height)
     gdk_draw_rgb_32_image(gtkui_drawing_area->window,
                          gtkui_drawing_area->style->fg_gc[GTK_STATE_NORMAL],
                          x, y, width, height, GDK_RGB_DITHER_NONE,
-                         &scaled_image[ y * scaled_pitch + 4 * x ],
+                         &scaled_image[y * scaled_pitch + 4 * x],
                          scaled_pitch);
 
 #else
@@ -401,8 +401,8 @@ static void gtkdisplay_area(int x, int y, int width, int height)
 #endif // #if !GTK_CHECK_VERSION(3, 0, 0)
 }
 
-int
-uidisplay_hotswap_gfx_mode(void)
+
+int uidisplay_hotswap_gfx_mode(void)
 {
     fuse_emulation_pause();
 
@@ -414,15 +414,15 @@ uidisplay_hotswap_gfx_mode(void)
     return 0;
 }
 
-int
-uidisplay_end(void)
+
+int uidisplay_end(void)
 {
     return 0;
 }
 
 // Set one pixel in the display
-void
-uidisplay_putpixel(int x, int y, int colour)
+
+void uidisplay_putpixel(int x, int y, int colour)
 {
     if (machine_current->timex) {
     x <<= 1; y <<= 1;
@@ -437,8 +437,8 @@ uidisplay_putpixel(int x, int y, int colour)
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((8*x) , y) */
-void
-uidisplay_plot8(int x, int y, libspectrum_byte data,
+
+void uidisplay_plot8(int x, int y, libspectrum_byte data,
                  libspectrum_byte ink, libspectrum_byte paper)
 {
     x <<= 3;
@@ -479,8 +479,8 @@ uidisplay_plot8(int x, int y, libspectrum_byte data,
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((16*x) , y) */
-void
-uidisplay_plot16(int x, int y, libspectrum_word data,
+
+void uidisplay_plot16(int x, int y, libspectrum_word data,
                  libspectrum_byte ink, libspectrum_byte paper)
 {
     int i;
@@ -511,8 +511,8 @@ uidisplay_plot16(int x, int y, libspectrum_word data,
 #if !GTK_CHECK_VERSION(3, 0, 0)
 
 // Called by gtkui_drawing_area on "expose_event"
-static gint
-gtkdisplay_expose(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
+
+static gint gtkdisplay_expose(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
                    gpointer data GCC_UNUSED)
 {
     gtkdisplay_area(event->expose.area.x, event->expose.area.y,
@@ -522,8 +522,8 @@ gtkdisplay_expose(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
 
 /* Called by gtkui_drawing_area on "configure_event".
    On GTK+ 2 the drawing_area determines the size of the window */
-static gint
-drawing_area_resize_callback(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
+
+static gint drawing_area_resize_callback(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
                               gpointer data GCC_UNUSED)
 {
     drawing_area_resize(event->configure.width, event->configure.height, 1);
@@ -534,8 +534,8 @@ drawing_area_resize_callback(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
 #else // #if !GTK_CHECK_VERSION(3, 0, 0)
 
 // Called by gtkui_drawing_area on "draw" event
-static gboolean
-gtkdisplay_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
+
+static gboolean gtkdisplay_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
     // Create a new surface for this gfx mode
     if (!surface) {
@@ -559,8 +559,8 @@ gtkdisplay_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 /* Called by gtkui_window on "configure_event".
    On GTK+ 3 the window determines the size of the drawing area */
-static gint
-drawing_area_resize_callback(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
+
+static gint drawing_area_resize_callback(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
                               gpointer data GCC_UNUSED)
 {
     drawing_area_resize(event->configure.width,
@@ -571,8 +571,8 @@ drawing_area_resize_callback(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
 
 #endif // #if !GTK_CHECK_VERSION(3, 0, 0)
 
-void
-gtkdisplay_update_geometry(void)
+
+void gtkdisplay_update_geometry(void)
 {
     GdkGeometry geometry;
     GdkWindowHints hints;
@@ -633,8 +633,8 @@ gtkdisplay_update_geometry(void)
                                  &geometry, hints);
 }
 
-static void
-gtkdisplay_load_gfx_mode(void)
+
+static void gtkdisplay_load_gfx_mode(void)
 {
     float scale;
 

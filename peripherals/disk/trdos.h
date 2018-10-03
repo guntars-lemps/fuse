@@ -54,20 +54,20 @@ typedef struct trdos_boot_info_t {
     char first_basic_file[8]; // not null-terminated
 } trdos_boot_info_t;
 
-int
-trdos_read_spec(trdos_spec_t *spec, const libspectrum_byte *src);
 
-void
-trdos_write_spec(libspectrum_byte *dest, const trdos_spec_t *spec);
+int trdos_read_spec(trdos_spec_t *spec, const libspectrum_byte *src);
 
-int
-trdos_read_dirent(trdos_dirent_t *entry, const libspectrum_byte *src);
 
-void
-trdos_write_dirent(libspectrum_byte *dest, const trdos_dirent_t *entry);
+void trdos_write_spec(libspectrum_byte *dest, const trdos_spec_t *spec);
 
-int
-trdos_read_fat(trdos_boot_info_t *info, const libspectrum_byte *sectors,
+
+int trdos_read_dirent(trdos_dirent_t *entry, const libspectrum_byte *src);
+
+
+void trdos_write_dirent(libspectrum_byte *dest, const trdos_dirent_t *entry);
+
+
+int trdos_read_fat(trdos_boot_info_t *info, const libspectrum_byte *sectors,
                 unsigned int seclen);
 
 #endif // #ifndef FUSE_TRDOS_H

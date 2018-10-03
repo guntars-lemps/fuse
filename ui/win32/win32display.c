@@ -42,19 +42,19 @@ int image_width, image_height;
 /* A copy of every pixel on the screen, replaceable by plotting directly into
    rgb_image below */
 libspectrum_word
-    win32display_image[ 2 * DISPLAY_SCREEN_HEIGHT ][ DISPLAY_SCREEN_WIDTH ];
+    win32display_image[2 * DISPLAY_SCREEN_HEIGHT][DISPLAY_SCREEN_WIDTH];
 ptrdiff_t win32display_pitch = DISPLAY_SCREEN_WIDTH *
                                sizeof(libspectrum_word);
 
 /* An RGB image of the Spectrum screen; slightly bigger than the real
    screen to handle the smoothing filters which read around each pixel */
-static unsigned char rgb_image[ 4 * 2 * (DISPLAY_SCREEN_HEIGHT + 4) *
+static unsigned char rgb_image[4 * 2 * (DISPLAY_SCREEN_HEIGHT + 4) *
                                         (DISPLAY_SCREEN_WIDTH  + 3)   ];
 static const int rgb_pitch = (DISPLAY_SCREEN_WIDTH + 3) * 4;
 
 // The scaled image
-static unsigned char scaled_image[ 3 * DISPLAY_SCREEN_HEIGHT *
-                                   6 * DISPLAY_SCREEN_WIDTH ];
+static unsigned char scaled_image[3 * DISPLAY_SCREEN_HEIGHT *
+                                   6 * DISPLAY_SCREEN_WIDTH];
 static const ptrdiff_t scaled_pitch = 6 * DISPLAY_SCREEN_WIDTH;
 
 // Win32 specific variables
@@ -65,22 +65,22 @@ static RECT invalidated_area;
 
 static const unsigned char rgb_colours[16][3] = {
 
-    {   0,   0,   0 },
-    {   0,   0, 192 },
-    { 192,   0,   0 },
-    { 192,   0, 192 },
-    {   0, 192,   0 },
-    {   0, 192, 192 },
-    { 192, 192,   0 },
-    { 192, 192, 192 },
-    {   0,   0,   0 },
-    {   0,   0, 255 },
-    { 255,   0,   0 },
-    { 255,   0, 255 },
-    {   0, 255,   0 },
-    {   0, 255, 255 },
-    { 255, 255,   0 },
-    { 255, 255, 255 },
+    {   0,   0,   0},
+    {   0,   0, 192},
+    {192,   0,   0},
+    {192,   0, 192},
+    {   0, 192,   0},
+    {   0, 192, 192},
+    {192, 192,   0},
+    {192, 192, 192},
+    {   0,   0,   0},
+    {   0,   0, 255},
+    {255,   0,   0},
+    {255,   0, 255},
+    {   0, 255,   0},
+    {   0, 255, 255},
+    {255, 255,   0},
+    {255, 255, 255},
 
 };
 
@@ -94,8 +94,8 @@ static int init_colours(void);
 static void register_scalers(int force_scaler);
 static void win32display_load_gfx_mode(void);
 
-void
-blit(void)
+
+void blit(void)
 {
     PAINTSTRUCT ps;
     HDC dest_dc, src_dc;
@@ -122,8 +122,8 @@ blit(void)
     EndPaint(fuse_hWnd, &ps);
 }
 
-int
-win32display_init(void)
+
+int win32display_init(void)
 {
     int x, y, error;
     libspectrum_dword black;
@@ -168,8 +168,8 @@ win32display_init(void)
     return 0;
 }
 
-static int
-init_colours(void)
+
+static int init_colours(void)
 {
     size_t i;
 
@@ -201,8 +201,8 @@ init_colours(void)
     return 0;
 }
 
-int
-win32display_drawing_area_resize(int width, int height, int force_scaler)
+
+int win32display_drawing_area_resize(int width, int height, int force_scaler)
 {
     int size;
 
@@ -223,8 +223,8 @@ win32display_drawing_area_resize(int width, int height, int force_scaler)
     return 0;
 }
 
-int
-uidisplay_init(int width, int height)
+
+int uidisplay_init(int width, int height)
 {
     const char *machine_name;
 
@@ -247,8 +247,8 @@ uidisplay_init(int width, int height)
     return 0;
 }
 
-static void
-register_scalers(int force_scaler)
+
+static void register_scalers(int force_scaler)
 {
     scaler_type scaler;
 
@@ -296,8 +296,8 @@ register_scalers(int force_scaler)
     scaler_select_scaler(scaler);
 }
 
-void
-uidisplay_frame_end(void)
+
+void uidisplay_frame_end(void)
 {
     if (!IsRectEmpty(&invalidated_area)) {
 
@@ -309,8 +309,8 @@ uidisplay_frame_end(void)
     }
 }
 
-void
-uidisplay_area(int x, int y, int w, int h)
+
+void uidisplay_area(int x, int y, int w, int h)
 {
     float scale = (float)win32display_current_size / image_scale;
     int scaled_x, scaled_y, i, yy;
@@ -335,13 +335,13 @@ uidisplay_area(int x, int y, int w, int h)
 
     display = &win32display_image[yy][x];
 
-    for (i = 0; i < w; i++, rgb++, display++) *rgb = palette[ *display ];
+    for (i = 0; i < w; i++, rgb++, display++) *rgb = palette[ *display];
     }
 
     // Create scaled image
     scaler_proc32(&rgb_image[ (y + 2) * rgb_pitch + 4 * (x + 1) ],
                  rgb_pitch,
-                 &scaled_image[ scaled_y * scaled_pitch + 4 * scaled_x ],
+                 &scaled_image[scaled_y * scaled_pitch + 4 * scaled_x],
                  scaled_pitch, w, h);
 
     w *= scale; h *= scale;
@@ -350,8 +350,8 @@ uidisplay_area(int x, int y, int w, int h)
     win32display_area(scaled_x, scaled_y, w, h);
 }
 
-void
-win32display_area(int x, int y, int width, int height)
+
+void win32display_area(int x, int y, int width, int height)
 {
     int disp_x,disp_y;
     int bottom, right;
@@ -366,10 +366,10 @@ win32display_area(int x, int y, int width, int height)
     for (disp_x = x; disp_x < right; disp_x++) {
       ofs = (disp_x << 2) + (disp_y * scaled_pitch);
 
-      pixdata[ ofs + 0 ] = scaled_image[ ofs + 2 ]; // blue
-      pixdata[ ofs + 1 ] = scaled_image[ ofs + 1 ]; // green
-      pixdata[ ofs + 2 ] = scaled_image[ ofs + 0 ]; // red
-      pixdata[ ofs + 3 ] = 0; // unused
+      pixdata[ofs + 0] = scaled_image[ofs + 2]; // blue
+      pixdata[ofs + 1] = scaled_image[ofs + 1]; // green
+      pixdata[ofs + 2] = scaled_image[ofs + 0]; // red
+      pixdata[ofs + 3] = 0; // unused
     }
     }
 
@@ -378,8 +378,8 @@ win32display_area(int x, int y, int width, int height)
     UnionRect(&invalidated_area, &invalidated_area, &r);
 }
 
-int
-uidisplay_hotswap_gfx_mode(void)
+
+int uidisplay_hotswap_gfx_mode(void)
 {
     fuse_emulation_pause();
 
@@ -391,14 +391,14 @@ uidisplay_hotswap_gfx_mode(void)
     return 0;
 }
 
-int
-uidisplay_end(void)
+
+int uidisplay_end(void)
 {
     return 0;
 }
 
-int
-win32display_end(void)
+
+int win32display_end(void)
 {
     DeleteObject(fuse_BMP);
 
@@ -406,8 +406,8 @@ win32display_end(void)
 }
 
 // Set one pixel in the display
-void
-uidisplay_putpixel(int x, int y, int colour)
+
+void uidisplay_putpixel(int x, int y, int colour)
 {
     if (machine_current->timex) {
     x <<= 1; y <<= 1;
@@ -422,8 +422,8 @@ uidisplay_putpixel(int x, int y, int colour)
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((8*x) , y) */
-void
-uidisplay_plot8(int x, int y, libspectrum_byte data,
+
+void uidisplay_plot8(int x, int y, libspectrum_byte data,
                  libspectrum_byte ink, libspectrum_byte paper)
 {
     x <<= 3;
@@ -464,8 +464,8 @@ uidisplay_plot8(int x, int y, libspectrum_byte data,
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((16*x) , y) */
-void
-uidisplay_plot16(int x, int y, libspectrum_word data,
+
+void uidisplay_plot16(int x, int y, libspectrum_word data,
                   libspectrum_byte ink, libspectrum_byte paper)
 {
     int i;
@@ -491,8 +491,8 @@ uidisplay_plot16(int x, int y, libspectrum_word data,
     }
 }
 
-static void
-win32display_load_gfx_mode(void)
+
+static void win32display_load_gfx_mode(void)
 {
     float scale;
 
@@ -504,14 +504,14 @@ win32display_load_gfx_mode(void)
     display_refresh_all();
 }
 
-int
-win32display_scaled_width(void)
+
+int win32display_scaled_width(void)
 {
     return image_width * win32display_current_size;
 }
 
-int
-win32display_scaled_height(void)
+
+int win32display_scaled_height(void)
 {
     return image_height * win32display_current_size;
 }

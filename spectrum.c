@@ -51,15 +51,15 @@
 #include "z80/z80.h"
 
 // 1040 KB of RAM
-libspectrum_byte RAM[ SPECTRUM_RAM_PAGES ][0x4000];
+libspectrum_byte RAM[SPECTRUM_RAM_PAGES][0x4000];
 
 /* How many tstates have elapsed since the last interrupt? (or more
    precisely, since the ULA last pulled the /INT line to the Z80 low) */
 libspectrum_dword tstates;
 
 // Contention patterns
-static int contention_pattern_65432100[] = { 5, 4, 3, 2, 1, 0, 0, 6 };
-static int contention_pattern_76543210[] = { 5, 4, 3, 2, 1, 0, 7, 6 };
+static int contention_pattern_65432100[] = {5, 4, 3, 2, 1, 0, 0, 6};
+static int contention_pattern_76543210[] = {5, 4, 3, 2, 1, 0, 7, 6};
 
 // Event
 int spectrum_frame_event;
@@ -73,8 +73,8 @@ static const char * const frame_count_name = "frames";
 // Count of frames since last reset
 static libspectrum_dword frames_since_reset;
 
-static void
-spectrum_reset(int hard_reset)
+
+static void spectrum_reset(int hard_reset)
 {
     frames_since_reset = 0;
 }
@@ -87,8 +87,8 @@ static module_info_t module_info = {
     /* .snapshot_to = */ NULL
 };
 
-static void
-spectrum_frame_event_fn(libspectrum_dword last_tstates, int type,
+
+static void spectrum_frame_event_fn(libspectrum_dword last_tstates, int type,
              void *user_data)
 {
     if (rzx_playback) event_force_events();
@@ -103,14 +103,14 @@ spectrum_frame_event_fn(libspectrum_dword last_tstates, int type,
     ui_error_frame();
 }
 
-static libspectrum_dword
-get_frame_count(void)
+
+static libspectrum_dword get_frame_count(void)
 {
     return frames_since_reset;
 }
 
-static int
-spectrum_init(void *context)
+
+static int spectrum_init(void *context)
 {
     spectrum_frame_event = event_register(spectrum_frame_event_fn,
                      "End of frame");
@@ -123,8 +123,8 @@ spectrum_init(void *context)
     return 0;
 }
 
-void
-spectrum_register_startup(void)
+
+void spectrum_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -136,8 +136,8 @@ spectrum_register_startup(void)
                             NULL);
 }
 
-int
-spectrum_frame(void)
+
+int spectrum_frame(void)
 {
     libspectrum_dword frame_length;
 
@@ -172,25 +172,25 @@ spectrum_frame(void)
     return 0;
 }
 
-libspectrum_byte
-spectrum_contend_delay_none(libspectrum_dword time)
+
+libspectrum_byte spectrum_contend_delay_none(libspectrum_dword time)
 {
     return 0;
 }
 
-static libspectrum_byte
-contend_delay_common(libspectrum_dword time, int* timings, int offset)
+
+static libspectrum_byte contend_delay_common(libspectrum_dword time, int* timings, int offset)
 {
     int line, tstates_through_line;
 
     line =
-    (libspectrum_signed_dword)(time - machine_current->line_times[ 0 ]) /
+    (libspectrum_signed_dword)(time - machine_current->line_times[0]) /
     machine_current->timings.tstates_per_line;
 
     /* Work out where we are in this line, remembering that line_times[0] holds
      the first pixel we display, not the start of where the Spectrum produced
      the left border */
-    tstates_through_line = time - machine_current->line_times[ 0 ] +
+    tstates_through_line = time - machine_current->line_times[0] +
     (machine_current->timings.left_border - DISPLAY_BORDER_WIDTH_COLS * 4);
 
     tstates_through_line %= machine_current->timings.tstates_per_line;
@@ -211,34 +211,34 @@ contend_delay_common(libspectrum_dword time, int* timings, int offset)
 
     /* We now know the ULA is reading the screen, so put in the appropriate
      delay */
-    return timings[ tstates_through_line % 8 ];
+    return timings[tstates_through_line % 8];
 }
 
-libspectrum_byte
-spectrum_contend_delay_65432100(libspectrum_dword time)
+
+libspectrum_byte spectrum_contend_delay_65432100(libspectrum_dword time)
 {
     return contend_delay_common(time, contention_pattern_65432100, 1);
 }
 
-libspectrum_byte
-spectrum_contend_delay_76543210(libspectrum_dword time)
+
+libspectrum_byte spectrum_contend_delay_76543210(libspectrum_dword time)
 {
     return contend_delay_common(time, contention_pattern_76543210, 4);
 }
 
 // What happens if we read from an unattached port?
-libspectrum_byte
-spectrum_unattached_port(void)
+
+libspectrum_byte spectrum_unattached_port(void)
 {
     int line, tstates_through_line, column;
 
     // Return 0xff (idle bus) if we're in the top border
-    if (tstates < machine_current->line_times[ DISPLAY_BORDER_HEIGHT ])
+    if (tstates < machine_current->line_times[DISPLAY_BORDER_HEIGHT])
     return 0xff;
 
     // Work out which line we're on, relative to the top of the screen
     line = ((libspectrum_signed_dword)tstates -
-       machine_current->line_times[ DISPLAY_BORDER_HEIGHT ]) /
+       machine_current->line_times[DISPLAY_BORDER_HEIGHT]) /
     machine_current->timings.tstates_per_line;
 
     // Idle bus if we're in the lower border
@@ -248,7 +248,7 @@ spectrum_unattached_port(void)
      the first pixel we display, not the start of where the Spectrum produced
      the left border */
     tstates_through_line = tstates -
-    machine_current->line_times[ DISPLAY_BORDER_HEIGHT + line ] +
+    machine_current->line_times[DISPLAY_BORDER_HEIGHT + line] +
     (machine_current->timings.left_border - DISPLAY_BORDER_WIDTH_COLS * 4);
 
     // Idle bus if we're in the left border
@@ -279,12 +279,12 @@ spectrum_unattached_port(void)
     // Attribute bytes
     case 5: column++;
     case 3:
-      return RAM[ memory_current_screen ][ display_attr_start[line] + column ];
+      return RAM[memory_current_screen][display_attr_start[line] + column];
 
     // Screen data
     case 4: column++;
     case 2:
-      return RAM[ memory_current_screen ][ display_line_start[line] + column ];
+      return RAM[memory_current_screen][display_line_start[line] + column];
 
     // Idle bus
     case 0: case 1: case 6: case 7:
@@ -295,8 +295,8 @@ spectrum_unattached_port(void)
     return 0; // Keep gcc happy
 }
 
-libspectrum_byte
-spectrum_unattached_port_none(void)
+
+libspectrum_byte spectrum_unattached_port_none(void)
 {
     return 0xff;
 }

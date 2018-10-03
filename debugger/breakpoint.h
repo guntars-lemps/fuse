@@ -116,30 +116,30 @@ extern GSList *debugger_breakpoints;
 
 int debugger_check(debugger_breakpoint_type type, libspectrum_dword value);
 
-void
-debugger_breakpoint_reduce_tstates(libspectrum_dword tstates);
+
+void debugger_breakpoint_reduce_tstates(libspectrum_dword tstates);
 
 // Add a new breakpoint
-int
-debugger_breakpoint_add_address(
+
+int debugger_breakpoint_add_address(
     debugger_breakpoint_type type, int source, int page, libspectrum_word offset,
     size_t ignore, debugger_breakpoint_life life, debugger_expression *condition
 );
 
-int
-debugger_breakpoint_add_port(
+
+int debugger_breakpoint_add_port(
     debugger_breakpoint_type type, libspectrum_word port, libspectrum_word mask,
     size_t ignore, debugger_breakpoint_life life, debugger_expression *condition
 );
 
-int
-debugger_breakpoint_add_time(
+
+int debugger_breakpoint_add_time(
     debugger_breakpoint_type type, libspectrum_dword breakpoint_tstates,
     size_t ignore, debugger_breakpoint_life life, debugger_expression *condition
 );
 
-int
-debugger_breakpoint_add_event(
+
+int debugger_breakpoint_add_event(
     debugger_breakpoint_type type, const char *type_string, const char *detail,
     size_t ignore, debugger_breakpoint_life life, debugger_expression *condition
 );

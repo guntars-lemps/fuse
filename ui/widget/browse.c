@@ -56,8 +56,8 @@ static void add_block_description(libspectrum_tape_block *block,
                    void *user_data);
 static void free_description(gpointer data, gpointer user_data);
 
-int
-widget_browse_draw(void *data GCC_UNUSED)
+
+int widget_browse_draw(void *data GCC_UNUSED)
 {
     int error;
 
@@ -78,8 +78,8 @@ widget_browse_draw(void *data GCC_UNUSED)
     return 0;
 }
 
-static void
-add_block_description(libspectrum_tape_block *block, void *user_data)
+
+static void add_block_description(libspectrum_tape_block *block, void *user_data)
 {
     char data_detail[MAX_BLOCK_DESC];
     GSList **ptr = user_data;
@@ -96,8 +96,8 @@ add_block_description(libspectrum_tape_block *block, void *user_data)
     block_count++;
 }
 
-static void
-show_blocks(void)
+
+static void show_blocks(void)
 {
     size_t i; char buffer[64];
     GSList *ptr;
@@ -131,8 +131,8 @@ show_blocks(void)
     widget_display_lines(3, 19);
 }
 
-void
-widget_browse_keyhandler(input_key key)
+
+void widget_browse_keyhandler(input_key key)
 {
     switch (key) {
 
@@ -213,8 +213,8 @@ widget_browse_keyhandler(input_key key)
     }
 }
 
-int
-widget_browse_finish(widget_finish_state finished)
+
+int widget_browse_finish(widget_finish_state finished)
 {
     g_slist_foreach(blocks, free_description, NULL);
     g_slist_free(blocks);
@@ -227,8 +227,8 @@ widget_browse_finish(widget_finish_state finished)
     return 0;
 }
 
-static void
-free_description(gpointer data, gpointer user_data)
+
+static void free_description(gpointer data, gpointer user_data)
 {
     free(data);
 }

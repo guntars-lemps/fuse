@@ -62,8 +62,8 @@ int specplus2_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-specplus2_reset(void)
+
+static int specplus2_reset(void)
 {
     int error;
 

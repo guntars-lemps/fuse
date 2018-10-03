@@ -63,15 +63,15 @@ libspectrum_word crc_fdc_table[] = {
 };
 
 // CRC-16-CCITT: G(x) = x^16 + x^12 + x^5 + 1
-libspectrum_word
-crc_fdc(libspectrum_word crc, libspectrum_byte data)
+
+libspectrum_word crc_fdc(libspectrum_word crc, libspectrum_byte data)
 {
     return ((crc << 8) ^ crc_fdc_table[((crc >> 8) ^ data) & 0xff]) &
          0xffff;
 }
 
-libspectrum_signed_dword
-crc_udi(libspectrum_signed_dword crc, libspectrum_byte data)
+
+libspectrum_signed_dword crc_udi(libspectrum_signed_dword crc, libspectrum_byte data)
 {
     int i;
     libspectrum_signed_dword temp;

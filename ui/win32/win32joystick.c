@@ -52,8 +52,8 @@
 static void do_axis(int which, WORD value,
                      input_key negative, input_key positive);
 
-int
-ui_joystick_init(void)
+
+int ui_joystick_init(void)
 {
     int retval;
     JOYINFO joyinfo;
@@ -91,15 +91,15 @@ ui_joystick_init(void)
     return retval;
 }
 
-void
-ui_joystick_poll(void)
+
+void ui_joystick_poll(void)
 {
     /* No action needed; joysticks already handled by the Window messages
      sent by mmsystem */
 }
 
-void
-win32joystick_buttonevent(int which_joystick, int button_down,
+
+void win32joystick_buttonevent(int which_joystick, int button_down,
                            unsigned int wParam)
 {
     input_event_t event;
@@ -122,8 +122,8 @@ win32joystick_buttonevent(int which_joystick, int button_down,
     input_event(&event);
 }
 
-void
-win32joystick_move(int which_joystick, unsigned short pos_x,
+
+void win32joystick_move(int which_joystick, unsigned short pos_x,
                     unsigned short pos_y)
 {
     do_axis(which_joystick, pos_x,
@@ -132,8 +132,8 @@ win32joystick_move(int which_joystick, unsigned short pos_x,
     INPUT_JOYSTICK_UP,   INPUT_JOYSTICK_DOWN);
 }
 
-static void
-do_axis(int which, WORD value, input_key negative, input_key positive)
+
+static void do_axis(int which, WORD value, input_key negative, input_key positive)
 {
     input_event_t event1, event2;
 
@@ -158,8 +158,8 @@ do_axis(int which, WORD value, input_key negative, input_key positive)
     input_event(&event2);
 }
 
-void
-ui_joystick_end(void)
+
+void ui_joystick_end(void)
 {
     // Initialization and unitialization is handled by MS Windows
 }
@@ -179,7 +179,7 @@ struct button_info {
 struct joystick_info {
 
     int *type;
-    HWND radio[ JOYSTICK_TYPE_COUNT ];
+    HWND radio[JOYSTICK_TYPE_COUNT];
 
     struct button_info button[NUM_JOY_BUTTONS];
 };
@@ -190,15 +190,15 @@ static INT_PTR CALLBACK dialog_proc(HWND hwndDlg, UINT uMsg,
 static void dialog_init(HWND hwndDlg, struct joystick_info *info);
 static void create_joystick_type_selector(struct joystick_info *info,
                        HWND hwndDlg);
-static void
-create_fire_button_selector(const TCHAR *title, struct button_info *info,
+
+static void create_fire_button_selector(const TCHAR *title, struct button_info *info,
                              HWND hwndDlg);
 static void set_key_text(HWND hlabel, keyboard_key_name key);
 static void joystick_done(LONG_PTR user_data);
 static void show_key_selection_popoup(HWND hwndDlg, LPARAM lParam);
 
-void
-menu_options_joysticks_select(int action)
+
+void menu_options_joysticks_select(int action)
 {
     struct joystick_info info;
 
@@ -260,8 +260,8 @@ dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 
-static void
-dialog_init(HWND hwndDlg, struct joystick_info *info)
+
+static void dialog_init(HWND hwndDlg, struct joystick_info *info)
 {
     size_t i;
     create_joystick_type_selector(info, hwndDlg);
@@ -292,8 +292,8 @@ dialog_init(HWND hwndDlg, struct joystick_info *info)
     }
 }
 
-static void
-setup_info(struct joystick_info *info, int action)
+
+static void setup_info(struct joystick_info *info, int action)
 {
     size_t i;
 
@@ -361,8 +361,8 @@ setup_info(struct joystick_info *info, int action)
     }
 }
 
-static void
-create_joystick_type_selector(struct joystick_info *info, HWND hwndDlg)
+
+static void create_joystick_type_selector(struct joystick_info *info, HWND hwndDlg)
 {
     size_t i;
     HFONT font;
@@ -375,17 +375,17 @@ create_joystick_type_selector(struct joystick_info *info, HWND hwndDlg)
     rect.left = 5; rect.top = i * 10 + 10 ;
     rect.right = 5 + 45; rect.bottom = (i * 10) + 10 + 10;
     MapDialogRect(hwndDlg, &rect);
-    info->radio[ i ] = CreateWindowEx(0, WC_BUTTON, joystick_name[ i ],
+    info->radio[i] = CreateWindowEx(0, WC_BUTTON, joystick_name[i],
                                        WS_VISIBLE | WS_CHILD |
                                        WS_TABSTOP | BS_AUTORADIOBUTTON,
                                        rect.left, rect.top,
                                        rect.right - rect.left,
                                        rect.bottom - rect.top,
                                        hwndDlg, 0, fuse_hInstance, 0);
-    SendMessage(info->radio[ i ], WM_SETFONT, (WPARAM) font, FALSE);
+    SendMessage(info->radio[i], WM_SETFONT, (WPARAM) font, FALSE);
 
     if (i == *(info->type))
-      SendMessage(info->radio[ i ], BM_SETCHECK, BST_CHECKED, 0);
+      SendMessage(info->radio[i], BM_SETCHECK, BST_CHECKED, 0);
     }
 
     rect.left = 0; rect.top = 0;
@@ -397,8 +397,8 @@ create_joystick_type_selector(struct joystick_info *info, HWND hwndDlg)
               FALSE);
 }
 
-static void
-create_fire_button_selector(const TCHAR *title, struct button_info *info,
+
+static void create_fire_button_selector(const TCHAR *title, struct button_info *info,
                              HWND hwndDlg)
 {
     SendMessage(info->frame, WM_SETTEXT, 0, (LPARAM) title);
@@ -409,8 +409,8 @@ create_fire_button_selector(const TCHAR *title, struct button_info *info,
     SetWindowLongPtr(info->label, GWLP_USERDATA, (LONG_PTR) info);
 }
 
-static void
-set_key_text(HWND hlabel, keyboard_key_name key)
+
+static void set_key_text(HWND hlabel, keyboard_key_name key)
 {
     const TCHAR *text;
     TCHAR buffer[40];
@@ -422,8 +422,8 @@ set_key_text(HWND hlabel, keyboard_key_name key)
     SendMessage(hlabel, WM_SETTEXT, 0, (LPARAM) buffer);
 }
 
-static void
-joystick_done(LONG_PTR user_data)
+
+static void joystick_done(LONG_PTR user_data)
 {
     struct joystick_info *info = (struct joystick_info *) user_data;
 
@@ -435,15 +435,15 @@ joystick_done(LONG_PTR user_data)
 
     for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
-    if (SendMessage(info->radio[ i ], BM_GETCHECK, 0, 0) == BST_CHECKED) {
+    if (SendMessage(info->radio[i], BM_GETCHECK, 0, 0) == BST_CHECKED) {
       *(info->type) = i;
       return;
     }
     }
 }
 
-static void
-show_key_selection_popoup(HWND hwndDlg, LPARAM lParam)
+
+static void show_key_selection_popoup(HWND hwndDlg, LPARAM lParam)
 {
     RECT rect;
     HMENU hpopup;

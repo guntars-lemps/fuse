@@ -142,13 +142,13 @@ typedef struct svga_mode_t {
 #define SIZE_3x_REGISTER(p,s) if (modes[2].n != -1 && (p || modes[2].depth > 4)) scaler_register(s)
 
 svga_mode_t modes[] = {
-    { -1, 0, 0, 0, 0, 0, }, // 320x240
-    { -1, 0, 0, 0, 0, 0, }, // 640x480
-    { -1, 0, 0, 0, 0, 0, }, // 960x720
+    { -1, 0, 0, 0, 0, 0,}, // 320x240
+    { -1, 0, 0, 0, 0, 0,}, // 640x480
+    { -1, 0, 0, 0, 0, 0,}, // 960x720
 };
 
-void
-set_mode(int i, int n, vga_modeinfo *inf)
+
+void set_mode(int i, int n, vga_modeinfo *inf)
 {
     if (inf->colors >= 16 && !(inf->flags & IS_MODEX) &&
     inf->width >= 256 * (i + 1) &&
@@ -166,8 +166,8 @@ set_mode(int i, int n, vga_modeinfo *inf)
     }
 }
 
-void
-find_mode(int exact)
+
+void find_mode(int exact)
 {
     vga_modeinfo *inf;
     int i, j, w, h;
@@ -218,8 +218,8 @@ find_mode(int exact)
     }
 }
 
-static void
-svgadisplay_setmode(int i)
+
+static void svgadisplay_setmode(int i)
 {
     int w, h;
     w = DISPLAY_ASPECT_WIDTH  * (i + 1);
@@ -245,8 +245,8 @@ svgadisplay_setmode(int i)
     svgadisplay_allocate_colours8();
 }
 
-int
-svgadisplay_init(void)
+
+int svgadisplay_init(void)
 {
     int i, j, found_mode = 0;
     int n0 = -1, n1 = -1, n2 = -1;
@@ -301,7 +301,7 @@ svgadisplay_init(void)
 
 
     if (settings_current.svga_modes) {
-    sscanf(settings_current.svga_modes, " %i%*[ ,;/|] %i%*[ ,;/|] %i", &n0, &n1, &n2);
+    sscanf(settings_current.svga_modes, " %i%*[,;/|] %i%*[,;/|] %i", &n0, &n1, &n2);
     if (n0 > 0 && vga_hasmode(n0)) set_mode(0, n0, vga_getmodeinfo(n0));
     if (n1 > 0 && vga_hasmode(n1)) set_mode(1, n1, vga_getmodeinfo(n1));
     if (n2 > 0 && vga_hasmode(n2)) set_mode(2, n2, vga_getmodeinfo(n2));
@@ -336,14 +336,14 @@ svgadisplay_init(void)
     return 0;
 }
 
-static void
-svgadisplay_putpixel_4(int x, int y, libspectrum_word *colour)
+
+static void svgadisplay_putpixel_4(int x, int y, libspectrum_word *colour)
 {
     *line_buff_ptr++ = *colour;
 }
 
-static void
-svgadisplay_putpixel_8(int x, int y, libspectrum_word *colour)
+
+static void svgadisplay_putpixel_8(int x, int y, libspectrum_word *colour)
 {
     libspectrum_word c = *colour;
 
@@ -353,8 +353,8 @@ svgadisplay_putpixel_8(int x, int y, libspectrum_word *colour)
     *line_buff_ptr++ = c;
 }
 
-static void
-svgadisplay_putpixel_15(int x, int y, libspectrum_word *colour)
+
+static void svgadisplay_putpixel_15(int x, int y, libspectrum_word *colour)
 {
     libspectrum_word c = *colour;
 
@@ -363,8 +363,8 @@ svgadisplay_putpixel_15(int x, int y, libspectrum_word *colour)
     line_buff_ptr += 2;
 }
 
-static void
-svgadisplay_putpixel_16(int x, int y, libspectrum_word *colour)
+
+static void svgadisplay_putpixel_16(int x, int y, libspectrum_word *colour)
 {
     libspectrum_word c = *colour;
 
@@ -372,8 +372,8 @@ svgadisplay_putpixel_16(int x, int y, libspectrum_word *colour)
     line_buff_ptr += 2;
 }
 
-static void
-svgadisplay_putpixel_24(int x, int y, libspectrum_word *colour)
+
+static void svgadisplay_putpixel_24(int x, int y, libspectrum_word *colour)
 {
     libspectrum_dword c = *colour;
 
@@ -384,8 +384,8 @@ svgadisplay_putpixel_24(int x, int y, libspectrum_word *colour)
     line_buff_ptr += 3;
 }
 
-static void
-svgadisplay_putpixel_32(int x, int y, libspectrum_word *colour)
+
+static void svgadisplay_putpixel_32(int x, int y, libspectrum_word *colour)
 {
     libspectrum_dword c = *colour;
 
@@ -396,8 +396,8 @@ svgadisplay_putpixel_32(int x, int y, libspectrum_word *colour)
     line_buff_ptr += 4;
 }
 
-static int
-svgadisplay_allocate_colours4(void)
+
+static int svgadisplay_allocate_colours4(void)
 {
     int i;
     int red, green, blue;
@@ -424,8 +424,8 @@ svgadisplay_allocate_colours4(void)
     return 0;
 }
 
-static int
-svgadisplay_allocate_colours8(void)
+
+static int svgadisplay_allocate_colours8(void)
 {
     int i, r, g, b;
     int red, green, blue;
@@ -452,8 +452,8 @@ svgadisplay_allocate_colours8(void)
 }
 
 
-int
-uidisplay_init(int width, int height)
+
+int uidisplay_init(int width, int height)
 {
     image_width  = width;
     image_height = height;
@@ -471,8 +471,8 @@ uidisplay_init(int width, int height)
     return 0;
 }
 
-static void
-register_scalers(void)
+
+static void register_scalers(void)
 {
     int f = -1;
 
@@ -527,8 +527,8 @@ register_scalers(void)
     }
 }
 
-static void
-svgadisplay_setup_rgb_putpixel(void)
+
+static void svgadisplay_setup_rgb_putpixel(void)
 {
     switch (svgadisplay_depth) {
     case 4:
@@ -553,8 +553,8 @@ svgadisplay_setup_rgb_putpixel(void)
 // resize_window(scaled_image_w, scaled_image_h);
 }
 
-int
-uidisplay_hotswap_gfx_mode(void)
+
+int uidisplay_hotswap_gfx_mode(void)
 {
     image_scale = 4.0 * scaler_get_scaling_factor(current_scaler);
     scaled_image_w = image_width  * image_scale >> 2;
@@ -586,8 +586,8 @@ uidisplay_hotswap_gfx_mode(void)
     return 0;
 }
 
-static void
-svgadisplay_update_rect_noscale(int x, int y, int w, int h)
+
+static void svgadisplay_update_rect_noscale(int x, int y, int w, int h)
 {
     int yy, xx;
 
@@ -607,8 +607,8 @@ svgadisplay_update_rect_noscale(int x, int y, int w, int h)
     }
 }
 
-static void
-svgadisplay_update_rect_scale(int x, int y, int w, int h)
+
+static void svgadisplay_update_rect_scale(int x, int y, int w, int h)
 {
     int yy = y, xx = x;
 
@@ -641,8 +641,8 @@ svgadisplay_update_rect_scale(int x, int y, int w, int h)
     }
 }
 
-void
-uidisplay_frame_end(void)
+
+void uidisplay_frame_end(void)
 {
     SVGA_Rect *r, *last_rect;
 
@@ -666,8 +666,8 @@ uidisplay_frame_end(void)
     svgadisplay_force_full_refresh = 0;
 }
 
-void
-uidisplay_area(int x, int y, int w, int h)
+
+void uidisplay_area(int x, int y, int w, int h)
 {
     if (svgadisplay_force_full_refresh)
     return;
@@ -689,20 +689,20 @@ uidisplay_area(int x, int y, int w, int h)
     num_rects++;
 }
 
-int
-uidisplay_end(void)
+
+int uidisplay_end(void)
 {
     display_ui_initialised = 0;
     return 0;
 }
 
 // Set one pixel in the display
-void
-uidisplay_putpixel(int x, int y, int colour)
+
+void uidisplay_putpixel(int x, int y, int colour)
 {
     libspectrum_word pc = svgadisplay_depth == 4 ? colour :
-        (settings_current.bw_tv ? pal_grey[ colour ] :
-                            pal_colour[ colour ]);
+        (settings_current.bw_tv ? pal_grey[colour] :
+                            pal_colour[colour]);
 
     if (machine_current->timex) {
     x <<= 1; y <<= 1;
@@ -717,17 +717,17 @@ uidisplay_putpixel(int x, int y, int colour)
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((8*x) , y) */
-void
-uidisplay_plot8(int x, int y, libspectrum_byte data,
+
+void uidisplay_plot8(int x, int y, libspectrum_byte data,
              libspectrum_byte ink, libspectrum_byte paper)
 {
     libspectrum_word *dest;
     libspectrum_word pi = svgadisplay_depth == 4 ? ink :
-            (settings_current.bw_tv ? pal_grey[ ink ] :
-                            pal_colour[ ink ]);
+            (settings_current.bw_tv ? pal_grey[ink] :
+                            pal_colour[ink]);
     libspectrum_word pp = svgadisplay_depth == 4 ? paper :
-            (settings_current.bw_tv ? pal_grey[ paper ] :
-                            pal_colour[ paper ]);
+            (settings_current.bw_tv ? pal_grey[paper] :
+                            pal_colour[paper]);
 
     if (machine_current->timex) {
 
@@ -769,17 +769,17 @@ uidisplay_plot8(int x, int y, libspectrum_byte data,
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((16*x) , y) */
-void
-uidisplay_plot16(int x, int y, libspectrum_word data,
+
+void uidisplay_plot16(int x, int y, libspectrum_word data,
                  libspectrum_byte ink, libspectrum_byte paper)
 {
     libspectrum_word *dest;
     libspectrum_word pi = svgadisplay_depth == 4 ? ink :
-            (settings_current.bw_tv ? pal_grey[ ink ] :
-                            pal_colour[ ink ]);
+            (settings_current.bw_tv ? pal_grey[ink] :
+                            pal_colour[ink]);
     libspectrum_word pp = svgadisplay_depth == 4 ? paper :
-            (settings_current.bw_tv ? pal_grey[ paper ] :
-                            pal_colour[ paper ]);
+            (settings_current.bw_tv ? pal_grey[paper] :
+                            pal_colour[paper]);
     x <<= 4; y <<= 1;
 
     dest = &(rgb_image[y + 2][x + 1]);
@@ -807,15 +807,15 @@ int svgadisplay_end(void)
     return 0;
 }
 
-void
-uidisplay_frame_save(void)
+
+void uidisplay_frame_save(void)
 {
     /* FIXME: Save current framebuffer state as the widget UI wants to scribble
      in here */
 }
 
-void
-uidisplay_frame_restore(void)
+
+void uidisplay_frame_restore(void)
 {
     /* FIXME: Restore saved framebuffer state as the widget UI wants to draw a
      new menu */

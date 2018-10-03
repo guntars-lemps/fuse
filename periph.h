@@ -94,16 +94,13 @@ typedef enum periph_present {
     PERIPH_PRESENT_ALWAYS, // Always present
 } periph_present;
 
-typedef libspectrum_byte (*periph_port_read_function)(libspectrum_word port,
-                               libspectrum_byte *attached);
-typedef void (*periph_port_write_function)(libspectrum_word port,
-                        libspectrum_byte data);
+typedef libspectrum_byte (*periph_port_read_function)(libspectrum_word port, libspectrum_byte *attached);
+typedef void (*periph_port_write_function)(libspectrum_word port, libspectrum_byte data);
 
 // Information about a specific port response
 typedef struct periph_port_t {
 
-    /* This peripheral responds to all port values where
-     <port> & mask == value */
+    // This peripheral responds to all port values where <port> & mask == value
     libspectrum_word mask;
     libspectrum_word value;
 
@@ -132,8 +129,7 @@ void periph_register(periph_type type, const periph_t *periph);
 // Set whether a peripheral can be present on this machine or not
 void periph_set_present(periph_type type, periph_present present);
 
-/* Mark a specific peripheral as (in)active, returns 1 if the enabled state has
-   changed */
+// Mark a specific peripheral as (in)active, returns 1 if the enabled state has changed
 int periph_activate_type(periph_type type, int active);
 
 // Is a specific peripheral active at the moment?
@@ -168,11 +164,8 @@ int periph_postcheck(void);
 void periph_disable_optional(void);
 
 // Register debugger page/unpage events for a peripheral
-void periph_register_paging_events(const char *type_string, int *page_event,
-                    int *unpage_event);
+void periph_register_paging_events(const char *type_string, int *page_event, int *unpage_event);
 
-libspectrum_byte periph_merge_floating_bus(libspectrum_byte value,
-                                            libspectrum_byte attached,
-                                            libspectrum_byte floating_bus);
+libspectrum_byte periph_merge_floating_bus(libspectrum_byte value, libspectrum_byte attached, libspectrum_byte floating_bus);
 
 #endif // #ifndef FUSE_PERIPH_H

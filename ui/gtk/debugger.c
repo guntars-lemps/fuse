@@ -142,11 +142,11 @@ static void update_events(void);
 static void add_event(gpointer data, gpointer user_data);
 static int deactivate_debugger(void);
 
-static gboolean
-disassembly_key_press(GtkTreeView *list, GdkEventKey *event,
+
+static gboolean disassembly_key_press(GtkTreeView *list, GdkEventKey *event,
                        gpointer user_data);
-static gboolean
-disassembly_wheel_scroll(GtkTreeView *list GCC_UNUSED, GdkEvent *event,
+
+static gboolean disassembly_wheel_scroll(GtkTreeView *list GCC_UNUSED, GdkEvent *event,
                           gpointer user_data);
 
 static void move_disassembly(GtkAdjustment *adjustment, gpointer user_data);
@@ -209,18 +209,18 @@ const gchar debugger_menu[] =
 // The debugger's menu actions
 static GtkActionEntry menu_data[] = {
 
-    { "VIEW", NULL, "_View", NULL, NULL, NULL },
+    {"VIEW", NULL, "_View", NULL, NULL, NULL},
 
 };
 
 static GtkToggleActionEntry menu_toggles[] = {
 
-    { "VIEW_REGISTERS", NULL, "_Registers", NULL, NULL, G_CALLBACK(toggle_display_registers), TRUE },
-    { "VIEW_MEMORY_MAP", NULL, "_Memory Map", NULL, NULL, G_CALLBACK(toggle_display_memory_map), TRUE },
-    { "VIEW_BREAKPOINTS", NULL, "_Breakpoints", NULL, NULL, G_CALLBACK(toggle_display_breakpoints), TRUE },
-    { "VIEW_DISASSEMBLY", NULL, "_Disassembly", NULL, NULL, G_CALLBACK(toggle_display_disassembly), TRUE },
-    { "VIEW_STACK", NULL, "_Stack", NULL, NULL, G_CALLBACK(toggle_display_stack), TRUE },
-    { "VIEW_EVENTS", NULL, "_Events", NULL, NULL, G_CALLBACK(toggle_display_events), TRUE },
+    {"VIEW_REGISTERS", NULL, "_Registers", NULL, NULL, G_CALLBACK(toggle_display_registers), TRUE},
+    {"VIEW_MEMORY_MAP", NULL, "_Memory Map", NULL, NULL, G_CALLBACK(toggle_display_memory_map), TRUE},
+    {"VIEW_BREAKPOINTS", NULL, "_Breakpoints", NULL, NULL, G_CALLBACK(toggle_display_breakpoints), TRUE},
+    {"VIEW_DISASSEMBLY", NULL, "_Disassembly", NULL, NULL, G_CALLBACK(toggle_display_disassembly), TRUE},
+    {"VIEW_STACK", NULL, "_Stack", NULL, NULL, G_CALLBACK(toggle_display_stack), TRUE},
+    {"VIEW_EVENTS", NULL, "_Events", NULL, NULL, G_CALLBACK(toggle_display_events), TRUE},
 
 };
 
@@ -236,8 +236,8 @@ format_16_bit(void)
     return debugger_output_base == 10 ? "%5d" : "0x%04X";
 }
 
-int
-ui_debugger_activate(void)
+
+int ui_debugger_activate(void)
 {
     int error;
 
@@ -256,14 +256,14 @@ ui_debugger_activate(void)
     return 0;
 }
 
-void
-ui_breakpoints_updated(void)
+
+void ui_breakpoints_updated(void)
 {
     // TODO: Refresh debugger list here
 }
 
-static int
-hide_hidden_panes(void)
+
+static int hide_hidden_panes(void)
 {
     debugger_pane i;
     GtkCheckMenuItem *checkitem; GtkWidget *pane;
@@ -337,8 +337,8 @@ get_pane(debugger_pane pane)
     return NULL;
 }
 
-int
-ui_debugger_deactivate(int interruptable)
+
+int ui_debugger_deactivate(int interruptable)
 {
     if (debugger_active) deactivate_debugger();
 
@@ -350,8 +350,8 @@ ui_debugger_deactivate(int interruptable)
     return 0;
 }
 
-static int
-create_dialog(void)
+
+static int create_dialog(void)
 {
     int error;
     GtkWidget *hbox, *vbox, *hbox2, *content_area;
@@ -408,8 +408,8 @@ create_dialog(void)
     return 0;
 }
 
-static int
-create_menu_bar(GtkBox *parent, GtkAccelGroup **accel_group)
+
+static int create_menu_bar(GtkBox *parent, GtkAccelGroup **accel_group)
 {
     GError *error = NULL;
     GtkActionGroup *menu_action_group;
@@ -449,8 +449,8 @@ create_menu_bar(GtkBox *parent, GtkAccelGroup **accel_group)
     return 0;
 }
 
-static void
-toggle_display(GtkToggleAction* action, debugger_pane pane_id)
+
+static void toggle_display(GtkToggleAction* action, debugger_pane pane_id)
 {
     GtkWidget *pane;
 
@@ -463,44 +463,44 @@ toggle_display(GtkToggleAction* action, debugger_pane pane_id)
     }
 }
 
-static void
-toggle_display_registers(GtkToggleAction* action, gpointer data GCC_UNUSED)
+
+static void toggle_display_registers(GtkToggleAction* action, gpointer data GCC_UNUSED)
 {
     toggle_display(action, DEBUGGER_PANE_REGISTERS);
 }
 
-static void
-toggle_display_memory_map(GtkToggleAction* action, gpointer data GCC_UNUSED)
+
+static void toggle_display_memory_map(GtkToggleAction* action, gpointer data GCC_UNUSED)
 {
     toggle_display(action, DEBUGGER_PANE_MEMORYMAP);
 }
 
-static void
-toggle_display_breakpoints(GtkToggleAction* action, gpointer data GCC_UNUSED)
+
+static void toggle_display_breakpoints(GtkToggleAction* action, gpointer data GCC_UNUSED)
 {
     toggle_display(action, DEBUGGER_PANE_BREAKPOINTS);
 }
 
-static void
-toggle_display_disassembly(GtkToggleAction* action, gpointer data GCC_UNUSED)
+
+static void toggle_display_disassembly(GtkToggleAction* action, gpointer data GCC_UNUSED)
 {
     toggle_display(action, DEBUGGER_PANE_DISASSEMBLY);
 }
 
-static void
-toggle_display_stack(GtkToggleAction* action, gpointer data GCC_UNUSED)
+
+static void toggle_display_stack(GtkToggleAction* action, gpointer data GCC_UNUSED)
 {
     toggle_display(action, DEBUGGER_PANE_STACK);
 }
 
-static void
-toggle_display_events(GtkToggleAction* action, gpointer data GCC_UNUSED)
+
+static void toggle_display_events(GtkToggleAction* action, gpointer data GCC_UNUSED)
 {
     toggle_display(action, DEBUGGER_PANE_EVENTS);
 }
 
-static int
-create_register_display(GtkBox *parent, gtkui_font font)
+
+static int create_register_display(GtkBox *parent, gtkui_font font)
 {
     size_t i;
 
@@ -535,8 +535,8 @@ create_register_display(GtkBox *parent, gtkui_font font)
     return 0;
 }
 
-static int
-create_memory_map(GtkBox *parent)
+
+static int create_memory_map(GtkBox *parent)
 {
     GtkWidget *label_address, *label_source, *label_writable, *label_contended;
 
@@ -580,13 +580,13 @@ create_memory_map(GtkBox *parent)
     return 0;
 }
 
-static void
-create_breakpoints(GtkBox *parent)
+
+static void create_breakpoints(GtkBox *parent)
 {
     size_t i;
 
     static const gchar *const titles[] =
-    { "ID", "Type", "Value", "Ignore", "Life", "Condition" };
+    {"ID", "Type", "Value", "Ignore", "Life", "Condition"};
 
     breakpoints_model = gtk_list_store_new(BREAKPOINTS_COLUMN_COUNT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
 
@@ -600,14 +600,14 @@ create_breakpoints(GtkBox *parent)
     gtk_box_pack_start(parent, breakpoints, TRUE, TRUE, 0);
 }
 
-static void
-create_disassembly(GtkBox *parent, gtkui_font font)
+
+static void create_disassembly(GtkBox *parent, gtkui_font font)
 {
     size_t i;
 
     GtkWidget *scrollbar;
     static const gchar *const titles[] =
-    { "Address", "Instruction" };
+    {"Address", "Instruction"};
 
     // A box to hold the disassembly listing and the scrollbar
     disassembly_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -648,11 +648,11 @@ create_disassembly(GtkBox *parent, gtkui_font font)
                     disassembly_scrollbar_adjustment);
 }
 
-static void
-create_stack_display(GtkBox *parent, gtkui_font font)
+
+static void create_stack_display(GtkBox *parent, gtkui_font font)
 {
     size_t i;
-    static const gchar *const titles[] = { "Address", "Instruction" };
+    static const gchar *const titles[] = {"Address", "Instruction"};
 
     stack_model =
     gtk_list_store_new(STACK_COLUMN_COUNT, G_TYPE_STRING, G_TYPE_STRING,
@@ -672,8 +672,8 @@ create_stack_display(GtkBox *parent, gtkui_font font)
     g_signal_connect(G_OBJECT(stack), "row-activated", G_CALLBACK(stack_activate), NULL);
 }
 
-static void
-stack_activate(GtkTreeView *tree_view, GtkTreePath *path,
+
+static void stack_activate(GtkTreeView *tree_view, GtkTreePath *path,
             GtkTreeViewColumn *column GCC_UNUSED,
         gpointer user_data GCC_UNUSED)
 {
@@ -696,10 +696,10 @@ stack_activate(GtkTreeView *tree_view, GtkTreePath *path,
     }
 }
 
-static void
-create_events(GtkBox *parent)
+
+static void create_events(GtkBox *parent)
 {
-    static const gchar *const titles[] = { "Time", "Type" };
+    static const gchar *const titles[] = {"Time", "Type"};
     size_t i;
 
     events_model =
@@ -718,8 +718,8 @@ create_events(GtkBox *parent)
     g_signal_connect(G_OBJECT(events), "row-activated", G_CALLBACK(events_activate), NULL);
 }
 
-static void
-events_activate(GtkTreeView *tree_view, GtkTreePath *path,
+
+static void events_activate(GtkTreeView *tree_view, GtkTreePath *path,
              GtkTreeViewColumn *column GCC_UNUSED,
          gpointer user_data GCC_UNUSED)
 {
@@ -742,8 +742,8 @@ events_activate(GtkTreeView *tree_view, GtkTreePath *path,
     }
 }
 
-static int
-create_command_entry(GtkBox *parent, GtkAccelGroup *accel_group)
+
+static int create_command_entry(GtkBox *parent, GtkAccelGroup *accel_group)
 {
     GtkWidget *hbox, *entry, *eval_button;
 
@@ -771,13 +771,13 @@ create_command_entry(GtkBox *parent, GtkAccelGroup *accel_group)
     return 0;
 }
 
-static int
-create_buttons(GtkDialog *parent, GtkAccelGroup *accel_group)
+
+static int create_buttons(GtkDialog *parent, GtkAccelGroup *accel_group)
 {
     static const gtkstock_button
-    step  = { "Single step", G_CALLBACK(gtkui_debugger_done_step), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE },
-    cont  = { "Continue", G_CALLBACK(gtkui_debugger_done_continue), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE },
-    brk   = { "Break", G_CALLBACK(gtkui_debugger_break), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE };
+    step  = {"Single step", G_CALLBACK(gtkui_debugger_done_step), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE},
+    cont  = {"Continue", G_CALLBACK(gtkui_debugger_done_continue), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE},
+    brk   = {"Break", G_CALLBACK(gtkui_debugger_break), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE};
 
     // Create the action buttons for the dialog box
     gtkstock_create_button(GTK_WIDGET(parent), accel_group, &step);
@@ -791,8 +791,8 @@ create_buttons(GtkDialog *parent, GtkAccelGroup *accel_group)
     return 0;
 }
 
-static int
-activate_debugger(void)
+
+static int activate_debugger(void)
 {
     debugger_active = 1;
 
@@ -804,8 +804,8 @@ activate_debugger(void)
 }
 
 // Update the debugger's display
-int
-ui_debugger_update(void)
+
+int ui_debugger_update(void)
 {
     size_t i;
     char buffer[1024], format_string[1024];
@@ -813,7 +813,7 @@ ui_debugger_update(void)
     libspectrum_word address;
     int capabilities; size_t length;
 
-    const char *register_name[] = { "PC", "SP",
+    const char *register_name[] = {"PC", "SP",
                   "AF", "AF'",
                   "BC", "BC'",
                   "DE", "DE'",
@@ -928,8 +928,8 @@ ui_debugger_update(void)
     return 0;
 }
 
-static void
-update_memory_map(void)
+
+static void update_memory_map(void)
 {
     int source, page_num, writable, contended;
     libspectrum_word offset;
@@ -999,8 +999,8 @@ update_memory_map(void)
     gtk_widget_show_all(GTK_WIDGET(memory_map_table));
 }
 
-static void
-update_breakpoints(void)
+
+static void update_breakpoints(void)
 {
     GSList *ptr;
 
@@ -1052,10 +1052,10 @@ update_breakpoints(void)
     gtk_list_store_set(
       breakpoints_model, &it,
       BREAKPOINTS_COLUMN_ID, bp->id,
-      BREAKPOINTS_COLUMN_TYPE, debugger_breakpoint_type_text[ bp->type ],
+      BREAKPOINTS_COLUMN_TYPE, debugger_breakpoint_type_text[bp->type],
       BREAKPOINTS_COLUMN_VALUE, buffer,
       BREAKPOINTS_COLUMN_IGNORE, bp->ignore,
-      BREAKPOINTS_COLUMN_LIFE, debugger_breakpoint_life_text[ bp->life ],
+      BREAKPOINTS_COLUMN_LIFE, debugger_breakpoint_life_text[bp->life],
       -1
 );
 
@@ -1068,8 +1068,8 @@ update_breakpoints(void)
     }
 }
 
-static void
-update_disassembly(void)
+
+static void update_disassembly(void)
 {
     size_t i; libspectrum_word address;
     GtkTreeIter it;
@@ -1097,15 +1097,15 @@ update_disassembly(void)
     disassembly_bottom = address;
 }
 
-static void
-update_events(void)
+
+static void update_events(void)
 {
     gtk_list_store_clear(events_model);
     event_foreach(add_event, NULL);
 }
 
-static void
-add_event(gpointer data, gpointer user_data GCC_UNUSED)
+
+static void add_event(gpointer data, gpointer user_data GCC_UNUSED)
 {
     event_t *ptr = data;
     GtkTreeIter it;
@@ -1116,8 +1116,8 @@ add_event(gpointer data, gpointer user_data GCC_UNUSED)
     }
 }
 
-static int
-deactivate_debugger(void)
+
+static int deactivate_debugger(void)
 {
     gtk_main_quit();
     debugger_active = 0;
@@ -1126,8 +1126,8 @@ deactivate_debugger(void)
 }
 
 // Set the disassembly to start at 'address'
-int
-ui_debugger_disassemble(libspectrum_word address)
+
+int ui_debugger_disassemble(libspectrum_word address)
 {
     disassembly_top = address;
 
@@ -1152,8 +1152,8 @@ ui_debugger_disassemble(libspectrum_word address)
 }
 
 // Called when the disassembly scrollbar is moved
-static void
-move_disassembly(GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED)
+
+static void move_disassembly(GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED)
 {
     gdouble value;
     int cursor_row;
@@ -1208,8 +1208,8 @@ move_disassembly(GtkAdjustment *adjustment, gpointer user_data GCC_UNUSED)
     gtkui_list_set_cursor(GTK_TREE_VIEW(disassembly), cursor_row);
 }
 
-static gboolean
-disassembly_key_press(GtkTreeView *list, GdkEventKey *event,
+
+static gboolean disassembly_key_press(GtkTreeView *list, GdkEventKey *event,
                        gpointer user_data)
 {
     GtkAdjustment *adjustment = user_data;
@@ -1276,8 +1276,8 @@ disassembly_key_press(GtkTreeView *list, GdkEventKey *event,
 }
 
 // Called when the wheel mouse is moved on the list (not on the scrollbar)
-static gboolean
-disassembly_wheel_scroll(GtkTreeView *list GCC_UNUSED, GdkEvent *event,
+
+static gboolean disassembly_wheel_scroll(GtkTreeView *list GCC_UNUSED, GdkEvent *event,
                           gpointer user_data)
 {
     libspectrum_word initial_top, addresss;
@@ -1340,28 +1340,28 @@ disassembly_wheel_scroll(GtkTreeView *list GCC_UNUSED, GdkEvent *event,
 }
 
 // Evaluate the command currently in the entry box
-static void
-evaluate_command(GtkWidget *widget, gpointer user_data GCC_UNUSED)
+
+static void evaluate_command(GtkWidget *widget, gpointer user_data GCC_UNUSED)
 {
     debugger_command_evaluate(gtk_entry_get_text(GTK_ENTRY(widget)));
 }
 
-static void
-gtkui_debugger_done_step(GtkWidget *widget GCC_UNUSED,
+
+static void gtkui_debugger_done_step(GtkWidget *widget GCC_UNUSED,
               gpointer user_data GCC_UNUSED)
 {
     debugger_step();
 }
 
-static void
-gtkui_debugger_done_continue(GtkWidget *widget GCC_UNUSED,
+
+static void gtkui_debugger_done_continue(GtkWidget *widget GCC_UNUSED,
                   gpointer user_data GCC_UNUSED)
 {
     debugger_run();
 }
 
-static void
-gtkui_debugger_break(GtkWidget *widget GCC_UNUSED,
+
+static void gtkui_debugger_break(GtkWidget *widget GCC_UNUSED,
               gpointer user_data GCC_UNUSED)
 {
     debugger_mode = DEBUGGER_MODE_HALTED;
@@ -1369,16 +1369,16 @@ gtkui_debugger_break(GtkWidget *widget GCC_UNUSED,
     gtk_widget_set_sensitive(break_button, 0);
 }
 
-static gboolean
-delete_dialog(GtkWidget *widget, GdkEvent *event GCC_UNUSED,
+
+static gboolean delete_dialog(GtkWidget *widget, GdkEvent *event GCC_UNUSED,
            gpointer user_data)
 {
     gtkui_debugger_done_close(widget, user_data);
     return TRUE;
 }
 
-static void
-gtkui_debugger_done_close(GtkWidget *widget, gpointer user_data GCC_UNUSED)
+
+static void gtkui_debugger_done_close(GtkWidget *widget, gpointer user_data GCC_UNUSED)
 {
     gtk_widget_hide(widget);
     gtkui_debugger_done_continue(NULL, NULL);

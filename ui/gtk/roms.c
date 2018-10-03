@@ -44,7 +44,7 @@ static void select_new_rom(GtkWidget *widget, gpointer data);
 static void roms_done(GtkButton *button, gpointer data);
 
 // The labels used to display the current ROMs
-static GtkWidget *rom[ SETTINGS_ROM_COUNT ];
+static GtkWidget *rom[SETTINGS_ROM_COUNT];
 
 struct callback_info {
 
@@ -53,8 +53,8 @@ struct callback_info {
 
 };
 
-int
-menu_select_roms_with_title(const char *title, size_t start, size_t n,
+
+int menu_select_roms_with_title(const char *title, size_t start, size_t n,
                  int is_peripheral)
 {
     GtkWidget *dialog;
@@ -62,7 +62,7 @@ menu_select_roms_with_title(const char *title, size_t start, size_t n,
 
     struct callback_info info;
 
-    char buffer[ 256 ];
+    char buffer[256];
     size_t i;
 
     // Firstly, stop emulation
@@ -101,11 +101,11 @@ menu_select_roms_with_title(const char *title, size_t start, size_t n,
     return 0;
 }
 
-static void
-add_rom(GtkBox *parent, size_t start, gint row, int is_peripheral)
+
+static void add_rom(GtkBox *parent, size_t start, gint row, int is_peripheral)
 {
     GtkWidget *frame, *hbox, *change_button;
-    char buffer[ 80 ], **setting;
+    char buffer[80], **setting;
 
     snprintf(buffer, 80, "ROM %d", row);
     frame = gtk_frame_new(buffer);
@@ -117,19 +117,19 @@ add_rom(GtkBox *parent, size_t start, gint row, int is_peripheral)
 
     setting = settings_get_rom_setting(&settings_current, start + row,
                       is_peripheral);
-    rom[ row ] = gtk_entry_new();
-    gtk_entry_set_text(GTK_ENTRY(rom[ row ]), *setting);
-    gtk_box_pack_start(GTK_BOX(hbox), rom[ row ], FALSE, FALSE, 2);
+    rom[row] = gtk_entry_new();
+    gtk_entry_set_text(GTK_ENTRY(rom[row]), *setting);
+    gtk_box_pack_start(GTK_BOX(hbox), rom[row], FALSE, FALSE, 2);
 
     change_button = gtk_button_new_with_label("Select...");
     g_signal_connect(G_OBJECT(change_button), "clicked",
             G_CALLBACK(select_new_rom),
-            rom[ row ]);
+            rom[row]);
     gtk_box_pack_start(GTK_BOX(hbox), change_button, FALSE, FALSE, 2);
 }
 
-static void
-select_new_rom(GtkWidget *widget GCC_UNUSED, gpointer data)
+
+static void select_new_rom(GtkWidget *widget GCC_UNUSED, gpointer data)
 {
     char *filename;
 
@@ -141,8 +141,8 @@ select_new_rom(GtkWidget *widget GCC_UNUSED, gpointer data)
     gtk_entry_set_text(GTK_ENTRY(entry), filename);
 }
 
-static void
-roms_done(GtkButton *button GCC_UNUSED, gpointer data)
+
+static void roms_done(GtkButton *button GCC_UNUSED, gpointer data)
 {
     size_t i;
 

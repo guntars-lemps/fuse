@@ -196,7 +196,7 @@ static int widget_add_filename(int *allocated, int *number,
     }
 
     strncpy((*namelist)[*number-1]->name, name, length);
-    (*namelist)[*number-1]->name[ length - 1 ] = 0;
+    (*namelist)[*number-1]->name[length - 1] = 0;
 
     return 0;
 }
@@ -282,7 +282,7 @@ static int widget_scandir(const char *dir, struct widget_dirent ***namelist,
     }
 
     while (!done) {
-    char name[ PATH_MAX ];
+    char name[PATH_MAX];
 
     compat_dir_result_t result =
       compat_readdir(directory, name, sizeof(name));
@@ -356,8 +356,8 @@ static void widget_scan(char *dir)
 
 }
 
-static int
-widget_select_file(const char *name)
+
+static int widget_select_file(const char *name)
 {
     if (!name) return 0;
 
@@ -389,8 +389,8 @@ static int widget_scan_compare(const struct widget_dirent **a,
 
 // File selection widget
 
-static int
-widget_filesel_draw(void *data)
+
+static int widget_filesel_draw(void *data)
 {
     widget_filesel_data *filesel_data = data;
     char *directory;
@@ -437,15 +437,15 @@ int widget_filesel_finish(widget_finish_state finished) {
     return 0;
 }
 
-int
-widget_filesel_load_draw(void *data)
+
+int widget_filesel_load_draw(void *data)
 {
     is_saving = 0;
     return widget_filesel_draw(data);
 }
 
-int
-widget_filesel_save_draw(void *data)
+
+int widget_filesel_save_draw(void *data)
 {
     is_saving = 1;
     return widget_filesel_draw(data);
@@ -623,8 +623,8 @@ static int widget_print_filename(struct widget_dirent *filename, int position,
 }
 #endif // ifndef AMIGA
 
-static int
-widget_filesel_chdir(void)
+
+static int widget_filesel_chdir(void)
 {
     char *fn, *ptr;
 
@@ -636,7 +636,7 @@ widget_filesel_chdir(void)
     }
     ptr = fn;
     fn = realloc(fn,
-     (strlen(fn) + 1 + strlen(widget_filenames[ current_file ]->name) +
+     (strlen(fn) + 1 + strlen(widget_filenames[current_file]->name) +
        1) * sizeof(char)
 );
     if (fn == NULL) {
@@ -648,7 +648,7 @@ widget_filesel_chdir(void)
     // Wii getcwd() already has the slash on the end
     strcat(fn, FUSE_DIR_SEP_STR);
 #endif // #ifndef GEKKO
-    strcat(fn, widget_filenames[ current_file ]->name);
+    strcat(fn, widget_filenames[current_file]->name);
 
 /*
 in Win32 errno resulting from chdir on file is EINVAL which may mean many things
@@ -677,8 +677,8 @@ http://thread.gmane.org/gmane.comp.gnu.mingw.user/9197
     return 0;
 }
 
-void
-widget_filesel_keyhandler(input_key key)
+
+void widget_filesel_keyhandler(input_key key)
 {
 #if !defined AMIGA && !defined __MORPHOS__
     char *fn, *ptr;
@@ -839,10 +839,10 @@ widget_filesel_keyhandler(input_key key)
       /* Otherwise, print the current file uninverted and the
      new current file inverted */
 
-      widget_print_filename(widget_filenames[ current_file ],
+      widget_print_filename(widget_filenames[current_file],
                  current_file - top_left_file, 0);
 
-      widget_print_filename(widget_filenames[ new_current_file ],
+      widget_print_filename(widget_filenames[new_current_file],
                  new_current_file - top_left_file, 1);
 
       widget_display_lines(2, 21);

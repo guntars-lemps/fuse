@@ -47,7 +47,7 @@
 
 // A copy of every pixel on the screen
 libspectrum_word
-    fbdisplay_image[ 2 * DISPLAY_SCREEN_HEIGHT ][ DISPLAY_SCREEN_WIDTH ];
+    fbdisplay_image[2 * DISPLAY_SCREEN_HEIGHT][DISPLAY_SCREEN_WIDTH];
 ptrdiff_t fbdisplay_pitch = DISPLAY_SCREEN_WIDTH * sizeof(libspectrum_word);
 
 // The environment variable specifying which device to use
@@ -102,31 +102,31 @@ typedef struct {
  *    x    y  clock   lm  rm  tm  bm   hl  vl  s  d
  */
 static const fuse_fb_mode_t fb_modes_singlescan[] = {
-    { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, // 640x480-72  72.114
-    { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, // 640x480-60  59.940 std
-    { 0 } // end of list
+    {640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0}, // 640x480-72  72.114
+    {640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0}, // 640x480-60  59.940 std
+    {0} // end of list
 };
 static const fuse_fb_mode_t fb_modes_doublescan[] = {
-    { 640, 240, 32052,  92, 56, 14,  4,  40,  3, 0, 1 }, // 640x240-72  72.185
-    { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, // 640x480-72  72.114
-    { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, // 640x480-60  59.940 std
-    { 320, 240, 64104,  46, 28, 14,  4,  20,  3, 3, 1 }, // 320x240-72  72.185 M wide
-    { 0 } // end of list
+    {640, 240, 32052,  92, 56, 14,  4,  40,  3, 0, 1}, // 640x240-72  72.185
+    {640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0}, // 640x480-72  72.114
+    {640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0}, // 640x480-60  59.940 std
+    {320, 240, 64104,  46, 28, 14,  4,  20,  3, 3, 1}, // 320x240-72  72.185 M wide
+    {0} // end of list
 };
 static const fuse_fb_mode_t fb_modes_doublescan_alt[] = {
-    { 640, 240, 39722,  36, 12, 18,  7,  96,  2, 1, 1 }, // 640x240-60  60.133 AM large
-    { 640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0 }, // 640x480-72  72.114
-    { 640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0 }, // 640x480-60  59.940 std
-    { 320, 240, 79444,  18,  6, 18,  7,  48,  2, 1, 1 }, // 320x240-60  60.133 AM large
-    { 0 } // end of list
+    {640, 240, 39722,  36, 12, 18,  7,  96,  2, 1, 1}, // 640x240-60  60.133 AM large
+    {640, 480, 32052,  96, 56, 28,  9,  40,  3, 0, 0}, // 640x480-72  72.114
+    {640, 480, 39722,  48, 16, 33, 10,  96,  2, 0, 0}, // 640x480-60  59.940 std
+    {320, 240, 79444,  18,  6, 18,  7,  48,  2, 1, 1}, // 320x240-60  60.133 AM large
+    {0} // end of list
 };
 /* Modes not used but which may work are listed here.
  *    x    y  clock   lm  rm  tm  bm   hl  vl  s  d
-    { 640, 480, 22272,  48, 32, 17, 22, 128, 12, 0, 0 }, ** 640x480-100 99.713
-    { 640, 480, 25057, 120, 32, 14, 25,  40, 14, 0, 0 }, ** 640x480-90  89.995
-    { 640, 480, 31747, 120, 16, 16,  1,  64,  3, 0, 0 }, ** 640x480-75  74.998
-    { 320, 240, 80000,  40, 28,  9,  2,  20,  3, 0, 1 }, ** 320x240-60  60.310 M tall
-    { 320, 240, 55555,  52, 16, 12,  0,  28,  2, 0, 1 }, ** 320x240-85  85.177 M
+    {640, 480, 22272,  48, 32, 17, 22, 128, 12, 0, 0}, ** 640x480-100 99.713
+    {640, 480, 25057, 120, 32, 14, 25,  40, 14, 0, 0}, ** 640x480-90  89.995
+    {640, 480, 31747, 120, 16, 16,  1,  64,  3, 0, 0}, ** 640x480-75  74.998
+    {320, 240, 80000,  40, 28,  9,  2,  20,  3, 0, 1}, ** 320x240-60  60.310 M tall
+    {320, 240, 55555,  52, 16, 12,  0,  28,  2, 0, 1}, ** 320x240-85  85.177 M
  */
 
 static unsigned short red16[256], green16[256], blue16[256], transp16[256];
@@ -150,16 +150,16 @@ int uidisplay_init(int width, int height)
     return 0;
 }
 
-static void
-register_scalers(void)
+
+static void register_scalers(void)
 {
     scaler_register_clear();
     scaler_select_bitformat(565); // 16bit always
     scaler_register(SCALER_NORMAL);
 }
 
-static void
-linear_palette(struct fb_cmap *p_cmap)
+
+static void linear_palette(struct fb_cmap *p_cmap)
 {
     int i;
     int rcols = 1 << display.red.length;
@@ -249,8 +249,8 @@ int fbdisplay_init(void)
     return 0;
 }
 
-static int
-fb_select_mode(const fuse_fb_mode_t *fb_mode)
+
+static int fb_select_mode(const fuse_fb_mode_t *fb_mode)
 {
     memset (&display, 0, sizeof (struct fb_var_screeninfo));
     display.xres_virtual = display.xres = fb_mode->xres;
@@ -295,8 +295,8 @@ fb_select_mode(const fuse_fb_mode_t *fb_mode)
     return 0; // success
 }
 
-static int
-fb_set_mode(void)
+
+static int fb_set_mode(void)
 {
     size_t i;
 
@@ -322,20 +322,20 @@ fb_set_mode(void)
     return 1;
 }
 
-int
-uidisplay_hotswap_gfx_mode(void)
+
+int uidisplay_hotswap_gfx_mode(void)
 {
     return 0;
 }
 
-void
-uidisplay_frame_end(void)
+
+void uidisplay_frame_end(void)
 {
     return;
 }
 
-void
-uidisplay_area(int x, int start, int width, int height)
+
+void uidisplay_area(int x, int start, int width, int height)
 {
     int y;
     const short *colours = settings_current.bw_tv ? greys : rgbs;
@@ -368,7 +368,7 @@ uidisplay_area(int x, int start, int width, int height)
     break;
 
     case FB_RES(640, 240):
-    if (hires) { start >>= 1; height >>= 1; }
+    if (hires) {start >>= 1; height >>= 1;}
     for (y = start; y < start + height; y++)
     {
       int i;
@@ -393,7 +393,7 @@ uidisplay_area(int x, int start, int width, int height)
     break;
 
     case FB_RES(320, 240):
-    if (hires) { start >>= 1; height >>= 1; x >>= 1; width >>= 1; }
+    if (hires) {start >>= 1; height >>= 1; x >>= 1; width >>= 1;}
     for (y = start; y < start + height; y++)
     {
       int i;
@@ -423,14 +423,14 @@ uidisplay_area(int x, int start, int width, int height)
     }
 }
 
-int
-uidisplay_end(void)
+
+int uidisplay_end(void)
 {
     return 0;
 }
 
-int
-fbdisplay_end(void)
+
+int fbdisplay_end(void)
 {
     if (fb_fd != -1) {
     if (got_orig_display) {
@@ -449,8 +449,8 @@ fbdisplay_end(void)
 }
 
 // Set one pixel in the display
-void
-uidisplay_putpixel(int x, int y, int colour)
+
+void uidisplay_putpixel(int x, int y, int colour)
 {
     if (machine_current->timex) {
     x <<= 1; y <<= 1;
@@ -465,8 +465,8 @@ uidisplay_putpixel(int x, int y, int colour)
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((8*x) , y) */
-void
-uidisplay_plot8(int x, int y, libspectrum_byte data,
+
+void uidisplay_plot8(int x, int y, libspectrum_byte data,
                 libspectrum_byte ink, libspectrum_byte paper)
 {
     x <<= 3;
@@ -507,8 +507,8 @@ uidisplay_plot8(int x, int y, libspectrum_byte data,
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((16*x) , y) */
-void
-uidisplay_plot16(int x, int y, libspectrum_word data,
+
+void uidisplay_plot16(int x, int y, libspectrum_word data,
                  libspectrum_byte ink, libspectrum_byte paper)
 {
     int i;
@@ -534,15 +534,15 @@ uidisplay_plot16(int x, int y, libspectrum_word data,
     }
 }
 
-void
-uidisplay_frame_save(void)
+
+void uidisplay_frame_save(void)
 {
     /* FIXME: Save current framebuffer state as the widget UI wants to scribble
      in here */
 }
 
-void
-uidisplay_frame_restore(void)
+
+void uidisplay_frame_restore(void)
 {
     /* FIXME: Restore saved framebuffer state as the widget UI wants to draw a
      new menu */

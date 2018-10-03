@@ -36,8 +36,8 @@
 
 static int specplus2a_reset(void);
 
-int
-specplus2a_init(fuse_machine_info *machine)
+
+int specplus2a_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_PLUS2A;
     machine->id = "plus2a";
@@ -59,8 +59,8 @@ specplus2a_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-specplus2a_reset(void)
+
+static int specplus2a_reset(void)
 {
     int error;
 

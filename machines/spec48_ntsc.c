@@ -61,8 +61,8 @@ int spec48_ntsc_init(fuse_machine_info *machine)
 
 }
 
-static int
-spec48_ntsc_reset(void)
+
+static int spec48_ntsc_reset(void)
 {
     int error;
 

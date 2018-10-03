@@ -54,8 +54,8 @@ static void save_data(HWND hwndDlg, LONG_PTR user_data);
 static INT_PTR CALLBACK
 binarydata_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-void
-menu_file_loadbinarydata(int action)
+
+void menu_file_loadbinarydata(int action)
 {
     /* FIXME: a way to associate a long type with a window is via SetWindowLong
             with GWL_USERDATA parameter - review past code and implement */
@@ -69,10 +69,10 @@ menu_file_loadbinarydata(int action)
     info.dialog_title = (TCHAR *) TEXT("Fuse - Load Binary Data");
 
     info.filename = ui_get_open_filename(info.dialog_title);
-    if (!info.filename) { fuse_emulation_unpause(); return; }
+    if (!info.filename) {fuse_emulation_unpause(); return;}
 
     error = utils_read_file(info.filename, &info.file);
-    if (error) { free(info.filename); fuse_emulation_unpause(); return; }
+    if (error) {free(info.filename); fuse_emulation_unpause(); return;}
 
     info.on_change_filename = &change_load_filename;
     info.on_execute = &load_data;
@@ -137,8 +137,8 @@ binarydata_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 
-static void
-change_load_filename(HWND hwndDlg, LONG_PTR user_data)
+
+static void change_load_filename(HWND hwndDlg, LONG_PTR user_data)
 {
     struct binary_info *info = (struct binary_info *) user_data;
 
@@ -152,7 +152,7 @@ change_load_filename(HWND hwndDlg, LONG_PTR user_data)
     if (!new_filename) return;
 
     error = utils_read_file(new_filename, &new_file);
-    if (error) { free(new_filename); return; }
+    if (error) {free(new_filename); return;}
 
     // Remove the data for the old file
     utils_close_file(&info->file);
@@ -171,8 +171,8 @@ change_load_filename(HWND hwndDlg, LONG_PTR user_data)
                       0, (LPARAM) buffer);
 }
 
-static void
-load_data(HWND hwndDlg, LONG_PTR user_data)
+
+static void load_data(HWND hwndDlg, LONG_PTR user_data)
 {
     struct binary_info *info = (struct binary_info *)user_data;
     HWND hwnd_control;
@@ -236,13 +236,13 @@ load_data(HWND hwndDlg, LONG_PTR user_data)
     }
 
     for (i = 0; i < length; i++)
-    writebyte_internal(start + i, info->file.buffer[ i ]);
+    writebyte_internal(start + i, info->file.buffer[i]);
 
     EndDialog(hwndDlg, 0);
 }
 
-void
-menu_file_savebinarydata(int action)
+
+void menu_file_savebinarydata(int action)
 {
     struct binary_info info;
 
@@ -251,7 +251,7 @@ menu_file_savebinarydata(int action)
     info.dialog_title = (TCHAR *) TEXT("Fuse - Save Binary Data");
 
     info.filename = ui_get_save_filename(info.dialog_title);
-    if (!info.filename) { fuse_emulation_unpause(); return; }
+    if (!info.filename) {fuse_emulation_unpause(); return;}
 
     info.file.length = -1; // let the dialog know to leave length box blank
     info.on_change_filename = &change_save_filename;
@@ -266,8 +266,8 @@ menu_file_savebinarydata(int action)
     fuse_emulation_unpause();
 }
 
-static void
-change_save_filename(HWND hwndDlg, LONG_PTR user_data)
+
+static void change_save_filename(HWND hwndDlg, LONG_PTR user_data)
 {
     struct binary_info *info = (struct binary_info *) user_data;
     TCHAR *new_filename;
@@ -283,8 +283,8 @@ change_save_filename(HWND hwndDlg, LONG_PTR user_data)
                       0, (LPARAM) new_filename);
 }
 
-static void
-save_data(HWND hwndDlg, LONG_PTR user_data)
+
+static void save_data(HWND hwndDlg, LONG_PTR user_data)
 {
     struct binary_info *info = (struct binary_info *) user_data;
     long start, length;

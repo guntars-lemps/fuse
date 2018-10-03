@@ -47,16 +47,16 @@ static int tc2068_reset(void);
 memory_page tc2068_empty_mapping[MEMORY_PAGES_IN_8K];
 static int empty_mapping_allocated = 0;
 
-libspectrum_byte
-tc2068_ay_registerport_read(libspectrum_word port, libspectrum_byte *attached)
+
+libspectrum_byte tc2068_ay_registerport_read(libspectrum_word port, libspectrum_byte *attached)
 {
     if (machine_current->ay.current_register == 14) return 0xff;
 
     return ay_registerport_read(port, attached);
 }
 
-libspectrum_byte
-tc2068_ay_dataport_read(libspectrum_word port, libspectrum_byte *attached)
+
+libspectrum_byte tc2068_ay_dataport_read(libspectrum_word port, libspectrum_byte *attached)
 {
     if (machine_current->ay.current_register != 14) {
     return ay_registerport_read(port, attached);
@@ -81,8 +81,8 @@ tc2068_ay_dataport_read(libspectrum_word port, libspectrum_byte *attached)
     }
 }
 
-static void
-ensure_empty_mapping(void)
+
+static void ensure_empty_mapping(void)
 {
     int i;
     libspectrum_byte *empty_chunk;
@@ -104,8 +104,8 @@ ensure_empty_mapping(void)
     empty_mapping_allocated = 1;
 }
 
-int
-tc2068_init(fuse_machine_info *machine)
+
+int tc2068_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_TC2068;
     machine->id = "2068";
@@ -129,8 +129,8 @@ tc2068_init(fuse_machine_info *machine)
     return 0;
 }
 
-static int
-tc2068_reset(void)
+
+static int tc2068_reset(void)
 {
     size_t i, j;
     int error;
@@ -183,8 +183,8 @@ tc2068_reset(void)
     return 0;
 }
 
-void
-tc2068_tc2048_common_reset(void)
+
+void tc2068_tc2048_common_reset(void)
 {
     scld_set_exrom_dock_contention();
 
@@ -197,8 +197,8 @@ tc2068_tc2048_common_reset(void)
     tc2068_tc2048_common_display_setup();
 }
 
-int
-tc2068_memory_map(void)
+
+int tc2068_memory_map(void)
 {
     // Start by mapping in the default configuration
     scld_memory_map_home();
@@ -212,8 +212,8 @@ tc2068_memory_map(void)
     return 0;
 }
 
-void
-tc2068_tc2048_common_display_setup(void)
+
+void tc2068_tc2048_common_display_setup(void)
 {
     display_dirty = display_dirty_timex;
     display_write_if_dirty = display_write_if_dirty_timex;

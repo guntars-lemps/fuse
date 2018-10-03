@@ -64,8 +64,8 @@ int spec16_init(fuse_machine_info *machine)
     return 0;
 }
 
-static void
-ensure_empty_mapping(void)
+
+static void ensure_empty_mapping(void)
 {
     int i;
     libspectrum_byte *empty_chunk;
@@ -86,8 +86,8 @@ ensure_empty_mapping(void)
     empty_mapping_allocated = 1;
 }
 
-static int
-spec16_reset(void)
+
+static int spec16_reset(void)
 {
     int error;
 

@@ -60,44 +60,44 @@ static void widget_query_line_draw(int left_edge, int width,
                                     const char *label);
 
 static widget_query_entry query_save[] = {
-    { "\012S\001ave", 0, INPUT_KEY_s, widget_save_click },
-    { "\012D\001on't save", 1, INPUT_KEY_d, widget_dont_save_click },
-    { "\012C\001ancel", 2, INPUT_KEY_c, widget_cancel_click },
-    { NULL }
+    {"\012S\001ave", 0, INPUT_KEY_s, widget_save_click},
+    {"\012D\001on't save", 1, INPUT_KEY_d, widget_dont_save_click},
+    {"\012C\001ancel", 2, INPUT_KEY_c, widget_cancel_click},
+    {NULL}
 };
 
 static widget_query_entry query_confirm[] = {
-    { "\012Y\001es", 0, INPUT_KEY_y, widget_yes_click },
-    { "\012N\001o", 1, INPUT_KEY_n, widget_no_click },
-    { NULL }
+    {"\012Y\001es", 0, INPUT_KEY_y, widget_yes_click},
+    {"\012N\001o", 1, INPUT_KEY_n, widget_no_click},
+    {NULL}
 };
 
-static void
-widget_save_click(void)
+
+static void widget_save_click(void)
 {
     widget_query.save = UI_CONFIRM_SAVE_SAVE;
 }
 
-static void
-widget_dont_save_click(void)
+
+static void widget_dont_save_click(void)
 {
     widget_query.save = UI_CONFIRM_SAVE_DONTSAVE;
 }
 
-static void
-widget_cancel_click(void)
+
+static void widget_cancel_click(void)
 {
     widget_query.save = UI_CONFIRM_SAVE_CANCEL;
 }
 
-static void
-widget_yes_click(void)
+
+static void widget_yes_click(void)
 {
     widget_query.confirm = 1;
 }
 
-static void
-widget_no_click(void)
+
+static void widget_no_click(void)
 {
     widget_query.confirm = 0;
 }
@@ -107,8 +107,8 @@ static size_t highlight_line = 0;
 static char **message_lines;
 static size_t num_message_lines;
 
-static void
-widget_query_line_draw(int left_edge, int width, struct widget_query_entry *menu,
+
+static void widget_query_line_draw(int left_edge, int width, struct widget_query_entry *menu,
                         const char *label)
 {
     int colour = WIDGET_COLOUR_BACKGROUND;
@@ -123,8 +123,8 @@ widget_query_line_draw(int left_edge, int width, struct widget_query_entry *menu
 
 const int query_vert_external_margin = 8;
 
-static int
-widget_calculate_query_width(const char *title, widget_query_entry *menu,
+
+static int widget_calculate_query_width(const char *title, widget_query_entry *menu,
                   char **lines, int num_lines)
 {
     widget_query_entry *ptr;
@@ -154,8 +154,8 @@ widget_calculate_query_width(const char *title, widget_query_entry *menu,
     return (max_width + query_vert_external_margin * 2) / 8;
 }
 
-static int
-internal_query_draw(widget_query_entry *query, int save, const char *message)
+
+static int internal_query_draw(widget_query_entry *query, int save, const char *message)
 {
     widget_query_entry *ptr;
     size_t height = 0;
@@ -197,24 +197,24 @@ internal_query_draw(widget_query_entry *query, int save, const char *message)
     return 0;
 }
 
-int
-widget_query_draw(void *data)
+
+int widget_query_draw(void *data)
 {
     highlight_line = 0;
     widget_query.confirm = 0;
     return internal_query_draw(query_confirm, 0, (const char *) data);
 }
 
-int
-widget_query_save_draw(void *data)
+
+int widget_query_save_draw(void *data)
 {
     highlight_line = 0;
     widget_query.save = UI_CONFIRM_SAVE_CANCEL;
     return internal_query_draw(query_save, 1, (const char *) data);
 }
 
-static void
-widget_query_generic_keyhandler(widget_query_entry *query, int num_entries,
+
+static void widget_query_generic_keyhandler(widget_query_entry *query, int num_entries,
                                  input_key key)
 {
     int new_highlight_line = 0;
@@ -296,24 +296,24 @@ widget_query_generic_keyhandler(widget_query_entry *query, int num_entries,
     }
 }
 
-void
-widget_query_keyhandler(input_key key)
+
+void widget_query_keyhandler(input_key key)
 {
     widget_query_generic_keyhandler(query_confirm,
                                    ARRAY_SIZE(query_confirm),
                                    key);
 }
 
-void
-widget_query_save_keyhandler(input_key key)
+
+void widget_query_save_keyhandler(input_key key)
 {
     widget_query_generic_keyhandler(query_save,
                                    ARRAY_SIZE(query_save),
                                    key);
 }
 
-int
-widget_query_finish(widget_finish_state finished)
+
+int widget_query_finish(widget_finish_state finished)
 {
     int i;
     for (i=0; i<num_message_lines; i++) {

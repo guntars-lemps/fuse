@@ -61,17 +61,17 @@ static nic_enc28j60_t *nic;
 static libspectrum_byte out_register_state;
 static libspectrum_byte in_register_state;
 
-static void
-speccyboot_reset(int hard_reset GCC_UNUSED);
 
-static void
-speccyboot_memory_map(void);
+static void speccyboot_reset(int hard_reset GCC_UNUSED);
 
-static libspectrum_byte
-speccyboot_register_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached);
 
-static void
-speccyboot_register_write(libspectrum_word port GCC_UNUSED,
+static void speccyboot_memory_map(void);
+
+
+static libspectrum_byte speccyboot_register_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached);
+
+
+static void speccyboot_register_write(libspectrum_word port GCC_UNUSED,
                            libspectrum_byte val);
 
 static module_info_t speccyboot_module_info = {
@@ -85,8 +85,8 @@ static module_info_t speccyboot_module_info = {
 };
 
 static const periph_port_t speccyboot_ports[] = {
-    { 0x00e0, 0x0080, speccyboot_register_read, speccyboot_register_write },
-    { 0, 0, NULL, NULL }
+    {0x00e0, 0x0080, speccyboot_register_read, speccyboot_register_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t speccyboot_periph = {
@@ -106,10 +106,10 @@ static int page_event, unpage_event;
 
 static int speccyboot_rom_active = 0; // SpeccyBoot ROM paged in?
 static int speccyboot_memory_source;
-static memory_page speccyboot_memory_map_romcs[ MEMORY_PAGES_IN_8K ];
+static memory_page speccyboot_memory_map_romcs[MEMORY_PAGES_IN_8K];
 
-static void
-speccyboot_page(void)
+
+static void speccyboot_page(void)
 {
     speccyboot_rom_active = 1;
     machine_current->ram.romcs = 1;
@@ -117,8 +117,8 @@ speccyboot_page(void)
     debugger_event(page_event);
 }
 
-static void
-speccyboot_unpage(void)
+
+static void speccyboot_unpage(void)
 {
     speccyboot_rom_active = 0;
     machine_current->ram.romcs = 0;
@@ -126,16 +126,16 @@ speccyboot_unpage(void)
     debugger_event(unpage_event);
 }
 
-static void
-speccyboot_memory_map(void)
+
+static void speccyboot_memory_map(void)
 {
     if (!speccyboot_rom_active) return;
 
     memory_map_romcs_8k(0x0000, speccyboot_memory_map_romcs);
 }
 
-static void
-speccyboot_reset(int hard_reset GCC_UNUSED)
+
+static void speccyboot_reset(int hard_reset GCC_UNUSED)
 {
     static int tap_opened = 0;
 
@@ -166,15 +166,15 @@ speccyboot_reset(int hard_reset GCC_UNUSED)
     }
 }
 
-static libspectrum_byte
-speccyboot_register_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+static libspectrum_byte speccyboot_register_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     *attached = 0xff; // TODO: check this
     return in_register_state;
 }
 
-static void
-speccyboot_register_write(libspectrum_word port GCC_UNUSED,
+
+static void speccyboot_register_write(libspectrum_word port GCC_UNUSED,
                            libspectrum_byte val)
 {
     nic_enc28j60_poll(nic);
@@ -217,8 +217,8 @@ speccyboot_register_write(libspectrum_word port GCC_UNUSED,
     out_register_state = val;
 }
 
-static int
-speccyboot_init(void *context)
+
+static int speccyboot_init(void *context)
 {
     int i;
 
@@ -238,14 +238,14 @@ speccyboot_init(void *context)
     return 0;
 }
 
-static void
-speccyboot_end(void)
+
+static void speccyboot_end(void)
 {
     nic_enc28j60_free(nic);
 }
 
-void
-speccyboot_register_startup(void)
+
+void speccyboot_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -257,8 +257,8 @@ speccyboot_register_startup(void)
                             speccyboot_end);
 }
 
-int
-speccyboot_unittest(void)
+
+int speccyboot_unittest(void)
 {
     int r = 0;
 
@@ -281,13 +281,13 @@ speccyboot_unittest(void)
 
 // No speccyboot support
 
-void
-speccyboot_register_startup(void)
+
+void speccyboot_register_startup(void)
 {
 }
 
-int
-speccyboot_unittest(void)
+
+int speccyboot_unittest(void)
 {
     return 0;
 }

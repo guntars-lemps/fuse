@@ -45,8 +45,8 @@ extern const keysyms_map_t unicode_keysyms_map[];
 
 static GHashTable *unicode_keysyms_hash;
 
-static input_key
-unicode_keysyms_remap(libspectrum_dword ui_keysym)
+
+static input_key unicode_keysyms_remap(libspectrum_dword ui_keysym)
 {
     const input_key *ptr;
 
@@ -55,8 +55,8 @@ unicode_keysyms_remap(libspectrum_dword ui_keysym)
     return ptr ? *ptr : INPUT_KEY_NONE;
 }
 
-void
-sdlkeyboard_init(void)
+
+void sdlkeyboard_init(void)
 {
     keysyms_map_t *ptr3;
 
@@ -69,14 +69,14 @@ sdlkeyboard_init(void)
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 }
 
-void
-sdlkeyboard_end(void)
+
+void sdlkeyboard_end(void)
 {
     g_hash_table_destroy(unicode_keysyms_hash);
 }
 
-void
-sdlkeyboard_keypress(SDL_KeyboardEvent *keyevent)
+
+void sdlkeyboard_keypress(SDL_KeyboardEvent *keyevent)
 {
     input_key fuse_keysym, unicode_keysym;
     input_event_t fuse_event;
@@ -102,8 +102,8 @@ sdlkeyboard_keypress(SDL_KeyboardEvent *keyevent)
     input_event(&fuse_event);
 }
 
-void
-sdlkeyboard_keyrelease(SDL_KeyboardEvent *keyevent)
+
+void sdlkeyboard_keyrelease(SDL_KeyboardEvent *keyevent)
 {
     input_key fuse_keysym;
     input_event_t fuse_event;

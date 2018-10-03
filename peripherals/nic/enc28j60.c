@@ -142,21 +142,21 @@ nic_enc28j60_alloc(void)
     return self;
 }
 
-void
-nic_enc28j60_init(nic_enc28j60_t *self)
+
+void nic_enc28j60_init(nic_enc28j60_t *self)
 {
     self->tap_fd = compat_get_tap(settings_current.speccyboot_tap);
 }
 
-void
-nic_enc28j60_free(nic_enc28j60_t *self)
+
+void nic_enc28j60_free(nic_enc28j60_t *self)
 {
     libspectrum_free(self);
 }
 
 // Poll for received frames.
-void
-nic_enc28j60_poll(nic_enc28j60_t *self)
+
+void nic_enc28j60_poll(nic_enc28j60_t *self)
 {
     ssize_t n;
 
@@ -182,14 +182,14 @@ nic_enc28j60_poll(nic_enc28j60_t *self)
 
       next_addr = (next_addr - erxnd) + erxst;
 
-      self->eth_rx_buf[ ETH_STATUS_NEXT_LO ] = LOBYTE(next_addr);
-      self->eth_rx_buf[ ETH_STATUS_NEXT_HI ] = HIBYTE(next_addr);
+      self->eth_rx_buf[ETH_STATUS_NEXT_LO] = LOBYTE(next_addr);
+      self->eth_rx_buf[ETH_STATUS_NEXT_HI] = HIBYTE(next_addr);
 
       memcpy(self->sram + erxwrpt, self->eth_rx_buf, first_part);
       memcpy(self->sram + erxst, self->eth_rx_buf + first_part, total_length - first_part);
     } else {
-      self->eth_rx_buf[ ETH_STATUS_NEXT_LO ] = LOBYTE(next_addr);
-      self->eth_rx_buf[ ETH_STATUS_NEXT_HI ] = HIBYTE(next_addr);
+      self->eth_rx_buf[ETH_STATUS_NEXT_LO] = LOBYTE(next_addr);
+      self->eth_rx_buf[ETH_STATUS_NEXT_HI] = HIBYTE(next_addr);
 
       memcpy(self->sram + erxwrpt, self->eth_rx_buf, total_length);
     }
@@ -201,8 +201,8 @@ nic_enc28j60_poll(nic_enc28j60_t *self)
 }
 
 // Writing to some registers produces special side effects.
-static void
-perform_side_effects_for_write(nic_enc28j60_t *self)
+
+static void perform_side_effects_for_write(nic_enc28j60_t *self)
 {
     if (ECON1(self) & ECON1_TXRTS) { // TXRTS: transmission request
     libspectrum_word frame_start = (GET_PTR_REG(self, ETXST) & 0x1fff) + 1;
@@ -223,15 +223,15 @@ perform_side_effects_for_write(nic_enc28j60_t *self)
     }
 }
 
-void
-nic_enc28j60_set_spi_state(nic_enc28j60_t *self, nic_enc28j60_spi_state new_state)
+
+void nic_enc28j60_set_spi_state(nic_enc28j60_t *self, nic_enc28j60_spi_state new_state)
 {
     self->spi_state = new_state;
     self->miso_valid_bits = self->mosi_valid_bits = 0;
 }
 
-void
-nic_enc28j60_reset(nic_enc28j60_t *self)
+
+void nic_enc28j60_reset(nic_enc28j60_t *self)
 {
     nic_enc28j60_set_spi_state(self, SPI_IDLE);
 
@@ -242,8 +242,8 @@ nic_enc28j60_reset(nic_enc28j60_t *self)
 }
 
 // Produce one bit for MISO for the next IN I/O operation
-int
-nic_enc28j60_spi_produce_bit(nic_enc28j60_t *self)
+
+int nic_enc28j60_spi_produce_bit(nic_enc28j60_t *self)
 {
     int bit;
 
@@ -253,11 +253,11 @@ nic_enc28j60_spi_produce_bit(nic_enc28j60_t *self)
     switch (self->spi_state) {
 
     case SPI_RCR:
-      self->miso_bits = self->registers[ self->curr_register_bank ][ self->curr_register ];
+      self->miso_bits = self->registers[self->curr_register_bank][self->curr_register];
       break;
 
     case SPI_RBM:
-      self->miso_bits = self->sram[ erdpt ];
+      self->miso_bits = self->sram[erdpt];
       // Assume ECON2:AUTOINC to be set, wrap at ERXND
       erdpt = (erdpt == GET_PTR_REG(self, ERXND)) ? GET_PTR_REG(self, ERXST)
                                                     : (erdpt + 1);
@@ -278,8 +278,8 @@ nic_enc28j60_spi_produce_bit(nic_enc28j60_t *self)
 }
 
 // Consume one bit from MOSI
-void
-nic_enc28j60_spi_consume_bit(nic_enc28j60_t *self, int bit)
+
+void nic_enc28j60_spi_consume_bit(nic_enc28j60_t *self, int bit)
 {
     self->mosi_bits = (self->mosi_bits << 1) | bit;
 
@@ -299,24 +299,24 @@ nic_enc28j60_spi_consume_bit(nic_enc28j60_t *self, int bit)
       break;
 
     case SPI_WCR:
-      self->registers[ self->curr_register_bank ][ self->curr_register ] = self->mosi_bits;
+      self->registers[self->curr_register_bank][self->curr_register] = self->mosi_bits;
       perform_side_effects_for_write(self);
       nic_enc28j60_set_spi_state(self, SPI_IDLE);
       break;
 
     case SPI_WBM:
-      self->sram[ ewrpt++ ] = self->mosi_bits; // Assume ECON2:AUTOINC to be set
+      self->sram[ewrpt++ ] = self->mosi_bits; // Assume ECON2:AUTOINC to be set
       SET_PTR_REG(self, EWRPT, ewrpt);
       break;
 
     case SPI_BFS:
-      self->registers[ self->curr_register_bank ][ self->curr_register ] |= self->mosi_bits;
+      self->registers[self->curr_register_bank][self->curr_register] |= self->mosi_bits;
       perform_side_effects_for_write(self);
       nic_enc28j60_set_spi_state(self, SPI_IDLE);
       break;
 
     case SPI_BFC:
-      self->registers[ self->curr_register_bank ][ self->curr_register ] &= ~self->mosi_bits;
+      self->registers[self->curr_register_bank][self->curr_register] &= ~self->mosi_bits;
       perform_side_effects_for_write(self);
       nic_enc28j60_set_spi_state(self, SPI_IDLE);
       break;

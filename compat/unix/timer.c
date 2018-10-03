@@ -46,8 +46,8 @@ compat_timer_get_time(void)
     return tv.tv_sec + tv.tv_usec / 1000000.0;
 }
 
-void
-compat_timer_sleep(int ms)
+
+void compat_timer_sleep(int ms)
 {
     usleep(ms * 1000);
 }

@@ -190,8 +190,8 @@ static  int rgb_for_4[] = {
     0xFF, 0xFF, 0xFF
 };
 
-int
-xdisplay_init(void)
+
+int xdisplay_init(void)
 {
     if (xdisplay_find_visual()) return 1;
     if (xdisplay_depth == 4 && xdisplay_allocate_colours4()) return 1;
@@ -203,8 +203,8 @@ xdisplay_init(void)
     return 0;
 }
 
-static int
-xdisplay_find_visual(void)
+
+static int xdisplay_find_visual(void)
 {
     XVisualInfo visual_tmpl;
     XVisualInfo *vis;
@@ -249,25 +249,25 @@ xdisplay_find_visual(void)
     return sel_v == -1 ? 1 : 0;
 }
 
-static void
-xdisplay_putpixel_4(int x, int y, libspectrum_word *colour)
+
+static void xdisplay_putpixel_4(int x, int y, libspectrum_word *colour)
 {
     XPutPixel(image, x, y, *colour);
 }
 
-static void
-xdisplay_putpixel_8(int x, int y, libspectrum_word *colour)
+
+static void xdisplay_putpixel_8(int x, int y, libspectrum_word *colour)
 {
     unsigned long c = *colour;
 
     c = (c         & 0x1f) * 3 / 31 +
       ((((c >>  5) & 0x3f) * 7 / 63) << 2) +
         (((c >> 11)          * 3 / 31) << 5);
-    XPutPixel(image, x, y, colours[ c ]);
+    XPutPixel(image, x, y, colours[c]);
 }
 
-static void
-xdisplay_putpixel_15(int x, int y, libspectrum_word *colour)
+
+static void xdisplay_putpixel_15(int x, int y, libspectrum_word *colour)
 {
     unsigned long c = *colour;
 
@@ -275,14 +275,14 @@ xdisplay_putpixel_15(int x, int y, libspectrum_word *colour)
     XPutPixel(image, x, y, c);
 }
 
-static void
-xdisplay_putpixel_16(int x, int y, libspectrum_word *colour)
+
+static void xdisplay_putpixel_16(int x, int y, libspectrum_word *colour)
 {
     XPutPixel(image, x, y, *colour);
 }
 
-static void
-xdisplay_putpixel_24(int x, int y, libspectrum_word *colour)
+
+static void xdisplay_putpixel_24(int x, int y, libspectrum_word *colour)
 {
     unsigned long c = *colour;
 
@@ -292,8 +292,8 @@ xdisplay_putpixel_24(int x, int y, libspectrum_word *colour)
     XPutPixel(image, x, y, c);
 }
 
-static int
-xdisplay_alloc_colour(Colormap *map, XColor *colour)
+
+static int xdisplay_alloc_colour(Colormap *map, XColor *colour)
 {
     for (;;) {
     if (XAllocColor(display, *map, colour))
@@ -313,8 +313,8 @@ xdisplay_alloc_colour(Colormap *map, XColor *colour)
     return 0;
 }
 
-static int
-xdisplay_allocate_colours4(void)
+
+static int xdisplay_allocate_colours4(void)
 {
     XColor c;
     int i;
@@ -350,8 +350,8 @@ xdisplay_allocate_colours4(void)
     return 0;
 }
 
-static int
-xdisplay_allocate_colours8(void)
+
+static int xdisplay_allocate_colours8(void)
 {
     XColor c;
     int i, r, g, b;
@@ -384,8 +384,8 @@ xdisplay_allocate_colours8(void)
     return 0;
 }
 
-static int
-xdisplay_allocate_gc(Window window, GC *new_gc)
+
+static int xdisplay_allocate_gc(Window window, GC *new_gc)
 {
     unsigned valuemask=0;
     XGCValues values;
@@ -395,8 +395,8 @@ xdisplay_allocate_gc(Window window, GC *new_gc)
     return 0;
 }
 
-static int
-xdisplay_allocate_image(void)
+
+static int xdisplay_allocate_image(void)
 {
     struct sigaction handler;
 
@@ -459,8 +459,8 @@ xdisplay_allocate_image(void)
 }
 
 #ifdef X_USE_SHM
-static int
-try_shm(void)
+
+static int try_shm(void)
 {
     int id;
     int error;
@@ -517,8 +517,8 @@ try_shm(void)
 }
 
 // Get an SHM ID; also attempt to reclaim any stale chunks we find
-static int
-get_shm_id(const int size)
+
+static int get_shm_id(const int size)
 {
     key_t key = 'F' << 24 | 'u' << 16 | 's' << 8 | 'e';
     struct shmid_ds shm;
@@ -562,8 +562,8 @@ get_shm_id(const int size)
 }
 #endif // #ifdef X_USE_SHM
 
-int
-uidisplay_init(int width, int height)
+
+int uidisplay_init(int width, int height)
 {
     image_width  = width;
     image_height = height;
@@ -581,8 +581,8 @@ uidisplay_init(int width, int height)
     return 0;
 }
 
-static void
-resize_window(int w, int h)
+
+static void resize_window(int w, int h)
 {
     if (xdisplay_current_size != w / DISPLAY_ASPECT_WIDTH) {
       XResizeWindow(display, xui_mainWindow, w, h);
@@ -590,8 +590,8 @@ resize_window(int w, int h)
     }
 }
 
-static void
-register_scalers(void)
+
+static void register_scalers(void)
 {
     int f = -1;
 
@@ -657,8 +657,8 @@ register_scalers(void)
     }
 }
 
-int
-xdisplay_configure_notify(int width, int height)
+
+int xdisplay_configure_notify(int width, int height)
 {
     int size;
 
@@ -686,8 +686,8 @@ xdisplay_configure_notify(int width, int height)
     return 0;
 }
 
-static void
-xdisplay_update_rect_noscale(int x, int y, int w, int h)
+
+static void xdisplay_update_rect_noscale(int x, int y, int w, int h)
 {
  int yy, xx;
 
@@ -699,8 +699,8 @@ xdisplay_update_rect_noscale(int x, int y, int w, int h)
     xdisplay_area(x, y, w, h);
 }
 
-static void
-xdisplay_update_rect_scale(int x, int y, int w, int h)
+
+static void xdisplay_update_rect_scale(int x, int y, int w, int h)
 {
     int yy = y, xx = x;
 
@@ -725,8 +725,8 @@ xdisplay_update_rect_scale(int x, int y, int w, int h)
     xdisplay_area(x, y, w, h);
 }
 
-void
-uidisplay_frame_end(void)
+
+void uidisplay_frame_end(void)
 {
     X_Rect *r, *last_rect;
 
@@ -752,21 +752,21 @@ uidisplay_frame_end(void)
     xdisplay_force_full_refresh = 0;
 }
 
-void
-uidisplay_frame_save(void)
+
+void uidisplay_frame_save(void)
 {
     memcpy(rgb_image_backup, rgb_image, sizeof(rgb_image));
 }
 
-void
-uidisplay_frame_restore(void)
+
+void uidisplay_frame_restore(void)
 {
     memcpy(rgb_image, rgb_image_backup, sizeof(rgb_image));
     xdisplay_update_rect(0, 0, image_width, image_height);
 }
 
-void
-uidisplay_area(int x, int y, int w, int h)
+
+void uidisplay_area(int x, int y, int w, int h)
 {
     if (xdisplay_force_full_refresh)
     return;
@@ -788,8 +788,8 @@ uidisplay_area(int x, int y, int w, int h)
     num_rects++;
 }
 
-void
-xdisplay_area(int x, int y, int w, int h)
+
+void xdisplay_area(int x, int y, int w, int h)
 {
 // e.g. dwm first expose with too big w and h
     if (x + w > 3 * DISPLAY_ASPECT_WIDTH)
@@ -808,8 +808,8 @@ xdisplay_area(int x, int y, int w, int h)
     }
 }
 
-static void
-xdisplay_destroy_image(void)
+
+static void xdisplay_destroy_image(void)
 {
     /* Free the XImage used to store screen data; also frees the malloc'd
      data */
@@ -824,8 +824,8 @@ xdisplay_destroy_image(void)
     if (image) XDestroyImage(image); image = NULL;
 }
 
-static void
-xdisplay_setup_rgb_putpixel(void)
+
+static void xdisplay_setup_rgb_putpixel(void)
 {
     switch (xdisplay_depth) {
     case 4:
@@ -848,8 +848,8 @@ xdisplay_setup_rgb_putpixel(void)
     resize_window(scaled_image_w, scaled_image_h);
 }
 
-int
-uidisplay_hotswap_gfx_mode(void)
+
+int uidisplay_hotswap_gfx_mode(void)
 {
     image_scale = 4.0 * scaler_get_scaling_factor(current_scaler);
     scaled_image_w = image_width  * image_scale >> 2;
@@ -874,23 +874,23 @@ uidisplay_hotswap_gfx_mode(void)
     return 0;
 }
 
-int
-uidisplay_end(void)
+
+int uidisplay_end(void)
 {
     display_ui_initialised = 0;
     return 0;
 }
 
-static void
-xdisplay_catch_signal(int sig)
+
+static void xdisplay_catch_signal(int sig)
 {
     xdisplay_end();
     psignal(sig, fuse_progname);
     exit(1);
 }
 
-int
-xdisplay_end(void)
+
+int xdisplay_end(void)
 {
     xdisplay_destroy_image();
     // Free the allocated GC
@@ -903,11 +903,11 @@ xdisplay_end(void)
 }
 
 // Set one pixel in the display
-void
-uidisplay_putpixel(int x, int y, int colour)
+
+void uidisplay_putpixel(int x, int y, int colour)
 {
-    libspectrum_word pc = settings_current.bw_tv ? pal_grey[ colour ] :
-                            pal_colour[ colour ];
+    libspectrum_word pc = settings_current.bw_tv ? pal_grey[colour] :
+                            pal_colour[colour];
 
     if (machine_current->timex) {
     x <<= 1; y <<= 1;
@@ -922,15 +922,15 @@ uidisplay_putpixel(int x, int y, int colour)
 
 /* Print the 8 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((8*x) , y) */
-void
-uidisplay_plot8(int x, int y, libspectrum_byte data,
+
+void uidisplay_plot8(int x, int y, libspectrum_byte data,
              libspectrum_byte ink, libspectrum_byte paper)
 {
     libspectrum_word *dest;
-    libspectrum_word pi = settings_current.bw_tv ? pal_grey[ ink ] :
-                            pal_colour[ ink ];
-    libspectrum_word pp = settings_current.bw_tv ? pal_grey[ paper ] :
-                            pal_colour[ paper ];
+    libspectrum_word pi = settings_current.bw_tv ? pal_grey[ink] :
+                            pal_colour[ink];
+    libspectrum_word pp = settings_current.bw_tv ? pal_grey[paper] :
+                            pal_colour[paper];
 
     if (machine_current->timex) {
 
@@ -972,15 +972,15 @@ uidisplay_plot8(int x, int y, libspectrum_byte data,
 
 /* Print the 16 pixels in `data' using ink colour `ink' and paper
    colour `paper' to the screen at ((16*x) , y) */
-void
-uidisplay_plot16(int x, int y, libspectrum_word data,
+
+void uidisplay_plot16(int x, int y, libspectrum_word data,
                  libspectrum_byte ink, libspectrum_byte paper)
 {
     libspectrum_word *dest;
-    libspectrum_word pi = settings_current.bw_tv ? pal_grey[ ink ] :
-                            pal_colour[ ink ];
-    libspectrum_word pp = settings_current.bw_tv ? pal_grey[ paper ] :
-                            pal_colour[ paper ];
+    libspectrum_word pi = settings_current.bw_tv ? pal_grey[ink] :
+                            pal_colour[ink];
+    libspectrum_word pp = settings_current.bw_tv ? pal_grey[paper] :
+                            pal_colour[paper];
     x <<= 4; y <<= 1;
 
     dest = &(rgb_image[y + 2][x + 1]);
@@ -1002,8 +1002,8 @@ uidisplay_plot16(int x, int y, libspectrum_word data,
     *(dest + rgb_pitch) = *dest = (data & 0x0001) ? pi : pp;
 }
 
-int
-ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
+
+int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
 {
     switch (item) {
 
@@ -1037,8 +1037,8 @@ ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
     return 1;
 }
 
-int
-ui_statusbar_update_speed(float speed)
+
+int ui_statusbar_update_speed(float speed)
 {
     char *list[2];
     char buffer[16];

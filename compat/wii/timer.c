@@ -48,8 +48,8 @@ compat_timer_get_time(void)
     return tp.tv_sec + tp.tv_nsec / 1000000000.0;
 }
 
-void
-compat_timer_sleep(int ms)
+
+void compat_timer_sleep(int ms)
 {
     usleep(ms * 1000);
 }

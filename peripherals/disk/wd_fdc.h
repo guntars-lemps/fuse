@@ -74,7 +74,7 @@ typedef struct wd_fdc {
 
     wd_type_t type; // WD1770, FD1793, WD1772, WD1773, WD2797
 
-    int rates[ 4 ];
+    int rates[4];
     int spin_cycles;
     fdd_dir_t direction; // 0 = spindlewards, 1 = rimwards
     int dden; // SD/DD -> FM/MFM

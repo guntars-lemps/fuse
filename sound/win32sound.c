@@ -41,20 +41,20 @@ static CRITICAL_SECTION sound_lock;
 static void *buffers[2];
 static int buffer_used[2];
 static int current_buffer;
-static char buffer1[ BUFFER_SIZE ];
-static char buffer2[ BUFFER_SIZE ];
+static char buffer1[BUFFER_SIZE];
+static char buffer2[BUFFER_SIZE];
 
 static int sixteenbit;
 
-static void
-sound_display_mmresult(const char * const func, MMRESULT result);
+
+static void sound_display_mmresult(const char * const func, MMRESULT result);
 
 static void CALLBACK
 sound_callback(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance,
                 DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 
-int
-sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
+
+int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 {
     WAVEFORMATEX pcmwf; // waveformat struct
     MMRESULT result;
@@ -97,8 +97,8 @@ sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     return 0;
 }
 
-void
-sound_lowlevel_end(void)
+
+void sound_lowlevel_end(void)
 {
     MMRESULT result;
 
@@ -111,14 +111,14 @@ sound_lowlevel_end(void)
     }
 
     // unprepare wave headers
-    if (wavehdr[ 0 ].dwFlags & WHDR_PREPARED) {
-    result = waveOutUnprepareHeader(hwaveout, &wavehdr[ 0 ], sizeof(WAVEHDR));
+    if (wavehdr[0].dwFlags & WHDR_PREPARED) {
+    result = waveOutUnprepareHeader(hwaveout, &wavehdr[0], sizeof(WAVEHDR));
     if (result != MMSYSERR_NOERROR)
       sound_display_mmresult("waveOutUnprepareHeader", result);
     }
 
-    if (wavehdr[ 1 ].dwFlags & WHDR_PREPARED) {
-    result = waveOutUnprepareHeader(hwaveout, &wavehdr[ 1 ], sizeof(WAVEHDR));
+    if (wavehdr[1].dwFlags & WHDR_PREPARED) {
+    result = waveOutUnprepareHeader(hwaveout, &wavehdr[1], sizeof(WAVEHDR));
     if (result != MMSYSERR_NOERROR)
       sound_display_mmresult("waveOutUnprepareHeader", result);
     }
@@ -134,8 +134,8 @@ sound_lowlevel_end(void)
     DeleteCriticalSection(&sound_lock);
 }
 
-void
-sound_lowlevel_frame(libspectrum_signed_word *data, int len)
+
+void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     static unsigned char buf8[4096];
     MMRESULT result;
@@ -163,31 +163,31 @@ sound_lowlevel_frame(libspectrum_signed_word *data, int len)
     }
 
     // wait for the buffer to finish playing
-    if (buffer_used[ current_buffer ] > 0)
+    if (buffer_used[current_buffer] > 0)
     WaitForSingleObject(sem_sound_done, INFINITE);
 
     // unprepare the header if it's prepared
-    if (wavehdr[ current_buffer ].dwFlags & WHDR_PREPARED) {
-    result = waveOutUnprepareHeader(hwaveout, &wavehdr[ current_buffer ], sizeof(WAVEHDR));
+    if (wavehdr[current_buffer].dwFlags & WHDR_PREPARED) {
+    result = waveOutUnprepareHeader(hwaveout, &wavehdr[current_buffer], sizeof(WAVEHDR));
     if (result != MMSYSERR_NOERROR)
       sound_display_mmresult("waveOutUnprepareHeader", result);
     }
 
     // copy the new wave into the buffer
-    memcpy(buffers[ current_buffer ], bytes, len);
-    buffer_used[ current_buffer ] = len;
+    memcpy(buffers[current_buffer], bytes, len);
+    buffer_used[current_buffer] = len;
 
     // prepare the header
-    wavehdr[ current_buffer ].lpData = (LPSTR) bytes;
-    wavehdr[ current_buffer ].dwBufferLength = len;
-    wavehdr[ current_buffer ].dwLoops |= WHDR_BEGINLOOP | WHDR_ENDLOOP;
+    wavehdr[current_buffer].lpData = (LPSTR) bytes;
+    wavehdr[current_buffer].dwBufferLength = len;
+    wavehdr[current_buffer].dwLoops |= WHDR_BEGINLOOP | WHDR_ENDLOOP;
 
-    result = waveOutPrepareHeader(hwaveout, &wavehdr[ current_buffer ], sizeof(WAVEHDR));
+    result = waveOutPrepareHeader(hwaveout, &wavehdr[current_buffer], sizeof(WAVEHDR));
     if (result != MMSYSERR_NOERROR)
     sound_display_mmresult("waveOutPrepareHeader", result);
 
     // play
-    result = waveOutWrite(hwaveout, &wavehdr[ current_buffer ], sizeof(WAVEHDR));
+    result = waveOutWrite(hwaveout, &wavehdr[current_buffer], sizeof(WAVEHDR));
     if (result != MMSYSERR_NOERROR)
     sound_display_mmresult("waveOutWrite", result);
 
@@ -197,8 +197,8 @@ sound_lowlevel_frame(libspectrum_signed_word *data, int len)
     current_buffer = 0;
 }
 
-static void
-sound_display_mmresult(const char * const func, MMRESULT result)
+
+static void sound_display_mmresult(const char * const func, MMRESULT result)
 {
     const char *mmresult;
 

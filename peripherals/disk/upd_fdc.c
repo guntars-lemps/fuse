@@ -74,40 +74,40 @@ static const int UPD_FDC_ST3_READY       = 0x20;
 static const int UPD_FDC_ST3_WRPROT      = 0x40;
 
 static upd_cmd_t cmd[] = {/*    mask  value  cmd / res length */
-    { UPD_CMD_READ_DATA,        0x1f, 0x06, 0x08, 0x07 },
-    { UPD_CMD_READ_DATA,        0x1f, 0x0c, 0x08, 0x07 }, // deleted data
-    { UPD_CMD_READ_DIAG,        0x9f, 0x02, 0x08, 0x07 },
-    { UPD_CMD_RECALIBRATE,    0xff, 0x07, 0x01, 0x00 },
-    { UPD_CMD_SEEK,        0xff, 0x0f, 0x02, 0x00 },
-    { UPD_CMD_WRITE_DATA,        0x3f, 0x05, 0x08, 0x07 },
-    { UPD_CMD_WRITE_DATA,        0x3f, 0x09, 0x08, 0x07 }, // deleted data
-    { UPD_CMD_WRITE_ID,        0xbf, 0x0d, 0x05, 0x07 },
-    { UPD_CMD_SCAN,        0x1f, 0x11, 0x08, 0x07 },
-    { UPD_CMD_SCAN,        0x1f, 0x19, 0x08, 0x07 }, // low or equal
-    { UPD_CMD_SCAN,        0x1f, 0x1d, 0x08, 0x07 }, // high or equal
-    { UPD_CMD_READ_ID,        0xbf, 0x0a, 0x01, 0x07 },
-    { UPD_CMD_SENSE_INT,        0xff, 0x08, 0x00, 0x02 },
-    { UPD_CMD_SPECIFY,        0xff, 0x03, 0x02, 0x00 },
-    { UPD_CMD_SENSE_DRIVE,    0xff, 0x04, 0x01, 0x01 },
-    { UPD_CMD_VERSION,        0x1f, 0x10, 0x00, 0x01 },
-    { UPD_CMD_INVALID,        0x00, 0x00, 0x00, 0x01 },
+    {UPD_CMD_READ_DATA,        0x1f, 0x06, 0x08, 0x07},
+    {UPD_CMD_READ_DATA,        0x1f, 0x0c, 0x08, 0x07}, // deleted data
+    {UPD_CMD_READ_DIAG,        0x9f, 0x02, 0x08, 0x07},
+    {UPD_CMD_RECALIBRATE,    0xff, 0x07, 0x01, 0x00},
+    {UPD_CMD_SEEK,        0xff, 0x0f, 0x02, 0x00},
+    {UPD_CMD_WRITE_DATA,        0x3f, 0x05, 0x08, 0x07},
+    {UPD_CMD_WRITE_DATA,        0x3f, 0x09, 0x08, 0x07}, // deleted data
+    {UPD_CMD_WRITE_ID,        0xbf, 0x0d, 0x05, 0x07},
+    {UPD_CMD_SCAN,        0x1f, 0x11, 0x08, 0x07},
+    {UPD_CMD_SCAN,        0x1f, 0x19, 0x08, 0x07}, // low or equal
+    {UPD_CMD_SCAN,        0x1f, 0x1d, 0x08, 0x07}, // high or equal
+    {UPD_CMD_READ_ID,        0xbf, 0x0a, 0x01, 0x07},
+    {UPD_CMD_SENSE_INT,        0xff, 0x08, 0x00, 0x02},
+    {UPD_CMD_SPECIFY,        0xff, 0x03, 0x02, 0x00},
+    {UPD_CMD_SENSE_DRIVE,    0xff, 0x04, 0x01, 0x01},
+    {UPD_CMD_VERSION,        0x1f, 0x10, 0x00, 0x01},
+    {UPD_CMD_INVALID,        0x00, 0x00, 0x00, 0x01},
 };
 
 static int fdc_event, head_event, timeout_event;
 
-static void
-upd_fdc_event(libspectrum_dword last_tstates, int event, void *user_data);
 
-void
-upd_fdc_init_events(void)
+static void upd_fdc_event(libspectrum_dword last_tstates, int event, void *user_data);
+
+
+void upd_fdc_init_events(void)
 {
     fdc_event = event_register(upd_fdc_event, "UPD FDC event");
     head_event = event_register(upd_fdc_event, "UPD FDC head (un)load");
     timeout_event = event_register(upd_fdc_event, "UPD FDC timeout");
 }
 
-static void
-cmd_identify(upd_fdc *f)
+
+static void cmd_identify(upd_fdc *f)
 {
     upd_cmd_t *r = cmd;
 
@@ -124,8 +124,8 @@ cmd_identify(upd_fdc *f)
     return;
 }
 
-void
-upd_fdc_master_reset(upd_fdc *f)
+
+void upd_fdc_master_reset(upd_fdc *f)
 {
     int i;
 
@@ -155,14 +155,14 @@ upd_fdc_master_reset(upd_fdc *f)
     if (f->speedlock != -1) f->speedlock = 0;
 }
 
-static void
-crc_preset(upd_fdc *f)
+
+static void crc_preset(upd_fdc *f)
 {
     f->crc = 0xffff;
 }
 
-static void
-crc_add(upd_fdc *f, fdd_t *d)
+
+static void crc_add(upd_fdc *f, fdd_t *d)
 {
     f->crc = crc_fdc(f->crc, d->data & 0xff);
 }
@@ -173,8 +173,8 @@ crc_add(upd_fdc *f, fdd_t *d)
    return 1 if found but with CRC error
    return 2 if not found ID
 */
-static int
-read_id(upd_fdc *f)
+
+static int read_id(upd_fdc *f)
 {
     int i;
     fdd_t *d = f->current_drive;
@@ -250,8 +250,8 @@ read_id(upd_fdc *f)
    1 - not found
 */
 
-static int
-read_datamark(upd_fdc *f)
+
+static int read_datamark(upd_fdc *f)
 {
     fdd_t *d = f->current_drive;
     int i;
@@ -348,8 +348,8 @@ read_datamark(upd_fdc *f)
  3 - not found the specified id
 */
 
-static int
-seek_id(upd_fdc *f)
+
+static int seek_id(upd_fdc *f)
 {
     int r;
 
@@ -396,8 +396,8 @@ upd_fdc_alloc_fdc(upd_type_t type, upd_clock_t clock)
     return f;
 }
 
-static void
-cmd_result(upd_fdc *f)
+
+static void cmd_result(upd_fdc *f)
 {
     f->cycle = f->cmd->res_length;
     f->main_status &= ~UPD_FDC_MAIN_EXECUTION;
@@ -419,8 +419,8 @@ cmd_result(upd_fdc *f)
     }
 }
 
-static void
-seek_step(upd_fdc *f, int start)
+
+static void seek_step(upd_fdc *f, int start)
 {
     int i, j;
     fdd_t *d;
@@ -504,8 +504,8 @@ seek_step(upd_fdc *f, int start)
     return;
 }
 
-static void
-start_read_id(upd_fdc *f)
+
+static void start_read_id(upd_fdc *f)
 {
     int i;
 
@@ -542,8 +542,8 @@ start_read_id(upd_fdc *f)
     cmd_result(f); // set up result phase
 }
 
-static void
-start_read_diag(upd_fdc *f)
+
+static void start_read_diag(upd_fdc *f)
 {
     int i;
 
@@ -603,8 +603,8 @@ abort_read_diag:
     cmd_result(f);
 }
 
-static void
-start_read_data(upd_fdc *f)
+
+static void start_read_data(upd_fdc *f)
 {
     int i;
 skip_deleted_sector:
@@ -695,8 +695,8 @@ abort_read_data:
                timeout_event, f);
 }
 
-static void
-start_write_data(upd_fdc *f)
+
+static void start_write_data(upd_fdc *f)
 {
     int i;
     fdd_t *d = f->current_drive;
@@ -785,8 +785,8 @@ abort_write_data:
                timeout_event, f);
 }
 
-static void
-start_write_id(upd_fdc *f)
+
+static void start_write_id(upd_fdc *f)
 {
     int i;
     fdd_t *d = f->current_drive;
@@ -824,8 +824,8 @@ start_write_id(upd_fdc *f)
                timeout_event, f);
 }
 
-static void
-head_load(upd_fdc *f)
+
+static void head_load(upd_fdc *f)
 {
     event_remove_type(head_event);
     if (f->head_load) { // head already loaded
@@ -851,8 +851,8 @@ head_load(upd_fdc *f)
     }
 }
 
-static void
-upd_fdc_event(libspectrum_dword last_tstates GCC_UNUSED, int event,
+
+static void upd_fdc_event(libspectrum_dword last_tstates GCC_UNUSED, int event,
            void *user_data)
 {
     upd_fdc *f = user_data;
@@ -899,14 +899,14 @@ upd_fdc_event(libspectrum_dword last_tstates GCC_UNUSED, int event,
     return;
 }
 
-libspectrum_byte
-upd_fdc_read_status(upd_fdc *f)
+
+libspectrum_byte upd_fdc_read_status(upd_fdc *f)
 {
     return f->main_status;
 }
 
-libspectrum_byte
-upd_fdc_read_data(upd_fdc *f)
+
+libspectrum_byte upd_fdc_read_data(upd_fdc *f)
 {
     libspectrum_byte r;
 
@@ -1001,8 +1001,8 @@ upd_fdc_read_data(upd_fdc *f)
     return r;
 }
 
-void
-upd_fdc_write_data(upd_fdc *f, libspectrum_byte data)
+
+void upd_fdc_write_data(upd_fdc *f, libspectrum_byte data)
 {
     int i, terminated = 0;
     unsigned int u;
@@ -1195,9 +1195,9 @@ upd_fdc_write_data(upd_fdc *f, libspectrum_byte data)
     f->cmd->id != UPD_CMD_VERSION &&
     f->cmd->id != UPD_CMD_INVALID) {
       f->us = f->data_register[0] & 0x03;
-      if (f->current_drive != f->drive[ f->us ]) {
+      if (f->current_drive != f->drive[f->us]) {
         fdd_select(f->current_drive, 0);
-        f->current_drive = f->drive[ f->us ];
+        f->current_drive = f->drive[f->us];
         fdd_select(f->current_drive, 1);
       }
 

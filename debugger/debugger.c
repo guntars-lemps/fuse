@@ -50,8 +50,8 @@ int debugger_breakpoint_event;
 // Fuse's exit code
 static int exit_code = 0;
 
-static int
-debugger_init(void *context)
+
+static int debugger_init(void *context)
 {
     debugger_breakpoints = NULL;
     debugger_output_base = 16;
@@ -68,15 +68,15 @@ debugger_init(void *context)
     return 0;
 }
 
-void
-debugger_reset(void)
+
+void debugger_reset(void)
 {
     debugger_breakpoint_remove_all();
     debugger_mode = DEBUGGER_MODE_INACTIVE;
 }
 
-static void
-debugger_end(void)
+
+static void debugger_end(void)
 {
     debugger_breakpoint_remove_all();
     debugger_variable_end();
@@ -84,8 +84,8 @@ debugger_end(void)
     debugger_event_end();
 }
 
-void
-debugger_register_startup(void)
+
+void debugger_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_EVENT,
@@ -98,15 +98,15 @@ debugger_register_startup(void)
 }
 
 // Activate the debugger
-int
-debugger_trap(void)
+
+int debugger_trap(void)
 {
     return ui_debugger_activate();
 }
 
 // Step one instruction
-int
-debugger_step(void)
+
+int debugger_step(void)
 {
     debugger_mode = DEBUGGER_MODE_HALTED;
     ui_debugger_deactivate(0);
@@ -114,8 +114,8 @@ debugger_step(void)
 }
 
 // Step to the next instruction, ignoring CALLs etc
-int
-debugger_next(void)
+
+int debugger_next(void)
 {
     size_t length;
 
@@ -134,8 +134,8 @@ debugger_next(void)
 }
 
 // Set debugger_mode so that emulation will occur
-int
-debugger_run(void)
+
+int debugger_run(void)
 {
     debugger_mode = debugger_breakpoints ?
                   DEBUGGER_MODE_ACTIVE :
@@ -146,8 +146,8 @@ debugger_run(void)
 
 /* Exit from the last CALL etc by setting a oneshot breakpoint at
    (SP) and then starting emulation */
-int
-debugger_breakpoint_exit(void)
+
+int debugger_breakpoint_exit(void)
 {
     libspectrum_word target;
 
@@ -166,24 +166,24 @@ debugger_breakpoint_exit(void)
 }
 
 // Poke a value into RAM
-int
-debugger_poke(libspectrum_word address, libspectrum_byte value)
+
+int debugger_poke(libspectrum_word address, libspectrum_byte value)
 {
     writebyte_internal(address, value);
     return 0;
 }
 
 // Write a value to a port
-int
-debugger_port_write(libspectrum_word port, libspectrum_byte value)
+
+int debugger_port_write(libspectrum_word port, libspectrum_byte value)
 {
     writeport_internal(port, value);
     return 0;
 }
 
 // Exit the emulator
-void
-debugger_exit_emulator(debugger_expression *exit_code_expression)
+
+void debugger_exit_emulator(debugger_expression *exit_code_expression)
 {
     fuse_exiting = 1;
 
@@ -196,8 +196,8 @@ debugger_exit_emulator(debugger_expression *exit_code_expression)
     debugger_run();
 }
 
-int
-debugger_get_exit_code(void)
+
+int debugger_get_exit_code(void)
 {
     return exit_code;
 }

@@ -70,16 +70,16 @@ libspectrum_word beta_pc_mask;
 libspectrum_word beta_pc_value;
 
 static wd_fdc *beta_fdc;
-static fdd_t beta_drives[ BETA_NUM_DRIVES ];
-static ui_media_drive_info_t beta_ui_drives[ BETA_NUM_DRIVES ];
+static fdd_t beta_drives[BETA_NUM_DRIVES];
+static ui_media_drive_info_t beta_ui_drives[BETA_NUM_DRIVES];
 
 static const periph_port_t beta_ports[] = {
-    { 0x00ff, 0x001f, beta_sr_read, beta_cr_write },
-    { 0x00ff, 0x003f, beta_tr_read, beta_tr_write },
-    { 0x00ff, 0x005f, beta_sec_read, beta_sec_write },
-    { 0x00ff, 0x007f, beta_dr_read, beta_dr_write },
-    { 0x00ff, 0x00ff, beta_sp_read, beta_sp_write },
-    { 0, 0, NULL, NULL }
+    {0x00ff, 0x001f, beta_sr_read, beta_cr_write},
+    {0x00ff, 0x003f, beta_tr_read, beta_tr_write},
+    {0x00ff, 0x005f, beta_sec_read, beta_sec_write},
+    {0x00ff, 0x007f, beta_dr_read, beta_dr_write},
+    {0x00ff, 0x00ff, beta_sp_read, beta_sp_write},
+    {0, 0, NULL, NULL}
 };
 
 static const periph_t beta_peripheral = {
@@ -112,8 +112,8 @@ static module_info_t beta_module_info = {
 
 };
 
-void
-beta_page(void)
+
+void beta_page(void)
 {
     beta_active = 1;
     machine_current->ram.romcs = 1;
@@ -121,8 +121,8 @@ beta_page(void)
     debugger_event(page_event);
 }
 
-void
-beta_unpage(void)
+
+void beta_unpage(void)
 {
     beta_active = 0;
     machine_current->ram.romcs = 0;
@@ -130,27 +130,27 @@ beta_unpage(void)
     debugger_event(unpage_event);
 }
 
-static void
-beta_memory_map(void)
+
+static void beta_memory_map(void)
 {
     if (!beta_active) return;
 
     memory_map_romcs_full(beta_memory_map_romcs);
 }
 
-static void
-beta_select_drive(int i)
+
+static void beta_select_drive(int i)
 {
-    if (beta_fdc->current_drive != &beta_drives[ i & 0x03 ]) {
+    if (beta_fdc->current_drive != &beta_drives[i & 0x03]) {
     if (beta_fdc->current_drive != NULL)
       fdd_select(beta_fdc->current_drive, 0);
-    beta_fdc->current_drive = &beta_drives[ i & 0x03 ];
+    beta_fdc->current_drive = &beta_drives[i & 0x03];
     fdd_select(beta_fdc->current_drive, 1);
     }
 }
 
-static int
-beta_init(void *context)
+
+static int beta_init(void *context)
 {
     int i;
     fdd_t *d;
@@ -159,7 +159,7 @@ beta_init(void *context)
     beta_fdc->current_drive = NULL;
 
     for (i = 0; i < BETA_NUM_DRIVES; i++) {
-    d = &beta_drives[ i ];
+    d = &beta_drives[i];
     fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
     d->disk.flag = DISK_FLAG_NONE;
     }
@@ -180,8 +180,8 @@ beta_init(void *context)
     periph_register(PERIPH_TYPE_BETA128, &beta_peripheral);
 
     for (i = 0; i < BETA_NUM_DRIVES; i++) {
-    beta_ui_drives[i].fdd = &beta_drives[ i ];
-    ui_media_drive_register(&beta_ui_drives[ i ]);
+    beta_ui_drives[i].fdd = &beta_drives[i];
+    ui_media_drive_register(&beta_ui_drives[i]);
     }
 
     periph_register_paging_events(event_type_string, &page_event,
@@ -190,8 +190,8 @@ beta_init(void *context)
     return 0;
 }
 
-static void
-beta_reset(int hard_reset GCC_UNUSED)
+
+static void beta_reset(int hard_reset GCC_UNUSED)
 {
     int i;
 
@@ -239,7 +239,7 @@ beta_reset(int hard_reset GCC_UNUSED)
     }
 
     for (i = 0; i < BETA_NUM_DRIVES; i++) {
-    ui_media_drive_update_menus(&beta_ui_drives[ i ],
+    ui_media_drive_update_menus(&beta_ui_drives[i],
                                  UI_MEDIA_DRIVE_UPDATE_ALL);
     }
 
@@ -248,15 +248,15 @@ beta_reset(int hard_reset GCC_UNUSED)
 
 }
 
-static void
-beta_end(void)
+
+static void beta_end(void)
 {
     beta_available = 0;
     libspectrum_free(beta_fdc);
 }
 
-void
-beta_register_startup(void)
+
+void beta_register_startup(void)
 {
     startup_manager_module dependencies[] = {
     STARTUP_MANAGER_MODULE_DEBUGGER,
@@ -268,8 +268,8 @@ beta_register_startup(void)
                             beta_end);
 }
 
-libspectrum_byte
-beta_sr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte beta_sr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     if (!beta_active) return 0xff;
 
@@ -277,16 +277,16 @@ beta_sr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
     return wd_fdc_sr_read(beta_fdc);
 }
 
-void
-beta_cr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void beta_cr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     if (!beta_active) return;
 
     wd_fdc_cr_write(beta_fdc, b);
 }
 
-libspectrum_byte
-beta_tr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte beta_tr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     if (!beta_active) return 0xff;
 
@@ -294,16 +294,16 @@ beta_tr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
     return wd_fdc_tr_read(beta_fdc);
 }
 
-void
-beta_tr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void beta_tr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     if (!beta_active) return;
 
     wd_fdc_tr_write(beta_fdc, b);
 }
 
-libspectrum_byte
-beta_sec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte beta_sec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     if (!beta_active) return 0xff;
 
@@ -311,16 +311,16 @@ beta_sec_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
     return wd_fdc_sec_read(beta_fdc);
 }
 
-void
-beta_sec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void beta_sec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     if (!beta_active) return;
 
     wd_fdc_sec_write(beta_fdc, b);
 }
 
-libspectrum_byte
-beta_dr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte beta_dr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     if (!beta_active) return 0xff;
 
@@ -328,16 +328,16 @@ beta_dr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
     return wd_fdc_dr_read(beta_fdc);
 }
 
-void
-beta_dr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void beta_dr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     if (!beta_active) return;
 
     wd_fdc_dr_write(beta_fdc, b);
 }
 
-void
-beta_sp_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
+
+void beta_sp_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     if (!beta_active) return;
 
@@ -352,8 +352,8 @@ beta_sp_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
     beta_system_register = b;
 }
 
-libspectrum_byte
-beta_sp_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
+
+libspectrum_byte beta_sp_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     libspectrum_byte b;
 
@@ -374,8 +374,8 @@ beta_sp_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
     return b;
 }
 
-int
-beta_disk_insert(beta_drive_number which, const char *filename,
+
+int beta_disk_insert(beta_drive_number which, const char *filename,
               int autoload)
 {
     if (which >= BETA_NUM_DRIVES) {
@@ -384,11 +384,11 @@ beta_disk_insert(beta_drive_number which, const char *filename,
     fuse_abort();
     }
 
-    return ui_media_drive_insert(&beta_ui_drives[ which ], filename, autoload);
+    return ui_media_drive_insert(&beta_ui_drives[which], filename, autoload);
 }
 
-static int
-ui_drive_autoload(void)
+
+static int ui_drive_autoload(void)
 {
     // Clear AY registers (and more) from current machine
     machine_reset(1);
@@ -407,19 +407,19 @@ ui_drive_autoload(void)
 fdd_t *
 beta_get_fdd(beta_drive_number which)
 {
-    return &(beta_drives[ which ]);
+    return &(beta_drives[which]);
 }
 
-static void
-beta_enabled_snapshot(libspectrum_snap *snap)
+
+static void beta_enabled_snapshot(libspectrum_snap *snap)
 {
     if (!(machine_current->capabilities &
          LIBSPECTRUM_MACHINE_CAPABILITY_TRDOS_DISK))
     settings_current.beta128 = libspectrum_snap_beta_active(snap);
 }
 
-static void
-beta_from_snapshot(libspectrum_snap *snap)
+
+static void beta_from_snapshot(libspectrum_snap *snap)
 {
     if (!libspectrum_snap_beta_active(snap)) return;
 
@@ -458,8 +458,8 @@ beta_from_snapshot(libspectrum_snap *snap)
     beta_sp_write (0x00ff, libspectrum_snap_beta_system(snap));
 }
 
-void
-beta_to_snapshot(libspectrum_snap *snap)
+
+void beta_to_snapshot(libspectrum_snap *snap)
 {
     wd_fdc *f = beta_fdc;
     libspectrum_byte *buffer;
@@ -500,8 +500,8 @@ beta_to_snapshot(libspectrum_snap *snap)
     libspectrum_snap_set_beta_system(snap, beta_system_register);
 }
 
-int
-beta_unittest(void)
+
+int beta_unittest(void)
 {
     int r = 0;
 
@@ -519,8 +519,8 @@ beta_unittest(void)
     return r;
 }
 
-static int
-ui_drive_is_available(void)
+
+static int ui_drive_is_available(void)
 {
     return beta_available;
 }
@@ -529,28 +529,28 @@ static const fdd_params_t *
 ui_drive_get_params_a(void)
 {
     // +1 => there is no `Disabled'
-    return &fdd_params[ option_enumerate_diskoptions_drive_beta128a_type() + 1 ];
+    return &fdd_params[option_enumerate_diskoptions_drive_beta128a_type() + 1];
 }
 
 static const fdd_params_t *
 ui_drive_get_params_b(void)
 {
-    return &fdd_params[ option_enumerate_diskoptions_drive_beta128b_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_beta128b_type() ];
 }
 
 static const fdd_params_t *
 ui_drive_get_params_c(void)
 {
-    return &fdd_params[ option_enumerate_diskoptions_drive_beta128c_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_beta128c_type() ];
 }
 
 static const fdd_params_t *
 ui_drive_get_params_d(void)
 {
-    return &fdd_params[ option_enumerate_diskoptions_drive_beta128d_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_beta128d_type() ];
 }
 
-static ui_media_drive_info_t beta_ui_drives[ BETA_NUM_DRIVES ] = {
+static ui_media_drive_info_t beta_ui_drives[BETA_NUM_DRIVES] = {
     {
     /* .name = */ "Beta Disk A:",
     /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,

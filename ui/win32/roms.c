@@ -46,18 +46,18 @@ static void roms_init(HWND hwndDlg, LPARAM lParam);
           dialog for example */
 
 // The edit boxes used to display the current ROMs
-static HWND rom[ SETTINGS_ROM_COUNT ];
+static HWND rom[SETTINGS_ROM_COUNT];
 
 struct callback_info {
 
     size_t start, n;
     int is_peripheral;
-    TCHAR title[ 256 ];
+    TCHAR title[256];
 
 };
 
-int
-menu_select_roms_with_title(const char *title, size_t start, size_t n,
+
+int menu_select_roms_with_title(const char *title, size_t start, size_t n,
                  int is_peripheral)
 {
     struct callback_info info;
@@ -123,8 +123,8 @@ roms_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 
-static void
-roms_init(HWND hwndDlg, LPARAM lParam)
+
+static void roms_init(HWND hwndDlg, LPARAM lParam)
 {
     size_t i;
     struct callback_info *info;
@@ -178,13 +178,13 @@ roms_init(HWND hwndDlg, LPARAM lParam)
     MoveWindow(hwndDlg, rect.left, rect.top, rect.right, rect.bottom, FALSE);
 }
 
-static void
-add_rom(HWND hwndDlg, size_t start, size_t row, int is_peripheral)
+
+static void add_rom(HWND hwndDlg, size_t start, size_t row, int is_peripheral)
 {
     RECT rect;
     HFONT font;
     HWND hgroup, hedit, hbutton;
-    TCHAR buffer[ 80 ], **setting;
+    TCHAR buffer[80], **setting;
 
     _sntprintf(buffer, 80, "ROM %lu", (unsigned long)row);
 
@@ -216,7 +216,7 @@ add_rom(HWND hwndDlg, size_t start, size_t row, int is_peripheral)
                           hwndDlg, 0, fuse_hInstance, 0);
     SendMessage(hedit, WM_SETFONT, (WPARAM) font, FALSE);
 
-    rom[ row ] = hedit;
+    rom[row] = hedit;
 
     // create a select... button
     rect.left = 120; rect.top = (row * 30) + 10;
@@ -233,8 +233,8 @@ add_rom(HWND hwndDlg, size_t start, size_t row, int is_peripheral)
     SetWindowLongPtr(hbutton, GWLP_USERDATA, (LONG_PTR) hedit);
 }
 
-static void
-select_new_rom(HWND hedit)
+
+static void select_new_rom(HWND hedit)
 {
     TCHAR *filename;
 
@@ -244,8 +244,8 @@ select_new_rom(HWND hedit)
     SendMessage(hedit, WM_SETTEXT, 0, (LPARAM) filename);
 }
 
-static void
-roms_done(HWND hwndDlg, LONG_PTR lParam)
+
+static void roms_done(HWND hwndDlg, LONG_PTR lParam)
 {
     size_t i;
 

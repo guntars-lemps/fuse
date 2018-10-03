@@ -66,8 +66,8 @@ static GtkTreeModel *location_model; // The data of possible locations
 
 #define MAX_POSSIBLE 20
 
-int possible_page[ MAX_POSSIBLE ];
-libspectrum_word possible_offset[ MAX_POSSIBLE ];
+int possible_page[MAX_POSSIBLE];
+libspectrum_word possible_offset[MAX_POSSIBLE];
 
 // List columns
 enum
@@ -77,8 +77,8 @@ enum
     NUM_COLS
 };
 
-void
-menu_machine_pokefinder(GtkAction *gtk_action GCC_UNUSED,
+
+void menu_machine_pokefinder(GtkAction *gtk_action GCC_UNUSED,
                          gpointer data GCC_UNUSED)
 {
     int error;
@@ -131,8 +131,8 @@ create_location_list(void)
     return view;
 }
 
-static int
-create_dialog(void)
+
+static int create_dialog(void)
 {
     GtkWidget *hbox, *vbox, *label, *entry, *content_area;
     GtkAccelGroup *accel_group;
@@ -163,10 +163,10 @@ create_dialog(void)
 
     {
     static gtkstock_button btn[] = {
-      { "Incremented", G_CALLBACK(gtkui_pokefinder_incremented), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE },
-      { "Decremented", G_CALLBACK(gtkui_pokefinder_decremented), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE },
-      { "!Search", G_CALLBACK(gtkui_pokefinder_search), NULL, NULL, GDK_KEY_Return, 0, 0, 0, GTK_RESPONSE_NONE },
-      { "Reset", G_CALLBACK(gtkui_pokefinder_reset), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE }
+      {"Incremented", G_CALLBACK(gtkui_pokefinder_incremented), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE},
+      {"Decremented", G_CALLBACK(gtkui_pokefinder_decremented), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE},
+      {"!Search", G_CALLBACK(gtkui_pokefinder_search), NULL, NULL, GDK_KEY_Return, 0, 0, 0, GTK_RESPONSE_NONE},
+      {"Reset", G_CALLBACK(gtkui_pokefinder_reset), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE}
     };
     btn[2].actiondata = G_OBJECT(entry);
     accel_group = gtkstock_create_buttons(dialog, NULL, btn,
@@ -183,24 +183,24 @@ create_dialog(void)
     return 0;
 }
 
-static void
-gtkui_pokefinder_incremented(GtkWidget *widget GCC_UNUSED,
+
+static void gtkui_pokefinder_incremented(GtkWidget *widget GCC_UNUSED,
                   gpointer user_data GCC_UNUSED)
 {
     pokefinder_incremented();
     update_pokefinder();
 }
 
-static void
-gtkui_pokefinder_decremented(GtkWidget *widget GCC_UNUSED,
+
+static void gtkui_pokefinder_decremented(GtkWidget *widget GCC_UNUSED,
                   gpointer user_data GCC_UNUSED)
 {
     pokefinder_decremented();
     update_pokefinder();
 }
 
-static void
-gtkui_pokefinder_search(GtkWidget *widget, gpointer user_data GCC_UNUSED)
+
+static void gtkui_pokefinder_search(GtkWidget *widget, gpointer user_data GCC_UNUSED)
 {
     long value;
     const gchar *entry;
@@ -221,38 +221,38 @@ gtkui_pokefinder_search(GtkWidget *widget, gpointer user_data GCC_UNUSED)
     update_pokefinder();
 }
 
-static void
-gtkui_pokefinder_reset(GtkWidget *widget GCC_UNUSED,
+
+static void gtkui_pokefinder_reset(GtkWidget *widget GCC_UNUSED,
             gpointer user_data GCC_UNUSED)
 {
     pokefinder_clear();
     update_pokefinder();
 }
 
-static gboolean
-delete_dialog(GtkWidget *widget, GdkEvent *event GCC_UNUSED,
+
+static gboolean delete_dialog(GtkWidget *widget, GdkEvent *event GCC_UNUSED,
            gpointer user_data)
 {
     gtkui_pokefinder_close(widget, user_data);
     return TRUE;
 }
 
-static void
-gtkui_pokefinder_close(GtkWidget *widget, gpointer user_data GCC_UNUSED)
+
+static void gtkui_pokefinder_close(GtkWidget *widget, gpointer user_data GCC_UNUSED)
 {
     gtk_widget_hide(widget);
 }
 
-static gboolean
-widget_delayed_show(GtkWidget *item)
+
+static gboolean widget_delayed_show(GtkWidget *item)
 {
     gtk_widget_show(item);
 
     return FALSE;
 }
 
-static void
-update_pokefinder(void)
+
+static void update_pokefinder(void)
 {
     size_t page, offset, bank, bank_offset;
     gchar buffer[256], *possible_text[2] = { &buffer[0], &buffer[128] };
@@ -274,8 +274,8 @@ update_pokefinder(void)
     if (! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7))) {
       bank_offset = mapping->offset + offset;
 
-      possible_page[ which ] = bank;
-      possible_offset[ which ] = bank_offset;
+      possible_page[which] = bank;
+      possible_offset[which] = bank_offset;
       which++;
 
       snprintf(possible_text[0], 128, "%lu", (unsigned long)bank);
@@ -303,8 +303,8 @@ update_pokefinder(void)
     gtk_label_set_text(GTK_LABEL(count_label), buffer);
 }
 
-static void
-possible_click(GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
+
+static void possible_click(GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
                 GtkTreeViewColumn *col GCC_UNUSED,
                 gpointer user_data GCC_UNUSED)
 {
@@ -316,16 +316,16 @@ possible_click(GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
     row = indices[0];
 
     error = debugger_breakpoint_add_address(
-    DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[ row ],
-    possible_offset[ row ], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
+    DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[row],
+    possible_offset[row], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
 );
     if (error) return;
 
     ui_debugger_update();
 }
 
-void
-gtkui_pokefinder_clear(void)
+
+void gtkui_pokefinder_clear(void)
 {
     pokefinder_clear();
     if (dialog_created) update_pokefinder();

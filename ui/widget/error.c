@@ -33,8 +33,8 @@
 
 widget_error_t *error_info;
 
-int
-ui_error_specific(ui_error_level severity, const char *message)
+
+int ui_error_specific(ui_error_level severity, const char *message)
 {
     widget_error_t error_info;
     // Can't output widgets if we don't have a display yet
@@ -88,8 +88,8 @@ int widget_error_draw(void *data)
     return 0;
 }
 
-int
-split_message(const char *message, char ***lines, size_t *count,
+
+int split_message(const char *message, char ***lines, size_t *count,
            size_t line_length)
 {
     const char *ptr = message;
@@ -160,8 +160,8 @@ split_message(const char *message, char ***lines, size_t *count,
     return 0;
 }
 
-void
-widget_error_keyhandler(input_key key)
+
+void widget_error_keyhandler(input_key key)
 {
     switch (key) {
 
