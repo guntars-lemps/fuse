@@ -124,7 +124,9 @@ widget_pokemem_calculate_width(void)
     entry_t *entry;
     trainer_t *trainer;
 
-    if (!store) return 25;
+    if (!store) {
+        return 25;
+    }
 
     max_width = 0;
 
@@ -394,12 +396,16 @@ int widget_pokemem_trainer_click(int index)
     entry_t *entry;
     trainer_t *trainer;
 
-    if (!store) return 1;
+    if (!store) {
+        return 1;
+    }
 
     // Disable incomplete trainers or active without restore value
     entry = &g_array_index(store, entry_t, index);
     trainer = entry->trainer;
-    if (trainer->disabled) return 1;
+    if (trainer->disabled) {
+        return 1;
+    }
 
     // Toggle current selection
     entry->checked = !entry->checked;
@@ -445,9 +451,13 @@ int widget_pokemem_add_custom_poke(void)
     text_data.title = "Enter bank (optional)";
     text_data.allow = WIDGET_INPUT_DIGIT;
     text_data.max_length = 1;
-    if (widget_do_text(&text_data)) return 1;
+    if (widget_do_text(&text_data)) {
+        return 1;
+    }
 
-    if (!widget_text_text) return 1;
+    if (!widget_text_text) {
+        return 1;
+    }
 
     errno = 0;
     b = strtol(widget_text_text, &endptr, 10);
@@ -462,9 +472,13 @@ int widget_pokemem_add_custom_poke(void)
     // Address
     text_data.title = "Enter address / offset";
     text_data.max_length = 5;
-    if (widget_do_text(&text_data)) return 1;
+    if (widget_do_text(&text_data)) {
+        return 1;
+    }
 
-    if (!widget_text_text) return 1;
+    if (!widget_text_text) {
+        return 1;
+    }
 
     errno = 0;
     a = strtol(widget_text_text, &endptr, 10);
@@ -484,9 +498,13 @@ int widget_pokemem_add_custom_poke(void)
     // Value
     text_data.title = "Enter value";
     text_data.max_length = 3;
-    if (widget_do_text(&text_data)) return 1;
+    if (widget_do_text(&text_data)) {
+        return 1;
+    }
 
-    if (!widget_text_text) return 1;
+    if (!widget_text_text) {
+        return 1;
+    }
 
     errno = 0;
     v = strtol(widget_text_text, &endptr, 10);
@@ -512,7 +530,9 @@ int widget_pokemem_add_custom_poke(void)
 
     if (!store) {
     store = g_array_new(FALSE, FALSE, sizeof(entry_t));
-    if (!store) return 1;
+    if (!store) {
+        return 1;
+    }
     }
 
     g_array_append_vals(store, &entry, 1);

@@ -350,7 +350,9 @@ static libspectrum_byte multiface_port_in1(libspectrum_word port, libspectrum_by
     libspectrum_byte ret = 0xff;
     int a7;
 
-    if (!IS(multiface_available, MF_1)) return ret;
+    if (!IS(multiface_available, MF_1)) {
+        return ret;
+    }
 
     // TODO: check if this value should be set to 0xff
     *attached = 0xff;
@@ -388,7 +390,9 @@ static libspectrum_byte multiface_port_in128(libspectrum_word port, libspectrum_
     libspectrum_byte ret = 0xff;
     int a7;
 
-    if (!IS(multiface_available, MF_128)) return ret;
+    if (!IS(multiface_available, MF_128)) {
+        return ret;
+    }
 
     // TODO: check if this value should be set to 0xff
     *attached = 0xff;
@@ -423,7 +427,9 @@ static libspectrum_byte multiface_port_in3(libspectrum_word port, libspectrum_by
     libspectrum_byte ret = 0xff;
     int a7;
 
-    if (!IS(multiface_available, MF_3)) return ret;
+    if (!IS(multiface_available, MF_3)) {
+        return ret;
+    }
 
     // TODO: check if this value should be set to 0xff
     *attached = 0xff;

@@ -155,7 +155,9 @@ int spectrum_frame(void)
 
     if (sound_enabled) sound_frame();
 
-    if (display_frame()) return 1;
+    if (display_frame()) {
+        return 1;
+    }
     if (profile_active) profile_frame(frame_length);
     printer_frame();
 
@@ -242,7 +244,9 @@ libspectrum_byte spectrum_unattached_port(void)
     machine_current->timings.tstates_per_line;
 
     // Idle bus if we're in the lower border
-    if (line >= DISPLAY_HEIGHT) return 0xff;
+    if (line >= DISPLAY_HEIGHT) {
+        return 0xff;
+    }
 
     /* Work out where we are in this line, remembering that line_times[] holds
      the first pixel we display, not the start of where the Spectrum produced

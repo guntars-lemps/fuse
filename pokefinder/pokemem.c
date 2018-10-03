@@ -120,12 +120,16 @@ int pokemem_read_from_file(const char *filename)
     utils_file file;
     int error;
 
-    if (!filename) return 1;
+    if (!filename) {
+        return 1;
+    }
 
     pokemem_clear();
 
     error = utils_read_file(filename, &file);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     pokfile = utils_safe_strdup(filename);
     pokemem_read_from_buffer(file.buffer, file.length);
@@ -382,7 +386,9 @@ pokemem_trainer_list_add(libspectrum_byte bank, libspectrum_word address,
 
 int pokemem_trainer_activate(trainer_t *trainer)
 {
-    if (!trainer || trainer->disabled || !trainer->poke_list) return 1;
+    if (!trainer || trainer->disabled || !trainer->poke_list) {
+        return 1;
+    }
 
     if (!trainer->active && trainer->poke_list) {
     g_slist_foreach(trainer->poke_list, pokemem_poke_activate, trainer);
@@ -417,7 +423,9 @@ static void pokemem_poke_activate(gpointer data, gpointer user_data)
 
 int pokemem_trainer_deactivate(trainer_t *trainer)
 {
-    if (!trainer || trainer->disabled || !trainer->poke_list) return 1;
+    if (!trainer || trainer->disabled || !trainer->poke_list) {
+        return 1;
+    }
 
     if (trainer->active && trainer->poke_list) {
     g_slist_foreach(trainer->poke_list, pokemem_poke_deactivate, trainer);
@@ -551,10 +559,14 @@ int pokemem_autoload_pokfile(void)
     utils_file file;
     int error;
 
-    if (!pokfile || trainer_list) return 1;
+    if (!pokfile || trainer_list) {
+        return 1;
+    }
 
     error = utils_read_file(pokfile, &file);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     pokemem_read_from_buffer(file.buffer, file.length);
     utils_close_file(&file);

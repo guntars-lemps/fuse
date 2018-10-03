@@ -94,7 +94,9 @@ int screenshot_write(const char *filename, scaler_type scaler)
 
     // Change from paletted data to RGB data
     error = get_rgb32_data(rgb_data1, rgb_stride, base_height, base_width);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     // Actually scale the data here
     scaler_get_proc32(scaler)(rgb_data1, rgb_stride, rgb_data2, rgb_stride,
@@ -106,7 +108,9 @@ int screenshot_write(const char *filename, scaler_type scaler)
     // Reduce from RGB(padding byte) to just RGB
     error = rgb32_to_rgb24(png_data, png_stride, rgb_data2, rgb_stride,
               height, width);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     for (y = 0; y < height; y++)
     row_pointers[y] = &png_data[y * png_stride];
@@ -464,7 +468,9 @@ int screenshot_scr_read(const char *filename)
     utils_file screen;
 
     error =  utils_read_file(filename, &screen);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     switch (screen.length) {
     case STANDARD_SCR_SIZE:
@@ -548,7 +554,9 @@ int screenshot_mlt_read(const char *filename)
     utils_file screen;
 
     error =  utils_read_file(filename, &screen);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     if (screen.length != MLT_SIZE) {
     ui_error(UI_ERROR_ERROR, "MLT picture ('%s') is not %d bytes long",

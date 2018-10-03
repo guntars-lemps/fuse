@@ -135,7 +135,9 @@ int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
 
     int error;
 
-    if (sound_lowlevel_init_in_progress) return 0;
+    if (sound_lowlevel_init_in_progress) {
+        return 0;
+    }
 
     sound_lowlevel_init_in_progress = 1;
 

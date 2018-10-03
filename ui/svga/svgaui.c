@@ -47,13 +47,19 @@ int ui_init(int *argc, char ***argv)
 {
     int error;
 
-    if (ui_widget_init()) return 1;
+    if (ui_widget_init()) {
+        return 1;
+    }
 
     error = svgadisplay_init();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = svgakeyboard_init();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     vga_setmousesupport(1);
     mouse_setxrange(0, 255);
@@ -101,10 +107,14 @@ int ui_end(void)
     int error;
 
     error = svgakeyboard_end();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = svgadisplay_end();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     ui_widget_end();
 

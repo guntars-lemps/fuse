@@ -193,11 +193,21 @@ static  int rgb_for_4[] = {
 
 int xdisplay_init(void)
 {
-    if (xdisplay_find_visual()) return 1;
-    if (xdisplay_depth == 4 && xdisplay_allocate_colours4()) return 1;
-    if (xdisplay_depth == 8 && xdisplay_allocate_colours8()) return 1;
-    if (xdisplay_allocate_gc(xui_mainWindow,&gc)) return 1;
-    if (xdisplay_allocate_image()) return 1;
+    if (xdisplay_find_visual()) {
+        return 1;
+    }
+    if (xdisplay_depth == 4 && xdisplay_allocate_colours4()) {
+        return 1;
+    }
+    if (xdisplay_depth == 8 && xdisplay_allocate_colours8()) {
+        return 1;
+    }
+    if (xdisplay_allocate_gc(xui_mainWindow,&gc)) {
+        return 1;
+    }
+    if (xdisplay_allocate_image()) {
+        return 1;
+    }
     ui_statusbar_update(UI_STATUSBAR_ITEM_TAPE, UI_STATUSBAR_STATE_INACTIVE);
 
     return 0;
@@ -465,7 +475,9 @@ static int try_shm(void)
     int id;
     int error;
 
-    if (!XShmQueryExtension(display)) return 0;
+    if (!XShmQueryExtension(display)) {
+        return 0;
+    }
 
     shm_eventtype = XShmGetEventBase(display) + ShmCompletion;
     image = XShmCreateImage(display, xdisplay_visual,
@@ -477,11 +489,15 @@ static int try_shm(void)
    we allocate extra space after the screen for status bar icons
    status bar icons total width always smaller than 3xDISPLAY_ASPECT_WIDTH
 */
-    if (!image) return 0;
+    if (!image) {
+        return 0;
+    }
 
     // Get an SHM to work with
     id = get_shm_id(image->bytes_per_line * image->height);
-    if (id == -1) return 0;
+    if (id == -1) {
+        return 0;
+    }
 
     // Attempt to attach to the shared memory
     shm_info.shmid = id;

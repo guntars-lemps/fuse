@@ -76,10 +76,14 @@ int utils_open_file(const char *filename, int autoload,
     error = 0;
     if (rzx_recording) error = rzx_stop_recording();
     if (rzx_playback) error = rzx_stop_playback(1);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     // Read the file into a buffer
-    if (utils_read_file(filename, &file)) return 1;
+    if (utils_read_file(filename, &file)) {
+        return 1;
+    }
 
     // See if we can work out what it is
     if (libspectrum_identify_file_with_class(&type, &class, filename,
@@ -216,7 +220,9 @@ int utils_open_file(const char *filename, int autoload,
     } else {
       error = divmmc_insert(filename);
     }
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     break;
 
@@ -276,7 +282,9 @@ static compat_fd utils_find_auxiliary_file(const char *filename, utils_aux_type 
 
     fd = compat_file_open(path, 0);
 
-    if (fd != COMPAT_FILE_OPEN_FAILED) return fd;
+    if (fd != COMPAT_FILE_OPEN_FAILED) {
+        return fd;
+    }
 
     // Give up. Couldn't find this file
     return COMPAT_FILE_OPEN_FAILED;
@@ -307,7 +315,9 @@ int utils_find_file_path(const char *filename, char *ret_path,
     bytes_written = snprintf(ret_path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "%s",
         ctx.path, filename);
 #endif
-    if (bytes_written < PATH_MAX && compat_file_exists(ret_path)) return 0;
+    if (bytes_written < PATH_MAX && compat_file_exists(ret_path)) {
+        return 0;
+    }
     }
 
     return 1;
@@ -339,7 +349,9 @@ int utils_read_file(const char *filename, utils_file *file)
     }
 
     error = utils_read_fd(fd, filename, file);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     return 0;
 }
@@ -348,7 +360,9 @@ int utils_read_file(const char *filename, utils_file *file)
 int utils_read_fd(compat_fd fd, const char *filename, utils_file *file)
 {
     file->length = compat_file_get_length(fd);
-    if (file->length == -1) return 1;
+    if (file->length == -1) {
+        return 1;
+    }
 
     file->buffer = libspectrum_new(unsigned char, file->length);
 
@@ -391,7 +405,9 @@ int utils_write_file(const char *filename, const unsigned char *buffer,
     return 1;
     }
 
-    if (compat_file_close(fd)) return 1;
+    if (compat_file_close(fd)) {
+        return 1;
+    }
 
     return 0;
 }
@@ -407,7 +423,9 @@ int utils_read_auxiliary_file(const char *filename, utils_file *file,
     if (fd == COMPAT_FILE_OPEN_FAILED) return -1;
 
     error = utils_read_fd(fd, filename, file);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     return 0;
 }
@@ -424,7 +442,9 @@ int utils_read_screen(const char *filename, utils_file *screen)
     return 1;
     }
 
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     if (screen->length != STANDARD_SCR_SIZE) {
     utils_close_file(screen);

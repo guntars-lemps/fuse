@@ -57,7 +57,9 @@ static input_key oem_keysyms_remap(WPARAM wParam)
     libspectrum_dword unshifted_char;
 
     mapped_code = MapVirtualKey(wParam, MAPVK_VK_TO_CHAR);
-    if (!mapped_code) return INPUT_KEY_NONE;
+    if (!mapped_code) {
+        return INPUT_KEY_NONE;
+    }
 
     unshifted_char = LOWORD(mapped_code);
     ptr = g_hash_table_lookup(oem_keysyms_hash, &unshifted_char);

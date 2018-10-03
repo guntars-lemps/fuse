@@ -410,12 +410,18 @@ menu_get_scaler(scaler_available_fn selector)
     info.finish_all = 1;
 
     error = widget_do_select(&info);
-    if (error) return SCALER_NUM;
+    if (error) {
+        return SCALER_NUM;
+    }
 
-    if (info.result == -1) return SCALER_NUM;
+    if (info.result == -1) {
+        return SCALER_NUM;
+    }
 
     for (i = 0; i < SCALER_NUM; i++)
-    if (selector(i) && !info.result--) return i;
+    if (selector(i) && !info.result--) {
+        return i;
+    }
 
     ui_error(UI_ERROR_ERROR, "widget_select_scaler: ran out of scalers");
     fuse_abort();

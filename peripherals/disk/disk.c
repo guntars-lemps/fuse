@@ -835,7 +835,9 @@ static int udi_read_compressed(const libspectrum_byte *buffer,
     tmp = NULL;
 
     error = libspectrum_zlib_inflate(buffer, compr_size, &tmp, &olength);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     if (*data_size < uncompr_size) {
     *data = libspectrum_renew(libspectrum_byte, *data, uncompr_size);
@@ -858,7 +860,9 @@ static int udi_write_compressed(const libspectrum_byte *buffer,
     tmp = NULL;
     error = libspectrum_zlib_compress(buffer, uncompr_size,
                                      &tmp, compr_size);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     if (*data_size < *compr_size) {
     *data = libspectrum_renew(libspectrum_byte, *data, *compr_size);
@@ -1115,7 +1119,9 @@ static int open_udi(buffer_t *buffer, disk_t *d)
     }
     }
     error = udi_uncompress_tracks(d);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     udi_unpack_tracks(d);
 
     return d->status = DISK_OK;
@@ -1319,7 +1325,9 @@ static int trdos_insert_basic_file(disk_t *d, trdos_spec_t *spec,
     // Next track
     if (s == 0) {
       t = t + 1;
-      if (t >= d->cylinders) return DISK_UNSUP;
+      if (t >= d->cylinders) {
+        return DISK_UNSUP;
+    }
       DISK_SET_TRACK_IDX(d, t);
     }
     }
@@ -2376,7 +2384,9 @@ static int write_udi(FILE *file, disk_t *d)
 #ifdef LIBSPECTRUM_SUPPORTS_ZLIB_COMPRESSION
     // Keep tracks uncompressed in memory
     error = udi_uncompress_tracks(d);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 #endif // #ifdef LIBSPECTRUM_SUPPORTS_ZLIB_COMPRESSION
 
     udi_unpack_tracks(d);

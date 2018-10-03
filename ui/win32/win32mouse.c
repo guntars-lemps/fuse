@@ -71,7 +71,9 @@ void win32mouse_button(int button, int down)
 
 int ui_mouse_grab(int startup)
 {
-    if (startup) return 0;
+    if (startup) {
+        return 0;
+    }
 
     SetCursor(NULL);
     SetCapture(fuse_hWnd);

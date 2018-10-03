@@ -100,7 +100,9 @@ static int widget_read_font(const char *filename)
     ui_error(UI_ERROR_ERROR, "couldn't find font file '%s'", filename);
     return 1;
     }
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     i = 0;
     while (i < file.length) {
@@ -183,7 +185,9 @@ int widget_printstring(int x, int y, int col, const char *s)
 {
     int c;
     int shadow = 0;
-    if (!s) return x;
+    if (!s) {
+        return x;
+    }
 
     while (x < 256 + DISPLAY_BORDER_ASPECT_WIDTH
      && (c = *(libspectrum_byte *)s++) != 0) {
@@ -211,7 +215,9 @@ int widget_printstring_fixed(int x, int y, int col, const char *s)
 {
     int c;
 
-    if (!s) return x;
+    if (!s) {
+        return x;
+    }
 
     while (x < 256 + DISPLAY_BORDER_ASPECT_WIDTH
      && (c = *(libspectrum_byte *)s++) != 0) {
@@ -448,7 +454,9 @@ int widget_init(void)
     int error;
 
     error = widget_read_font("fuse.font");
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     widget_filenames = NULL;
     widget_numfiles = 0;
@@ -488,7 +496,9 @@ int widget_end(void)
 int widget_do(widget_type which, void *data)
 {
     // If we don't have a UI yet, we can't output widgets
-    if (!display_ui_initialised) return 1;
+    if (!display_ui_initialised) {
+        return 1;
+    }
 
     if (which == WIDGET_TYPE_QUERY && !settings_current.confirm_actions) {
     widget_query.confirm = 1;
@@ -719,7 +729,9 @@ int ui_tape_browser_update(ui_tape_browser_update_type change,
 ui_confirm_save_t
 ui_confirm_save_specific(const char *message)
 {
-    if (!settings_current.confirm_actions) return UI_CONFIRM_SAVE_DONTSAVE;
+    if (!settings_current.confirm_actions) {
+        return UI_CONFIRM_SAVE_DONTSAVE;
+    }
 
     if (widget_do_query_save(message))
     return UI_CONFIRM_SAVE_CANCEL;
@@ -747,7 +759,9 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
     int error;
     char title[80];
 
-    if (!settings_current.joy_prompt) return UI_CONFIRM_JOYSTICK_NONE;
+    if (!settings_current.joy_prompt) {
+        return UI_CONFIRM_JOYSTICK_NONE;
+    }
 
     snprintf(title, sizeof(title), "Configure %s joystick",
         libspectrum_joystick_name(libspectrum_type));
@@ -759,7 +773,9 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
     info.finish_all = 1;
 
     error = widget_do_select(&info);
-    if (error) return UI_CONFIRM_JOYSTICK_NONE;
+    if (error) {
+        return UI_CONFIRM_JOYSTICK_NONE;
+    }
 
     return (ui_confirm_joystick_t)info.result;
 }

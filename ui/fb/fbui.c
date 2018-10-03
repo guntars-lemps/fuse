@@ -44,7 +44,9 @@ int ui_init(int *argc, char ***argv)
     struct sigaction handler;
     int error;
 
-    if (ui_widget_init()) return 1;
+    if (ui_widget_init()) {
+        return 1;
+    }
 
     error = atexit(fb_end);
     if (error) {
@@ -69,13 +71,19 @@ int ui_init(int *argc, char ***argv)
     }
 
     error = fbkeyboard_init();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = fbmouse_init();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = fbdisplay_init();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     return 0;
 }

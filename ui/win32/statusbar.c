@@ -108,7 +108,9 @@ int win32statusbar_set_visibility(int visible)
     int current_state;
 
     current_state = IsWindowVisible(fuse_hStatusWindow);
-    if (current_state == visible) return 0;
+    if (current_state == visible) {
+        return 0;
+    }
 
     if (visible) {
     ShowWindow(fuse_hStatusWindow, SW_SHOW);
@@ -132,7 +134,9 @@ void win32statusbar_update_machine(const char *name)
 int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
 {
     // Fix flickering on +2A, +3 and +3e machines because of high refresh rate
-    if (item == UI_STATUSBAR_ITEM_DISK && icons_status[item] == state) return 0;
+    if (item == UI_STATUSBAR_ITEM_DISK && icons_status[item] == state) {
+        return 0;
+    }
 
     icons_status[item] = state;
 

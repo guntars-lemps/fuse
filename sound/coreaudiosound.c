@@ -117,8 +117,12 @@ int sound_lowlevel_init(const char *dev, int *freqptr, int *stereoptr)
     float hz;
     int sound_framesiz;
 
-    if (get_default_output_device(&device)) return 1;
-    if (get_default_sample_rate(device, &deviceFormat.mSampleRate)) return 1;
+    if (get_default_output_device(&device)) {
+        return 1;
+    }
+    if (get_default_sample_rate(device, &deviceFormat.mSampleRate)) {
+        return 1;
+    }
 
     *freqptr = deviceFormat.mSampleRate;
 

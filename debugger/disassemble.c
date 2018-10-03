@@ -802,7 +802,9 @@ libspectrum_word debugger_search_instruction(libspectrum_word address, int delta
     size_t j, length, longest;
     int i;
 
-    if (!delta) return address;
+    if (!delta) {
+        return address;
+    }
 
     if (delta > 0) {
 
@@ -864,8 +866,12 @@ static int run_test(libspectrum_byte *data, size_t data_length, const char *expe
 
     debugger_disassemble(disassembly, sizeof(disassembly), &length, 0x4000);
 
-    if (strcmp(disassembly, expected)) return 1;
-    if (length != data_length) return 1;
+    if (strcmp(disassembly, expected)) {
+        return 1;
+    }
+    if (length != data_length) {
+        return 1;
+    }
 
     return 0;
 }

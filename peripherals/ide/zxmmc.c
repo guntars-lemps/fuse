@@ -95,10 +95,14 @@ static int zxmmc_init(void *context)
 
     error =
       libspectrum_mmc_insert(card, settings_current.zxmmc_file);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = ui_menu_activate(eject_menu_item, 1);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     }
 
     module_register(&zxmmc_module_info);
@@ -177,7 +181,9 @@ int zxmmc_insert(const char *filename)
     settings_set_string(&settings_current.zxmmc_file, filename);
 
     error = libspectrum_mmc_insert(card, filename);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     return ui_menu_activate(eject_menu_item, 1);
 }
 

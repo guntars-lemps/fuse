@@ -72,10 +72,14 @@ static int ts2068_reset(void)
 
     error = machine_load_rom(0, settings_current.rom_ts2068_0,
                             settings_default.rom_ts2068_0, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom(1, settings_current.rom_ts2068_1,
                             settings_default.rom_ts2068_1, 0x2000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     // 0x0000: ROM 0
     scld_home_map_16k(0x0000, memory_map_rom, 0);

@@ -93,7 +93,9 @@ static int spec16_reset(void)
 
     error = machine_load_rom(0, settings_current.rom_16,
                             settings_default.rom_16, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     ensure_empty_mapping();
 

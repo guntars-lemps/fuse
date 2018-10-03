@@ -80,7 +80,9 @@ int slt_trap(libspectrum_word address, libspectrum_byte level)
     size_t length;
     libspectrum_byte *data;
 
-    if (!settings_current.slt_traps) return 0;
+    if (!settings_current.slt_traps) {
+        return 0;
+    }
 
     if (slt_length[level]) {
 

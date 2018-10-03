@@ -50,7 +50,9 @@ static int empty_mapping_allocated = 0;
 
 libspectrum_byte tc2068_ay_registerport_read(libspectrum_word port, libspectrum_byte *attached)
 {
-    if (machine_current->ay.current_register == 14) return 0xff;
+    if (machine_current->ay.current_register == 14) {
+        return 0xff;
+    }
 
     return ay_registerport_read(port, attached);
 }
@@ -137,10 +139,14 @@ static int tc2068_reset(void)
 
     error = machine_load_rom(0, settings_current.rom_tc2068_0,
                             settings_default.rom_tc2068_0, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom(1, settings_current.rom_tc2068_1,
                             settings_default.rom_tc2068_1, 0x2000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     // 0x0000: ROM 0
     scld_home_map_16k(0x0000, memory_map_rom, 0);

@@ -42,7 +42,9 @@ int ui_init(int *argc, char ***argv)
     int error;
 
 #ifdef USE_WIDGET
-    if (ui_widget_init()) return 1;
+    if (ui_widget_init()) {
+        return 1;
+    }
 #endif // #ifdef USE_WIDGET
 
     error = atexit(wii_end);
@@ -52,11 +54,17 @@ int ui_init(int *argc, char ***argv)
     }
 
     error = wiidisplay_init();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = wiikeyboard_init();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = wiimouse_init();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     return 0;
 }

@@ -90,7 +90,9 @@ int main(int argc, char **argv)
 
     testsfile = argv[1];
 
-    if (init_dummies()) return 1;
+    if (init_dummies()) {
+        return 1;
+    }
 
     // Initialise the tables used by the Z80 core
     z80_init(NULL);
@@ -231,7 +233,9 @@ static int run_test(FILE *f)
     memory[i + 2] = 0xbe; memory[i + 3] = 0xef;
     }
 
-    if (read_test(f, &event_next_event)) return 0;
+    if (read_test(f, &event_next_event)) {
+        return 0;
+    }
 
     // Grab a copy of the memory for comparison at the end
     memcpy(initial_memory, memory, 0x10000);
@@ -260,7 +264,9 @@ static int read_test(FILE *f, libspectrum_dword *end_tstates)
 
     if (!fgets(test_name, sizeof(test_name), f)) {
 
-      if (feof(f)) return 1;
+      if (feof(f)) {
+        return 1;
+    }
 
       fprintf(stderr, "%s: error reading test description from `%s': %s\n",
            progname, testsfile, strerror(errno));

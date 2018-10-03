@@ -151,7 +151,9 @@ int ui_debugger_activate(void)
     fuse_emulation_pause();
 
     // create_dialog will create the dialog or activate if it exists
-    if (!dialog_created) if (create_dialog()) return 1;
+    if (!dialog_created) if (create_dialog()) {
+        return 1;
+    }
 
     ShowWindow(fuse_hDBGWnd, SW_SHOW);
     error = hide_hidden_panes(); if (error) return error;
@@ -187,7 +189,9 @@ static int hide_hidden_panes(void)
 
     if (mii.fState && MFS_CHECKED) continue;
 
-    if (! show_hide_pane(i, SW_HIDE)) return 1;
+    if (! show_hide_pane(i, SW_HIDE)) {
+        return 1;
+    }
     }
 
     return 0;
@@ -301,7 +305,9 @@ static int create_dialog(void)
 
     // The main display areas
     error = create_register_display(font);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = create_breakpoints(); if (error) return error;
 
@@ -628,7 +634,9 @@ int ui_debugger_update(void)
                     &HL, &HL_, &IX, &IY,
                   };
 
-    if (!dialog_created) return 0;
+    if (!dialog_created) {
+        return 0;
+    }
 
     // FIXME: verify all functions below are unicode compliant
     for (i = 0; i < 12; i++) {
@@ -1025,20 +1033,28 @@ static int move_disassembly(WPARAM scroll_command)
     // in Windows we have to read the command and scroll the scrollbar manually
     switch (LOWORD(scroll_command)) {
     case SB_BOTTOM:
-      if (disassembly_bottom == disassembly_min) return 0;
+      if (disassembly_bottom == disassembly_min) {
+        return 0;
+    }
       address = debugger_search_instruction(disassembly_min,
                                              -disassembly_page);
       break;
     case SB_TOP:
-      if (disassembly_top == disassembly_min) return 0;
+      if (disassembly_top == disassembly_min) {
+        return 0;
+    }
       address = disassembly_min;
       break;
     case SB_LINEDOWN:
-      if (disassembly_bottom == disassembly_min) return 0;
+      if (disassembly_bottom == disassembly_min) {
+        return 0;
+    }
       address = debugger_search_instruction(disassembly_top, 1);
       break;
     case SB_LINEUP:
-      if (disassembly_top == disassembly_min) return 0;
+      if (disassembly_top == disassembly_min) {
+        return 0;
+    }
       address = debugger_search_instruction(disassembly_top, -1);
       break;
     case SB_PAGEUP:
@@ -1320,7 +1336,9 @@ disassembly_listview_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     break;
 
     case WM_KEYDOWN:
-    if (disassembly_key_press(hWnd, wParam)) return 0;
+    if (disassembly_key_press(hWnd, wParam)) {
+        return 0;
+    }
     break;
 
     case WM_MOUSEWHEEL:

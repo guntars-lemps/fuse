@@ -177,7 +177,9 @@ kbdthread_fn(void *arg)
 int wiikeyboard_init(void)
 {
     kbd = IOS_Open("/dev/usb/kbd", IPC_OPEN_RW);
-    if (kbd < 0) return kbd;
+    if (kbd < 0) {
+        return kbd;
+    }
 
     if (LWP_MutexInit(&kbdmutex, 0) != 0 ||
       LWP_CreateThread(&kbdthread, kbdthread_fn, NULL, NULL, 0, 80) != 0) {

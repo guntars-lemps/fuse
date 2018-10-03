@@ -364,7 +364,9 @@ int ui_init(int *argc, char ***argv)
               FALSE);
 
     // init the display area
-    if (win32display_init()) return 1;
+    if (win32display_init()) {
+        return 1;
+    }
 
     win32keyboard_init();
 
@@ -427,7 +429,9 @@ int ui_end(void)
 int ui_error_specific(ui_error_level severity, const char *message)
 {
     // If we don't have a UI yet, we can't output widgets
-    if (!display_ui_initialised) return 0;
+    if (!display_ui_initialised) {
+        return 0;
+    }
 
     switch (severity) {
 
@@ -710,7 +714,9 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
     int i, selection;
     int selected_joystick;
 
-    if (!settings_current.joy_prompt) return UI_CONFIRM_JOYSTICK_NONE;
+    if (!settings_current.joy_prompt) {
+        return UI_CONFIRM_JOYSTICK_NONE;
+    }
 
     // Some space to store the radio options in
     items.labels = malloc(JOYSTICK_CONN_COUNT * sizeof(char *));
@@ -789,11 +795,15 @@ int window_recommended_width(HWND hwndDlg, LPCTSTR title)
 
     // Get window style
     window_style = GetWindowLongPtr(hwndDlg, GWL_STYLE);
-    if (!(window_style & WS_CAPTION)) return 0;
+    if (!(window_style & WS_CAPTION)) {
+        return 0;
+    }
 
     // Get caption bar font
     dc = GetDC(hwndDlg);
-    if (!dc) return 0;
+    if (!dc) {
+        return 0;
+    }
     ncm.cbSize = sizeof(NONCLIENTMETRICS);
     /* FIXME: iPaddedBorderWidth,
      http://msdn.microsoft.com/en-us/library/ms724506%28VS.85%29.aspx */

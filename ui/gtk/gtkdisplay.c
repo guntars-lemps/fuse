@@ -245,7 +245,9 @@ static int drawing_area_resize(int width, int height, int force_scaler)
     size = height / DISPLAY_SCREEN_HEIGHT;
 
     // If we're the same size as before, no need to do anything else
-    if (size == gtkdisplay_current_size) return 0;
+    if (size == gtkdisplay_current_size) {
+        return 0;
+    }
 
     gtkdisplay_current_size = size;
 

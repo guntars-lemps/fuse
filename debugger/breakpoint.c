@@ -330,7 +330,9 @@ int debugger_breakpoint_trigger(debugger_breakpoint *bp)
 static int breakpoint_check(debugger_breakpoint *bp, debugger_breakpoint_type type,
           libspectrum_dword value)
 {
-    if (bp->type != type) return 0;
+    if (bp->type != type) {
+        return 0;
+    }
 
     switch (type) {
 
@@ -341,7 +343,9 @@ static int breakpoint_check(debugger_breakpoint *bp, debugger_breakpoint_type ty
     /* If source == memory_source_any, value must match exactly; otherwise,
        the source, page and offset must match */
     if (bp->value.address.source == memory_source_any) {
-      if (bp->value.address.offset != value) return 0;
+      if (bp->value.address.offset != value) {
+        return 0;
+    }
     } else {
       memory_page *page = get_page(type, value);
       if (bp->value.address.source != page->source ||
@@ -353,12 +357,16 @@ static int breakpoint_check(debugger_breakpoint *bp, debugger_breakpoint_type ty
     // Port values must match after masking
     case DEBUGGER_BREAKPOINT_TYPE_PORT_READ:
     case DEBUGGER_BREAKPOINT_TYPE_PORT_WRITE:
-    if ((value & bp->value.port.mask) != bp->value.port.port) return 0;
+    if ((value & bp->value.port.mask) != bp->value.port.port) {
+        return 0;
+    }
     break;
 
     // Timed breakpoints trigger if we're past the relevant time
     case DEBUGGER_BREAKPOINT_TYPE_TIME:
-    if (bp->value.time.triggered || bp->value.time.tstates > tstates) return 0;
+    if (bp->value.time.triggered || bp->value.time.tstates > tstates) {
+        return 0;
+    }
     break;
 
     default:
@@ -499,7 +507,9 @@ static gint find_breakpoint_by_address(gconstpointer data, gconstpointer user_da
     return 1;
 
     // Ignore all page-specific breakpoints
-    if (bp->value.address.source != memory_source_any) return 1;
+    if (bp->value.address.source != memory_source_any) {
+        return 1;
+    }
 
     return bp->value.address.offset - address;
 }
@@ -574,7 +584,9 @@ int debugger_breakpoint_set_condition(size_t id, debugger_expression *condition)
 
     if (condition) {
     bp->condition = debugger_expression_copy(condition);
-    if (!bp->condition) return 1;
+    if (!bp->condition) {
+        return 1;
+    }
     } else {
     bp->condition = NULL;
     }
@@ -586,7 +598,9 @@ int debugger_breakpoint_set_condition(size_t id, debugger_expression *condition)
 int debugger_breakpoint_set_commands(size_t id, const char *commands)
 {
     debugger_breakpoint *bp = get_breakpoint_by_id(id);
-    if (!bp) return 1;
+    if (!bp) {
+        return 1;
+    }
 
     libspectrum_free(bp->commands);
     bp->commands = utils_safe_strdup(commands);

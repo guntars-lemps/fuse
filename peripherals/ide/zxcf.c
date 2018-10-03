@@ -123,7 +123,9 @@ static int zxcf_init(void *context)
     if (settings_current.zxcf_pri_file) {
     error = libspectrum_ide_insert(zxcf_idechn, LIBSPECTRUM_IDE_MASTER,
                     settings_current.zxcf_pri_file);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     ui_menu_activate(UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT, 1);
     }
 

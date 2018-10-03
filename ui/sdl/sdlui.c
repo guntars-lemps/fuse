@@ -50,7 +50,9 @@ int ui_init(int *argc, char ***argv)
 {
     int error;
 
-    if (ui_widget_init()) return 1;
+    if (ui_widget_init()) {
+        return 1;
+    }
 
 /* Comment out to Work around a bug in OS X 10.1 related to OpenGL in windowed
    mode */
@@ -176,7 +178,9 @@ int ui_mouse_grab(int startup)
     SDL_WarpMouse(128, 128);
     return 1;
     }
-    if (startup) return 0;
+    if (startup) {
+        return 0;
+    }
 
     switch (SDL_WM_GrabInput(SDL_GRAB_ON)) {
     case SDL_GRAB_ON:

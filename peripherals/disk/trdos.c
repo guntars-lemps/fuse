@@ -114,7 +114,9 @@ int trdos_read_fat(trdos_boot_info_t *info, const libspectrum_byte *sectors,
     // FAT entries
     for (j = 0; j < 16; j++) {
       error = trdos_read_dirent(&entry, sector + j * 16);
-      if (error) return 0;
+      if (error) {
+        return 0;
+    }
 
       // Basic files
       if (entry.filename[0] > 0x01 &&

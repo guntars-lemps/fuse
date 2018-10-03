@@ -62,7 +62,9 @@ int ui_init(int *argc, char ***argv)
 
     // Allocate memory for various things
 
-    if (ui_widget_init()) return 1;
+    if (ui_widget_init()) {
+        return 1;
+    }
 
     if (!(wmHints = XAllocWMHints())) {
     fprintf(stderr,"%s: failure allocating memory\n", fuse_progname);
@@ -186,7 +188,9 @@ int ui_init(int *argc, char ***argv)
     delete_window_atom = XInternAtom(display, "WM_DELETE_WINDOW", 0);
     XSetWMProtocols(display, xui_mainWindow, &delete_window_atom, 1);
 
-    if (xdisplay_init()) return 1;
+    if (xdisplay_init()) {
+        return 1;
+    }
 
     // And finally display the window
     XMapWindow(display,xui_mainWindow);
@@ -276,7 +280,9 @@ int ui_end(void)
 
 int ui_mouse_grab(int startup)
 {
-    if (startup) return 0;
+    if (startup) {
+        return 0;
+    }
 
     switch (XGrabPointer(display, xui_mainWindow, True,
             ButtonPressMask | ButtonReleaseMask | PointerMotionMask,

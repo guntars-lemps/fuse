@@ -166,7 +166,9 @@ int tape_open(const char *filename, int autoload)
     int error;
 
     error = utils_read_file(filename, &file);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = tape_read_buffer(file.buffer, file.length, LIBSPECTRUM_ID_UNKNOWN,
                 filename, autoload);
@@ -189,14 +191,18 @@ int tape_read_buffer(unsigned char *buffer, size_t length, libspectrum_id_t type
     }
 
     error = libspectrum_tape_read(tape, buffer, length, type, filename);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     tape_modified = 0;
     ui_tape_browser_update(UI_TAPE_BROWSER_NEW_TAPE, NULL);
 
     if (autoload) {
     error = tape_autoload(machine_current->machine);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     }
 
     return 0;
@@ -278,12 +284,16 @@ int tape_close(void)
     // Stop the tape if it's currently playing
     if (tape_playing) {
     error = tape_stop();
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     }
 
     // And then remove it from memory
     error = libspectrum_tape_clear(tape);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     tape_modified = 0;
     ui_tape_browser_update(UI_TAPE_BROWSER_NEW_TAPE, NULL);
@@ -295,7 +305,9 @@ int tape_close(void)
 
 int tape_rewind(void)
 {
-    if (!libspectrum_tape_present(tape)) return 0;
+    if (!libspectrum_tape_present(tape)) {
+        return 0;
+    }
 
     return tape_select_block(0);
 }
@@ -349,7 +361,9 @@ int tape_write(const char* filename)
      .tzx if we couldn't guess */
     error = libspectrum_identify_file_with_class(&type, &class, filename, NULL,
                         0);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     if (class != LIBSPECTRUM_CLASS_TAPE || type == LIBSPECTRUM_ID_UNKNOWN)
     type = LIBSPECTRUM_ID_TAPE_TZX;
@@ -357,7 +371,9 @@ int tape_write(const char* filename)
     length = 0;
 
     error = libspectrum_tape_write(&buffer, &length, tape, type);
-    if (error != LIBSPECTRUM_ERROR_NONE) return error;
+    if (error != LIBSPECTRUM_ERROR_NONE) {
+        return error;
+    }
 
     error = utils_write_file(filename, buffer, length);
     if (error) {libspectrum_free(buffer); return error;}
@@ -391,17 +407,23 @@ int tape_load_trap(void)
     return 2;
 
     // Do nothing if we're not in the correct ROM
-    if (!trap_check_rom(CHECK_TAPE_ROM)) return 3;
+    if (!trap_check_rom(CHECK_TAPE_ROM)) {
+        return 3;
+    }
 
     // Return with error if no tape file loaded
-    if (!libspectrum_tape_present(tape)) return 1;
+    if (!libspectrum_tape_present(tape)) {
+        return 1;
+    }
 
     block = libspectrum_tape_current_block(tape);
 
     // Skip over any meta-data blocks
     while (libspectrum_tape_block_metadata(block)) {
     block = libspectrum_tape_select_next_block(tape);
-    if (!block) return 1;
+    if (!block) {
+        return 1;
+    }
     }
 
     /* If this block isn't a ROM loader, start the block playing. After
@@ -432,7 +454,9 @@ int tape_load_trap(void)
     }
 
     error = trap_load_block(block);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     /* Peek at the next block. If it's a ROM block, move along, initialise
      the block, and return */
@@ -441,7 +465,9 @@ int tape_load_trap(void)
     if (libspectrum_tape_block_type(next_block) == LIBSPECTRUM_TAPE_BLOCK_ROM) {
 
     next_block = libspectrum_tape_select_next_block(tape);
-    if (!next_block) return 1;
+    if (!next_block) {
+        return 1;
+    }
 
     ui_tape_browser_update(UI_TAPE_BROWSER_SELECT_BLOCK, NULL);
 
@@ -579,7 +605,9 @@ int tape_save_trap(void)
     return 2;
 
     // Check we're in the right ROM
-    if (!trap_check_rom(CHECK_TAPE_ROM)) return 3;
+    if (!trap_check_rom(CHECK_TAPE_ROM)) {
+        return 3;
+    }
 
     block = libspectrum_tape_block_alloc(LIBSPECTRUM_TAPE_BLOCK_ROM);
 
@@ -626,7 +654,9 @@ int tape_save_trap(void)
 
 static int tape_play(int autoplay)
 {
-    if (!libspectrum_tape_present(tape)) return 1;
+    if (!libspectrum_tape_present(tape)) {
+        return 1;
+    }
 
     // Otherwise, start the tape going
     tape_playing = 1;

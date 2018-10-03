@@ -63,7 +63,9 @@ int widget_browse_draw(void *data GCC_UNUSED)
 
     blocks = NULL; block_count = 0;
     error = tape_foreach(add_block_description, &blocks);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     widget_dialog_with_border(1, 2, 30, 20);
 

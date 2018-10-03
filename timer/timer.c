@@ -67,10 +67,14 @@ int timer_estimate_speed(void)
 {
     double current_time;
 
-    if (frames_until_update--) return 0;
+    if (frames_until_update--) {
+        return 0;
+    }
 
     current_time = timer_get_time();
-    if (current_time < 0) return 1;
+    if (current_time < 0) {
+        return 1;
+    }
 
     if (samples < 10) {
 

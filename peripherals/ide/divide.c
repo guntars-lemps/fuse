@@ -106,7 +106,9 @@ static int divide_init(void *context)
             UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
             settings_current.divide_slave_file,
             UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     module_register(&divide_module_info);
 

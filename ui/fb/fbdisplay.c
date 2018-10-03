@@ -203,7 +203,9 @@ int fbdisplay_init(void)
     }
     got_orig_display = 1;
 
-    if (fb_set_mode()) return 1;
+    if (fb_set_mode()) {
+        return 1;
+    }
 
     fputs("\x1B[H\x1B[J", stdout); // clear tty
     memset(gm, 0, display.xres_virtual * display.yres_virtual * 2);

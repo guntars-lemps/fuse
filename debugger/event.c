@@ -64,9 +64,15 @@ int debugger_event_register(const char *type, const char *detail)
 
 static int event_matches(debugger_event_t *event, const char *type, const char *detail)
 {
-    if (strcasecmp(type, event->type)) return 0;
-    if (strcmp(detail, "*") == 0) return 1;
-    if (strcmp(event->detail, "*") == 0) return 1;
+    if (strcasecmp(type, event->type)) {
+        return 0;
+    }
+    if (strcmp(detail, "*") == 0) {
+        return 1;
+    }
+    if (strcmp(event->detail, "*") == 0) {
+        return 1;
+    }
     return strcasecmp(detail, event->detail) == 0;
 }
 
@@ -79,7 +85,9 @@ int debugger_event_is_registered(const char *type, const char *detail)
     debugger_event_t event =
       g_array_index(registered_events, debugger_event_t, i);
 
-    if (event_matches(&event, type, detail)) return 1;
+    if (event_matches(&event, type, detail)) {
+        return 1;
+    }
     }
 
     return 0;

@@ -160,7 +160,9 @@ int debugger_breakpoint_exit(void)
 )
     return 1;
 
-    if (debugger_run()) return 1;
+    if (debugger_run()) {
+        return 1;
+    }
 
     return 0;
 }

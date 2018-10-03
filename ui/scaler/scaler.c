@@ -124,9 +124,13 @@ scaler_expand_fn *scaler_expander;
 
 int scaler_select_scaler(scaler_type scaler)
 {
-    if (!scaler_is_supported(scaler)) return 1;
+    if (!scaler_is_supported(scaler)) {
+        return 1;
+    }
 
-    if (current_scaler == scaler) return 0;
+    if (current_scaler == scaler) {
+        return 0;
+    }
 
     current_scaler = scaler;
 

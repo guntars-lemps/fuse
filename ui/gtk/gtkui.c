@@ -327,7 +327,9 @@ int ui_error_specific(ui_error_level severity, const char *message)
     const gchar *title;
 
     // If we don't have a UI yet, we can't output widgets
-    if (!display_ui_initialised) return 0;
+    if (!display_ui_initialised) {
+        return 0;
+    }
 
     // Set the appropriate title
     switch (severity) {
@@ -741,7 +743,9 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type,
     int i;
     GSList *group = NULL;
 
-    if (!settings_current.joy_prompt) return UI_CONFIRM_JOYSTICK_NONE;
+    if (!settings_current.joy_prompt) {
+        return UI_CONFIRM_JOYSTICK_NONE;
+    }
 
     // Some space to store the radio buttons in
     dialog.buttons =

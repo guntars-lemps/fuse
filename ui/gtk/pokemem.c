@@ -553,7 +553,9 @@ static gboolean custom_value_edit(GtkTreeView *tree)
     GtkTreeViewColumn *col, *col_current;
 
     gtk_tree_view_get_cursor(tree, &path, &col_current);
-    if (!path || !col_current) return FALSE;
+    if (!path || !col_current) {
+        return FALSE;
+    }
 
     col = gtk_tree_view_get_column(tree, COL_VALUE);
     gtk_tree_view_set_cursor(tree, path, col, TRUE);

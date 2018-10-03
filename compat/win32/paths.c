@@ -59,8 +59,12 @@ compat_get_config_path(void)
 
 int compat_is_absolute_path(const char *path)
 {
-    if (path[0] == '\\') return 1;
-    if (path[0] && path[1] == ':') return 1;
+    if (path[0] == '\\') {
+        return 1;
+    }
+    if (path[0] && path[1] == ':') {
+        return 1;
+    }
     return 0;
 }
 
@@ -90,7 +94,9 @@ int compat_get_next_path(path_context *ctx)
     } else {
       DWORD retval;
       retval = GetModuleFileName(NULL, buffer, PATH_MAX);
-      if (!retval) return 0;
+      if (!retval) {
+        return 0;
+    }
     }
 
     path2 = dirname(buffer);
@@ -101,7 +107,9 @@ int compat_get_next_path(path_context *ctx)
     // Then relative to %APPDATA%/Fuse directory
     case 1:
     path2 = getenv("APPDATA");
-    if (!path2) return 0;
+    if (!path2) {
+        return 0;
+    }
     snprintf(ctx->path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "Fuse"
               FUSE_DIR_SEP_STR "%s", path2, path_segment);
 

@@ -265,7 +265,9 @@ debugger_expression_copy(debugger_expression *src)
     debugger_expression *dest;
 
     dest = libspectrum_new(debugger_expression, 1);
-    if (!dest) return NULL;
+    if (!dest) {
+        return NULL;
+    }
 
     dest->type = src->type;
     dest->precedence = src->precedence;
@@ -577,7 +579,9 @@ static int brackets_necessary(int top_operation, debugger_expression *operand)
 
     /* If the top level operation has a higher precedence than the
      bottom level operation, we always need brackets */
-    if (top_precedence > bottom_precedence) return 1;
+    if (top_precedence > bottom_precedence) {
+        return 1;
+    }
 
     /* If the two operations are of equal precedence, we need brackets
      i) if the top level operation is non-associative, or
@@ -593,7 +597,9 @@ static int brackets_necessary(int top_operation, debugger_expression *operand)
     */
     if (top_precedence == bottom_precedence) {
 
-    if (is_non_associative(top_operation)) return 1;
+    if (is_non_associative(top_operation)) {
+        return 1;
+    }
 
     // Sanity check
     if (operand->type != DEBUGGER_EXPRESSION_TYPE_BINARYOP) {

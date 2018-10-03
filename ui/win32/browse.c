@@ -160,7 +160,9 @@ int ui_tape_browser_update(ui_tape_browser_update_type change GCC_UNUSED,
 {
     int error, current_block;
 
-    if (!dialog_created) return 0;
+    if (!dialog_created) {
+        return 0;
+    }
 
     fuse_emulation_pause();
 

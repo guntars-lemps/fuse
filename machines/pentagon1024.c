@@ -71,20 +71,30 @@ static int pentagon1024_reset(void)
 
     error = machine_load_rom(0, settings_current.rom_pentagon1024_0,
                             settings_default.rom_pentagon1024_0, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom(1, settings_current.rom_pentagon1024_1,
                             settings_default.rom_pentagon1024_1, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom(2, settings_current.rom_pentagon1024_3,
                             settings_default.rom_pentagon1024_3, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom_bank(beta_memory_map_romcs, 0,
                                  settings_current.rom_pentagon1024_2,
                                  settings_default.rom_pentagon1024_2, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = spec128_common_reset(0);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     machine_current->ram.last_byte2 = 0;
     machine_current->ram.special = 0;

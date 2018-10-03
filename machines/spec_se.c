@@ -88,10 +88,14 @@ int spec_se_reset(void)
 
     error = machine_load_rom(0, settings_current.rom_spec_se_0,
                             settings_default.rom_spec_se_0, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom(1, settings_current.rom_spec_se_1,
                             settings_default.rom_spec_se_1, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     scld_home_map_16k(0x0000, memory_map_rom, 0);
     scld_home_map_16k(0x4000, memory_map_ram, 5);

@@ -238,7 +238,9 @@ listview_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
           long val;
 
           // Edit cancelled?
-          if (!dispinfo->item.pszText) return TRUE;
+          if (!dispinfo->item.pszText) {
+        return TRUE;
+    }
 
           memset(&lvi, 0, sizeof(lvi));
           lvi.iItem = dispinfo->item.iItem;

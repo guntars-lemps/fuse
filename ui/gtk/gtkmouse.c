@@ -56,7 +56,9 @@ gboolean
 gtkmouse_position(GtkWidget *widget GCC_UNUSED,
                    GdkEventMotion *event, gpointer data GCC_UNUSED)
 {
-    if (!ui_mouse_grabbed) return TRUE;
+    if (!ui_mouse_grabbed) {
+        return TRUE;
+    }
 
     if (event->x != 128 || event->y != 128)
     gtkmouse_reset_pointer();
@@ -82,7 +84,9 @@ int ui_mouse_grab(int startup)
     GdkWindow *window;
     GdkGrabStatus status;
 
-    if (startup) return 0;
+    if (startup) {
+        return 0;
+    }
 
     window = gtk_widget_get_window(gtkui_drawing_area);
 

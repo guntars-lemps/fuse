@@ -36,7 +36,9 @@ static int ide_insert_file(libspectrum_ide_channel *channel, libspectrum_ide_uni
     int error;
 
     error = libspectrum_ide_insert(channel, unit, filename);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     return ui_menu_activate(menu_item, 1);
 }
 
@@ -53,13 +55,17 @@ int ide_init(libspectrum_ide_channel *channel,
     if (master_setting) {
     error = ide_insert_file(channel, LIBSPECTRUM_IDE_MASTER, master_setting,
                      master_menu_item);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     }
 
     if (slave_setting) {
     error = ide_insert_file(channel, LIBSPECTRUM_IDE_SLAVE, slave_setting,
                              slave_menu_item);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     }
 
     return 0;
@@ -108,7 +114,9 @@ int ide_insert(const char *filename, libspectrum_ide_channel *chn,
     settings_set_string(setting, filename);
 
     error = ide_insert_file(chn, unit, filename, item);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     return 0;
 }
@@ -167,10 +175,14 @@ int ide_eject_mass_storage(
     libspectrum_free(*setting); *setting = NULL;
 
     error = eject_fn(context);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = ui_menu_activate(item, 0);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     return 0;
 }

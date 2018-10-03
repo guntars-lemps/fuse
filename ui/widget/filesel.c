@@ -359,13 +359,19 @@ static void widget_scan(char *dir)
 
 static int widget_select_file(const char *name)
 {
-    if (!name) return 0;
+    if (!name) {
+        return 0;
+    }
 
     // Skip current directory
-    if (!strcmp(name, ".")) return 0;
+    if (!strcmp(name, ".")) {
+        return 0;
+    }
 
     // Skip hidden files/directories
-    if (strlen(name) > 1 && name[0] == '.' && name[1] != '.') return 0;
+    if (strlen(name) > 1 && name[0] == '.' && name[1] != '.') {
+        return 0;
+    }
 
     return 1;
 }
@@ -402,7 +408,9 @@ static int widget_filesel_draw(void *data)
 #if !defined AMIGA && !defined __MORPHOS__
 
     directory = widget_getcwd();
-    if (directory == NULL) return 1;
+    if (directory == NULL) {
+        return 1;
+    }
 
     widget_scan(directory);
     new_current_file = current_file = 0;
@@ -494,7 +502,9 @@ static int widget_print_all_filenames(struct widget_dirent **filenames, int n,
 
     // Give us a clean box to start with
     error = widget_dialog_with_border(1, 2, 30, 22);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     widget_printstring(10, 16, WIDGET_COLOUR_TITLE, title);
     if (widget_stringwidth(dir) > 223) {

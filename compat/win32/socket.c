@@ -63,7 +63,9 @@ compat_socket_get_strerror(void)
                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                buffer, ARRAY_SIZE(buffer), NULL);
 
-    if (!msg_size) return NULL;
+    if (!msg_size) {
+        return NULL;
+    }
 
     // skip 'new line' like chars
     for (ptr = buffer; *ptr; ptr++) {

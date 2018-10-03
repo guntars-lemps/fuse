@@ -45,7 +45,9 @@ int gtkui_confirm(const char *string)
 
     /* Return value isn't an error code, but signifies whether to undertake
      the action */
-    if (!settings_current.confirm_actions) return 1;
+    if (!settings_current.confirm_actions) {
+        return 1;
+    }
 
     fuse_emulation_pause();
 
@@ -84,7 +86,9 @@ ui_confirm_save_specific(const char *message)
     GtkWidget *dialog, *label, *content_area;
     ui_confirm_save_t confirm;
 
-    if (!settings_current.confirm_actions) return UI_CONFIRM_SAVE_DONTSAVE;
+    if (!settings_current.confirm_actions) {
+        return UI_CONFIRM_SAVE_DONTSAVE;
+    }
 
     fuse_emulation_pause();
 

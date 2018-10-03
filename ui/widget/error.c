@@ -38,7 +38,9 @@ int ui_error_specific(ui_error_level severity, const char *message)
 {
     widget_error_t error_info;
     // Can't output widgets if we don't have a display yet
-    if (!display_ui_initialised) return 0;
+    if (!display_ui_initialised) {
+        return 0;
+    }
 
 
     error_info.severity = severity;
@@ -57,7 +59,9 @@ int widget_error_draw(void *data)
     size_t i;
 
     error_info = (widget_error_t*)data;
-    if (split_message(error_info->message, &lines, &count, 28)) return 1;
+    if (split_message(error_info->message, &lines, &count, 28)) {
+        return 1;
+    }
 
     widget_dialog_with_border(1, 2, 30, count+2);
 
@@ -123,7 +127,9 @@ int split_message(const char *message, char ***lines, size_t *count,
       char **new_lines; size_t i;
 
       // If we've filled the screen, stop
-      if (*count == 18) return 0;
+      if (*count == 18) {
+        return 0;
+    }
 
       new_lines = realloc((*lines), (*count + 1) * sizeof(char*));
       if (new_lines == NULL) {

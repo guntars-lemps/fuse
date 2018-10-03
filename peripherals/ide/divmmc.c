@@ -118,10 +118,14 @@ static int divmmc_init(void *context)
 
     error =
       libspectrum_mmc_insert(card, settings_current.divmmc_file);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = ui_menu_activate(eject_menu_item, 1);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     }
 
     module_register(&divmmc_module_info);
@@ -211,7 +215,9 @@ int divmmc_insert(const char *filename)
     settings_set_string(&settings_current.divmmc_file, filename);
 
     error = libspectrum_mmc_insert(card, filename);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     return ui_menu_activate(eject_menu_item, 1);
 }
 

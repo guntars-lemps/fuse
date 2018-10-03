@@ -125,7 +125,9 @@ int snapshot_write(const char *filename)
      .szx if we couldn't guess */
     error = libspectrum_identify_file_with_class(&type, &class, filename, NULL,
                         0);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     if (class != LIBSPECTRUM_CLASS_SNAPSHOT || type == LIBSPECTRUM_ID_UNKNOWN)
     type = LIBSPECTRUM_ID_SNAPSHOT_SZX;

@@ -138,7 +138,9 @@ int startup_manager_run(void)
           error = registered_module->init_fn(
             registered_module->init_context
 );
-          if (error) return error;
+          if (error) {
+        return error;
+    }
         }
 
         if (registered_module->end_fn)

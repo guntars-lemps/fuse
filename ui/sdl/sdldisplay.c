@@ -288,7 +288,9 @@ int uidisplay_init(int width, int height)
     if (scaler_select_scaler(current_scaler))
     scaler_select_scaler(SCALER_NORMAL);
 
-    if (sdldisplay_load_gfx_mode()) return 1;
+    if (sdldisplay_load_gfx_mode()) {
+        return 1;
+    }
 
     SDL_WM_SetCaption("Fuse", "Fuse");
 
@@ -452,7 +454,9 @@ int uidisplay_hotswap_gfx_mode(void)
     }
 
     // Setup the new GFX mode
-    if (sdldisplay_load_gfx_mode()) return 1;
+    if (sdldisplay_load_gfx_mode()) {
+        return 1;
+    }
 
     // reset palette
     SDL_SetColors(sdldisplay_gc, colour_palette, 0, 16);

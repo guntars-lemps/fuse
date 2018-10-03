@@ -244,7 +244,9 @@ int ui_debugger_activate(void)
     fuse_emulation_pause();
 
     // Create the dialog box if it doesn't already exist
-    if (!dialog_created) if (create_dialog()) return 1;
+    if (!dialog_created) if (create_dialog()) {
+        return 1;
+    }
 
     gtk_widget_show_all(dialog);
     error = hide_hidden_panes(); if (error) return error;
@@ -367,7 +369,9 @@ static int create_dialog(void)
 
     // The menu bar
     error = create_menu_bar(GTK_BOX(content_area), &accel_group);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     // Keyboard shortcuts
     gtk_window_add_accel_group(GTK_WINDOW(dialog), accel_group);
@@ -384,7 +388,9 @@ static int create_dialog(void)
 
     // The main display areas
     error = create_register_display(GTK_BOX(hbox2), font);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = create_memory_map(GTK_BOX(hbox2)); if (error) return error;
 
@@ -394,12 +400,16 @@ static int create_dialog(void)
     create_events(GTK_BOX(hbox));
 
     error = create_command_entry(GTK_BOX(content_area), accel_group);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     // The action buttons
 
     error = create_buttons(GTK_DIALOG(dialog), accel_group);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     gtkui_free_font(font);
 
@@ -826,7 +836,9 @@ int ui_debugger_update(void)
                     &HL, &HL_, &IX, &IY,
                   };
 
-    if (!dialog_created) return 0;
+    if (!dialog_created) {
+        return 0;
+    }
 
     for (i = 0; i < 12; i++) {
     snprintf(buffer, 5, "%3s ", register_name[i]);

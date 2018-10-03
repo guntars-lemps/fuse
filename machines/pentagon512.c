@@ -75,20 +75,30 @@ static int pentagon_reset(void)
 
     error = machine_load_rom(0, settings_current.rom_pentagon512_0,
                             settings_default.rom_pentagon512_0, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom(1, settings_current.rom_pentagon512_1,
                             settings_default.rom_pentagon512_1, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom(2, settings_current.rom_pentagon512_3,
                             settings_default.rom_pentagon512_3, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
     error = machine_load_rom_bank(beta_memory_map_romcs, 0,
                                  settings_current.rom_pentagon512_2,
                                  settings_default.rom_pentagon512_2, 0x4000);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     error = spec128_common_reset(0);
-    if (error) return error;
+    if (error) {
+        return error;
+    }
 
     periph_clear();
     machines_periph_pentagon();

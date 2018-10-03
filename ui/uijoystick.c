@@ -129,10 +129,14 @@ int open_joystick(int which, const char *device, const char *calibration)
 
     // Otherwise try /dev/input/js<n> and /dev/js<n>
     snprintf(path, PATH_MAX, "/dev/input/js%d", which);
-    if (!init_stick(which, path, calibration)) return 0;
+    if (!init_stick(which, path, calibration)) {
+        return 0;
+    }
 
     snprintf(path, PATH_MAX, "/dev/js%d", which);
-    if (!init_stick(which, path, calibration)) return 0;
+    if (!init_stick(which, path, calibration)) {
+        return 0;
+    }
 
     // Couldn't find this joystick
     return 1;

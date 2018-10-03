@@ -211,7 +211,9 @@ int win32display_drawing_area_resize(int width, int height, int force_scaler)
     size = height / DISPLAY_SCREEN_HEIGHT;
 
     // If we're the same size as before, no need to do anything else
-    if (size == win32display_current_size) return 0;
+    if (size == win32display_current_size) {
+        return 0;
+    }
 
     win32display_current_size = size;
 
