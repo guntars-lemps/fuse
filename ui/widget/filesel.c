@@ -611,11 +611,11 @@ static int widget_print_filename(struct widget_dirent *filename, int position,
     truncated = 2;
     if (suffix_width >= MAX_SUFFIX_WIDTH) {
       suffix_truncated = 2;
-      suffix[strlen (suffix) - 1] = '\0';
+      suffix[strlen(suffix) - 1] = '\0';
       suffix_width = widget_stringwidth (suffix);
     }
     else
-      buffer[strlen (buffer) - 1] = '\0';
+      buffer[strlen(buffer) - 1] = '\0';
     }
     if (dir)
     strcat (buffer, FUSE_DIR_SEP_STR);

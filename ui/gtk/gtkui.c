@@ -698,7 +698,7 @@ int ui_menu_item_set_active(const char *path, int active)
     GtkWidget *menu_item;
 
     // Translate UI-indepentment path to GTK UI path
-    gchar *full_path = g_strdup_printf ("/MainMenu%s", path);
+    gchar *full_path = g_strdup_printf("/MainMenu%s", path);
 
     menu_item = gtk_ui_manager_get_widget(ui_manager_menu, full_path);
     g_free(full_path);

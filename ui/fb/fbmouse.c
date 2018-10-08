@@ -157,7 +157,7 @@ static void mouse_update_gpm(void)
 
     if (gpmfd < 0) {
     static int t = 0;
-    if (!t) fprintf (stderr, "gpm not there?\n");
+    if (!t) fprintf(stderr, "gpm not there?\n");
     t = 1;
     return;
     }

@@ -33,19 +33,19 @@
 // FIXME: where should we get this prototype from?
 extern int clock_gettime(struct timespec *tp);
 
-double
-compat_timer_get_time(void)
+
+double compat_timer_get_time(void)
 {
     int error;
     struct timespec tp;
 
     error = clock_gettime(&tp);
     if (error) {
-    ui_error(UI_ERROR_ERROR, "%s: error getting time: %s", __func__, strerror(errno));
-    return -1;
+        ui_error(UI_ERROR_ERROR, "%s: error getting time: %s", __func__, strerror(errno));
+        return -1;
     }
 
-    return tp.tv_sec + tp.tv_nsec / 1000000000.0;
+    return tp.tv_sec + (tp.tv_nsec / 1000000000.0);
 }
 
 

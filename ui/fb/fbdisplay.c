@@ -282,7 +282,7 @@ static int fb_select_mode(const fuse_fb_mode_t *fb_mode)
 
     gm = mmap(0, fixed.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, fb_fd, 0);
     if (gm == (void*)-1) {
-    fprintf (stderr, "%s: couldn't mmap for framebuffer: %s\n",
+    fprintf(stderr, "%s: couldn't mmap for framebuffer: %s\n",
          fuse_progname, strerror(errno));
     return 1;
     }

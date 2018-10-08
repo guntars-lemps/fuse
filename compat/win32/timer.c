@@ -27,8 +27,8 @@
 
 #include "compat.h"
 
-double
-compat_timer_get_time(void)
+
+double compat_timer_get_time(void)
 {
     return GetTickCount() / 1000.0;
 }

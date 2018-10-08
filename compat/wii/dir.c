@@ -25,14 +25,14 @@
 
 #include "compat.h"
 
-compat_dir
-compat_opendir(const char *path)
+
+compat_dir compat_opendir(const char *path)
 {
     return diropen(path);
 }
 
-compat_dir_result_t
-compat_readdir(compat_dir directory, char *path, size_t length)
+
+compat_dir_result_t compat_readdir(compat_dir directory, char *path, size_t length)
 {
     struct stat fstat;
 

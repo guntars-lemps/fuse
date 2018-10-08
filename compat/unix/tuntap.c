@@ -40,19 +40,18 @@ int compat_get_tap(const char *interface_name)
 {
     int fd = -1;
 
-    if ((fd = open("/dev/net/tun", O_RDWR | O_NONBLOCK)) < 0)
-    ui_error(UI_ERROR_ERROR, "couldn't open TUN/TAP device '/dev/net/tun'");
-    else {
-    struct ifreq ifr;
-    memset(&ifr, 0, sizeof(ifr));
-    ifr.ifr_flags = IFF_TAP | IFF_NO_PI;
-    strncpy(ifr.ifr_name, interface_name, IFNAMSIZ);
-    ifr.ifr_name[IFNAMSIZ - 1] = '\0';
+    if ((fd = open("/dev/net/tun", O_RDWR | O_NONBLOCK)) < 0) {
+        ui_error(UI_ERROR_ERROR, "couldn't open TUN/TAP device '/dev/net/tun'");
+    } else {
+        struct ifreq ifr;
+        memset(&ifr, 0, sizeof(ifr));
+        ifr.ifr_flags = IFF_TAP | IFF_NO_PI;
+        strncpy(ifr.ifr_name, interface_name, IFNAMSIZ);
+        ifr.ifr_name[IFNAMSIZ - 1] = '\0';
 
-    if (ioctl(fd, TUNSETIFF, (void *) &ifr) < 0) {
-      ui_error(UI_ERROR_ERROR, "couldn't select TAP interface '%s'",
-                ifr.ifr_name);
-    }
+        if (ioctl(fd, TUNSETIFF, (void *)&ifr) < 0) {
+            ui_error(UI_ERROR_ERROR, "couldn't select TAP interface '%s'", ifr.ifr_name);
+        }
     }
 
     return fd;

@@ -35,21 +35,27 @@
 
 void get_relative_directory(char *buffer, size_t bufsize);
 
-const char*
-compat_get_temp_path(void)
+
+const char *compat_get_temp_path(void)
 {
     const char *dir;
 
     // Use TMPDIR if specified, if not /tmp
-    dir = getenv("TMPDIR"); if (dir) return dir;
+    dir = getenv("TMPDIR");
+    if (dir) {
+        return dir;
+    }
     return "/tmp";
 }
 
-const char*
-compat_get_config_path(void)
+
+const char *compat_get_config_path(void)
 {
     const char *dir;
-    dir = getenv("HOME"); if (dir) return dir;
+    dir = getenv("HOME");
+    if (dir) {
+        return dir;
+    }
     return ".";
 }
 
@@ -67,48 +73,55 @@ int compat_get_next_path(path_context *ctx)
 
     switch ((ctx->state)++) {
 
-    // First look relative to the current directory
-    case 0:
-    strncpy(ctx->path, ".", PATH_MAX);
-    return 1;
+        // First look relative to the current directory
+        case 0:
+            strncpy(ctx->path, ".", PATH_MAX);
+            return 1;
 
-    // Then relative to the Fuse executable
-    case 1:
+        // Then relative to the Fuse executable
+        case 1:
+            switch (ctx->type) {
+                case UTILS_AUXILIARY_LIB:
+                    path_segment = "lib";
+                    break;
+                case UTILS_AUXILIARY_ROM:
+                    path_segment = "roms";
+                    break;
+                case UTILS_AUXILIARY_WIDGET:
+                    path_segment = "ui/widget";
+                    break;
+                case UTILS_AUXILIARY_GTK:
+                    path_segment = "ui/gtk";
+                    break;
+                default:
+                    ui_error(UI_ERROR_ERROR, "unknown auxiliary file type %d", ctx->type);
+                    return 0;
+            }
 
-    switch (ctx->type) {
-    case UTILS_AUXILIARY_LIB: path_segment = "lib"; break;
-    case UTILS_AUXILIARY_ROM: path_segment = "roms"; break;
-    case UTILS_AUXILIARY_WIDGET: path_segment = "ui/widget"; break;
-    case UTILS_AUXILIARY_GTK: path_segment = "ui/gtk"; break;
-    default:
-      ui_error(UI_ERROR_ERROR, "unknown auxiliary file type %d", ctx->type);
-      return 0;
-    }
+            if (compat_is_absolute_path(fuse_progname)) {
+                strncpy(buffer, fuse_progname, PATH_MAX);
+                buffer[PATH_MAX - 1] = '\0';
+            } else {
+                get_relative_directory(buffer, PATH_MAX);
+            }
 
-    if (compat_is_absolute_path(fuse_progname)) {
-      strncpy(buffer, fuse_progname, PATH_MAX);
-      buffer[PATH_MAX - 1] = '\0';
-    } else {
-      get_relative_directory(buffer, PATH_MAX);
-    }
+            path2 = dirname(buffer);
+            snprintf(ctx->path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "%s", path2, path_segment);
+            return 1;
 
-    path2 = dirname(buffer);
-    snprintf(ctx->path, PATH_MAX, "%s" FUSE_DIR_SEP_STR "%s", path2,
-              path_segment);
-    return 1;
-
-    // Then where we may have installed the data files
-    case 2:
-
+        // Then where we may have installed the data files
+        case 2:
 #ifndef ROMSDIR
-    path2 = FUSEDATADIR;
+            path2 = FUSEDATADIR;
 #else // #ifndef ROMSDIR
-    path2 = ctx->type == UTILS_AUXILIARY_ROM ? ROMSDIR : FUSEDATADIR;
+            path2 = (ctx->type == UTILS_AUXILIARY_ROM) ? ROMSDIR : FUSEDATADIR;
 #endif // #ifndef ROMSDIR
-    strncpy(ctx->path, path2, PATH_MAX); buffer[PATH_MAX - 1] = '\0';
-    return 1;
+            strncpy(ctx->path, path2, PATH_MAX);
+            buffer[PATH_MAX - 1] = '\0';
+            return 1;
 
-    case 3: return 0;
+        case 3:
+            return 0;
     }
     ui_error(UI_ERROR_ERROR, "unknown path_context state %d", ctx->state);
     fuse_abort();

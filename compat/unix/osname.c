@@ -37,12 +37,10 @@ int compat_osname(char *buffer, size_t length)
 
     error = uname(&osname);
     if (error < 0) {
-    ui_error(UI_ERROR_ERROR, "error getting system information: %s",
-          strerror(errno));
-    return 1;
+        ui_error(UI_ERROR_ERROR, "error getting system information: %s", strerror(errno));
+        return 1;
     }
 
-    snprintf(buffer, length, "%s %s %s", osname.sysname, osname.machine,
-        osname.release);
+    snprintf(buffer, length, "%s %s %s", osname.sysname, osname.machine, osname.release);
     return 0;
 }
