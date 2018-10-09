@@ -57,21 +57,17 @@ int debugger_step(void); // Single step
 int debugger_next(void); // Go to next instruction, ignoring CALL etc
 int debugger_run(void); // Set debugger_mode so that emulation will occur
 
-/* Disassemble the instruction at 'address', returning its length in
-   '*length' */
-void debugger_disassemble(char *buffer, size_t buflen, size_t *length,
-               libspectrum_word address);
+// Disassemble the instruction at 'address', returning its length in '*length'
+void debugger_disassemble(char *buffer, size_t buflen, size_t *length, libspectrum_word address);
 
 // Get an instruction relative to a specific address
-libspectrum_word debugger_search_instruction(libspectrum_word address,
-                                              int delta);
+libspectrum_word debugger_search_instruction(libspectrum_word address, int delta);
 
 // Evaluate a debugger command
 void debugger_command_evaluate(const char *command);
 
 // Get a deparsed expression
-int debugger_expression_deparse(char *buffer, size_t length,
-                 const debugger_expression *exp);
+int debugger_expression_deparse(char *buffer, size_t length, const debugger_expression *exp);
 
 // Register an event type with the debugger
 int debugger_event_register(const char *type, const char *detail);
@@ -87,12 +83,13 @@ int debugger_get_exit_code(void);
 
 // Debugger system variables
 typedef libspectrum_dword (*debugger_get_system_variable_fn_t)(void);
+
 typedef void (*debugger_set_system_variable_fn_t)(libspectrum_dword value);
 
-void debugger_system_variable_register(
-    const char *type, const char *detail,
-    debugger_get_system_variable_fn_t get,
-    debugger_set_system_variable_fn_t set);
+void debugger_system_variable_register(const char *type,
+                                       const char *detail,
+                                       debugger_get_system_variable_fn_t get,
+                                       debugger_set_system_variable_fn_t set);
 
 // Unit tests
 int debugger_disassemble_unittest(void);

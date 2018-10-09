@@ -41,8 +41,7 @@ static GHashTable *debugger_variables;
 
 void debugger_variable_init(void)
 {
-    debugger_variables = g_hash_table_new_full(g_str_hash, g_str_equal,
-                                              libspectrum_free, NULL);
+    debugger_variables = g_hash_table_new_full(g_str_hash, g_str_equal, libspectrum_free, NULL);
 }
 
 
@@ -55,8 +54,7 @@ void debugger_variable_end(void)
 
 void debugger_variable_set(const char *name, libspectrum_dword value)
 {
-    g_hash_table_insert(debugger_variables, utils_safe_strdup(name),
-                       GINT_TO_POINTER(value));
+    g_hash_table_insert(debugger_variables, utils_safe_strdup(name), GINT_TO_POINTER(value));
 }
 
 

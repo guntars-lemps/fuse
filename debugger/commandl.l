@@ -33,11 +33,13 @@
 
 #include "debugger/commandy.h"
 
-#define YY_INPUT(buf,result,max_size) \
+#define YY_INPUT(buf, result, max_size) \
 { \
-  int retval; \
-  if( !debugger_command_input( buf, &retval, max_size ) ) retval = YY_NULL; \
-  result = (yy_size_t)retval; \
+    int retval; \
+    if (!debugger_command_input(buf, &retval, max_size)) { \
+        retval = YY_NULL; \
+    } \
+    result = (yy_size_t)retval; \
 }
 
 #define YY_NO_INPUT

@@ -88,24 +88,27 @@ static void debugger_end(void)
 void debugger_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_EVENT,
-    STARTUP_MANAGER_MODULE_MEMPOOL,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_EVENT,
+        STARTUP_MANAGER_MODULE_MEMPOOL,
+        STARTUP_MANAGER_MODULE_SETUID,
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_DEBUGGER, dependencies,
-                            ARRAY_SIZE(dependencies), debugger_init, NULL,
-                            debugger_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_DEBUGGER,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             debugger_init,
+                             NULL,
+                             debugger_end);
 }
 
-// Activate the debugger
 
+// Activate the debugger
 int debugger_trap(void)
 {
     return ui_debugger_activate();
 }
 
-// Step one instruction
 
+// Step one instruction
 int debugger_step(void)
 {
     debugger_mode = DEBUGGER_MODE_HALTED;
@@ -113,8 +116,8 @@ int debugger_step(void)
     return 0;
 }
 
-// Step to the next instruction, ignoring CALLs etc
 
+// Step to the next instruction, ignoring CALLs etc
 int debugger_next(void)
 {
     size_t length;
@@ -123,43 +126,45 @@ int debugger_next(void)
     debugger_disassemble(NULL, 0, &length, PC);
 
     // And add a breakpoint after that
-    debugger_breakpoint_add_address(
-    DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, PC + length, 0,
-    DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
-);
+    debugger_breakpoint_add_address(DEBUGGER_BREAKPOINT_TYPE_EXECUTE,
+                                    memory_source_any,
+                                    0,
+                                    PC + length,
+                                    0,
+                                    DEBUGGER_BREAKPOINT_LIFE_ONESHOT,
+                                    NULL);
 
     debugger_run();
 
     return 0;
 }
 
-// Set debugger_mode so that emulation will occur
 
+// Set debugger_mode so that emulation will occur
 int debugger_run(void)
 {
-    debugger_mode = debugger_breakpoints ?
-                  DEBUGGER_MODE_ACTIVE :
-                  DEBUGGER_MODE_INACTIVE;
+    debugger_mode = debugger_breakpoints ? DEBUGGER_MODE_ACTIVE : DEBUGGER_MODE_INACTIVE;
     ui_debugger_deactivate(1);
     return 0;
 }
 
-/* Exit from the last CALL etc by setting a oneshot breakpoint at
-   (SP) and then starting emulation */
 
+// Exit from the last CALL etc by setting a oneshot breakpoint at (SP) and then starting emulation
 int debugger_breakpoint_exit(void)
 {
     libspectrum_word target;
 
-    target = readbyte_internal(SP) + 0x100 * readbyte_internal(SP+1);
+    target = readbyte_internal(SP) + 0x100 * readbyte_internal(SP + 1);
 
-    if (debugger_breakpoint_add_address(
-        DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, target, 0,
-    DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
-)
-)
-    return 1;
-
+    if (debugger_breakpoint_add_address(DEBUGGER_BREAKPOINT_TYPE_EXECUTE,
+                                        memory_source_any,
+                                        0,
+                                        target,
+                                        0,
+                                        DEBUGGER_BREAKPOINT_LIFE_ONESHOT,
+                                        NULL)) {
+        return 1;
+    }
     if (debugger_run()) {
         return 1;
     }
@@ -167,30 +172,29 @@ int debugger_breakpoint_exit(void)
     return 0;
 }
 
-// Poke a value into RAM
 
+// Poke a value into RAM
 int debugger_poke(libspectrum_word address, libspectrum_byte value)
 {
     writebyte_internal(address, value);
     return 0;
 }
 
-// Write a value to a port
 
+// Write a value to a port
 int debugger_port_write(libspectrum_word port, libspectrum_byte value)
 {
     writeport_internal(port, value);
     return 0;
 }
 
-// Exit the emulator
 
+// Exit the emulator
 void debugger_exit_emulator(debugger_expression *exit_code_expression)
 {
     fuse_exiting = 1;
 
-    exit_code = exit_code_expression ?
-    debugger_expression_evaluate(exit_code_expression) : 0;
+    exit_code = exit_code_expression ? debugger_expression_evaluate(exit_code_expression) : 0;
 
     // Ensure we break out of the main Z80 loop immediately
     event_add(0, event_type_null);

@@ -52,25 +52,20 @@ extern const char debugger_breakpoint_life_abbr[][5];
 
 typedef struct debugger_breakpoint_address {
 
-    /* Which memory device we are interested in. memory_source_any for an
-     absolute address */
+    // Which memory device we are interested in. memory_source_any for an absolute address
     int source;
 
-    /* The page number from the source we are interested in. Not used for
-     MEMORY_SOURCE_ANY */
+    // The page number from the source we are interested in. Not used for MEMORY_SOURCE_ANY
     int page;
 
-    /* The offset within the page, or the absolute address for
-     MEMORY_SOURCE_ANY */
+    // The offset within the page, or the absolute address for MEMORY_SOURCE_ANY
     libspectrum_word offset;
 
 } debugger_breakpoint_address;
 
 typedef struct debugger_breakpoint_port {
-
     libspectrum_word port;
     libspectrum_word mask;
-
 } debugger_breakpoint_port;
 
 typedef struct debugger_breakpoint_time {
@@ -85,12 +80,10 @@ typedef struct debugger_event_t {
 } debugger_event_t;
 
 typedef union debugger_breakpoint_value {
-
     debugger_breakpoint_address address;
     debugger_breakpoint_port port;
     debugger_breakpoint_time time;
     debugger_event_t event;
-
 } debugger_breakpoint_value;
 
 typedef struct debugger_expression debugger_expression;
@@ -98,17 +91,12 @@ typedef struct debugger_expression debugger_expression;
 // The breakpoint structure
 typedef struct debugger_breakpoint {
     size_t id;
-
     debugger_breakpoint_type type;
     debugger_breakpoint_value value;
-
     size_t ignore; // Ignore this breakpoint this many times
     debugger_breakpoint_life life;
-    debugger_expression *condition; /* Conditional expression to activate this
-                     breakpoint */
-
+    debugger_expression *condition; // Conditional expression to activate this breakpoint
     char *commands;
-
 } debugger_breakpoint;
 
 // The current breakpoints
@@ -116,36 +104,42 @@ extern GSList *debugger_breakpoints;
 
 int debugger_check(debugger_breakpoint_type type, libspectrum_dword value);
 
-
 void debugger_breakpoint_reduce_tstates(libspectrum_dword tstates);
 
 // Add a new breakpoint
-
-int debugger_breakpoint_add_address(
-    debugger_breakpoint_type type, int source, int page, libspectrum_word offset,
-    size_t ignore, debugger_breakpoint_life life, debugger_expression *condition
+int debugger_breakpoint_add_address(debugger_breakpoint_type type,
+                                    int source,
+                                    int page,
+                                    libspectrum_word offset,
+                                    size_t ignore,
+                                    debugger_breakpoint_life life,
+                                    debugger_expression *condition
 );
 
-
-int debugger_breakpoint_add_port(
-    debugger_breakpoint_type type, libspectrum_word port, libspectrum_word mask,
-    size_t ignore, debugger_breakpoint_life life, debugger_expression *condition
+int debugger_breakpoint_add_port(debugger_breakpoint_type type,
+                                 libspectrum_word port,
+                                 libspectrum_word mask,
+                                 size_t ignore,
+                                 debugger_breakpoint_life life,
+                                 debugger_expression *condition
 );
 
-
-int debugger_breakpoint_add_time(
-    debugger_breakpoint_type type, libspectrum_dword breakpoint_tstates,
-    size_t ignore, debugger_breakpoint_life life, debugger_expression *condition
+int debugger_breakpoint_add_time(debugger_breakpoint_type type,
+                                 libspectrum_dword breakpoint_tstates,
+                                 size_t ignore,
+                                 debugger_breakpoint_life life,
+                                 debugger_expression *condition
 );
 
-
-int debugger_breakpoint_add_event(
-    debugger_breakpoint_type type, const char *type_string, const char *detail,
-    size_t ignore, debugger_breakpoint_life life, debugger_expression *condition
+int debugger_breakpoint_add_event(debugger_breakpoint_type type,
+                                  const char *type_string,
+                                  const char *detail,
+                                  size_t ignore,
+                                  debugger_breakpoint_life life,
+                                  debugger_expression *condition
 );
 
-/* Add events corresponding to all the time breakpoints to happen
-   during this frame */
+// Add events corresponding to all the time breakpoints to happen during this frame
 int debugger_add_time_events(void);
 
 #endif // #ifndef FUSE_DEBUGGER_BREAKPOINT_H

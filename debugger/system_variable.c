@@ -55,9 +55,10 @@ void debugger_system_variable_init(void)
 }
 
 
-void debugger_system_variable_register(const char *type, const char *detail,
-                                   debugger_get_system_variable_fn_t get,
-                                   debugger_set_system_variable_fn_t set)
+void debugger_system_variable_register(const char *type,
+                                       const char *detail,
+                                       debugger_get_system_variable_fn_t get,
+                                       debugger_set_system_variable_fn_t set)
 {
     system_variable_t sysvar;
 
@@ -70,10 +71,11 @@ void debugger_system_variable_register(const char *type, const char *detail,
 }
 
 
-static int system_variable_matches(system_variable_t *sysvar, const char *type, const char *detail)
+static int system_variable_matches(system_variable_t *sysvar,
+                                   const char *type,
+                                   const char *detail)
 {
-    return strcasecmp(type, sysvar->type) == 0 &&
-         strcasecmp(detail, sysvar->detail) == 0;
+    return ((strcasecmp(type, sysvar->type) == 0) && (strcasecmp(detail, sysvar->detail) == 0));
 }
 
 
@@ -82,13 +84,14 @@ static int find_system_variable(const char *type, const char *detail, system_var
     size_t i;
 
     for (i = 0; i < system_variables->len; i++) {
-    system_variable_t sysvar =
-      g_array_index(system_variables, system_variable_t, i);
+        system_variable_t sysvar =  g_array_index(system_variables, system_variable_t, i);
 
-    if (system_variable_matches(&sysvar, type, detail)) {
-      if (out != NULL) *out = sysvar;
-      return i;
-    }
+        if (system_variable_matches(&sysvar, type, detail)) {
+            if (out != NULL) {
+                *out = sysvar;
+            }
+            return i;
+        }
     }
 
     return -1;
@@ -103,57 +106,54 @@ int debugger_system_variable_find(const char *type, const char *detail)
 
 libspectrum_dword debugger_system_variable_get(int system_variable)
 {
-    system_variable_t sysvar =
-    g_array_index(system_variables, system_variable_t, system_variable);
+    system_variable_t sysvar = g_array_index(system_variables, system_variable_t, system_variable);
 
     return sysvar.get();
 }
 
 
-void debugger_system_variable_set(const char *type, const char *detail,
-                              libspectrum_dword value)
+void debugger_system_variable_set(const char *type, const char *detail, libspectrum_dword value)
 {
     int index;
     system_variable_t sysvar;
 
     index = find_system_variable(type, detail, &sysvar);
     if (index == -1) {
-    ui_error(UI_ERROR_ERROR, "Unknown system variable %s:%s", type, detail);
-    return;
+        ui_error(UI_ERROR_ERROR, "Unknown system variable %s:%s", type, detail);
+        return;
     }
 
     if (sysvar.set == NULL) {
-    ui_error(UI_ERROR_ERROR, "System variable %s:%s cannot be set", type,
-              detail);
-    return;
+        ui_error(UI_ERROR_ERROR, "System variable %s:%s cannot be set", type, detail);
+        return;
     }
 
     sysvar.set(value);
 }
 
 
-void debugger_system_variable_text(char *buffer, size_t length,
-                               int system_variable)
+void debugger_system_variable_text(char *buffer, size_t length, int system_variable)
 {
-    system_variable_t sysvar =
-    g_array_index(system_variables, system_variable_t, system_variable);
+    system_variable_t sysvar = g_array_index(system_variables, system_variable_t, system_variable);
 
     snprintf(buffer, length, "%s:%s", sysvar.type, sysvar.detail);
 }
 
-// Tidy-up function called at end of emulation
 
+// Tidy-up function called at end of emulation
 void debugger_system_variable_end(void)
 {
     int i;
     system_variable_t sysvar;
 
-    if (!system_variables) return;
+    if (!system_variables) {
+        return;
+    }
 
     for (i = 0; i < system_variables->len; i++) {
-    sysvar = g_array_index(system_variables, system_variable_t, i);
-    libspectrum_free(sysvar.detail);
-    libspectrum_free(sysvar.type);
+        sysvar = g_array_index(system_variables, system_variable_t, i);
+        libspectrum_free(sysvar.detail);
+        libspectrum_free(sysvar.type);
     }
 
     g_array_free(system_variables, TRUE);
