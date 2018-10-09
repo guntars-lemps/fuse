@@ -91,15 +91,18 @@ typedef void (*startup_manager_end_fn)(void);
 void startup_manager_init(void);
 
 // Register an module with the startup manager
-void startup_manager_register(
-    startup_manager_module module, startup_manager_module *dependencies,
-    size_t dependency_count, startup_manager_init_fn init_fn,
-    void *init_context, startup_manager_end_fn end_fn);
+void startup_manager_register(startup_manager_module module,
+                              startup_manager_module *dependencies,
+                              size_t dependency_count,
+                              startup_manager_init_fn init_fn,
+                              void *init_context,
+                              startup_manager_end_fn end_fn);
 
 // Register an module with no dependencies with the startup manager
-void startup_manager_register_no_dependencies(
-    startup_manager_module module, startup_manager_init_fn init_fn,
-    void *init_context, startup_manager_end_fn end_fn);
+void startup_manager_register_no_dependencies(startup_manager_module module,
+                                              startup_manager_init_fn init_fn,
+                                              void *init_context,
+                                              startup_manager_end_fn end_fn);
 
 // Run all the registered init functions in the right order
 int startup_manager_run(void);
