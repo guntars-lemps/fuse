@@ -339,8 +339,8 @@ static int xdisplay_allocate_colours4(void)
     for (i=0; i<16; i++) { // grey
       c.red = c.green = c.blue =
         rgb_for_4[i * 3    ] * 19595 / 255 +
-        rgb_for_4[i * 3 + 1] * 38469 / 255 +
-        rgb_for_4[i * 3 + 2] *  7471 / 255;
+        rgb_for_4[(i * 3) + 1] * 38469 / 255 +
+        rgb_for_4[(i * 3) + 2] *  7471 / 255;
       if (xdisplay_alloc_colour(&currentMap, &c))
             return 1;
       colours[i] = pal_grey[i] = c.pixel;
@@ -348,8 +348,8 @@ static int xdisplay_allocate_colours4(void)
     } else {
     for (i=0; i<16; i++) { // rgb
       c.red   = rgb_for_4[i * 3    ] * 65535 / 255;
-      c.green = rgb_for_4[i * 3 + 1] * 65535 / 255;
-      c.blue  = rgb_for_4[i * 3 + 2] * 65535 / 255;
+      c.green = rgb_for_4[(i * 3) + 1] * 65535 / 255;
+      c.blue  = rgb_for_4[(i * 3) + 2] * 65535 / 255;
       if (xdisplay_alloc_colour(&currentMap, &c))
         return 1;
       colours[i] = pal_colour[i] = c.pixel;

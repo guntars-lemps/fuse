@@ -45,13 +45,11 @@
 static void pentagon_from_snapshot(libspectrum_snap *snap);
 
 static module_info_t pentagon_module_info = {
-
     NULL,
     NULL,
     NULL,
     pentagon_from_snapshot,
     NULL,
-
 };
 
 static int pentagon_reset(void);
@@ -65,12 +63,13 @@ libspectrum_byte pentagon_select_1f_read(libspectrum_word port, libspectrum_byte
     // TODO: fine-grained attachment handling
 
     data = beta_sr_read(port, &tmpattached);
-    if (!tmpattached && settings_current.joy_kempston)
-    data = joystick_kempston_read(port, &tmpattached);
+    if (!tmpattached && settings_current.joy_kempston) {
+        data = joystick_kempston_read(port, &tmpattached);
+    }
 
     if (tmpattached) {
-    *attached = 0xff; // TODO: check this
-    return data;
+        *attached = 0xff; // TODO: check this
+        return data;
     }
 
     return 0xff;
@@ -85,8 +84,9 @@ libspectrum_byte pentagon_select_ff_read(libspectrum_word port, libspectrum_byte
     // TODO: fine-grained attachment handling
 
     data = beta_sp_read(port, &tmpattached);
-    if (!tmpattached)
-    data = spectrum_unattached_port();
+    if (!tmpattached) {
+        data = spectrum_unattached_port();
+    }
 
     *attached = 0xff; // TODO: check this
     return data;
@@ -108,10 +108,10 @@ int pentagon_init(fuse_machine_info *machine)
     machine->reset = pentagon_reset;
 
     machine->timex = 0;
-    machine->ram.port_from_ula  = pentagon_port_from_ula;
-    machine->ram.contend_delay  = spectrum_contend_delay_none;
+    machine->ram.port_from_ula = pentagon_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_none;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_none;
-    machine->ram.valid_pages    = 8;
+    machine->ram.valid_pages = 8;
 
     machine->unattached_port = spectrum_unattached_port_none;
 
@@ -129,19 +129,19 @@ static int pentagon_reset(void)
 {
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_pentagon_0,
-                            settings_default.rom_pentagon_0, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_pentagon_0, settings_default.rom_pentagon_0, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(1, settings_current.rom_pentagon_1,
-                            settings_default.rom_pentagon_1, 0x4000);
+    error = machine_load_rom(1, settings_current.rom_pentagon_1, settings_default.rom_pentagon_1, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom_bank(beta_memory_map_romcs, 0,
-                                 settings_current.rom_pentagon_2,
-                                 settings_default.rom_pentagon_2, 0x4000);
+    error = machine_load_rom_bank(beta_memory_map_romcs,
+                                  0,
+                                  settings_current.rom_pentagon_2,
+                                  settings_default.rom_pentagon_2,
+                                  0x4000);
     if (error) {
         return error;
     }
@@ -176,14 +176,13 @@ static int pentagon_reset(void)
 static void pentagon_from_snapshot(libspectrum_snap *snap)
 {
     /* During init we set beta_active to true unconditionally to bootstrap into
-     the TR-DOS ROM, but during snapshot loading we should repect the paging
-     setting from the snapshot itself */
-    if (periph_is_active(PERIPH_TYPE_BETA128_PENTAGON) ||
-      periph_is_active(PERIPH_TYPE_BETA128_PENTAGON_LATE)) {
-    if (libspectrum_snap_beta_paged(snap)) {
-      beta_page();
-    } else {
-      beta_unpage();
-    }
+       the TR-DOS ROM, but during snapshot loading we should respect the paging
+       setting from the snapshot itself */
+    if (periph_is_active(PERIPH_TYPE_BETA128_PENTAGON) || periph_is_active(PERIPH_TYPE_BETA128_PENTAGON_LATE)) {
+        if (libspectrum_snap_beta_paged(snap)) {
+            beta_page();
+        } else {
+            beta_unpage();
+        }
     }
 }

@@ -54,10 +54,10 @@ int scorpion_init(fuse_machine_info *machine)
     machine->reset = scorpion_reset;
 
     machine->timex = 0;
-    machine->ram.port_from_ula  = pentagon_port_from_ula;
-    machine->ram.contend_delay  = spectrum_contend_delay_none;
+    machine->ram.port_from_ula = pentagon_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_none;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_none;
-    machine->ram.valid_pages    = 16;
+    machine->ram.valid_pages = 16;
 
     machine->unattached_port = spectrum_unattached_port_none;
 
@@ -73,24 +73,23 @@ int scorpion_reset(void)
 {
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_scorpion_0,
-                            settings_default.rom_scorpion_0, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_scorpion_0, settings_default.rom_scorpion_0, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(1, settings_current.rom_scorpion_1,
-                            settings_default.rom_scorpion_1, 0x4000);
+    error = machine_load_rom(1, settings_current.rom_scorpion_1, settings_default.rom_scorpion_1, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(2, settings_current.rom_scorpion_2,
-                            settings_default.rom_scorpion_2, 0x4000);
+    error = machine_load_rom(2, settings_current.rom_scorpion_2, settings_default.rom_scorpion_2, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom_bank(beta_memory_map_romcs, 0,
-                                 settings_current.rom_scorpion_3,
-                                 settings_default.rom_scorpion_3, 0x4000);
+    error = machine_load_rom_bank(beta_memory_map_romcs,
+                                  0,
+                                  settings_current.rom_scorpion_3,
+                                  settings_default.rom_scorpion_3,
+                                  0x4000);
     if (error) {
         return error;
     }
@@ -132,27 +131,26 @@ static int scorpion_memory_map(void)
 
     screen = (machine_current->ram.last_byte & 0x08) ? 7 : 5;
     if (memory_current_screen != screen) {
-    display_update_critical(0, 0);
-    display_refresh_main_screen();
-    memory_current_screen = screen;
+        display_update_critical(0, 0);
+        display_refresh_main_screen();
+        memory_current_screen = screen;
     }
 
     if (machine_current->ram.last_byte2 & 0x02) {
-    rom = 2;
+        rom = 2;
     } else {
-    rom = (machine_current->ram.last_byte & 0x10) >> 4;
+        rom = (machine_current->ram.last_byte & 0x10) >> 4;
     }
     machine_current->ram.current_rom = rom;
 
     if (machine_current->ram.last_byte2 & 0x01) {
-    memory_map_16k(0x0000, memory_map_ram, 0);
-    machine_current->ram.special = 1;
+        memory_map_16k(0x0000, memory_map_ram, 0);
+        machine_current->ram.special = 1;
     } else {
-    spec128_select_rom(rom);
+        spec128_select_rom(rom);
     }
 
-    page = ((machine_current->ram.last_byte2 & 0x10) >> 1) |
-           (machine_current->ram.last_byte  & 0x07);
+    page = ((machine_current->ram.last_byte2 & 0x10) >> 1) | (machine_current->ram.last_byte  & 0x07);
 
     spec128_select_page(page);
     machine_current->ram.current_page = page;

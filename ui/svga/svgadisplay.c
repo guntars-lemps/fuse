@@ -408,15 +408,15 @@ static int svgadisplay_allocate_colours4(void)
     for (i=0; i<16; i++) { // grey
       red = green = blue = (
         rgb_for_4[i * 3    ] * 4822 / 255 +
-        rgb_for_4[i * 3 + 1] * 9467 / 255 +
-        rgb_for_4[i * 3 + 2] * 1839 / 255) >> 8;
+        rgb_for_4[(i * 3) + 1] * 9467 / 255 +
+        rgb_for_4[(i * 3 )+ 2] * 1839 / 255) >> 8;
       vga_setpalette(i, red, green, blue);
     }
     } else {
     for (i=0; i<16; i++) { // rgb
       red   = rgb_for_4[i * 3    ] * 63 / 255;
-      green = rgb_for_4[i * 3 + 1] * 63 / 255;
-      blue  = rgb_for_4[i * 3 + 2] * 63 / 255;
+      green = rgb_for_4[(i * 3) + 1] * 63 / 255;
+      blue  = rgb_for_4[(i * 3) + 2] * 63 / 255;
       vga_setpalette(i, red, green, blue);
     }
     }

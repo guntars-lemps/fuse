@@ -38,6 +38,7 @@
 
 static int spec48_ntsc_reset(void);
 
+
 int spec48_ntsc_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_48_NTSC;
@@ -46,10 +47,10 @@ int spec48_ntsc_init(fuse_machine_info *machine)
     machine->reset = spec48_ntsc_reset;
 
     machine->timex = 0;
-    machine->ram.port_from_ula         = spec48_port_from_ula;
-    machine->ram.contend_delay         = spectrum_contend_delay_65432100;
+    machine->ram.port_from_ula = spec48_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_65432100;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_65432100;
-    machine->ram.valid_pages         = 3;
+    machine->ram.valid_pages = 3;
 
     machine->unattached_port = spectrum_unattached_port;
 
@@ -66,8 +67,7 @@ static int spec48_ntsc_reset(void)
 {
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_48,
-                            settings_default.rom_48, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_48, settings_default.rom_48, 0x4000);
     if (error) {
         return error;
     }

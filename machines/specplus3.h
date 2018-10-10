@@ -45,8 +45,7 @@ int specplus3_shutdown(void);
 
 void specplus3_memoryport_write(libspectrum_word port, libspectrum_byte b);
 void specplus3_memoryport2_write(libspectrum_word port, libspectrum_byte b);
-void specplus3_memoryport2_write_internal(libspectrum_word port,
-                                           libspectrum_byte b);
+void specplus3_memoryport2_write_internal(libspectrum_word port, libspectrum_byte b);
 
 libspectrum_byte specplus3_fdc_status(libspectrum_word port, libspectrum_byte *attached);
 libspectrum_byte specplus3_fdc_read(libspectrum_word port, libspectrum_byte *attached);
@@ -60,8 +59,7 @@ typedef enum specplus3_drive_number {
     SPECPLUS3_NUM_DRIVES,
 } specplus3_drive_number;
 
-int specplus3_disk_insert(specplus3_drive_number which, const char *filename,
-                           int autoload);
+int specplus3_disk_insert(specplus3_drive_number which, const char *filename, int autoload);
 fdd_t *specplus3_get_fdd(specplus3_drive_number which);
 
 #endif // #ifndef FUSE_SPECPLUS3_H

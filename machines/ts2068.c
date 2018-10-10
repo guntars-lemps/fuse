@@ -50,10 +50,10 @@ int ts2068_init(fuse_machine_info *machine)
     machine->reset = ts2068_reset;
 
     machine->timex = 1;
-    machine->ram.port_from_ula         = tc2048_port_from_ula;
-    machine->ram.contend_delay         = spectrum_contend_delay_65432100;
+    machine->ram.port_from_ula = tc2048_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_65432100;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_65432100;
-    machine->ram.valid_pages         = 3;
+    machine->ram.valid_pages = 3;
 
     machine->unattached_port = spectrum_unattached_port_none;
 
@@ -70,13 +70,12 @@ static int ts2068_reset(void)
     size_t i, j;
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_ts2068_0,
-                            settings_default.rom_ts2068_0, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_ts2068_0, settings_default.rom_ts2068_0, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(1, settings_current.rom_ts2068_1,
-                            settings_default.rom_ts2068_1, 0x2000);
+
+    error = machine_load_rom(1, settings_current.rom_ts2068_1, settings_default.rom_ts2068_1, 0x2000);
     if (error) {
         return error;
     }
@@ -101,26 +100,26 @@ static int ts2068_reset(void)
 
     periph_update();
 
-    for (i = 0; i < 8; i++)
-    for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
-      memory_page *dock_page, *exrom_page;
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
+            memory_page *dock_page, *exrom_page;
 
-      dock_page = &timex_dock[i * MEMORY_PAGES_IN_8K + j];
-      *dock_page = tc2068_empty_mapping[j];
-      dock_page->page_num = i;
+            dock_page = &timex_dock[(i * MEMORY_PAGES_IN_8K) + j];
+            *dock_page = tc2068_empty_mapping[j];
+            dock_page->page_num = i;
 
-      exrom_page = &timex_exrom[i * MEMORY_PAGES_IN_8K + j];
-      *exrom_page = memory_map_rom[MEMORY_PAGES_IN_16K + j];
-      exrom_page->source = memory_source_exrom;
-      exrom_page->page_num = i;
+            exrom_page = &timex_exrom[(i * MEMORY_PAGES_IN_8K) + j];
+            *exrom_page = memory_map_rom[MEMORY_PAGES_IN_16K + j];
+            exrom_page->source = memory_source_exrom;
+            exrom_page->page_num = i;
+        }
     }
 
     tc2068_tc2048_common_reset();
 
     error = dck_reset();
     if (error) {
-    ui_error(UI_ERROR_INFO, "Ignoring Timex dock file '%s'",
-            settings_current.dck_file);
+        ui_error(UI_ERROR_INFO, "Ignoring Timex dock file '%s'", settings_current.dck_file);
     }
 
     return 0;

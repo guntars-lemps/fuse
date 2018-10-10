@@ -40,6 +40,7 @@
 
 static int specplus2_reset(void);
 
+
 int specplus2_init(fuse_machine_info *machine)
 {
     machine->machine = LIBSPECTRUM_MACHINE_PLUS2;
@@ -48,10 +49,10 @@ int specplus2_init(fuse_machine_info *machine)
     machine->reset = specplus2_reset;
 
     machine->timex = 0;
-    machine->ram.port_from_ula         = spec48_port_from_ula;
-    machine->ram.contend_delay         = spectrum_contend_delay_65432100;
+    machine->ram.port_from_ula = spec48_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_65432100;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_65432100;
-    machine->ram.valid_pages         = 8;
+    machine->ram.valid_pages = 8;
 
     machine->unattached_port = spectrum_unattached_port;
 
@@ -67,13 +68,11 @@ static int specplus2_reset(void)
 {
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_plus2_0,
-                            settings_default.rom_plus2_0, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_plus2_0, settings_default.rom_plus2_0, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(1, settings_current.rom_plus2_1,
-                            settings_default.rom_plus2_1, 0x4000);
+    error = machine_load_rom(1, settings_current.rom_plus2_1, settings_default.rom_plus2_1, 0x4000);
     if (error) {
         return error;
     }

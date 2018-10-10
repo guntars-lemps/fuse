@@ -45,10 +45,10 @@ int specplus2a_init(fuse_machine_info *machine)
     machine->reset = specplus2a_reset;
 
     machine->timex = 0;
-    machine->ram.port_from_ula         = specplus3_port_from_ula;
-    machine->ram.contend_delay         = spectrum_contend_delay_76543210;
+    machine->ram.port_from_ula = specplus3_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_76543210;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_none;
-    machine->ram.valid_pages         = 8;
+    machine->ram.valid_pages = 8;
 
     machine->unattached_port = spectrum_unattached_port_none;
 
@@ -64,23 +64,22 @@ static int specplus2a_reset(void)
 {
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_plus2a_0,
-                            settings_default.rom_plus2a_0, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_plus2a_0, settings_default.rom_plus2a_0, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(1, settings_current.rom_plus2a_1,
-                            settings_default.rom_plus2a_1, 0x4000);
+
+    error = machine_load_rom(1, settings_current.rom_plus2a_1, settings_default.rom_plus2a_1, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(2, settings_current.rom_plus2a_2,
-                            settings_default.rom_plus2a_2, 0x4000);
+
+    error = machine_load_rom(2, settings_current.rom_plus2a_2, settings_default.rom_plus2a_2, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(3, settings_current.rom_plus2a_3,
-                            settings_default.rom_plus2a_3, 0x4000);
+
+    error = machine_load_rom(3, settings_current.rom_plus2a_3, settings_default.rom_plus2a_3, 0x4000);
     if (error) {
         return error;
     }

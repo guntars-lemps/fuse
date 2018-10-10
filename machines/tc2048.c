@@ -46,8 +46,9 @@ int tc2048_port_from_ula(libspectrum_word port)
     // Ports F4 (HSR), FE (SCLD) and FF (DEC) supplied by ULA
     port &= 0xff;
 
-    return (port == 0xf4 || port == 0xfe || port == 0xff);
+    return ((port == 0xf4) || (port == 0xfe) || (port == 0xff));
 }
+
 
 int tc2048_init(fuse_machine_info *machine)
 {
@@ -57,10 +58,10 @@ int tc2048_init(fuse_machine_info *machine)
     machine->reset = tc2048_reset;
 
     machine->timex = 1;
-    machine->ram.port_from_ula         = tc2048_port_from_ula;
-    machine->ram.contend_delay         = spectrum_contend_delay_65432100;
+    machine->ram.port_from_ula = tc2048_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_65432100;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_65432100;
-    machine->ram.valid_pages         = 3;
+    machine->ram.valid_pages = 3;
 
     machine->unattached_port = spectrum_unattached_port_none;
 
@@ -77,8 +78,7 @@ static int tc2048_reset(void)
     size_t i, j;
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_tc2048,
-                            settings_default.rom_tc2048, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_tc2048, settings_default.rom_tc2048, 0x4000);
     if (error) {
         return error;
     }
@@ -109,8 +109,7 @@ static int tc2048_reset(void)
     // SCLD always present
     periph_set_present(PERIPH_TYPE_SCLD, PERIPH_PRESENT_ALWAYS);
 
-    /* TC2048 has a built-in Kempston joystick, which uses the "loose"
-     decoding */
+    // TC2048 has a built-in Kempston joystick, which uses the "loose" decoding
     periph_set_present(PERIPH_TYPE_KEMPSTON, PERIPH_PRESENT_NEVER);
     periph_set_present(PERIPH_TYPE_KEMPSTON_LOOSE, PERIPH_PRESENT_ALWAYS);
 
@@ -121,17 +120,18 @@ static int tc2048_reset(void)
 
     beta_builtin = 0;
 
-    for (i = 0; i < 8; i++)
-    for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
-      memory_page *dock_page, *exrom_page;
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
+            memory_page *dock_page, *exrom_page;
 
-      dock_page = &timex_dock[i * MEMORY_PAGES_IN_8K + j];
-      *dock_page = tc2068_empty_mapping[j];
-      dock_page->page_num = i;
+            dock_page = &timex_dock[(i * MEMORY_PAGES_IN_8K) + j];
+            *dock_page = tc2068_empty_mapping[j];
+            dock_page->page_num = i;
 
-      exrom_page = &timex_exrom[i * MEMORY_PAGES_IN_8K + j];
-      *exrom_page = tc2068_empty_mapping[j];
-      exrom_page->page_num = i;
+            exrom_page = &timex_exrom[(i * MEMORY_PAGES_IN_8K) + j];
+            *exrom_page = tc2068_empty_mapping[j];
+            exrom_page->page_num = i;
+        }
     }
 
     tc2068_tc2048_common_reset();

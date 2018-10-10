@@ -61,25 +61,27 @@ libspectrum_byte tc2068_ay_registerport_read(libspectrum_word port, libspectrum_
 libspectrum_byte tc2068_ay_dataport_read(libspectrum_word port, libspectrum_byte *attached)
 {
     if (machine_current->ay.current_register != 14) {
-    return ay_registerport_read(port, attached);
+        return ay_registerport_read(port, attached);
     } else {
 
-    libspectrum_byte ret;
+        libspectrum_byte ret;
 
-    /* In theory, we may need to distinguish cases where some data
-       is returned here and were it isn't. In practice, this doesn't
-       matter for the TC2068 as it doesn't have a floating bus, so we'll
-       get 0xff in both cases anyway */
-    *attached = 0xff; // TODO: check this
+        /* In theory, we may need to distinguish cases where some data
+           is returned here and were it isn't. In practice, this doesn't
+           matter for the TC2068 as it doesn't have a floating bus,
+           so we'll get 0xff in both cases anyway */
+        *attached = 0xff; // TODO: check this
 
-    ret =   machine_current->ay.registers[7] & 0x40
-      ? machine_current->ay.registers[14]
-      : 0xff;
+        ret = ((machine_current->ay.registers[7] & 0x40) ? machine_current->ay.registers[14] : 0xff);
 
-    if (port & 0x0100) ret &= ~joystick_timex_read(port, 0);
-    if (port & 0x0200) ret &= ~joystick_timex_read(port, 1);
+        if (port & 0x0100) {
+            ret &= ~joystick_timex_read(port, 0);
+        }
+        if (port & 0x0200) {
+            ret &= ~joystick_timex_read(port, 1);
+        }
 
-    return ret;
+        return ret;
     }
 }
 
@@ -89,18 +91,20 @@ static void ensure_empty_mapping(void)
     int i;
     libspectrum_byte *empty_chunk;
 
-    if (empty_mapping_allocated) return;
+    if (empty_mapping_allocated) {
+        return;
+    }
 
     empty_chunk = memory_pool_allocate_persistent(0x2000, 1);
     memset(empty_chunk, 0xff, 0x2000);
 
     for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
-    memory_page *page = &tc2068_empty_mapping[i];
-    page->page = empty_chunk + i * MEMORY_PAGE_SIZE;
-    page->offset = i * MEMORY_PAGE_SIZE;
-    page->writable = 0;
-    page->contended = 0;
-    page->source = memory_source_none;
+        memory_page *page = &tc2068_empty_mapping[i];
+        page->page = empty_chunk + (i * MEMORY_PAGE_SIZE);
+        page->offset = (i * MEMORY_PAGE_SIZE);
+        page->writable = 0;
+        page->contended = 0;
+        page->source = memory_source_none;
     }
 
     empty_mapping_allocated = 1;
@@ -115,10 +119,10 @@ int tc2068_init(fuse_machine_info *machine)
     machine->reset = tc2068_reset;
 
     machine->timex = 1;
-    machine->ram.port_from_ula         = tc2048_port_from_ula;
-    machine->ram.contend_delay         = spectrum_contend_delay_65432100;
+    machine->ram.port_from_ula = tc2048_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_65432100;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_65432100;
-    machine->ram.valid_pages         = 3;
+    machine->ram.valid_pages = 3;
 
     ensure_empty_mapping();
 
@@ -137,13 +141,11 @@ static int tc2068_reset(void)
     size_t i, j;
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_tc2068_0,
-                            settings_default.rom_tc2068_0, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_tc2068_0, settings_default.rom_tc2068_0, 0x4000);
     if (error) {
         return error;
     }
-    error = machine_load_rom(1, settings_current.rom_tc2068_1,
-                            settings_default.rom_tc2068_1, 0x2000);
+    error = machine_load_rom(1, settings_current.rom_tc2068_1, settings_default.rom_tc2068_1, 0x2000);
     if (error) {
         return error;
     }
@@ -164,26 +166,26 @@ static int tc2068_reset(void)
     machines_periph_timex();
     periph_update();
 
-    for (i = 0; i < 8; i++)
-    for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
-      memory_page *dock_page, *exrom_page;
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < MEMORY_PAGES_IN_8K; j++) {
+            memory_page *dock_page, *exrom_page;
 
-      dock_page = &timex_dock[i * MEMORY_PAGES_IN_8K + j];
-      *dock_page = tc2068_empty_mapping[j];
-      dock_page->page_num = i;
+            dock_page = &timex_dock[(i * MEMORY_PAGES_IN_8K) + j];
+            *dock_page = tc2068_empty_mapping[j];
+            dock_page->page_num = i;
 
-      exrom_page = &timex_exrom[i * MEMORY_PAGES_IN_8K + j];
-      *exrom_page = memory_map_rom[MEMORY_PAGES_IN_16K + j];
-      exrom_page->source = memory_source_exrom;
-      exrom_page->page_num = i;
+            exrom_page = &timex_exrom[(i * MEMORY_PAGES_IN_8K) + j];
+            *exrom_page = memory_map_rom[MEMORY_PAGES_IN_16K + j];
+            exrom_page->source = memory_source_exrom;
+            exrom_page->page_num = i;
+        }
     }
 
     tc2068_tc2048_common_reset();
 
     error = dck_reset();
     if (error) {
-    ui_error(UI_ERROR_INFO, "Ignoring Timex dock file '%s'",
-            settings_current.dck_file);
+        ui_error(UI_ERROR_INFO, "Ignoring Timex dock file '%s'", settings_current.dck_file);
     }
 
     return 0;

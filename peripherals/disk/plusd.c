@@ -531,7 +531,7 @@ ui_drive_get_params_1(void)
 static const fdd_params_t *
 ui_drive_get_params_2(void)
 {
-    return &fdd_params[option_enumerate_diskoptions_drive_plusd2_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_plusd2_type()];
 }
 
 static ui_media_drive_info_t plusd_ui_drives[PLUSD_NUM_DRIVES] = {

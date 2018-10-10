@@ -126,7 +126,7 @@ static const periph_t didaktik_periph = {
 };
 
 // Debugger events
-static const char * const event_type_string = "didaktik80";
+static const char *const event_type_string = "didaktik80";
 static int page_event, unpage_event;
 
 
@@ -150,28 +150,30 @@ void didaktik80_unpage(void)
 
 static void didaktik_memory_map(void)
 {
-    if (!didaktik80_active) return;
+    if (!didaktik80_active) {
+        return;
+    }
 
     memory_map_romcs_8k(0x0000, didaktik_memory_map_romcs_rom);
-    memory_map_romcs_4k(0x2000,
-                       didaktik_memory_map_romcs_rom + MEMORY_PAGES_IN_8K);
-    memory_map_romcs_2k(0x3000,
-                       didaktik_memory_map_romcs_rom + MEMORY_PAGES_IN_12K);
+    memory_map_romcs_4k(0x2000, didaktik_memory_map_romcs_rom + MEMORY_PAGES_IN_8K);
+    memory_map_romcs_2k(0x3000, didaktik_memory_map_romcs_rom + MEMORY_PAGES_IN_12K);
     memory_map_romcs_2k(0x3800, didaktik_memory_map_romcs_ram);
 }
 
 
 static void didaktik_set_datarq(struct wd_fdc *f)
 {
-    if (aux_register & DATARQ_ENABLED)
-    event_add(0, z80_nmi_event);
+    if (aux_register & DATARQ_ENABLED) {
+        event_add(0, z80_nmi_event);
+    }
 }
 
 
 static void didaktik_set_intrq(struct wd_fdc *f)
 {
-    if (aux_register & INTRQ_ENABLED)
-    event_add(0, z80_nmi_event);
+    if (aux_register & INTRQ_ENABLED) {
+        event_add(0, z80_nmi_event);
+    }
 }
 
 
@@ -183,9 +185,9 @@ static int didaktik80_init(void *context)
     didaktik_fdc = wd_fdc_alloc_fdc(WD2797, 0, WD_FLAG_DRQ | WD_FLAG_RDY);
 
     for (i = 0; i < DIDAKTIK80_NUM_DRIVES; i++) {
-    d = &didaktik_drives[i];
-    fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
-    d->disk.flag = DISK_FLAG_NONE;
+        d = &didaktik_drives[i];
+        fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
+        d->disk.flag = DISK_FLAG_NONE;
     }
 
     didaktik_fdc->current_drive = &didaktik_drives[0];
@@ -201,20 +203,22 @@ static int didaktik80_init(void *context)
 
     didaktik_rom_memory_source = memory_source_register("Didaktik 80 ROM");
     didaktik_ram_memory_source = memory_source_register("Didaktik 80 RAM");
-    for (i = 0; i < MEMORY_PAGES_IN_14K; i++)
-    didaktik_memory_map_romcs_rom[i].source = didaktik_rom_memory_source;
 
-    for (i = 0; i < MEMORY_PAGES_IN_2K; i++)
-    didaktik_memory_map_romcs_ram[i].source = didaktik_ram_memory_source;
+    for (i = 0; i < MEMORY_PAGES_IN_14K; i++) {
+        didaktik_memory_map_romcs_rom[i].source = didaktik_rom_memory_source;
+    }
+
+    for (i = 0; i < MEMORY_PAGES_IN_2K; i++) {
+        didaktik_memory_map_romcs_ram[i].source = didaktik_ram_memory_source;
+    }
 
     periph_register(PERIPH_TYPE_DIDAKTIK80, &didaktik_periph);
     for (i = 0; i < DIDAKTIK80_NUM_DRIVES; i++) {
-    didaktik_ui_drives[i].fdd = &didaktik_drives[i];
-    ui_media_drive_register(&didaktik_ui_drives[i]);
+        didaktik_ui_drives[i].fdd = &didaktik_drives[i];
+        ui_media_drive_register(&didaktik_ui_drives[i]);
     }
 
-    periph_register_paging_events(event_type_string, &page_event,
-                                 &unpage_event);
+    periph_register_paging_events(event_type_string, &page_event, &unpage_event);
 
     return 0;
 }
@@ -229,25 +233,26 @@ static void didaktik_reset(int hard_reset)
 
     ui_menu_activate(UI_MENU_ITEM_MACHINE_DIDAKTIK80_SNAP, 0);
     if (!periph_is_active(PERIPH_TYPE_DIDAKTIK80)) {
-    return;
+        return;
     }
 
-    if (machine_load_rom_bank(didaktik_memory_map_romcs_rom, 0,
-                             settings_current.rom_didaktik80,
-                             settings_default.rom_didaktik80, ROM_SIZE)) {
-    settings_current.didaktik80 = 0;
-    periph_activate_type(PERIPH_TYPE_DIDAKTIK80, 0);
-    return;
+    if (machine_load_rom_bank(didaktik_memory_map_romcs_rom,
+                              0,
+                              settings_current.rom_didaktik80,
+                              settings_default.rom_didaktik80,
+                              ROM_SIZE)) {
+        settings_current.didaktik80 = 0;
+        periph_activate_type(PERIPH_TYPE_DIDAKTIK80, 0);
+        return;
     }
 
     ui_menu_activate(UI_MENU_ITEM_MACHINE_DIDAKTIK80_SNAP, 1);
 
     for (i = 0; i < MEMORY_PAGES_IN_2K; i++) {
-    struct memory_page *page =
-      &didaktik_memory_map_romcs_ram[i];
-    page->page = ram + i * MEMORY_PAGE_SIZE;
-    page->offset = i * MEMORY_PAGE_SIZE;
-    page->writable = 1;
+        struct memory_page *page = &didaktik_memory_map_romcs_ram[i];
+        page->page = ram + (i * MEMORY_PAGE_SIZE);
+        page->offset = (i * MEMORY_PAGE_SIZE);
+        page->writable = 1;
     }
 
     machine_current->ram.romcs = 0;
@@ -256,21 +261,20 @@ static void didaktik_reset(int hard_reset)
 
     didaktik80_available = 1;
 
-    if (hard_reset)
-    memset(ram, 0, sizeof(ram));
+    if (hard_reset) {
+        memset(ram, 0, sizeof(ram));
+    }
 
     wd_fdc_master_reset(didaktik_fdc);
 
     for (i = 0; i < DIDAKTIK80_NUM_DRIVES; i++) {
-    ui_media_drive_update_menus(&didaktik_ui_drives[i],
-                                 UI_MEDIA_DRIVE_UPDATE_ALL);
+        ui_media_drive_update_menus(&didaktik_ui_drives[i], UI_MEDIA_DRIVE_UPDATE_ALL);
     }
 
     didaktik_fdc->current_drive = &didaktik_drives[0];
     fdd_select(&didaktik_drives[0], 1);
     fdd_select(&didaktik_drives[1], 0);
     machine_current->memory_map();
-
 }
 
 
@@ -284,13 +288,16 @@ static void didaktik80_end(void)
 void didaktik80_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DEBUGGER,
-    STARTUP_MANAGER_MODULE_MEMORY,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_DEBUGGER,
+        STARTUP_MANAGER_MODULE_MEMORY,
+        STARTUP_MANAGER_MODULE_SETUID
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_DIDAKTIK, dependencies,
-                            ARRAY_SIZE(dependencies), didaktik80_init, NULL,
-                            didaktik80_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_DIDAKTIK,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             didaktik80_init,
+                             NULL,
+                             didaktik80_end);
 }
 
 
@@ -361,35 +368,37 @@ static void didaktik_8255_write(libspectrum_word port GCC_UNUSED, libspectrum_by
 
 static void didaktik_aux_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
-    if ((b & 0x01) != (aux_register & 0x01))
-    fdd_select(&didaktik_drives[0], b & 0x01 ? 1 : 0);
-    if ((b & 0x02) != (aux_register & 0x02))
-    fdd_select(&didaktik_drives[1], b & 0x02 ? 1 : 0);
-    didaktik_fdc->current_drive = &didaktik_drives[b & 0x02 ? 1 : 0];
+    if ((b & 0x01) != (aux_register & 0x01)) {
+        fdd_select(&didaktik_drives[0], ((b & 0x01) ? 1 : 0));
+    }
+    if ((b & 0x02) != (aux_register & 0x02)) {
+        fdd_select(&didaktik_drives[1], ((b & 0x02) ? 1 : 0));
+    }
+    didaktik_fdc->current_drive = &didaktik_drives[(b & 0x02) ? 1 : 0];
 
-    if ((b & 0x04) != (aux_register & 0x04))
-    fdd_motoron(&didaktik_drives[0], b & 0x04 ? 1 : 0);
-    if ((b & 0x08) != (aux_register & 0x08))
-    fdd_motoron(&didaktik_drives[1], b & 0x08 ? 1 : 0);
+    if ((b & 0x04) != (aux_register & 0x04)) {
+        fdd_motoron(&didaktik_drives[0], ((b & 0x04) ? 1 : 0));
+    }
+    if ((b & 0x08) != (aux_register & 0x08)) {
+        fdd_motoron(&didaktik_drives[1], ((b & 0x08) ? 1 : 0));
+    }
 
     aux_register = b;
 }
 
 
-int didaktik80_disk_insert(didaktik80_drive_number which, const char *filename,
-           int autoload)
+int didaktik80_disk_insert(didaktik80_drive_number which, const char *filename, int autoload)
 {
     if (which >= DIDAKTIK80_NUM_DRIVES) {
-    ui_error(UI_ERROR_ERROR, "didaktik80_insert: unknown drive %d",
-          which);
-    fuse_abort();
+        ui_error(UI_ERROR_ERROR, "didaktik80_insert: unknown drive %d", which);
+        fuse_abort();
     }
 
     return ui_media_drive_insert(&didaktik_ui_drives[which], filename, autoload);
 }
 
-fdd_t *
-didaktik80_get_fdd(didaktik80_drive_number which)
+
+fdd_t *didaktik80_get_fdd(didaktik80_drive_number which)
 {
     return &(didaktik_drives[which]);
 }
@@ -422,44 +431,45 @@ static int ui_drive_is_available(void)
     return didaktik80_available;
 }
 
-static const fdd_params_t *
-ui_drive_get_params_a(void)
+
+static const fdd_params_t *ui_drive_get_params_a(void)
 {
     // +1 => there is no `Disabled'
     return &fdd_params[option_enumerate_diskoptions_drive_didaktik80a_type() + 1];
 }
 
-static const fdd_params_t *
-ui_drive_get_params_b(void)
+
+static const fdd_params_t *ui_drive_get_params_b(void)
 {
-    return &fdd_params[option_enumerate_diskoptions_drive_didaktik80b_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_didaktik80b_type()];
 }
+
 
 static ui_media_drive_info_t didaktik_ui_drives[DIDAKTIK80_NUM_DRIVES] = {
     {
-    /* .name = */ "Didaktik Disk A",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_DIDAKTIK,
-    /* .drive_index = */ DIDAKTIK80_DRIVE_A,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_A,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_A_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_A_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_A_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_a,
+        /* .name = */ "Didaktik Disk A",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_DIDAKTIK,
+        /* .drive_index = */ DIDAKTIK80_DRIVE_A,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_A,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_A_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_A_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_A_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_a
     },
     {
-    /* .name = */ "Didaktik Disk B",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_DIDAKTIK,
-    /* .drive_index = */ DIDAKTIK80_DRIVE_B,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_B,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_B_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_B_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_B_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_b,
-    },
+        /* .name = */ "Didaktik Disk B",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_DIDAKTIK,
+        /* .drive_index = */ DIDAKTIK80_DRIVE_B,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_B,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_B_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_B_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_DIDAKTIK_B_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_b
+    }
 };
 
 

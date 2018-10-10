@@ -212,7 +212,7 @@ static void spectranet_activate(void)
     // Start of by mapping the fake data in everywhere
     for (i = 0; i < SPECTRANET_PAGES; i++)
       for (j = 0; j < MEMORY_PAGES_IN_4K; j++) {
-        memory_page *page = &spectranet_full_map[i * MEMORY_PAGES_IN_4K + j];
+        memory_page *page = &spectranet_full_map[(i * MEMORY_PAGES_IN_4K) + j];
         page->writable = 0;
         page->contended = 0;
         page->source = spectranet_source;

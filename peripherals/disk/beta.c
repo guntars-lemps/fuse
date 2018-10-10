@@ -103,13 +103,77 @@ static void beta_to_snapshot(libspectrum_snap *snap);
 #define ROM_SIZE 0x4000
 
 static module_info_t beta_module_info = {
-
     /* .reset = */ beta_reset,
     /* .romcs = */ beta_memory_map,
     /* .snapshot_enabled = */ beta_enabled_snapshot,
     /* .snapshot_from = */ beta_from_snapshot,
     /* .snapshot_to = */ beta_to_snapshot,
+};
 
+static int ui_drive_is_available(void);
+static int ui_drive_autoload(void);
+static const fdd_params_t *ui_drive_get_params_a(void);
+static const fdd_params_t *ui_drive_get_params_b(void);
+static const fdd_params_t *ui_drive_get_params_c(void);
+static const fdd_params_t *ui_drive_get_params_d(void);
+
+static ui_media_drive_info_t beta_ui_drives[BETA_NUM_DRIVES] = {
+    {
+        /* .name = */ "Beta Disk A:",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,
+        /* .drive_index = */ BETA_DRIVE_A,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_BETA,
+        /* .menu_item_top = */ UI_MENU_ITEM_INVALID,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_BETA_A_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_BETA_A_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_BETA_A_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_a,
+        /* .insert_hook = */ NULL,
+        /* .autoload_hook = */ &ui_drive_autoload,
+    },
+    {
+        /* .name = */ "Beta Disk B:",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,
+        /* .drive_index = */ BETA_DRIVE_B,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_BETA,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_BETA_B,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_BETA_B_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_BETA_B_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_BETA_B_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_b,
+        /* .insert_hook = */ NULL,
+        /* .autoload_hook = */ &ui_drive_autoload,
+    },
+    {
+        /* .name = */ "Beta Disk C:",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,
+        /* .drive_index = */ BETA_DRIVE_C,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_BETA,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_BETA_C,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_BETA_C_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_BETA_C_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_BETA_C_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_c,
+        /* .insert_hook = */ NULL,
+        /* .autoload_hook = */ &ui_drive_autoload,
+    },
+    {
+        /* .name = */ "Beta Disk D:",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,
+        /* .drive_index = */ BETA_DRIVE_D,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_BETA,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_BETA_D,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_BETA_D_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_BETA_D_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_BETA_D_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_d,
+        /* .insert_hook = */ NULL,
+        /* .autoload_hook = */ &ui_drive_autoload,
+    },
 };
 
 
@@ -133,7 +197,9 @@ void beta_unpage(void)
 
 static void beta_memory_map(void)
 {
-    if (!beta_active) return;
+    if (!beta_active) {
+        return;
+    }
 
     memory_map_romcs_full(beta_memory_map_romcs);
 }
@@ -142,10 +208,11 @@ static void beta_memory_map(void)
 static void beta_select_drive(int i)
 {
     if (beta_fdc->current_drive != &beta_drives[i & 0x03]) {
-    if (beta_fdc->current_drive != NULL)
-      fdd_select(beta_fdc->current_drive, 0);
-    beta_fdc->current_drive = &beta_drives[i & 0x03];
-    fdd_select(beta_fdc->current_drive, 1);
+        if (beta_fdc->current_drive != NULL) {
+            fdd_select(beta_fdc->current_drive, 0);
+        }
+        beta_fdc->current_drive = &beta_drives[i & 0x03];
+        fdd_select(beta_fdc->current_drive, 1);
     }
 }
 
@@ -159,9 +226,9 @@ static int beta_init(void *context)
     beta_fdc->current_drive = NULL;
 
     for (i = 0; i < BETA_NUM_DRIVES; i++) {
-    d = &beta_drives[i];
-    fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
-    d->disk.flag = DISK_FLAG_NONE;
+        d = &beta_drives[i];
+        fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
+        d->disk.flag = DISK_FLAG_NONE;
     }
     beta_select_drive(0);
 
@@ -174,18 +241,18 @@ static int beta_init(void *context)
     module_register(&beta_module_info);
 
     beta_memory_source = memory_source_register("Betadisk");
-    for (i = 0; i < MEMORY_PAGES_IN_16K; i++)
-    beta_memory_map_romcs[i].source = beta_memory_source;
+    for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
+        beta_memory_map_romcs[i].source = beta_memory_source;
+    }
 
     periph_register(PERIPH_TYPE_BETA128, &beta_peripheral);
 
     for (i = 0; i < BETA_NUM_DRIVES; i++) {
-    beta_ui_drives[i].fdd = &beta_drives[i];
-    ui_media_drive_register(&beta_ui_drives[i]);
+        beta_ui_drives[i].fdd = &beta_drives[i];
+        ui_media_drive_register(&beta_ui_drives[i]);
     }
 
-    periph_register_paging_events(event_type_string, &page_event,
-                                 &unpage_event);
+    periph_register_paging_events(event_type_string, &page_event, &unpage_event);
 
     return 0;
 }
@@ -198,9 +265,9 @@ static void beta_reset(int hard_reset GCC_UNUSED)
     if (!(periph_is_active(PERIPH_TYPE_BETA128) ||
         periph_is_active(PERIPH_TYPE_BETA128_PENTAGON) ||
         periph_is_active(PERIPH_TYPE_BETA128_PENTAGON_LATE))) {
-    beta_active = 0;
-    beta_available = 0;
-    return;
+        beta_active = 0;
+        beta_available = 0;
+        return;
     }
 
     beta_available = 1;
@@ -211,36 +278,36 @@ static void beta_reset(int hard_reset GCC_UNUSED)
     wd_fdc_master_reset(beta_fdc);
 
     if (!beta_builtin) {
-    if (machine_load_rom_bank(beta_memory_map_romcs, 0,
-                   settings_current.rom_beta128,
-                   settings_default.rom_beta128, ROM_SIZE)) {
-      beta_active = 0;
-      beta_available = 0;
-      periph_activate_type(PERIPH_TYPE_BETA128, 0);
-      settings_current.beta128 = 0;
-      return;
+    if (machine_load_rom_bank(beta_memory_map_romcs,
+                              0,
+                              settings_current.rom_beta128,
+                              settings_default.rom_beta128,
+                              ROM_SIZE)) {
+        beta_active = 0;
+        beta_available = 0;
+        periph_activate_type(PERIPH_TYPE_BETA128, 0);
+        settings_current.beta128 = 0;
+        return;
     }
 
     beta_active = 0;
 
-    if (!(machine_current->capabilities &
-           LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY)) {
-      beta_pc_mask = 0xfe00;
-      beta_pc_value = 0x3c00;
+    if (!(machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY)) {
+        beta_pc_mask = 0xfe00;
+        beta_pc_value = 0x3c00;
 
-      /* For 48K type machines, the Beta 128 is supposed to be configured
-         to start with the Beta ROM paged in (System switch in centre position)
-         but we also allow the settion where the Beta does not auto-boot (System
-         switch is in the off position 3)
+        /* For 48K type machines, the Beta 128 is supposed to be configured
+           to start with the Beta ROM paged in (System switch in centre position)
+           but we also allow the settion where the Beta does not auto-boot (System
+           switch is in the off position 3)
          */
-      if (settings_current.beta128_48boot)
-        beta_page();
-    }
+        if (settings_current.beta128_48boot)
+            beta_page();
+        }
     }
 
     for (i = 0; i < BETA_NUM_DRIVES; i++) {
-    ui_media_drive_update_menus(&beta_ui_drives[i],
-                                 UI_MEDIA_DRIVE_UPDATE_ALL);
+        ui_media_drive_update_menus(&beta_ui_drives[i], UI_MEDIA_DRIVE_UPDATE_ALL);
     }
 
     beta_select_drive(0);
@@ -259,13 +326,11 @@ static void beta_end(void)
 void beta_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DEBUGGER,
-    STARTUP_MANAGER_MODULE_MEMORY,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_DEBUGGER,
+        STARTUP_MANAGER_MODULE_MEMORY,
+        STARTUP_MANAGER_MODULE_SETUID,
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_BETA, dependencies,
-                            ARRAY_SIZE(dependencies), beta_init, NULL,
-                            beta_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_BETA, dependencies, ARRAY_SIZE(dependencies), beta_init, NULL, beta_end);
 }
 
 
@@ -282,7 +347,9 @@ libspectrum_byte beta_sr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte
 
 void beta_cr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
-    if (!beta_active) return;
+    if (!beta_active) {
+        return;
+    }
 
     wd_fdc_cr_write(beta_fdc, b);
 }
@@ -301,7 +368,9 @@ libspectrum_byte beta_tr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte
 
 void beta_tr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
-    if (!beta_active) return;
+    if (!beta_active) {
+        return;
+    }
 
     wd_fdc_tr_write(beta_fdc, b);
 }
@@ -320,7 +389,9 @@ libspectrum_byte beta_sec_read(libspectrum_word port GCC_UNUSED, libspectrum_byt
 
 void beta_sec_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
-    if (!beta_active) return;
+    if (!beta_active) {
+        return;
+    }
 
     wd_fdc_sec_write(beta_fdc, b);
 }
@@ -339,7 +410,9 @@ libspectrum_byte beta_dr_read(libspectrum_word port GCC_UNUSED, libspectrum_byte
 
 void beta_dr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
-    if (!beta_active) return;
+    if (!beta_active) {
+        return;
+    }
 
     wd_fdc_dr_write(beta_fdc, b);
 }
@@ -347,7 +420,9 @@ void beta_dr_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 
 void beta_sp_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
-    if (!beta_active) return;
+    if (!beta_active) {
+        return;
+    }
 
     // reset 0x04 and then set it to reset controller
     beta_select_drive(b & 0x03);
@@ -355,7 +430,7 @@ void beta_sp_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
     wd_fdc_set_hlt(beta_fdc, ((b & 0x08) ? 1 : 0));
     fdd_set_head(beta_fdc->current_drive, ((b & 0x10) ? 0 : 1));
     // 0x20 = density, reset = FM, set = MFM
-    beta_fdc->dden = b & 0x20 ? 1 : 0;
+    beta_fdc->dden = ((b & 0x20) ? 1 : 0);
 
     beta_system_register = b;
 }
@@ -372,26 +447,26 @@ libspectrum_byte beta_sp_read(libspectrum_word port GCC_UNUSED, libspectrum_byte
     *attached = 0xff; // TODO: check this
     b = 0;
 
-    if (beta_fdc->intrq)
-    b |= 0x80;
+    if (beta_fdc->intrq) {
+        b |= 0x80;
+    }
 
-    if (beta_fdc->datarq)
-    b |= 0x40;
+    if (beta_fdc->datarq) {
+        b |= 0x40;
+    }
 
-/* we should reset beta_datarq, but we first need to raise it for each byte
- * transferred in wd_fdc.c */
+    /* we should reset beta_datarq, but we first need to raise it for each byte
+       transferred in wd_fdc.c */
 
     return b;
 }
 
 
-int beta_disk_insert(beta_drive_number which, const char *filename,
-              int autoload)
+int beta_disk_insert(beta_drive_number which, const char *filename, int autoload)
 {
     if (which >= BETA_NUM_DRIVES) {
-    ui_error(UI_ERROR_ERROR, "beta_disk_insert: unknown drive %d",
-          which);
-    fuse_abort();
+        ui_error(UI_ERROR_ERROR, "beta_disk_insert: unknown drive %d", which);
+        fuse_abort();
     }
 
     return ui_media_drive_insert(&beta_ui_drives[which], filename, autoload);
@@ -403,19 +478,17 @@ static int ui_drive_autoload(void)
     // Clear AY registers (and more) from current machine
     machine_reset(1);
 
-    if ((machine_current->capabilities &
-        LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY) ||
-      !settings_current.beta128_48boot) {
-    PC = 0;
-    machine_current->ram.last_byte |= 0x10; // Select ROM 1
-    beta_page();
+    if ((machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY) || !settings_current.beta128_48boot) {
+        PC = 0;
+        machine_current->ram.last_byte |= 0x10; // Select ROM 1
+        beta_page();
     }
 
     return 0;
 }
 
-fdd_t *
-beta_get_fdd(beta_drive_number which)
+
+fdd_t *beta_get_fdd(beta_drive_number which)
 {
     return &(beta_drives[which]);
 }
@@ -423,48 +496,46 @@ beta_get_fdd(beta_drive_number which)
 
 static void beta_enabled_snapshot(libspectrum_snap *snap)
 {
-    if (!(machine_current->capabilities &
-         LIBSPECTRUM_MACHINE_CAPABILITY_TRDOS_DISK))
-    settings_current.beta128 = libspectrum_snap_beta_active(snap);
+    if (!(machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_TRDOS_DISK)) {
+        settings_current.beta128 = libspectrum_snap_beta_active(snap);
+    }
 }
 
 
 static void beta_from_snapshot(libspectrum_snap *snap)
 {
-    if (!libspectrum_snap_beta_active(snap)) return;
+    if (!libspectrum_snap_beta_active(snap)) {
+        return;
+    }
 
-    if (!(machine_current->capabilities &
-         LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY)) {
-    settings_current.beta128_48boot = libspectrum_snap_beta_autoboot(snap);
+    if (!(machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY)) {
+        settings_current.beta128_48boot = libspectrum_snap_beta_autoboot(snap);
     }
 
     beta_active = libspectrum_snap_beta_paged(snap);
 
     if (beta_active) {
-    beta_page();
+        beta_page();
     } else {
-    beta_unpage();
+        beta_unpage();
     }
 
     if (libspectrum_snap_beta_custom_rom(snap) &&
-      libspectrum_snap_beta_rom(snap, 0) &&
-      machine_load_rom_bank_from_buffer(
-                             beta_memory_map_romcs, 0,
-                             libspectrum_snap_beta_rom(snap, 0),
-                             ROM_SIZE, 1))
-    return;
+        libspectrum_snap_beta_rom(snap, 0) &&
+        machine_load_rom_bank_from_buffer(beta_memory_map_romcs, 0, libspectrum_snap_beta_rom(snap, 0), ROM_SIZE, 1)) {
+        return;
+    }
 
-    /* ignore drive count for now, there will be an issue with loading snaps where
-     drives have been disabled
-    libspectrum_snap_beta_drive_count(snap)
-   */
+    /* ignore drive count for now, there will be an issue with loading snaps where drives have been disabled
+       libspectrum_snap_beta_drive_count(snap)
+    */
 
     beta_fdc->direction = libspectrum_snap_beta_direction(snap);
 
     beta_cr_write (0x001f, 0);
-    beta_tr_write (0x003f, libspectrum_snap_beta_track (snap));
+    beta_tr_write (0x003f, libspectrum_snap_beta_track(snap));
     beta_sec_write(0x005f, libspectrum_snap_beta_sector(snap));
-    beta_dr_write (0x007f, libspectrum_snap_beta_data  (snap));
+    beta_dr_write (0x007f, libspectrum_snap_beta_data(snap));
     beta_sp_write (0x00ff, libspectrum_snap_beta_system(snap));
 }
 
@@ -476,31 +547,39 @@ void beta_to_snapshot(libspectrum_snap *snap)
     int drive_count = 0;
     int i;
 
-    if (!periph_is_active(PERIPH_TYPE_BETA128)) return;
+    if (!periph_is_active(PERIPH_TYPE_BETA128)) {
+        return;
+    }
 
     libspectrum_snap_set_beta_active(snap, 1);
 
     buffer = libspectrum_new(libspectrum_byte, ROM_SIZE);
 
-    for (i = 0; i < MEMORY_PAGES_IN_16K; i++)
-    memcpy(buffer + i * MEMORY_PAGE_SIZE,
-            beta_memory_map_romcs[i].page, MEMORY_PAGE_SIZE);
+    for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
+        memcpy(buffer + (i * MEMORY_PAGE_SIZE), beta_memory_map_romcs[i].page, MEMORY_PAGE_SIZE);
+    }
 
     libspectrum_snap_set_beta_rom(snap, 0, buffer);
 
-    if (beta_memory_map_romcs[0].save_to_snapshot)
-    libspectrum_snap_set_beta_custom_rom(snap, 1);
+    if (beta_memory_map_romcs[0].save_to_snapshot) {
+        libspectrum_snap_set_beta_custom_rom(snap, 1);
+    }
 
     drive_count++; // Drive A is not removable
-    if (option_enumerate_diskoptions_drive_beta128b_type() > 0) drive_count++;
-    if (option_enumerate_diskoptions_drive_beta128c_type() > 0) drive_count++;
-    if (option_enumerate_diskoptions_drive_beta128d_type() > 0) drive_count++;
+    if (option_enumerate_diskoptions_drive_beta128b_type() > 0) {
+        drive_count++;
+    }
+    if (option_enumerate_diskoptions_drive_beta128c_type() > 0) {
+        drive_count++;
+    }
+    if (option_enumerate_diskoptions_drive_beta128d_type() > 0) {
+        drive_count++;
+    }
     libspectrum_snap_set_beta_drive_count(snap, drive_count);
 
     libspectrum_snap_set_beta_paged (snap, beta_active);
-    if (!(machine_current->capabilities &
-         LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY)) {
-    libspectrum_snap_set_beta_autoboot(snap, settings_current.beta128_48boot);
+    if (!(machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY)) {
+        libspectrum_snap_set_beta_autoboot(snap, settings_current.beta128_48boot);
     }
     libspectrum_snap_set_beta_direction(snap, beta_fdc->direction);
     libspectrum_snap_set_beta_status(snap, f->status_register);
@@ -535,86 +614,28 @@ static int ui_drive_is_available(void)
     return beta_available;
 }
 
-static const fdd_params_t *
-ui_drive_get_params_a(void)
+
+static const fdd_params_t *ui_drive_get_params_a(void)
 {
     // +1 => there is no `Disabled'
     return &fdd_params[option_enumerate_diskoptions_drive_beta128a_type() + 1];
 }
 
-static const fdd_params_t *
-ui_drive_get_params_b(void)
+
+static const fdd_params_t *ui_drive_get_params_b(void)
 {
-    return &fdd_params[option_enumerate_diskoptions_drive_beta128b_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_beta128b_type()];
 }
 
-static const fdd_params_t *
-ui_drive_get_params_c(void)
+
+static const fdd_params_t *ui_drive_get_params_c(void)
 {
-    return &fdd_params[option_enumerate_diskoptions_drive_beta128c_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_beta128c_type()];
 }
 
-static const fdd_params_t *
-ui_drive_get_params_d(void)
+
+static const fdd_params_t *ui_drive_get_params_d(void)
 {
-    return &fdd_params[option_enumerate_diskoptions_drive_beta128d_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_beta128d_type()];
 }
 
-static ui_media_drive_info_t beta_ui_drives[BETA_NUM_DRIVES] = {
-    {
-    /* .name = */ "Beta Disk A:",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,
-    /* .drive_index = */ BETA_DRIVE_A,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_BETA,
-    /* .menu_item_top = */ UI_MENU_ITEM_INVALID,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_BETA_A_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_BETA_A_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_BETA_A_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_a,
-    /* .insert_hook = */ NULL,
-    /* .autoload_hook = */ &ui_drive_autoload,
-    },
-    {
-    /* .name = */ "Beta Disk B:",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,
-    /* .drive_index = */ BETA_DRIVE_B,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_BETA,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_BETA_B,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_BETA_B_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_BETA_B_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_BETA_B_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_b,
-    /* .insert_hook = */ NULL,
-    /* .autoload_hook = */ &ui_drive_autoload,
-    },
-    {
-    /* .name = */ "Beta Disk C:",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,
-    /* .drive_index = */ BETA_DRIVE_C,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_BETA,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_BETA_C,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_BETA_C_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_BETA_C_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_BETA_C_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_c,
-    /* .insert_hook = */ NULL,
-    /* .autoload_hook = */ &ui_drive_autoload,
-    },
-    {
-    /* .name = */ "Beta Disk D:",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_BETA,
-    /* .drive_index = */ BETA_DRIVE_D,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_BETA,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_BETA_D,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_BETA_D_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_BETA_D_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_BETA_D_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_d,
-    /* .insert_hook = */ NULL,
-    /* .autoload_hook = */ &ui_drive_autoload,
-    },
-};

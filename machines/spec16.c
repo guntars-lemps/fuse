@@ -50,10 +50,10 @@ int spec16_init(fuse_machine_info *machine)
     machine->reset = spec16_reset;
 
     machine->timex = 0;
-    machine->ram.port_from_ula  = spec48_port_from_ula;
-    machine->ram.contend_delay  = spectrum_contend_delay_65432100;
+    machine->ram.port_from_ula = spec48_port_from_ula;
+    machine->ram.contend_delay = spectrum_contend_delay_65432100;
     machine->ram.contend_delay_no_mreq = spectrum_contend_delay_65432100;
-    machine->ram.valid_pages    = 1;
+    machine->ram.valid_pages = 1;
 
     machine->unattached_port = spectrum_unattached_port;
 
@@ -70,17 +70,19 @@ static void ensure_empty_mapping(void)
     int i;
     libspectrum_byte *empty_chunk;
 
-    if (empty_mapping_allocated) return;
+    if (empty_mapping_allocated) {
+        return;
+    }
 
     empty_chunk = memory_pool_allocate_persistent(0x4000, 1);
     memset(empty_chunk, 0xff, 0x4000);
 
     for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
-    memory_page *page = &empty_mapping[i];
-    page->page = empty_chunk + i * MEMORY_PAGE_SIZE;
-    page->writable = 0;
-    page->contended = 0;
-    page->source = memory_source_none;
+        memory_page *page = &empty_mapping[i];
+        page->page = empty_chunk + (i * MEMORY_PAGE_SIZE);
+        page->writable = 0;
+        page->contended = 0;
+        page->source = memory_source_none;
     }
 
     empty_mapping_allocated = 1;
@@ -91,8 +93,7 @@ static int spec16_reset(void)
 {
     int error;
 
-    error = machine_load_rom(0, settings_current.rom_16,
-                            settings_default.rom_16, 0x4000);
+    error = machine_load_rom(0, settings_current.rom_16, settings_default.rom_16, 0x4000);
     if (error) {
         return error;
     }

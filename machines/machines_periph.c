@@ -36,8 +36,7 @@
 #include "tc2068.h"
 
 
-static void spec_se_memoryport_write(libspectrum_word port GCC_UNUSED,
-              libspectrum_byte b)
+static void spec_se_memoryport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     machine_current->ram.last_byte = b;
     machine_current->memory_map();
@@ -171,13 +170,16 @@ void machines_periph_register_startup(void)
 {
     startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
     startup_manager_register(STARTUP_MANAGER_MODULE_MACHINES_PERIPH,
-                            dependencies, ARRAY_SIZE(dependencies),
-                            machines_periph_init, NULL, NULL);
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             machines_periph_init,
+                             NULL,
+                             NULL);
 }
 
-/* Peripherals generally available on all machines; the Timex machines and
-   Russian clones remove some items from this list */
 
+/* Peripherals generally available on all machines;
+   the Timex machines and Russian clones remove some items from this list */
 static void base_peripherals(void)
 {
     periph_set_present(PERIPH_TYPE_DIVIDE, PERIPH_PRESENT_OPTIONAL);
@@ -192,8 +194,8 @@ static void base_peripherals(void)
     periph_set_present(PERIPH_TYPE_ZXCF, PERIPH_PRESENT_OPTIONAL);
 }
 
-// Peripherals available on the 48K and 128K
 
+// Peripherals available on the 48K and 128K
 static void base_peripherals_48_128(void)
 {
     base_peripherals();
@@ -207,8 +209,8 @@ static void base_peripherals_48_128(void)
     periph_set_present(PERIPH_TYPE_USOURCE, PERIPH_PRESENT_OPTIONAL);
 }
 
-// The set of peripherals available on the 48K and similar machines
 
+// The set of peripherals available on the 48K and similar machines
 void machines_periph_48(void)
 {
     base_peripherals_48_128();
@@ -220,8 +222,8 @@ void machines_periph_48(void)
     periph_set_present(PERIPH_TYPE_DISCIPLE, PERIPH_PRESENT_OPTIONAL);
 }
 
-// The set of peripherals available on the 128K and similar machines
 
+// The set of peripherals available on the 128K and similar machines
 void machines_periph_128(void)
 {
     base_peripherals_48_128();
@@ -229,8 +231,8 @@ void machines_periph_128(void)
     periph_set_present(PERIPH_TYPE_128_MEMORY, PERIPH_PRESENT_ALWAYS);
 }
 
-// The set of peripherals available on the +3 and similar machines
 
+// The set of peripherals available on the +3 and similar machines
 void machines_periph_plus3(void)
 {
     base_peripherals();
@@ -241,8 +243,8 @@ void machines_periph_plus3(void)
     periph_set_present(PERIPH_TYPE_ZXMMC, PERIPH_PRESENT_OPTIONAL);
 }
 
-// The set of peripherals available on the TC2068 and TS2068
 
+// The set of peripherals available on the TC2068 and TS2068
 void machines_periph_timex(void)
 {
     base_peripherals();
@@ -262,8 +264,8 @@ void machines_periph_timex(void)
     periph_set_present(PERIPH_TYPE_ZXPRINTER_FULL_DECODE, PERIPH_PRESENT_OPTIONAL);
 }
 
-// The set of peripherals available on the Pentagon and Scorpion
 
+// The set of peripherals available on the Pentagon and Scorpion
 void machines_periph_pentagon(void)
 {
     base_peripherals();
@@ -279,8 +281,8 @@ void machines_periph_pentagon(void)
     periph_set_present(PERIPH_TYPE_ULA_FULL_DECODE, PERIPH_PRESENT_ALWAYS);
 
     /* All machines have a built-in Betadisk 128 interface, which also
-     handles Kempston joystick as they share a port; we don't add the
-     actual Betadisk interface here as it differs slightly between the
-     (original) Pentagon and the Scorpion/Pentagon 1024 */
+       handles Kempston joystick as they share a port;
+       we don't add the actual Betadisk interface here as it differs slightly between the
+       (original) Pentagon and the Scorpion/Pentagon 1024 */
     periph_set_present(PERIPH_TYPE_KEMPSTON, PERIPH_PRESENT_NEVER);
 }

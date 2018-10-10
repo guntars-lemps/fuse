@@ -120,7 +120,7 @@ static int memory_init(void *context)
 
     for (i = 0; i < SPECTRUM_ROM_PAGES; i++) {
         for (j = 0; j < MEMORY_PAGES_IN_16K; j++) {
-            memory_page *page = &memory_map_rom[i * MEMORY_PAGES_IN_16K + j];
+            memory_page *page = &memory_map_rom[(i * MEMORY_PAGES_IN_16K) + j];
             page->writable = 0;
             page->contended = 0;
             page->source = memory_source_rom;
@@ -129,7 +129,7 @@ static int memory_init(void *context)
 
     for (i = 0; i < SPECTRUM_RAM_PAGES; i++) {
         for (j = 0; j < MEMORY_PAGES_IN_16K; j++) {
-            memory_page *page = &memory_map_ram[i * MEMORY_PAGES_IN_16K + j];
+            memory_page *page = &memory_map_ram[(i * MEMORY_PAGES_IN_16K) + j];
             page->page = &RAM[i][j * MEMORY_PAGE_SIZE];
             page->page_num = i;
             page->offset = j * MEMORY_PAGE_SIZE;

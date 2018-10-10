@@ -552,7 +552,7 @@ ui_drive_get_params_1(void)
 static const fdd_params_t *
 ui_drive_get_params_2(void)
 {
-    return &fdd_params[option_enumerate_diskoptions_drive_opus2_type() ];
+    return &fdd_params[option_enumerate_diskoptions_drive_opus2_type()];
 }
 
 static ui_media_drive_info_t opus_ui_drives[OPUS_NUM_DRIVES] = {
