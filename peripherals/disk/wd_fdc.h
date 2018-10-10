@@ -36,29 +36,29 @@
 // Status register bits
 enum {
     WD_FDC_SR_MOTORON = 1<<7, // Motor on or READY
-    WD_FDC_SR_WRPROT  = 1<<6, // Write-protect
-    WD_FDC_SR_SPINUP  = 1<<5, // Record type / Spin-up complete
-    WD_FDC_SR_RNF     = 1<<4, // Record Not Found or SEEK Error
-    WD_FDC_SR_CRCERR  = 1<<3, // CRC error
-    WD_FDC_SR_LOST    = 1<<2, // Lost data or TRACK00
+    WD_FDC_SR_WRPROT = 1<<6, // Write-protect
+    WD_FDC_SR_SPINUP = 1<<5, // Record type / Spin-up complete
+    WD_FDC_SR_RNF = 1<<4, // Record Not Found or SEEK Error
+    WD_FDC_SR_CRCERR = 1<<3, // CRC error
+    WD_FDC_SR_LOST = 1<<2, // Lost data or TRACK00
     WD_FDC_SR_IDX_DRQ = 1<<1, // Index pulse / Data request
-    WD_FDC_SR_BUSY    = 1<<0 // Busy (command under execution)
+    WD_FDC_SR_BUSY = 1<<0 // Busy (command under execution)
 };
 
 // Configuration flags (interface-specific)
 enum {
-    WD_FLAG_NONE      = 0,
+    WD_FLAG_NONE = 0,
     /* The Beta 128 connects the HLD output pin to the READY input pin and
    * the MOTOR ON output pin on the FDD interface. */
-    WD_FLAG_BETA128   = 1<<0,
+    WD_FLAG_BETA128 = 1<<0,
     /* The Opus Discovery needs a pulse of the DRQ (data request) line for every
    * byte transferred. */
-    WD_FLAG_DRQ       = 1<<1,
+    WD_FLAG_DRQ = 1<<1,
     /* The MB-02+ provides a READY signal to FDC instead of FDD, so we use
    * 'extra_signal' for this */
-    WD_FLAG_RDY       = 1<<2,
+    WD_FLAG_RDY = 1<<2,
     // HLT (input) pin not connected at all, so we assume it is always 1.
-    WD_FLAG_NOHLT     = 1<<3
+    WD_FLAG_NOHLT = 1<<3
 };
 
 typedef enum wd_type_t {
@@ -82,7 +82,7 @@ typedef struct wd_fdc {
     int datarq; // DRQ line status
     int head_load; // WD1773/FD1793
     int hlt; // WD1773/FD1793 Head Load Timing input pin
-    int hlt_time;        /* "... When a logic high is found on the HLT input
+    int hlt_time; /*"... When a logic high is found on the HLT input
                the head is assumed to be enganged. It is typically
                derived from a 1 shot triggered by HLD ..."
                if hlt_time > 0 it means trigger time in ms, if = 0

@@ -34,7 +34,6 @@ typedef enum fdd_error_t {
     FDD_DATA,
     FDD_RDONLY,
     FDD_NONE, // FDD not exist (disabled)
-
     FDD_LAST_ERROR,
 } fdd_error_t;
 
@@ -42,23 +41,17 @@ typedef enum fdd_type_t {
     FDD_TYPE_NONE = 0, // FDD not exist/disabled
     FDD_SHUGART, // head load when selected
     /*
-     .. In a single drive system (program shunt position
-        "MX" shorted), with program shunt position "HL"
-    shorted, Drive Select when activated to a logical
-    zero level, will load the R/W head against the
-    diskette enabling contact of the R/W head against
-    the media. ...
+    .. In a single drive system (program shunt position"MX" shorted),
+    with program shunt position "HL" shorted,
+    Drive Select when activated to a logical zero level,
+    will load the R/W head against the diskette enabling contact of the R/W head against the media. ...
 
-    In a multiple drive system (program shunt position
-        "MX" open), the three input lines (Drive Select 1,
-    Drive Select 2 and Drive select 3) are provided so
-    that the using system may select which drive on
-    the interface is to be used. In this mode of opera-
-    tion only the drive with its Drive Select line active
-    will respond to the input lines and gate the output
-    lines. In addition, the selected drive will load its
-    R/W head if program shunt position "HL" is
-    shorted. ...
+    In a multiple drive system (program shunt position "MX" open),
+    the three input lines (Drive Select 1, Drive Select 2 and Drive select 3)
+    are provided so that the using system may select which drive on the interface is to be used.
+    In this mode of operation only the drive with its Drive Select line active
+    will respond to the input lines and gate the output lines.
+    In addition, the selected drive will load its R/W head if program shunt position "HL" is shorted. ...
     */
     FDD_IBMPC,
 } fdd_type_t;
@@ -90,13 +83,13 @@ typedef struct fdd_t {
 
     fdd_error_t status;
 
-/* WD/FD 177X may wait for an index or RDY->/RDY or /RDY->RDY
-   we do not need more, just a subroutine and a pointer to fdc_struct
-*/
+    /* WD/FD 177X may wait for an index or RDY->/RDY or /RDY->RDY
+       we do not need more, just a subroutine and a pointer to fdc_struct
+    */
     void (*fdc_index) (void *fdc);
     void *fdc; // if not NULL FDC wait for an index pulse
 
-// --private section, fdc may never use it
+    // --private section, fdc may never use it
     int unreadable; // disk unreadable in this drive
     int do_read_weak;
     int c_head; // current head (side)

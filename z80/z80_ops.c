@@ -152,7 +152,7 @@ void z80_do_opcodes(void)
 
     if (R + rzx_instructions_offset >= rzx_instruction_count) {
       event_add(tstates, spectrum_frame_event);
-      break;        /* And break out of the execution loop to let
+      break; /* (A)nd break out of the execution loop to let
                the interrupt happen */
     }
 

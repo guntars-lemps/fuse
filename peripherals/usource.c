@@ -234,7 +234,7 @@ static void usource_to_snapshot(libspectrum_snap *snap)
     }
 
     libspectrum_snap_set_usource_active(snap, 1);
-    libspectrum_snap_set_usource_paged (snap, usource_active);
+    libspectrum_snap_set_usource_paged(snap, usource_active);
 
     if (usource_memory_map_romcs[0].save_to_snapshot) {
     rom_length = 0x2000;

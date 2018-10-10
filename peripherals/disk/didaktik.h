@@ -43,8 +43,7 @@ void didaktik80_register_startup(void);
 void didaktik80_page(void);
 void didaktik80_unpage(void);
 
-int didaktik80_disk_insert(didaktik80_drive_number which, const char *filename,
-               int autoload);
+int didaktik80_disk_insert(didaktik80_drive_number which, const char *filename, int autoload);
 fdd_t *didaktik80_get_fdd(didaktik80_drive_number which);
 
 int didaktik80_unittest(void);

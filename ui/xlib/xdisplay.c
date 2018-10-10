@@ -71,7 +71,7 @@ typedef enum {
                 // ARGB/ABGR RGBA/BGRA ????
 } redmask_t;
 
-static XImage *image = NULL;    /* The image structure to draw the
+static XImage *image = NULL; /* (T)he image structure to draw the
                    Speccy's screen on */
 static GC gc; // A graphics context to draw with
 
@@ -347,9 +347,9 @@ static int xdisplay_allocate_colours4(void)
     }
     } else {
     for (i=0; i<16; i++) { // rgb
-      c.red   = rgb_for_4[i * 3    ] * 65535 / 255;
+      c.red = rgb_for_4[i * 3    ] * 65535 / 255;
       c.green = rgb_for_4[(i * 3) + 1] * 65535 / 255;
-      c.blue  = rgb_for_4[(i * 3) + 2] * 65535 / 255;
+      c.blue = rgb_for_4[(i * 3) + 2] * 65535 / 255;
       if (xdisplay_alloc_colour(&currentMap, &c))
         return 1;
       colours[i] = pal_colour[i] = c.pixel;
@@ -581,7 +581,7 @@ static int get_shm_id(const int size)
 
 int uidisplay_init(int width, int height)
 {
-    image_width  = width;
+    image_width = width;
     image_height = height;
     if (!scaler_is_supported(current_scaler)) {
     if (machine_current->timex)
@@ -984,7 +984,7 @@ void uidisplay_plot8(int x, int y, libspectrum_byte data,
     *(dest++) = (data & 0x08) ? pi : pp;
     *(dest++) = (data & 0x04) ? pi : pp;
     *(dest++) = (data & 0x02) ? pi : pp;
-    *dest     = (data & 0x01) ? pi : pp;
+    *dest = (data & 0x01) ? pi : pp;
     }
 }
 

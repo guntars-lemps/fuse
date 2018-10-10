@@ -103,7 +103,7 @@ int screenshot_write(const char *filename, scaler_type scaler)
     scaler_get_proc32(scaler)(rgb_data1, rgb_stride, rgb_data2, rgb_stride, base_width, base_height);
 
     height = base_height * scaler_get_scaling_factor(scaler);
-    width  = base_width * scaler_get_scaling_factor(scaler);
+    width = base_width * scaler_get_scaling_factor(scaler);
 
     // Reduce from RGB(padding byte) to just RGB
     error = rgb32_to_rgb24(png_data, png_stride, rgb_data2, rgb_stride, height, width);
@@ -211,9 +211,9 @@ static int get_rgb32_data(libspectrum_byte *rgb32_data, size_t stride,  size_t h
             if (settings_current.bw_tv) {
                 red = green = blue = grey_palette[colour];
             } else {
-                red   = palette[colour][0];
+                red = palette[colour][0];
                 green = palette[colour][1];
-                blue  = palette[colour][2];
+                blue = palette[colour][2];
             }
             rgb32_data[(y * stride) + (4 * x)] = red;
             rgb32_data[(y * stride) + (4 * x) + 1] = green;

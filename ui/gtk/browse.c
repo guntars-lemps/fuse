@@ -53,7 +53,7 @@ static GdkPixbuf *tape_marker_pixbuf;
 static GtkWidget
     *dialog, // The dialog box itself
     *blocks, // The list of blocks
-    *modified_label;        /* The label saying if the tape has been
+    *modified_label; /* (T)he label saying if the tape has been
                    modified */
 
 static int dialog_created; // Have we created the dialog box yet?

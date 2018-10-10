@@ -31,16 +31,16 @@ int trdos_read_spec(trdos_spec_t *spec, const libspectrum_byte *src)
 {
     if (*src) return -1;
 
-    spec->first_free_sector   = src[225];
-    spec->first_free_track    = src[226];
-    spec->disk_type           = src[227];
-    spec->file_count          = src[228];
-    spec->free_sectors        = src[229] + src[230] * 0x100;
-    spec->id                  = src[231];
+    spec->first_free_sector = src[225];
+    spec->first_free_track = src[226];
+    spec->disk_type = src[227];
+    spec->file_count = src[228];
+    spec->free_sectors = src[229] + src[230] * 0x100;
+    spec->id = src[231];
     if (spec->id != 16) return -1;
 
     memcpy(spec->password, src + 234, 9);
-    spec->deleted_files       = src[244];
+    spec->deleted_files = src[244];
     memcpy(spec->disk_label, src + 245, 8);
 
     return 0;
@@ -67,11 +67,11 @@ int trdos_read_dirent(trdos_dirent_t *entry, const libspectrum_byte *src)
 {
     memcpy(entry->filename, src, 8);
     entry->file_extension = src[8];
-    entry->param1         = src[9]  + src[10] * 0x100;
-    entry->param2         = src[11] + src[12] * 0x100;
-    entry->file_length    = src[13];
-    entry->start_sector   = src[14];
-    entry->start_track    = src[15];
+    entry->param1 = src[9]  + src[10] * 0x100;
+    entry->param2 = src[11] + src[12] * 0x100;
+    entry->file_length = src[13];
+    entry->start_sector = src[14];
+    entry->start_track = src[15];
 
     return entry->filename[0]? 0 : 1;
 }
@@ -80,8 +80,8 @@ int trdos_read_dirent(trdos_dirent_t *entry, const libspectrum_byte *src)
 void trdos_write_dirent(libspectrum_byte *dest, const trdos_dirent_t *entry)
 {
     memcpy(dest, entry->filename, 8);
-    dest[8]  = entry->file_extension;
-    dest[9]  = entry->param1 & 0xff;
+    dest[8] = entry->file_extension;
+    dest[9] = entry->param1 & 0xff;
     dest[10] = entry->param1 >> 8;
     dest[11] = entry->param2 & 0xff;
     dest[12] = entry->param2 >> 8;

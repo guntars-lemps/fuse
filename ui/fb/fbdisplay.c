@@ -361,7 +361,7 @@ void uidisplay_area(int x, int start, int width, int height)
     for (i = 0, point = gm + 2 * y * display.xres_virtual + x * 2;
          i < width;
          i++, point += 2)
-      *  point       = *(point +     display.xres_virtual) =
+      *  point = *(point +     display.xres_virtual) =
       *(point + 1) = *(point + 1 + display.xres_virtual) =
         colours[fbdisplay_image[y][x+i]];
 

@@ -78,7 +78,7 @@ static int romcs = 0;
 typedef struct multiface_t {
     int IC8a_Q; // IC8 74LS74 first Flip-flop /Q output
     int IC8b_Q; // IC8 74LS74 second Flip-flop /Q output
-    int J2;            /* Jumper 2 to disable software paging, or
+    int J2; /* (J)umper 2 to disable software paging, or
                    the software on/off state for 128/3 */
     int J1; // Jumper 1 to disable joystick (always 0)
     libspectrum_byte xfdd_reg[4]; /* 74LS670 chip store low 4 bits of

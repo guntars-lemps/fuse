@@ -321,7 +321,7 @@ static int sdldisplay_allocate_colours(int numColours, Uint32 *colour_values,
     grey = (0.299 * red + 0.587 * green + 0.114 * blue) + 0.5;
 
     colour_values[i] = SDL_MapRGB(tmp_screen->format,  red, green, blue);
-    bw_values[i]     = SDL_MapRGB(tmp_screen->format, grey,  grey, grey);
+    bw_values[i] = SDL_MapRGB(tmp_screen->format, grey,  grey, grey);
     }
 
     return 0;
@@ -684,7 +684,7 @@ void uidisplay_plot8(int x, int y, libspectrum_byte data,
       *(dest++) = (data & 0x02) ? palette_ink : palette_paper;
       *(dest++) = (data & 0x02) ? palette_ink : palette_paper;
       *(dest++) = (data & 0x01) ? palette_ink : palette_paper;
-      *dest     = (data & 0x01) ? palette_ink : palette_paper;
+      *dest = (data & 0x01) ? palette_ink : palette_paper;
 
       dest_base = (libspectrum_word*)
         ((libspectrum_byte*)dest_base + tmp_screen->pitch);
@@ -704,7 +704,7 @@ void uidisplay_plot8(int x, int y, libspectrum_byte data,
     *(dest++) = (data & 0x08) ? palette_ink : palette_paper;
     *(dest++) = (data & 0x04) ? palette_ink : palette_paper;
     *(dest++) = (data & 0x02) ? palette_ink : palette_paper;
-    *dest     = (data & 0x01) ? palette_ink : palette_paper;
+    *dest = (data & 0x01) ? palette_ink : palette_paper;
     }
 }
 
@@ -745,7 +745,7 @@ void uidisplay_plot16(int x, int y, libspectrum_word data,
     *(dest++) = (data & 0x0008) ? palette_ink : palette_paper;
     *(dest++) = (data & 0x0004) ? palette_ink : palette_paper;
     *(dest++) = (data & 0x0002) ? palette_ink : palette_paper;
-    *dest     = (data & 0x0001) ? palette_ink : palette_paper;
+    *dest = (data & 0x0001) ? palette_ink : palette_paper;
 
     dest_base = (libspectrum_word*)
       ((libspectrum_byte*)dest_base + tmp_screen->pitch);

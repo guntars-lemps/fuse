@@ -154,7 +154,7 @@ void set_mode(int i, int n, vga_modeinfo *inf)
     inf->width >= 256 * (i + 1) &&
       inf->height >= 192 * (i + 1)) {
     modes[i].n = n;
-    modes[i].width  = inf->width;
+    modes[i].width = inf->width;
     modes[i].height = inf->height;
     modes[i].colors = inf->colors;
     modes[i].bytesperpixel = inf->bytesperpixel ? inf->bytesperpixel : 1;
@@ -402,7 +402,7 @@ static int svgadisplay_allocate_colours4(void)
     int i;
     int red, green, blue;
 
-// Y  =  0.29900 * R + 0.58700 * G + 0.11400 * B
+// Y =  0.29900 * R + 0.58700 * G + 0.11400 * B
 
     if (settings_current.bw_tv) {
     for (i=0; i<16; i++) { // grey
@@ -414,9 +414,9 @@ static int svgadisplay_allocate_colours4(void)
     }
     } else {
     for (i=0; i<16; i++) { // rgb
-      red   = rgb_for_4[i * 3    ] * 63 / 255;
+      red = rgb_for_4[i * 3    ] * 63 / 255;
       green = rgb_for_4[(i * 3) + 1] * 63 / 255;
-      blue  = rgb_for_4[(i * 3) + 2] * 63 / 255;
+      blue = rgb_for_4[(i * 3) + 2] * 63 / 255;
       vga_setpalette(i, red, green, blue);
     }
     }
@@ -455,7 +455,7 @@ static int svgadisplay_allocate_colours8(void)
 
 int uidisplay_init(int width, int height)
 {
-    image_width  = width;
+    image_width = width;
     image_height = height;
     if (!scaler_is_supported(current_scaler)) {
     if (machine_current->timex)
@@ -765,7 +765,7 @@ void uidisplay_plot8(int x, int y, libspectrum_byte data,
     *(dest++) = (data & 0x08) ? pi : pp;
     *(dest++) = (data & 0x04) ? pi : pp;
     *(dest++) = (data & 0x02) ? pi : pp;
-    *dest     = (data & 0x01) ? pi : pp;
+    *dest = (data & 0x01) ? pi : pp;
     }
 }
 

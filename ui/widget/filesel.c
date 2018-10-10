@@ -67,7 +67,7 @@ char *amiga_asl(char *title, BOOL is_saving);
 
 struct widget_dirent **widget_filenames; /* Filenames in the current
                         directory */
-size_t widget_numfiles;      /* The number of files in the current
+size_t widget_numfiles; /* (T)he number of files in the current
                  directory */
 
 static const char *title;

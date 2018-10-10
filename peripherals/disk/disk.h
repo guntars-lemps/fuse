@@ -39,7 +39,6 @@ typedef enum disk_error_t {
     DISK_CLOSE,
     DISK_WRFILE,
     DISK_WRPART,
-
     DISK_LAST_ERROR,
 } disk_error_t;
 
@@ -119,9 +118,9 @@ TRACK_LEN TYPE TRACK......DATA CLOCK..MARKS MF..MARKS WEAK..MARKS
 
 #define DISK_SET_TRACK_IDX(d, idx) \
    d->track = d->data + 3 + (idx) * d->tlen; \
-   d->clocks = d->track  + d->bpt; \
-   d->fm     = d->clocks + DISK_CLEN(d->bpt); \
-   d->weak   = d->fm     + DISK_CLEN(d->bpt)
+   d->clocks = d->track + d->bpt; \
+   d->fm = d->clocks + DISK_CLEN(d->bpt); \
+   d->weak = d->fm + DISK_CLEN(d->bpt)
 
 #define DISK_SET_TRACK(d, head, cyl) \
    DISK_SET_TRACK_IDX((d), (d)->sides * cyl + head)

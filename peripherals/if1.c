@@ -92,10 +92,10 @@ typedef struct if1_ula_t {
     int comms_clk; // the previous data comms state
     int cts; // CTS of peripheral
     int dtr; // DTR of peripheral
-    int tx;    /* TxD the name is very kind, because this is the read end of
+    int tx; /* (T)xD the name is very kind, because this is the read end of
                    the TxD wire of DATA machine (really RxD the view of
            spectrum */
-    int rx;    /* RxD the name is very kind, because this is the write end of
+    int rx; /* (R)xD the name is very kind, because this is the write end of
                    the RxD wire of DATA machine (really TxD the view of
            spectrum */
     int data_in; // interpreted incoming data
@@ -504,7 +504,7 @@ static void if1_to_snapshot(libspectrum_snap *snap)
     }
 
     libspectrum_snap_set_interface1_active(snap, 1);
-    libspectrum_snap_set_interface1_paged (snap, if1_active);
+    libspectrum_snap_set_interface1_paged(snap, if1_active);
     libspectrum_snap_set_interface1_drive_count(snap, 8);
 
     if (if1_memory_map_romcs[0].save_to_snapshot) {
@@ -529,8 +529,8 @@ static void microdrives_reset(void)
     for (m = 0; m < 8; m++) {
     microdrive[m].head_pos = 0;
     microdrive[m].motor_on = 0; // motor off
-    microdrive[m].gap      = 15;
-    microdrive[m].sync     = 15;
+    microdrive[m].gap = 15;
+    microdrive[m].sync = 15;
     microdrive[m].transfered = 0;
     }
     ui_statusbar_update(UI_STATUSBAR_ITEM_MICRODRIVE,
@@ -544,8 +544,8 @@ static void microdrives_reset(void)
     if1_ula.dtr = 0;
     if1_ula.wait = 0;
     if1_ula.busy = 0;
-    if1_ula.net  = 0;
-    if1_ula.net_state  = 0;
+    if1_ula.net = 0;
+    if1_ula.net_state = 0;
 */
 }
 
@@ -710,7 +710,7 @@ static libspectrum_byte port_net_in(void)
       if (if1_ula.fd_r >= 0 && read_rs232() == 1) {
     if1_ula.count_in++; // Ok, if read a byte, we begin
       }
-      if1_ula.tx = 0;                /* now send __ to if1
+      if1_ula.tx = 0; /* (n)ow send __ to if1
                                                later we raise :-) */
     } else if (if1_ula.count_in >= 1 && if1_ula.count_in < 5) {
       if1_ula.tx = 1; // send ~~ (start bit :-)

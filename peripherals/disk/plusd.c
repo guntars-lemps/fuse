@@ -440,10 +440,10 @@ static void plusd_from_snapshot(libspectrum_snap *snap)
 
     plusd_fdc->direction = libspectrum_snap_plusd_direction(snap);
 
-    plusd_cr_write (0x00e3, libspectrum_snap_plusd_status (snap));
-    plusd_tr_write (0x00eb, libspectrum_snap_plusd_track  (snap));
-    plusd_sec_write(0x00f3, libspectrum_snap_plusd_sector (snap));
-    plusd_dr_write (0x00fb, libspectrum_snap_plusd_data   (snap));
+    plusd_cr_write (0x00e3, libspectrum_snap_plusd_status(snap));
+    plusd_tr_write (0x00eb, libspectrum_snap_plusd_track(snap));
+    plusd_sec_write(0x00f3, libspectrum_snap_plusd_sector(snap));
+    plusd_dr_write (0x00fb, libspectrum_snap_plusd_data(snap));
     plusd_cn_write (0x00ef, libspectrum_snap_plusd_control(snap));
 
     if (libspectrum_snap_plusd_paged(snap)) {
@@ -483,12 +483,12 @@ static void plusd_to_snapshot(libspectrum_snap *snap)
     if (option_enumerate_diskoptions_drive_plusd2_type() > 0) drive_count++;
     libspectrum_snap_set_plusd_drive_count(snap, drive_count);
 
-    libspectrum_snap_set_plusd_paged (snap, plusd_active);
+    libspectrum_snap_set_plusd_paged(snap, plusd_active);
     libspectrum_snap_set_plusd_direction(snap, plusd_fdc->direction);
     libspectrum_snap_set_plusd_status(snap, plusd_fdc->status_register);
-    libspectrum_snap_set_plusd_track (snap, plusd_fdc->track_register);
+    libspectrum_snap_set_plusd_track(snap, plusd_fdc->track_register);
     libspectrum_snap_set_plusd_sector(snap, plusd_fdc->sector_register);
-    libspectrum_snap_set_plusd_data  (snap, plusd_fdc->data_register);
+    libspectrum_snap_set_plusd_data(snap, plusd_fdc->data_register);
     libspectrum_snap_set_plusd_control(snap, plusd_control_register);
 }
 

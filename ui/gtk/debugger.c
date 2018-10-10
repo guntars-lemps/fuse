@@ -550,9 +550,9 @@ static int create_memory_map(GtkBox *parent)
 {
     GtkWidget *label_address, *label_source, *label_writable, *label_contended;
 
-    label_address   = gtk_label_new("Address");
-    label_source    = gtk_label_new("Source");
-    label_writable  = gtk_label_new("W?");
+    label_address = gtk_label_new("Address");
+    label_source = gtk_label_new("Source");
+    label_writable = gtk_label_new("W?");
     label_contended = gtk_label_new("C?");
 
     memory_map = gtk_frame_new("Memory Map");
@@ -789,9 +789,9 @@ static int create_command_entry(GtkBox *parent, GtkAccelGroup *accel_group)
 static int create_buttons(GtkDialog *parent, GtkAccelGroup *accel_group)
 {
     static const gtkstock_button
-    step  = {"Single step", G_CALLBACK(gtkui_debugger_done_step), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE},
-    cont  = {"Continue", G_CALLBACK(gtkui_debugger_done_continue), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE},
-    brk   = {"Break", G_CALLBACK(gtkui_debugger_break), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE};
+    step = {"Single step", G_CALLBACK(gtkui_debugger_done_step), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE},
+    cont = {"Continue", G_CALLBACK(gtkui_debugger_done_continue), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE},
+    brk = {"Break", G_CALLBACK(gtkui_debugger_break), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE};
 
     // Create the action buttons for the dialog box
     gtkstock_create_button(GTK_WIDGET(parent), accel_group, &step);

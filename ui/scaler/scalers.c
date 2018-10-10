@@ -103,11 +103,11 @@ int scaler_select_bitformat(libspectrum_dword BitFormat)
     redblue8_Mask = 0x0007C0F8;
     redblue16_Mask = 0x000F81F0;
     green6bit = 1;
-    redMask   = 0x0000001F;
+    redMask = 0x0000001F;
     greenMask = 0x000007E0;
     green8_Mask = 0x00003F00;
     green16_Mask = 0x00007E00;
-    blueMask  = 0x0000F800;
+    blueMask = 0x0000F800;
     dotmatrix = dotmatrix_565;
     break;
 
@@ -120,11 +120,11 @@ int scaler_select_bitformat(libspectrum_dword BitFormat)
     redblue8_Mask = 0x0003E0F8;
     redblue16_Mask = 0x0007C1F0;
     green6bit = 0;
-    redMask   = 0x0000001F;
+    redMask = 0x0000001F;
     greenMask = 0x000003E0;
     green8_Mask = 0x00001F00;
     green16_Mask = 0x00003E00;
-    blueMask  = 0x00007C00;
+    blueMask = 0x00007C00;
     dotmatrix = dotmatrix_555;
     break;
 
@@ -1086,7 +1086,7 @@ void FUNCTION(scaler_TV2x)(const libspectrum_byte *srcPtr,
       scaler_data_type p1 = *(p + i);
       scaler_data_type pi;
 
-      pi  = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
+      pi = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
       pi |= (((p1 & greenMask) * 7) >> 3) & greenMask;
 
       *(q + j) = p1;
@@ -1117,7 +1117,7 @@ void FUNCTION(scaler_TV3x)(const libspectrum_byte *srcPtr,
       scaler_data_type p1 = *(p + i);
       scaler_data_type pi;
 
-      pi  = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
+      pi = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
       pi |= (((p1 & greenMask) * 7) >> 3) & greenMask;
 
       *(q + j) = p1;
@@ -1157,7 +1157,7 @@ void FUNCTION(scaler_TimexTV)(const libspectrum_byte *srcPtr,
         scaler_data_type p1 = *(p + i);
         scaler_data_type pi;
 
-    pi  = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
+    pi = (((p1 & redblueMask) * 7) >> 3) & redblueMask;
     pi |= (((p1 & greenMask) * 7) >> 3) & greenMask;
 
         *(q + j) = p1;
@@ -1201,9 +1201,9 @@ void FUNCTION(scaler_DotMatrix)(const libspectrum_byte *srcPtr,
 }
 
 /*
-    Y  =  0.29900 * R + 0.58700 * G + 0.11400 * B
-    U  = -0.16874 * R - 0.33126 * G + 0.50000 * B  (+ 128)
-    V  =  0.50000 * R - 0.41869 * G - 0.08131 * B  (+ 128)
+    Y =  0.29900 * R + 0.58700 * G + 0.11400 * B
+    U = -0.16874 * R - 0.33126 * G + 0.50000 * B  (+ 128)
+    V =  0.50000 * R - 0.41869 * G - 0.08131 * B  (+ 128)
 */
 
 #define RGB_TO_Y(r, g, b) ((2449L * r + 4809L * g + 934L * b + 1024) >> 11)

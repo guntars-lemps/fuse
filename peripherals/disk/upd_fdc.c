@@ -37,41 +37,41 @@
 // static const int UPD_FDC_MAIN_DRV_1_SEEK = 0x02;
 // static const int UPD_FDC_MAIN_DRV_2_SEEK = 0x04;
 // static const int UPD_FDC_MAIN_DRV_3_SEEK = 0x08;
-static const int UPD_FDC_MAIN_BUSY       = 0x10;
-static const int UPD_FDC_MAIN_EXECUTION  = 0x20;
-static const int UPD_FDC_MAIN_DATADIR    = 0x40;
-static const int UPD_FDC_MAIN_DATA_READ  = 0x40; // computer should read
+static const int UPD_FDC_MAIN_BUSY = 0x10;
+static const int UPD_FDC_MAIN_EXECUTION = 0x20;
+static const int UPD_FDC_MAIN_DATADIR = 0x40;
+static const int UPD_FDC_MAIN_DATA_READ = 0x40; // computer should read
 static const int UPD_FDC_MAIN_DATA_WRITE = 0x00; // computer should write
-static const int UPD_FDC_MAIN_DATAREQ    = 0x80;
+static const int UPD_FDC_MAIN_DATAREQ = 0x80;
 
-static const int UPD_FDC_ST0_NOT_READY   = 0x08;
+static const int UPD_FDC_ST0_NOT_READY = 0x08;
 static const int UPD_FDC_ST0_EQUIP_CHECK = 0x10;
-static const int UPD_FDC_ST0_SEEK_END    = 0x20;
-/* static const int UPD_FDC_ST0_INT_NORMAL  = 0x00; */ // normal termination
-static const int UPD_FDC_ST0_INT_ABNORM  = 0x40; // abnormal termination
+static const int UPD_FDC_ST0_SEEK_END = 0x20;
+/* static const int UPD_FDC_ST0_INT_NORMAL = 0x00; */ // normal termination
+static const int UPD_FDC_ST0_INT_ABNORM = 0x40; // abnormal termination
 /* static const int UPD_FDC_ST0_INT_INVALID = 0x80; */ // invalid command
-static const int UPD_FDC_ST0_INT_READY   = 0xc0; // ready signal change
+static const int UPD_FDC_ST0_INT_READY = 0xc0; // ready signal change
 
-static const int UPD_FDC_ST1_MISSING_AM  = 0x01;
+static const int UPD_FDC_ST1_MISSING_AM = 0x01;
 static const int UPD_FDC_ST1_NOT_WRITEABLE=0x02;
-static const int UPD_FDC_ST1_NO_DATA     = 0x04;
+static const int UPD_FDC_ST1_NO_DATA = 0x04;
 
-static const int UPD_FDC_ST1_OVERRUN     = 0x10;
-static const int UPD_FDC_ST1_CRC_ERROR   = 0x20;
+static const int UPD_FDC_ST1_OVERRUN = 0x10;
+static const int UPD_FDC_ST1_CRC_ERROR = 0x20;
 static const int UPD_FDC_ST1_EOF_CYLINDER= 0x80;
 
-static const int UPD_FDC_ST2_MISSING_DM  = 0x01; // missing data mark
+static const int UPD_FDC_ST2_MISSING_DM = 0x01; // missing data mark
 static const int UPD_FDC_ST2_BAD_CYLINDER= 0x02; // bad cylinder number
 static const int UPD_FDC_ST2_SCAN_NOT_SAT= 0x04; // seek not satisfied
-static const int UPD_FDC_ST2_SCAN_HIT    = 0x08; // seek equal match
+static const int UPD_FDC_ST2_SCAN_HIT = 0x08; // seek equal match
 static const int UPD_FDC_ST2_WRONG_CYLINDER=0x10;
-static const int UPD_FDC_ST2_DATA_ERROR  = 0x20; // CRC error in data field
+static const int UPD_FDC_ST2_DATA_ERROR = 0x20; // CRC error in data field
 static const int UPD_FDC_ST2_CONTROL_MARK= 0x40;
 
-// static const int UPD_FDC_ST3_TWO_SIDE    = 0x08;
-static const int UPD_FDC_ST3_TR00        = 0x10;
-static const int UPD_FDC_ST3_READY       = 0x20;
-static const int UPD_FDC_ST3_WRPROT      = 0x40;
+// static const int UPD_FDC_ST3_TWO_SIDE = 0x08;
+static const int UPD_FDC_ST3_TR00 = 0x10;
+static const int UPD_FDC_ST3_READY = 0x20;
+static const int UPD_FDC_ST3_WRPROT = 0x40;
 
 static upd_cmd_t cmd[] = {/*    mask  value  cmd / res length */
     {UPD_CMD_READ_DATA,        0x1f, 0x06, 0x08, 0x07},

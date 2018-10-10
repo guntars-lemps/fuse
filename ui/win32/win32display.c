@@ -177,9 +177,9 @@ static int init_colours(void)
 
     unsigned char red, green, blue, grey;
 
-    red   = rgb_colours[i][0];
+    red = rgb_colours[i][0];
     green = rgb_colours[i][1];
-    blue  = rgb_colours[i][2];
+    blue = rgb_colours[i][2];
 
     // Addition of 0.5 is to avoid rounding errors
     grey = (0.299 * red + 0.587 * green + 0.114 * blue) + 0.5;

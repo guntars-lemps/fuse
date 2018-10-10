@@ -284,9 +284,9 @@ static int read_test(FILE *f, libspectrum_dword *end_tstates)
     return 1;
     }
 
-    AF  = af;  BC  = bc;  DE  = de;  HL  = hl;
+    AF = af;  BC = bc;  DE = de;  HL = hl;
     AF_ = af_; BC_ = bc_; DE_ = de_; HL_ = hl_;
-    IX  = ix;  IY  = iy;  SP  = sp;  PC  = pc;
+    IX = ix;  IY = iy;  SP = sp;  PC = pc;
     z80.memptr.w = memptr;
 
     if (fscanf(f, "%x %x %u %u %u %d %d", &i, &r, &iff1, &iff2, &im,

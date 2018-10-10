@@ -367,7 +367,7 @@ int specplus3_memory_map(void)
     }
 
     machine_current->ram.current_page = page;
-    machine_current->ram.current_rom  = rom;
+    machine_current->ram.current_rom = rom;
 
     memory_romcs_map();
 

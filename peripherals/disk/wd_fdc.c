@@ -838,7 +838,7 @@ static void wd_fdc_event(libspectrum_dword last_tstates GCC_UNUSED, int event,
            !
         +--+--+
        /  is   \  no
-      ! MO =  0 !----->----+
+      ! MO = 0  !----->----+
        \   ?   /           !
         +--+--+            !
            !               !
@@ -848,7 +848,7 @@ static void wd_fdc_event(libspectrum_dword last_tstates GCC_UNUSED, int event,
            !               !
         +--+--+            !
        /  is   \  no       !
-      ! h  =  0 !----->----+
+      !  h = 0  !----->----+
        \   ?   /           !
         +--+--+            !
            !yes            !

@@ -166,12 +166,12 @@ void nic_enc28j60_poll(nic_enc28j60_t *self)
                      self->eth_rx_buf + ETH_STATUS_LENGTH,
                      ETH_MAX)) > 0) {
     libspectrum_word erxwrpt = GET_PTR_REG(self, ERXWRPT);
-    libspectrum_word erxst   = GET_PTR_REG(self, ERXST);
-    libspectrum_word erxnd   = GET_PTR_REG(self, ERXND);
+    libspectrum_word erxst = GET_PTR_REG(self, ERXST);
+    libspectrum_word erxnd = GET_PTR_REG(self, ERXND);
 
     // Round total_length upwards to an even value
     libspectrum_word total_length = (ETH_STATUS_LENGTH + n + 1) & 0x1ffe;
-    libspectrum_word next_addr    = erxwrpt + total_length;
+    libspectrum_word next_addr = erxwrpt + total_length;
 
     // Sanity check
     if (erxwrpt > erxnd)
@@ -206,7 +206,7 @@ static void perform_side_effects_for_write(nic_enc28j60_t *self)
 {
     if (ECON1(self) & ECON1_TXRTS) { // TXRTS: transmission request
     libspectrum_word frame_start = (GET_PTR_REG(self, ETXST) & 0x1fff) + 1;
-    libspectrum_word frame_end   = GET_PTR_REG(self, ETXND) & 0x1fff;
+    libspectrum_word frame_end = GET_PTR_REG(self, ETXND) & 0x1fff;
 
     if (frame_end > frame_start && self->tap_fd >= 0) {
       ssize_t length = (frame_end - frame_start) + 1;

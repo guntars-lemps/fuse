@@ -53,8 +53,8 @@ typedef enum scaler_type {
 } scaler_type;
 
 typedef enum scaler_flags_t {
-    SCALER_FLAGS_NONE        = 0,
-    SCALER_FLAGS_EXPAND      = 1 << 0,
+    SCALER_FLAGS_NONE = 0,
+    SCALER_FLAGS_EXPAND = 1 << 0,
 } scaler_flags_t;
 
 typedef void ScalerProc(const libspectrum_byte *srcPtr,

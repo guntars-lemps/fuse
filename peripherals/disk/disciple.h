@@ -44,8 +44,7 @@ void disciple_register_startup(void);
 void disciple_page(void);
 void disciple_unpage(void);
 
-int disciple_disk_insert(disciple_drive_number which, const char *filename,
-                          int autoload);
+int disciple_disk_insert(disciple_drive_number which, const char *filename, int autoload);
 int disciple_disk_eject(disciple_drive_number which);
 int disciple_disk_save(disciple_drive_number which, int saveas);
 int disciple_disk_write(disciple_drive_number which, const char *filename);

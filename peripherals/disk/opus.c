@@ -230,10 +230,10 @@ static void opus_reset(int hard_reset)
 
     data_reg_a = 0;
     data_dir_a = 0;
-    control_a  = 0;
+    control_a = 0;
     data_reg_b = 0;
     data_dir_b = 0;
-    control_b  = 0;
+    control_b = 0;
 
     opus_available = 1;
 
@@ -461,16 +461,16 @@ static void opus_from_snapshot(libspectrum_snap *snap)
 
     opus_fdc->direction = libspectrum_snap_opus_direction(snap);
 
-    wd_fdc_cr_write (opus_fdc, libspectrum_snap_opus_status (snap));
-    wd_fdc_tr_write (opus_fdc, libspectrum_snap_opus_track  (snap));
-    wd_fdc_sec_write(opus_fdc, libspectrum_snap_opus_sector (snap));
-    wd_fdc_dr_write (opus_fdc, libspectrum_snap_opus_data   (snap));
+    wd_fdc_cr_write (opus_fdc, libspectrum_snap_opus_status(snap));
+    wd_fdc_tr_write (opus_fdc, libspectrum_snap_opus_track(snap));
+    wd_fdc_sec_write(opus_fdc, libspectrum_snap_opus_sector(snap));
+    wd_fdc_dr_write (opus_fdc, libspectrum_snap_opus_data(snap));
     data_reg_a = libspectrum_snap_opus_data_reg_a(snap);
     data_dir_a = libspectrum_snap_opus_data_dir_a(snap);
-    control_a  = libspectrum_snap_opus_control_a (snap);
+    control_a = libspectrum_snap_opus_control_a (snap);
     data_reg_b = libspectrum_snap_opus_data_reg_b(snap);
     data_dir_b = libspectrum_snap_opus_data_dir_b(snap);
-    control_b  = libspectrum_snap_opus_control_b (snap);
+    control_b = libspectrum_snap_opus_control_b (snap);
 
     if (libspectrum_snap_opus_paged(snap)) {
     opus_page();
@@ -510,18 +510,18 @@ static void opus_to_snapshot(libspectrum_snap *snap)
     if (option_enumerate_diskoptions_drive_opus2_type() > 0) drive_count++;
     libspectrum_snap_set_opus_drive_count(snap, drive_count);
 
-    libspectrum_snap_set_opus_paged     (snap, opus_active);
-    libspectrum_snap_set_opus_direction (snap, opus_fdc->direction);
-    libspectrum_snap_set_opus_status    (snap, opus_fdc->status_register);
-    libspectrum_snap_set_opus_track     (snap, opus_fdc->track_register);
-    libspectrum_snap_set_opus_sector    (snap, opus_fdc->sector_register);
-    libspectrum_snap_set_opus_data      (snap, opus_fdc->data_register);
+    libspectrum_snap_set_opus_paged(snap, opus_active);
+    libspectrum_snap_set_opus_direction(snap, opus_fdc->direction);
+    libspectrum_snap_set_opus_status(snap, opus_fdc->status_register);
+    libspectrum_snap_set_opus_track(snap, opus_fdc->track_register);
+    libspectrum_snap_set_opus_sector(snap, opus_fdc->sector_register);
+    libspectrum_snap_set_opus_data(snap, opus_fdc->data_register);
     libspectrum_snap_set_opus_data_reg_a(snap, data_reg_a);
     libspectrum_snap_set_opus_data_dir_a(snap, data_dir_a);
-    libspectrum_snap_set_opus_control_a (snap, control_a);
+    libspectrum_snap_set_opus_control_a(snap, control_a);
     libspectrum_snap_set_opus_data_reg_b(snap, data_reg_b);
     libspectrum_snap_set_opus_data_dir_b(snap, data_dir_b);
-    libspectrum_snap_set_opus_control_b (snap, control_b);
+    libspectrum_snap_set_opus_control_b(snap, control_b);
 }
 
 

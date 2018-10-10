@@ -40,7 +40,7 @@ typedef struct {
     regpair af_,bc_,de_,hl_;
     regpair ix,iy;
     libspectrum_byte i;
-    libspectrum_word r;    /* The low seven bits of the R register. 16 bits long
+    libspectrum_word r; /* (T)he low seven bits of the R register. 16 bits long
                so it can also act as an RZX instruction counter */
     libspectrum_byte r7; // The high bit of the R register
     regpair sp,pc;

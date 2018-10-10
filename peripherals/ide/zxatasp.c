@@ -117,19 +117,19 @@ static int memory_allocated = 0;
 static const size_t ZXATASP_NOT_PAGED = 0xff;
 
 // We're ignoring all mode bits and only emulating mode 0, basic I/O
-static const libspectrum_byte MC8255_PORT_C_LOW_IO  = 0x01;
-static const libspectrum_byte MC8255_PORT_B_IO      = 0x02;
-static const libspectrum_byte MC8255_PORT_C_HI_IO   = 0x08;
-static const libspectrum_byte MC8255_PORT_A_IO      = 0x10;
-static const libspectrum_byte MC8255_SETMODE        = 0x80;
+static const libspectrum_byte MC8255_PORT_C_LOW_IO = 0x01;
+static const libspectrum_byte MC8255_PORT_B_IO = 0x02;
+static const libspectrum_byte MC8255_PORT_C_HI_IO = 0x08;
+static const libspectrum_byte MC8255_PORT_A_IO = 0x10;
+static const libspectrum_byte MC8255_SETMODE = 0x80;
 
-static const libspectrum_byte ZXATASP_IDE_REG       = 0x07;
-static const libspectrum_byte ZXATASP_RAM_BANK      = 0x1f;
-static const libspectrum_byte ZXATASP_IDE_WR        = 0x08;
-static const libspectrum_byte ZXATASP_IDE_RD        = 0x10;
-static const libspectrum_byte ZXATASP_IDE_PRIMARY   = 0x20;
-static const libspectrum_byte ZXATASP_RAM_LATCH     = 0x40;
-static const libspectrum_byte ZXATASP_RAM_DISABLE   = 0x80;
+static const libspectrum_byte ZXATASP_IDE_REG = 0x07;
+static const libspectrum_byte ZXATASP_RAM_BANK = 0x1f;
+static const libspectrum_byte ZXATASP_IDE_WR = 0x08;
+static const libspectrum_byte ZXATASP_IDE_RD = 0x10;
+static const libspectrum_byte ZXATASP_IDE_PRIMARY = 0x20;
+static const libspectrum_byte ZXATASP_RAM_LATCH = 0x40;
+static const libspectrum_byte ZXATASP_RAM_DISABLE = 0x80;
 static const libspectrum_byte ZXATASP_IDE_SECONDARY = 0x80;
 
 #define ZXATASP_READ_PRIMARY(x)    \
@@ -515,9 +515,9 @@ static void zxatasp_from_snapshot(libspectrum_snap *snap)
     settings_current.zxatasp_upload = libspectrum_snap_zxatasp_upload(snap);
     settings_current.zxatasp_wp = libspectrum_snap_zxatasp_writeprotect(snap);
 
-    zxatasp_portA   = libspectrum_snap_zxatasp_port_a (snap);
-    zxatasp_portB   = libspectrum_snap_zxatasp_port_b (snap);
-    zxatasp_portC   = libspectrum_snap_zxatasp_port_c (snap);
+    zxatasp_portA = libspectrum_snap_zxatasp_port_a (snap);
+    zxatasp_portB = libspectrum_snap_zxatasp_port_b (snap);
+    zxatasp_portC = libspectrum_snap_zxatasp_port_c (snap);
     zxatasp_control = libspectrum_snap_zxatasp_control(snap);
 
     page = libspectrum_snap_zxatasp_current_page(snap);
