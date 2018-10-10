@@ -81,6 +81,9 @@
 /* Define to 1 if you have the <strings.h> header file. */
 #undef HAVE_STRINGS_H
 
+/* Define if your system has strcasecmp() in strings.h */
+#undef HAVE_STRINGS_STRCASECMP
+
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
@@ -111,8 +114,7 @@
 /* Define to 1 if you have the <zlib.h> header file. */
 #undef HAVE_ZLIB_H
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
 
 /* Defined if no sound code is present */
