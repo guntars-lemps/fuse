@@ -2132,8 +2132,9 @@ static int open_td0(buffer_t *buffer, disk_t *d, int preindex)
     int data_offset, track_offset, sector_offset;
     unsigned char *uncomp_buff, *hdrb;
 
-    if (buff[0] == 't') // signature "td" -> advanced compression
-    return d->status = DISK_IMPL; // not implemented
+    if (buff[0] == 't') { // signature "td" -> advanced compression
+        return d->status = DISK_IMPL; // not implemented
+    }
 
     uncomp_buff = NULL; // we may use this buffer
     mfm_old = buff[5] & 0x80 ? 0 : 1; /* (t)d0notes say: may older teledisk
