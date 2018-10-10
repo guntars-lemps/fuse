@@ -344,7 +344,9 @@ static void widget_scan(char *dir)
 
     widget_numfiles = widget_scandir(dir, &widget_filenames,  widget_select_file);
 
-    if (widget_numfiles == (size_t)-1) return;
+    if (widget_numfiles == (size_t)-1) {
+        return;
+    }
 
     for (i=0; i<widget_numfiles; i++) {
     error = stat(widget_filenames[i]->name, &file_info);
@@ -814,7 +816,9 @@ void widget_filesel_keyhandler(input_key key)
     case INPUT_KEY_Return:
     case INPUT_KEY_KP_Enter:
     case INPUT_JOYSTICK_FIRE_1:
-      if (widget_filesel_chdir()) return;
+      if (widget_filesel_chdir()) {
+        return;
+    }
 
     break;
 

@@ -111,7 +111,9 @@ void win32keyboard_keypress(WPARAM wParam, LPARAM lParam)
     break;
     }
 
-    if (fuse_keysym == INPUT_KEY_NONE) return;
+    if (fuse_keysym == INPUT_KEY_NONE) {
+        return;
+    }
 
     fuse_event.type = INPUT_EVENT_KEYPRESS;
     fuse_event.types.key.native_key = fuse_keysym;
@@ -147,7 +149,9 @@ void win32keyboard_keyrelease(WPARAM wParam, LPARAM lParam)
     break;
     }
 
-    if (fuse_keysym == INPUT_KEY_NONE) return;
+    if (fuse_keysym == INPUT_KEY_NONE) {
+        return;
+    }
 
     fuse_event.type = INPUT_EVENT_KEYRELEASE;
     fuse_event.types.key.native_key = fuse_keysym;

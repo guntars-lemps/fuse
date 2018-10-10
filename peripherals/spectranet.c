@@ -191,7 +191,9 @@ static void spectranet_reset(int hard_reset)
 
 static void spectranet_memory_map(void)
 {
-    if (!spectranet_paged) return;
+    if (!spectranet_paged) {
+        return;
+    }
 
     memory_map_romcs_full(spectranet_current_map);
 }

@@ -239,7 +239,9 @@ static void select_new_rom(HWND hedit)
     TCHAR *filename;
 
     filename = ui_get_open_filename("Fuse - Select ROM");
-    if (!filename) return;
+    if (!filename) {
+        return;
+    }
 
     SendMessage(hedit, WM_SETTEXT, 0, (LPARAM) filename);
 }

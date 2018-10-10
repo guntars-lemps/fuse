@@ -511,7 +511,9 @@ static void stack_click(LPNMITEMACTIVATE lpnmitem)
     LVITEM li;
 
     row = lpnmitem->iItem;
-    if (row < 0) return;
+    if (row < 0) {
+        return;
+    }
 
     li.iSubItem = 1;
     li.pszText = buffer;
@@ -529,7 +531,9 @@ static void stack_click(LPNMITEMACTIVATE lpnmitem)
     DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, destination, 0,
     DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
 );
-    if (error) return;
+    if (error) {
+        return;
+    }
 
     debugger_run();
 }
@@ -577,7 +581,9 @@ static void events_click(LPNMITEMACTIVATE lpnmitem)
     libspectrum_dword tstates;
 
     row = lpnmitem->iItem;
-    if (row < 0) return;
+    if (row < 0) {
+        return;
+    }
 
     li.iSubItem = 0;
     li.pszText = buffer;
@@ -594,7 +600,9 @@ static void events_click(LPNMITEMACTIVATE lpnmitem)
     DEBUGGER_BREAKPOINT_TYPE_TIME, tstates, 0,
     DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
 );
-    if (error) return;
+    if (error) {
+        return;
+    }
 
     debugger_run();
 }
@@ -976,7 +984,9 @@ static void add_event(gpointer data, gpointer user_data GCC_UNUSED)
     lvi.mask = LVIF_TEXT;
 
     // Skip events which have been removed
-    if (ptr->type == event_type_null) return;
+    if (ptr->type == event_type_null) {
+        return;
+    }
 
     _sntprintf(event_text[0], 40, "%d", ptr->tstates);
     // FIXME: event_name() is not unicode compliant

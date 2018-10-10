@@ -306,7 +306,9 @@ static void divmmc_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
-    if (!libspectrum_snap_divmmc_active(snap)) return;
+    if (!libspectrum_snap_divmmc_active(snap)) {
+        return;
+    }
 
     settings_current.divmmc_wp =
     libspectrum_snap_divmmc_eprom_writeprotect(snap);
@@ -336,7 +338,9 @@ static void divmmc_to_snapshot(libspectrum_snap *snap)
     size_t i;
     libspectrum_byte *buffer;
 
-    if (!settings_current.divmmc_enabled) return;
+    if (!settings_current.divmmc_enabled) {
+        return;
+    }
 
     libspectrum_snap_set_divmmc_active(snap, 1);
     libspectrum_snap_set_divmmc_eprom_writeprotect(snap,

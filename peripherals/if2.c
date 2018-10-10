@@ -142,7 +142,9 @@ static void if2_reset(int hard_reset GCC_UNUSED)
     return;
     }
 
-    if (!periph_is_active(PERIPH_TYPE_INTERFACE2)) return;
+    if (!periph_is_active(PERIPH_TYPE_INTERFACE2)) {
+        return;
+    }
 
     if (machine_load_rom_bank(if2_memory_map_romcs, 0,
                   settings_current.if2_file,
@@ -160,7 +162,9 @@ static void if2_reset(int hard_reset GCC_UNUSED)
 
 static void if2_memory_map(void)
 {
-    if (!if2_active) return;
+    if (!if2_active) {
+        return;
+    }
 
     memory_map_romcs_full(if2_memory_map_romcs);
 }
@@ -168,7 +172,9 @@ static void if2_memory_map(void)
 
 static void if2_from_snapshot(libspectrum_snap *snap)
 {
-    if (!libspectrum_snap_interface2_active(snap)) return;
+    if (!libspectrum_snap_interface2_active(snap)) {
+        return;
+    }
 
     if2_active = 1;
     machine_current->ram.romcs = 1;
@@ -192,7 +198,9 @@ static void if2_to_snapshot(libspectrum_snap *snap)
     libspectrum_byte *buffer;
     int i;
 
-    if (!if2_active) return;
+    if (!if2_active) {
+        return;
+    }
 
     libspectrum_snap_set_interface2_active(snap, 1);
 

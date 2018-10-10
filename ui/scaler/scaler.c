@@ -172,7 +172,9 @@ void scaler_register_clear(void)
 
 void scaler_register(scaler_type scaler)
 {
-    if (scaler_supported[scaler] == 1) return;
+    if (scaler_supported[scaler] == 1) {
+        return;
+    }
     scalers_registered++;
     scaler_supported[scaler] = 1;
 }

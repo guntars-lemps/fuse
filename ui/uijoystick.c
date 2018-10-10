@@ -208,7 +208,9 @@ static void poll_joystick(int which)
 
     joystick = &jsd[which];
 
-    if (JSUpdate(joystick) != JSGotEvent) return;
+    if (JSUpdate(joystick) != JSGotEvent) {
+        return;
+    }
 
     position = JSGetAxisCoeffNZ(joystick, 0);
     do_axis(which, position, INPUT_JOYSTICK_LEFT, INPUT_JOYSTICK_RIGHT);

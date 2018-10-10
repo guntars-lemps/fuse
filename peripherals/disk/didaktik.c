@@ -483,7 +483,9 @@ static void didaktik_from_snapshot(libspectrum_snap *snap)
 {
     int i;
 
-    if (!libspectrum_snap_didaktik80_active(snap)) return;
+    if (!libspectrum_snap_didaktik80_active(snap)) {
+        return;
+    }
 
     if (libspectrum_snap_didaktik80_custom_rom(snap) &&
       libspectrum_snap_didaktik80_rom(snap, 0) &&
@@ -528,7 +530,9 @@ static void didaktik_to_snapshot(libspectrum_snap *snap)
     int i;
     size_t memory_length;
 
-    if (!periph_is_active(PERIPH_TYPE_DIDAKTIK80)) return;
+    if (!periph_is_active(PERIPH_TYPE_DIDAKTIK80)) {
+        return;
+    }
 
     libspectrum_snap_set_didaktik80_active(snap, 1);
 

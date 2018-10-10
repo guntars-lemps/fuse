@@ -165,7 +165,9 @@ void zxcf_register_startup(void)
 
 static void zxcf_reset(int hard_reset GCC_UNUSED)
 {
-    if (!settings_current.zxcf_active) return;
+    if (!settings_current.zxcf_active) {
+        return;
+    }
 
     machine_current->ram.romcs = 1;
 
@@ -284,7 +286,9 @@ static void zxcf_memory_map(void)
 {
     int map_read;
 
-    if (!settings_current.zxcf_active) return;
+    if (!settings_current.zxcf_active) {
+        return;
+    }
 
     map_read = !settings_current.zxcf_upload;
     memory_map_16k_read_write(0x0000, zxcf_memory_map_romcs, 0, map_read, 1);
@@ -301,7 +305,9 @@ static void zxcf_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
-    if (!libspectrum_snap_zxcf_active(snap)) return;
+    if (!libspectrum_snap_zxcf_active(snap)) {
+        return;
+    }
 
     settings_current.zxcf_upload = libspectrum_snap_zxcf_upload(snap);
 
@@ -319,7 +325,9 @@ static void zxcf_to_snapshot(libspectrum_snap *snap)
     size_t i;
     libspectrum_byte *buffer;
 
-    if (!settings_current.zxcf_active) return;
+    if (!settings_current.zxcf_active) {
+        return;
+    }
 
     libspectrum_snap_set_zxcf_active(snap, 1);
     libspectrum_snap_set_zxcf_upload(snap, settings_current.zxcf_upload);

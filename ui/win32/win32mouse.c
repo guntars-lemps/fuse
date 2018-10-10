@@ -49,7 +49,9 @@ void win32mouse_position(LPARAM lParam)
 {
     int x,y;
 
-    if (!ui_mouse_grabbed) return;
+    if (!ui_mouse_grabbed) {
+        return;
+    }
 
     x = GET_X_LPARAM(lParam);
     y = GET_Y_LPARAM(lParam);

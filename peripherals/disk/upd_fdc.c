@@ -429,7 +429,9 @@ static void seek_step(upd_fdc *f, int start)
     i = f->us;
 
     // Drive already in seek state?
-    if (f->main_status & (1 << i)) return;
+    if (f->main_status & (1 << i)) {
+        return;
+    }
 
     // Mark seek mode for fdd. It will be cleared by Sense Interrupt command
     f->main_status |= 1 << i;

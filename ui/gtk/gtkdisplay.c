@@ -581,7 +581,9 @@ void gtkdisplay_update_geometry(void)
     GtkWidget *geometry_widget;
     float scale;
 
-    if (!scalers_registered) return;
+    if (!scalers_registered) {
+        return;
+    }
 
     scale = scaler_get_scaling_factor(current_scaler);
 

@@ -138,7 +138,9 @@ static void joy_handler(int ev, int number, char value, int which)
     break;
     case JOY_EVENTBUTTONDOWN:
     case JOY_EVENTBUTTONUP:
-    if (number >= buttons[which]) return;
+    if (number >= buttons[which]) {
+        return;
+    }
     event.types.joystick.which = which;
     event.types.joystick.button = INPUT_JOYSTICK_FIRE_1 + number;
     event.type = (ev == JOY_EVENTBUTTONDOWN)

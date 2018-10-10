@@ -199,7 +199,9 @@ void mouse_update(void)
     ssize_t xoff = 0, yoff = 0;
     int btn_changed = 0, btn_new = btn_state, btn_mod = btn_state;
 
-    if (mouse_fd == -1) return;
+    if (mouse_fd == -1) {
+        return;
+    }
 
     while (1) {
     ssize_t available;

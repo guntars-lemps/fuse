@@ -244,6 +244,8 @@ static void zxmmc_enabled_snapshot(libspectrum_snap *snap)
 
 static void zxmmc_to_snapshot(libspectrum_snap *snap)
 {
-    if (!settings_current.zxmmc_enabled) return;
+    if (!settings_current.zxmmc_enabled) {
+        return;
+    }
     libspectrum_snap_set_zxmmc_active(snap, 1);
 }

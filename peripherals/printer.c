@@ -268,7 +268,9 @@ static void printer_zxp_update_header(void)
 {
 long pos;
 
-if (!printer_graphics_enabled || !zxpheight) return;
+if (!printer_graphics_enabled || !zxpheight) {
+        return;
+    }
 
 if (!printer_graphics_file && !printer_zxp_open_file())
     return;
@@ -387,7 +389,9 @@ static void printer_zxp_output_line(void)
 unsigned char *ptr;
 int i,j,d;
 
-if (!printer_graphics_enabled) return;
+if (!printer_graphics_enabled) {
+        return;
+    }
 
 if (!printer_graphics_file && !printer_zxp_open_file())
     return;

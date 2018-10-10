@@ -268,7 +268,9 @@ static void divide_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
-    if (!libspectrum_snap_divide_active(snap)) return;
+    if (!libspectrum_snap_divide_active(snap)) {
+        return;
+    }
 
     settings_current.divide_wp =
     libspectrum_snap_divide_eprom_writeprotect(snap);
@@ -298,7 +300,9 @@ static void divide_to_snapshot(libspectrum_snap *snap)
     size_t i;
     libspectrum_byte *buffer;
 
-    if (!settings_current.divide_enabled) return;
+    if (!settings_current.divide_enabled) {
+        return;
+    }
 
     libspectrum_snap_set_divide_active(snap, 1);
     libspectrum_snap_set_divide_eprom_writeprotect(snap,

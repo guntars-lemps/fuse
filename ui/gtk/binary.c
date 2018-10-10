@@ -193,7 +193,9 @@ static void change_load_filename(GtkButton *button GCC_UNUSED, gpointer user_dat
     int error;
 
     new_filename = ui_get_open_filename("Fuse - Load Binary Data");
-    if (!new_filename) return;
+    if (!new_filename) {
+        return;
+    }
 
     error = utils_read_file(new_filename, &new_file);
     if (error) {free(new_filename); return;}
@@ -294,7 +296,9 @@ static void change_save_filename(GtkButton *button GCC_UNUSED, gpointer user_dat
     char *new_filename;
 
     new_filename = ui_get_save_filename("Fuse - Save Binary Data");
-    if (!new_filename) return;
+    if (!new_filename) {
+        return;
+    }
 
     free(info->filename);
 
@@ -341,7 +345,9 @@ static void save_data(GtkEntry *entry GCC_UNUSED, gpointer user_data)
     }
 
     error = utils_save_binary(start, length, info->filename);
-    if (error) return;
+    if (error) {
+        return;
+    }
 
     gtkui_destroy_widget_and_quit(info->dialog, NULL);
 }

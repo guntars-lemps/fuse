@@ -332,7 +332,9 @@ void specplus3_memoryport2_write_internal(libspectrum_word port GCC_UNUSED, libs
 void specplus3_memoryport2_write(libspectrum_word port, libspectrum_byte b)
 {
     // Do nothing else if we've locked the RAM configuration
-    if (machine_current->ram.locked) return;
+    if (machine_current->ram.locked) {
+        return;
+    }
 
     specplus3_memoryport2_write_internal(port, b);
 }

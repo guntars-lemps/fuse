@@ -110,7 +110,9 @@ void sdlkeyboard_keyrelease(SDL_KeyboardEvent *keyevent)
 
     fuse_keysym = keysyms_remap(keyevent->keysym.sym);
 
-    if (fuse_keysym == INPUT_KEY_NONE) return;
+    if (fuse_keysym == INPUT_KEY_NONE) {
+        return;
+    }
 
     fuse_event.type = INPUT_EVENT_KEYRELEASE;
     /* SDL doesn't provide key release information for UNICODE, assuming that

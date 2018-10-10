@@ -362,7 +362,9 @@ static void if1_end(void)
     for (m = 0; m < 8; m++) {
     libspectrum_error error =
       libspectrum_microdrive_free(microdrive[m].cartridge);
-    if (error) return;
+    if (error) {
+        return;
+    }
     }
 }
 
@@ -454,7 +456,9 @@ void if1_unpage(void)
 
 void if1_memory_map(void)
 {
-    if (!if1_active) return;
+    if (!if1_active) {
+        return;
+    }
 
     memory_map_romcs_8k(0x0000, if1_memory_map_romcs);
     memory_map_romcs_8k(0x2000, if1_memory_map_romcs);
@@ -469,7 +473,9 @@ static void if1_enabled_snapshot(libspectrum_snap *snap)
 
 static void if1_from_snapshot(libspectrum_snap *snap)
 {
-    if (!libspectrum_snap_interface1_active(snap)) return;
+    if (!libspectrum_snap_interface1_active(snap)) {
+        return;
+    }
 
     if (libspectrum_snap_interface1_custom_rom(snap) &&
       libspectrum_snap_interface1_rom(snap, 0) &&
@@ -493,7 +499,9 @@ static void if1_to_snapshot(libspectrum_snap *snap)
     libspectrum_byte *buffer;
     int i;
 
-    if (!periph_is_active(PERIPH_TYPE_INTERFACE1)) return;
+    if (!periph_is_active(PERIPH_TYPE_INTERFACE1)) {
+        return;
+    }
 
     libspectrum_snap_set_interface1_active(snap, 1);
     libspectrum_snap_set_interface1_paged (snap, if1_active);

@@ -183,7 +183,9 @@ static void simpleide_snapshot_enabled(libspectrum_snap *snap)
 
 static void simpleide_to_snapshot(libspectrum_snap *snap)
 {
-    if (!settings_current.simpleide_active) return;
+    if (!settings_current.simpleide_active) {
+        return;
+    }
 
     libspectrum_snap_set_simpleide_active(snap, 1);
 }

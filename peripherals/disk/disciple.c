@@ -142,7 +142,9 @@ void disciple_memory_map(void)
 {
     struct memory_page *rom_page, *lower_page, *upper_page;
 
-    if (!disciple_active) return;
+    if (!disciple_active) {
+        return;
+    }
 
     // TODO: add support for 16 KiB ROM images.
     rom_page = disciple_memory_map_romcs_rom;
@@ -605,7 +607,9 @@ static void disciple_from_snapshot(libspectrum_snap *snap)
 {
     int i;
 
-    if (!libspectrum_snap_disciple_active(snap)) return;
+    if (!libspectrum_snap_disciple_active(snap)) {
+        return;
+    }
 
     if (libspectrum_snap_disciple_custom_rom(snap) &&
       libspectrum_snap_disciple_rom(snap, 0) &&
@@ -657,7 +661,9 @@ static void disciple_to_snapshot(libspectrum_snap *snap)
     int drive_count = 0;
     int i;
 
-    if (!periph_is_active(PERIPH_TYPE_DISCIPLE)) return;
+    if (!periph_is_active(PERIPH_TYPE_DISCIPLE)) {
+        return;
+    }
 
     libspectrum_snap_set_disciple_active(snap, 1);
 

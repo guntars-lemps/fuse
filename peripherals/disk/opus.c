@@ -118,7 +118,9 @@ void opus_unpage(void)
 
 static void opus_memory_map(void)
 {
-    if (!opus_active) return;
+    if (!opus_active) {
+        return;
+    }
 
     memory_map_romcs_8k(0x0000, opus_memory_map_romcs_rom);
     memory_map_romcs_2k(0x2000, opus_memory_map_romcs_ram);
@@ -399,8 +401,12 @@ libspectrum_byte opus_read(libspectrum_word address)
 
 void opus_write(libspectrum_word address, libspectrum_byte b)
 {
-    if (address < 0x2000) return;
-    if (address >= 0x3800) return;
+    if (address < 0x2000) {
+        return;
+    }
+    if (address >= 0x3800) {
+        return;
+    }
 
     if (address >= 0x3000) {
     opus_6821_access(address, b, 1);
@@ -431,7 +437,9 @@ static void opus_enabled_snapshot(libspectrum_snap *snap)
 
 static void opus_from_snapshot(libspectrum_snap *snap)
 {
-    if (!libspectrum_snap_opus_active(snap)) return;
+    if (!libspectrum_snap_opus_active(snap)) {
+        return;
+    }
 
     if (libspectrum_snap_opus_custom_rom(snap) &&
       libspectrum_snap_opus_rom(snap, 0) &&
@@ -478,7 +486,9 @@ static void opus_to_snapshot(libspectrum_snap *snap)
     int drive_count = 0;
     int i;
 
-    if (!periph_is_active(PERIPH_TYPE_OPUS)) return;
+    if (!periph_is_active(PERIPH_TYPE_OPUS)) {
+        return;
+    }
 
     libspectrum_snap_set_opus_active(snap, 1);
 

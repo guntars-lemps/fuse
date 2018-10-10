@@ -149,7 +149,9 @@ void usource_toggle(void)
 
 static void usource_memory_map(void)
 {
-    if (!usource_active) return;
+    if (!usource_active) {
+        return;
+    }
 
     memory_map_romcs_8k(0x0000, usource_memory_map_romcs);
     memory_map_romcs_8k(0x2000, usource_memory_map_romcs);
@@ -201,7 +203,9 @@ static void usource_enabled_snapshot(libspectrum_snap *snap)
 
 static void usource_from_snapshot(libspectrum_snap *snap)
 {
-    if (!libspectrum_snap_usource_active(snap)) return;
+    if (!libspectrum_snap_usource_active(snap)) {
+        return;
+    }
 
     if (libspectrum_snap_usource_custom_rom(snap) &&
       libspectrum_snap_usource_rom(snap, 0) &&
@@ -225,7 +229,9 @@ static void usource_to_snapshot(libspectrum_snap *snap)
     size_t rom_length;
     int i;
 
-    if (!periph_is_active(PERIPH_TYPE_USOURCE)) return;
+    if (!periph_is_active(PERIPH_TYPE_USOURCE)) {
+        return;
+    }
 
     libspectrum_snap_set_usource_active(snap, 1);
     libspectrum_snap_set_usource_paged (snap, usource_active);

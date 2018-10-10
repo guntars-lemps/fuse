@@ -144,7 +144,9 @@ void widget_roms_keyhandler(input_key key)
     data.exit_all_widgets = 0;
     data.title = buf;
     widget_do_fileselector(&data);
-    if (!widget_filesel_name) return;
+    if (!widget_filesel_name) {
+        return;
+    }
 
     setting = settings_get_rom_setting(widget_settings, key + first_rom,
                     is_peripheral);

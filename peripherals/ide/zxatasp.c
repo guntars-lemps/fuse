@@ -221,7 +221,9 @@ void zxatasp_register_startup(void)
 
 static void zxatasp_reset(int hard_reset GCC_UNUSED)
 {
-    if (!settings_current.zxatasp_active) return;
+    if (!settings_current.zxatasp_active) {
+        return;
+    }
 
     machine_current->ram.romcs = 1;
 
@@ -323,7 +325,9 @@ static void zxatasp_portC_write(libspectrum_word port GCC_UNUSED, libspectrum_by
     zxatasp_portC = newC;
 
     // No action can occur if high part of port C is in input mode
-    if (zxatasp_control & MC8255_PORT_C_HI_IO) return;
+    if (zxatasp_control & MC8255_PORT_C_HI_IO) {
+        return;
+    }
 
     // Check for any I/O action
     if ((ZXATASP_READ_PRIMARY(newC)) &&
@@ -475,7 +479,9 @@ static void zxatasp_memory_map(void)
 {
     int i, writable, map_read;
 
-    if (!settings_current.zxatasp_active) return;
+    if (!settings_current.zxatasp_active) {
+        return;
+    }
 
     if (settings_current.zxatasp_wp &&
       (zxatasp_memory_map_romcs[0].page_num & 1)) {
@@ -502,7 +508,9 @@ static void zxatasp_from_snapshot(libspectrum_snap *snap)
 {
     size_t i, page;
 
-    if (!libspectrum_snap_zxatasp_active(snap)) return;
+    if (!libspectrum_snap_zxatasp_active(snap)) {
+        return;
+    }
 
     settings_current.zxatasp_upload = libspectrum_snap_zxatasp_upload(snap);
     settings_current.zxatasp_wp = libspectrum_snap_zxatasp_writeprotect(snap);
@@ -533,7 +541,9 @@ static void zxatasp_to_snapshot(libspectrum_snap *snap)
     size_t i;
     libspectrum_byte *buffer;
 
-    if (!settings_current.zxatasp_active) return;
+    if (!settings_current.zxatasp_active) {
+        return;
+    }
 
     libspectrum_snap_set_zxatasp_active(snap, 1);
     libspectrum_snap_set_zxatasp_upload(snap, settings_current.zxatasp_upload);

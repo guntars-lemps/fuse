@@ -700,7 +700,9 @@ static void stack_activate(GtkTreeView *tree_view, GtkTreePath *path,
       DEBUGGER_BREAKPOINT_TYPE_EXECUTE, memory_source_any, 0, address, 0,
       DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
 );
-    if (error) return;
+    if (error) {
+        return;
+    }
 
     debugger_run();
     }
@@ -746,7 +748,9 @@ static void events_activate(GtkTreeView *tree_view, GtkTreePath *path,
       DEBUGGER_BREAKPOINT_TYPE_TIME, event_tstates, 0,
       DEBUGGER_BREAKPOINT_LIFE_ONESHOT, NULL
 );
-    if (error) return;
+    if (error) {
+        return;
+    }
 
     debugger_run();
     }

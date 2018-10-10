@@ -225,7 +225,9 @@ void widget_pokemem_update_line(unsigned int left_edge, unsigned int width,
     entry_t *entry;
     trainer_t *trainer;
 
-    if (!store) return;
+    if (!store) {
+        return;
+    }
 
     entry = &g_array_index(store, entry_t, index);
     trainer = entry->trainer;
@@ -333,7 +335,9 @@ void widget_pokemem_keyhandler(input_key key)
 
 void widget_pokemem_store_new(void)
 {
-    if (!trainer_list) return;
+    if (!trainer_list) {
+        return;
+    }
 
     store = g_array_new(FALSE, FALSE, sizeof(entry_t));
 
@@ -361,7 +365,9 @@ void widget_pokemem_store_add(gpointer data, gpointer user_data GCC_UNUSED)
     trainer_t *trainer = data;
     entry_t entry;
 
-    if (!trainer) return;
+    if (!trainer) {
+        return;
+    }
 
     // Append a new row and fill data
     entry.checked = trainer->active;
@@ -376,7 +382,9 @@ void widget_pokemem_apply_pokes(void)
     trainer_t *trainer;
     unsigned int i;
 
-    if (!store) return;
+    if (!store) {
+        return;
+    }
 
     for (i = 0; i < store->len; i++) {
     entry = &g_array_index(store, entry_t, i);

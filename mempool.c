@@ -134,7 +134,9 @@ static void mempool_end(void)
     int i;
     GArray *pool;
 
-    if (!memory_pools) return;
+    if (!memory_pools) {
+        return;
+    }
 
     for (i = 0; i < memory_pools->len; i++) {
     pool = g_array_index(memory_pools, GArray *, i);

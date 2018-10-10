@@ -253,7 +253,9 @@ static void select_row(GtkTreeView *treeview GCC_UNUSED, GtkTreePath *path,
 
     // Don't do anything if the current block was clicked on
     current_block = tape_get_current_block();
-    if (row == current_block) return;
+    if (row == current_block) {
+        return;
+    }
 
     // Otherwise, select the new block
     tape_select_block_no_update(row);

@@ -120,7 +120,9 @@ void keyboard_update(void)
     ssize_t available, i;
 
     available = read(STDIN_FILENO, &keybuf, sizeof(keybuf));
-    if (available <= 0) return;
+    if (available <= 0) {
+        return;
+    }
 
     for (i = 0; i < available; i++)
       if (ignore) {

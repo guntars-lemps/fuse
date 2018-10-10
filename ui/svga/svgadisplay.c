@@ -656,7 +656,9 @@ void uidisplay_frame_end(void)
     updated_rects[0].h = image_height;
     }
 
-    if (!(ui_widget_level >= 0) && num_rects == 0) return;
+    if (!(ui_widget_level >= 0) && num_rects == 0) {
+        return;
+    }
 
     last_rect = updated_rects + num_rects;
 

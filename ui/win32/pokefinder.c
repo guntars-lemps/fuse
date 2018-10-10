@@ -349,7 +349,9 @@ static void possible_click(LPNMITEMACTIVATE lpnmitem)
     int error;
     libspectrum_word row;
 
-    if (lpnmitem->iItem < 0) return;
+    if (lpnmitem->iItem < 0) {
+        return;
+    }
 
     row = lpnmitem->iItem;
 
@@ -357,7 +359,9 @@ static void possible_click(LPNMITEMACTIVATE lpnmitem)
     DEBUGGER_BREAKPOINT_TYPE_WRITE, memory_source_ram, possible_page[row],
     possible_offset[row], 0, DEBUGGER_BREAKPOINT_LIFE_PERMANENT, NULL
 );
-    if (error) return;
+    if (error) {
+        return;
+    }
 
     ui_debugger_update();
 }

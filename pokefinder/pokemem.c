@@ -81,7 +81,9 @@ static void pokemem_trainer_free(gpointer data, gpointer user_data GCC_UNUSED)
 {
     trainer_t *trainer = data;
 
-    if (!trainer) return;
+    if (!trainer) {
+        return;
+    }
 
     pokemem_trainer_deactivate(trainer);
 

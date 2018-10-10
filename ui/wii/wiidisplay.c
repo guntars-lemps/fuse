@@ -336,7 +336,9 @@ void wiidisplay_showmouse(float x, float y)
 {
     int c, r;
 
-    if (!fuse_emulation_paused) return;
+    if (!fuse_emulation_paused) {
+        return;
+    }
 
     int mousenewx = x*(DISPLAY_SCREEN_WIDTH/2-MOUSESIZEX);
     int mousenewy = y*(DISPLAY_SCREEN_HEIGHT-MOUSESIZEY);

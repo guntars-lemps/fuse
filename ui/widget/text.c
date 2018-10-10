@@ -118,20 +118,28 @@ void widget_text_keyhandler(input_key key)
     // FIXME: we *don't* want keypresses filtered through the input layer
 
     // First, return if the character isn't printable ASCII.
-    if (key < ' ' || key > '~') return;
+    if (key < ' ' || key > '~') {
+        return;
+    }
 
     // Return if the key isn't valid.
     switch (allow) {
     case WIDGET_INPUT_ASCII:
     break;
     case WIDGET_INPUT_DIGIT:
-    if (!isdigit(key)) return;
+    if (!isdigit(key)) {
+        return;
+    }
     break;
     case WIDGET_INPUT_ALPHA:
-    if (!isalpha(key)) return;
+    if (!isalpha(key)) {
+        return;
+    }
     break;
     case WIDGET_INPUT_ALNUM:
-    if (!isdigit(key) && !isalpha(key)) return;
+    if (!isdigit(key) && !isalpha(key)) {
+        return;
+    }
     break;
     }
 

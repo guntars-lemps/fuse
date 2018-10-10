@@ -432,7 +432,9 @@ void menu_file_exit(int action)
 {
     static int menu_exit_open = 0;
 
-    if (menu_exit_open) return;
+    if (menu_exit_open) {
+        return;
+    }
 
     menu_exit_open = 1;
     if (widget_do_query("Exit Fuse?") || !widget_query.confirm) {
@@ -583,7 +585,9 @@ void menu_options_joysticks_select(int action)
     error = widget_do_menu(submenu_type_and_mapping_for_joystick);
 #endif // #ifdef USE_JOYSTICK
 
-    if (error) return;
+    if (error) {
+        return;
+    }
 }
 
 
@@ -668,9 +672,13 @@ void menu_machine_select(int action)
 
     error = widget_do_select(&info);
     free(buffer); free(options);
-    if (error) return;
+    if (error) {
+        return;
+    }
 
-    if (info.result == -1) return;
+    if (info.result == -1) {
+        return;
+    }
 
     new_machine = machine_types[info.result]->machine;
 

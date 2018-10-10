@@ -112,7 +112,9 @@ static void covox_enabled_snapshot(libspectrum_snap *snap)
 
 static void covox_from_snapshot(libspectrum_snap *snap)
 {
-    if (!libspectrum_snap_covox_active(snap)) return;
+    if (!libspectrum_snap_covox_active(snap)) {
+        return;
+    }
 
     /* We just set the internal machine status to the last read covox_dac
    * instead of trying to write to the sound routines, as at this stage

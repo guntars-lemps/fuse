@@ -43,7 +43,9 @@ int dmalen = BUFSIZE;
 
 static void sound_dmacallback(void)
 {
-    if (sfifo_used(&sound_fifo) < 128) return;
+    if (sfifo_used(&sound_fifo) < 128) {
+        return;
+    }
 
     dmalen = MIN(BUFSIZE, sfifo_used(&sound_fifo));
     sfifo_read(&sound_fifo, dmabuf, dmalen);

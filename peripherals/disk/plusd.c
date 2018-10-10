@@ -126,7 +126,9 @@ void plusd_unpage(void)
 
 static void plusd_memory_map(void)
 {
-    if (!plusd_active) return;
+    if (!plusd_active) {
+        return;
+    }
 
     memory_map_romcs_8k(0x0000, plusd_memory_map_romcs_rom);
     memory_map_romcs_8k(0x2000, plusd_memory_map_romcs_ram);
@@ -414,7 +416,9 @@ static void plusd_enabled_snapshot(libspectrum_snap *snap)
 
 static void plusd_from_snapshot(libspectrum_snap *snap)
 {
-    if (!libspectrum_snap_plusd_active(snap)) return;
+    if (!libspectrum_snap_plusd_active(snap)) {
+        return;
+    }
 
     if (libspectrum_snap_plusd_custom_rom(snap) &&
       libspectrum_snap_plusd_rom(snap, 0) &&
@@ -456,7 +460,9 @@ static void plusd_to_snapshot(libspectrum_snap *snap)
     int drive_count = 0;
     int i;
 
-    if (!periph_is_active(PERIPH_TYPE_PLUSD)) return;
+    if (!periph_is_active(PERIPH_TYPE_PLUSD)) {
+        return;
+    }
 
     libspectrum_snap_set_plusd_active(snap, 1);
 

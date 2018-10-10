@@ -60,7 +60,9 @@ void ui_joystick_poll(void)
     WPADData *wpad;
     joystick_t js;
 
-    if (fuse_emulation_paused) return;
+    if (fuse_emulation_paused) {
+        return;
+    }
 
 #define POST_JOYPRESS(number, pressed) do {      \
     fuse_event.type = INPUT_EVENT_JOYSTICK_PRESS; \

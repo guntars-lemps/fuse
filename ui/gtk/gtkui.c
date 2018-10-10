@@ -397,7 +397,9 @@ void menu_file_exit(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     if (gtkui_confirm("Exit Fuse?")) {
 
-    if (menu_check_media_changed()) return;
+    if (menu_check_media_changed()) {
+        return;
+    }
 
     fuse_exiting = 1;
 

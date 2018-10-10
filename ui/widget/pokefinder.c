@@ -148,7 +148,9 @@ static void display_value(void)
 
 static void scroll(int step)
 {
-    if (!FEW_ENOUGH()) return;
+    if (!FEW_ENOUGH()) {
+        return;
+    }
 
     selected += step;
     if (selected < 0)

@@ -243,7 +243,9 @@ static void multiface_reset_real(int idx, int hard_reset)
     SET(multiface_available, idx, 0);
 
     if (hard_reset) memset(mf[idx].ram, 0, 8192);
-    if (!periph_is_active(mf[idx].type)) return;
+    if (!periph_is_active(mf[idx].type)) {
+        return;
+    }
 
     mf[idx].IC8a_Q = 1;
     mf[idx].IC8b_Q = 1;
@@ -302,7 +304,9 @@ void multiface_status_update(void)
     for (i = MF_1; i <= MF_3; i++)
     SET(multiface_available, i, periph_is_active(mf[i].type));
 
-    if (!multiface_available) return;
+    if (!multiface_available) {
+        return;
+    }
 
     ui_menu_activate(UI_MENU_ITEM_MACHINE_MULTIFACE, 1);
     if (IS(multiface_available, MF_1) &&
@@ -314,7 +318,9 @@ void multiface_status_update(void)
 
 static void multiface_page(int idx)
 {
-    if (IS(multiface_active, idx)) return;
+    if (IS(multiface_active, idx)) {
+        return;
+    }
     SET(multiface_active, idx, 1);
     romcs = machine_current->ram.romcs;
     machine_current->ram.romcs = 1;
@@ -327,7 +333,9 @@ static void multiface_page(int idx)
 
 static void multiface_unpage(int idx)
 {
-    if (!IS(multiface_active, idx)) return;
+    if (!IS(multiface_active, idx)) {
+        return;
+    }
     SET(multiface_active, idx, 0);
     machine_current->ram.romcs = romcs;
     machine_current->memory_map();
@@ -461,7 +469,9 @@ static libspectrum_byte multiface_port_in3(libspectrum_word port, libspectrum_by
 static void multiface_port_out1(libspectrum_word port GCC_UNUSED,
                      libspectrum_byte val GCC_UNUSED)
 {
-    if (!IS(multiface_available, MF_1)) return;
+    if (!IS(multiface_available, MF_1)) {
+        return;
+    }
 
     // MF one: out ()
     // xxxxxxxx x001xx1x page out
@@ -471,7 +481,9 @@ static void multiface_port_out1(libspectrum_word port GCC_UNUSED,
 
 static void multiface_port_out128_3(int idx, libspectrum_word port)
 {
-    if (!IS(multiface_available, idx)) return;
+    if (!IS(multiface_available, idx)) {
+        return;
+    }
 
     if (IS(multiface_active, idx)) {
     mf[idx].J2 = port & 0x0080 ? 1 : 0; // A7 == 1
@@ -566,7 +578,9 @@ static void multiface_enabled_snapshot(libspectrum_snap *snap)
     settings_current.multiface128 = 0;
     settings_current.multiface3 = 0;
 
-    if (!libspectrum_snap_multiface_active(snap)) return;
+    if (!libspectrum_snap_multiface_active(snap)) {
+        return;
+    }
 
     if (libspectrum_snap_multiface_model_one(snap))
     settings_current.multiface1 = 1;
@@ -581,7 +595,9 @@ static void multiface_from_snapshot(libspectrum_snap *snap)
 {
     int idx;
 
-    if (!libspectrum_snap_multiface_active(snap)) return;
+    if (!libspectrum_snap_multiface_active(snap)) {
+        return;
+    }
 
     if (libspectrum_snap_multiface_model_one(snap))
     idx = MF_1;
@@ -592,7 +608,9 @@ static void multiface_from_snapshot(libspectrum_snap *snap)
     else
     return;
 
-    if (!IS(multiface_available, idx)) return;
+    if (!IS(multiface_available, idx)) {
+        return;
+    }
 
     // Multiface with 16 Kb RAM not supported
     if (libspectrum_snap_multiface_ram_length(snap, 0) != MULTIFACE_RAM_SIZE) {

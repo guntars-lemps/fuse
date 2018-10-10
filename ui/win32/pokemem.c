@@ -416,7 +416,9 @@ void trainer_add(gpointer data, gpointer user_data)
     int i, state;
     LV_ITEM lvi;
 
-    if (!trainer) return;
+    if (!trainer) {
+        return;
+    }
 
     // Get count of items
     i = SendMessage(hwnd_list, LVM_GETITEMCOUNT, 0, 0);
@@ -475,7 +477,9 @@ void create_custom_edit(HWND parent, int item, int subitem)
                               subitemrect.left, subitemrect.top, width, height,
                               parent, (HMENU) IDC_PM_LIST_EDIT,
                               GetModuleHandle(NULL), NULL);
-    if (!hwnd_edit) return;
+    if (!hwnd_edit) {
+        return;
+    }
 
     // Replace message handler
     WNDPROC orig_proc = (WNDPROC) GetWindowLongPtr(hwnd_edit, GWLP_WNDPROC);

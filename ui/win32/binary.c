@@ -149,7 +149,9 @@ static void change_load_filename(HWND hwndDlg, LONG_PTR user_data)
     int error;
 
     new_filename = ui_get_open_filename("Fuse - Load Binary Data");
-    if (!new_filename) return;
+    if (!new_filename) {
+        return;
+    }
 
     error = utils_read_file(new_filename, &new_file);
     if (error) {free(new_filename); return;}
@@ -273,7 +275,9 @@ static void change_save_filename(HWND hwndDlg, LONG_PTR user_data)
     TCHAR *new_filename;
 
     new_filename = ui_get_save_filename("Fuse - Save Binary Data");
-    if (!new_filename) return;
+    if (!new_filename) {
+        return;
+    }
 
     free(info->filename);
 
@@ -342,7 +346,9 @@ static void save_data(HWND hwndDlg, LONG_PTR user_data)
     }
 
     error = utils_save_binary(start, length, info->filename);
-    if (error) return;
+    if (error) {
+        return;
+    }
 
     EndDialog(hwndDlg, 0);
 }

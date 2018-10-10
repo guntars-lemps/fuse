@@ -265,7 +265,9 @@ static void trainer_add(gpointer data, gpointer user_data)
     GtkTreeIter iter;
     trainer_t *trainer = data;
 
-    if (!trainer) return;
+    if (!trainer) {
+        return;
+    }
 
     if (trainer->ask_value)
     val = g_strdup_printf("%d", trainer->value);

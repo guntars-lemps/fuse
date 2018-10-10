@@ -478,7 +478,9 @@ void menu_file_exit(int action)
  // FIXME: this should really be sending WM_CLOSE, not duplicate code
     if (win32ui_confirm("Exit Fuse?")) {
 
-    if (menu_check_media_changed()) return;
+    if (menu_check_media_changed()) {
+        return;
+    }
 
     DestroyWindow(fuse_hWnd);
     }
@@ -1014,7 +1016,9 @@ static int selector_dialog(win32ui_select_info *items)
 
 void win32_verror(int is_error)
 {
-    if (!is_error) return;
+    if (!is_error) {
+        return;
+    }
 
     DWORD last_error;
     static LPVOID err_msg;
@@ -1216,7 +1220,9 @@ void win32ui_process_messages(int process_queue_once)
         }
       }
     }
-    if (process_queue_once) return;
+    if (process_queue_once) {
+        return;
+    }
 
     /* If we miss WM_USER_EXIT_PROCESS_MESSAGES, the window procedure will
        kindly notify us */

@@ -339,7 +339,9 @@ static void sdldisplay_find_best_fullscreen_scaler(void)
     if (settings_current.full_screen) {
     int i = 0;
 
-    if (searching_fullscreen_scaler) return;
+    if (searching_fullscreen_scaler) {
+        return;
+    }
     searching_fullscreen_scaler = 1;
     while (i < SCALER_NUM &&
            (image_height*sdldisplay_current_size <= min_fullscreen_height/2 ||
@@ -519,7 +521,9 @@ static void sdl_blit_icon(SDL_Surface **icon,
     r->x++;
     r->y++;
 
-    if (SDL_BlitSurface(icon[timex], NULL, tmp_screen, r)) return;
+    if (SDL_BlitSurface(icon[timex], NULL, tmp_screen, r)) {
+        return;
+    }
 
     /* Extend the dirty region by 1 pixel for scalers
      that "smear" the screen, e.g. 2xSAI */

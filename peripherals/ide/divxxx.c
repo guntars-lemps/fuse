@@ -184,7 +184,9 @@ void divxxx_reset(divxxx_t *divxxx, int hard_reset)
 
     divxxx->active = 0;
 
-    if (!*divxxx->enabled) return;
+    if (!*divxxx->enabled) {
+        return;
+    }
 
     if (hard_reset) {
     divxxx->control = 0;
@@ -282,7 +284,9 @@ void divxxx_memory_map(divxxx_t *divxxx)
     int lower_page_writable, upper_page_writable;
     memory_page *lower_page, *upper_page;
 
-    if (!divxxx->active) return;
+    if (!divxxx->active) {
+        return;
+    }
 
     upper_ram_page = divxxx->control & (divxxx->ram_page_count - 1);
 
