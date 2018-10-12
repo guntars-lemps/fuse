@@ -130,7 +130,7 @@ static ui_media_drive_info_t beta_ui_drives[BETA_NUM_DRIVES] = {
         /* .is_available = */ &ui_drive_is_available,
         /* .get_params = */ &ui_drive_get_params_a,
         /* .insert_hook = */ NULL,
-        /* .autoload_hook = */ &ui_drive_autoload,
+        /* .autoload_hook = */ &ui_drive_autoload
     },
     {
         /* .name = */ "Beta Disk B:",
@@ -144,7 +144,7 @@ static ui_media_drive_info_t beta_ui_drives[BETA_NUM_DRIVES] = {
         /* .is_available = */ &ui_drive_is_available,
         /* .get_params = */ &ui_drive_get_params_b,
         /* .insert_hook = */ NULL,
-        /* .autoload_hook = */ &ui_drive_autoload,
+        /* .autoload_hook = */ &ui_drive_autoload
     },
     {
         /* .name = */ "Beta Disk C:",
@@ -158,7 +158,7 @@ static ui_media_drive_info_t beta_ui_drives[BETA_NUM_DRIVES] = {
         /* .is_available = */ &ui_drive_is_available,
         /* .get_params = */ &ui_drive_get_params_c,
         /* .insert_hook = */ NULL,
-        /* .autoload_hook = */ &ui_drive_autoload,
+        /* .autoload_hook = */ &ui_drive_autoload
     },
     {
         /* .name = */ "Beta Disk D:",
@@ -172,8 +172,8 @@ static ui_media_drive_info_t beta_ui_drives[BETA_NUM_DRIVES] = {
         /* .is_available = */ &ui_drive_is_available,
         /* .get_params = */ &ui_drive_get_params_d,
         /* .insert_hook = */ NULL,
-        /* .autoload_hook = */ &ui_drive_autoload,
-    },
+        /* .autoload_hook = */ &ui_drive_autoload
+    }
 };
 
 
@@ -278,31 +278,32 @@ static void beta_reset(int hard_reset GCC_UNUSED)
     wd_fdc_master_reset(beta_fdc);
 
     if (!beta_builtin) {
-    if (machine_load_rom_bank(beta_memory_map_romcs,
-                              0,
-                              settings_current.rom_beta128,
-                              settings_default.rom_beta128,
-                              ROM_SIZE)) {
+        if (machine_load_rom_bank(beta_memory_map_romcs,
+                                  0,
+                                  settings_current.rom_beta128,
+                                  settings_default.rom_beta128,
+                                  ROM_SIZE)) {
+            beta_active = 0;
+            beta_available = 0;
+            periph_activate_type(PERIPH_TYPE_BETA128, 0);
+            settings_current.beta128 = 0;
+            return;
+        }
+
         beta_active = 0;
-        beta_available = 0;
-        periph_activate_type(PERIPH_TYPE_BETA128, 0);
-        settings_current.beta128 = 0;
-        return;
-    }
 
-    beta_active = 0;
+        if (!(machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY)) {
+            beta_pc_mask = 0xfe00;
+            beta_pc_value = 0x3c00;
 
-    if (!(machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_128_MEMORY)) {
-        beta_pc_mask = 0xfe00;
-        beta_pc_value = 0x3c00;
-
-        /* For 48K type machines, the Beta 128 is supposed to be configured
-           to start with the Beta ROM paged in (System switch in centre position)
-           but we also allow the settion where the Beta does not auto-boot (System
-           switch is in the off position 3)
-         */
-        if (settings_current.beta128_48boot)
-            beta_page();
+            /* For 48K type machines, the Beta 128 is supposed to be configured
+               to start with the Beta ROM paged in (System switch in centre position)
+               but we also allow the settion where the Beta does not auto-boot (System
+               switch is in the off position 3)
+             */
+            if (settings_current.beta128_48boot) {
+                beta_page();
+            }
         }
     }
 
