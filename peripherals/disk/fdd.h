@@ -34,7 +34,7 @@ typedef enum fdd_error_t {
     FDD_DATA,
     FDD_RDONLY,
     FDD_NONE, // FDD not exist (disabled)
-    FDD_LAST_ERROR,
+    FDD_LAST_ERROR
 } fdd_error_t;
 
 typedef enum fdd_type_t {
@@ -53,12 +53,12 @@ typedef enum fdd_type_t {
     will respond to the input lines and gate the output lines.
     In addition, the selected drive will load its R/W head if program shunt position "HL" is shorted. ...
     */
-    FDD_IBMPC,
+    FDD_IBMPC
 } fdd_type_t;
 
 typedef enum fdd_dir_t {
     FDD_STEP_OUT = 0,
-    FDD_STEP_IN = 1,
+    FDD_STEP_IN = 1
 } fdd_dir_t;
 
 typedef struct fdd_t {

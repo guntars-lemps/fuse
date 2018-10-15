@@ -291,7 +291,7 @@ int fdd_load(fdd_t *d, int upsidedown)
                             settings_current.drive_80_max_track :
                             settings_current.drive_40_max_track);
     }
-    if (d->disk.cylinders > d->fdd_cylinders + FDD_TRACK_TRESHOLD) {
+    if (d->disk.cylinders > (d->fdd_cylinders + FDD_TRACK_TRESHOLD)) {
         d->unreadable = 1;
         ui_error(UI_ERROR_WARNING,
                  "This %d track disk image is incompatible with the configured "

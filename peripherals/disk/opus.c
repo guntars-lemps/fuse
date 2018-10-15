@@ -77,20 +77,18 @@ static void opus_from_snapshot(libspectrum_snap *snap);
 static void opus_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t opus_module_info = {
-
     /* .reset = */ opus_reset,
     /* .romcs = */ opus_memory_map,
     /* .snapshot_enabled = */ opus_enabled_snapshot,
     /* .snapshot_from = */ opus_from_snapshot,
-    /* .snapshot_to = */ opus_to_snapshot,
-
+    /* .snapshot_to = */ opus_to_snapshot
 };
 
 static const periph_t opus_periph = {
     /* .option = */ &settings_current.opus,
     /* .ports = */ NULL,
     /* .hard_reset = */ 1,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 // Debugger events
@@ -142,9 +140,9 @@ static int opus_init(void *context)
     opus_fdc = wd_fdc_alloc_fdc(WD1770, 0, WD_FLAG_DRQ);
 
     for (i = 0; i < OPUS_NUM_DRIVES; i++) {
-    d = &opus_drives[i];
-    fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
-    d->disk.flag = DISK_FLAG_NONE;
+        d = &opus_drives[i];
+        fdd_init(d, FDD_SHUGART, NULL, 0); // drive geometry 'autodetect'
+        d->disk.flag = DISK_FLAG_NONE;
     }
 
     opus_fdc->current_drive = &opus_drives[0];
@@ -159,19 +157,23 @@ static int opus_init(void *context)
 
     opus_rom_memory_source = memory_source_register("Opus ROM");
     opus_ram_memory_source = memory_source_register("Opus RAM");
-    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
-    opus_memory_map_romcs_rom[i].source = opus_rom_memory_source;
-    for (i = 0; i < MEMORY_PAGES_IN_2K; i++)
-    opus_memory_map_romcs_ram[i].source = opus_ram_memory_source;
 
-    periph_register(PERIPH_TYPE_OPUS, &opus_periph);
-    for (i = 0; i < OPUS_NUM_DRIVES; i++) {
-    opus_ui_drives[i].fdd = &opus_drives[i];
-    ui_media_drive_register(&opus_ui_drives[i]);
+    for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
+        opus_memory_map_romcs_rom[i].source = opus_rom_memory_source;
     }
 
-    periph_register_paging_events(event_type_string, &page_event,
-                                 &unpage_event);
+    for (i = 0; i < MEMORY_PAGES_IN_2K; i++) {
+        opus_memory_map_romcs_ram[i].source = opus_ram_memory_source;
+    }
+
+    periph_register(PERIPH_TYPE_OPUS, &opus_periph);
+
+    for (i = 0; i < OPUS_NUM_DRIVES; i++) {
+        opus_ui_drives[i].fdd = &opus_drives[i];
+        ui_media_drive_register(&opus_ui_drives[i]);
+    }
+
+    periph_register_paging_events(event_type_string, &page_event, &unpage_event);
 
     return 0;
 }
@@ -187,13 +189,11 @@ static void opus_end(void)
 void opus_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DEBUGGER,
-    STARTUP_MANAGER_MODULE_MEMORY,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_DEBUGGER,
+        STARTUP_MANAGER_MODULE_MEMORY,
+        STARTUP_MANAGER_MODULE_SETUID
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_OPUS, dependencies,
-                            ARRAY_SIZE(dependencies), opus_init, NULL,
-                            opus_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_OPUS, dependencies, ARRAY_SIZE(dependencies), opus_init, NULL, opus_end);
 }
 
 
@@ -205,28 +205,30 @@ static void opus_reset(int hard_reset)
     opus_available = 0;
 
     if (!periph_is_active(PERIPH_TYPE_OPUS)) {
-    return;
+        return;
     }
 
-    if (machine_load_rom_bank(opus_memory_map_romcs_rom, 0,
-                             settings_current.rom_opus,
-                             settings_default.rom_opus, OPUS_ROM_SIZE)) {
-    settings_current.opus = 0;
-    periph_activate_type(PERIPH_TYPE_OPUS, 0);
-    return;
+    if (machine_load_rom_bank(opus_memory_map_romcs_rom,
+                              0,
+                              settings_current.rom_opus,
+                              settings_default.rom_opus,
+                              OPUS_ROM_SIZE)) {
+        settings_current.opus = 0;
+        periph_activate_type(PERIPH_TYPE_OPUS, 0);
+        return;
     }
 
     for (i = 0; i < MEMORY_PAGES_IN_2K; i++) {
-    struct memory_page *page =
-      &opus_memory_map_romcs_ram[i];
-    page->page = opus_ram + i * MEMORY_PAGE_SIZE;
-    page->offset = i * MEMORY_PAGE_SIZE;
+        struct memory_page *page = &opus_memory_map_romcs_ram[i];
+        page->page = opus_ram + (i * MEMORY_PAGE_SIZE);
+        page->offset = i * MEMORY_PAGE_SIZE;
     }
 
     machine_current->ram.romcs = 0;
 
-    for (i = 0; i < MEMORY_PAGES_IN_2K; i++)
-    opus_memory_map_romcs_ram[i].writable = 1;
+    for (i = 0; i < MEMORY_PAGES_IN_2K; i++) {
+        opus_memory_map_romcs_ram[i].writable = 1;
+    }
 
     data_reg_a = 0;
     data_dir_a = 0;
@@ -237,20 +239,21 @@ static void opus_reset(int hard_reset)
 
     opus_available = 1;
 
-    if (hard_reset)
-    memset(opus_ram, 0, sizeof(opus_ram));
+    if (hard_reset) {
+        memset(opus_ram, 0, sizeof(opus_ram));
+    }
 
     wd_fdc_master_reset(opus_fdc);
 
     for (i = 0; i < OPUS_NUM_DRIVES; i++) {
-    ui_media_drive_update_menus(&opus_ui_drives[i],
-                                 UI_MEDIA_DRIVE_UPDATE_ALL);
+        ui_media_drive_update_menus(&opus_ui_drives[i], UI_MEDIA_DRIVE_UPDATE_ALL);
     }
 
     opus_fdc->current_drive = &opus_drives[0];
     fdd_select(&opus_drives[0], 1);
     machine_current->memory_map();
 }
+
 
 /*
  * opus_6821_access(reg, data, dir)
@@ -265,107 +268,105 @@ static void opus_reset(int hard_reset)
  *
  * Mostly borrowed from EightyOne - A Windows ZX80/81/clone emulator
  */
-
-
-static libspectrum_byte opus_6821_access(libspectrum_byte reg, libspectrum_byte data,
-                  libspectrum_byte dir)
+static libspectrum_byte opus_6821_access(libspectrum_byte reg, libspectrum_byte data, libspectrum_byte dir)
 {
     int drive, side;
     int i;
 
     switch (reg & 0x03) {
-    case 0:
-    if (dir) {
-      if (control_a & 0x04) {
-        data_reg_a = data;
+        case 0:
+            if (dir) {
+                if (control_a & 0x04) {
+                    data_reg_a = data;
 
-        drive = (data & 0x02) == 2 ? 1 : 0;
-        side = (data & 0x10)>>4 ? 1 : 0;
+                    drive = ((data & 0x02) == 2) ? 1 : 0;
+                    side = ((data & 0x10) >> 4) ? 1 : 0;
 
-        for (i = 0; i < OPUS_NUM_DRIVES; i++) {
-          fdd_set_head(&opus_drives[i], side);
-        }
+                    for (i = 0; i < OPUS_NUM_DRIVES; i++) {
+                        fdd_set_head(&opus_drives[i], side);
+                    }
 
-        fdd_select(&opus_drives[ (!drive) ], 0);
-        fdd_select(&opus_drives[drive], 1);
+                    fdd_select(&opus_drives[(!drive)], 0);
+                    fdd_select(&opus_drives[drive], 1);
 
-        if (opus_fdc->current_drive != &opus_drives[drive]) {
-          if (opus_fdc->current_drive->motoron) { // swap motoron
-            fdd_motoron(&opus_drives[ (!drive) ], 0);
-            fdd_motoron(&opus_drives[drive], 1);
-          }
-          opus_fdc->current_drive = &opus_drives[drive];
-        }
-      } else {
-        data_dir_a = data;
-      }
-    } else {
-      if (control_a & 0x04) {
-        // printer never busy (bit 6)
-        data_reg_a &= ~0x40;
-        return data_reg_a;
-      } else {
-        return data_dir_a;
-      }
-    }
-    break;
-    case 1:
-    if (dir) {
-      control_a = data;
-    } else {
-      // Always return bit 6 set to ACK parallel port actions
-      return control_a | 0x40;
-    }
-    break;
-    case 2:
-    if (dir) {
-      if (control_b & 0x04) {
-        data_reg_b = data;
-        printer_parallel_write(0x00, data);
-        /* Don't worry about emulating the strobes from the ROM, they are
-           all bound up with checking current printer busy status which we
-           don't emulate, so just send the char now */
-        printer_parallel_strobe_write(0);
-        printer_parallel_strobe_write(1);
-        printer_parallel_strobe_write(0);
-      } else {
-        data_dir_b = data;
-      }
-    } else {
-      if (control_b & 0x04) {
-        return data_reg_b;
-      } else {
-        return data_dir_b;
-      }
-    }
-    break;
-    case 3:
-    if (dir) {
-      control_b = data;
-    } else {
-      return control_b;
-    }
-    break;
+                    if (opus_fdc->current_drive != &opus_drives[drive]) {
+                        if (opus_fdc->current_drive->motoron) { // swap motoron
+                            fdd_motoron(&opus_drives[(!drive)], 0);
+                            fdd_motoron(&opus_drives[drive], 1);
+                        }
+                        opus_fdc->current_drive = &opus_drives[drive];
+                    }
+                } else {
+                    data_dir_a = data;
+                }
+            } else {
+                if (control_a & 0x04) {
+                    // printer never busy (bit 6)
+                    data_reg_a &= ~0x40;
+                    return data_reg_a;
+                } else {
+                    return data_dir_a;
+                }
+            }
+            break;
+
+        case 1:
+            if (dir) {
+                control_a = data;
+            } else {
+                // Always return bit 6 set to ACK parallel port actions
+                return control_a | 0x40;
+            }
+            break;
+
+        case 2:
+            if (dir) {
+                if (control_b & 0x04) {
+                    data_reg_b = data;
+                    printer_parallel_write(0x00, data);
+                    /* Don't worry about emulating the strobes from the ROM, they are
+                       all bound up with checking current printer busy status which we
+                       don't emulate, so just send the char now */
+                    printer_parallel_strobe_write(0);
+                    printer_parallel_strobe_write(1);
+                    printer_parallel_strobe_write(0);
+                } else {
+                    data_dir_b = data;
+                }
+            } else {
+                if (control_b & 0x04) {
+                    return data_reg_b;
+                } else {
+                    return data_dir_b;
+                }
+            }
+            break;
+
+        case 3:
+            if (dir) {
+                control_b = data;
+            } else {
+                return control_b;
+            }
+            break;
     }
 
     return 0;
 }
 
 
-int opus_disk_insert(opus_drive_number which, const char *filename,
-           int autoload)
+int opus_disk_insert(opus_drive_number which, const char *filename, int autoload)
 {
     if (which >= OPUS_NUM_DRIVES) {
-    ui_error(UI_ERROR_ERROR, "opus_disk_insert: unknown drive %d",
-          which);
-    fuse_abort();
+        ui_error(UI_ERROR_ERROR, "opus_disk_insert: unknown drive %d", which);
+        fuse_abort();
     }
 
     return ui_media_drive_insert(&opus_ui_drives[which], filename, autoload);
 }
 
-fdd_t *
-opus_get_fdd(opus_drive_number which)
+
+fdd_t *opus_get_fdd(opus_drive_number which)
 {
     return &(opus_drives[which]);
 }
@@ -375,24 +376,25 @@ libspectrum_byte opus_read(libspectrum_word address)
 {
     libspectrum_byte data = 0xff;
 
-    if (address >= 0x3800) data = 0xff; // Undefined on Opus
-    else if (address >= 0x3000) // 6821 PIA
-    data = opus_6821_access(address, 0, 0);
-    else if (address >= 0x2800) { // WD1770 FDC
-    switch (address & 0x03) {
-    case 0:
-      data = wd_fdc_sr_read(opus_fdc);
-      break;
-    case 1:
-      data = wd_fdc_tr_read(opus_fdc);
-      break;
-    case 2:
-      data = wd_fdc_sec_read(opus_fdc);
-      break;
-    case 3:
-      data = wd_fdc_dr_read(opus_fdc);
-      break;
-    }
+    if (address >= 0x3800) {
+        data = 0xff; // Undefined on Opus
+    } else if (address >= 0x3000) { // 6821 PIA
+        data = opus_6821_access(address, 0, 0);
+    } else if (address >= 0x2800) { // WD1770 FDC
+        switch (address & 0x03) {
+            case 0:
+                data = wd_fdc_sr_read(opus_fdc);
+                break;
+            case 1:
+                data = wd_fdc_tr_read(opus_fdc);
+                break;
+            case 2:
+                data = wd_fdc_sec_read(opus_fdc);
+                break;
+            case 3:
+                data = wd_fdc_dr_read(opus_fdc);
+                break;
+        }
     }
 
     return data;
@@ -409,22 +411,22 @@ void opus_write(libspectrum_word address, libspectrum_byte b)
     }
 
     if (address >= 0x3000) {
-    opus_6821_access(address, b, 1);
+        opus_6821_access(address, b, 1);
     } else if (address >= 0x2800) {
-    switch (address & 0x03) {
-    case 0:
-      wd_fdc_cr_write(opus_fdc, b);
-      break;
-    case 1:
-      wd_fdc_tr_write(opus_fdc, b);
-      break;
-    case 2:
-      wd_fdc_sec_write(opus_fdc, b);
-      break;
-    case 3:
-      wd_fdc_dr_write(opus_fdc, b);
-      break;
-    }
+        switch (address & 0x03) {
+            case 0:
+                wd_fdc_cr_write(opus_fdc, b);
+                break;
+            case 1:
+                wd_fdc_tr_write(opus_fdc, b);
+                break;
+            case 2:
+                wd_fdc_sec_write(opus_fdc, b);
+                break;
+            case 3:
+                wd_fdc_dr_write(opus_fdc, b);
+                break;
+        }
     }
 }
 
@@ -441,23 +443,22 @@ static void opus_from_snapshot(libspectrum_snap *snap)
         return;
     }
 
-    if (libspectrum_snap_opus_custom_rom(snap) &&
-      libspectrum_snap_opus_rom(snap, 0) &&
-      machine_load_rom_bank_from_buffer(
-                             opus_memory_map_romcs_rom, 0,
-                             libspectrum_snap_opus_rom(snap, 0),
-                             OPUS_ROM_SIZE, 1))
-    return;
+    if (libspectrum_snap_opus_custom_rom(snap) && libspectrum_snap_opus_rom(snap, 0) &&
+        machine_load_rom_bank_from_buffer(opus_memory_map_romcs_rom,
+                                          0,
+                                          libspectrum_snap_opus_rom(snap, 0),
+                                          OPUS_ROM_SIZE,
+                                          1)) {
+        return;
+    }
 
     if (libspectrum_snap_opus_ram(snap, 0)) {
-    memcpy(opus_ram,
-            libspectrum_snap_opus_ram(snap, 0), OPUS_RAM_SIZE);
+        memcpy(opus_ram, libspectrum_snap_opus_ram(snap, 0), OPUS_RAM_SIZE);
     }
 
     /* ignore drive count for now, there will be an issue with loading snaps where
-     drives have been disabled
-    libspectrum_snap_opus_drive_count(snap)
-   */
+       drives have been disabled libspectrum_snap_opus_drive_count(snap)
+    */
 
     opus_fdc->direction = libspectrum_snap_opus_direction(snap);
 
@@ -473,9 +474,9 @@ static void opus_from_snapshot(libspectrum_snap *snap)
     control_b = libspectrum_snap_opus_control_b (snap);
 
     if (libspectrum_snap_opus_paged(snap)) {
-    opus_page();
+        opus_page();
     } else {
-    opus_unpage();
+        opus_unpage();
     }
 }
 
@@ -493,21 +494,24 @@ static void opus_to_snapshot(libspectrum_snap *snap)
     libspectrum_snap_set_opus_active(snap, 1);
 
     buffer = libspectrum_new(libspectrum_byte, OPUS_ROM_SIZE);
-    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
-    memcpy(buffer + i * MEMORY_PAGE_SIZE,
-            opus_memory_map_romcs_rom[i].page, MEMORY_PAGE_SIZE);
+    for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
+        memcpy(buffer + (i * MEMORY_PAGE_SIZE), opus_memory_map_romcs_rom[i].page, MEMORY_PAGE_SIZE);
+    }
 
     libspectrum_snap_set_opus_rom(snap, 0, buffer);
 
-    if (opus_memory_map_romcs_rom[0].save_to_snapshot)
-    libspectrum_snap_set_opus_custom_rom(snap, 1);
+    if (opus_memory_map_romcs_rom[0].save_to_snapshot) {
+        libspectrum_snap_set_opus_custom_rom(snap, 1);
+    }
 
     buffer = libspectrum_new(libspectrum_byte, OPUS_RAM_SIZE);
     memcpy(buffer, opus_ram, OPUS_RAM_SIZE);
     libspectrum_snap_set_opus_ram(snap, 0, buffer);
 
     drive_count++; // Drive 1 is not removable
-    if (option_enumerate_diskoptions_drive_opus2_type() > 0) drive_count++;
+    if (option_enumerate_diskoptions_drive_opus2_type() > 0) {
+        drive_count++;
+    }
     libspectrum_snap_set_opus_drive_count(snap, drive_count);
 
     libspectrum_snap_set_opus_paged(snap, opus_active);
@@ -552,43 +556,44 @@ static int ui_drive_is_available(void)
     return opus_available;
 }
 
-static const fdd_params_t *
-ui_drive_get_params_1(void)
+
+static const fdd_params_t *ui_drive_get_params_1(void)
 {
     // +1 => there is no `Disabled'
     return &fdd_params[option_enumerate_diskoptions_drive_opus1_type() + 1];
 }
 
-static const fdd_params_t *
-ui_drive_get_params_2(void)
+
+static const fdd_params_t *ui_drive_get_params_2(void)
 {
     return &fdd_params[option_enumerate_diskoptions_drive_opus2_type()];
 }
 
+
 static ui_media_drive_info_t opus_ui_drives[OPUS_NUM_DRIVES] = {
     {
-    /* .name = */ "Opus Disk 1",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_OPUS,
-    /* .drive_index = */ OPUS_DRIVE_1,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_OPUS,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_1,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_1_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_1_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_1_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_1,
+        /* .name = */ "Opus Disk 1",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_OPUS,
+        /* .drive_index = */ OPUS_DRIVE_1,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_OPUS,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_1,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_1_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_1_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_1_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_1
     },
     {
-    /* .name = */ "Opus Disk 2",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_OPUS,
-    /* .drive_index = */ OPUS_DRIVE_2,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_OPUS,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_2,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_2_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_2_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_2_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_2,
-    },
+        /* .name = */ "Opus Disk 2",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_OPUS,
+        /* .drive_index = */ OPUS_DRIVE_2,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_OPUS,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_2,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_2_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_2_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_OPUS_2_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_2
+    }
 };
 

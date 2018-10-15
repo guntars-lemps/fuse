@@ -90,13 +90,11 @@ static libspectrum_byte plusd_printer_read(libspectrum_word port, libspectrum_by
 static void plusd_printer_write(libspectrum_word port, libspectrum_byte b);
 
 static module_info_t plusd_module_info = {
-
     /* .reset = */ plusd_reset,
     /* .romcs = */ plusd_memory_map,
     /* .snapshot_enabled = */ plusd_enabled_snapshot,
     /* .snapshot_from = */ plusd_from_snapshot,
-    /* .snapshot_to = */ plusd_to_snapshot,
-
+    /* .snapshot_to = */ plusd_to_snapshot
 };
 
 // Debugger events
@@ -161,6 +159,37 @@ static const periph_t plusd_periph = {
     /* .activate = */ plusd_activate,
 };
 
+static int ui_drive_is_available(void);
+static const fdd_params_t *ui_drive_get_params_1(void);
+static const fdd_params_t *ui_drive_get_params_2(void);
+
+static ui_media_drive_info_t plusd_ui_drives[PLUSD_NUM_DRIVES] = {
+    {
+        /* .name = */ "+D Disk 1",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_PLUSD,
+        /* .drive_index = */ PLUSD_DRIVE_1,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_1,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_1_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_1_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_1_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_1
+    },
+    {
+        /* .name = */ "+D Disk 2",
+        /* .controller_index = */ UI_MEDIA_CONTROLLER_PLUSD,
+        /* .drive_index = */ PLUSD_DRIVE_2,
+        /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD,
+        /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_2,
+        /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_2_EJECT,
+        /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_2_FLIP_SET,
+        /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_2_WP_SET,
+        /* .is_available = */ &ui_drive_is_available,
+        /* .get_params = */ &ui_drive_get_params_2
+    }
+};
+
 
 static int plusd_init(void *context)
 {
@@ -170,9 +199,9 @@ static int plusd_init(void *context)
     plusd_fdc = wd_fdc_alloc_fdc(WD1770, 0, WD_FLAG_NONE);
 
     for (i = 0; i < PLUSD_NUM_DRIVES; i++) {
-    d = &plusd_drives[i];
-    fdd_init(d, FDD_SHUGART, NULL, 0);
-    d->disk.flag = DISK_FLAG_NONE;
+        d = &plusd_drives[i];
+        fdd_init(d, FDD_SHUGART, NULL, 0);
+        d->disk.flag = DISK_FLAG_NONE;
     }
 
     plusd_fdc->current_drive = &plusd_drives[0];
@@ -187,20 +216,23 @@ static int plusd_init(void *context)
 
     plusd_memory_source_rom = memory_source_register("PlusD ROM");
     plusd_memory_source_ram = memory_source_register("PlusD RAM");
-    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
-    plusd_memory_map_romcs_rom[i].source = plusd_memory_source_rom;
-    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
-    plusd_memory_map_romcs_ram[i].source = plusd_memory_source_ram;
+
+    for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
+        plusd_memory_map_romcs_rom[i].source = plusd_memory_source_rom;
+    }
+
+    for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
+        plusd_memory_map_romcs_ram[i].source = plusd_memory_source_ram;
+    }
 
     periph_register(PERIPH_TYPE_PLUSD, &plusd_periph);
 
     for (i = 0; i < PLUSD_NUM_DRIVES; i++) {
-    plusd_ui_drives[i].fdd = &plusd_drives[i];
-    ui_media_drive_register(&plusd_ui_drives[i]);
+        plusd_ui_drives[i].fdd = &plusd_drives[i];
+        ui_media_drive_register(&plusd_ui_drives[i]);
     }
 
-    periph_register_paging_events(event_type_string, &page_event,
-                                 &unpage_event);
+    periph_register_paging_events(event_type_string, &page_event, &unpage_event);
 
     return 0;
 }
@@ -216,13 +248,16 @@ static void plusd_end(void)
 void plusd_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DEBUGGER,
-    STARTUP_MANAGER_MODULE_MEMORY,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_DEBUGGER,
+        STARTUP_MANAGER_MODULE_MEMORY,
+        STARTUP_MANAGER_MODULE_SETUID
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_PLUSD, dependencies,
-                            ARRAY_SIZE(dependencies), plusd_init, NULL,
-                            plusd_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_PLUSD,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             plusd_init,
+                             NULL,
+                             plusd_end);
 }
 
 
@@ -234,37 +269,39 @@ static void plusd_reset(int hard_reset)
     plusd_available = 0;
 
     if (!periph_is_active(PERIPH_TYPE_PLUSD)) {
-    return;
+        return;
     }
 
-    if (machine_load_rom_bank(plusd_memory_map_romcs_rom, 0,
-                 settings_current.rom_plusd,
-                 settings_default.rom_plusd, ROM_SIZE)) {
-    settings_current.plusd = 0;
-    periph_activate_type(PERIPH_TYPE_PLUSD, 0);
-    return;
+    if (machine_load_rom_bank(plusd_memory_map_romcs_rom,
+                              0,
+                              settings_current.rom_plusd,
+                              settings_default.rom_plusd,
+                              ROM_SIZE)) {
+        settings_current.plusd = 0;
+        periph_activate_type(PERIPH_TYPE_PLUSD, 0);
+        return;
     }
 
     machine_current->ram.romcs = 0;
 
     for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
-    struct memory_page *page = &plusd_memory_map_romcs_ram[i];
-    page->page = &plusd_ram[i * MEMORY_PAGE_SIZE];
-    page->offset = i * MEMORY_PAGE_SIZE;
-    page->writable = 1;
+        struct memory_page *page = &plusd_memory_map_romcs_ram[i];
+        page->page = &plusd_ram[i * MEMORY_PAGE_SIZE];
+        page->offset = i * MEMORY_PAGE_SIZE;
+        page->writable = 1;
     }
 
     plusd_available = 1;
     plusd_active = 1;
 
-    if (hard_reset)
-    memset(plusd_ram, 0, RAM_SIZE);
+    if (hard_reset) {
+        memset(plusd_ram, 0, RAM_SIZE);
+    }
 
     wd_fdc_master_reset(plusd_fdc);
 
     for (i = 0; i < PLUSD_NUM_DRIVES; i++) {
-    ui_media_drive_update_menus(&plusd_ui_drives[i],
-                                 UI_MEDIA_DRIVE_UPDATE_ALL);
+        ui_media_drive_update_menus(&plusd_ui_drives[i], UI_MEDIA_DRIVE_UPDATE_ALL);
     }
 
     plusd_fdc->current_drive = &plusd_drives[0];
@@ -333,22 +370,22 @@ static void plusd_cn_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 
     plusd_control_register = b;
 
-    drive = (b & 0x03) == 2 ? 1 : 0;
+    drive = ((b & 0x03) == 2) ? 1 : 0;
     side = (b & 0x80) ? 1 : 0;
 
     // TODO: set current_drive to NULL when bits 0 and 1 of b are '00' or '11'
     for (i = 0; i < PLUSD_NUM_DRIVES; i++) {
-    fdd_set_head(&plusd_drives[i], side);
+        fdd_set_head(&plusd_drives[i], side);
     }
-    fdd_select(&plusd_drives[ (!drive) ], 0);
+    fdd_select(&plusd_drives[(!drive)], 0);
     fdd_select(&plusd_drives[drive], 1);
 
     if (plusd_fdc->current_drive != &plusd_drives[drive]) {
-    if (plusd_fdc->current_drive->motoron) { // swap motoron
-      fdd_motoron(&plusd_drives[ (!drive) ], 0);
-      fdd_motoron(&plusd_drives[drive], 1);
-    }
-    plusd_fdc->current_drive = &plusd_drives[drive];
+        if (plusd_fdc->current_drive->motoron) { // swap motoron
+            fdd_motoron(&plusd_drives[(!drive)], 0);
+            fdd_motoron(&plusd_drives[drive], 1);
+        }
+        plusd_fdc->current_drive = &plusd_drives[drive];
     }
 
     printer_parallel_strobe_write(b & 0x40);
@@ -389,20 +426,18 @@ static void plusd_printer_write(libspectrum_word port, libspectrum_byte b)
 }
 
 
-int plusd_disk_insert(plusd_drive_number which, const char *filename,
-           int autoload)
+int plusd_disk_insert(plusd_drive_number which, const char *filename, int autoload)
 {
     if (which >= PLUSD_NUM_DRIVES) {
-    ui_error(UI_ERROR_ERROR, "plusd_disk_insert: unknown drive %d",
-          which);
-    fuse_abort();
+        ui_error(UI_ERROR_ERROR, "plusd_disk_insert: unknown drive %d", which);
+        fuse_abort();
     }
 
     return ui_media_drive_insert(&plusd_ui_drives[which], filename, autoload);
 }
 
-fdd_t *
-plusd_get_fdd(plusd_drive_number which)
+
+fdd_t *plusd_get_fdd(plusd_drive_number which)
 {
     return &(plusd_drives[which]);
 }
@@ -420,22 +455,20 @@ static void plusd_from_snapshot(libspectrum_snap *snap)
         return;
     }
 
-    if (libspectrum_snap_plusd_custom_rom(snap) &&
-      libspectrum_snap_plusd_rom(snap, 0) &&
-      machine_load_rom_bank_from_buffer(
-                             plusd_memory_map_romcs_rom, 0,
-                             libspectrum_snap_plusd_rom(snap, 0),
-                             ROM_SIZE, 1))
-    return;
-
+    if (libspectrum_snap_plusd_custom_rom(snap) && libspectrum_snap_plusd_rom(snap, 0) &&
+        machine_load_rom_bank_from_buffer(plusd_memory_map_romcs_rom,
+                                          0,
+                                          libspectrum_snap_plusd_rom(snap, 0),
+                                          ROM_SIZE,
+                                          1)) {
+        return;
+    }
     if (libspectrum_snap_plusd_ram(snap, 0)) {
-    memcpy(plusd_ram,
-            libspectrum_snap_plusd_ram(snap, 0), RAM_SIZE);
+        memcpy(plusd_ram, libspectrum_snap_plusd_ram(snap, 0), RAM_SIZE);
     }
 
     /* ignore drive count for now, there will be an issue with loading snaps where
-     drives have been disabled
-    libspectrum_snap_plusd_drive_count(snap)
+       drives have been disabled libspectrum_snap_plusd_drive_count(snap)
    */
 
     plusd_fdc->direction = libspectrum_snap_plusd_direction(snap);
@@ -447,9 +480,9 @@ static void plusd_from_snapshot(libspectrum_snap *snap)
     plusd_cn_write (0x00ef, libspectrum_snap_plusd_control(snap));
 
     if (libspectrum_snap_plusd_paged(snap)) {
-    plusd_page();
+        plusd_page();
     } else {
-    plusd_unpage();
+        plusd_unpage();
     }
 }
 
@@ -467,20 +500,25 @@ static void plusd_to_snapshot(libspectrum_snap *snap)
     libspectrum_snap_set_plusd_active(snap, 1);
 
     buffer = libspectrum_new(libspectrum_byte, ROM_SIZE);
-    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
-    memcpy(buffer + i * MEMORY_PAGE_SIZE,
-            plusd_memory_map_romcs_rom[i].page, MEMORY_PAGE_SIZE);
+
+    for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
+        memcpy(buffer + (i * MEMORY_PAGE_SIZE), plusd_memory_map_romcs_rom[i].page, MEMORY_PAGE_SIZE);
+    }
+
     libspectrum_snap_set_plusd_rom(snap, 0, buffer);
 
-    if (plusd_memory_map_romcs_rom[0].save_to_snapshot)
-    libspectrum_snap_set_plusd_custom_rom(snap, 1);
+    if (plusd_memory_map_romcs_rom[0].save_to_snapshot) {
+        libspectrum_snap_set_plusd_custom_rom(snap, 1);
+    }
 
     buffer = libspectrum_new(libspectrum_byte, RAM_SIZE);
     memcpy(buffer, plusd_ram, RAM_SIZE);
     libspectrum_snap_set_plusd_ram(snap, 0, buffer);
 
     drive_count++; // Drive 1 is not removable
-    if (option_enumerate_diskoptions_drive_plusd2_type() > 0) drive_count++;
+    if (option_enumerate_diskoptions_drive_plusd2_type() > 0) {
+        drive_count++;
+    }
     libspectrum_snap_set_plusd_drive_count(snap, drive_count);
 
     libspectrum_snap_set_plusd_paged(snap, plusd_active);
@@ -496,8 +534,8 @@ static void plusd_to_snapshot(libspectrum_snap *snap)
 static void plusd_activate(void)
 {
     if (!memory_allocated) {
-    plusd_ram = memory_pool_allocate_persistent(RAM_SIZE, 1);
-    memory_allocated = 1;
+        plusd_ram = memory_pool_allocate_persistent(RAM_SIZE, 1);
+        memory_allocated = 1;
     }
 }
 
@@ -527,42 +565,15 @@ static int ui_drive_is_available(void)
     return plusd_available;
 }
 
-static const fdd_params_t *
-ui_drive_get_params_1(void)
+
+static const fdd_params_t *ui_drive_get_params_1(void)
 {
     // +1 => there is no `Disabled'
     return &fdd_params[option_enumerate_diskoptions_drive_plusd1_type() + 1];
 }
 
-static const fdd_params_t *
-ui_drive_get_params_2(void)
+
+static const fdd_params_t *ui_drive_get_params_2(void)
 {
     return &fdd_params[option_enumerate_diskoptions_drive_plusd2_type()];
 }
-
-static ui_media_drive_info_t plusd_ui_drives[PLUSD_NUM_DRIVES] = {
-    {
-    /* .name = */ "+D Disk 1",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_PLUSD,
-    /* .drive_index = */ PLUSD_DRIVE_1,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_1,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_1_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_1_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_1_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_1,
-    },
-    {
-    /* .name = */ "+D Disk 2",
-    /* .controller_index = */ UI_MEDIA_CONTROLLER_PLUSD,
-    /* .drive_index = */ PLUSD_DRIVE_2,
-    /* .menu_item_parent = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD,
-    /* .menu_item_top = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_2,
-    /* .menu_item_eject = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_2_EJECT,
-    /* .menu_item_flip = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_2_FLIP_SET,
-    /* .menu_item_wp = */ UI_MENU_ITEM_MEDIA_DISK_PLUSD_2_WP_SET,
-    /* .is_available = */ &ui_drive_is_available,
-    /* .get_params = */ &ui_drive_get_params_2,
-    },
-};

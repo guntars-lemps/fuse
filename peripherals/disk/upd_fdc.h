@@ -35,7 +35,7 @@
 
 typedef enum upd_type_t {
     UPD765A = 0,
-    UPD765B,
+    UPD765B
 } upd_type_t;
 
 typedef enum upd_clock_t {
@@ -46,27 +46,27 @@ typedef enum upd_clock_t {
 typedef enum upd_scan_t {
     UPD_SCAN_EQ = 0,
     UPD_SCAN_LO,
-    UPD_SCAN_HI,
+    UPD_SCAN_HI
 } upd_scan_t;
 
 typedef enum upd_cmd_id_t {
-                // ----v computer READ at execution phase
+    // ----v computer READ at execution phase
     UPD_CMD_READ_DATA = 0, // (non)deleted
     UPD_CMD_READ_DIAG,
-                // ----v computer WRITE at execution phase
+    // ----v computer WRITE at execution phase
     UPD_CMD_WRITE_DATA, // (non)deleted
     UPD_CMD_WRITE_ID, // :) format
     UPD_CMD_SCAN, // equal/low-or-equal/high-or-equal
-                // ----v NO data transfer at execution phase
+    // ----v NO data transfer at execution phase
     UPD_CMD_READ_ID,
-                // ----v NO RW head contact
+    // ----v NO RW head contact
     UPD_CMD_RECALIBRATE,
     UPD_CMD_SENSE_INT,
     UPD_CMD_SPECIFY,
     UPD_CMD_SENSE_DRIVE,
     UPD_CMD_VERSION,
     UPD_CMD_SEEK,
-    UPD_CMD_INVALID,
+    UPD_CMD_INVALID
 } upd_cmd_id_t;
 
 typedef struct upd_cmd_t {
@@ -82,7 +82,7 @@ typedef enum upd_intrq_t {
     UPD_INTRQ_RESULT,
     UPD_INTRQ_EXE,
     UPD_INTRQ_READY,
-    UPD_INTRQ_SEEK,
+    UPD_INTRQ_SEEK
 } upd_intrq_t;
 
 typedef struct upd_fdc {
@@ -104,9 +104,9 @@ typedef struct upd_fdc {
     int datarq; // DRQ line status
 
     enum upd_fdc_state {
-    UPD_FDC_STATE_CMD = 0,
-    UPD_FDC_STATE_EXE,
-    UPD_FDC_STATE_RES,
+        UPD_FDC_STATE_CMD = 0,
+        UPD_FDC_STATE_EXE,
+        UPD_FDC_STATE_RES
     } state;
 
     int id_track;
@@ -118,9 +118,10 @@ typedef struct upd_fdc {
     int rev; // revolution counter
     int head_load; // head state
     int read_id; // searching an IDAM
+
     enum upd_fdc_am_type {
-    UPD_FDC_AM_NONE = 0,
-    UPD_FDC_AM_ID,
+        UPD_FDC_AM_NONE = 0,
+        UPD_FDC_AM_ID
     } id_mark;
 
     unsigned int last_sector_read;/* for Speedlock 'random' sector hack */

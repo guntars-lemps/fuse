@@ -148,9 +148,7 @@ static libspectrum_byte beta128_boot_loader[] = {
 /* calculate track len from type, if type eq. 0x00/0x01/0x02/0x80/0x81/0x82
    !!! not for 0x83 nor 0xf0 !!!
 */
-#define UDI_TLEN(type, bpt) ((bpt) + DISK_CLEN(bpt) * (1 + \
-                    (type & 0x02 ? 1 : 0) + \
-                    (type & 0x80 ? 1 : 0)))
+#define UDI_TLEN(type, bpt) ((bpt) + DISK_CLEN(bpt) * (1 + (type & 0x02 ? 1 : 0) + (type & 0x80 ? 1 : 0)))
 
 typedef struct buffer_t { // to store buffer data
     utils_file file; // buffer, length
@@ -356,8 +354,9 @@ static int guess_track_geom(disk_t *d, int head, int track, int *sector_base, in
         }
         if (sl != *seclen) {
             r |= DISK_SECLEN_VARI;
-            if (sl > *seclen)
+            if (sl > *seclen) {
                 *seclen = sl;
+            }
         }
         if (del) {
             r |= DISK_DDAM;
@@ -1315,7 +1314,7 @@ static int open_img_mgt_opd(buffer_t *buffer, disk_t *d)
         d->cylinders = 40;
         sectors = 18;
         seclen = 256;
-    } else if (buffer->file.length == 1 * 80 * 18 * 256) {
+    } else if (buffer->file.length == (1 * 80 * 18 * 256)) {
         /* we cannot distinguish between a single sided 80 track image
            and a double sided 40 track image (2 * 40 * 18 * 256) */
         d->sides = 1;
@@ -1592,7 +1591,7 @@ static void trdos_insert_boot_loader(disk_t *d)
 
     // Insert a simple boot loader that runs the first program
     if (info.basic_files_count >= 1) {
-        memcpy(beta128_boot_loader + 22, info.first_basic_file, 8);
+        memcpy((beta128_boot_loader + 22), info.first_basic_file, 8);
 
         trdos_insert_basic_file(d, &spec, beta128_boot_loader, ARRAY_SIZE(beta128_boot_loader));
     }
@@ -1831,13 +1830,16 @@ static int open_cpc(buffer_t *buffer, disk_t *d, int preindex)
         bpt = postindex_len(d, gap) + (preindex ? preindex_len(d, gap) : 0) + ((gap == GAP_MINIMAL_MFM) ? 6 : 3); // gap4
         sector_pad = 0;
         for (j = 0; j < buff[0x15]; j++) { // each sector
-            seclen = (d->type == DISK_ECPC) ? (buff[0x1e + (8 * j)] + (256 * buff[0x1f + (8 * j)])) : (0x80 << buff[0x1b + (8 * j)]);
+            seclen = (d->type == DISK_ECPC) ?
+                      (buff[0x1e + (8 * j)] + (256 * buff[0x1f + (8 * j)])) :
+                      (0x80 << buff[0x1b + (8 * j)]);
             idlen = 0x80 << buff[0x1b + (8 * j)]; // sector length from ID
-            if ((idlen != 0) && (idlen <= (0x80 << 0x08)) && (seclen > idlen) && (seclen % idlen)) { // idlen is o.k. seclen != N * len
+            if ((idlen != 0) && (idlen <= (0x80 << 0x08)) &&
+                (seclen > idlen) && (seclen % idlen)) { // idlen is o.k. seclen != N * len
                 return d->status = DISK_OPEN;
             }
             bpt += calc_sectorlen(((gap == GAP_MINIMAL_MFM) ? 1 : 0), ((seclen > idlen) ? idlen : seclen), gap);
-            if ((i < 84) &&( d->flag & DISK_FLAG_PLUS3_CPC)) {
+            if ((i < 84) && (d->flag & DISK_FLAG_PLUS3_CPC)) {
                 if ((j == 0) && (buff[0x1b + (8 * j)] == 6) && (seclen > 6144)) {
                     plus3_fix = CPC_ISSUE_4;
                 } else if ((j == 0) && (buff[0x1b + (8 * j)] == 6)) {
@@ -2666,8 +2668,9 @@ static int write_udi(FILE *file, disk_t *d)
                 return d->status = DISK_WRPART;
             }
 
-        for (j = 0; j < 3; j++)
+        for (j = 0; j < 3; j++) {
             crc = crc_udi(crc, head[j]);
+        }
 
         if (d->track[-1] == 0xf0) {
             len = 4 + d->track[-3] + (256 * d->track[-2]);

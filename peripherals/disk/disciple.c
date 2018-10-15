@@ -314,7 +314,8 @@ static void disciple_reset(int hard_reset)
     if (machine_load_rom_bank(disciple_memory_map_romcs_rom,
                               0,
                               settings_current.rom_disciple,
-                              settings_default.rom_disciple, ROM_SIZE)) {
+                              settings_default.rom_disciple,
+                              ROM_SIZE)) {
         settings_current.disciple = 0;
         periph_activate_type(PERIPH_TYPE_DISCIPLE, 0);
         return;
