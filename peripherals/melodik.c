@@ -39,13 +39,11 @@ static void melodik_from_snapshot(libspectrum_snap *snap);
 static void melodik_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t melodik_module_info = {
-
     /* .reset = */ NULL,
     /* .romcs = */ NULL,
     /* .snapshot_enabled = */ melodik_enabled_snapshot,
     /* .snapshot_from = */ melodik_from_snapshot,
-    /* .snapshot_to = */ melodik_to_snapshot,
-
+    /* .snapshot_to = */ melodik_to_snapshot
 };
 
 static const periph_port_t melodik_ports[] = {
@@ -58,7 +56,7 @@ static const periph_t melodik_periph = {
     /* .option = */ &settings_current.melodik,
     /* .ports = */ melodik_ports,
     /* .hard_reset = */ 1,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 
@@ -70,8 +68,9 @@ static void melodik_enabled_snapshot(libspectrum_snap *snap)
 
 static void melodik_from_snapshot(libspectrum_snap *snap)
 {
-    if (periph_is_active(PERIPH_TYPE_MELODIK))
-    ay_state_from_snapshot(snap);
+    if (periph_is_active(PERIPH_TYPE_MELODIK)) {
+        ay_state_from_snapshot(snap);
+    }
 }
 
 
@@ -94,7 +93,10 @@ static int melodik_init(void *context)
 void melodik_register_startup(void)
 {
     startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
-    startup_manager_register(STARTUP_MANAGER_MODULE_MELODIK, dependencies,
-                            ARRAY_SIZE(dependencies), melodik_init, NULL,
-                            NULL);
+    startup_manager_register(STARTUP_MANAGER_MODULE_MELODIK,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             melodik_init,
+                             NULL,
+                             NULL);
 }

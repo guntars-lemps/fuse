@@ -47,7 +47,7 @@ typedef enum nic_enc28j60_spi_state {
 
 typedef struct nic_enc28j60_t nic_enc28j60_t;
 
-nic_enc28j60_t* nic_enc28j60_alloc(void);
+nic_enc28j60_t *nic_enc28j60_alloc(void);
 void nic_enc28j60_init(nic_enc28j60_t *self);
 void nic_enc28j60_free(nic_enc28j60_t *self);
 

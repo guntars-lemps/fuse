@@ -45,13 +45,11 @@ static void covox_from_snapshot(libspectrum_snap *snap);
 static void covox_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t covox_module_info = {
-
     /* .reset = */ covox_reset,
     /* .romcs = */ NULL,
     /* .snapshot_enabled = */ covox_enabled_snapshot,
     /* .snapshot_from = */ covox_from_snapshot,
-    /* .snapshot_to = */ covox_to_snapshot,
-
+    /* .snapshot_to = */ covox_to_snapshot
 };
 
 static const periph_port_t covox_ports_fb[] = {
@@ -75,7 +73,7 @@ static const periph_t covox_periph_dd = {
     /* .option = */ &settings_current.covox,
     /* .ports = */ covox_ports_dd,
     /* .hard_reset = */ 1,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 
@@ -92,9 +90,12 @@ static int covox_init(void *context)
 void covox_register_startup(void)
 {
     startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
-    startup_manager_register(STARTUP_MANAGER_MODULE_COVOX, dependencies,
-                            ARRAY_SIZE(dependencies), covox_init, NULL,
-                            NULL);
+    startup_manager_register(STARTUP_MANAGER_MODULE_COVOX,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             covox_init,
+                             NULL,
+                             NULL);
 }
 
 
@@ -117,9 +118,9 @@ static void covox_from_snapshot(libspectrum_snap *snap)
     }
 
     /* We just set the internal machine status to the last read covox_dac
-   * instead of trying to write to the sound routines, as at this stage
-   * sound isn't initialised so there is no synth to write to
-   */
+       instead of trying to write to the sound routines,
+       as at this stage sound isn't initialised so there is no synth to write to
+    */
 
     machine_current->covox.covox_dac = libspectrum_snap_covox_dac(snap);
 }
@@ -127,10 +128,9 @@ static void covox_from_snapshot(libspectrum_snap *snap)
 
 static void covox_to_snapshot(libspectrum_snap *snap)
 {
-    if (!(periph_is_active(PERIPH_TYPE_COVOX_FB) ||
-        periph_is_active(PERIPH_TYPE_COVOX_DD)))
-    return;
-
+    if (!(periph_is_active(PERIPH_TYPE_COVOX_FB) || periph_is_active(PERIPH_TYPE_COVOX_DD))) {
+        return;
+    }
     libspectrum_snap_set_covox_active(snap, 1);
     libspectrum_snap_set_covox_dac(snap, machine_current->covox.covox_dac);
 }

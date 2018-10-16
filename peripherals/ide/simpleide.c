@@ -51,7 +51,7 @@ static const periph_t simpleide_periph = {
     /* .option = */ &settings_current.simpleide_active,
     /* .ports = */ simpleide_ports,
     /* .hard_reset = */ 1,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 static libspectrum_ide_channel *simpleide_idechn;
@@ -60,13 +60,11 @@ static void simpleide_snapshot_enabled(libspectrum_snap *snap);
 static void simpleide_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t simpleide_module_info = {
-
     /* .reset = */ simpleide_reset,
     /* .romcs = */ NULL,
     /* .snapshot_enabled = */ simpleide_snapshot_enabled,
     /* .snapshot_from = */ NULL,
     /* .snapshot_to = */ simpleide_to_snapshot,
-
 };
 
 // Housekeeping functions
@@ -79,10 +77,10 @@ static int simpleide_init(void *context)
     simpleide_idechn = libspectrum_ide_alloc(LIBSPECTRUM_IDE_DATA8);
 
     error = ide_init(simpleide_idechn,
-            settings_current.simpleide_master_file,
-            UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_MASTER_EJECT,
-            settings_current.simpleide_slave_file,
-            UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT);
+                     settings_current.simpleide_master_file,
+                     UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_MASTER_EJECT,
+                     settings_current.simpleide_slave_file,
+                     UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT);
     if (error) {
         return error;
     }
@@ -103,12 +101,15 @@ static void simpleide_end(void)
 void simpleide_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DISPLAY,
-    STARTUP_MANAGER_MODULE_SETUID
+        STARTUP_MANAGER_MODULE_DISPLAY,
+        STARTUP_MANAGER_MODULE_SETUID
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_SIMPLEIDE, dependencies,
-                            ARRAY_SIZE(dependencies), simpleide_init, NULL,
-                            simpleide_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_SIMPLEIDE,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             simpleide_init,
+                             NULL,
+                             simpleide_end);
 }
 
 
@@ -120,12 +121,13 @@ void simpleide_reset(int hard_reset GCC_UNUSED)
 
 int simpleide_insert(const char *filename, libspectrum_ide_unit unit)
 {
-    return ide_master_slave_insert(
-    simpleide_idechn, unit, filename,
-    &settings_current.simpleide_master_file,
-    UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_MASTER_EJECT,
-    &settings_current.simpleide_slave_file,
-    UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT);
+    return ide_master_slave_insert(simpleide_idechn,
+                                   unit,
+                                   filename,
+                                   &settings_current.simpleide_master_file,
+                                   UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_MASTER_EJECT,
+                                   &settings_current.simpleide_slave_file,
+                                   UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT);
 }
 
 
@@ -141,12 +143,12 @@ int simpleide_commit(libspectrum_ide_unit unit)
 
 int simpleide_eject(libspectrum_ide_unit unit)
 {
-    return ide_master_slave_eject(
-    simpleide_idechn, unit,
-    &settings_current.simpleide_master_file,
-    UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_MASTER_EJECT,
-    &settings_current.simpleide_slave_file,
-    UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT);
+    return ide_master_slave_eject(simpleide_idechn,
+                                  unit,
+                                  &settings_current.simpleide_master_file,
+                                  UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_MASTER_EJECT,
+                                  &settings_current.simpleide_slave_file,
+                                  UI_MENU_ITEM_MEDIA_IDE_SIMPLE8BIT_SLAVE_EJECT);
 }
 
 // Port read/writes
@@ -176,8 +178,9 @@ static void simpleide_write(libspectrum_word port, libspectrum_byte data)
 
 static void simpleide_snapshot_enabled(libspectrum_snap *snap)
 {
-    if (libspectrum_snap_simpleide_active(snap))
-    settings_current.simpleide_active = 1;
+    if (libspectrum_snap_simpleide_active(snap)) {
+        settings_current.simpleide_active = 1;
+    }
 }
 
 

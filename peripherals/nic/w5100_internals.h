@@ -97,7 +97,7 @@ typedef struct nic_w5100_socket_t {
     libspectrum_byte port[2]; // Source port
 
     libspectrum_byte dip[4]; // Destination IP address
-    libspectrum_byte dport[2];/* Destination port */
+    libspectrum_byte dport[2]; // Destination port
 
     libspectrum_word tx_rr; // Transmit read pointer
     libspectrum_word tx_wr; // Transmit write pointer
@@ -122,8 +122,7 @@ typedef struct nic_w5100_socket_t {
     int datagram_count;
 
     /* Flag used to indicate that a socket has been closed since we started
-     waiting for it in a select() call and therefore the socket should no
-     longer be used */
+       waiting for it in a select() call and therefore the socket should no longer be used */
     int ok_for_io;
 
     pthread_mutex_t lock; // Mutex for this socket
@@ -154,10 +153,8 @@ void nic_w5100_socket_write(nic_w5100_t *self, libspectrum_word reg, libspectrum
 libspectrum_byte nic_w5100_socket_read_rx_buffer(nic_w5100_t *self, libspectrum_word reg);
 void nic_w5100_socket_write_tx_buffer(nic_w5100_t *self, libspectrum_word reg, libspectrum_byte b);
 
-void nic_w5100_socket_add_to_sets(nic_w5100_socket_t *socket, fd_set *readfds,
-    fd_set *writefds, int *max_fd);
-void nic_w5100_socket_process_io(nic_w5100_socket_t *socket, fd_set readfds,
-    fd_set writefds);
+void nic_w5100_socket_add_to_sets(nic_w5100_socket_t *socket, fd_set *readfds, fd_set *writefds, int *max_fd);
+void nic_w5100_socket_process_io(nic_w5100_socket_t *socket, fd_set readfds, fd_set writefds);
 
 // Debug routines
 
@@ -165,10 +162,12 @@ void nic_w5100_socket_process_io(nic_w5100_socket_t *socket, fd_set readfds,
 #define W5100_DEBUG 0
 
 void nic_w5100_debug(const char *format, ...)
-     GCC_PRINTF(1, 2);
+    GCC_PRINTF(1, 2);
+
 void nic_w5100_vdebug(const char *format, va_list ap)
-     GCC_PRINTF(1, 0);
+    GCC_PRINTF(1, 0);
+
 void nic_w5100_error(int severity, const char *format, ...)
-     GCC_PRINTF(2, 3);
+    GCC_PRINTF(2, 3);
 
 #endif // #ifndef FUSE_W5100_H

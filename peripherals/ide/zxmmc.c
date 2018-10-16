@@ -39,8 +39,7 @@
 // Private function prototypes
 
 static void zxmmc_card_select(libspectrum_word port, libspectrum_byte data);
-static libspectrum_byte zxmmc_mmc_read(libspectrum_word port,
-                                        libspectrum_byte *attached);
+static libspectrum_byte zxmmc_mmc_read(libspectrum_word port, libspectrum_byte *attached);
 static void zxmmc_mmc_write(libspectrum_word port, libspectrum_byte data);
 
 // Data
@@ -55,7 +54,7 @@ static const periph_t zxmmc_periph = {
     /* .option = */ &settings_current.zxmmc_enabled,
     /* .ports = */ zxmmc_ports,
     /* .hard_reset = */ 1,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 // The card inserted into the ZXMMC. For now, we emulate only one card.
@@ -69,13 +68,11 @@ static void zxmmc_enabled_snapshot(libspectrum_snap *snap);
 static void zxmmc_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t zxmmc_module_info = {
-
     /* .reset = */ zxmmc_reset,
     /* .romcs = */ NULL,
     /* .snapshot_enabled = */ zxmmc_enabled_snapshot,
     /* .snapshot_from = */ NULL,
-    /* .snapshot_to = */ zxmmc_to_snapshot,
-
+    /* .snapshot_to = */ zxmmc_to_snapshot
 };
 
 // Eject menu item
@@ -91,18 +88,17 @@ static int zxmmc_init(void *context)
     ui_menu_activate(eject_menu_item, 0);
 
     if (settings_current.zxmmc_file) {
-    int error;
+        int error;
 
-    error =
-      libspectrum_mmc_insert(card, settings_current.zxmmc_file);
-    if (error) {
-        return error;
-    }
+        error = libspectrum_mmc_insert(card, settings_current.zxmmc_file);
+        if (error) {
+            return error;
+        }
 
-    error = ui_menu_activate(eject_menu_item, 1);
-    if (error) {
-        return error;
-    }
+        error = ui_menu_activate(eject_menu_item, 1);
+        if (error) {
+            return error;
+        }
     }
 
     module_register(&zxmmc_module_info);
@@ -122,13 +118,16 @@ static void zxmmc_end(void)
 void zxmmc_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DEBUGGER,
-    STARTUP_MANAGER_MODULE_DISPLAY,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_DEBUGGER,
+        STARTUP_MANAGER_MODULE_DISPLAY,
+        STARTUP_MANAGER_MODULE_SETUID
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_ZXMMC, dependencies,
-                            ARRAY_SIZE(dependencies), zxmmc_init, NULL,
-                            zxmmc_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_ZXMMC,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             zxmmc_init,
+                             NULL,
+                             zxmmc_end);
 }
 
 
@@ -160,11 +159,13 @@ static libspectrum_error eject_fn_wrapper(void *context)
 
 static int mmc_eject(libspectrum_mmc_card *card)
 {
-    return ide_eject_mass_storage(dirty_fn_wrapper, commit_fn_wrapper,
-      eject_fn_wrapper, card,
-      "Card has been modified.\nDo you want to save it?",
-      &settings_current.zxmmc_file,
-      eject_menu_item);
+    return ide_eject_mass_storage(dirty_fn_wrapper,
+                                  commit_fn_wrapper,
+                                  eject_fn_wrapper,
+                                  card,
+                                  "Card has been modified.\nDo you want to save it?",
+                                  &settings_current.zxmmc_file,
+                                  eject_menu_item);
 }
 
 
@@ -172,11 +173,12 @@ int zxmmc_insert(const char *filename)
 {
     int error;
 
-    /* Remove any currently inserted card; abort if we want to keep the current
-     card */
-    if (settings_current.zxmmc_file)
-    if (mmc_eject(card))
-      return 0;
+    // Remove any currently inserted card; abort if we want to keep the current card
+    if (settings_current.zxmmc_file) {
+        if (mmc_eject(card)) {
+            return 0;
+        }
+    }
 
     settings_set_string(&settings_current.zxmmc_file, filename);
 
@@ -205,18 +207,18 @@ int zxmmc_eject(void)
 static void zxmmc_card_select(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
     /* D0 = MMC0, D1 = MMC1, active LOW
-     somehow logic prevents enabling both cards at the same time */
+       somehow logic prevents enabling both cards at the same time */
     switch (data & 0x03) {
-    case 0x02:
-      current_card = card;
-      break;
-    case 0x01:
-      // TODO: select second card
-      current_card = NULL;
-      break;
-    default:
-      current_card = NULL;
-      break;
+        case 0x02:
+            current_card = card;
+            break;
+        case 0x01:
+            // TODO: select second card
+            current_card = NULL;
+            break;
+        default:
+            current_card = NULL;
+            break;
     }
 }
 
@@ -231,14 +233,17 @@ static libspectrum_byte zxmmc_mmc_read(libspectrum_word port GCC_UNUSED, libspec
 
 static void zxmmc_mmc_write(libspectrum_word port GCC_UNUSED, libspectrum_byte data)
 {
-    if (current_card) libspectrum_mmc_write(card, data);
+    if (current_card) {
+        libspectrum_mmc_write(card, data);
+    }
 }
 
 
 static void zxmmc_enabled_snapshot(libspectrum_snap *snap)
 {
-    if (libspectrum_snap_zxmmc_active(snap))
-    settings_current.zxmmc_enabled = 1;
+    if (libspectrum_snap_zxmmc_active(snap)) {
+        settings_current.zxmmc_enabled = 1;
+    }
 }
 
 

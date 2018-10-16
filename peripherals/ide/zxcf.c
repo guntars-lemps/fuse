@@ -54,8 +54,7 @@ static int zxcf_memory_source;
 // Private function prototype
 
 static void set_zxcf_bank(int bank);
-static libspectrum_byte zxcf_memctl_read(libspectrum_word port,
-                      libspectrum_byte *attached);
+static libspectrum_byte zxcf_memctl_read(libspectrum_word port, libspectrum_byte *attached);
 static void zxcf_memctl_write(libspectrum_word port, libspectrum_byte data);
 static libspectrum_byte zxcf_ide_read(libspectrum_word port, libspectrum_byte *attached);
 static void zxcf_ide_write(libspectrum_word port, libspectrum_byte data);
@@ -73,7 +72,7 @@ static const periph_t zxcf_periph = {
     /* .option = */ &settings_current.zxcf_active,
     /* .ports = */ zxcf_ports,
     /* .hard_reset = */ 1,
-    /* .activate = */ zxcf_activate,
+    /* .activate = */ zxcf_activate
 };
 
 static int zxcf_writeenable;
@@ -94,13 +93,11 @@ static void zxcf_from_snapshot(libspectrum_snap *snap);
 static void zxcf_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t zxcf_module_info = {
-
     /* .reset = */ zxcf_reset,
     /* .romcs = */ zxcf_memory_map,
     /* .snapshot_enabled = */ zxcf_snapshot_enabled,
     /* .snapshot_from = */ zxcf_from_snapshot,
-    /* .snapshot_to = */ zxcf_to_snapshot,
-
+    /* .snapshot_to = */ zxcf_to_snapshot
 };
 
 // Debugger events
@@ -121,23 +118,21 @@ static int zxcf_init(void *context)
     ui_menu_activate(UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT, 0);
 
     if (settings_current.zxcf_pri_file) {
-    error = libspectrum_ide_insert(zxcf_idechn, LIBSPECTRUM_IDE_MASTER,
-                    settings_current.zxcf_pri_file);
-    if (error) {
-        return error;
-    }
-    ui_menu_activate(UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT, 1);
+        error = libspectrum_ide_insert(zxcf_idechn, LIBSPECTRUM_IDE_MASTER, settings_current.zxcf_pri_file);
+        if (error) {
+            return error;
+        }
+        ui_menu_activate(UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT, 1);
     }
 
     module_register(&zxcf_module_info);
 
     zxcf_memory_source = memory_source_register("ZXCF");
-    for (i = 0; i < MEMORY_PAGES_IN_16K; i++)
-    zxcf_memory_map_romcs[i].source = zxcf_memory_source;
-
+    for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
+        zxcf_memory_map_romcs[i].source = zxcf_memory_source;
+    }
     periph_register(PERIPH_TYPE_ZXCF, &zxcf_periph);
-    periph_register_paging_events(event_type_string, &page_event,
-                                 &unpage_event);
+    periph_register_paging_events(event_type_string, &page_event, &unpage_event);
 
     return 0;
 }
@@ -152,14 +147,17 @@ static void zxcf_end(void)
 void zxcf_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DEBUGGER,
-    STARTUP_MANAGER_MODULE_DISPLAY,
-    STARTUP_MANAGER_MODULE_MEMORY,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_DEBUGGER,
+        STARTUP_MANAGER_MODULE_DISPLAY,
+        STARTUP_MANAGER_MODULE_MEMORY,
+        STARTUP_MANAGER_MODULE_SETUID
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_ZXCF, dependencies,
-                            ARRAY_SIZE(dependencies), zxcf_init, NULL,
-                            zxcf_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_ZXCF,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             zxcf_init,
+                             NULL,
+                             zxcf_end);
 }
 
 
@@ -181,9 +179,11 @@ static void zxcf_reset(int hard_reset GCC_UNUSED)
 
 int zxcf_insert(const char *filename)
 {
-    return ide_insert(filename, zxcf_idechn, LIBSPECTRUM_IDE_MASTER,
-             &settings_current.zxcf_pri_file,
-             UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT);
+    return ide_insert(filename,
+                      zxcf_idechn,
+                      LIBSPECTRUM_IDE_MASTER,
+                      &settings_current.zxcf_pri_file,
+                      UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT);
 }
 
 
@@ -199,9 +199,10 @@ int zxcf_commit(void)
 
 int zxcf_eject(void)
 {
-    return ide_eject(zxcf_idechn, LIBSPECTRUM_IDE_MASTER,
-            &settings_current.zxcf_pri_file,
-            UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT);
+    return ide_eject(zxcf_idechn,
+                     LIBSPECTRUM_IDE_MASTER,
+                     &settings_current.zxcf_pri_file,
+                     UI_MENU_ITEM_MEDIA_IDE_ZXCF_EJECT);
 }
 
 
@@ -212,15 +213,15 @@ static void set_zxcf_bank(int bank)
 
     for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
 
-    page = &zxcf_memory_map_romcs[i];
-    offset = i * MEMORY_PAGE_SIZE;
+        page = &zxcf_memory_map_romcs[i];
+        offset = i * MEMORY_PAGE_SIZE;
 
-    page->page = &ZXCFMEM[bank][offset];
-    page->writable = zxcf_writeenable;
-    page->contended = 0;
+        page->page = &ZXCFMEM[bank][offset];
+        page->writable = zxcf_writeenable;
+        page->contended = 0;
 
-    page->page_num = bank;
-    page->offset = offset;
+        page->page_num = bank;
+        page->offset = offset;
     }
 }
 
@@ -252,8 +253,9 @@ static void zxcf_memctl_write(libspectrum_word port GCC_UNUSED, libspectrum_byte
 
     machine_current->memory_map();
 
-    if (machine_current->ram.romcs != was_paged)
-    debugger_event(machine_current->ram.romcs ? page_event : unpage_event);
+    if (machine_current->ram.romcs != was_paged) {
+        debugger_event(machine_current->ram.romcs ? page_event : unpage_event);
+    }
 }
 
 
@@ -313,10 +315,11 @@ static void zxcf_from_snapshot(libspectrum_snap *snap)
 
     zxcf_memctl_write(0x10bf, libspectrum_snap_zxcf_memctl(snap));
 
-    for (i = 0; i < libspectrum_snap_zxcf_pages(snap); i++)
-    if (libspectrum_snap_zxcf_ram(snap, i))
-      memcpy(ZXCFMEM[i], libspectrum_snap_zxcf_ram(snap, i),
-          ZXCF_PAGE_LENGTH);
+    for (i = 0; i < libspectrum_snap_zxcf_pages(snap); i++) {
+        if (libspectrum_snap_zxcf_ram(snap, i)) {
+            memcpy(ZXCFMEM[i], libspectrum_snap_zxcf_ram(snap, i), ZXCF_PAGE_LENGTH);
+        }
+    }
 }
 
 
@@ -336,10 +339,10 @@ static void zxcf_to_snapshot(libspectrum_snap *snap)
 
     for (i = 0; i < ZXCF_PAGES; i++) {
 
-    buffer = libspectrum_new(libspectrum_byte, ZXCF_PAGE_LENGTH);
+        buffer = libspectrum_new(libspectrum_byte, ZXCF_PAGE_LENGTH);
 
-    memcpy(buffer, ZXCFMEM[i], ZXCF_PAGE_LENGTH);
-    libspectrum_snap_set_zxcf_ram(snap, i, buffer);
+        memcpy(buffer, ZXCFMEM[i], ZXCF_PAGE_LENGTH);
+        libspectrum_snap_set_zxcf_ram(snap, i, buffer);
     }
 }
 
@@ -347,12 +350,12 @@ static void zxcf_to_snapshot(libspectrum_snap *snap)
 static void zxcf_activate(void)
 {
     if (!memory_allocated) {
-    int i;
-    libspectrum_byte *memory =
-      memory_pool_allocate_persistent(ZXCF_PAGES * ZXCF_PAGE_LENGTH, 1);
-    for (i = 0; i < ZXCF_PAGES; i++)
-      ZXCFMEM[i] = memory + i * ZXCF_PAGE_LENGTH;
-    memory_allocated = 1;
+        int i;
+        libspectrum_byte *memory = memory_pool_allocate_persistent((ZXCF_PAGES * ZXCF_PAGE_LENGTH), 1);
+        for (i = 0; i < ZXCF_PAGES; i++) {
+            ZXCFMEM[i] = memory + (i * ZXCF_PAGE_LENGTH);
+        }
+        memory_allocated = 1;
     }
 }
 

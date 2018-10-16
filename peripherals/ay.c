@@ -36,13 +36,10 @@
 #include "psg.h"
 #include "sound.h"
 
-/* Unused bits in the AY registers are silently zeroed out; these masks
-   accomplish this */
+// Unused bits in the AY registers are silently zeroed out; these masks accomplish this
 static const libspectrum_byte mask[AY_REGISTERS] = {
-
     0xff, 0x0f, 0xff, 0x0f, 0xff, 0x0f, 0x1f, 0xff,
     0x1f, 0x1f, 0x1f, 0xff, 0xff, 0x0f, 0xff, 0xff,
-
 };
 
 static void ay_reset(int hard_reset);
@@ -52,13 +49,11 @@ static libspectrum_dword get_current_register(void);
 static void set_current_register(libspectrum_dword value);
 
 static module_info_t ay_module_info = {
-
     /* .reset = */ ay_reset,
     /* .romcs = */ NULL,
     /* .snapshot_enabled = */ NULL,
     /* .snapshot_from = */ ay_from_snapshot,
-    /* .snapshot_to = */ ay_to_snapshot,
-
+    /* .snapshot_to = */ ay_to_snapshot
 };
 
 static periph_port_t ay_ports[] = {
@@ -71,7 +66,7 @@ static periph_t ay_periph = {
     /* .option = */ NULL,
     /* .ports = */ ay_ports,
     /* .hard_reset = */ 0,
-    /* .actinate = */ NULL,
+    /* .actinate = */ NULL
 };
 
 static periph_port_t ay_ports_plus3[] = {
@@ -84,7 +79,7 @@ static periph_t ay_periph_plus3 = {
     /* .option = */ NULL,
     /* .ports = */ ay_ports_plus3,
     /* .hard_reset = */ 0,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 static periph_port_t ay_ports_full_decode[] = {
@@ -97,7 +92,7 @@ static periph_t ay_periph_full_decode = {
     /* .option = */ NULL,
     /* .ports = */ ay_ports_full_decode,
     /* .hard_reset = */ 0,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 static periph_port_t ay_ports_timex[] = {
@@ -110,7 +105,7 @@ static periph_t ay_periph_timex = {
     /* .option = */ NULL,
     /* .ports = */ ay_ports_timex,
     /* .hard_reset = */ 0,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 // Debugger system variables
@@ -126,9 +121,10 @@ static int ay_init(void *context)
     periph_register(PERIPH_TYPE_AY_FULL_DECODE, &ay_periph_full_decode);
     periph_register(PERIPH_TYPE_AY_TIMEX, &ay_periph_timex);
 
-    debugger_system_variable_register(
-    debugger_type_string, current_register_detail_string, get_current_register,
-    set_current_register);
+    debugger_system_variable_register(debugger_type_string,
+                                      current_register_detail_string,
+                                      get_current_register,
+                                      set_current_register);
 
     return 0;
 }
@@ -137,11 +133,10 @@ static int ay_init(void *context)
 void ay_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DEBUGGER,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_DEBUGGER,
+        STARTUP_MANAGER_MODULE_SETUID,
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_AY, dependencies,
-                            ARRAY_SIZE(dependencies), ay_init, NULL, NULL);
+    startup_manager_register(STARTUP_MANAGER_MODULE_AY, dependencies, ARRAY_SIZE(dependencies), ay_init, NULL, NULL);
 }
 
 
@@ -153,9 +148,8 @@ static void ay_reset(int hard_reset GCC_UNUSED)
     memset(ay->registers, 0, sizeof(ay->registers));
 }
 
-/* What happens when the AY register port (traditionally 0xfffd on the 128K
-   machines) is read from */
 
+// What happens when the AY register port (traditionally 0xfffd on the 128K machines) is read from
 libspectrum_byte ay_registerport_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached)
 {
     int current;
@@ -165,38 +159,38 @@ libspectrum_byte ay_registerport_read(libspectrum_word port GCC_UNUSED, libspect
 
     current = machine_current->ay.current_register;
 
-    /* The AY I/O ports return input directly from the port when in
-     input mode; but in output mode, they return an AND between the
-     register value and the port input. So, allow for this when
-     reading R14... */
+    /* The AY I/O ports return input directly from the port when in input mode;
+       but in output mode, they return an AND between the register value and the port input.
+       So, allow for this when reading R14... */
 
     if (current == 14) {
-    if (machine_current->ay.registers[7] & 0x40)
-      return (port_input & machine_current->ay.registers[14]);
-    else
-      return port_input;
+        if (machine_current->ay.registers[7] & 0x40) {
+            return (port_input & machine_current->ay.registers[14]);
+        } else {
+            return port_input;
+        }
     }
 
-    /* R15 is simpler to do, as the 8912 lacks the second I/O port, and
-     the input-mode input is always 0xff */
-    if (current == 15 && !(machine_current->ay.registers[7] & 0x80))
-    return 0xff;
+    /* R15 is simpler to do, as the 8912 lacks the second I/O port,
+       and the input-mode input is always 0xff */
+    if ((current == 15) && !(machine_current->ay.registers[7] & 0x80)) {
+        return 0xff;
+    }
 
     // Otherwise return register value, appropriately masked
     return machine_current->ay.registers[current] & mask[current];
 }
 
-// And when it's written to
 
+// And when it's written to
 void ay_registerport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     set_current_register(b);
 }
 
-/* What happens when the AY data port (traditionally 0xbffd on the 128K
-   machines) is written to; no corresponding read function as this
-   always returns 0xff */
 
+/* What happens when the AY data port (traditionally 0xbffd on the 128K machines) is written to;
+   no corresponding read function as this always returns 0xff */
 void ay_dataport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 {
     int current;
@@ -205,9 +199,13 @@ void ay_dataport_write(libspectrum_word port GCC_UNUSED, libspectrum_byte b)
 
     machine_current->ay.registers[current] = b & mask[current];
     sound_ay_write(current, b, tstates);
-    if (psg_recording) psg_write_register(current, b);
+    if (psg_recording) {
+        psg_write_register(current, b);
+    }
 
-    if (current == 14) printer_serial_write(b);
+    if (current == 14) {
+        printer_serial_write(b);
+    }
 }
 
 
@@ -215,13 +213,11 @@ void ay_state_from_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
-    ay_registerport_write(0xfffd,
-                         libspectrum_snap_out_ay_registerport(snap));
+    ay_registerport_write(0xfffd, libspectrum_snap_out_ay_registerport(snap));
 
     for (i = 0; i < AY_REGISTERS; i++) {
-    machine_current->ay.registers[i] =
-      libspectrum_snap_ay_registers(snap, i);
-    sound_ay_write(i, machine_current->ay.registers[i], 0);
+        machine_current->ay.registers[i] = libspectrum_snap_ay_registers(snap, i);
+        sound_ay_write(i, machine_current->ay.registers[i], 0);
     }
 }
 
@@ -229,7 +225,7 @@ void ay_state_from_snapshot(libspectrum_snap *snap)
 static void ay_from_snapshot(libspectrum_snap *snap)
 {
     if (machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY) {
-    ay_state_from_snapshot(snap);
+        ay_state_from_snapshot(snap);
     }
 }
 
@@ -238,13 +234,11 @@ static void ay_to_snapshot(libspectrum_snap *snap)
 {
     size_t i;
 
-    libspectrum_snap_set_out_ay_registerport(
-    snap, machine_current->ay.current_register
-);
+    libspectrum_snap_set_out_ay_registerport(snap, machine_current->ay.current_register);
 
-    for (i = 0; i < AY_REGISTERS; i++)
-    libspectrum_snap_set_ay_registers(snap, i,
-                       machine_current->ay.registers[i]);
+    for (i = 0; i < AY_REGISTERS; i++) {
+        libspectrum_snap_set_ay_registers(snap, i, machine_current->ay.registers[i]);
+    }
 }
 
 

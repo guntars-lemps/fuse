@@ -60,7 +60,7 @@ static const periph_t divide_periph = {
     /* .option = */ &settings_current.divide_enabled,
     /* .ports = */ divide_ports,
     /* .hard_reset = */ 1,
-    /* .activate = */ divide_activate,
+    /* .activate = */ divide_activate
 };
 
 int divide_automapping_enabled = 0;
@@ -79,13 +79,11 @@ static void divide_from_snapshot(libspectrum_snap *snap);
 static void divide_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t divide_module_info = {
-
     /* .reset = */ divide_reset,
     /* .romcs = */ divide_memory_map,
     /* .snapshot_enabled = */ divide_enabled_snapshot,
     /* .snapshot_from = */ divide_from_snapshot,
-    /* .snapshot_to = */ divide_to_snapshot,
-
+    /* .snapshot_to = */ divide_to_snapshot
 };
 
 // Debugger events
@@ -102,10 +100,10 @@ static int divide_init(void *context)
     divide_idechn1 = libspectrum_ide_alloc(LIBSPECTRUM_IDE_DATA16);
 
     error = ide_init(divide_idechn0,
-            settings_current.divide_master_file,
-            UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
-            settings_current.divide_slave_file,
-            UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT);
+                     settings_current.divide_master_file,
+                     UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
+                     settings_current.divide_slave_file,
+                     UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT);
     if (error) {
         return error;
     }
@@ -114,9 +112,12 @@ static int divide_init(void *context)
 
     periph_register(PERIPH_TYPE_DIVIDE, &divide_periph);
 
-    divide_state = divxxx_alloc("DivIDE EPROM", DIVIDE_PAGES, "DivIDE RAM",
-      event_type_string, &settings_current.divide_enabled,
-      &settings_current.divide_wp);
+    divide_state = divxxx_alloc("DivIDE EPROM",
+                                DIVIDE_PAGES,
+                                "DivIDE RAM",
+                                event_type_string,
+                                &settings_current.divide_enabled,
+                                &settings_current.divide_wp);
 
     return 0;
 }
@@ -133,20 +134,23 @@ static void divide_end(void)
 void divide_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_DEBUGGER,
-    STARTUP_MANAGER_MODULE_DISPLAY,
-    STARTUP_MANAGER_MODULE_MEMORY,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_DEBUGGER,
+        STARTUP_MANAGER_MODULE_DISPLAY,
+        STARTUP_MANAGER_MODULE_MEMORY,
+        STARTUP_MANAGER_MODULE_SETUID
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_DIVIDE, dependencies,
-                            ARRAY_SIZE(dependencies), divide_init, NULL,
-                            divide_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_DIVIDE,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             divide_init,
+                             NULL,
+                             divide_end);
 }
 
-/* DivIDE does not page in immediately on a reset condition (we do that by
-   trapping PC instead); however, it needs to perform housekeeping tasks upon
-   reset */
 
+/* DivIDE does not page in immediately on a reset condition
+   (we do that by trapping PC instead);
+   however, it needs to perform housekeeping tasks upon reset */
 static void divide_reset(int hard_reset)
 {
     divxxx_reset(divide_state, hard_reset);
@@ -158,12 +162,13 @@ static void divide_reset(int hard_reset)
 
 int divide_insert(const char *filename, libspectrum_ide_unit unit)
 {
-    return ide_master_slave_insert(
-    divide_idechn0, unit, filename,
-    &settings_current.divide_master_file,
-    UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
-    &settings_current.divide_slave_file,
-    UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT);
+    return ide_master_slave_insert(divide_idechn0,
+                                   unit,
+                                   filename,
+                                   &settings_current.divide_master_file,
+                                   UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
+                                   &settings_current.divide_slave_file,
+                                   UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT);
 }
 
 
@@ -179,13 +184,14 @@ int divide_commit(libspectrum_ide_unit unit)
 
 int divide_eject(libspectrum_ide_unit unit)
 {
-    return ide_master_slave_eject(
-    divide_idechn0, unit,
-    &settings_current.divide_master_file,
-    UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
-    &settings_current.divide_slave_file,
-    UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT);
+    return ide_master_slave_eject(divide_idechn0,
+                                  unit,
+                                  &settings_current.divide_master_file,
+                                  UI_MENU_ITEM_MEDIA_IDE_DIVIDE_MASTER_EJECT,
+                                  &settings_current.divide_slave_file,
+                                  UI_MENU_ITEM_MEDIA_IDE_DIVIDE_SLAVE_EJECT);
 }
+
 
 // Port read/writes
 
@@ -193,22 +199,22 @@ int divide_eject(libspectrum_ide_unit unit)
 static libspectrum_ide_register port_to_ide_register(libspectrum_byte port)
 {
     switch (port & 0xff) {
-    case 0xa3:
-      return LIBSPECTRUM_IDE_REGISTER_DATA;
-    case 0xa7:
-      return LIBSPECTRUM_IDE_REGISTER_ERROR_FEATURE;
-    case 0xab:
-      return LIBSPECTRUM_IDE_REGISTER_SECTOR_COUNT;
-    case 0xaf:
-      return LIBSPECTRUM_IDE_REGISTER_SECTOR;
-    case 0xb3:
-      return LIBSPECTRUM_IDE_REGISTER_CYLINDER_LOW;
-    case 0xb7:
-      return LIBSPECTRUM_IDE_REGISTER_CYLINDER_HIGH;
-    case 0xbb:
-      return LIBSPECTRUM_IDE_REGISTER_HEAD_DRIVE;
-    default: // 0xbf
-      return LIBSPECTRUM_IDE_REGISTER_COMMAND_STATUS;
+        case 0xa3:
+            return LIBSPECTRUM_IDE_REGISTER_DATA;
+        case 0xa7:
+            return LIBSPECTRUM_IDE_REGISTER_ERROR_FEATURE;
+        case 0xab:
+            return LIBSPECTRUM_IDE_REGISTER_SECTOR_COUNT;
+        case 0xaf:
+            return LIBSPECTRUM_IDE_REGISTER_SECTOR;
+        case 0xb3:
+            return LIBSPECTRUM_IDE_REGISTER_CYLINDER_LOW;
+        case 0xb7:
+            return LIBSPECTRUM_IDE_REGISTER_CYLINDER_HIGH;
+        case 0xbb:
+            return LIBSPECTRUM_IDE_REGISTER_HEAD_DRIVE;
+        default: // 0xbf
+            return LIBSPECTRUM_IDE_REGISTER_COMMAND_STATUS;
     }
 }
 
@@ -272,25 +278,24 @@ static void divide_from_snapshot(libspectrum_snap *snap)
         return;
     }
 
-    settings_current.divide_wp =
-    libspectrum_snap_divide_eprom_writeprotect(snap);
+    settings_current.divide_wp = libspectrum_snap_divide_eprom_writeprotect(snap);
     divxxx_control_write_internal(divide_state, libspectrum_snap_divide_control(snap));
 
     if (libspectrum_snap_divide_eprom(snap, 0)) {
-    memcpy(divxxx_get_eprom(divide_state),
-        libspectrum_snap_divide_eprom(snap, 0), DIVIDE_PAGE_LENGTH);
+        memcpy(divxxx_get_eprom(divide_state), libspectrum_snap_divide_eprom(snap, 0), DIVIDE_PAGE_LENGTH);
     }
 
-    for (i = 0; i < libspectrum_snap_divide_pages(snap); i++)
-    if (libspectrum_snap_divide_ram(snap, i)) {
-      libspectrum_byte *ram = divxxx_get_ram(divide_state, i);
-      memcpy(ram, libspectrum_snap_divide_ram(snap, i), DIVIDE_PAGE_LENGTH);
+    for (i = 0; i < libspectrum_snap_divide_pages(snap); i++) {
+        if (libspectrum_snap_divide_ram(snap, i)) {
+            libspectrum_byte *ram = divxxx_get_ram(divide_state, i);
+            memcpy(ram, libspectrum_snap_divide_ram(snap, i), DIVIDE_PAGE_LENGTH);
+        }
     }
 
     if (libspectrum_snap_divide_paged(snap)) {
-    divxxx_page(divide_state);
+        divxxx_page(divide_state);
     } else {
-    divxxx_unpage(divide_state);
+        divxxx_unpage(divide_state);
     }
 }
 
@@ -305,8 +310,7 @@ static void divide_to_snapshot(libspectrum_snap *snap)
     }
 
     libspectrum_snap_set_divide_active(snap, 1);
-    libspectrum_snap_set_divide_eprom_writeprotect(snap,
-                                                  settings_current.divide_wp);
+    libspectrum_snap_set_divide_eprom_writeprotect(snap, settings_current.divide_wp);
     libspectrum_snap_set_divide_paged(snap, divxxx_get_active(divide_state));
     libspectrum_snap_set_divide_control(snap, divxxx_get_control(divide_state));
 
@@ -319,10 +323,10 @@ static void divide_to_snapshot(libspectrum_snap *snap)
 
     for (i = 0; i < DIVIDE_PAGES; i++) {
 
-    buffer = libspectrum_new(libspectrum_byte, DIVIDE_PAGE_LENGTH);
+        buffer = libspectrum_new(libspectrum_byte, DIVIDE_PAGE_LENGTH);
 
-    memcpy(buffer, divxxx_get_ram(divide_state, i), DIVIDE_PAGE_LENGTH);
-    libspectrum_snap_set_divide_ram(snap, i, buffer);
+        memcpy(buffer, divxxx_get_ram(divide_state, i), DIVIDE_PAGE_LENGTH);
+        libspectrum_snap_set_divide_ram(snap, i, buffer);
     }
 }
 

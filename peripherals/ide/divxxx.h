@@ -32,63 +32,48 @@ typedef struct divxxx_t divxxx_t;
 
 // Allocation and deallocation
 
-divxxx_t*
-divxxx_alloc(const char *eprom_source_name, size_t ram_page_count,
-    const char *ram_source_name, const char *event_type_string,
-    const int *enabled, const int *write_protect);
-
+divxxx_t *divxxx_alloc(const char *eprom_source_name,
+                       size_t ram_page_count,
+                       const char *ram_source_name,
+                       const char *event_type_string,
+                       const int *enabled,
+                       const int *write_protect);
 
 void divxxx_free(divxxx_t *divxxx);
 
 // Getters
 
-
 libspectrum_byte divxxx_get_control(divxxx_t *divxxx);
-
 
 int divxxx_get_active(divxxx_t *divxxx);
 
-
 int divxxx_get_eprom_memory_source(divxxx_t *divxxx);
 
-memory_page*
-divxxx_get_eprom_page(divxxx_t *divxxx, size_t which);
+memory_page *divxxx_get_eprom_page(divxxx_t *divxxx, size_t which);
 
-libspectrum_byte*
-divxxx_get_eprom(divxxx_t *divxxx);
-
+libspectrum_byte *divxxx_get_eprom(divxxx_t *divxxx);
 
 int divxxx_get_ram_memory_source(divxxx_t *divxxx);
 
-libspectrum_byte*
-divxxx_get_ram(divxxx_t *divxxx, size_t which);
+libspectrum_byte *divxxx_get_ram(divxxx_t *divxxx, size_t which);
 
 // Actions
 
-
 void divxxx_reset(divxxx_t *divxxx, int hard_reset);
-
 
 void divxxx_activate(divxxx_t *divxxx);
 
-
 void divxxx_control_write(divxxx_t *divxxx, libspectrum_byte data);
-
 
 void divxxx_control_write_internal(divxxx_t *divxxx, libspectrum_byte data);
 
-
 void divxxx_set_automap(divxxx_t *divxxx, int automap);
-
 
 void divxxx_refresh_page_state(divxxx_t *divxxx);
 
-
 void divxxx_memory_map(divxxx_t *divxxx);
 
-
 void divxxx_page(divxxx_t *divxxx);
-
 
 void divxxx_unpage(divxxx_t *divxxx);
 
