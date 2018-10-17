@@ -41,17 +41,15 @@
 #include "usource.h"
 
 /* An 8 KiB memory chunk accessible by the Z80 when /ROMCS is low
- * (mirrored in the second 8 KiB when active) */
+   (mirrored in the second 8 KiB when active) */
 static memory_page usource_memory_map_romcs[MEMORY_PAGES_IN_8K];
 static int usource_memory_source;
 
 int usource_active = 0;
 int usource_available = 0;
 
-static void usource_toggle_write(libspectrum_word port,
-                  libspectrum_byte val);
-static libspectrum_byte usource_toggle_read(libspectrum_word port,
-                         libspectrum_byte *attached);
+static void usource_toggle_write(libspectrum_word port, libspectrum_byte val);
+static libspectrum_byte usource_toggle_read(libspectrum_word port, libspectrum_byte *attached);
 
 static void usource_reset(int hard_reset);
 static void usource_enabled_snapshot(libspectrum_snap *snap);
@@ -60,18 +58,15 @@ static void usource_to_snapshot(libspectrum_snap *snap);
 static void usource_memory_map(void);
 
 static module_info_t usource_module_info = {
-
     /* .reset = */ usource_reset,
     /* .romcs = */ usource_memory_map,
     /* .snapshot_enabled = */ usource_enabled_snapshot,
     /* .snapshot_from = */ usource_from_snapshot,
-    /* .snapshot_to = */ usource_to_snapshot,
-
+    /* .snapshot_to = */ usource_to_snapshot
 };
 
 static const periph_port_t usource_ports[] = {
     {0xffff, 0x2bae, usource_toggle_read, usource_toggle_write},
-
     {0, 0, NULL, NULL}
 };
 
@@ -79,7 +74,7 @@ static const periph_t usource_periph = {
     /* .option = */ &settings_current.usource,
     /* .ports = */ usource_ports,
     /* .hard_reset = */ 1,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 
@@ -90,9 +85,9 @@ static int usource_init(void *context)
     module_register(&usource_module_info);
 
     usource_memory_source = memory_source_register("uSource");
-    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
-    usource_memory_map_romcs[i].source = usource_memory_source;
-
+    for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
+        usource_memory_map_romcs[i].source = usource_memory_source;
+    }
     periph_register(PERIPH_TYPE_USOURCE, &usource_periph);
 
     return 0;
@@ -108,12 +103,15 @@ static void usource_end(void)
 void usource_register_startup(void)
 {
     startup_manager_module dependencies[] = {
-    STARTUP_MANAGER_MODULE_MEMORY,
-    STARTUP_MANAGER_MODULE_SETUID,
+        STARTUP_MANAGER_MODULE_MEMORY,
+        STARTUP_MANAGER_MODULE_SETUID
     };
-    startup_manager_register(STARTUP_MANAGER_MODULE_USOURCE, dependencies,
-                            ARRAY_SIZE(dependencies), usource_init, NULL,
-                            usource_end);
+    startup_manager_register(STARTUP_MANAGER_MODULE_USOURCE,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             usource_init,
+                             NULL,
+                             usource_end);
 }
 
 
@@ -122,15 +120,13 @@ static void usource_reset(int hard_reset GCC_UNUSED)
     usource_active = 0;
     usource_available = 0;
 
-    if (!periph_is_active(PERIPH_TYPE_USOURCE))
-    return;
-
-    if (machine_load_rom_bank(usource_memory_map_romcs, 0,
-                 settings_current.rom_usource,
-                 settings_default.rom_usource, 0x2000)) {
-    settings_current.usource = 0;
-    periph_activate_type(PERIPH_TYPE_USOURCE, 0);
-    return;
+    if (!periph_is_active(PERIPH_TYPE_USOURCE)) {
+        return;
+    }
+    if (machine_load_rom_bank(usource_memory_map_romcs, 0, settings_current.rom_usource, settings_default.rom_usource, 0x2000)) {
+        settings_current.usource = 0;
+        periph_activate_type(PERIPH_TYPE_USOURCE, 0);
+        return;
     }
 
     machine_current->ram.romcs = 0;
@@ -158,8 +154,7 @@ static void usource_memory_map(void)
 }
 
 
-static libspectrum_byte usource_toggle_read(libspectrum_word port GCC_UNUSED,
-             libspectrum_byte *attached GCC_UNUSED)
+static libspectrum_byte usource_toggle_read(libspectrum_word port GCC_UNUSED, libspectrum_byte *attached GCC_UNUSED)
 {
     usource_toggle();
 
@@ -207,18 +202,17 @@ static void usource_from_snapshot(libspectrum_snap *snap)
         return;
     }
 
-    if (libspectrum_snap_usource_custom_rom(snap) &&
-      libspectrum_snap_usource_rom(snap, 0) &&
-      machine_load_rom_bank_from_buffer(
-                             usource_memory_map_romcs, 0,
-                             libspectrum_snap_usource_rom(snap, 0),
-                             libspectrum_snap_usource_rom_length(snap, 0),
-                             1))
-    return;
-
+    if (libspectrum_snap_usource_custom_rom(snap) && libspectrum_snap_usource_rom(snap, 0) &&
+        machine_load_rom_bank_from_buffer(usource_memory_map_romcs,
+                                          0,
+                                          libspectrum_snap_usource_rom(snap, 0),
+                                          libspectrum_snap_usource_rom_length(snap, 0),
+                                          1)) {
+        return;
+    }
     if (libspectrum_snap_usource_paged(snap)) {
-    usource_active = 0; // Will be toggled to active next
-    usource_toggle();
+        usource_active = 0; // Will be toggled to active next
+        usource_toggle();
     }
 }
 
@@ -237,17 +231,16 @@ static void usource_to_snapshot(libspectrum_snap *snap)
     libspectrum_snap_set_usource_paged(snap, usource_active);
 
     if (usource_memory_map_romcs[0].save_to_snapshot) {
-    rom_length = 0x2000;
+        rom_length = 0x2000;
 
-    libspectrum_snap_set_usource_custom_rom(snap, 1);
-    libspectrum_snap_set_usource_rom_length(snap, 0, rom_length);
+        libspectrum_snap_set_usource_custom_rom(snap, 1);
+        libspectrum_snap_set_usource_rom_length(snap, 0, rom_length);
 
-    buffer = libspectrum_new(libspectrum_byte, rom_length);
+        buffer = libspectrum_new(libspectrum_byte, rom_length);
 
-    for (i = 0; i < MEMORY_PAGES_IN_8K; i++)
-      memcpy(buffer + i * MEMORY_PAGE_SIZE,
-              usource_memory_map_romcs[i].page, MEMORY_PAGE_SIZE);
-
-    libspectrum_snap_set_usource_rom(snap, 0, buffer);
+        for (i = 0; i < MEMORY_PAGES_IN_8K; i++) {
+            memcpy(buffer + (i * MEMORY_PAGE_SIZE), usource_memory_map_romcs[i].page, MEMORY_PAGE_SIZE);
+        }
+        libspectrum_snap_set_usource_rom(snap, 0, buffer);
     }
 }

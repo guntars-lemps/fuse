@@ -44,13 +44,11 @@ static void specdrum_from_snapshot(libspectrum_snap *snap);
 static void specdrum_to_snapshot(libspectrum_snap *snap);
 
 static module_info_t specdrum_module_info = {
-
     /* .reset = */ specdrum_reset,
     /* .romcs = */ NULL,
     /* .snapshot_enabled = */ specdrum_enabled_snapshot,
     /* .snapshot_from = */ specdrum_from_snapshot,
-    /* .snapshot_to = */ specdrum_to_snapshot,
-
+    /* .snapshot_to = */ specdrum_to_snapshot
 };
 
 static const periph_port_t specdrum_ports[] = {
@@ -62,7 +60,7 @@ static const periph_t specdrum_periph = {
     /* .option = */ &settings_current.specdrum,
     /* .ports = */ specdrum_ports,
     /* .hard_reset = */ 1,
-    /* .activate = */ NULL,
+    /* .activate = */ NULL
 };
 
 
@@ -78,9 +76,12 @@ static int specdrum_init(void *context)
 void specdrum_register_startup(void)
 {
     startup_manager_module dependencies[] = {STARTUP_MANAGER_MODULE_SETUID};
-    startup_manager_register(STARTUP_MANAGER_MODULE_SPECDRUM, dependencies,
-                            ARRAY_SIZE(dependencies), specdrum_init, NULL,
-                            NULL);
+    startup_manager_register(STARTUP_MANAGER_MODULE_SPECDRUM,
+                             dependencies,
+                             ARRAY_SIZE(dependencies),
+                             specdrum_init,
+                             NULL,
+                             NULL);
 }
 
 
@@ -103,12 +104,13 @@ static void specdrum_from_snapshot(libspectrum_snap *snap)
     }
 
     /* We just set the internal machine status to the last read specdrum_dac
-   * instead of trying to write to the sound routines, as at this stage
-   * sound isn't initialised so there is no synth to write to
-   */
+       instead of trying to write to the sound routines, as at this stage
+       sound isn't initialised so there is no synth to write to
+    */
 
     machine_current->specdrum.specdrum_dac = libspectrum_snap_specdrum_dac(snap);
 }
+
 
 static void specdrum_to_snapshot(libspectrum_snap *snap)
 {

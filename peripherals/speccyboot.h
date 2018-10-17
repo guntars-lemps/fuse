@@ -1,9 +1,8 @@
 /* speccyboot.h: SpeccyBoot Ethernet emulation
 
    Emulates SPI communication and (a minimal subset of) the
-   functionality of the Microchip ENC28J60 Ethernet controller. Refer
-   to the ENC28J60 data sheet and SpeccyBoot documentation for
-   details.
+   functionality of the Microchip ENC28J60 Ethernet controller.
+   Refer to the ENC28J60 data sheet and SpeccyBoot documentation for details.
 
    ENC28J60 data sheet:
      http://www.microchip.com/wwwproducts/Devices.aspx?dDocName=en022889
