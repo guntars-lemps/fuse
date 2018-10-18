@@ -50,93 +50,114 @@
 #include "unittests.h"
 
 
+#define TEST_ASSERT(x) do {if (!(x)) {printf("Test assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #x); return 1;}} while (0)
+
+
 static int contention_test(void)
 {
     libspectrum_dword i, checksum = 0, target;
     int error = 0;
 
     for (i = 0; i < ULA_CONTENTION_SIZE; i++) {
-    // Naive, but it will do for now
-    checksum += ula_contention[i] * (i + 1);
+        // Naive, but it will do for now
+        checksum += ula_contention[i] * (i + 1);
     }
 
     if (settings_current.late_timings) {
-    switch (machine_current->machine) {
-    case LIBSPECTRUM_MACHINE_16:
-    case LIBSPECTRUM_MACHINE_48:
-    case LIBSPECTRUM_MACHINE_SE:
-      target = 2308927488UL;
-      break;
-    case LIBSPECTRUM_MACHINE_48_NTSC:
-      target = 1962110976UL;
-      break;
-    case LIBSPECTRUM_MACHINE_128:
-    case LIBSPECTRUM_MACHINE_PLUS2:
-      target = 2335248384UL;
-      break;
-    case LIBSPECTRUM_MACHINE_PLUS2A:
-    case LIBSPECTRUM_MACHINE_PLUS3:
-    case LIBSPECTRUM_MACHINE_PLUS3E:
-      target = 3113840640UL;
-      break;
-    case LIBSPECTRUM_MACHINE_TC2048:
-    case LIBSPECTRUM_MACHINE_TC2068:
-      target = 2307959808UL;
-      break;
-    case LIBSPECTRUM_MACHINE_TS2068:
-      target = 1975593984UL;
-      break;
-    case LIBSPECTRUM_MACHINE_PENT:
-    case LIBSPECTRUM_MACHINE_PENT512:
-    case LIBSPECTRUM_MACHINE_PENT1024:
-    case LIBSPECTRUM_MACHINE_SCORP:
-      target = 0;
-      break;
-    default:
-      target = -1;
-      break;
-    }
+
+        switch (machine_current->machine) {
+
+            case LIBSPECTRUM_MACHINE_16:
+            case LIBSPECTRUM_MACHINE_48:
+            case LIBSPECTRUM_MACHINE_SE:
+                target = 2308927488UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_48_NTSC:
+                target = 1962110976UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_128:
+            case LIBSPECTRUM_MACHINE_PLUS2:
+                target = 2335248384UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_PLUS2A:
+            case LIBSPECTRUM_MACHINE_PLUS3:
+            case LIBSPECTRUM_MACHINE_PLUS3E:
+                target = 3113840640UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_TC2048:
+            case LIBSPECTRUM_MACHINE_TC2068:
+                target = 2307959808UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_TS2068:
+                target = 1975593984UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_PENT:
+            case LIBSPECTRUM_MACHINE_PENT512:
+            case LIBSPECTRUM_MACHINE_PENT1024:
+            case LIBSPECTRUM_MACHINE_SCORP:
+                target = 0;
+                break;
+
+            default:
+                target = -1;
+                break;
+        }
     } else {
-    switch (machine_current->machine) {
-    case LIBSPECTRUM_MACHINE_16:
-    case LIBSPECTRUM_MACHINE_48:
-    case LIBSPECTRUM_MACHINE_SE:
-      target = 2308862976UL;
-      break;
-    case LIBSPECTRUM_MACHINE_48_NTSC:
-      target = 1962046464UL;
-      break;
-    case LIBSPECTRUM_MACHINE_128:
-    case LIBSPECTRUM_MACHINE_PLUS2:
-      target = 2335183872UL;
-      break;
-    case LIBSPECTRUM_MACHINE_PLUS2A:
-    case LIBSPECTRUM_MACHINE_PLUS3:
-    case LIBSPECTRUM_MACHINE_PLUS3E:
-      target = 3113754624UL;
-      break;
-    case LIBSPECTRUM_MACHINE_TC2048:
-    case LIBSPECTRUM_MACHINE_TC2068:
-      target = 2307895296UL;
-      break;
-    case LIBSPECTRUM_MACHINE_TS2068:
-      target = 1975529472UL;
-      break;
-    case LIBSPECTRUM_MACHINE_PENT:
-    case LIBSPECTRUM_MACHINE_PENT512:
-    case LIBSPECTRUM_MACHINE_PENT1024:
-    case LIBSPECTRUM_MACHINE_SCORP:
-      target = 0;
-      break;
-    default:
-      target = -1;
-      break;
-    }
+
+        switch (machine_current->machine) {
+
+            case LIBSPECTRUM_MACHINE_16:
+            case LIBSPECTRUM_MACHINE_48:
+            case LIBSPECTRUM_MACHINE_SE:
+                target = 2308862976UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_48_NTSC:
+                target = 1962046464UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_128:
+            case LIBSPECTRUM_MACHINE_PLUS2:
+                target = 2335183872UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_PLUS2A:
+            case LIBSPECTRUM_MACHINE_PLUS3:
+            case LIBSPECTRUM_MACHINE_PLUS3E:
+                target = 3113754624UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_TC2048:
+            case LIBSPECTRUM_MACHINE_TC2068:
+                target = 2307895296UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_TS2068:
+                target = 1975529472UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_PENT:
+            case LIBSPECTRUM_MACHINE_PENT512:
+            case LIBSPECTRUM_MACHINE_PENT1024:
+            case LIBSPECTRUM_MACHINE_SCORP:
+                target = 0;
+                break;
+
+            default:
+                target = -1;
+                break;
+        }
     }
 
     if (checksum != target) {
-    printf("%s: contention test: checksum = %u, expected = %u\n", fuse_progname, checksum, target);
-    error = 1;
+        printf("%s: contention test: checksum = %u, expected = %u\n", fuse_progname, checksum, target);
+        error = 1;
     }
 
     return error;
@@ -149,83 +170,95 @@ static int floating_bus_test(void)
     libspectrum_word offset;
     int error = 0;
 
-    for (offset = 0; offset < 8192; offset++)
-    RAM[memory_current_screen][offset] = offset % 0x100;
+    for (offset = 0; offset < 8192; offset++) {
+        RAM[memory_current_screen][offset] = offset % 0x100;
+    }
 
-    for (tstates = 0; tstates < ULA_CONTENTION_SIZE; tstates++)
-    checksum += machine_current->unattached_port() * (tstates + 1);
+    for (tstates = 0; tstates < ULA_CONTENTION_SIZE; tstates++) {
+        checksum += machine_current->unattached_port() * (tstates + 1);
+    }
 
     if (settings_current.late_timings) {
-    switch (machine_current->machine) {
-    case LIBSPECTRUM_MACHINE_16:
-    case LIBSPECTRUM_MACHINE_48:
-      target = 3426156480UL;
-      break;
-    case LIBSPECTRUM_MACHINE_48_NTSC:
-      target = 3258908608UL;
-      break;
-    case LIBSPECTRUM_MACHINE_128:
-    case LIBSPECTRUM_MACHINE_PLUS2:
-      target = 2852995008UL;
-      break;
-    case LIBSPECTRUM_MACHINE_PLUS2A:
-    case LIBSPECTRUM_MACHINE_PLUS3:
-    case LIBSPECTRUM_MACHINE_PLUS3E:
-    case LIBSPECTRUM_MACHINE_TC2048:
-    case LIBSPECTRUM_MACHINE_TC2068:
-    case LIBSPECTRUM_MACHINE_TS2068:
-    case LIBSPECTRUM_MACHINE_SE:
-    case LIBSPECTRUM_MACHINE_PENT:
-    case LIBSPECTRUM_MACHINE_PENT512:
-    case LIBSPECTRUM_MACHINE_PENT1024:
-    case LIBSPECTRUM_MACHINE_SCORP:
-      target = 4261381056UL;
-      break;
-    default:
-      target = -1;
-      break;
-    }
+
+        switch (machine_current->machine) {
+
+            case LIBSPECTRUM_MACHINE_16:
+            case LIBSPECTRUM_MACHINE_48:
+                target = 3426156480UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_48_NTSC:
+                target = 3258908608UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_128:
+            case LIBSPECTRUM_MACHINE_PLUS2:
+                target = 2852995008UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_PLUS2A:
+            case LIBSPECTRUM_MACHINE_PLUS3:
+            case LIBSPECTRUM_MACHINE_PLUS3E:
+            case LIBSPECTRUM_MACHINE_TC2048:
+            case LIBSPECTRUM_MACHINE_TC2068:
+            case LIBSPECTRUM_MACHINE_TS2068:
+            case LIBSPECTRUM_MACHINE_SE:
+            case LIBSPECTRUM_MACHINE_PENT:
+            case LIBSPECTRUM_MACHINE_PENT512:
+            case LIBSPECTRUM_MACHINE_PENT1024:
+            case LIBSPECTRUM_MACHINE_SCORP:
+                target = 4261381056UL;
+                break;
+
+            default:
+                target = -1;
+                break;
+        }
     } else {
-    switch (machine_current->machine) {
-    case LIBSPECTRUM_MACHINE_16:
-    case LIBSPECTRUM_MACHINE_48:
-      target = 3427723200UL;
-      break;
-    case LIBSPECTRUM_MACHINE_48_NTSC:
-      target = 3260475328UL;
-      break;
-    case LIBSPECTRUM_MACHINE_128:
-    case LIBSPECTRUM_MACHINE_PLUS2:
-      target = 2854561728UL;
-      break;
-    case LIBSPECTRUM_MACHINE_PLUS2A:
-    case LIBSPECTRUM_MACHINE_PLUS3:
-    case LIBSPECTRUM_MACHINE_PLUS3E:
-    case LIBSPECTRUM_MACHINE_TC2048:
-    case LIBSPECTRUM_MACHINE_TC2068:
-    case LIBSPECTRUM_MACHINE_TS2068:
-    case LIBSPECTRUM_MACHINE_SE:
-    case LIBSPECTRUM_MACHINE_PENT:
-    case LIBSPECTRUM_MACHINE_PENT512:
-    case LIBSPECTRUM_MACHINE_PENT1024:
-    case LIBSPECTRUM_MACHINE_SCORP:
-      target = 4261381056UL;
-      break;
-    default:
-      target = -1;
-      break;
-    }
+
+        switch (machine_current->machine) {
+
+            case LIBSPECTRUM_MACHINE_16:
+            case LIBSPECTRUM_MACHINE_48:
+                target = 3427723200UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_48_NTSC:
+                target = 3260475328UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_128:
+            case LIBSPECTRUM_MACHINE_PLUS2:
+                target = 2854561728UL;
+                break;
+
+            case LIBSPECTRUM_MACHINE_PLUS2A:
+            case LIBSPECTRUM_MACHINE_PLUS3:
+            case LIBSPECTRUM_MACHINE_PLUS3E:
+            case LIBSPECTRUM_MACHINE_TC2048:
+            case LIBSPECTRUM_MACHINE_TC2068:
+            case LIBSPECTRUM_MACHINE_TS2068:
+            case LIBSPECTRUM_MACHINE_SE:
+            case LIBSPECTRUM_MACHINE_PENT:
+            case LIBSPECTRUM_MACHINE_PENT512:
+            case LIBSPECTRUM_MACHINE_PENT1024:
+            case LIBSPECTRUM_MACHINE_SCORP:
+                target = 4261381056UL;
+                break;
+
+            default:
+                target = -1;
+                break;
+        }
     }
 
     if (checksum != target) {
-    printf("%s: floating bus test: checksum = %u, expected = %u\n", fuse_progname, checksum, target);
-    error = 1;
+        printf("%s: floating bus test: checksum = %u, expected = %u\n", fuse_progname, checksum, target);
+        error = 1;
     }
 
     return error;
 }
-
-#define TEST_ASSERT(x) do {if (!(x)) {printf("Test assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #x); return 1;}} while (0)
 
 
 static int floating_bus_merge_test(void)
@@ -255,7 +288,7 @@ static int mempool_test(void)
 
     pool1 = mempool_register_pool();
 
-    TEST_ASSERT(mempool_get_pools() == initial_pools + 1);
+    TEST_ASSERT(mempool_get_pools() == (initial_pools + 1));
     TEST_ASSERT(mempool_get_pool_size(pool1) == 0);
 
     mempool_malloc(pool1, 23);
@@ -276,7 +309,7 @@ static int mempool_test(void)
 
     pool2 = mempool_register_pool();
 
-    TEST_ASSERT(mempool_get_pools() == initial_pools + 2);
+    TEST_ASSERT(mempool_get_pools() == (initial_pools + 2));
     TEST_ASSERT(mempool_get_pool_size(pool2) == 0);
 
     mempool_malloc(pool1, 23);
@@ -315,10 +348,10 @@ static int assert_page(libspectrum_word base, libspectrum_word length, int sourc
     int i;
 
     for (i = 0; i < length / MEMORY_PAGE_SIZE; i++) {
-    TEST_ASSERT(memory_map_read[base_index + i].source == source);
-    TEST_ASSERT(memory_map_read[base_index + i].page_num == page);
-    TEST_ASSERT(memory_map_write[base_index + i].source == source);
-    TEST_ASSERT(memory_map_write[base_index + i].page_num == page);
+        TEST_ASSERT(memory_map_read[base_index + i].source == source);
+        TEST_ASSERT(memory_map_read[base_index + i].page_num == page);
+        TEST_ASSERT(memory_map_write[base_index + i].source == source);
+        TEST_ASSERT(memory_map_write[base_index + i].page_num == page);
     }
 
     return 0;
@@ -706,70 +739,78 @@ static int paging_test(void)
     int r = 0;
 
     switch (machine_current->machine) {
-    case LIBSPECTRUM_MACHINE_16:
-      r += paging_test_16();
-      break;
-    case LIBSPECTRUM_MACHINE_48:
-    case LIBSPECTRUM_MACHINE_48_NTSC:
-      r += unittests_paging_test_48(2);
-      break;
-    case LIBSPECTRUM_MACHINE_128:
-    case LIBSPECTRUM_MACHINE_PLUS2:
-    case LIBSPECTRUM_MACHINE_PENT:
-      r += paging_test_128();
-      break;
-    case LIBSPECTRUM_MACHINE_PLUS2A:
-    case LIBSPECTRUM_MACHINE_PLUS3:
-    case LIBSPECTRUM_MACHINE_PLUS3E:
-    case LIBSPECTRUM_MACHINE_128E:
-      r += paging_test_plus3();
-      break;
-    case LIBSPECTRUM_MACHINE_SCORP:
-      r += paging_test_scorpion();
-      break;
-    case LIBSPECTRUM_MACHINE_PENT512:
-      r += paging_test_pentagon512();
-      break;
-    case LIBSPECTRUM_MACHINE_PENT1024:
-      r += paging_test_pentagon1024();
-      break;
-    case LIBSPECTRUM_MACHINE_TC2048:
-      r += paging_test_timex(2, memory_source_none, memory_source_none);
-      break;
-    case LIBSPECTRUM_MACHINE_TC2068:
-    case LIBSPECTRUM_MACHINE_TS2068:
-      r += paging_test_timex(2, memory_source_none, memory_source_exrom);
-      break;
-    case LIBSPECTRUM_MACHINE_SE:
-      r += paging_test_se();
-      break;
-    case LIBSPECTRUM_MACHINE_UNKNOWN:
-      printf("%s:%d: unknown machine?\n", __FILE__, __LINE__);
-      break;
+
+        case LIBSPECTRUM_MACHINE_16:
+            r += paging_test_16();
+            break;
+
+        case LIBSPECTRUM_MACHINE_48:
+        case LIBSPECTRUM_MACHINE_48_NTSC:
+            r += unittests_paging_test_48(2);
+            break;
+
+        case LIBSPECTRUM_MACHINE_128:
+        case LIBSPECTRUM_MACHINE_PLUS2:
+        case LIBSPECTRUM_MACHINE_PENT:
+            r += paging_test_128();
+            break;
+
+        case LIBSPECTRUM_MACHINE_PLUS2A:
+        case LIBSPECTRUM_MACHINE_PLUS3:
+        case LIBSPECTRUM_MACHINE_PLUS3E:
+        case LIBSPECTRUM_MACHINE_128E:
+            r += paging_test_plus3();
+            break;
+
+        case LIBSPECTRUM_MACHINE_SCORP:
+            r += paging_test_scorpion();
+            break;
+
+        case LIBSPECTRUM_MACHINE_PENT512:
+            r += paging_test_pentagon512();
+            break;
+
+        case LIBSPECTRUM_MACHINE_PENT1024:
+            r += paging_test_pentagon1024();
+            break;
+
+        case LIBSPECTRUM_MACHINE_TC2048:
+            r += paging_test_timex(2, memory_source_none, memory_source_none);
+            break;
+
+        case LIBSPECTRUM_MACHINE_TC2068:
+        case LIBSPECTRUM_MACHINE_TS2068:
+            r += paging_test_timex(2, memory_source_none, memory_source_exrom);
+            break;
+
+        case LIBSPECTRUM_MACHINE_SE:
+            r += paging_test_se();
+            break;
+
+        case LIBSPECTRUM_MACHINE_UNKNOWN:
+            printf("%s:%d: unknown machine?\n", __FILE__, __LINE__);
+            break;
     }
 
     /* We don't run the peripheral unit tests with the 16K machine or the
-     Spectrum SE so as to avoid the problem with them having different RAM
-     pages at 0x8000 and/or 0xc000 */
-    if (machine_current->machine != LIBSPECTRUM_MACHINE_16 &&
-      machine_current->machine != LIBSPECTRUM_MACHINE_SE)
-    {
-    r += if1_unittest();
-    r += if2_unittest();
-    r += multiface_unittest();
-    r += speccyboot_unittest();
-    r += usource_unittest();
+       Spectrum SE so as to avoid the problem with them having different RAM pages at 0x8000 and/or 0xc000 */
+    if ((machine_current->machine != LIBSPECTRUM_MACHINE_16) && (machine_current->machine != LIBSPECTRUM_MACHINE_SE)) {
+        r += if1_unittest();
+        r += if2_unittest();
+        r += multiface_unittest();
+        r += speccyboot_unittest();
+        r += usource_unittest();
 
-    r += beta_unittest();
-    r += didaktik80_unittest();
-    r += disciple_unittest();
-    r += opus_unittest();
-    r += plusd_unittest();
+        r += beta_unittest();
+        r += didaktik80_unittest();
+        r += disciple_unittest();
+        r += opus_unittest();
+        r += plusd_unittest();
 
-    r += divide_unittest();
-    r += divmmc_unittest();
-    r += zxatasp_unittest();
-    r += zxcf_unittest();
+        r += divide_unittest();
+        r += divmmc_unittest();
+        r += zxatasp_unittest();
+        r += zxcf_unittest();
     }
 
     return r;

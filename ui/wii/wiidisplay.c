@@ -287,7 +287,7 @@ int wiidisplay_init(void)
     VIDEO_Init();
 
     u32 videoMode = VIDEO_GetCurrentTvMode();
-    switch(videoMode) {
+    switch (videoMode) {
     case VI_NTSC:
     rmode = &TVNtsc480IntDf;
     break;

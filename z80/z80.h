@@ -41,7 +41,7 @@ typedef struct {
     regpair ix,iy;
     libspectrum_byte i;
     libspectrum_word r; /* (T)he low seven bits of the R register. 16 bits long
-               so it can also act as an RZX instruction counter */
+                           so it can also act as an RZX instruction counter */
     libspectrum_byte r7; // The high bit of the R register
     regpair sp,pc;
     regpair memptr; // The hidden register
@@ -49,14 +49,13 @@ typedef struct {
     libspectrum_byte iff1, iff2, im;
     int halted;
 
-    /* Presumably, internal register where Z80 assembles the new content of the
-     F register, before moving it back to F. The behaviour is deterministic in
-     Zilog Z80 and nondeterministic in NEC Z80.
-     https://www.worldofspectrum.org/forums/discussion/41704/ */
+    /* Presumably, internal register where Z80 assembles the new content of the F register,
+       before moving it back to F.
+       The behaviour is deterministic in Zilog Z80 and nondeterministic in NEC Z80.
+       https://www.worldofspectrum.org/forums/discussion/41704/ */
     libspectrum_byte q;
 
-    /* Interrupts were enabled at this time; do not accept any interrupts
-     until tstates > this value */
+    // Interrupts were enabled at this time; do not accept any interrupts until tstates > this value
     libspectrum_signed_dword interrupts_enabled_at;
 
 } processor;

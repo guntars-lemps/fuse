@@ -713,7 +713,7 @@ void widget_filesel_keyhandler(input_key key)
 
     new_current_file = current_file;
 
-    switch(key) {
+    switch (key) {
 
 #if 0
     case INPUT_KEY_Resize: // Fake keypress used on window resize

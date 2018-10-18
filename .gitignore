@@ -8,6 +8,7 @@
 /data/win32/installer.nsi
 /**/*.o
 /fuse
+/libtool
 /z80/coretest
 /ui/widget/fuse.font
 /autom4te.cache/*

@@ -208,7 +208,7 @@ int ui_event(void)
     while (XEventsQueued(display, QueuedAlready)) {
     XNextEvent(display, &event);
 
-    switch(event.type) {
+    switch (event.type) {
     case ConfigureNotify:
       xdisplay_configure_notify(event.xconfigure.width,
                 event.xconfigure.height);
