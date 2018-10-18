@@ -19,8 +19,8 @@
 
 #include <config.h>
 
-/* Dummy functions for when we don't have a sound device; should never be
-   called, so just abort if they are */
+/* Dummy functions for when we don't have a sound device;
+   should never be called, so just abort if they are */
 
 #include "fuse.h"
 

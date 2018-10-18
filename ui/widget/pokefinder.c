@@ -84,7 +84,7 @@ static void update_possible(void)
     bank = mapping->page_num;
 
     for (offset = 0; offset < MEMORY_PAGE_SIZE; ++offset)
-      if (! (pokefinder_impossible[page][offset/8] & 1 << (offset & 7))) {
+      if (! (pokefinder_impossible[page][offset / 8] & 1 << (offset & 7))) {
     bank_offset = mapping->offset + offset;
 
     possible_page[i] = bank;

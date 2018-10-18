@@ -189,7 +189,7 @@ int fbdisplay_init(void)
     dev = getenv(DEVICE_VARIABLE);
     if (!dev || !*dev) dev = DEFAULT_DEVICE;
 
-    fb_fd = open(dev, O_RDWR | O_EXCL);
+    fb_fd = open(dev, (O_RDWR | O_EXCL));
     if (fb_fd == -1) {
     fprintf(stderr, "%s: couldn't open framebuffer device '%s'\n",
          fuse_progname, dev);

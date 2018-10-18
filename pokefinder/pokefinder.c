@@ -43,13 +43,15 @@ void pokefinder_clear(void)
 
     max_page = MEMORY_PAGES_IN_16K * machine_current->ram.valid_pages;
     pokefinder_count = 0;
-    for (page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; ++page)
-    if (page < max_page && memory_map_ram[page].writable) {
-      pokefinder_count += MEMORY_PAGE_SIZE;
-      memcpy(pokefinder_possible[page], memory_map_ram[page].page, MEMORY_PAGE_SIZE);
-      memset(pokefinder_impossible[page], 0, MEMORY_PAGE_SIZE / 8);
-    } else
-      memset(pokefinder_impossible[page], 255, MEMORY_PAGE_SIZE / 8);
+    for (page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; ++page) {
+        if (page < max_page && memory_map_ram[page].writable) {
+            pokefinder_count += MEMORY_PAGE_SIZE;
+            memcpy(pokefinder_possible[page], memory_map_ram[page].page, MEMORY_PAGE_SIZE);
+            memset(pokefinder_impossible[page], 0, (MEMORY_PAGE_SIZE / 8));
+        } else {
+            memset(pokefinder_impossible[page], 255, MEMORY_PAGE_SIZE / 8);
+        }
+    }
 }
 
 
@@ -57,19 +59,20 @@ int pokefinder_search(libspectrum_byte value)
 {
     size_t page, offset;
 
-    for (page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; page++) {
-    memory_page *mapping = &memory_map_ram[page];
+    for (page = 0; page < (MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES); page++) {
+        memory_page *mapping = &memory_map_ram[page];
 
-    for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
-      if (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) continue;
+        for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
+            if (pokefinder_impossible[page][offset / 8] & (1 << (offset & 7))) {
+                continue;
+            }
 
-      if (mapping->page[offset] != value) {
-    pokefinder_impossible[page][offset/8] |= 1 << (offset & 7);
-    pokefinder_count--;
-      }
+            if (mapping->page[offset] != value) {
+                pokefinder_impossible[page][offset / 8] |= (1 << (offset & 7));
+                pokefinder_count--;
+            }
+        }
     }
-    }
-
     return 0;
 }
 
@@ -79,21 +82,21 @@ int pokefinder_incremented(void)
     size_t page, offset;
 
     for (page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; page++) {
-    memory_page *mapping = &memory_map_ram[page];
+        memory_page *mapping = &memory_map_ram[page];
 
-    for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
-      if (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) continue;
+        for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
+            if (pokefinder_impossible[page][offset / 8] & (1 << (offset & 7))) {
+                continue;
+            }
 
-      if (mapping->page[offset] > pokefinder_possible[page][offset]) {
-        pokefinder_possible[page][offset] = mapping->page[offset];
-      } else {
-    pokefinder_impossible[page][offset/8] |= 1 << (offset & 7);
-    pokefinder_count--;
-      }
-
+            if (mapping->page[offset] > pokefinder_possible[page][offset]) {
+                pokefinder_possible[page][offset] = mapping->page[offset];
+            } else {
+                pokefinder_impossible[page][offset / 8] |= (1 << (offset & 7));
+                pokefinder_count--;
+            }
+        }
     }
-    }
-
     return 0;
 }
 
@@ -103,20 +106,20 @@ int pokefinder_decremented(void)
     size_t page, offset;
 
     for (page = 0; page < MEMORY_PAGES_IN_16K * SPECTRUM_RAM_PAGES; page++) {
-    memory_page *mapping = &memory_map_ram[page];
+        memory_page *mapping = &memory_map_ram[page];
 
-    for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
-      if (pokefinder_impossible[page][offset/8] & 1 << (offset & 7)) continue;
+        for (offset = 0; offset < MEMORY_PAGE_SIZE; offset++) {
+            if (pokefinder_impossible[page][offset / 8] & (1 << (offset & 7))) {
+                continue;
+            }
 
-      if (mapping->page[offset] < pokefinder_possible[page][offset]) {
-        pokefinder_possible[page][offset] = mapping->page[offset];
-      } else {
-    pokefinder_impossible[page][offset/8] |= 1 << (offset & 7);
-    pokefinder_count--;
-      }
-
+            if (mapping->page[offset] < pokefinder_possible[page][offset]) {
+                pokefinder_possible[page][offset] = mapping->page[offset];
+            } else {
+                pokefinder_impossible[page][offset / 8] |= (1 << (offset & 7));
+               pokefinder_count--;
+            }
+        }
     }
-    }
-
     return 0;
 }

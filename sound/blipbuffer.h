@@ -57,74 +57,16 @@ typedef unsigned long blip_resampled_time_t;
 # define BLIP_BUFFER_DEF_STEREO 0
 # define BLIP_BUFFER_DEF_ENTIRE_BUFF 1
 
-typedef struct Blip_Buffer_s {
-    unsigned long factor_;
-    blip_resampled_time_t offset_;
-    buf_t_ *buffer_;
-    long buffer_size_;
-    long reader_accum;
-    int bass_shift;
-    long sample_rate_;
-    long clock_rate_;
-    int bass_freq_;
-    int length_;
-} Blip_Buffer;
+#define BLIP_SAMPLE_BITS 30
 
-Blip_Buffer *new_Blip_Buffer(void);
+// End of public interface
 
-void delete_Blip_Buffer(Blip_Buffer ** buff);
+#define BLIP_UNSCALED 65535
+#define BLIP_MAX_LENGTH 0
 
-/*  Set output sample rate and buffer length in milliseconds (1/1000 sec, defaults
- to 1/4 second), then clear buffer. Returns NULL on success, otherwise if there
- isn't enough memory, returns error without affecting current buffer setup.
-*/
-blargg_err_t blip_buffer_set_sample_rate(Blip_Buffer * buff,
-                                          long samples_per_sec,
-                                          int msec_length);
-
-/*  Set number of source time units per second
-*/
-void blip_buffer_set_clock_rate(Blip_Buffer * buff, long rate);
-
-/*  End current time frame of specified duration and make its samples available
- (along with any still-unread samples) for reading with read_samples(). Begins
- a new time frame at the end of the current frame.
-*/
-void blip_buffer_end_frame(Blip_Buffer * buff, blip_time_t time);
-
-/*  Read at most 'max_samples' out of buffer into 'dest', removing them from from
- the buffer. Returns number of samples actually read and removed. If stereo is
- true, increments 'dest' one extra time after writing each sample, to allow
- easy interleving of two channels into a stereo output buffer.
-*/
-long blip_buffer_read_samples(Blip_Buffer * buff, blip_sample_t * dest,
-                               long max_samples, int stereo);
-
-// Additional optional features
-
-// Set frequency high-pass filter frequency, where higher values reduce bass more
-void blip_buffer_set_bass_freq(Blip_Buffer * buff, int frequency);
-
-/*  Remove all available samples and clear buffer to silence. If 'entire_buffer' is
- false, just clears out any samples waiting rather than the entire buffer.
-*/
-void blip_buffer_clear(Blip_Buffer * buff, int entire_buffer);
-
-/*  Number of samples available for reading with read_samples()
-*/
-long
-blip_buffer_samples_avail(Blip_Buffer * buff);
-
-/*  Remove 'count' samples from those waiting to be read
-*/
-void blip_buffer_remove_samples(Blip_Buffer * buff, long count);
-
-// Experimental features
-
-void blip_buffer_remove_silence(Blip_Buffer * buff, long count);
-
-blip_resampled_time_t blip_buffer_clock_rate_factor(Blip_Buffer * buff,
-                                                    long clock_rate);
+#define BLIP_SYNTH_QUALITY BLIP_GOOD_QUALITY
+#define BLIP_SYNTH_RANGE BLIP_UNSCALED
+#define BLIP_SYNTH_WIDTH BLIP_SYNTH_QUALITY // `quality' of synth as `width' of synth_
 
 /*
  Number of bits in resample ratio fraction. Higher values give a more accurate ratio
@@ -146,63 +88,11 @@ blip_resampled_time_t blip_buffer_clock_rate_factor(Blip_Buffer * buff,
 #define BLIP_WIDEST_IMPULSE_ 16
 #define BLIP_RES (1 << BLIP_PHASE_BITS)
 
-struct blip_eq_s;
-
-typedef struct Blip_Synth_s_ {
-    double volume_unit_;
-    short *impulses;
-    long kernel_unit;
-
-    Blip_Buffer *buf;
-    int last_amp;
-    int delta_factor;
-} Blip_Synth_;
-
-int _blip_synth_impulses_size(Blip_Synth_ * synth_);
-
-void _blip_synth_adjust_impulse(Blip_Synth_ * synth_);
-
-void _blip_synth_treble_eq(Blip_Synth_ * synth_, struct blip_eq_s *eq);
-
-void _blip_synth_volume_unit(Blip_Synth_ * synth_, double v);
-
 // Quality level. Start with blip_good_quality.
 #define BLIP_MED_QUALITY 8
 #define BLIP_GOOD_QUALITY 12
 #define BLIP_HIGH_QUALITY 16
 
-/*  Range specifies the greatest expected change in amplitude. Calculate it
- by finding the difference between the maximum and minimum expected
- amplitudes (max - min). */
-
-typedef short imp_t;
-
-typedef struct Blip_Synth_s {
-    imp_t *impulses;
-    Blip_Synth_ impl;
-} Blip_Synth;
-
-void blip_synth_set_volume(Blip_Synth * synth, double v);
-
-// Configure low-pass filter (see notes.txt)
-void blip_synth_set_treble_eq(Blip_Synth * synth, double treble);
-
-// Get/set Blip_Buffer used for output
-void blip_synth_set_output(Blip_Synth * synth, Blip_Buffer * b);
-
-/*  Update amplitude of waveform at given time. Using this requires a separate
-Blip_Synth for each waveform. */
-void blip_synth_update(Blip_Synth * synth, blip_time_t time,
-                        int amplitude);
-
-// Low-level interface
-
-void blip_synth_offset_resampled(Blip_Synth * synth,
-                                 blip_resampled_time_t, int delta,
-                                 Blip_Buffer * buff);
-Blip_Synth *new_Blip_Synth(void);
-
-void delete_Blip_Synth(Blip_Synth ** synth);
 
 #define BLIP_EQ_DEF_CUTOFF 0
 // Low-pass equalization parameters
@@ -214,15 +104,119 @@ typedef struct blip_eq_s {
     long cutoff_freq;
 } blip_eq_t;
 
-#define BLIP_SAMPLE_BITS 30
+/* Range specifies the greatest expected change in amplitude.
+   Calculate it by finding the difference between the maximum and minimum expected amplitudes (max - min).
+*/
+typedef short imp_t;
 
-// End of public interface
+typedef struct Blip_Buffer_s {
+    unsigned long factor_;
+    blip_resampled_time_t offset_;
+    buf_t_ *buffer_;
+    long buffer_size_;
+    long reader_accum;
+    int bass_shift;
+    long sample_rate_;
+    long clock_rate_;
+    int bass_freq_;
+    int length_;
+} Blip_Buffer;
 
-#define BLIP_UNSCALED 65535
-#define BLIP_MAX_LENGTH 0
+typedef struct Blip_Synth_s_ {
+    double volume_unit_;
+    short *impulses;
+    long kernel_unit;
 
-#define BLIP_SYNTH_QUALITY BLIP_GOOD_QUALITY
-#define BLIP_SYNTH_RANGE BLIP_UNSCALED
-#define BLIP_SYNTH_WIDTH BLIP_SYNTH_QUALITY // `quality' of synth as `width' of synth_
+    Blip_Buffer *buf;
+    int last_amp;
+    int delta_factor;
+} Blip_Synth_;
+
+typedef struct Blip_Synth_s {
+    imp_t *impulses;
+    Blip_Synth_ impl;
+} Blip_Synth;
+
+struct blip_eq_s;
+
+Blip_Buffer *new_Blip_Buffer(void);
+
+void delete_Blip_Buffer(Blip_Buffer **buff);
+
+/*  Set output sample rate and buffer length in milliseconds (1/1000 sec, defaults
+ to 1/4 second), then clear buffer. Returns NULL on success, otherwise if there
+ isn't enough memory, returns error without affecting current buffer setup.
+*/
+blargg_err_t blip_buffer_set_sample_rate(Blip_Buffer *buff, long samples_per_sec, int msec_length);
+
+/*  Set number of source time units per second
+*/
+void blip_buffer_set_clock_rate(Blip_Buffer *buff, long rate);
+
+/*  End current time frame of specified duration and make its samples available
+ (along with any still-unread samples) for reading with read_samples(). Begins
+ a new time frame at the end of the current frame.
+*/
+void blip_buffer_end_frame(Blip_Buffer *buff, blip_time_t time);
+
+/*  Read at most 'max_samples' out of buffer into 'dest', removing them from from
+ the buffer. Returns number of samples actually read and removed. If stereo is
+ true, increments 'dest' one extra time after writing each sample, to allow
+ easy interleving of two channels into a stereo output buffer.
+*/
+long blip_buffer_read_samples(Blip_Buffer *buff, blip_sample_t *dest, long max_samples, int stereo);
+
+// Additional optional features
+
+// Set frequency high-pass filter frequency, where higher values reduce bass more
+void blip_buffer_set_bass_freq(Blip_Buffer *buff, int frequency);
+
+/*  Remove all available samples and clear buffer to silence. If 'entire_buffer' is
+ false, just clears out any samples waiting rather than the entire buffer.
+*/
+void blip_buffer_clear(Blip_Buffer *buff, int entire_buffer);
+
+/*  Number of samples available for reading with read_samples()
+*/
+long blip_buffer_samples_avail(Blip_Buffer *buff);
+
+/*  Remove 'count' samples from those waiting to be read
+*/
+void blip_buffer_remove_samples(Blip_Buffer *buff, long count);
+
+// Experimental features
+
+void blip_buffer_remove_silence(Blip_Buffer *buff, long count);
+
+blip_resampled_time_t blip_buffer_clock_rate_factor(Blip_Buffer *buff, long clock_rate);
+
+int _blip_synth_impulses_size(Blip_Synth_ *synth_);
+
+void _blip_synth_adjust_impulse(Blip_Synth_ *synth_);
+
+void _blip_synth_treble_eq(Blip_Synth_ *synth_, struct blip_eq_s *eq);
+
+void _blip_synth_volume_unit(Blip_Synth_ *synth_, double v);
+
+void blip_synth_set_volume(Blip_Synth *synth, double v);
+
+// Configure low-pass filter (see notes.txt)
+void blip_synth_set_treble_eq(Blip_Synth *synth, double treble);
+
+// Get/set Blip_Buffer used for output
+void blip_synth_set_output(Blip_Synth *synth, Blip_Buffer *b);
+
+/* Update amplitude of waveform at given time.
+   Using this requires a separate Blip_Synth for each waveform. */
+void blip_synth_update(Blip_Synth *synth, blip_time_t time,  int amplitude);
+
+// Low-level interface
+
+void blip_synth_offset_resampled(Blip_Synth *synth, blip_resampled_time_t, int delta, Blip_Buffer *buff);
+
+Blip_Synth *new_Blip_Synth(void);
+
+void delete_Blip_Synth(Blip_Synth **synth);
+
 
 #endif

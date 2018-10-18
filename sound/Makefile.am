@@ -26,15 +26,12 @@ EXTRA_fuse_SOURCES += \
                       sound/alsasound.c \
                       sound/aosound.c \
                       sound/coreaudiosound.c \
-                      sound/dxsound.c \
                       sound/hpsound.c \
                       sound/nullsound.c \
                       sound/osssound.c \
                       sound/sdlsound.c \
                       sound/sfifo.c \
-                      sound/sunsound.c \
-                      sound/wiisound.c \
-                      sound/win32sound.c
+                      sound/sunsound.c
 
 noinst_HEADERS += \
                   sound/blipbuffer.h \

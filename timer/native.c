@@ -26,8 +26,8 @@
 #include "compat.h"
 #include "timer.h"
 
-double
-timer_get_time(void)
+
+double timer_get_time(void)
 {
     return compat_timer_get_time();
 }

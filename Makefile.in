@@ -882,10 +882,9 @@ fuse_LDADD = $(PTHREAD_LIBS) $(LIBSPECTRUM_LIBS) $(GTK_LIBS) \
 fuse_DEPENDENCIES = $(am__append_3) $(SOUND_LIBADD) $(TIMER_LIBADD) \
 	ui/scaler/scalers16.o ui/scaler/scalers32.o
 EXTRA_fuse_SOURCES = sound/alsasound.c sound/aosound.c \
-	sound/coreaudiosound.c sound/dxsound.c sound/hpsound.c \
-	sound/nullsound.c sound/osssound.c sound/sdlsound.c \
-	sound/sfifo.c sound/sunsound.c sound/wiisound.c \
-	sound/win32sound.c timer/native.c timer/sdl.c $(ui_xlib_files)
+	sound/coreaudiosound.c sound/hpsound.c sound/nullsound.c \
+	sound/osssound.c sound/sdlsound.c sound/sfifo.c \
+	sound/sunsound.c timer/native.c timer/sdl.c $(ui_xlib_files)
 BUILT_SOURCES = options.h settings.c settings.h $(am__append_19) \
 	$(am__append_21) $(am__append_26) $(am__append_28) \
 	$(am__append_30) $(am__append_32) $(am__append_35) \
@@ -1929,8 +1928,6 @@ sound/aosound.$(OBJEXT): sound/$(am__dirstamp) \
 	sound/$(DEPDIR)/$(am__dirstamp)
 sound/coreaudiosound.$(OBJEXT): sound/$(am__dirstamp) \
 	sound/$(DEPDIR)/$(am__dirstamp)
-sound/dxsound.$(OBJEXT): sound/$(am__dirstamp) \
-	sound/$(DEPDIR)/$(am__dirstamp)
 sound/hpsound.$(OBJEXT): sound/$(am__dirstamp) \
 	sound/$(DEPDIR)/$(am__dirstamp)
 sound/nullsound.$(OBJEXT): sound/$(am__dirstamp) \
@@ -1942,10 +1939,6 @@ sound/sdlsound.$(OBJEXT): sound/$(am__dirstamp) \
 sound/sfifo.$(OBJEXT): sound/$(am__dirstamp) \
 	sound/$(DEPDIR)/$(am__dirstamp)
 sound/sunsound.$(OBJEXT): sound/$(am__dirstamp) \
-	sound/$(DEPDIR)/$(am__dirstamp)
-sound/wiisound.$(OBJEXT): sound/$(am__dirstamp) \
-	sound/$(DEPDIR)/$(am__dirstamp)
-sound/win32sound.$(OBJEXT): sound/$(am__dirstamp) \
 	sound/$(DEPDIR)/$(am__dirstamp)
 timer/native.$(OBJEXT): timer/$(am__dirstamp) \
 	timer/$(DEPDIR)/$(am__dirstamp)
@@ -2127,15 +2120,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/aosound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/blipbuffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/coreaudiosound.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/dxsound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/hpsound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/nullsound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/osssound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/sdlsound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/sfifo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/sunsound.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/wiisound.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@sound/$(DEPDIR)/win32sound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@timer/$(DEPDIR)/native.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@timer/$(DEPDIR)/sdl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@timer/$(DEPDIR)/timer.Po@am__quote@

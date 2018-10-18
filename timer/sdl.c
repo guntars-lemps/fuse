@@ -27,8 +27,8 @@
 
 #include "timer.h"
 
-double
-timer_get_time(void)
+
+double timer_get_time(void)
 {
     return SDL_GetTicks() / 1000.0;
 }

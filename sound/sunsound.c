@@ -57,32 +57,28 @@ int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     int flags;
     struct audio_info ai;
 
-    if (device == NULL)
+    if (device == NULL) {
         device = "/dev/audio";
-
+    }
     /* Open the sound device non-blocking to avoid hangs if it is
        being used by something else, but then set it blocking
        again as that's what we actually want */
-    if ((soundfd = open(device, O_WRONLY | O_NONBLOCK)) == -1) {
+    if ((soundfd = open(device, (O_WRONLY | O_NONBLOCK))) == -1) {
         settings_current.sound = 0;
-            ui_error(UI_ERROR_ERROR, "Couldn't open sound device '%s'",
-              device);
+        ui_error(UI_ERROR_ERROR, "Couldn't open sound device '%s'", device);
         return 1;
     }
     if ((flags = fcntl(soundfd, F_GETFL)) == -1) {
         settings_current.sound = 0;
-            ui_error(UI_ERROR_ERROR, "Couldn't fcntl sound device '%s'",
-              device);
-            close(soundfd);
-            return 1;
+        ui_error(UI_ERROR_ERROR, "Couldn't fcntl sound device '%s'", device);
+        close(soundfd);
+        return 1;
     }
     flags &= ~O_NONBLOCK;
     if (fcntl(soundfd, F_SETFL, flags) == -1) {
         settings_current.sound = 0;
-            ui_error(UI_ERROR_ERROR,
-              "Couldn't set sound device '%s' blocking",
-              device);
-            close(soundfd);
+        ui_error(UI_ERROR_ERROR, "Couldn't set sound device '%s' blocking", device);
+        close(soundfd);
         return 1;
     }
 
@@ -91,17 +87,14 @@ int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     ai.play.encoding = AUDIO_ENCODING_LINEAR;
     ai.play.precision = 16;
     sixteenbit = 1;
-    if (settings_current.sound_force_8bit ||
-        ioctl(soundfd, AUDIO_SETINFO, &ai) == -1) {
+    if (settings_current.sound_force_8bit || (ioctl(soundfd, AUDIO_SETINFO, &ai) == -1)) {
         // try 8-bit
         ai.play.encoding = AUDIO_ENCODING_LINEAR8;
         ai.play.precision = 8;
         sixteenbit = 0;
         if (ioctl(soundfd, AUDIO_SETINFO, &ai) == -1) {
             settings_current.sound = 0;
-                ui_error(UI_ERROR_ERROR,
-                "Couldn't set bit size of sound device '%s'",
-                  device);
+            ui_error(UI_ERROR_ERROR, "Couldn't set bit size of sound device '%s'", device);
             close(soundfd);
             return 1;
         }
@@ -113,9 +106,7 @@ int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
         ai.play.channels = *stereoptr ? 1 : 2;
         if (ioctl(soundfd, AUDIO_SETINFO, &ai) == -1) {
             settings_current.sound = 0;
-                ui_error(UI_ERROR_ERROR,
-                "Couldn't set channels of sound device '%s'",
-                  device);
+            ui_error(UI_ERROR_ERROR, "Couldn't set channels of sound device '%s'", device);
             close(soundfd);
             return 1;
         }
@@ -126,34 +117,36 @@ int sound_lowlevel_init(const char *device, int *freqptr, int *stereoptr)
     ai.play.sample_rate = *freqptr;
     if (ioctl(soundfd, AUDIO_SETINFO, &ai) == -1) {
         settings_current.sound = 0;
-            ui_error(UI_ERROR_ERROR,
-              "Couldn't set sample rate of sound device '%s'",
-              device);
+        ui_error(UI_ERROR_ERROR, "Couldn't set sample rate of sound device '%s'", device);
         close(soundfd);
         return 1;
     }
 
 #ifndef solaris
     frag = 0x80000 | BASE_SOUND_FRAG_PWR;
-    if (*freqptr > 8250)
+    if (*freqptr > 8250) {
         frag++;
-    if (*freqptr > 16500)
+    }
+    if (*freqptr > 16500) {
         frag++;
-    if (*freqptr > 33000)
+    }
+    if (*freqptr > 33000) {
         frag++;
-    if (*stereoptr)
+    }
+    if (*stereoptr) {
         frag++;
-    if (sixteenbit)
+    }
+    if (sixteenbit) {
         frag++;
+    }
     ai.blocksize = 1 << (frag & 0xffff);
     ai.hiwat = ((unsigned)frag >> 16) & 0x7fff;
-    if (ai.hiwat == 0)
+    if (ai.hiwat == 0) {
         ai.hiwat = 65536;
+    }
     if (ioctl(soundfd, AUDIO_SETINFO, &ai) == -1) {
         settings_current.sound = 0;
-            ui_error(UI_ERROR_ERROR,
-              "Couldn't set block size of sound device '%s'",
-              device);
+        ui_error(UI_ERROR_ERROR, "Couldn't set block size of sound device '%s'", device);
         close(soundfd);
         return 1;
     }
@@ -177,8 +170,8 @@ void sound_lowlevel_end(void)
 void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 {
     static unsigned char buf8[4096];
-    unsigned char *data8=(unsigned char *)data;
-    int ret=0, ofs=0;
+    unsigned char *data8 = (unsigned char *)data;
+    int ret = 0, ofs = 0;
 
     len <<= 1; // now in bytes
 
@@ -187,16 +180,17 @@ void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
         unsigned char *dst;
         int f;
 
-        src = data; dst = buf8;
+        src = data;
+        dst = buf8;
         len >>= 1;
-        for (f=0; f < len; f++)
-            *dst++ = 128 + (int)((*src++)/256);
-
+        for (f = 0; f < len; f++) {
+            *dst++ = (128 + (int)((*src++) / 256));
+        }
         data8 = buf8;
     }
 
     while (len) {
-        ret = write (soundfd, data8 + ofs, len);
+        ret = write(soundfd, (data8 + ofs), len);
         if (ret > 0) {
             ofs += ret;
             len -= ret;
@@ -205,4 +199,3 @@ void sound_lowlevel_frame(libspectrum_signed_word *data, int len)
 }
 
 #endif // #if defined AUDIO_SETINFO || defined HAVE_SYS_AUDIOIO_H
-
