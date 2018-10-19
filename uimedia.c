@@ -41,6 +41,11 @@
 
 static GSList *registered_drives = NULL;
 
+struct find_info {
+    int controller;
+    int drive;
+};
+
 
 static inline int menu_item_valid(ui_menu_item item)
 {
@@ -60,11 +65,6 @@ void ui_media_drive_end(void)
     g_slist_free(registered_drives);
     registered_drives = NULL;
 }
-
-struct find_info {
-    int controller;
-    int drive;
-};
 
 
 static gint find_drive(gconstpointer data, gconstpointer user_data)

@@ -62,6 +62,7 @@ static void init_path_context(path_context *ctx, utils_aux_type type);
 
 static int networking_init_count = 0;
 
+
 // Open `filename' and do something sensible with it;
 // autoload tapes if `autoload' is true and return the type of file found in `type'
 int utils_open_file(const char *filename, int autoload, libspectrum_id_t *type_ptr)

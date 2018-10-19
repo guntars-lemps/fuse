@@ -78,6 +78,7 @@ static int menu_select_machine_roms(libspectrum_machine machine, size_t start, s
 
 static int menu_select_peripheral_roms(const char *peripheral_name, size_t start, size_t n);
 
+
 MENU_CALLBACK(menu_file_open)
 {
     char *filename;

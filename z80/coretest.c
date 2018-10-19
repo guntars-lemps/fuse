@@ -326,7 +326,21 @@ static int read_test(FILE *f, libspectrum_dword *end_tstates)
     } while (test_name[0] == '\n');
 
     // FIXME: how should we read/write our data types?
-    if (fscanf(f, "%x %x %x %x %x %x %x %x %x %x %x %x %x", &af, &bc, &de, &hl, &af_, &bc_, &de_, &hl_, &ix, &iy, &sp, &pc, &memptr) != 13) {
+    if (fscanf(f,
+               "%x %x %x %x %x %x %x %x %x %x %x %x %x",
+               &af,
+               &bc,
+               &de,
+               &hl,
+               &af_,
+               &bc_,
+               &de_,
+               &hl_,
+               &ix,
+               &iy,
+               &sp,
+               &pc,
+               &memptr) != 13) {
         fprintf(stderr, "%s: first registers line in `%s' corrupt\n", progname, testsfile);
         return 1;
     }
@@ -393,7 +407,20 @@ static int read_test(FILE *f, libspectrum_dword *end_tstates)
 
 static void dump_z80_state(void)
 {
-    printf("%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x\n", AF, BC, DE, HL, AF_, BC_, DE_, HL_, IX, IY, SP, PC, z80.memptr.w);
+    printf("%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x\n",
+           AF,
+           BC,
+           DE,
+           HL,
+           AF_,
+           BC_,
+           DE_,
+           HL_,
+           IX,
+           IY,
+           SP,
+           PC,
+           z80.memptr.w);
     printf("%02x %02x %d %d %d %d %d\n", I, ((R7 & 0x80) | (R & 0x7f)), IFF1, IFF2, IM, z80.halted, tstates);
 }
 
@@ -464,7 +491,11 @@ int debugger_check(debugger_breakpoint_type type GCC_UNUSED, libspectrum_dword v
     abort();
 }
 
-void debugger_system_variable_register(const char *type, const char *detail, debugger_get_system_variable_fn_t get, debugger_set_system_variable_fn_t set)
+
+void debugger_system_variable_register(const char *type,
+                                       const char *detail,
+                                       debugger_get_system_variable_fn_t get,
+                                       debugger_set_system_variable_fn_t set)
 {
 }
 

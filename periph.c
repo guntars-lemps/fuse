@@ -381,7 +381,8 @@ void writeport(libspectrum_word port, libspectrum_byte b)
 {
     ula_contend_port_early(port);
     writeport_internal(port, b);
-    ula_contend_port_late(port); tstates++;
+    ula_contend_port_late(port);
+    tstates++;
 }
 
 

@@ -36,14 +36,14 @@ typedef union {
 
 // What's stored in the main processor
 typedef struct {
-    regpair af,bc,de,hl;
-    regpair af_,bc_,de_,hl_;
-    regpair ix,iy;
+    regpair af, bc, de, hl;
+    regpair af_, bc_, de_, hl_;
+    regpair ix, iy;
     libspectrum_byte i;
     libspectrum_word r; /* (T)he low seven bits of the R register. 16 bits long
                            so it can also act as an RZX instruction counter */
     libspectrum_byte r7; // The high bit of the R register
-    regpair sp,pc;
+    regpair sp, pc;
     regpair memptr; // The hidden register
     int iff2_read;
     libspectrum_byte iff1, iff2, im;

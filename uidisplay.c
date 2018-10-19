@@ -40,15 +40,15 @@ void uidisplay_spectrum_screen(const libspectrum_byte *screen, int border)
     for (y = 0; y < DISPLAY_BORDER_HEIGHT; y++) {
         for (x = 0; x < DISPLAY_ASPECT_WIDTH; x++) {
             uidisplay_putpixel(x, y, border);
-            uidisplay_putpixel(x, y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT, border);
+            uidisplay_putpixel(x, (y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT), border);
         }
     }
 
     for (y = 0; y < DISPLAY_HEIGHT; y++) {
 
         for (x = 0; x < DISPLAY_BORDER_WIDTH; x++) {
-            uidisplay_putpixel(x, y + DISPLAY_BORDER_HEIGHT, border);
-            uidisplay_putpixel(x + DISPLAY_ASPECT_WIDTH - DISPLAY_BORDER_ASPECT_WIDTH, y + DISPLAY_BORDER_HEIGHT, border);
+            uidisplay_putpixel(x, (y + DISPLAY_BORDER_HEIGHT), border);
+            uidisplay_putpixel((x + DISPLAY_ASPECT_WIDTH - DISPLAY_BORDER_ASPECT_WIDTH), (y + DISPLAY_BORDER_HEIGHT), border);
         }
 
         for (x = 0; x < DISPLAY_WIDTH_COLS; x++) {
@@ -62,9 +62,9 @@ void uidisplay_spectrum_screen(const libspectrum_byte *screen, int border)
 
             data = screen[display_line_start[y] + x];
 
-            uidisplay_plot8(x + DISPLAY_BORDER_WIDTH_COLS, y + DISPLAY_BORDER_HEIGHT, data, ink, paper);
+            uidisplay_plot8((x + DISPLAY_BORDER_WIDTH_COLS), (y + DISPLAY_BORDER_HEIGHT), data, ink, paper);
         }
     }
 
-    uidisplay_area(0, 0, scale * DISPLAY_ASPECT_WIDTH, scale * DISPLAY_SCREEN_HEIGHT);
+    uidisplay_area(0, 0, (scale * DISPLAY_ASPECT_WIDTH), (scale * DISPLAY_SCREEN_HEIGHT));
 }

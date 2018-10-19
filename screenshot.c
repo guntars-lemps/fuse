@@ -198,9 +198,9 @@ static int get_rgb32_data(libspectrum_byte *rgb32_data, size_t stride,  size_t h
     libspectrum_byte grey_palette[16];
 
     // Addition of 0.5 is to avoid rounding errors
-    for (i = 0; i < 16; i++)
-    grey_palette[i] = ((0.299 * palette[i][0]) + (0.587 * palette[i][1]) + (0.114 * palette[i][2])) + 0.5;
-
+    for (i = 0; i < 16; i++) {
+        grey_palette[i] = ((0.299 * palette[i][0]) + (0.587 * palette[i][1]) + (0.114 * palette[i][2])) + 0.5;
+    }
     for (y = 0; y < height; y++) {
         for (x = 0; x < width; x++) {
             size_t colour;
@@ -540,12 +540,12 @@ int screenshot_mlt_read(const char *filename)
     // If it is not a Timex copy the mono bitmap and raise an error
     if (machine_current->timex) {
         if (!scld_last_dec.name.b1) {
-            scld_dec_write(0xff, (scld_last_dec.byte & ~HIRESATTR) | EXTCOLOUR);
+            scld_dec_write(0xff, ((scld_last_dec.byte & ~HIRESATTR) | EXTCOLOUR));
         }
         for (y = 0; y < DISPLAY_HEIGHT; y++) {
             for (x = 0; x < DISPLAY_WIDTH_COLS; x++) {
                 RAM[memory_current_screen][display_get_addr(x,y) + ALTDFILE_OFFSET] =
-                    *(screen.buffer + MONO_BITMAP_SIZE + x + y * DISPLAY_WIDTH_COLS);
+                    *(screen.buffer + MONO_BITMAP_SIZE + x + (y * DISPLAY_WIDTH_COLS));
             }
         }
     } else {

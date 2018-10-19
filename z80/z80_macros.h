@@ -107,17 +107,17 @@
 #ifndef CORETEST
 
 #define contend_read(address,time) \
-    if (memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM].contended) \
+    if (memory_map_read[(address) >> MEMORY_PAGE_SIZE_LOGARITHM].contended) \
     tstates += ula_contention[tstates]; \
     tstates += (time);
 
 #define contend_read_no_mreq(address,time) \
-    if (memory_map_read[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM].contended) \
+    if (memory_map_read[(address) >> MEMORY_PAGE_SIZE_LOGARITHM].contended) \
     tstates += ula_contention_no_mreq[tstates]; \
     tstates += (time);
 
 #define contend_write_no_mreq(address,time) \
-    if (memory_map_write[ (address) >> MEMORY_PAGE_SIZE_LOGARITHM].contended) \
+    if (memory_map_write[(address) >> MEMORY_PAGE_SIZE_LOGARITHM].contended) \
     tstates += ula_contention_no_mreq[tstates]; \
     tstates += (time);
 
@@ -156,7 +156,7 @@ void contend_write_no_mreq(libspectrum_word address, libspectrum_dword time);
     libspectrum_byte lookup = ((HL & 0x8800) >> 11) | \
                 (((value) & 0x8800) >> 10) | \
                 ((add16temp & 0x8800) >>  9);  \
-    z80.memptr.w=HL+1;\
+    z80.memptr.w = HL + 1;\
     HL = add16temp;\
     F = ((add16temp & 0x10000) ? FLAG_C : 0)|\
     overflow_add_table[lookup >> 4] |\
@@ -185,7 +185,7 @@ void contend_write_no_mreq(libspectrum_word address, libspectrum_dword time);
     libspectrum_byte lookup = (((value1) & 0x0800) >> 11) | \
                 (((value2) & 0x0800) >> 10) | \
                 ((add16temp & 0x0800) >>  9);  \
-    z80.memptr.w=(value1)+1;\
+    z80.memptr.w = (value1) + 1;\
     (value1) = add16temp;\
     F = (F & (FLAG_V | FLAG_Z | FLAG_S)) |\
     ((add16temp & 0x10000) ? FLAG_C : 0)|\
@@ -235,7 +235,7 @@ void contend_write_no_mreq(libspectrum_word address, libspectrum_dword time);
 
 // Macro for the {DD,FD} CB dd xx rotate/shift instructions
 #define DDFDCB_ROTATESHIFT(time, target, instruction)\
-tstates+=(time);\
+tstates += (time);\
 {\
     (target) = readbyte(tempaddr);\
     instruction((target));\
@@ -245,7 +245,7 @@ break
 
 #define DEC(value)\
 {\
-    F = (F & FLAG_C) | ((value) & 0x0f ? 0 : FLAG_H) | FLAG_N;\
+    F = (F & FLAG_C) | (((value) & 0x0f) ? 0 : FLAG_H) | FLAG_N;\
     (value)--;\
     F |= (((value) == 0x7f) ? FLAG_V : 0) | sz53_table[value];\
     Q = F;\
@@ -262,7 +262,7 @@ break
 #define INC(value)\
 {\
     (value)++;\
-    F = (F & FLAG_C) | ((value) == 0x80 ? FLAG_V : 0) |\
+    F = (F & FLAG_C) | (((value) == 0x80) ? FLAG_V : 0) |\
     (((value) & 0x0f) ? 0 : FLAG_H) | sz53_table[(value)];\
     Q = F;\
 }

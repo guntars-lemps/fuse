@@ -212,9 +212,9 @@ static libspectrum_byte contend_delay_common(libspectrum_dword time, int* timing
     }
 
     // Or the right border or retrace
-    if (tstates_through_line >= machine_current->timings.left_border +
-                                machine_current->timings.horizontal_screen -
-                                offset) {
+    if (tstates_through_line >= (machine_current->timings.left_border +
+                                 machine_current->timings.horizontal_screen -
+                                 offset)) {
         return 0;
     }
 

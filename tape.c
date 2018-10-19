@@ -576,7 +576,7 @@ static int trap_load_block(libspectrum_tape_block *block)
     } else {
         for (i = 0; i < read; i++) {
             parity ^= data[i];
-            writebyte_internal(IX+i, data[i]);
+            writebyte_internal(IX + i, data[i]);
         }
     }
 
@@ -1073,7 +1073,8 @@ normal:
                      (unsigned long)libspectrum_tape_generalised_data_symbol_table_symbols_in_block
                          (
                             libspectrum_tape_block_data_table(block)
-                         ));
+                         )
+                    );
             break;
 
         case LIBSPECTRUM_TAPE_BLOCK_RLE_PULSE:
@@ -1099,7 +1100,7 @@ static void make_name(unsigned char *name, const unsigned char *data)
     size_t i;
 
     for (i = 0; i < 10; i++, name++, data++) {
-        if (*data >= 32 && *data < 127) {
+        if ((*data >= 32) && (*data < 127)) {
             *name = *data;
         } else {
             *name = '?';

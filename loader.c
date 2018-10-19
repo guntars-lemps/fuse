@@ -41,7 +41,7 @@ static int length_long1 = 0, length_long2 = 0;
 typedef enum acceleration_mode_t {
     ACCELERATION_MODE_NONE = 0,
     ACCELERATION_MODE_INCREASING,
-    ACCELERATION_MODE_DECREASING,
+    ACCELERATION_MODE_DECREASING
 } acceleration_mode_t;
 
 static acceleration_mode_t acceleration_mode;

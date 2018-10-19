@@ -457,13 +457,13 @@ static int creator_init(void *context)
         return error;
     }
 
-    error = libspectrum_creator_set_major(fuse_creator, (version[0] * 0x100) + version[1]);
+    error = libspectrum_creator_set_major(fuse_creator, ((version[0] * 0x100) + version[1]));
     if (error) {
         libspectrum_creator_free(fuse_creator);
         return error;
     }
 
-    error = libspectrum_creator_set_minor(fuse_creator, (version[2] * 0x100) + version[3]);
+    error = libspectrum_creator_set_minor(fuse_creator, ((version[2] * 0x100) + version[3]));
     if (error) {
         libspectrum_creator_free(fuse_creator);
         return error;

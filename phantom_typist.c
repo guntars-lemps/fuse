@@ -133,7 +133,7 @@ typedef enum phantom_typist_state_t {
 
     // For typing L and O somewhat slowly
     PHANTOM_TYPIST_STATE_SLOW_LOAD_L,
-    PHANTOM_TYPIST_STATE_SLOW_LOAD_O,
+    PHANTOM_TYPIST_STATE_SLOW_LOAD_O
 
 } phantom_typist_state_t;
 

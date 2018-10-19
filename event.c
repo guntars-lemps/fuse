@@ -85,7 +85,7 @@ static gint event_add_cmp(gconstpointer a1, gconstpointer b1)
 {
     const event_t *a = a1, *b = b1;
 
-    return a->tstates != b->tstates ? (a->tstates - b->tstates) : (a->type - b->type);
+    return (a->tstates != b->tstates) ? (a->tstates - b->tstates) : (a->type - b->type);
 }
 
 

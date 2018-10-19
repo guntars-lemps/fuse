@@ -55,12 +55,18 @@ static int mouse_grab_suspended = 0;
 struct menu_item_entries {
     ui_menu_item item;
     const char *string1;
-    const char *string2; int string2_inverted;
-    const char *string3; int string3_inverted;
-    const char *string4; int string4_inverted;
-    const char *string5; int string5_inverted;
-    const char *string6; int string6_inverted;
-    const char *string7; int string7_inverted;
+    const char *string2;
+    int string2_inverted;
+    const char *string3;
+    int string3_inverted;
+    const char *string4;
+    int string4_inverted;
+    const char *string5;
+    int string5_inverted;
+    const char *string6;
+    int string6_inverted;
+    const char *string7;
+    int string7_inverted;
 };
 
 // Menu entries
@@ -915,7 +921,7 @@ int ui_mdr_write(int which, int saveas)
 
     fuse_emulation_pause();
 
-    snprintf(title, 80, "Fuse - Write Microdrive Cartridge %i", which + 1);
+    snprintf(title, 80, "Fuse - Write Microdrive Cartridge %i", (which + 1));
 
     if (saveas) {
         filename = ui_get_save_filename(title);

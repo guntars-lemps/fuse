@@ -99,7 +99,7 @@ typedef enum utils_aux_type {
     UTILS_AUXILIARY_LIB,        // Something from the lib/ directory
     UTILS_AUXILIARY_ROM,        // Something from the roms/ directory
     UTILS_AUXILIARY_WIDGET,     // Something from the widget/ directory
-    UTILS_AUXILIARY_GTK,        // Something from the gtk/ directory
+    UTILS_AUXILIARY_GTK         // Something from the gtk/ directory
 } utils_aux_type;
 
 typedef struct path_context {
@@ -140,7 +140,7 @@ int compat_file_exists(const char *path);
 typedef enum compat_dir_result_t {
     COMPAT_DIR_RESULT_OK,
     COMPAT_DIR_RESULT_END,
-    COMPAT_DIR_RESULT_ERROR,
+    COMPAT_DIR_RESULT_ERROR
 } compat_dir_result_t;
 
 compat_dir compat_opendir(const char *path);

@@ -166,7 +166,7 @@ void svg_openfile(void)
 
     if ((writer = xmlNewTextWriterMemory(buffer, 0)) == NULL) {
         ui_error(UI_ERROR_ERROR, "error allocating the XML writer");
-       return;
+        return;
     }
 
     // we free the writer at the start of each of these branches since this must be done before using the buffer
@@ -175,7 +175,7 @@ void svg_openfile(void)
 
     if (xmlTextWriterStartDocument(writer, NULL, ENCODING, NULL) < 0) {
         ui_error(UI_ERROR_ERROR, "error on SVG document start");
-       return;
+        return;
     }
 
     // svg
@@ -292,8 +292,8 @@ void svg_closefile(void)
 
     xmlFreeTextWriter(writer);
 
-    svg_fname = libspectrum_new(char, strlen(svg_fnameroot) + BUFSIZ);
-    snprintf(svg_fname, strlen(svg_fnameroot) + BUFSIZ, "%s%d.svg", svg_fnameroot, svg_filecount++);
+    svg_fname = libspectrum_new(char, (strlen(svg_fnameroot) + BUFSIZ));
+    snprintf(svg_fname, (strlen(svg_fnameroot) + BUFSIZ), "%s%d.svg", svg_fnameroot, svg_filecount++);
 
     if ((fp = fopen(svg_fname, "w")) != NULL) {
         fprintf(fp, "%s", buffer->content);
@@ -372,12 +372,12 @@ void svg_capture_draw(void)
             return;
         }
         err = 0;
-        snprintf(path_element, BUFSZ, "%d", readbyte_internal(0x5c7d) * 2);
+        snprintf(path_element, BUFSZ, "%d", (readbyte_internal(0x5c7d) * 2));
         err += (svg_attribute("x1", path_element, "line") != 0);
-        snprintf(path_element, BUFSZ, "%d", (svg_y_size - 1 - readbyte_internal(0x5c7e)) * 2);
+        snprintf(path_element, BUFSZ, "%d", ((svg_y_size - 1 - readbyte_internal(0x5c7e)) * 2));
         err += (svg_attribute("y1", path_element, "line") != 0);
 
-        snprintf(path_element, BUFSZ, "%d", (readbyte_internal(0x5c7d) + dx) * 2);
+        snprintf(path_element, BUFSZ, "%d", ((readbyte_internal(0x5c7d) + dx) * 2));
         err += (svg_attribute("x2", path_element, "line") != 0);
         snprintf(path_element, BUFSZ, "%d", ((svg_y_size - 1 - readbyte_internal(0x5c7e) - dy) * 2));
         err += (svg_attribute("y2", path_element, "line") != 0);
@@ -390,12 +390,12 @@ void svg_capture_draw(void)
            return;
         }
         err = 0;
-        snprintf(path_element, BUFSZ, "%d", dx * 2);
+        snprintf(path_element, BUFSZ, "%d", (dx * 2));
         err += (svg_attribute("x1", path_element, "line") != 0);
         err += (svg_attribute("x2", path_element, "line") != 0);
-        snprintf(path_element, BUFSZ, "%d", ((svg_y_size - dy) * 2) - 1);
+        snprintf(path_element, BUFSZ, "%d", (((svg_y_size - dy) * 2) - 1));
         err += (svg_attribute("y1", path_element, "line") != 0);
-        snprintf(path_element, BUFSZ, "%d", ((svg_y_size - dy) * 2) - 2);
+        snprintf(path_element, BUFSZ, "%d", (((svg_y_size - dy) * 2) - 2));
         err += (svg_attribute("y2", path_element, "line") != 0);
         err += (svg_attribute("stroke", svgcolor, "line") != 0);
     }
@@ -428,9 +428,9 @@ void svg_byte(int xpos, int ypos, int udg_byte, char *color)
                 ui_error(UI_ERROR_ERROR, "error creating an UDG dot in the SVG file");
                 return;
             }
-            snprintf(path_element,BUFSZ, "%d", xpos + (i * 2));
+            snprintf(path_element,BUFSZ, "%d", (xpos + (i * 2)));
             err += (svg_attribute("cx", path_element, "circle") != 0);
-            snprintf(path_element, BUFSZ, "%d", ypos + 1);
+            snprintf(path_element, BUFSZ, "%d", (ypos + 1));
             err += (svg_attribute("cy", path_element, "circle") != 0);
             err += (svg_attribute("r", "0.17", "circle") != 0);
             err += (svg_attribute("stroke", color, "circle") != 0);
@@ -487,7 +487,7 @@ void svg_capture_char(void)
 
         // -- PAPER
         if (svg_char < 165) {
-            svg_rect(x_pos * 16, (y_pos - 1) * 16, "16", "16", "0.4", svgcolor_paper);
+            svg_rect((x_pos * 16), ((y_pos - 1) * 16), "16", "16", "0.4", svgcolor_paper);
         }
 
         if (svg_char > 127) {
@@ -495,22 +495,24 @@ void svg_capture_char(void)
             if (svg_char < 144) {
                 // GRAPHICS BLOCKS
                 if (svg_char & 1)
-                    svg_rect(8 + x_pos * 16, (y_pos - 1) * 16, "8", "8", "1", svgcolor_ink);
+                    svg_rect((8 + (x_pos * 16)), ((y_pos - 1) * 16), "8", "8", "1", svgcolor_ink);
 
                 if (svg_char & 2)
-                    svg_rect(x_pos * 16, (y_pos - 1) * 16, "8", "8", "1", svgcolor_ink);
+                    svg_rect((x_pos * 16), ((y_pos - 1) * 16), "8", "8", "1", svgcolor_ink);
 
                 if (svg_char & 4)
-                    svg_rect(8 + x_pos * 16, 8 + (y_pos - 1) * 16, "8", "8", "1", svgcolor_ink);
+                    svg_rect((8 +(x_pos * 16)), (8 + ((y_pos - 1) * 16)), "8", "8", "1", svgcolor_ink);
 
                 if (svg_char & 8)
-                    svg_rect(x_pos * 16, 8 + (y_pos - 1) * 16, "8", "8", "1", svgcolor_ink);
+                    svg_rect((x_pos * 16), (8 + ((y_pos - 1) * 16)), "8", "8", "1", svgcolor_ink);
             } else if (svg_char < 165) {
                 // 144-164 -> UDG "A"-"U" (pointed by $5C7B/$5C7C)
                 for (i = 0; i < 8; i++) {
                     udg_ptr = (readbyte_internal(0x5c7c) << 8) + readbyte_internal(0x5c7b);
-                    svg_byte(x_pos * 16, (i * 2) + (y_pos - 1) * 16,
-                    readbyte_internal(udg_ptr + i + 8 * (svg_char - 144)), svgcolor_ink);
+                    svg_byte(x_pos * 16,
+                             (i * 2) + ((y_pos - 1) * 16),
+                             readbyte_internal(udg_ptr + i + (8 * (svg_char - 144))),
+                             svgcolor_ink);
                 }
             }
         } else {
@@ -521,9 +523,9 @@ void svg_capture_char(void)
             }
 
             err = 0;
-            snprintf(path_element, BUFSZ, "%d", x_pos * 16 + 2);
+            snprintf(path_element, BUFSZ, "%d", ((x_pos * 16) + 2));
             err += (svg_attribute("x", path_element, "text") != 0);
-            snprintf(path_element, BUFSZ, "%d", y_pos * 16 - 3);
+            snprintf(path_element, BUFSZ, "%d", ((y_pos * 16) - 3));
             err += (svg_attribute("y", path_element, "text") != 0);
             err += (svg_attribute("font-family", "monospace", "text") != 0);
             err += (svg_attribute("stroke", svgcolor_ink, "text") != 0);
@@ -592,7 +594,7 @@ void svg_capture_scroll(void)
     snprintf(svgcolor, BUFSZ, "rgb(%u,%u,%u)", palette[svg_paper][0], palette[svg_paper][1], palette[svg_paper][2]);
 
     svg_y_size += 8;
-    svg_rect(0, svg_y_size * 2, "512", "16", "1", svgcolor);
+    svg_rect(0, (svg_y_size * 2), "512", "16", "1", svgcolor);
     return;
 }
 
@@ -607,7 +609,7 @@ void svg_capture(void)
                 svg_capture_draw();
             }
 
-            if ((svg_capture_mode == SVG_CAPTURE_LINES) && ((z80.pc.w == 0x2813 || z80.pc.w == 0x263e))) {
+            if ((svg_capture_mode == SVG_CAPTURE_LINES) && ((z80.pc.w == 0x2813) || (z80.pc.w == 0x263e))) {
                 svg_capture_draw();
             }
 
@@ -627,7 +629,7 @@ void svg_capture(void)
                 svg_capture_draw();
             }
 
-            if ((svg_capture_mode == SVG_CAPTURE_LINES) && ((z80.pc.w == 0x24ba || z80.pc.w == 0x22df))) {
+            if ((svg_capture_mode == SVG_CAPTURE_LINES) && ((z80.pc.w == 0x24ba) || (z80.pc.w == 0x22df))) {
                 svg_capture_draw();
             }
 

@@ -334,10 +334,10 @@ static int machine_load_rom_bank_from_file(memory_page *bank_map,
 
     if (rom.length != expected_length) {
         ui_error(UI_ERROR_ERROR,
-                   "ROM '%s' is %ld bytes long; expected %ld bytes",
-                   filename,
+                 "ROM '%s' is %ld bytes long; expected %ld bytes",
+                 filename,
                  (unsigned long)rom.length,
-                   (unsigned long)expected_length);
+                 (unsigned long)expected_length);
         utils_close_file(&rom);
         return 1;
     }
@@ -457,16 +457,15 @@ static void machine_set_variable_timings(fuse_machine_info *machine)
 
     machine->line_times[0] = libspectrum_timings_top_left_pixel(machine->machine) -
                              // DISPLAY_BORDER_HEIGHT lines of top border
-                             DISPLAY_BORDER_HEIGHT * machine->timings.tstates_per_line -
-                             4 * DISPLAY_BORDER_WIDTH_COLS; // Left border at 4 tstates per column
+                             (DISPLAY_BORDER_HEIGHT * machine->timings.tstates_per_line) -
+                             (4 * DISPLAY_BORDER_WIDTH_COLS); // Left border at 4 tstates per column
 
     if (settings_current.late_timings) {
         machine->line_times[0]++;
     }
 
     for (y = 1; y < DISPLAY_SCREEN_HEIGHT + 1; y++) {
-        machine->line_times[y] = machine->line_times[y - 1] +
-                                 machine->timings.tstates_per_line;
+        machine->line_times[y] = machine->line_times[y - 1] + machine->timings.tstates_per_line;
     }
 }
 

@@ -151,7 +151,7 @@ void z80_do_opcodes(void)
         // If we're due an end of frame from RZX playback, generate one
         CHECK(rzx, rzx_playback)
 
-        if (R + rzx_instructions_offset >= rzx_instruction_count) {
+        if ((R + rzx_instructions_offset) >= rzx_instruction_count) {
             event_add(tstates, spectrum_frame_event);
             break; /* (A)nd break out of the execution loop to let the interrupt happen */
         }
@@ -195,7 +195,7 @@ void z80_do_opcodes(void)
         if ((PC == 0x0000) || (PC == 0x0008)) {
             didaktik80_page();
         } else if (PC == 0x1700) {
-           didaktik80_unpage();
+            didaktik80_unpage();
         }
 
         END_CHECK

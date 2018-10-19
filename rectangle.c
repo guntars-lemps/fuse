@@ -103,8 +103,8 @@ static inline int compare_and_merge_rectangles(struct rectangle *source)
                 ((source->y < rectangle_inactive[z].y) &&
                 (rectangle_inactive[z].y < (source->y + source->h + 1)))) {
                 // rects overlap or touch in the y dimension, merge
-                rectangle_inactive[z].h = MAX(rectangle_inactive[z].y + rectangle_inactive[z].h,
-                                              source->y + source->h) - MIN(rectangle_inactive[z].y, source->y);
+                rectangle_inactive[z].h = MAX((rectangle_inactive[z].y + rectangle_inactive[z].h), (source->y + source->h)) -
+                                          MIN(rectangle_inactive[z].y, source->y);
                 rectangle_inactive[z].y = MIN(rectangle_inactive[z].y, source->y);
                 return 1;
             }
@@ -116,7 +116,7 @@ static inline int compare_and_merge_rectangles(struct rectangle *source)
                 ((source->x < rectangle_inactive[z].x) &&
                 (rectangle_inactive[z].x < (source->x + source->w + 1)))) {
                 // rects overlap or touch in the x dimension, merge
-                rectangle_inactive[z].w = MAX(rectangle_inactive[z].x + rectangle_inactive[z].w, source->x + source->w) -
+                rectangle_inactive[z].w = MAX((rectangle_inactive[z].x + rectangle_inactive[z].w), (source->x + source->w)) -
                                           MIN(rectangle_inactive[z].x, source->x);
                 rectangle_inactive[z].x = MIN(rectangle_inactive[z].x, source->x);
                 return 1;

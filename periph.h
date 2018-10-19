@@ -80,7 +80,7 @@ typedef enum periph_type {
     PERIPH_TYPE_ZXCF, // ZXCF IDE interface
     PERIPH_TYPE_ZXMMC, // ZXMMC interface
     PERIPH_TYPE_ZXPRINTER, // ZX Printer
-    PERIPH_TYPE_ZXPRINTER_FULL_DECODE, // ZX Printer responding only to 0xfb
+    PERIPH_TYPE_ZXPRINTER_FULL_DECODE // ZX Printer responding only to 0xfb
 } periph_type;
 
 /*
@@ -91,7 +91,7 @@ typedef enum periph_type {
 typedef enum periph_present {
     PERIPH_PRESENT_NEVER, // Never present
     PERIPH_PRESENT_OPTIONAL, // Optionally present
-    PERIPH_PRESENT_ALWAYS, // Always present
+    PERIPH_PRESENT_ALWAYS // Always present
 } periph_present;
 
 typedef libspectrum_byte (*periph_port_read_function)(libspectrum_word port, libspectrum_byte *attached);

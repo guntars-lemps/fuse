@@ -238,7 +238,7 @@ void display_dirty_timex(libspectrum_word offset)
             if (offset < 0x1800) { // 0x1800 = first attributes byte
                 display_dirty8(offset);
             } else {
-               display_dirty64(offset);
+                display_dirty64(offset);
             }
             break;
 
@@ -301,7 +301,7 @@ void display_dirty_sinclair(libspectrum_word offset)
     if (offset < 0x1800) { // 0x1800 = first attributes byte
         display_dirty8(offset);
     } else {
-       display_dirty64(offset);
+        display_dirty64(offset);
     }
 }
 
@@ -351,7 +351,7 @@ static void update_dirty_rects(void)
                 x++;
             } while (display_is_dirty[y] & 0x01);
 
-            rectangle_add(y, start, x - start);
+            rectangle_add(y, start, (x - start));
         }
 
         // compress the active rectangles list
@@ -437,7 +437,8 @@ static inline void pentagon_16c_get_colour(libspectrum_byte data, libspectrum_by
 
 
 // In this mode we need to gather the pixel information for the 8 pixels to be displayed,
-// if current screen is 5 we need to read from pages 5 and 4, and if current screen is 7 we need to read from pages 7 and 6.
+// if current screen is 5 we need to read from pages 5 and 4,
+// and if current screen is 7 we need to read from pages 7 and 6.
 void display_write_if_dirty_pentagon_16_col(int x, int y)
 {
     int beam_x, beam_y;
@@ -527,7 +528,7 @@ void display_write_if_dirty_sinclair(int x, int y)
 
     last_chunk_detail = (display_flash_reversed << 24) | (data2 << 8) | data;
     // And draw it if it is different to what was there last time
-    index = beam_x + beam_y * DISPLAY_SCREEN_WIDTH_COLS;
+    index = beam_x + (beam_y * DISPLAY_SCREEN_WIDTH_COLS);
     if (display_last_screen[index] != last_chunk_detail) {
         libspectrum_byte ink, paper;
         display_parse_attr(data2, &ink, &paper);
@@ -673,7 +674,7 @@ static void display_dirty64(libspectrum_word offset)
     y = display_dirty_ytable2[offset - 0x1800];
 
     for (i = 0; i < 8; i++) {
-       display_dirty_chunk(x, y + i);
+       display_dirty_chunk(x, (y + i));
     }
 }
 
@@ -850,7 +851,7 @@ static void update_border(void)
     memcpy(end_sentinel, &border_change_end_sentinel, sizeof(struct border_change_t));
 
     for (pos = 0; pos < (border_changes_last - 1); pos++) {
-        do_border_change(border_changes + pos, border_changes + pos + 1);
+        do_border_change((border_changes + pos), (border_changes + pos + 1));
     }
 
     border_changes_last = 0;
@@ -878,9 +879,9 @@ static void update_ui_screen(void)
 
         if (display_redraw_all) {
             if (movie_recording) {
-                movie_add_area (0, 0, DISPLAY_ASPECT_WIDTH >> 3, DISPLAY_SCREEN_HEIGHT);
+                movie_add_area (0, 0, (DISPLAY_ASPECT_WIDTH >> 3), DISPLAY_SCREEN_HEIGHT);
             }
-            uidisplay_area(0, 0, scale * DISPLAY_ASPECT_WIDTH, scale * DISPLAY_SCREEN_HEIGHT);
+            uidisplay_area(0, 0, (scale * DISPLAY_ASPECT_WIDTH), (scale * DISPLAY_SCREEN_HEIGHT));
             display_redraw_all = 0;
         } else {
             for (i = 0, ptr = rectangle_inactive; i < rectangle_inactive_count; i++, ptr++) {
@@ -937,7 +938,7 @@ void display_dirty_flashing_timex(void)
             }
         } else if (scld_last_dec.name.altdfile) {
 
-            for (offset= 0x3800; offset < 0x3b00; offset++) {
+            for (offset = 0x3800; offset < 0x3b00; offset++) {
                 attr = screen[offset];
                 if (attr & 0x80) {
                     display_dirty64(offset - ALTDFILE_OFFSET);
@@ -996,7 +997,7 @@ void display_refresh_all(void)
         display_is_dirty[i] = display_all_dirty;
     }
 
-    memset(display_last_screen, 0xff, DISPLAY_SCREEN_WIDTH_COLS * DISPLAY_SCREEN_HEIGHT * sizeof(libspectrum_dword));
+    memset(display_last_screen, 0xff, (DISPLAY_SCREEN_WIDTH_COLS * DISPLAY_SCREEN_HEIGHT * sizeof(libspectrum_dword)));
 }
 
 
@@ -1014,7 +1015,7 @@ int display_getpixel(int x, int y)
         scld mode_data;
 
         y >>= 1;
-        index = column + y * DISPLAY_SCREEN_WIDTH_COLS;
+        index = column + (y * DISPLAY_SCREEN_WIDTH_COLS);
 
         data = display_last_screen[index] & 0xff;
         data2 = (display_last_screen[index] & 0xff00) >> 8;
@@ -1033,7 +1034,7 @@ int display_getpixel(int x, int y)
     } else {
         int column = x >> 3;
 
-        index = column + y * DISPLAY_SCREEN_WIDTH_COLS;
+        index = column + (y * DISPLAY_SCREEN_WIDTH_COLS);
 
         data = display_last_screen[index] & 0xff;
         data2 = (display_last_screen[index] & 0xff00) >> 8;

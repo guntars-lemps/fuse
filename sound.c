@@ -61,6 +61,27 @@ int sound_stereo_ay = SOUND_STEREO_AY_NONE; // local copy of settings_current.st
  */
 #define AY_CHANGE_MAX 8000
 
+// bitmasks for envelope
+#define AY_ENV_CONT    8
+#define AY_ENV_ATTACK  4
+#define AY_ENV_ALT     2
+#define AY_ENV_HOLD    1
+
+// the AY steps down the external clock by 16 for tone and noise generators
+#define AY_CLOCK_DIVISOR 16
+// all Spectrum models and clones with an AY seem to count down the master clock by 2 to drive the AY
+#define AY_CLOCK_RATIO 2
+
+#ifndef UI_WIN32
+#define MIN_SPEED_PERCENTAGE 2
+#define MAX_SPEED_PERCENTAGE 500
+#else // #ifndef UI_WIN32
+// We are limiting speed until bugs in the DirectSound driver are resolved, see [bugs:#364] for more details
+#define MIN_SPEED_PERCENTAGE 50
+#define MAX_SPEED_PERCENTAGE 300
+#endif // #ifndef UI_WIN32
+
+
 int sound_framesiz;
 
 static int sound_channels;
@@ -166,7 +187,7 @@ static void sound_ay_init(void)
 
     // scale the values down to fit
     for (f = 0; f < 16; f++) {
-        ay_tone_levels[f] = (levels[f] * AMPL_AY_TONE + 0x8000) / 0xffff;
+        ay_tone_levels[f] = ((levels[f] * AMPL_AY_TONE) + 0x8000) / 0xffff;
     }
 
     ay_noise_tick = ay_noise_period = 0;
@@ -178,15 +199,6 @@ static void sound_ay_init(void)
 
     ay_change_count = 0;
 }
-
-#ifndef UI_WIN32
-#define MIN_SPEED_PERCENTAGE 2
-#define MAX_SPEED_PERCENTAGE 500
-#else // #ifndef UI_WIN32
-// We are limiting speed until bugs in the DirectSound driver are resolved, see [bugs:#364] for more details
-#define MIN_SPEED_PERCENTAGE 50
-#define MAX_SPEED_PERCENTAGE 300
-#endif // #ifndef UI_WIN32
 
 
 static int is_in_sound_enabled_range(void)
@@ -399,17 +411,6 @@ static inline void ay_do_tone(int level, unsigned int tone_count, int *var, int 
         }
     }
 }
-
-// bitmasks for envelope
-#define AY_ENV_CONT    8
-#define AY_ENV_ATTACK  4
-#define AY_ENV_ALT     2
-#define AY_ENV_HOLD    1
-
-// the AY steps down the external clock by 16 for tone and noise generators
-#define AY_CLOCK_DIVISOR 16
-// all Spectrum models and clones with an AY seem to count down the master clock by 2 to drive the AY
-#define AY_CLOCK_RATIO 2
 
 
 static void sound_ay_overlay(void)
@@ -665,9 +666,9 @@ void sound_ay_reset(void)
 void sound_specdrum_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
 {
     if (periph_is_active(PERIPH_TYPE_SPECDRUM)) {
-        blip_synth_update(left_specdrum_synth, tstates, (val - 128) * 128);
+        blip_synth_update(left_specdrum_synth, tstates, ((val - 128) * 128));
         if (right_specdrum_synth) {
-            blip_synth_update(right_specdrum_synth, tstates, (val - 128) * 128);
+            blip_synth_update(right_specdrum_synth, tstates, ((val - 128) * 128));
         }
         machine_current->specdrum.specdrum_dac = val - 128;
     }
@@ -678,9 +679,9 @@ void sound_specdrum_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val
 void sound_covox_write(libspectrum_word port GCC_UNUSED, libspectrum_byte val)
 {
     if (periph_is_active(PERIPH_TYPE_COVOX_FB) || periph_is_active(PERIPH_TYPE_COVOX_DD)) {
-        blip_synth_update(left_covox_synth, tstates, val * 128);
+        blip_synth_update(left_covox_synth, tstates, (val * 128));
         if (right_covox_synth) {
-            blip_synth_update(right_covox_synth, tstates, val * 128);
+            blip_synth_update(right_covox_synth, tstates, (val * 128));
         }
         machine_current->covox.covox_dac = val;
     }
@@ -705,7 +706,7 @@ void sound_frame(void)
 
         // Read left channel into even samples, right channel into odd samples: LRLRLRLRLR...
         count = blip_buffer_read_samples(left_buf, samples, sound_framesiz, 1);
-        blip_buffer_read_samples(right_buf, samples + 1, count, 1);
+        blip_buffer_read_samples(right_buf, (samples + 1), count, 1);
         count <<= 1;
     } else {
         count = blip_buffer_read_samples(left_buf, samples, sound_framesiz, BLIP_BUFFER_DEF_STEREO);
@@ -724,7 +725,7 @@ void sound_frame(void)
 
 void sound_beeper(libspectrum_dword at_tstates, int on)
 {
-    static int beeper_ampl[] = {0, AMPL_TAPE, AMPL_BEEPER, AMPL_BEEPER + AMPL_TAPE};
+    static int beeper_ampl[] = {0, AMPL_TAPE, AMPL_BEEPER, (AMPL_BEEPER + AMPL_TAPE)};
     int val;
 
     if (!sound_enabled) {

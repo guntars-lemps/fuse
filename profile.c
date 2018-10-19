@@ -48,7 +48,7 @@ static module_info_t profile_module_info = {
     NULL,
     NULL,
     profile_from_snapshot,
-    NULL,
+    NULL
 };
 
 

@@ -88,7 +88,9 @@ static void z80_interrupt_event_fn(libspectrum_dword event_tstates, int type, vo
     }
 
     // Otherwise, see if we actually accept an interrupt. If we do and we're doing RZX recording, store a frame
-    if (z80_interrupt()) rzx_frame();
+    if (z80_interrupt()) {
+        rzx_frame();
+    }
 }
 
 

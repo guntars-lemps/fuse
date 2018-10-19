@@ -34,6 +34,7 @@
 
 static GSList *registered_modules = NULL;
 
+
 int module_register(module_info_t *module)
 {
     registered_modules = g_slist_append(registered_modules, module);

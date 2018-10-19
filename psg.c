@@ -143,7 +143,7 @@ int psg_frame(void)
 
     // check if any AY sound events have happened this frame
     ay_updated = 0;
-    for (i = 0; i < 14 && !ay_updated; i++) {
+    for (i = 0; (i < 14) && !ay_updated; i++) {
         ay_updated = psg_registers_written[i];
     }
 

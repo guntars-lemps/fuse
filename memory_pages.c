@@ -270,7 +270,7 @@ void memory_ram_set_16k_contention(int page_num, int contended)
     int i;
 
     for (i = 0; i < MEMORY_PAGES_IN_16K; i++) {
-        memory_map_ram[page_num * MEMORY_PAGES_IN_16K + i].contended = contended;
+        memory_map_ram[(page_num * MEMORY_PAGES_IN_16K) + i].contended = contended;
     }
 }
 
@@ -285,8 +285,8 @@ void memory_map_16k(libspectrum_word address, memory_page source[], int page_num
 // Map 16K of memory for either reading, writing or both
 void memory_map_16k_read_write(libspectrum_word address, memory_page source[], int page_num, int map_read, int map_write)
 {
-    memory_map_8k_read_write(address, source, page_num * 2, map_read, map_write);
-    memory_map_8k_read_write(address + 0x2000, source, page_num * 2 + 1, map_read, map_write);
+    memory_map_8k_read_write(address, source, (page_num * 2), map_read, map_write);
+    memory_map_8k_read_write((address + 0x2000), source, ((page_num * 2) + 1), map_read, map_write);
 }
 
 
@@ -300,16 +300,16 @@ void memory_map_8k(libspectrum_word address, memory_page source[], int page_num)
 // Map 8K of memory for either reading, writing or both
 void memory_map_8k_read_write(libspectrum_word address, memory_page source[], int page_num, int map_read, int map_write)
 {
-    memory_map_4k_read_write(address, source, page_num * 2, map_read, map_write);
-    memory_map_4k_read_write(address + 0x1000, source, page_num * 2 + 1, map_read, map_write);
+    memory_map_4k_read_write(address, source, (page_num * 2), map_read, map_write);
+    memory_map_4k_read_write((address + 0x1000), source, ((page_num * 2) + 1), map_read, map_write);
 }
 
 
 // Map 4K of memory for either reading, writing or both
 void memory_map_4k_read_write(libspectrum_word address, memory_page source[], int page_num, int map_read, int map_write)
 {
-    memory_map_2k_read_write(address, source, page_num * 2, map_read, map_write);
-    memory_map_2k_read_write(address + 0x0800, source, page_num * 2 + 1, map_read, map_write);
+    memory_map_2k_read_write(address, source, (page_num * 2), map_read, map_write);
+    memory_map_2k_read_write((address + 0x0800), source, ((page_num * 2) + 1), map_read, map_write);
 }
 
 // Map 2K of memory for either reading, writing or both

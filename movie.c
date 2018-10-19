@@ -221,7 +221,7 @@ static void movie_compress_area(int x, int y, int w, int h, int s)
     libspectrum_byte buff[960];
     int w0, h0, l;
 
-    dline = &display_last_screen[x + 40 * y];
+    dline = &display_last_screen[x + (40 * y)];
     b = buff;
     l = -1;
     d1 = ((*dline >> s) & 0xff) + 1; // *d1 != dpoint :-)
@@ -265,8 +265,7 @@ static void movie_compress_area(int x, int y, int w, int h, int s)
 
 
 /* Fetch pixel (x, y). On a Timex this will be a point on a 640x480 canvas,
-   on a Sinclair/Amstrad/Russian clone this will be a point on a 320x240
-   canvas */
+   on a Sinclair/Amstrad/Russian clone this will be a point on a 320x240 canvas */
 
 // x: 0 - 39; y: 0 - 239
 
@@ -368,7 +367,7 @@ void movie_stop(void)
             zstream.next_out = zbuf_o;
             deflate(&zstream, Z_SYNC_FLUSH);
             if (zstream.avail_out != ZBUF_SIZE) {
-                fwrite(zbuf_o, ZBUF_SIZE - zstream.avail_out, 1, of);
+                fwrite(zbuf_o, (ZBUF_SIZE - zstream.avail_out), 1, of);
             }
         } while (zstream.avail_out != ZBUF_SIZE);
         deflateEnd(&zstream);
@@ -425,7 +424,7 @@ static inline void write_alaw(libspectrum_signed_word *buff, int len)
         if (*buff >= 0) {
             sbuff[i++] = alaw_table[*buff >> 4];
         } else {
-            sbuff[i++] = 0x7f & alaw_table [- *buff >> 4];
+            sbuff[i++] = 0x7f & alaw_table[- *buff >> 4];
         }
         buff++;
         if (i == 4096) {
@@ -452,9 +451,9 @@ static void add_sound(libspectrum_signed_word *buff, int len)
     len++; // len :-)
     fwrite_compr(head, 7, 1, of); // Sound frame
     if (format == 'P') {
-        fwrite_compr(buff, len * framesiz , 1, of); // write frame
+        fwrite_compr(buff, (len * framesiz) , 1, of); // write frame
     } else if (format == 'A') {
-        write_alaw(buff, len * framesiz);
+        write_alaw(buff, (len * framesiz));
     }
 }
 
