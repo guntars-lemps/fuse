@@ -86,29 +86,29 @@ typedef struct gtkui_select_info {
 } gtkui_select_info;
 
 static gboolean gtkui_make_menu(GtkAccelGroup **accel_group,
-                GtkWidget **menu_bar,
-                GtkActionEntry *menu_data,
-                guint menu_data_size);
+                                GtkWidget **menu_bar,
+                                GtkActionEntry *menu_data,
+                                guint menu_data_size);
 
 static gboolean gtkui_lose_focus(GtkWidget*, GdkEvent*, gpointer);
 static gboolean gtkui_gain_focus(GtkWidget*, GdkEvent*, gpointer);
 
-static gboolean gtkui_delete(GtkWidget *widget, GdkEvent *event,
-                  gpointer data);
+static gboolean gtkui_delete(GtkWidget *widget, GdkEvent *event, gpointer data);
 
 static void menu_options_filter_done(GtkWidget *widget, gpointer user_data);
 static void menu_machine_select_done(GtkWidget *widget, gpointer user_data);
 
-static const GtkTargetEntry drag_types[] =
-{
-    { (gchar *)"text/uri-list", GTK_TARGET_OTHER_APP, 0}
+static const GtkTargetEntry drag_types[] = {
+    {(gchar *)"text/uri-list", GTK_TARGET_OTHER_APP, 0}
 };
 
 static void gtkui_drag_data_received(GtkWidget *widget GCC_UNUSED,
-                                      GdkDragContext *drag_context,
-                                      gint x GCC_UNUSED, gint y GCC_UNUSED,
-                                      GtkSelectionData *data,
-                                      guint info GCC_UNUSED, guint timestamp)
+                                     GdkDragContext *drag_context,
+                                     gint x GCC_UNUSED,
+                                     gint y GCC_UNUSED,
+                                     GtkSelectionData *data,
+                                     guint info GCC_UNUSED,
+                                     guint timestamp)
 {
     static char uri_prefix[] = "file://";
     char *filename, *selection_filename;
@@ -117,31 +117,30 @@ static void gtkui_drag_data_received(GtkWidget *widget GCC_UNUSED,
 
     selection_length = gtk_selection_data_get_length(data);
 
-    if (data && selection_length > (gint) sizeof(uri_prefix)) {
-    selection_data = gtk_selection_data_get_data(data);
-    data_begin = selection_data + sizeof(uri_prefix) - 1;
-    data_end = selection_data + selection_length;
-    p = data_begin;
-    do {
-      if (*p == '\r' || *p == '\n') {
-        data_end = p;
-        break;
-      }
-    } while (p++ != data_end);
+    if (data && (selection_length > (gint)sizeof(uri_prefix))) {
+        selection_data = gtk_selection_data_get_data(data);
+        data_begin = selection_data + sizeof(uri_prefix) - 1;
+        data_end = selection_data + selection_length;
+        p = data_begin;
+        do {
+            if ((*p == '\r') || (*p == '\n')) {
+                data_end = p;
+                break;
+            }
+        } while (p++ != data_end);
 
-    selection_filename = g_strndup((const gchar *)data_begin,
-                                    data_end - data_begin);
+        selection_filename = g_strndup((const gchar *)data_begin, (data_end - data_begin));
 
-    filename = g_uri_unescape_string(selection_filename, NULL);
-    if (filename) {
-      fuse_emulation_pause();
-      utils_open_file(filename, settings_current.auto_load, NULL);
-      free(filename);
-      display_refresh_all();
-      fuse_emulation_unpause();
-    }
+        filename = g_uri_unescape_string(selection_filename, NULL);
+        if (filename) {
+            fuse_emulation_pause();
+            utils_open_file(filename, settings_current.auto_load, NULL);
+            free(filename);
+            display_refresh_all();
+            fuse_emulation_unpause();
+        }
 
-    g_free(selection_filename);
+        g_free(selection_filename);
     }
     gtk_drag_finish(drag_context, FALSE, FALSE, timestamp);
 }
@@ -153,7 +152,7 @@ int ui_init(int *argc, char ***argv)
     GtkAccelGroup *accel_group;
     GtkSettings *settings;
 
-    gtk_init(argc,argv);
+    gtk_init(argc, argv);
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
     gdk_rgb_init();
@@ -168,19 +167,14 @@ int ui_init(int *argc, char ***argv)
     g_object_set(settings, "gtk-menu-bar-accel", "F1", NULL);
     gtk_window_set_title(GTK_WINDOW(gtkui_window), "Fuse");
 
-    g_signal_connect(G_OBJECT(gtkui_window), "delete-event",
-           G_CALLBACK(gtkui_delete), NULL);
-    g_signal_connect(G_OBJECT(gtkui_window), "key-press-event",
-           G_CALLBACK(gtkkeyboard_keypress), NULL);
+    g_signal_connect(G_OBJECT(gtkui_window), "delete-event", G_CALLBACK(gtkui_delete), NULL);
+    g_signal_connect(G_OBJECT(gtkui_window), "key-press-event", G_CALLBACK(gtkkeyboard_keypress), NULL);
     gtk_widget_add_events(gtkui_window, GDK_KEY_RELEASE_MASK);
-    g_signal_connect(G_OBJECT(gtkui_window), "key-release-event",
-           G_CALLBACK(gtkkeyboard_keyrelease), NULL);
+    g_signal_connect(G_OBJECT(gtkui_window), "key-release-event", G_CALLBACK(gtkkeyboard_keyrelease), NULL);
 
     // If we lose the focus, disable all keys
-    g_signal_connect(G_OBJECT(gtkui_window), "focus-out-event",
-            G_CALLBACK(gtkui_lose_focus), NULL);
-    g_signal_connect(G_OBJECT(gtkui_window), "focus-in-event",
-            G_CALLBACK(gtkui_gain_focus), NULL);
+    g_signal_connect(G_OBJECT(gtkui_window), "focus-out-event", G_CALLBACK(gtkui_lose_focus), NULL);
+    g_signal_connect(G_OBJECT(gtkui_window), "focus-in-event", G_CALLBACK(gtkui_gain_focus), NULL);
 
     gtk_drag_dest_set(GTK_WIDGET(gtkui_window),
                      GTK_DEST_DEFAULT_ALL,
@@ -190,17 +184,14 @@ int ui_init(int *argc, char ***argv)
                      /* GDK_ACTION_PRIVATE alone DNW with ROX-Filer,
                         GDK_ACTION_MOVE allow DnD from KDE */
 
-    g_signal_connect(G_OBJECT(gtkui_window), "drag-data-received",
-            G_CALLBACK(gtkui_drag_data_received), NULL);
+    g_signal_connect(G_OBJECT(gtkui_window), "drag-data-received", G_CALLBACK(gtkui_drag_data_received), NULL);
 
     box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add(GTK_CONTAINER(gtkui_window), box);
 
-    if (gtkui_make_menu(&accel_group, &menu_bar, gtkui_menu_data,
-                       gtkui_menu_data_size)) {
-    fprintf(stderr,"%s: couldn't make menus %s:%d\n",
-        fuse_progname,__FILE__,__LINE__);
-    return 1;
+    if (gtkui_make_menu(&accel_group, &menu_bar, gtkui_menu_data, gtkui_menu_data_size)) {
+        fprintf(stderr, "%s: couldn't make menus %s:%d\n", fuse_progname, __FILE__, __LINE__);
+        return 1;
     }
 
     gtk_window_add_accel_group(GTK_WINDOW(gtkui_window), accel_group);
@@ -208,23 +199,18 @@ int ui_init(int *argc, char ***argv)
 
     gtkui_drawing_area = gtk_drawing_area_new();
     if (!gtkui_drawing_area) {
-    fprintf(stderr,"%s: couldn't create drawing area at %s:%d\n",
-        fuse_progname,__FILE__,__LINE__);
-    return 1;
+        fprintf(stderr,"%s: couldn't create drawing area at %s:%d\n", fuse_progname, __FILE__, __LINE__);
+        return 1;
     }
 
     // Set minimum size for drawing area
-    gtk_widget_set_size_request(gtkui_drawing_area, DISPLAY_ASPECT_WIDTH,
-                               DISPLAY_SCREEN_HEIGHT);
+    gtk_widget_set_size_request(gtkui_drawing_area, DISPLAY_ASPECT_WIDTH, DISPLAY_SCREEN_HEIGHT);
 
     gtk_widget_add_events(GTK_WIDGET(gtkui_drawing_area),
     GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-    g_signal_connect(G_OBJECT(gtkui_drawing_area), "motion-notify-event",
-            G_CALLBACK(gtkmouse_position), NULL);
-    g_signal_connect(G_OBJECT(gtkui_drawing_area), "button-press-event",
-            G_CALLBACK(gtkmouse_button), NULL);
-    g_signal_connect(G_OBJECT(gtkui_drawing_area), "button-release-event",
-            G_CALLBACK(gtkmouse_button), NULL);
+    g_signal_connect(G_OBJECT(gtkui_drawing_area), "motion-notify-event", G_CALLBACK(gtkmouse_position), NULL);
+    g_signal_connect(G_OBJECT(gtkui_drawing_area), "button-press-event", G_CALLBACK(gtkmouse_button), NULL);
+    g_signal_connect(G_OBJECT(gtkui_drawing_area), "button-release-event", G_CALLBACK(gtkmouse_button), NULL);
 
     gtk_box_pack_start(GTK_BOX(box), gtkui_drawing_area, TRUE, TRUE, 0);
 
@@ -240,17 +226,16 @@ int ui_init(int *argc, char ***argv)
 }
 
 
-static void gtkui_menu_deactivate(GtkMenuShell *menu GCC_UNUSED,
-               gpointer data GCC_UNUSED)
+static void gtkui_menu_deactivate(GtkMenuShell *menu GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     ui_mouse_resume();
 }
 
 
 static gboolean gtkui_make_menu(GtkAccelGroup **accel_group,
-                GtkWidget **menu_bar,
-                GtkActionEntry *menu_data,
-                guint menu_data_size)
+                                GtkWidget **menu_bar,
+                                GtkActionEntry *menu_data,
+                                guint menu_data_size)
 {
     *accel_group = NULL;
     *menu_bar = NULL;
@@ -261,31 +246,28 @@ static gboolean gtkui_make_menu(GtkAccelGroup **accel_group,
 
     // Load actions
     GtkActionGroup *menu_action_group = gtk_action_group_new("MenuActionGroup");
-    gtk_action_group_add_actions(menu_action_group, menu_data, menu_data_size,
-                                NULL);
+    gtk_action_group_add_actions(menu_action_group, menu_data, menu_data_size, NULL);
     gtk_ui_manager_insert_action_group(ui_manager_menu, menu_action_group, 0);
     g_object_unref(menu_action_group);
 
     // Load the UI
     if (utils_find_file_path("menu_data.ui", ui_file, UTILS_AUXILIARY_GTK)) {
-    fprintf(stderr, "%s: Error getting path for menu_data.ui\n",
-                     fuse_progname);
-    return TRUE;
+        fprintf(stderr, "%s: Error getting path for menu_data.ui\n", fuse_progname);
+        return TRUE;
     }
 
-    guint ui_menu_id = gtk_ui_manager_add_ui_from_file(ui_manager_menu, ui_file,
-                                                      &error);
+    guint ui_menu_id = gtk_ui_manager_add_ui_from_file(ui_manager_menu, ui_file, &error);
     if (error) {
-    g_error_free(error);
-    return TRUE;
+        g_error_free(error);
+        return TRUE;
+    } else if (!ui_menu_id) {
+        return TRUE;
     }
-    else if (!ui_menu_id) return TRUE;
 
     *accel_group = gtk_ui_manager_get_accel_group(ui_manager_menu);
 
     *menu_bar = gtk_ui_manager_get_widget(ui_manager_menu, "/MainMenu");
-    g_signal_connect(G_OBJECT(*menu_bar), "deactivate",
-            G_CALLBACK(gtkui_menu_deactivate), NULL);
+    g_signal_connect(G_OBJECT(*menu_bar), "deactivate", G_CALLBACK(gtkui_menu_deactivate), NULL);
 
     // Start various menus in the 'off' state
     ui_menu_activate(UI_MENU_ITEM_AY_LOGGING, 0);
@@ -303,8 +285,9 @@ static gboolean gtkui_make_menu(GtkAccelGroup **accel_group,
 
 int ui_event(void)
 {
-    while (gtk_events_pending())
-    gtk_main_iteration();
+    while (gtk_events_pending()) {
+        gtk_main_iteration();
+    }
     return 0;
 }
 
@@ -313,14 +296,12 @@ int ui_end(void)
 {
     // Don't display the window whilst doing all this!
     gtk_widget_hide(gtkui_window);
-
     g_object_unref(ui_manager_menu);
-
     return 0;
 }
 
-// Create a dialog box with the given error message
 
+// Create a dialog box with the given error message
 int ui_error_specific(ui_error_level severity, const char *message)
 {
     GtkWidget *dialog, *label, *vbox, *content_area;
@@ -333,18 +314,25 @@ int ui_error_specific(ui_error_level severity, const char *message)
 
     // Set the appropriate title
     switch (severity) {
-    case UI_ERROR_INFO:     title = "Fuse - Info"; break;
-    case UI_ERROR_WARNING: title = "Fuse - Warning"; break;
-    case UI_ERROR_ERROR:     title = "Fuse - Error"; break;
-    default:         title = "Fuse - (Unknown Error Level)"; break;
+        case UI_ERROR_INFO:
+            title = "Fuse - Info";
+            break;
+        case UI_ERROR_WARNING:
+            title = "Fuse - Warning";
+            break;
+        case UI_ERROR_ERROR:
+            title = "Fuse - Error";
+            break;
+        default:
+            title = "Fuse - (Unknown Error Level)";
+            break;
     }
 
     // Create the dialog box
     dialog = gtkstock_dialog_new(title, G_CALLBACK(gtk_widget_destroy));
 
     // Add the OK button into the lower half
-    gtkstock_create_close(dialog, NULL, G_CALLBACK (gtk_widget_destroy),
-             FALSE);
+    gtkstock_create_close(dialog, NULL, G_CALLBACK (gtk_widget_destroy), FALSE);
 
     // Create a label with that message
     label = gtk_label_new(message);
@@ -363,11 +351,9 @@ int ui_error_specific(ui_error_level severity, const char *message)
     return 0;
 }
 
+
 // The callbacks used by various routines
-
-
-static gboolean gtkui_lose_focus(GtkWidget *widget GCC_UNUSED,
-          GdkEvent *event GCC_UNUSED, gpointer data GCC_UNUSED)
+static gboolean gtkui_lose_focus(GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     keyboard_release_all();
     ui_mouse_suspend();
@@ -375,48 +361,45 @@ static gboolean gtkui_lose_focus(GtkWidget *widget GCC_UNUSED,
 }
 
 
-static gboolean gtkui_gain_focus(GtkWidget *widget GCC_UNUSED,
-          GdkEvent *event GCC_UNUSED, gpointer data GCC_UNUSED)
+static gboolean gtkui_gain_focus(GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     ui_mouse_resume();
     return TRUE;
 }
 
-// Called by the main window on a "delete-event"
 
-static gboolean gtkui_delete(GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED,
-              gpointer data GCC_UNUSED)
+// Called by the main window on a "delete-event"
+static gboolean gtkui_delete(GtkWidget *widget GCC_UNUSED, GdkEvent *event GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     menu_file_exit(NULL, NULL);
     return TRUE;
 }
 
-// Called by the menu when File/Exit selected
 
+// Called by the menu when File/Exit selected
 void menu_file_exit(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     if (gtkui_confirm("Exit Fuse?")) {
 
-    if (menu_check_media_changed()) {
-        return;
-    }
+        if (menu_check_media_changed()) {
+            return;
+        }
 
-    fuse_exiting = 1;
+        fuse_exiting = 1;
 
-    /* Stop the paused state to allow us to exit (occurs from main
-       emulation loop) */
-    if (paused) menu_machine_pause(NULL, NULL);
+        // Stop the paused state to allow us to exit (occurs from main emulation loop)
+        if (paused) {
+            menu_machine_pause(NULL, NULL);
+        }
 
-    /* Ensure we break out of the main Z80 loop, there could be active
-       breakpoints before the next event */
-    debugger_exit_emulator(NULL);
+        // Ensure we break out of the main Z80 loop, there could be active breakpoints before the next event
+        debugger_exit_emulator(NULL);
     }
 }
 
-/* Select a graphics filter from those for which `available' returns
-   true */
-scaler_type
-menu_get_scaler(scaler_available_fn selector)
+
+// Select a graphics filter from those for which `available' returns true
+scaler_type menu_get_scaler(scaler_available_fn selector)
 {
     GtkWidget *content_area;
     gtkui_select_info dialog;
@@ -425,8 +408,7 @@ menu_get_scaler(scaler_available_fn selector)
     int count;
     scaler_type scaler;
 
-    /* Store the function which tells us which scalers are currently
-     available */
+    // Store the function which tells us which scalers are currently available
     dialog.selector = selector;
 
     // No scaler currently selected
@@ -435,8 +417,8 @@ menu_get_scaler(scaler_available_fn selector)
     // Some space to store the radio buttons in
     dialog.buttons = malloc(SCALER_NUM * sizeof(GtkWidget*));
     if (dialog.buttons == NULL) {
-    ui_error(UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__);
-    return SCALER_NUM;
+        ui_error(UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__);
+        return SCALER_NUM;
     }
 
     count = 0;
@@ -447,29 +429,29 @@ menu_get_scaler(scaler_available_fn selector)
 
     for (scaler = 0; scaler < SCALER_NUM; scaler++) {
 
-    if (!selector(scaler)) continue;
+        if (!selector(scaler)) {
+            continue;
+        }
 
-    dialog.buttons[count] =
-      gtk_radio_button_new_with_label(button_group, scaler_name(scaler));
-    button_group =
-      gtk_radio_button_get_group(GTK_RADIO_BUTTON(dialog.buttons[count]));
+        dialog.buttons[count] = gtk_radio_button_new_with_label(button_group, scaler_name(scaler));
+        button_group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(dialog.buttons[count]));
 
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dialog.buttons[count]),
-                  current_scaler == scaler);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dialog.buttons[count]), (current_scaler == scaler));
 
-    gtk_container_add(GTK_CONTAINER(content_area), dialog.buttons[count]);
+        gtk_container_add(GTK_CONTAINER(content_area), dialog.buttons[count]);
 
-    count++;
+        count++;
     }
 
     // Create and add the actions buttons to the dialog box
-    gtkstock_create_ok_cancel(dialog.dialog, NULL,
-                             G_CALLBACK(menu_options_filter_done),
-                             (gpointer) &dialog, DEFAULT_DESTROY,
-                             DEFAULT_DESTROY);
+    gtkstock_create_ok_cancel(dialog.dialog,
+                              NULL,
+                              G_CALLBACK(menu_options_filter_done),
+                              (gpointer)&dialog,
+                              DEFAULT_DESTROY,
+                              DEFAULT_DESTROY);
 
-    gtk_dialog_set_default_response(GTK_DIALOG(dialog.dialog),
-                                   GTK_RESPONSE_OK);
+    gtk_dialog_set_default_response(GTK_DIALOG(dialog.dialog), GTK_RESPONSE_OK);
 
     gtk_widget_show_all(dialog.dialog);
 
@@ -479,8 +461,8 @@ menu_get_scaler(scaler_available_fn selector)
     return dialog.selected;
 }
 
-// Callback used by the filter selection dialog
 
+// Callback used by the filter selection dialog
 static void menu_options_filter_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
 {
     int i, count;
@@ -490,16 +472,15 @@ static void menu_options_filter_done(GtkWidget *widget GCC_UNUSED, gpointer user
 
     for (i = 0; i < SCALER_NUM; i++) {
 
-    if (!ptr->selector(i)) continue;
+        if (!ptr->selector(i)) {
+            continue;
+        }
 
-    if (gtk_toggle_button_get_active(
-      GTK_TOGGLE_BUTTON(ptr->buttons[count])
-    )
-) {
-      ptr->selected = i;
-    }
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ptr->buttons[count]))) {
+            ptr->selected = i;
+        }
 
-    count++;
+        count++;
     }
 
     gtk_widget_destroy(ptr->dialog);
@@ -513,64 +494,65 @@ static gboolean gtkui_run_main_loop(gpointer user_data GCC_UNUSED)
     return FALSE;
 }
 
-// Machine/Pause
 
+// Machine/Pause
 void menu_machine_pause(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     int error;
 
     if (paused) {
-    paused = 0;
-    ui_statusbar_update(UI_STATUSBAR_ITEM_PAUSED,
-             UI_STATUSBAR_STATE_INACTIVE);
-    timer_estimate_reset();
-    gtk_main_quit();
+        paused = 0;
+        ui_statusbar_update(UI_STATUSBAR_ITEM_PAUSED, UI_STATUSBAR_STATE_INACTIVE);
+        timer_estimate_reset();
+        gtk_main_quit();
     } else {
 
-    // Stop recording any competition mode RZX file
-    if (rzx_recording && rzx_competition_mode) {
-      ui_error(UI_ERROR_INFO, "Stopping competition mode RZX recording");
-      error = rzx_stop_recording(); if (error) return;
+        // Stop recording any competition mode RZX file
+        if (rzx_recording && rzx_competition_mode) {
+            ui_error(UI_ERROR_INFO, "Stopping competition mode RZX recording");
+            error = rzx_stop_recording();
+            if (error) {
+                return;
+            }
+        }
+
+        paused = 1;
+        ui_statusbar_update(UI_STATUSBAR_ITEM_PAUSED, UI_STATUSBAR_STATE_ACTIVE);
+
+        // Create nested main loop outside this callback to allow unpause
+        g_idle_add((GSourceFunc)gtkui_run_main_loop, NULL);
     }
-
-    paused = 1;
-    ui_statusbar_update(UI_STATUSBAR_ITEM_PAUSED, UI_STATUSBAR_STATE_ACTIVE);
-
-    // Create nested main loop outside this callback to allow unpause
-    g_idle_add((GSourceFunc)gtkui_run_main_loop, NULL);
-    }
-
 }
 
-// Called by the menu when Machine/Reset selected
 
+// Called by the menu when Machine/Reset selected
 void menu_machine_reset(GtkAction *gtk_action GCC_UNUSED, guint action)
 {
     int hard_reset = action;
     const char *message = "Reset?";
 
-    if (hard_reset)
-    message = "Hard reset?";
+    if (hard_reset) {
+        message = "Hard reset?";
+    }
 
-    if (!gtkui_confirm(message))
-    return;
-
+    if (!gtkui_confirm(message)) {
+        return;
+    }
     // Stop any ongoing RZX
     rzx_stop_recording();
     rzx_stop_playback(1);
 
     if (machine_reset(hard_reset)) {
-    ui_error(UI_ERROR_ERROR, "couldn't reset machine: giving up!");
+        ui_error(UI_ERROR_ERROR, "couldn't reset machine: giving up!");
 
-    // FIXME: abort() seems a bit extreme here, but it'll do for now
-    fuse_abort();
+        // FIXME: abort() seems a bit extreme here, but it'll do for now
+        fuse_abort();
     }
 }
 
-// Called by the menu when Machine/Select selected
 
-void menu_machine_select(GtkAction *gtk_action GCC_UNUSED,
-                     gpointer data GCC_UNUSED)
+// Called by the menu when Machine/Select selected
+void menu_machine_select(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     GtkWidget *content_area;
     gtkui_select_info dialog;
@@ -580,8 +562,8 @@ void menu_machine_select(GtkAction *gtk_action GCC_UNUSED,
     // Some space to store the radio buttons in
     dialog.buttons = malloc(machine_count * sizeof(GtkWidget*));
     if (dialog.buttons == NULL) {
-    ui_error(UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__);
-    return;
+        ui_error(UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__);
+        return;
     }
 
     // Stop emulation
@@ -591,33 +573,27 @@ void menu_machine_select(GtkAction *gtk_action GCC_UNUSED,
     dialog.dialog = gtkstock_dialog_new("Fuse - Select Machine", NULL);
     content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog.dialog));
 
-    dialog.buttons[0] =
-    gtk_radio_button_new_with_label(
-      NULL, libspectrum_machine_name(machine_types[0]->machine)
-);
+    dialog.buttons[0] = gtk_radio_button_new_with_label(NULL, libspectrum_machine_name(machine_types[0]->machine));
 
-    for (i=1; i<machine_count; i++) {
-    dialog.buttons[i] =
-      gtk_radio_button_new_with_label(
-        gtk_radio_button_get_group(GTK_RADIO_BUTTON(dialog.buttons[i-1])),
-    libspectrum_machine_name(machine_types[i]->machine)
-);
+    for (i = 1; i < machine_count; i++) {
+        dialog.buttons[i] = gtk_radio_button_new_with_label(gtk_radio_button_get_group(GTK_RADIO_BUTTON(dialog.buttons[i - 1])),
+                                                            libspectrum_machine_name(machine_types[i]->machine));
     }
 
-    for (i=0; i<machine_count; i++) {
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dialog.buttons[i]),
-                  machine_current == machine_types[i]);
-    gtk_container_add(GTK_CONTAINER(content_area), dialog.buttons[i]);
+    for (i = 0; i < machine_count; i++) {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dialog.buttons[i]), (machine_current == machine_types[i]));
+        gtk_container_add(GTK_CONTAINER(content_area), dialog.buttons[i]);
     }
 
     // Create and add the actions buttons to the dialog box
-    gtkstock_create_ok_cancel(dialog.dialog, NULL,
-                             G_CALLBACK(menu_machine_select_done),
-                             (gpointer) &dialog, DEFAULT_DESTROY,
-                             DEFAULT_DESTROY);
+    gtkstock_create_ok_cancel(dialog.dialog,
+                              NULL,
+                              G_CALLBACK(menu_machine_select_done),
+                              (gpointer)&dialog,
+                              DEFAULT_DESTROY,
+                              DEFAULT_DESTROY);
 
-    gtk_dialog_set_default_response(GTK_DIALOG(dialog.dialog),
-                                   GTK_RESPONSE_OK);
+    gtk_dialog_set_default_response(GTK_DIALOG(dialog.dialog), GTK_RESPONSE_OK);
 
     gtk_widget_show_all(dialog.dialog);
 
@@ -628,20 +604,17 @@ void menu_machine_select(GtkAction *gtk_action GCC_UNUSED,
     fuse_emulation_unpause();
 }
 
-// Callback used by the machine selection dialog
 
+// Callback used by the machine selection dialog
 static void menu_machine_select_done(GtkWidget *widget GCC_UNUSED, gpointer user_data)
 {
     int i;
     gtkui_select_info *ptr = user_data;
 
-    for (i=0; i<machine_count; i++) {
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ptr->buttons[i])) &&
-        machine_current != machine_types[i]
-)
-    {
-      machine_select(machine_types[i]->machine);
-    }
+    for (i = 0; i < machine_count; i++) {
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ptr->buttons[i])) && (machine_current != machine_types[i])) {
+            machine_select(machine_types[i]->machine);
+        }
     }
 
     gtk_widget_destroy(ptr->dialog);
@@ -649,15 +622,16 @@ static void menu_machine_select_done(GtkWidget *widget GCC_UNUSED, gpointer user
 }
 
 
-void menu_machine_debugger(GtkAction *gtk_action GCC_UNUSED,
-                       gpointer data GCC_UNUSED)
+void menu_machine_debugger(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     debugger_mode = DEBUGGER_MODE_HALTED;
-    if (paused) ui_debugger_activate();
+    if (paused) {
+        ui_debugger_activate();
+    }
 }
 
-// Called on machine selection
 
+// Called on machine selection
 int ui_widgets_reset(void)
 {
     gtkui_pokefinder_clear();
@@ -675,26 +649,31 @@ void menu_help_about(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     // TODO: show Fuse icon
     gtk_show_about_dialog(GTK_WINDOW(gtkui_window),
-                         "program-name", "Fuse",
-                         "comments", "The Free Unix Spectrum Emulator",
-                         "copyright", FUSE_COPYRIGHT,
-                         "logo-icon-name", NULL,
-                         "version", VERSION,
-                         "website", PACKAGE_URL,
-                         NULL);
+                          "program-name",
+                          "Fuse",
+                          "comments",
+                          "The Free Unix Spectrum Emulator",
+                          "copyright",
+                          FUSE_COPYRIGHT,
+                          "logo-icon-name",
+                          NULL,
+                          "version",
+                          VERSION,
+                          "website",
+                          PACKAGE_URL,
+                          NULL);
 }
 
-// Generic `tidy-up' callback
 
+// Generic `tidy-up' callback
 void gtkui_destroy_widget_and_quit(GtkWidget *widget, gpointer data GCC_UNUSED)
 {
     gtk_widget_destroy(widget);
     gtk_main_quit();
 }
 
+
 // Functions to activate and deactivate certain menu items
-
-
 int ui_menu_item_set_active(const char *path, int active)
 {
     GtkWidget *menu_item;
@@ -706,9 +685,8 @@ int ui_menu_item_set_active(const char *path, int active)
     g_free(full_path);
 
     if (!menu_item) {
-    ui_error(UI_ERROR_ERROR, "couldn't get menu item '%s' from menu_factory",
-          path);
-    return 1;
+        ui_error(UI_ERROR_ERROR, "couldn't get menu item '%s' from menu_factory", path);
+        return 1;
     }
     gtk_widget_set_sensitive(menu_item, active);
 
@@ -723,21 +701,20 @@ static void confirm_joystick_done(GtkWidget *widget GCC_UNUSED, gpointer user_da
 
     for (i = 0; i < JOYSTICK_CONN_COUNT; i++) {
 
-    GtkToggleButton *button = GTK_TOGGLE_BUTTON(ptr->buttons[i]);
+        GtkToggleButton *button = GTK_TOGGLE_BUTTON(ptr->buttons[i]);
 
-    if (gtk_toggle_button_get_active(button)) {
-      ptr->joystick = i;
-      break;
-    }
+        if (gtk_toggle_button_get_active(button)) {
+            ptr->joystick = i;
+            break;
+        }
     }
 
     gtk_widget_destroy(ptr->dialog);
     gtk_main_quit();
 }
 
-ui_confirm_joystick_t
-ui_confirm_joystick(libspectrum_joystick libspectrum_type,
-             int inputs GCC_UNUSED)
+
+ui_confirm_joystick_t ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs GCC_UNUSED)
 {
     GtkWidget *content_area;
     gtkui_select_info dialog;
@@ -750,42 +727,40 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type,
     }
 
     // Some space to store the radio buttons in
-    dialog.buttons =
-    malloc(JOYSTICK_CONN_COUNT * sizeof(*dialog.buttons));
+    dialog.buttons = malloc(JOYSTICK_CONN_COUNT * sizeof(*dialog.buttons));
     if (!dialog.buttons) {
-    ui_error(UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__);
-    return UI_CONFIRM_JOYSTICK_NONE;
+        ui_error(UI_ERROR_ERROR, "out of memory at %s:%d", __FILE__, __LINE__);
+        return UI_CONFIRM_JOYSTICK_NONE;
     }
 
     // Stop emulation
     fuse_emulation_pause();
 
     // Create the necessary widgets
-    snprintf(title, sizeof(title), "Fuse - Configure %s Joystick",
-        libspectrum_joystick_name(libspectrum_type));
+    snprintf(title, sizeof(title), "Fuse - Configure %s Joystick", libspectrum_joystick_name(libspectrum_type));
     dialog.dialog = gtkstock_dialog_new(title, NULL);
     content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog.dialog));
 
     for (i = 0; i < JOYSTICK_CONN_COUNT; i++) {
 
-    GtkWidget **button = &(dialog.buttons[i]);
+        GtkWidget **button = &(dialog.buttons[i]);
 
-    *button =
-      gtk_radio_button_new_with_label(group, joystick_connection[i]);
-    group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(*button));
+        *button = gtk_radio_button_new_with_label(group, joystick_connection[i]);
+        group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(*button));
 
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(*button), i == 0);
-    gtk_container_add(GTK_CONTAINER(content_area), *button);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(*button), (i == 0));
+        gtk_container_add(GTK_CONTAINER(content_area), *button);
     }
 
     // Create and add the actions buttons to the dialog box
-    gtkstock_create_ok_cancel(dialog.dialog, NULL,
-                             G_CALLBACK(confirm_joystick_done),
-                             (gpointer) &dialog, DEFAULT_DESTROY,
-                             DEFAULT_DESTROY);
+    gtkstock_create_ok_cancel(dialog.dialog,
+                              NULL,
+                              G_CALLBACK(confirm_joystick_done),
+                              (gpointer)&dialog,
+                              DEFAULT_DESTROY,
+                              DEFAULT_DESTROY);
 
-    gtk_dialog_set_default_response(GTK_DIALOG(dialog.dialog),
-                                   GTK_RESPONSE_OK);
+    gtk_dialog_set_default_response(GTK_DIALOG(dialog.dialog), GTK_RESPONSE_OK);
 
     gtk_widget_show_all(dialog.dialog);
 
@@ -799,19 +774,17 @@ ui_confirm_joystick(libspectrum_joystick libspectrum_type,
     return dialog.joystick;
 }
 
+
 /*
  * Font code
  */
-
-
 int gtkui_get_monospaced_font(gtkui_font *font)
 {
     *font = pango_font_description_from_string("Monospace 10");
     if (!(*font)) {
-    ui_error(UI_ERROR_ERROR, "couldn't find a monospaced font");
-    return 1;
+        ui_error(UI_ERROR_ERROR, "couldn't find a monospaced font");
+        return 1;
     }
-
     return 0;
 }
 
@@ -833,9 +806,9 @@ void gtkui_list_set_cursor(GtkTreeView *list, int row)
     GtkTreePath *path;
 
     if (row >= 0) {
-    path = gtk_tree_path_new_from_indices(row, -1);
-    gtk_tree_view_set_cursor(list, path, NULL, FALSE);
-    gtk_tree_path_free(path);
+        path = gtk_tree_path_new_from_indices(row, -1);
+        gtk_tree_view_set_cursor(list, path, NULL, FALSE);
+        gtk_tree_path_free(path);
     }
 }
 
@@ -850,9 +823,11 @@ int gtkui_list_get_cursor(GtkTreeView *list)
     // Get selected row
     gtk_tree_view_get_cursor(list, &path, &focus_column);
     if (path) {
-    indices = gtk_tree_path_get_indices(path);
-    if (indices) row = indices[0];
-    gtk_tree_path_free(path);
+        indices = gtk_tree_path_get_indices(path);
+        if (indices) {
+            row = indices[0];
+        }
+        gtk_tree_path_free(path);
     }
 
     return row;
@@ -875,53 +850,56 @@ static gboolean key_press(GtkTreeView *list, GdkEventKey *event, gpointer user_d
     // Get selected row
     cursor_row = gtkui_list_get_cursor(list);
 
-    switch (event->keyval)
-    {
-    case GDK_KEY_Up:
-    if (cursor_row == 0)
-      base -= step_increment;
-    break;
+    switch (event->keyval) {
+        case GDK_KEY_Up:
+            if (cursor_row == 0) {
+                base -= step_increment;
+            }
+            break;
 
-    case GDK_KEY_Down:
-    if (cursor_row == num_rows - 1)
-      base += step_increment;
-    break;
+        case GDK_KEY_Down:
+            if (cursor_row == num_rows - 1) {
+                base += step_increment;
+            }
+            break;
 
-    case GDK_KEY_Page_Up:
-    base -= gtk_adjustment_get_page_increment(adjustment);
-    break;
+        case GDK_KEY_Page_Up:
+            base -= gtk_adjustment_get_page_increment(adjustment);
+            break;
 
-    case GDK_KEY_Page_Down:
-    base += gtk_adjustment_get_page_increment(adjustment);
-    break;
+        case GDK_KEY_Page_Down:
+            base += gtk_adjustment_get_page_increment(adjustment);
+            break;
 
-    case GDK_KEY_Home:
-    cursor_row = 0;
-    base = gtk_adjustment_get_lower(adjustment);
-    break;
+        case GDK_KEY_Home:
+            cursor_row = 0;
+            base = gtk_adjustment_get_lower(adjustment);
+            break;
 
-    case GDK_KEY_End:
-    cursor_row = num_rows - 1;
-    base = gtk_adjustment_get_upper(adjustment) - page_size;
-    break;
+        case GDK_KEY_End:
+            cursor_row = num_rows - 1;
+            base = gtk_adjustment_get_upper(adjustment) - page_size;
+            break;
 
-    default:
-    return FALSE;
+        default:
+            return FALSE;
     }
 
     if (base < 0) {
-    base = 0;
+        base = 0;
     } else {
-    base_limit = gtk_adjustment_get_upper(adjustment) - page_size;
-    if (base > base_limit) base = base_limit;
+        base_limit = gtk_adjustment_get_upper(adjustment) - page_size;
+        if (base > base_limit) {
+            base = base_limit;
+        }
     }
 
     if (base != oldbase) {
-    gtk_adjustment_set_value(adjustment, base);
+        gtk_adjustment_set_value(adjustment, base);
 
-    // Mark selected row
-    gtkui_list_set_cursor(list, cursor_row);
-    return TRUE;
+        // Mark selected row
+        gtkui_list_set_cursor(list, cursor_row);
+        return TRUE;
     }
 
     return FALSE;
@@ -936,53 +914,51 @@ static gboolean wheel_scroll_event(GtkTreeView *list, GdkEvent *event, gpointer 
 
     base = oldbase = gtk_adjustment_get_value(adjustment);
 
-    switch (event->scroll.direction)
-    {
-    case GDK_SCROLL_UP:
-    base -= gtk_adjustment_get_page_increment(adjustment) / 2;
-    break;
-    case GDK_SCROLL_DOWN:
-    base += gtk_adjustment_get_page_increment(adjustment) / 2;
-    break;
+    switch (event->scroll.direction) {
+        case GDK_SCROLL_UP:
+            base -= gtk_adjustment_get_page_increment(adjustment) / 2;
+            break;
+        case GDK_SCROLL_DOWN:
+            base += gtk_adjustment_get_page_increment(adjustment) / 2;
+            break;
 
 #if GTK_CHECK_VERSION(3, 4, 0)
-    case GDK_SCROLL_SMOOTH:
-    {
-      static gdouble total_dy = 0;
-      gdouble dx, dy, page_size;
-      int delta;
+        case GDK_SCROLL_SMOOTH:
+            ;
+            static gdouble total_dy = 0;
+            gdouble dx, dy, page_size;
+            int delta;
 
-      if (gdk_event_get_scroll_deltas(event, &dx, &dy)) {
-        total_dy += dy;
-        page_size = gtk_adjustment_get_page_size(adjustment);
-        delta = total_dy * pow(page_size, 2.0 / 3.0);
+            if (gdk_event_get_scroll_deltas(event, &dx, &dy)) {
+                total_dy += dy;
+                page_size = gtk_adjustment_get_page_size(adjustment);
+                delta = total_dy * pow(page_size, (2.0 / 3.0));
 
-        // Is movement significative?
-        if (delta) {
-          base += delta;
-          total_dy = 0;
-        }
-      }
-      break;
-    }
+                // Is movement significative?
+                if (delta) {
+                    base += delta;
+                    total_dy = 0;
+                }
+            }
+            break;
 #endif
-
-    default:
-    return FALSE;
+        default:
+            return FALSE;
     }
 
     if (base < 0) {
-    base = 0;
+        base = 0;
     } else {
-    base_limit = gtk_adjustment_get_upper(adjustment) -
-                 gtk_adjustment_get_page_size(adjustment);
-    if (base > base_limit) base = base_limit;
+        base_limit = gtk_adjustment_get_upper(adjustment) - gtk_adjustment_get_page_size(adjustment);
+        if (base > base_limit) {
+            base = base_limit;
+        }
     }
 
     if (base != oldbase) {
-    cursor_row = gtkui_list_get_cursor(list);
-    gtk_adjustment_set_value(adjustment, base);
-    gtkui_list_set_cursor(list, cursor_row);
+        cursor_row = gtkui_list_get_cursor(list);
+        gtk_adjustment_set_value(adjustment, base);
+        gtkui_list_set_cursor(list, cursor_row);
     }
 
     return TRUE;
@@ -991,18 +967,14 @@ static gboolean wheel_scroll_event(GtkTreeView *list, GdkEvent *event, gpointer 
 
 void gtkui_scroll_connect(GtkTreeView *list, GtkAdjustment *adj)
 {
-    g_signal_connect(list, "key-press-event",
-                    G_CALLBACK(key_press), adj);
-    g_signal_connect(list, "scroll-event",
-                    G_CALLBACK(wheel_scroll_event), adj);
+    g_signal_connect(list, "key-press-event", G_CALLBACK(key_press), adj);
+    g_signal_connect(list, "scroll-event", G_CALLBACK(wheel_scroll_event), adj);
 }
 
 
 int gtkui_menubar_get_height(void)
 {
     GtkAllocation alloc;
-
     gtk_widget_get_allocation(menu_bar, &alloc);
-
     return alloc.height;
 }

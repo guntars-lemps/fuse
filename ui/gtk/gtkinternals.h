@@ -40,12 +40,9 @@ void gtkdisplay_update_geometry(void);
  * Keyboard routines (gtkkeyboard.c)
  */
 
-int gtkkeyboard_keypress(GtkWidget *widget, GdkEvent *event,
-              gpointer data);
-int gtkkeyboard_keyrelease(GtkWidget *widget, GdkEvent *event,
-                gpointer data);
-int gtkkeyboard_release_all(GtkWidget *widget, GdkEvent *event,
-                 gpointer data);
+int gtkkeyboard_keypress(GtkWidget *widget, GdkEvent *event, gpointer data);
+int gtkkeyboard_keyrelease(GtkWidget *widget, GdkEvent *event, gpointer data);
+int gtkkeyboard_release_all(GtkWidget *widget, GdkEvent *event, gpointer data);
 
 /*
  * Mouse routines (gtkmouse.c)
@@ -98,21 +95,17 @@ typedef struct gtkstock_button {
  * If the label begins with "!", then g_signal_connect_swapped, rather than
  * g_signal_connect, is used to connect the action function.
  */
-GtkWidget* gtkstock_create_button(GtkWidget *widget, GtkAccelGroup *accel,
-                   const gtkstock_button *btn);
-GtkAccelGroup*
-gtkstock_create_buttons(GtkWidget *widget, GtkAccelGroup *accel,
-             const gtkstock_button *buttons, size_t count);
+GtkWidget* gtkstock_create_button(GtkWidget *widget, GtkAccelGroup *accel, const gtkstock_button *btn);
+GtkAccelGroup* gtkstock_create_buttons(GtkWidget *widget, GtkAccelGroup *accel, const gtkstock_button *buttons, size_t count);
 GtkAccelGroup* gtkstock_create_ok_cancel(GtkWidget *widget,
-                      GtkAccelGroup *accel,
-    /* for OK button -> */              GCallback action,
-                          gpointer actiondata,
-    /* for both buttons -> */         GCallback destroy_ok,
-                                      GCallback destroy_cancel);
-GtkAccelGroup* gtkstock_create_close(GtkWidget *widget, GtkAccelGroup *accel,
-                      GCallback destroy,
-                      gboolean esconly);
-    // destroy==NULL => use DEFAULT_DESTROY
+                                         GtkAccelGroup *accel,  /* for OK button -> */
+                                         GCallback action,
+                                         gpointer actiondata,
+                                         GCallback destroy_ok, /* for both buttons -> */
+                                         GCallback destroy_cancel);
+// destroy == NULL => use DEFAULT_DESTROY
+GtkAccelGroup* gtkstock_create_close(GtkWidget *widget, GtkAccelGroup *accel, GCallback destroy, gboolean esconly);
+
 
 #define DEFAULT_DESTROY (G_CALLBACK(gtkui_destroy_widget_and_quit))
 

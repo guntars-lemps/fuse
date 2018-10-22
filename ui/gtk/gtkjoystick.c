@@ -47,8 +47,7 @@
 
 #endif // #if !defined USE_JOYSTICK || defined HAVE_JSW_H
 
-enum
-{
+enum {
     COL_TEXT = 0,
     COL_KEY,
     NUM_COLS
@@ -82,11 +81,9 @@ typedef struct key_menu_t {
 } key_menu_t;
 
 static void setup_info(struct joystick_info *info, int callback_action);
-static void create_joystick_type_selector(struct joystick_info *info,
-                       GtkBox *parent);
+static void create_joystick_type_selector(struct joystick_info *info, GtkBox *parent);
 
-static void create_fire_button_selector(const char *title, struct button_info *info,
-                             GtkBox *parent, GtkTreeModel *model);
+static void create_fire_button_selector(const char *title, struct button_info *info, GtkBox *parent, GtkTreeModel *model);
 static void set_key_text(GtkWidget *label, keyboard_key_name key);
 
 static void key_callback(GtkComboBox *widget, gpointer user_data);
@@ -142,12 +139,12 @@ static key_menu_t key_menu[] = {
     {ITEM, "Enter", KEYBOARD_Enter},
     {ITEM, "Caps Shift", KEYBOARD_Caps},
     {ITEM, "Symbol Shift", KEYBOARD_Symbol},
-    {ITEM, "Nothing", KEYBOARD_NONE},
+    {ITEM, "Nothing", KEYBOARD_NONE}
 
 };
 
-static GtkTreeModel *
-create_joystick_options_store(void)
+
+static GtkTreeModel *create_joystick_options_store(void)
 {
     GtkTreeIter iter, iter2;
     GtkTreeStore *store;
@@ -157,35 +154,26 @@ create_joystick_options_store(void)
 
     for (i = 0; i < ARRAY_SIZE(key_menu); i++) {
 
-    switch (key_menu[i].item) {
+        switch (key_menu[i].item) {
 
-      case ITEM:
-      case GROUP:
-        gtk_tree_store_append(store, &iter, NULL);
-        gtk_tree_store_set(store, &iter,
-                            COL_TEXT, key_menu[i].text,
-                            COL_KEY, key_menu[i].key,
-                            -1);
-        break;
+            case ITEM:
+            case GROUP:
+                gtk_tree_store_append(store, &iter, NULL);
+                gtk_tree_store_set(store, &iter, COL_TEXT, key_menu[i].text, COL_KEY, key_menu[i].key, -1);
+                break;
 
-      case SUBITEM:
-        gtk_tree_store_append(store, &iter2, &iter);
-        gtk_tree_store_set(store, &iter2,
-                            COL_TEXT, key_menu[i].text,
-                            COL_KEY, key_menu[i].key,
-                            -1);
-        break;
+            case SUBITEM:
+                gtk_tree_store_append(store, &iter2, &iter);
+                gtk_tree_store_set(store, &iter2, COL_TEXT, key_menu[i].text, COL_KEY, key_menu[i].key, -1);
+                break;
 
+        }
     }
-
-    }
-
     return GTK_TREE_MODEL(store);
 }
 
 
-void menu_options_joysticks_select(GtkAction *gtk_action GCC_UNUSED,
-                               guint callback_action)
+void menu_options_joysticks_select(GtkAction *gtk_action GCC_UNUSED, guint callback_action)
 {
     GtkWidget *dialog, *hbox, *vbox, *content_area;
     GtkTreeModel *model;
@@ -212,22 +200,21 @@ void menu_options_joysticks_select(GtkAction *gtk_action GCC_UNUSED,
 
     for (i = 0; i < NUM_JOY_BUTTONS; i += 5) {
 
-    int j;
+        int j;
 
-    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-    gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 0);
+        vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+        gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 0);
 
-    for (j = i; j < i + 5; j++)
-      if (info.button[j].setting) {
-        create_fire_button_selector(info.button[j].name, &(info.button[j]),
-                                     GTK_BOX(vbox), model);
-      }
+        for (j = i; j < i + 5; j++) {
+            if (info.button[j].setting) {
+                create_fire_button_selector(info.button[j].name, &(info.button[j]), GTK_BOX(vbox), model);
+            }
+        }
     }
 
     g_object_unref(model);
 
-    gtkstock_create_ok_cancel(dialog, NULL, G_CALLBACK(joystick_done),
-                             &info, DEFAULT_DESTROY, DEFAULT_DESTROY);
+    gtkstock_create_ok_cancel(dialog, NULL, G_CALLBACK(joystick_done), &info, DEFAULT_DESTROY, DEFAULT_DESTROY);
 
     gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
 
@@ -244,62 +231,66 @@ static void setup_info(struct joystick_info *info, int callback_action)
 
     switch (callback_action) {
 
-    case 1:
-    info->type = &(settings_current.joystick_1_output);
-    info->button[0].setting = &(settings_current.joystick_1_fire_1);
-    info->button[1].setting = &(settings_current.joystick_1_fire_2);
-    info->button[2].setting = &(settings_current.joystick_1_fire_3);
-    info->button[3].setting = &(settings_current.joystick_1_fire_4);
-    info->button[4].setting = &(settings_current.joystick_1_fire_5);
-    info->button[5].setting = &(settings_current.joystick_1_fire_6);
-    info->button[6].setting = &(settings_current.joystick_1_fire_7);
-    info->button[7].setting = &(settings_current.joystick_1_fire_8);
-    info->button[8].setting = &(settings_current.joystick_1_fire_9);
-    info->button[9].setting = &(settings_current.joystick_1_fire_10);
-    info->button[10].setting = &(settings_current.joystick_1_fire_11);
-    info->button[11].setting = &(settings_current.joystick_1_fire_12);
-    info->button[12].setting = &(settings_current.joystick_1_fire_13);
-    info->button[13].setting = &(settings_current.joystick_1_fire_14);
-    info->button[14].setting = &(settings_current.joystick_1_fire_15);
-    for (i = 0; i < NUM_JOY_BUTTONS; i++)
-      snprintf(info->button[i].name, 80, "Button %lu", (unsigned long)i + 1);
-    break;
+        case 1:
+            info->type = &(settings_current.joystick_1_output);
+            info->button[0].setting = &(settings_current.joystick_1_fire_1);
+            info->button[1].setting = &(settings_current.joystick_1_fire_2);
+            info->button[2].setting = &(settings_current.joystick_1_fire_3);
+            info->button[3].setting = &(settings_current.joystick_1_fire_4);
+            info->button[4].setting = &(settings_current.joystick_1_fire_5);
+            info->button[5].setting = &(settings_current.joystick_1_fire_6);
+            info->button[6].setting = &(settings_current.joystick_1_fire_7);
+            info->button[7].setting = &(settings_current.joystick_1_fire_8);
+            info->button[8].setting = &(settings_current.joystick_1_fire_9);
+            info->button[9].setting = &(settings_current.joystick_1_fire_10);
+            info->button[10].setting = &(settings_current.joystick_1_fire_11);
+            info->button[11].setting = &(settings_current.joystick_1_fire_12);
+            info->button[12].setting = &(settings_current.joystick_1_fire_13);
+            info->button[13].setting = &(settings_current.joystick_1_fire_14);
+            info->button[14].setting = &(settings_current.joystick_1_fire_15);
+            for (i = 0; i < NUM_JOY_BUTTONS; i++) {
+                snprintf(info->button[i].name, 80, "Button %lu", ((unsigned long)i + 1));
+            }
+            break;
 
-    case 2:
-    info->type = &(settings_current.joystick_2_output);
-    info->button[0].setting = &(settings_current.joystick_2_fire_1);
-    info->button[1].setting = &(settings_current.joystick_2_fire_2);
-    info->button[2].setting = &(settings_current.joystick_2_fire_3);
-    info->button[3].setting = &(settings_current.joystick_2_fire_4);
-    info->button[4].setting = &(settings_current.joystick_2_fire_5);
-    info->button[5].setting = &(settings_current.joystick_2_fire_6);
-    info->button[6].setting = &(settings_current.joystick_2_fire_7);
-    info->button[7].setting = &(settings_current.joystick_2_fire_8);
-    info->button[8].setting = &(settings_current.joystick_2_fire_9);
-    info->button[9].setting = &(settings_current.joystick_2_fire_10);
-    info->button[10].setting = &(settings_current.joystick_2_fire_10);
-    info->button[11].setting = &(settings_current.joystick_2_fire_11);
-    info->button[12].setting = &(settings_current.joystick_2_fire_12);
-    info->button[13].setting = &(settings_current.joystick_2_fire_13);
-    info->button[14].setting = &(settings_current.joystick_2_fire_14);
-    for (i = 0; i < NUM_JOY_BUTTONS; i++)
-      snprintf(info->button[i].name, 80, "Button %lu", (unsigned long)i + 1);
-    break;
+        case 2:
+            info->type = &(settings_current.joystick_2_output);
+            info->button[0].setting = &(settings_current.joystick_2_fire_1);
+            info->button[1].setting = &(settings_current.joystick_2_fire_2);
+            info->button[2].setting = &(settings_current.joystick_2_fire_3);
+            info->button[3].setting = &(settings_current.joystick_2_fire_4);
+            info->button[4].setting = &(settings_current.joystick_2_fire_5);
+            info->button[5].setting = &(settings_current.joystick_2_fire_6);
+            info->button[6].setting = &(settings_current.joystick_2_fire_7);
+            info->button[7].setting = &(settings_current.joystick_2_fire_8);
+            info->button[8].setting = &(settings_current.joystick_2_fire_9);
+            info->button[9].setting = &(settings_current.joystick_2_fire_10);
+            info->button[10].setting = &(settings_current.joystick_2_fire_10);
+            info->button[11].setting = &(settings_current.joystick_2_fire_11);
+            info->button[12].setting = &(settings_current.joystick_2_fire_12);
+            info->button[13].setting = &(settings_current.joystick_2_fire_13);
+            info->button[14].setting = &(settings_current.joystick_2_fire_14);
+            for (i = 0; i < NUM_JOY_BUTTONS; i++) {
+                snprintf(info->button[i].name, 80, "Button %lu", ((unsigned long)i + 1));
+            }
+            break;
 
-    case 3:
-    info->type = &(settings_current.joystick_keyboard_output);
-    info->button[0].setting = &(settings_current.joystick_keyboard_up);
-    snprintf(info->button[0].name, 80, "Button for UP");
-    info->button[1].setting = &(settings_current.joystick_keyboard_down);
-    snprintf(info->button[1].name, 80, "Button for DOWN");
-    info->button[2].setting = &(settings_current.joystick_keyboard_left);
-    snprintf(info->button[2].name, 80, "Button for LEFT");
-    info->button[3].setting = &(settings_current.joystick_keyboard_right);
-    snprintf(info->button[3].name, 80, "Button for RIGHT");
-    info->button[4].setting = &(settings_current.joystick_keyboard_fire);
-    snprintf(info->button[4].name, 80, "Button for FIRE");
-    for (i = 5; i < NUM_JOY_BUTTONS; i++) info->button[i].setting = NULL;
-    break;
+        case 3:
+            info->type = &(settings_current.joystick_keyboard_output);
+            info->button[0].setting = &(settings_current.joystick_keyboard_up);
+            snprintf(info->button[0].name, 80, "Button for UP");
+            info->button[1].setting = &(settings_current.joystick_keyboard_down);
+            snprintf(info->button[1].name, 80, "Button for DOWN");
+            info->button[2].setting = &(settings_current.joystick_keyboard_left);
+            snprintf(info->button[2].name, 80, "Button for LEFT");
+            info->button[3].setting = &(settings_current.joystick_keyboard_right);
+            snprintf(info->button[3].name, 80, "Button for RIGHT");
+            info->button[4].setting = &(settings_current.joystick_keyboard_fire);
+            snprintf(info->button[4].name, 80, "Button for FIRE");
+            for (i = 5; i < NUM_JOY_BUTTONS; i++) {
+                info->button[i].setting = NULL;
+            }
+            break;
 
     }
 }
@@ -321,23 +312,21 @@ static void create_joystick_type_selector(struct joystick_info *info, GtkBox *pa
 
     for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
-    info->radio[i] =
-      gtk_radio_button_new_with_label(button_group, joystick_name[i]);
-    button_group =
-      gtk_radio_button_get_group(GTK_RADIO_BUTTON(info->radio[i]));
-    gtk_box_pack_start(GTK_BOX(box), info->radio[i], FALSE, FALSE, 0);
+        info->radio[i] = gtk_radio_button_new_with_label(button_group, joystick_name[i]);
+        button_group = gtk_radio_button_get_group(GTK_RADIO_BUTTON(info->radio[i]));
+        gtk_box_pack_start(GTK_BOX(box), info->radio[i], FALSE, FALSE, 0);
 
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(info->radio[i]),
-                  i == *(info->type));
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(info->radio[i]), (i == *(info->type)));
 
     }
-
 }
 
 
 static void set_entry_properties(GtkCellLayout *cell_layout GCC_UNUSED,
-                      GtkCellRenderer *cell, GtkTreeModel *tree_model,
-                      GtkTreeIter *iter, gpointer data  GCC_UNUSED)
+                                 GtkCellRenderer *cell,
+                                 GtkTreeModel *tree_model,
+                                 GtkTreeIter *iter,
+                                 gpointer data GCC_UNUSED)
 {
     gboolean sensitive;
 
@@ -349,8 +338,7 @@ static void set_entry_properties(GtkCellLayout *cell_layout GCC_UNUSED,
 }
 
 
-static void create_fire_button_selector(const char *title, struct button_info *info,
-                             GtkBox *parent, GtkTreeModel *model)
+static void create_fire_button_selector(const char *title, struct button_info *info, GtkBox *parent, GtkTreeModel *model)
 {
     GtkWidget *frame, *box, *combo;
     GtkCellRenderer *renderer;
@@ -371,15 +359,14 @@ static void create_fire_button_selector(const char *title, struct button_info *i
 
     for (i = 0; i < ARRAY_SIZE(key_menu); i++) {
 
-    keyboard_key_name key;
+        keyboard_key_name key;
 
-    key = key_menu[i].key;
+        key = key_menu[i].key;
 
-    if (key_menu[i].item != GROUP && key == (unsigned int)*info->setting) {
-      set_key_text(info->label, key);
-      break;
-    }
-
+        if ((key_menu[i].item != GROUP) && (key == (unsigned int)*info->setting)) {
+            set_key_text(info->label, key);
+            break;
+        }
     }
 
     gtk_box_pack_start(GTK_BOX(box), info->label, TRUE, TRUE, 0);
@@ -388,10 +375,8 @@ static void create_fire_button_selector(const char *title, struct button_info *i
     combo = gtk_combo_box_new_with_model(model);
     renderer = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, TRUE);
-    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer,
-                                  "text", 0, NULL);
-    gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(combo), renderer,
-                                      set_entry_properties, NULL, NULL);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "text", 0, NULL);
+    gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(combo), renderer, set_entry_properties, NULL, NULL);
 
     // Select first item
     path = gtk_tree_path_new_from_indices(0, -1);
@@ -401,8 +386,7 @@ static void create_fire_button_selector(const char *title, struct button_info *i
 
     gtk_box_pack_start(GTK_BOX(box), combo, TRUE, TRUE, 0);
 
-    g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(key_callback),
-                    info);
+    g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(key_callback), info);
 }
 
 
@@ -448,19 +432,19 @@ static void joystick_done(GtkButton *button GCC_UNUSED, gpointer user_data)
     int i;
     GtkToggleButton *toggle;
 
-    for (i = 0; i < NUM_JOY_BUTTONS; i++)
-    if (info->button[i].setting)
-      *info->button[i].setting = info->button[i].key;
+    for (i = 0; i < NUM_JOY_BUTTONS; i++) {
+        if (info->button[i].setting) {
+            *info->button[i].setting = info->button[i].key;
+        }
+    }
 
     for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
-    toggle = GTK_TOGGLE_BUTTON(info->radio[i]);
+        toggle = GTK_TOGGLE_BUTTON(info->radio[i]);
 
-    if (gtk_toggle_button_get_active(toggle)) {
-      *(info->type) = i;
-      return;
+        if (gtk_toggle_button_get_active(toggle)) {
+            *(info->type) = i;
+            return;
+        }
     }
-
-    }
-
 }

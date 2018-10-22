@@ -50,24 +50,22 @@ int ui_init(int *argc, char ***argv)
 
     error = atexit(fb_end);
     if (error) {
-    ui_error(UI_ERROR_ERROR, "ui_init: couldn't set atexit function");
-    return 1;
+        ui_error(UI_ERROR_ERROR, "ui_init: couldn't set atexit function");
+        return 1;
     }
 
     handler.sa_handler = end_handler;
 
     error = sigaction(SIGTERM, &handler, NULL);
     if (error) {
-    ui_error(UI_ERROR_ERROR, "ui_init: couldn't set SIGTERM handler: %s",
-          strerror(errno));
-    return 1;
+        ui_error(UI_ERROR_ERROR, "ui_init: couldn't set SIGTERM handler: %s", strerror(errno));
+        return 1;
     }
 
     error = sigaction(SIGHUP, &handler, NULL);
     if (error) {
-    ui_error(UI_ERROR_ERROR, "ui_init: couldn't set SIGHUP handler: %s",
-          strerror(errno));
-    return 1;
+        ui_error(UI_ERROR_ERROR, "ui_init: couldn't set SIGHUP handler: %s", strerror(errno));
+        return 1;
     }
 
     error = fbkeyboard_init();
@@ -88,6 +86,7 @@ int ui_init(int *argc, char ***argv)
     return 0;
 }
 
+
 int ui_event(void)
 {
     keyboard_update();
@@ -95,14 +94,20 @@ int ui_event(void)
     return 0;
 }
 
+
 int ui_end(void)
 {
     // Cleanup handled by atexit function
     int error;
 
-    error = fbkeyboard_end(); if (error) return error;
-    error = fbdisplay_end(); if (error) return error;
-
+    error = fbkeyboard_end();
+    if (error) {
+        return error;
+    }
+    error = fbdisplay_end();
+    if (error) {
+        return error;
+    }
     ui_widget_end();
 
     return 0;

@@ -57,16 +57,14 @@ int fbkeyboard_init(void)
 
     // First, set up the keyboard
     if (fstat(STDIN_FILENO, &st)) {
-    fprintf(stderr, "%s: couldn't stat stdin: %s\n", fuse_progname,
-         strerror(errno));
-    return 1;
+        fprintf(stderr, "%s: couldn't stat stdin: %s\n", fuse_progname, strerror(errno));
+        return 1;
     }
 
     // check for character special, major 4, minor 0..63
-    if (!isatty(STDIN_FILENO) || !S_ISCHR(st.st_mode) ||
-      (st.st_rdev & ~63) != 0x0400) {
-    fprintf(stderr, "%s: stdin isn't a local tty\n", fuse_progname);
-    return 1;
+    if (!isatty(STDIN_FILENO) || !S_ISCHR(st.st_mode) || (st.st_rdev & ~63) != 0x0400) {
+        fprintf(stderr, "%s: stdin isn't a local tty\n", fuse_progname);
+        return 1;
     }
 
     tcgetattr(STDIN_FILENO, &old_ts);
@@ -75,14 +73,12 @@ int fbkeyboard_init(void)
 
     // We need non-blocking semi-cooked keyboard input
     if (ioctl(STDIN_FILENO, FIONBIO, &i)) {
-    fprintf(stderr, "%s: can't set stdin nonblocking: %s\n", fuse_progname,
-         strerror(errno));
-    return 1;
+        fprintf(stderr, "%s: can't set stdin nonblocking: %s\n", fuse_progname, strerror(errno));
+        return 1;
     }
     if (ioctl(STDIN_FILENO, KDSKBMODE, K_MEDIUMRAW)) {
-    fprintf(stderr, "%s: can't set keyboard into medium-raw mode: %s\n",
-         fuse_progname, strerror(errno));
-    return 1;
+        fprintf(stderr, "%s: can't set keyboard into medium-raw mode: %s\n", fuse_progname, strerror(errno));
+        return 1;
     }
 
     // Add in a bit of voodoo...
@@ -97,14 +93,15 @@ int fbkeyboard_init(void)
     return 0;
 }
 
+
 int fbkeyboard_end(void)
 {
     int i = 0;
 
     ioctl(STDIN_FILENO, FIONBIO, &i);
     if (got_old_ts) {
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, &old_ts);
-    ioctl(STDIN_FILENO, KDSKBMODE, old_kbmode);
+        tcsetattr(STDIN_FILENO, TCSAFLUSH, &old_ts);
+        ioctl(STDIN_FILENO, KDSKBMODE, old_kbmode);
     }
 
     return 0;
@@ -117,33 +114,34 @@ void keyboard_update(void)
     static int ignore = 0;
 
     while (1) {
-    ssize_t available, i;
+        ssize_t available, i;
 
-    available = read(STDIN_FILENO, &keybuf, sizeof(keybuf));
-    if (available <= 0) {
-        return;
-    }
+        available = read(STDIN_FILENO, &keybuf, sizeof(keybuf));
+        if (available <= 0) {
+            return;
+        }
 
-    for (i = 0; i < available; i++)
-      if (ignore) {
-    ignore--;
-      } else if ((keybuf[i] & 0x7f) == 0) {
-    ignore = 2; // ignore extended keysyms
-      } else {
-    input_key fuse_keysym;
-    input_event_t fuse_event;
+        for (i = 0; i < available; i++) {
+            if (ignore) {
+                ignore--;
+            } else if ((keybuf[i] & 0x7f) == 0) {
+                ignore = 2; // ignore extended keysyms
+            } else {
+                input_key fuse_keysym;
+                input_event_t fuse_event;
 
-    fuse_keysym = keysyms_remap(keybuf[i] & 0x7f);
+                fuse_keysym = keysyms_remap(keybuf[i] & 0x7f);
 
-    if (fuse_keysym == INPUT_KEY_NONE) continue;
+                if (fuse_keysym == INPUT_KEY_NONE) {
+                    continue;
+                }
 
-    fuse_event.type = (keybuf[i] & 0x80) ?
-                          INPUT_EVENT_KEYRELEASE :
-                          INPUT_EVENT_KEYPRESS;
-    fuse_event.types.key.native_key = fuse_keysym;
-    fuse_event.types.key.spectrum_key = fuse_keysym;
+                fuse_event.type = (keybuf[i] & 0x80) ? INPUT_EVENT_KEYRELEASE : INPUT_EVENT_KEYPRESS;
+                fuse_event.types.key.native_key = fuse_keysym;
+                fuse_event.types.key.spectrum_key = fuse_keysym;
 
-    input_event(&fuse_event);
-      }
+                input_event(&fuse_event);
+            }
+        }
     }
 }

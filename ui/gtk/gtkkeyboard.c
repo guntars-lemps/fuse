@@ -43,22 +43,23 @@ static guint unshift_keysym(guint keycode, gint group)
     guint *keyvals, i, r = GDK_KEY_VoidSymbol, r2 = GDK_KEY_VoidSymbol;
     gint count;
 
-    gdk_keymap_get_entries_for_keycode(gdk_keymap_get_default(), keycode,
-                                      &maps, &keyvals, &count);
+    gdk_keymap_get_entries_for_keycode(gdk_keymap_get_default(), keycode, &maps, &keyvals, &count);
 
     for (i = 0; i < count; i++) {
-    if (maps[i].group == group && maps[i].level == 0) {
-      r = keyvals[i];
-      break;
+        if ((maps[i].group == group) && (maps[i].level == 0)) {
+            r = keyvals[i];
+            break;
+        }
+        if ((maps[i].group == 0) && (maps[i].level == 0)) {
+            r2 = keyvals[i];
+        }
     }
-    if (maps[i].group == 0 && maps[i].level == 0) {
-      r2 = keyvals[i];
+    if (i == count) {
+        r = r2;
     }
-    }
-    if (i == count)
-      r = r2;
 
-    g_free(keyvals); g_free(maps);
+    g_free(keyvals);
+    g_free(maps);
 
     return r;
 }
@@ -69,7 +70,7 @@ static void get_keysyms(input_event_t *event, guint keycode, guint keysym, gint 
     guint unshifted;
 
     /* The GTK+ UI doesn't actually use the native keysym for anything,
-     but we may as well set it up anyway as we've got it */
+       but we may as well set it up anyway as we've got it */
     event->types.key.native_key = keysyms_remap(keysym);
 
     unshifted = unshift_keysym(keycode, group);
@@ -77,14 +78,13 @@ static void get_keysyms(input_event_t *event, guint keycode, guint keysym, gint 
 }
 
 
-int gtkkeyboard_keypress(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
-              gpointer data GCC_UNUSED)
+int gtkkeyboard_keypress(GtkWidget *widget GCC_UNUSED, GdkEvent *event, gpointer data GCC_UNUSED)
 {
     input_event_t fuse_event;
 
-    if (event->key.keyval == GDK_KEY_F1 && event->key.state == 0)
-    ui_mouse_suspend();
-
+    if ((event->key.keyval == GDK_KEY_F1) && (event->key.state == 0)) {
+        ui_mouse_suspend();
+    }
     fuse_event.type = INPUT_EVENT_KEYPRESS;
     get_keysyms(&fuse_event, event->key.hardware_keycode, event->key.keyval, event->key.group);
 
@@ -94,8 +94,7 @@ int gtkkeyboard_keypress(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
 }
 
 
-int gtkkeyboard_keyrelease(GtkWidget *widget GCC_UNUSED, GdkEvent *event,
-            gpointer data GCC_UNUSED)
+int gtkkeyboard_keyrelease(GtkWidget *widget GCC_UNUSED, GdkEvent *event, gpointer data GCC_UNUSED)
 {
     input_event_t fuse_event;
 

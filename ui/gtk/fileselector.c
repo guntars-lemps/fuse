@@ -47,24 +47,27 @@ static void add_filter_tape_files(GtkFileFilter *filter);
 static void add_filter_compressed_files(GtkFileFilter *filter);
 #endif
 
-static char*
-run_dialog(const char *title, GtkFileChooserAction action)
+
+static char *run_dialog(const char *title, GtkFileChooserAction action)
 {
     GtkWidget *dialog;
     char *filename = NULL;
     const char *button;
 
     if (action == GTK_FILE_CHOOSER_ACTION_SAVE) {
-    button = "_Save";
+        button = "_Save";
     } else {
-    button = "_Open";
+        button = "_Open";
     }
 
-    dialog =
-    gtk_file_chooser_dialog_new(title, GTK_WINDOW(gtkui_window),
-                                 action, "_Cancel", GTK_RESPONSE_CANCEL,
-                                 button, GTK_RESPONSE_ACCEPT,
-                                 NULL);
+    dialog = gtk_file_chooser_dialog_new(title,
+                                         GTK_WINDOW(gtkui_window),
+                                         action,
+                                         "_Cancel",
+                                         GTK_RESPONSE_CANCEL,
+                                         button,
+                                         GTK_RESPONSE_ACCEPT,
+                                         NULL);
 
     gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
 
@@ -72,16 +75,16 @@ run_dialog(const char *title, GtkFileChooserAction action)
     // TODO: custom filter based file action (open, save)
     add_filter_defaults(dialog);
 
-    if (current_folder)
-    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), current_folder);
-
-    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-    gchar *new_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
-    if (new_folder) {
-      g_free(current_folder);
-      current_folder = new_folder;
+    if (current_folder) {
+        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), current_folder);
     }
-    filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+        gchar *new_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+        if (new_folder) {
+            g_free(current_folder);
+            current_folder = new_folder;
+        }
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
     }
 
     gtk_widget_destroy(dialog);
@@ -90,14 +93,13 @@ run_dialog(const char *title, GtkFileChooserAction action)
 }
 
 
-char*
-ui_get_open_filename(const char *title)
+char *ui_get_open_filename(const char *title)
 {
     return run_dialog(title, GTK_FILE_CHOOSER_ACTION_OPEN);
 }
 
-char*
-ui_get_save_filename(const char *title)
+
+char *ui_get_save_filename(const char *title)
 {
     return run_dialog(title, GTK_FILE_CHOOSER_ACTION_SAVE);
 }
@@ -107,8 +109,7 @@ static void add_filter_defaults(GtkWidget *file_chooser)
 {
     GtkFileFilter *filter;
 
-    /* TODO: poll libspectrum for supported file extensions and avoid duplication
-     between UIs */
+    // TODO: poll libspectrum for supported file extensions and avoid duplication between UIs
     filter = gtk_file_filter_new();
     gtk_file_filter_set_name(filter, "Supported Files");
     add_filter_auxiliary_files(filter);
@@ -183,7 +184,6 @@ static void add_filter_defaults(GtkWidget *file_chooser)
     gtk_file_filter_set_name(filter, "Tape Files");
     add_filter_tape_files(filter);
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), filter);
-
 }
 
 

@@ -29,28 +29,22 @@
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
 
-GtkWidget *
-gtk_box_new(GtkOrientation orientation, gint spacing)
+
+GtkWidget *gtk_box_new(GtkOrientation orientation, gint spacing)
 {
-    return (orientation == GTK_ORIENTATION_HORIZONTAL)?
-          gtk_hbox_new(FALSE, spacing) :
-          gtk_vbox_new(FALSE, spacing);
+    return (orientation == GTK_ORIENTATION_HORIZONTAL) ? gtk_hbox_new(FALSE, spacing) : gtk_vbox_new(FALSE, spacing);
 }
 
-GtkWidget *
-gtk_separator_new(GtkOrientation orientation)
+
+GtkWidget *gtk_separator_new(GtkOrientation orientation)
 {
-    return (orientation == GTK_ORIENTATION_HORIZONTAL)?
-          gtk_hseparator_new() :
-          gtk_vseparator_new();
+    return (orientation == GTK_ORIENTATION_HORIZONTAL) ? gtk_hseparator_new() : gtk_vseparator_new();
 }
 
-GtkWidget *
-gtk_scrollbar_new(GtkOrientation orientation, GtkAdjustment *adjustment)
+
+GtkWidget *gtk_scrollbar_new(GtkOrientation orientation, GtkAdjustment *adjustment)
 {
-    return (orientation == GTK_ORIENTATION_HORIZONTAL)?
-          gtk_hscrollbar_new(adjustment) :
-          gtk_vscrollbar_new(adjustment);
+    return (orientation == GTK_ORIENTATION_HORIZONTAL) ? gtk_hscrollbar_new(adjustment) : gtk_vscrollbar_new(adjustment);
 }
 
 #endif // #if !GTK_CHECK_VERSION(3, 0, 0)

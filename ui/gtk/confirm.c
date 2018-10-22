@@ -43,8 +43,7 @@ int gtkui_confirm(const char *string)
     GtkWidget *dialog, *label, *content_area;
     int confirm;
 
-    /* Return value isn't an error code, but signifies whether to undertake
-     the action */
+    // Return value isn't an error code, but signifies whether to undertake the action
     if (!settings_current.confirm_actions) {
         return 1;
     }
@@ -59,8 +58,7 @@ int gtkui_confirm(const char *string)
     content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     gtk_box_pack_start(GTK_BOX(content_area), label, TRUE, TRUE, 5);
 
-    gtkstock_create_ok_cancel(dialog, NULL, G_CALLBACK(set_confirmed),
-                             &confirm, DEFAULT_DESTROY, DEFAULT_DESTROY);
+    gtkstock_create_ok_cancel(dialog, NULL, G_CALLBACK(set_confirmed), &confirm, DEFAULT_DESTROY, DEFAULT_DESTROY);
 
     gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_CANCEL);
 
@@ -80,8 +78,8 @@ static void set_confirmed(GtkButton *button GCC_UNUSED, gpointer user_data)
     *ptr = 1;
 }
 
-ui_confirm_save_t
-ui_confirm_save_specific(const char *message)
+
+ui_confirm_save_t ui_confirm_save_specific(const char *message)
 {
     GtkWidget *dialog, *label, *content_area;
     ui_confirm_save_t confirm;
@@ -100,15 +98,14 @@ ui_confirm_save_specific(const char *message)
     label = gtk_label_new(message);
     gtk_box_pack_start(GTK_BOX(content_area), label, TRUE, TRUE, 5);
 
-    {
+
     static gtkstock_button btn[] = {
-      {"_No", G_CALLBACK(set_dont_save), NULL, DEFAULT_DESTROY, 0, 0, 0, 0, GTK_RESPONSE_NO},
-      {"_Cancel", NULL, NULL, DEFAULT_DESTROY, GDK_KEY_Escape, 0, 0, 0, GTK_RESPONSE_CANCEL},
-      {"_Save", G_CALLBACK(set_save), NULL, DEFAULT_DESTROY, 0, 0, 0, 0, GTK_RESPONSE_YES}
+        {"_No", G_CALLBACK(set_dont_save), NULL, DEFAULT_DESTROY, 0, 0, 0, 0, GTK_RESPONSE_NO},
+        {"_Cancel", NULL, NULL, DEFAULT_DESTROY, GDK_KEY_Escape, 0, 0, 0, GTK_RESPONSE_CANCEL},
+        {"_Save", G_CALLBACK(set_save), NULL, DEFAULT_DESTROY, 0, 0, 0, 0, GTK_RESPONSE_YES}
     };
     btn[0].actiondata = btn[2].actiondata = &confirm;
     gtkstock_create_buttons(dialog, NULL, btn, ARRAY_SIZE(btn));
-    }
 
     gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_CANCEL);
 
