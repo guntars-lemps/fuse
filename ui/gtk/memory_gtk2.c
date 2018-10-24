@@ -55,36 +55,31 @@ static void update_display(GtkTreeModel *model, libspectrum_word base)
     GtkTreeIter iter;
 
     gchar buffer[8 + 64 + 20];
-    gchar *text[] = { &buffer[0], &buffer[8], &buffer[8 + 64] };
+    gchar *text[] = {&buffer[0], &buffer[8], &buffer[8 + 64]};
     char buffer2[8];
 
     memaddr = base;
     gtk_list_store_clear(GTK_LIST_STORE(model));
 
     for (i = 0; i < 20; i++) {
-    snprintf(text[0], 8, "%04X", base);
+        snprintf(text[0], 8, "%04X", base);
 
-    text[1][0] = '\0';
-    for (j = 0; j < 0x10; j++, base++) {
+        text[1][0] = '\0';
+        for (j = 0; j < 0x10; j++, base++) {
 
-      libspectrum_byte b = readbyte_internal(base);
+            libspectrum_byte b = readbyte_internal(base);
 
-      snprintf(buffer2, 4, "%02X ", b);
-      strncat(text[1], buffer2, 4);
+            snprintf(buffer2, 4, "%02X ", b);
+            strncat(text[1], buffer2, 4);
 
-      text[2][j] = (b >= 32 && b < 127) ? b : '.';
+            text[2][j] = ((b >= 32) && (b < 127)) ? b : '.';
+        }
+        text[2][0x10] = '\0';
+
+        // Append a new row and fill data
+        gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+        gtk_list_store_set(GTK_LIST_STORE(model), &iter, COL_ADDRESS, text[0], COL_HEX, text[1], COL_DATA, text[2], -1);
     }
-    text[2][0x10] = '\0';
-
-    // Append a new row and fill data
-    gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-    gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-                        COL_ADDRESS, text[0],
-                        COL_HEX,     text[1],
-                        COL_DATA,    text[2],
-                        -1);
-    }
-
 }
 
 
@@ -100,8 +95,8 @@ static void scroller(GtkAdjustment *adjustment, gpointer user_data)
     update_display(model, base);
 }
 
-static GtkWidget *
-create_mem_list(void)
+
+static GtkWidget *create_mem_list(void)
 {
     GtkWidget *view;
     GtkCellRenderer *renderer;
@@ -112,32 +107,16 @@ create_mem_list(void)
 
     // Add columns
     renderer = gtk_cell_renderer_text_new();
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view),
-                                               -1,
-                                               "Address",
-                                               renderer,
-                                               "text", COL_ADDRESS,
-                                               NULL);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, "Address", renderer, "text", COL_ADDRESS, NULL);
 
     renderer = gtk_cell_renderer_text_new();
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view),
-                                               -1,
-                                               "Hex",
-                                               renderer,
-                                               "text", COL_HEX,
-                                               NULL);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, "Hex", renderer, "text", COL_HEX, NULL);
 
     renderer = gtk_cell_renderer_text_new();
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view),
-                                               -1,
-                                               "Data",
-                                               renderer,
-                                               "text", COL_DATA,
-                                               NULL);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, "Data", renderer, "text", COL_DATA, NULL);
 
     // Create data model
-    store = gtk_list_store_new(NUM_COLS, G_TYPE_STRING, G_TYPE_STRING,
-                              G_TYPE_STRING);
+    store = gtk_list_store_new(NUM_COLS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
     model = GTK_TREE_MODEL(store);
     gtk_tree_view_set_model(GTK_TREE_VIEW(view), model);
@@ -147,8 +126,7 @@ create_mem_list(void)
 }
 
 
-void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
-                            gpointer data GCC_UNUSED)
+void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     GtkWidget *dialog, *box, *content_area, *list, *scrollbar;
     GtkAdjustment *adjustment;
@@ -158,7 +136,11 @@ void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
 
     fuse_emulation_pause();
 
-    error = gtkui_get_monospaced_font(&font); if (error) return;
+    error = gtkui_get_monospaced_font(&font);
+
+    if (error) {
+        return;
+    }
 
     dialog = gtkstock_dialog_new("Fuse - Memory Browser", NULL);
 
@@ -175,10 +157,8 @@ void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
     update_display(GTK_TREE_MODEL(model), memaddr);
     gtk_box_pack_start(GTK_BOX(box), list, TRUE, TRUE, 0);
 
-    adjustment = GTK_ADJUSTMENT(
-    gtk_adjustment_new(memaddr, 0x0000, 0xffff, 0x10, 0xa0, 0x13f));
-    g_signal_connect(adjustment, "value-changed", G_CALLBACK(scroller),
-                    model);
+    adjustment = GTK_ADJUSTMENT(gtk_adjustment_new(memaddr, 0x0000, 0xffff, 0x10, 0xa0, 0x13f));
+    g_signal_connect(adjustment, "value-changed", G_CALLBACK(scroller), model);
 
     gtkui_scroll_connect(GTK_TREE_VIEW(list), adjustment);
 

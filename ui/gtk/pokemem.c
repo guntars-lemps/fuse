@@ -36,8 +36,7 @@
 #include "pokefinder/pokemem.h"
 #include "ui/ui.h"
 
-enum
-{
+enum {
     COL_CHECK = 0,
     COL_NAME,
     COL_VALUE,
@@ -48,37 +47,30 @@ enum
     NUM_COLS
 };
 
-static GtkWidget
-    *dialog, // The dialog box itself
-    *poke_list, // The list of possible pokes
-    *bank, // Entries for custom poke
-    *address,
-    *value;
+static GtkWidget *dialog; // The dialog box itself
+static GtkWidget *poke_list; // The list of possible pokes
+static GtkWidget *bank; // Entries for custom poke
+static GtkWidget *address;
+static GtkWidget *value;
 
 void create_dialog(void);
 void create_and_fill_treeview(void);
 static void pokemem_close(GtkWidget *widget, gpointer user_data);
 static void pokemem_update_list(GtkWidget *widget, gpointer user_data);
-gboolean pokemem_update_trainer(GtkTreeModel *model, GtkTreePath *path,
-                                 GtkTreeIter *iter, gpointer data);
+gboolean pokemem_update_trainer(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data);
 static void pokemem_add_custom_poke(GtkWidget *widget, gpointer user_data);
 static void trainer_add(gpointer data, gpointer user_data);
 
-void entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
-                           gint *position, gpointer data);
-void entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
-                             gint *position, gpointer data);
+void entry_validate_digit(GtkEntry *entry, const gchar *text, gint length, gint *position, gpointer data);
+void entry_validate_address(GtkEntry *entry, const gchar *text, gint length, gint *position, gpointer data);
 
-void row_toggled_callback(GtkCellRendererToggle *cell, gchar *path_string,
-                           gpointer user_data);
+void row_toggled_callback(GtkCellRendererToggle *cell, gchar *path_string, gpointer user_data);
 
 static gboolean custom_value_edit(GtkTreeView *tree);
-void custom_value_changed(GtkCellRendererText *cell, gchar *path_string,
-                           gchar *new_text, gpointer user_data);
+void custom_value_changed(GtkCellRendererText *cell, gchar *path_string, gchar *new_text, gpointer user_data);
 
 
-void menu_machine_pokememory(GtkAction *gtk_action GCC_UNUSED,
-                         gpointer data GCC_UNUSED)
+void menu_machine_pokememory(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     fuse_emulation_pause();
 
@@ -105,8 +97,7 @@ void create_dialog(void)
     GtkWidget *hbox, *vbox, *label, *scroll;
     GtkAccelGroup *accel_group;
 
-    dialog = gtkstock_dialog_new("Fuse - Poke Memory",
-                                G_CALLBACK(pokemem_close));
+    dialog = gtkstock_dialog_new("Fuse - Poke Memory", G_CALLBACK(pokemem_close));
 
     vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
@@ -122,10 +113,8 @@ void create_dialog(void)
     bank = gtk_entry_new();
     gtk_entry_set_width_chars(GTK_ENTRY(bank), 7);
     gtk_entry_set_max_length(GTK_ENTRY(bank), 1);
-    g_signal_connect(G_OBJECT(bank), "activate",
-                    G_CALLBACK(pokemem_add_custom_poke), NULL);
-    g_signal_connect(G_OBJECT(bank), "insert_text",
-                    G_CALLBACK(entry_validate_digit), NULL);
+    g_signal_connect(G_OBJECT(bank), "activate", G_CALLBACK(pokemem_add_custom_poke), NULL);
+    g_signal_connect(G_OBJECT(bank), "insert_text", G_CALLBACK(entry_validate_digit), NULL);
     gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 5);
     gtk_box_pack_start(GTK_BOX(hbox), bank, TRUE, TRUE, 5);
 
@@ -134,10 +123,8 @@ void create_dialog(void)
     address = gtk_entry_new();
     gtk_entry_set_width_chars(GTK_ENTRY(address), 7);
     gtk_entry_set_max_length(GTK_ENTRY(address), 6);
-    g_signal_connect(G_OBJECT(address), "activate",
-                    G_CALLBACK(pokemem_add_custom_poke), NULL);
-    g_signal_connect(G_OBJECT(address), "insert_text",
-                    G_CALLBACK(entry_validate_address), NULL);
+    g_signal_connect(G_OBJECT(address), "activate", G_CALLBACK(pokemem_add_custom_poke), NULL);
+    g_signal_connect(G_OBJECT(address), "insert_text", G_CALLBACK(entry_validate_address), NULL);
     gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 5);
     gtk_box_pack_start(GTK_BOX(hbox), address, TRUE, TRUE, 5);
 
@@ -146,17 +133,14 @@ void create_dialog(void)
     value = gtk_entry_new();
     gtk_entry_set_width_chars(GTK_ENTRY(value), 7);
     gtk_entry_set_max_length(GTK_ENTRY(value), 3);
-    g_signal_connect(G_OBJECT(value), "activate",
-                    G_CALLBACK(pokemem_add_custom_poke), NULL);
-    g_signal_connect(G_OBJECT(value), "insert_text",
-                    G_CALLBACK(entry_validate_digit), NULL);
+    g_signal_connect(G_OBJECT(value), "activate", G_CALLBACK(pokemem_add_custom_poke), NULL);
+    g_signal_connect(G_OBJECT(value), "insert_text", G_CALLBACK(entry_validate_digit), NULL);
     gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 5);
     gtk_box_pack_start(GTK_BOX(hbox), value, TRUE, TRUE, 5);
 
     // Create Add button for custom pokes
     static const gtkstock_button
-    add = {"_Add", G_CALLBACK(pokemem_add_custom_poke), NULL, NULL,
-             0, 0, 0, 0, GTK_RESPONSE_NONE};
+    add = {"_Add", G_CALLBACK(pokemem_add_custom_poke), NULL, NULL, 0, 0, 0, 0, GTK_RESPONSE_NONE};
     gtkstock_create_button(GTK_WIDGET(hbox), accel_group, &add);
 
     label = gtk_label_new("Choose active POKES:");
@@ -177,11 +161,12 @@ void create_dialog(void)
     gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(scroll), TRUE, TRUE, 5);
 
     // Create and add the actions buttons to the dialog box
-    gtkstock_create_ok_cancel(dialog, accel_group,
-                             G_CALLBACK(pokemem_update_list),
-                             (gpointer) &dialog,
-                             G_CALLBACK(pokemem_close),
-                             G_CALLBACK(pokemem_close));
+    gtkstock_create_ok_cancel(dialog,
+                              accel_group,
+                              G_CALLBACK(pokemem_update_list),
+                              (gpointer)&dialog,
+                              G_CALLBACK(pokemem_close),
+                              G_CALLBACK(pokemem_close));
 
     // Users shouldn't be able to resize this window
     gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
@@ -204,51 +189,62 @@ void create_and_fill_treeview(void)
     gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(poke_list), TRUE);
 #endif
 
-    store = gtk_list_store_new(NUM_COLS, G_TYPE_BOOLEAN, G_TYPE_STRING,
-                              G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_BOOLEAN,
-                              G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
+    store = gtk_list_store_new(NUM_COLS,
+                               G_TYPE_BOOLEAN,
+                               G_TYPE_STRING,
+                               G_TYPE_STRING,
+                               G_TYPE_POINTER,
+                               G_TYPE_BOOLEAN,
+                               G_TYPE_BOOLEAN,
+                               G_TYPE_BOOLEAN);
 
     renderer = gtk_cell_renderer_toggle_new();
 
     // First column, checkbox
-    g_signal_connect(renderer, "toggled",
-                    (GCallback) row_toggled_callback,
-                    (gpointer) GTK_TREE_MODEL(store));
+    g_signal_connect(renderer,
+                     "toggled",
+                     (GCallback)row_toggled_callback,
+                     (gpointer)GTK_TREE_MODEL(store));
 
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(poke_list),
-                                               -1,
-                                               "Active",
-                                               renderer,
-                                               "active", COL_CHECK,
-                                               "activatable", COL_ENABLED,
-                                               "inconsistent", COL_INCONSISTENT,
-                                               NULL);
+                                                -1,
+                                                "Active",
+                                                renderer,
+                                                "active",
+                                                COL_CHECK,
+                                                "activatable",
+                                                COL_ENABLED,
+                                                "inconsistent",
+                                                COL_INCONSISTENT,
+                                                NULL);
 
     // Second column, name
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(poke_list),
-                                               -1,
-                                               "Trainer",
-                                               renderer,
-                                               "text", COL_NAME,
-                                               NULL);
+                                                -1,
+                                                "Trainer",
+                                                renderer,
+                                                "text",
+                                                COL_NAME,
+                                                NULL);
 
     // Third column, optional value
     renderer = gtk_cell_renderer_text_new();
-    g_signal_connect(renderer, "edited", (GCallback)custom_value_changed,
-                    (gpointer) GTK_TREE_MODEL(store));
+    g_signal_connect(renderer, "edited", (GCallback)custom_value_changed, (gpointer)GTK_TREE_MODEL(store));
 
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(poke_list),
-                                               -1,
-                                               "Value",
-                                               renderer,
-                                               "text", COL_VALUE,
-                                               "editable", COL_EDITABLE,
-                                               NULL);
+                                                -1,
+                                                "Value",
+                                                renderer,
+                                                "text",
+                                                COL_VALUE,
+                                                "editable",
+                                                COL_EDITABLE,
+                                                NULL);
 
     // Create and fill model
     if (trainer_list) {
-    g_slist_foreach(trainer_list, trainer_add, store);
+        g_slist_foreach(trainer_list, trainer_add, store);
     }
     model = GTK_TREE_MODEL(store);
 
@@ -269,21 +265,29 @@ static void trainer_add(gpointer data, gpointer user_data)
         return;
     }
 
-    if (trainer->ask_value)
-    val = g_strdup_printf("%d", trainer->value);
+    if (trainer->ask_value) {
+        val = g_strdup_printf("%d", trainer->value);
+    }
 
     // Append a new row and fill data
     gtk_list_store_append(store, &iter);
-    gtk_list_store_set(store, &iter,
-                      COL_CHECK, trainer->active,
-                      COL_NAME, trainer->name,
-                      COL_VALUE, (trainer->ask_value)? val : NULL,
-                      COL_TRAINER, trainer,
-                      COL_ENABLED, !trainer->disabled,
-                      COL_EDITABLE, (!trainer->disabled && !trainer->active
-                                      && trainer->ask_value),
-                      COL_INCONSISTENT, (trainer->disabled && !trainer->active),
-                      -1);
+    gtk_list_store_set(store,
+                       &iter,
+                       COL_CHECK,
+                       trainer->active,
+                       COL_NAME,
+                       trainer->name,
+                       COL_VALUE,
+                       (trainer->ask_value) ? val : NULL,
+                       COL_TRAINER,
+                       trainer,
+                       COL_ENABLED,
+                       !trainer->disabled,
+                       COL_EDITABLE,
+                       !trainer->disabled && !trainer->active && trainer->ask_value,
+                       COL_INCONSISTENT,
+                       trainer->disabled && !trainer->active,
+                       -1);
 
     g_free(val);
 }
@@ -295,43 +299,37 @@ static void pokemem_close(GtkWidget *widget, gpointer user_data GCC_UNUSED)
 }
 
 
-static void pokemem_update_list(GtkWidget *widget GCC_UNUSED,
-                     gpointer user_data GCC_UNUSED)
+static void pokemem_update_list(GtkWidget *widget GCC_UNUSED, gpointer user_data GCC_UNUSED)
 {
     GtkTreeModel *model;
 
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(poke_list));
     if (model) {
-    gtk_tree_model_foreach(model, pokemem_update_trainer, NULL);
+        gtk_tree_model_foreach(model, pokemem_update_trainer, NULL);
     }
 
     gtkui_destroy_widget_and_quit(dialog, NULL);
 }
 
-gboolean
-pokemem_update_trainer(GtkTreeModel *model, GtkTreePath *path GCC_UNUSED,
-                        GtkTreeIter *iter, gpointer data GCC_UNUSED)
+
+gboolean pokemem_update_trainer(GtkTreeModel *model, GtkTreePath *path GCC_UNUSED, GtkTreeIter *iter, gpointer data GCC_UNUSED)
 {
     gboolean selected;
     trainer_t *trainer;
 
-    gtk_tree_model_get(model, iter,
-                      COL_CHECK, &selected,
-                      COL_TRAINER, &trainer,
-                      -1);
+    gtk_tree_model_get(model, iter, COL_CHECK, &selected, COL_TRAINER, &trainer, -1);
 
     if (selected) {
-    pokemem_trainer_activate(trainer);
+        pokemem_trainer_activate(trainer);
     } else {
-    pokemem_trainer_deactivate(trainer);
+        pokemem_trainer_deactivate(trainer);
     }
 
     return FALSE;
 }
 
 
-static void pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED,
-                         gpointer user_data GCC_UNUSED)
+static void pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED, gpointer user_data GCC_UNUSED)
 {
     long b, a, v;
     const gchar *entry;
@@ -340,41 +338,41 @@ static void pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED,
     trainer_t *trainer;
     GtkListStore *store;
 
-    if (gtk_entry_get_text_length(GTK_ENTRY(address)) == 0 &&
-      gtk_entry_get_text_length(GTK_ENTRY(value)) == 0) {
-     return;
+    if ((gtk_entry_get_text_length(GTK_ENTRY(address)) == 0) &&
+        (gtk_entry_get_text_length(GTK_ENTRY(value)) == 0)) {
+        return;
     }
 
     // Parse bank
     entry = gtk_entry_get_text(GTK_ENTRY(bank));
     errno = 0;
     b = strtol(entry, &endptr, 10);
-    if (errno || b < 0 || b > 8) {
-    ui_error(UI_ERROR_ERROR, "Invalid bank: use an integer from 0 to 8");
-    gtk_widget_grab_focus(bank);
-    return;
+    if (errno || (b < 0) || (b > 8)) {
+        ui_error(UI_ERROR_ERROR, "Invalid bank: use an integer from 0 to 8");
+        gtk_widget_grab_focus(bank);
+        return;
     }
 
-    if (endptr == entry) b = 8; // ignore bank by default
+    if (endptr == entry) {
+        b = 8; // ignore bank by default
+    }
 
     // Parse address
     entry = gtk_entry_get_text(GTK_ENTRY(address));
     errno = 0;
-    base = (g_str_has_prefix(entry, "0x"))? 16 : 10;
+    base = (g_str_has_prefix(entry, "0x") ? 16 : 10);
     a = strtol(entry, &endptr, base);
 
-    if (errno || a < 0 || a > 65535 || endptr == entry) {
-    ui_error(UI_ERROR_ERROR,
-              "Invalid address: use an integer from 0 to 65535");
-    gtk_widget_grab_focus(address);
-    return;
+    if (errno || (a < 0) || (a > 65535) || (endptr == entry)) {
+        ui_error(UI_ERROR_ERROR, "Invalid address: use an integer from 0 to 65535");
+        gtk_widget_grab_focus(address);
+        return;
     }
 
-    if (b == 8 && a < 16384) {
-    ui_error(UI_ERROR_ERROR,
-              "Invalid address: use an integer from 16384 to 65535");
-    gtk_widget_grab_focus(address);
-    return;
+    if ((b == 8) && (a < 16384)) {
+        ui_error(UI_ERROR_ERROR, "Invalid address: use an integer from 16384 to 65535");
+        gtk_widget_grab_focus(address);
+        return;
     }
 
     // Parse value
@@ -382,21 +380,20 @@ static void pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED,
     errno = 0;
     v = strtol(entry, &endptr, 10);
 
-    if (errno || v < 0 || v > 256 || endptr == entry) {
-    ui_error(UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 256");
-    gtk_widget_grab_focus(value);
-    return;
+    if (errno || (v < 0) || (v > 256) || (endptr == entry)) {
+        ui_error(UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 256");
+        gtk_widget_grab_focus(value);
+        return;
     }
 
     // Update store and view
     trainer = pokemem_trainer_list_add(b, a, v);
     if (!trainer) {
-    ui_error(UI_ERROR_ERROR, "Cannot add trainer");
-    return;
+        ui_error(UI_ERROR_ERROR, "Cannot add trainer");
+        return;
     }
 
-    store = GTK_LIST_STORE(gtk_tree_view_get_model(
-                          GTK_TREE_VIEW(poke_list)));
+    store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(poke_list)));
     trainer_add(trainer, store);
 
     // Mark custom trainer for activate
@@ -406,12 +403,12 @@ static void pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED,
     int rows;
 
     if (!trainer->active && !trainer->disabled) {
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(poke_list));
-    rows = gtk_tree_model_iter_n_children(model, NULL);
-    path = gtk_tree_path_new_from_indices(rows - 1, -1);
-    gtk_tree_model_get_iter(model, &iter, path);
-    gtk_list_store_set(GTK_LIST_STORE(model), &iter, COL_CHECK, TRUE, -1);
-    gtk_tree_path_free(path);
+        model = gtk_tree_view_get_model(GTK_TREE_VIEW(poke_list));
+        rows = gtk_tree_model_iter_n_children(model, NULL);
+        path = gtk_tree_path_new_from_indices(rows - 1, -1);
+        gtk_tree_model_get_iter(model, &iter, path);
+        gtk_list_store_set(GTK_LIST_STORE(model), &iter, COL_CHECK, TRUE, -1);
+        gtk_tree_path_free(path);
     }
 
     // Clear custom fields
@@ -422,8 +419,7 @@ static void pokemem_add_custom_poke(GtkWidget *widget GCC_UNUSED,
 }
 
 
-void entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
-                      gint *position, gpointer data)
+void entry_validate_digit(GtkEntry *entry, const gchar *text, gint length, gint *position, gpointer data)
 {
     int i, count = 0;
     GtkEditable *editable = GTK_EDITABLE(entry);
@@ -431,20 +427,21 @@ void entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
 
     // Validate decimal and fill buffer to insert
     for (i = 0; i < length; i++) {
-    if (!isdigit(text[i])) continue;
-
-    result[count++] = text[i];
+        if (!isdigit(text[i])) {
+            continue;
+        }
+        result[count++] = text[i];
     }
 
     // Insert only validated text
     if (count > 0) {
-    g_signal_handlers_block_by_func(G_OBJECT(editable),
-                                     G_CALLBACK(entry_validate_digit),
-                                     data);
-    gtk_editable_insert_text(editable, result, count, position);
-    g_signal_handlers_unblock_by_func(G_OBJECT(editable),
-                                       G_CALLBACK(entry_validate_digit),
-                                       data);
+        g_signal_handlers_block_by_func(G_OBJECT(editable),
+                                        G_CALLBACK(entry_validate_digit),
+                                        data);
+        gtk_editable_insert_text(editable, result, count, position);
+        g_signal_handlers_unblock_by_func(G_OBJECT(editable),
+                                          G_CALLBACK(entry_validate_digit),
+                                          data);
     }
     g_signal_stop_emission_by_name(G_OBJECT(editable), "insert_text");
 
@@ -452,8 +449,7 @@ void entry_validate_digit(GtkEntry *entry, const gchar *text, gint length,
 }
 
 
-void entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
-                        gint *position, gpointer data)
+void entry_validate_address(GtkEntry *entry, const gchar *text, gint length, gint *position, gpointer data)
 {
     int i, is_valid, is_hex;
     size_t n, prev_length, max_length, count = 0;
@@ -470,47 +466,47 @@ void entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
 
     for (n = 0; n < full_text->len && is_valid; n++) {
 
-    switch (n) {
-    case 0:
-      is_valid = isdigit(full_text->str[n]);
-      break;
+        switch (n) {
+            case 0:
+                is_valid = isdigit(full_text->str[n]);
+                break;
 
-    case 1:
-      if (full_text->str[n] == 'x') {
-          if (full_text->str[0] == '0') is_hex = 1;
-          is_valid = is_hex;
-      } else {
-        is_valid = isdigit(full_text->str[n]);
-      }
-      break;
+            case 1:
+                if (full_text->str[n] == 'x') {
+                    if (full_text->str[0] == '0') {
+                        is_hex = 1;
+                    }
+                    is_valid = is_hex;
+                } else {
+                    is_valid = isdigit(full_text->str[n]);
+                }
+                break;
 
-    default:
-      is_valid = (is_hex)? isxdigit(full_text->str[n]) :
-                             isdigit(full_text->str[n]);
-    }
-
+            default:
+                is_valid = (is_hex ? isxdigit(full_text->str[n]) : isdigit(full_text->str[n]));
+        }
     }
     g_string_free(full_text, TRUE);
 
     // Fill buffer to insert
     if (is_valid) {
-    max_length = (is_hex)? 6 : 5;
-    result = g_new(gchar, length);
+        max_length = (is_hex ? 6 : 5);
+        result = g_new(gchar, length);
 
-    for (i = 0; i < length && i + prev_length < max_length; i++) {
-      result[count++] = text[i];
-    }
+        for (i = 0; (i < length) && ((i + prev_length) < max_length); i++) {
+            result[count++] = text[i];
+        }
     }
 
     // Insert only validated text
     if (count > 0) {
-    g_signal_handlers_block_by_func(G_OBJECT(editable),
-                                     G_CALLBACK(entry_validate_address),
-                                     data);
-    gtk_editable_insert_text(editable, result, count, position);
-    g_signal_handlers_unblock_by_func(G_OBJECT(editable),
-                                       G_CALLBACK(entry_validate_address),
-                                       data);
+        g_signal_handlers_block_by_func(G_OBJECT(editable),
+                                        G_CALLBACK(entry_validate_address),
+                                        data);
+        gtk_editable_insert_text(editable, result, count, position);
+        g_signal_handlers_unblock_by_func(G_OBJECT(editable),
+                                          G_CALLBACK(entry_validate_address),
+                                          data);
     }
 
     g_signal_stop_emission_by_name(G_OBJECT(editable), "insert_text");
@@ -518,8 +514,7 @@ void entry_validate_address(GtkEntry *entry, const gchar *text, gint length,
 }
 
 
-void row_toggled_callback(GtkCellRendererToggle *cell GCC_UNUSED,
-                      gchar *path_string, gpointer user_data)
+void row_toggled_callback(GtkCellRendererToggle *cell GCC_UNUSED, gchar *path_string, gpointer user_data)
 {
     GtkTreeIter iter;
     GtkTreeModel *model = user_data;
@@ -537,14 +532,14 @@ void row_toggled_callback(GtkCellRendererToggle *cell GCC_UNUSED,
 
     // Request user for custom value
     if (flag) {
-    memset(&gtrainer, 0, sizeof(gtrainer));
-    gtk_tree_model_get_value(model, &iter, COL_TRAINER, &gtrainer);
-    trainer = (trainer_t *)g_value_get_pointer(&gtrainer);
-    g_value_unset(&gtrainer);
+        memset(&gtrainer, 0, sizeof(gtrainer));
+        gtk_tree_model_get_value(model, &iter, COL_TRAINER, &gtrainer);
+        trainer = (trainer_t *)g_value_get_pointer(&gtrainer);
+        g_value_unset(&gtrainer);
 
-    if (trainer->ask_value) {
-      g_idle_add((GSourceFunc)custom_value_edit, GTK_TREE_VIEW(poke_list));
-    }
+        if (trainer->ask_value) {
+            g_idle_add((GSourceFunc)custom_value_edit, GTK_TREE_VIEW(poke_list));
+        }
     }
 }
 
@@ -567,8 +562,7 @@ static gboolean custom_value_edit(GtkTreeView *tree)
 }
 
 
-void custom_value_changed(GtkCellRendererText *cell GCC_UNUSED, gchar *path_string,
-                      gchar *new_text, gpointer user_data)
+void custom_value_changed(GtkCellRendererText *cell GCC_UNUSED, gchar *path_string, gchar *new_text, gpointer user_data)
 {
     GtkTreeModel *model = (GtkTreeModel *)user_data;
     GtkTreeIter iter;
@@ -579,25 +573,24 @@ void custom_value_changed(GtkCellRendererText *cell GCC_UNUSED, gchar *path_stri
     char *endptr;
 
     if (gtk_tree_model_get_iter_from_string(model, &iter, path_string)) {
-    memset(&val, 0, sizeof(val));
+        memset(&val, 0, sizeof(val));
 
-    gtk_tree_model_get_value(model, &iter, COL_TRAINER, &val);
-    trainer = (trainer_t *)g_value_get_pointer(&val);
-    g_value_unset(&val);
+        gtk_tree_model_get_value(model, &iter, COL_TRAINER, &val);
+        trainer = (trainer_t *)g_value_get_pointer(&val);
+        g_value_unset(&val);
 
-    errno = 0;
-    v = strtol(new_text, &endptr, 10);
+        errno = 0;
+        v = strtol(new_text, &endptr, 10);
 
-    if (errno || v < 0 || v > 255 || endptr == new_text) {
-      ui_error(UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 255");
-      return;
-    }
+        if (errno || (v < 0) || (v > 255) || (endptr == new_text)) {
+            ui_error(UI_ERROR_ERROR, "Invalid value: use an integer from 0 to 255");
+            return;
+        }
 
-    trainer->value = v;
-    str_value = g_strdup_printf("%d", trainer->value);
+        trainer->value = v;
+        str_value = g_strdup_printf("%d", trainer->value);
 
-    gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-                        COL_VALUE, str_value, -1);
-    g_free(str_value);
+        gtk_list_store_set(GTK_LIST_STORE(model), &iter, COL_VALUE, str_value, -1);
+        g_free(str_value);
     }
 }

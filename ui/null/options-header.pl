@@ -47,7 +47,7 @@ foreach( @dialogs ) {
   foreach my $widget ( @{ $_->{widgets} } ) {
     if( $widget->{type} eq "Combo" ) {
       print <<"CODE";
-int option_enumerate_$_->{name}_$widget->{value}( void );
+int option_enumerate_$_->{name}_$widget->{value}(void);
 
 CODE
     }

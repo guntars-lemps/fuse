@@ -32,16 +32,15 @@ keysyms_map_t keysyms_map[] = {
     {0, 0} // End marker
 };
 
-scaler_type
-menu_get_scaler(scaler_available_fn selector)
+
+scaler_type menu_get_scaler(scaler_available_fn selector)
 {
     // No scaler selected
     return SCALER_NUM;
 }
 
 
-int menu_select_roms_with_title(const char *title, size_t start, size_t count,
-    int is_peripheral)
+int menu_select_roms_with_title(const char *title, size_t start, size_t count, int is_peripheral)
 {
     // No error
     return 0;
@@ -53,14 +52,14 @@ void ui_breakpoints_updated(void)
     // Do nothing
 }
 
-ui_confirm_save_t
-ui_confirm_save_specific(const char *message)
+
+ui_confirm_save_t ui_confirm_save_specific(const char *message)
 {
     return UI_CONFIRM_SAVE_DONTSAVE;
 }
 
-ui_confirm_joystick_t
-ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
+
+ui_confirm_joystick_t ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs)
 {
     return UI_CONFIRM_JOYSTICK_NONE;
 }
@@ -114,8 +113,8 @@ int ui_event(void)
     return 0;
 }
 
-char*
-ui_get_open_filename(const char *title)
+
+char *ui_get_open_filename(const char *title)
 {
     // No filename
     return NULL;
@@ -128,8 +127,8 @@ int ui_get_rollback_point(GSList *points)
     return -1;
 }
 
-char*
-ui_get_save_filename(const char *title)
+
+char *ui_get_save_filename(const char *title)
 {
     // No filename
     return NULL;
@@ -239,15 +238,13 @@ int uidisplay_init(int width, int height)
 }
 
 
-void uidisplay_plot16(int x, int y, libspectrum_word data,
-    libspectrum_byte ink, libspectrum_byte paper)
+void uidisplay_plot16(int x, int y, libspectrum_word data, libspectrum_byte ink, libspectrum_byte paper)
 {
     // Do nothing
 }
 
 
-void uidisplay_plot8(int x, int y, libspectrum_byte data,
-    libspectrum_byte ink, libspectrum_byte paper)
+void uidisplay_plot8(int x, int y, libspectrum_byte data, libspectrum_byte ink, libspectrum_byte paper)
 {
     // Do nothing
 }

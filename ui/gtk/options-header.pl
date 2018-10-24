@@ -69,11 +69,11 @@ if( $internal ) {
     foreach( @dialogs ) {
 
 	print << "CODE";
-void menu_options_$_->{name}( GtkWidget *widget, gpointer data );
+void menu_options_$_->{name}(GtkWidget *widget, gpointer data);
 
 typedef struct menu_options_$_->{name}_t \{
 
-  GtkWidget *dialog;
+    GtkWidget *dialog;
 
 CODE
 
@@ -98,7 +98,7 @@ CODE
 	foreach my $widget ( @{ $_->{widgets} } ) {
 	    if( $widget->{type} eq "Combo" ) {
 		print <<"CODE";
-int option_enumerate_$_->{name}_$widget->{value}( void );
+int option_enumerate_$_->{name}_$widget->{value}(void);
 
 CODE
 	    }

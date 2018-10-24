@@ -61,51 +61,49 @@ static gboolean textview_wheel_scroll_event(GtkWidget *widget, GdkEvent *event, 
 
     base = oldbase = gtk_adjustment_get_value(adjustment);
 
-    switch (event->scroll.direction)
-    {
-    case GDK_SCROLL_UP:
-    base -= gtk_adjustment_get_page_increment(adjustment) / 2;
-    break;
-    case GDK_SCROLL_DOWN:
-    base += gtk_adjustment_get_page_increment(adjustment) / 2;
-    break;
+    switch (event->scroll.direction) {
+        case GDK_SCROLL_UP:
+            base -= gtk_adjustment_get_page_increment(adjustment) / 2;
+            break;
+        case GDK_SCROLL_DOWN:
+            base += gtk_adjustment_get_page_increment(adjustment) / 2;
+            break;
 
 #if GTK_CHECK_VERSION(3, 4, 0)
-    case GDK_SCROLL_SMOOTH:
-    {
-      static gdouble total_dy = 0;
-      gdouble dx, dy, page_size;
-      int delta;
+        case GDK_SCROLL_SMOOTH:
+            ;
+            static gdouble total_dy = 0;
+            gdouble dx, dy, page_size;
+            int delta;
 
-      if (gdk_event_get_scroll_deltas(event, &dx, &dy)) {
-        total_dy += dy;
-        page_size = gtk_adjustment_get_page_size(adjustment);
-        delta = total_dy * pow(page_size, 2.0 / 3.0);
+            if (gdk_event_get_scroll_deltas(event, &dx, &dy)) {
+                total_dy += dy;
+                page_size = gtk_adjustment_get_page_size(adjustment);
+                delta = total_dy * pow(page_size, (2.0 / 3.0));
 
-        // Is movement significative?
-        if (delta) {
-          base += delta;
-          total_dy = 0;
-        }
-      }
-      break;
-    }
+                // Is movement significative?
+                if (delta) {
+                    base += delta;
+                    total_dy = 0;
+                }
+            }
+            break;
 #endif
-
-    default:
-    return FALSE;
+        default:
+            return FALSE;
     }
 
     if (base < 0) {
-    base = 0;
+        base = 0;
     } else {
-    base_limit = gtk_adjustment_get_upper(adjustment) -
-                 gtk_adjustment_get_page_size(adjustment);
-    if (base > base_limit) base = base_limit;
+        base_limit = gtk_adjustment_get_upper(adjustment) - gtk_adjustment_get_page_size(adjustment);
+        if (base > base_limit) {
+            base = base_limit;
+        }
     }
 
     if (base != oldbase) {
-    gtk_adjustment_set_value(adjustment, base);
+        gtk_adjustment_set_value(adjustment, base);
     }
 
     return TRUE;
@@ -131,8 +129,7 @@ static gboolean textview_key_press_event(GtkWidget *widget, GdkEventKey *event, 
     text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
 
     // Get line width (includes CR/LF)
-    line_width = gtk_text_buffer_get_char_count(text_buffer) /
-               gtk_text_buffer_get_line_count(text_buffer);
+    line_width = gtk_text_buffer_get_char_count(text_buffer) / gtk_text_buffer_get_line_count(text_buffer);
 
     // Get row and offset of cursor
     mark = gtk_text_buffer_get_insert(text_buffer);
@@ -140,84 +137,83 @@ static gboolean textview_key_press_event(GtkWidget *widget, GdkEventKey *event, 
     line = gtk_text_iter_get_line(&iter);
     line_offset = gtk_text_iter_get_line_offset(&iter);
 
-    switch (event->keyval)
-    {
+    switch (event->keyval) {
 
-    case GDK_KEY_Left:
-    if (line == 0 && line_offset == 0) {
-      base -= step_increment;
-      cursor_buffer = text_buffer;
-      cursor_line_number = line;
-      cursor_char_offset = line_width;
-    }
-    break;
+        case GDK_KEY_Left:
+            if ((line == 0) && (line_offset == 0)) {
+                base -= step_increment;
+                cursor_buffer = text_buffer;
+                cursor_line_number = line;
+                cursor_char_offset = line_width;
+            }
+            break;
 
-    case GDK_KEY_Right:
-    if (line == num_rows - 1 && line_offset == line_width) {
-      base += step_increment;
-      cursor_buffer = text_buffer;
-      cursor_line_number = line;
-      cursor_char_offset = 0;
-    }
-    break;
+        case GDK_KEY_Right:
+            if ((line == (num_rows - 1)) && (line_offset == line_width)) {
+                base += step_increment;
+                cursor_buffer = text_buffer;
+                cursor_line_number = line;
+                cursor_char_offset = 0;
+            }
+            break;
 
-    case GDK_KEY_Up:
-    if (line == 0) {
-      base -= step_increment;
-      cursor_buffer = text_buffer;
-      cursor_line_number = 0;
-      cursor_char_offset = line_offset;
-    }
-    break;
+        case GDK_KEY_Up:
+            if (line == 0) {
+                base -= step_increment;
+                cursor_buffer = text_buffer;
+                cursor_line_number = 0;
+                cursor_char_offset = line_offset;
+            }
+            break;
 
-    case GDK_KEY_Down:
-    if (line == num_rows - 1) {
-      base += step_increment;
-      cursor_buffer = text_buffer;
-      cursor_line_number = line;
-      cursor_char_offset = line_offset;
-    }
-    break;
+        case GDK_KEY_Down:
+            if (line == num_rows - 1) {
+                base += step_increment;
+                cursor_buffer = text_buffer;
+                cursor_line_number = line;
+                cursor_char_offset = line_offset;
+            }
+            break;
 
-    case GDK_KEY_Page_Up:
-    base -= gtk_adjustment_get_page_increment(adjustment);
-    cursor_buffer = text_buffer;
-    cursor_line_number = line;
-    cursor_char_offset = line_offset;
-    break;
+        case GDK_KEY_Page_Up:
+            base -= gtk_adjustment_get_page_increment(adjustment);
+            cursor_buffer = text_buffer;
+            cursor_line_number = line;
+            cursor_char_offset = line_offset;
+            break;
 
-    case GDK_KEY_Page_Down:
-    base += gtk_adjustment_get_page_increment(adjustment);
-    cursor_buffer = text_buffer;
-    cursor_line_number = line;
-    cursor_char_offset = line_offset;
-    break;
+        case GDK_KEY_Page_Down:
+            base += gtk_adjustment_get_page_increment(adjustment);
+            cursor_buffer = text_buffer;
+            cursor_line_number = line;
+            cursor_char_offset = line_offset;
+            break;
 
-    default:
-    return FALSE;
+        default:
+            return FALSE;
     }
 
     if (base < 0) {
-    base = 0;
+        base = 0;
     } else {
-    base_limit = gtk_adjustment_get_upper(adjustment) - page_size;
-    if (base > base_limit) base = base_limit;
+        base_limit = gtk_adjustment_get_upper(adjustment) - page_size;
+        if (base > base_limit) {
+            base = base_limit;
+        }
     }
 
     if (base != oldbase) {
-    gtk_adjustment_set_value(adjustment, base);
+        gtk_adjustment_set_value(adjustment, base);
 
-    /* As we are simulating a full-filled text view, we need to move the cursor
-       position after page movement/redraw */
-    if (cursor_line_number >= 0 && cursor_line_number < VIEW_NUM_ROWS) {
-      gtk_text_buffer_get_iter_at_line_offset(cursor_buffer, &iter,
-                                               cursor_line_number,
-                                               cursor_char_offset);
-      gtk_text_buffer_place_cursor(cursor_buffer, &iter);
-      cursor_line_number = -1;
-    }
+        /* As we are simulating a full-filled text view, we need to move the cursor
+           position after page movement/redraw */
+        if ((cursor_line_number >= 0) && (cursor_line_number < VIEW_NUM_ROWS)) {
+            gtk_text_buffer_get_iter_at_line_offset(cursor_buffer, &iter, cursor_line_number, cursor_char_offset);
+            gtk_text_buffer_place_cursor(cursor_buffer, &iter);
+            cursor_line_number = -1;
+        }
 
-    return TRUE;
+        return TRUE;
     }
 
     return FALSE;
@@ -245,34 +241,32 @@ static void update_display(libspectrum_word base)
     gtk_text_buffer_get_start_iter(buffer_data, &iter_data);
 
     for (i = 0; i < VIEW_NUM_ROWS; i++) {
-    if (i > 0) {
-      gtk_text_buffer_insert(buffer_address, &iter_address, "\n", -1);
-      gtk_text_buffer_insert(buffer_hex, &iter_hex, "\n", -1);
-      gtk_text_buffer_insert(buffer_data, &iter_data, "\n", -1);
-    }
+        if (i > 0) {
+            gtk_text_buffer_insert(buffer_address, &iter_address, "\n", -1);
+            gtk_text_buffer_insert(buffer_hex, &iter_hex, "\n", -1);
+            gtk_text_buffer_insert(buffer_data, &iter_data, "\n", -1);
+        }
 
-    snprintf(buffer2, 8, "%04X", base);
-    gtk_text_buffer_insert(buffer_address, &iter_address, buffer2, -1);
+        snprintf(buffer2, 8, "%04X", base);
+        gtk_text_buffer_insert(buffer_address, &iter_address, buffer2, -1);
 
-    for (j = 0; j < VIEW_NUM_COLS; j++, base++) {
-      if (j > 0)
-        gtk_text_buffer_insert(buffer_hex, &iter_hex, " ", -1);
+        for (j = 0; j < VIEW_NUM_COLS; j++, base++) {
+            if (j > 0) {
+                gtk_text_buffer_insert(buffer_hex, &iter_hex, " ", -1);
+            }
+            libspectrum_byte b = readbyte_internal(base);
+            snprintf(buffer2, 4, "%02X", b);
 
-      libspectrum_byte b = readbyte_internal(base);
-      snprintf(buffer2, 4, "%02X", b);
+            buffer3 = ((b >= 32) && (b < 127)) ? b : '.';
 
-      buffer3 = (b >= 32 && b < 127) ? b : '.';
-
-      if (base != mark_offset) {
-        gtk_text_buffer_insert(buffer_hex, &iter_hex, buffer2, -1);
-        gtk_text_buffer_insert(buffer_data, &iter_data, &buffer3, 1);
-      } else {
-        gtk_text_buffer_insert_with_tags_by_name(buffer_hex, &iter_hex,
-          buffer2, -1, "background_yellow", NULL);
-        gtk_text_buffer_insert_with_tags_by_name(buffer_data, &iter_data,
-          &buffer3, 1, "background_yellow", NULL);
-      }
-    }
+            if (base != mark_offset) {
+                gtk_text_buffer_insert(buffer_hex, &iter_hex, buffer2, -1);
+                gtk_text_buffer_insert(buffer_data, &iter_data, &buffer3, 1);
+            } else {
+                gtk_text_buffer_insert_with_tags_by_name(buffer_hex, &iter_hex, buffer2, -1, "background_yellow", NULL);
+                gtk_text_buffer_insert_with_tags_by_name(buffer_data, &iter_data, &buffer3, 1, "background_yellow", NULL);
+            }
+        }
     }
 
     gtk_text_buffer_get_bounds(buffer_address, &start, &end);
@@ -295,7 +289,9 @@ static void scroller(GtkAdjustment *adjustment, gpointer user_data)
     update_display(base);
 }
 
+
 #if GTK_CHECK_VERSION(3, 6, 0)
+
 
 static void goto_offset(GtkWidget *widget GCC_UNUSED, gpointer user_data GCC_UNUSED)
 {
@@ -304,29 +300,30 @@ static void goto_offset(GtkWidget *widget GCC_UNUSED, gpointer user_data GCC_UNU
     char *endptr;
     int base_num;
 
-    if (gtk_entry_get_text_length(GTK_ENTRY(widget)) == 0)
-     return;
+    if (gtk_entry_get_text_length(GTK_ENTRY(widget)) == 0) {
+        return;
+    }
 
     // Parse address
     entry = gtk_entry_get_text(GTK_ENTRY(widget));
     errno = 0;
-    base_num = (g_str_has_prefix(entry, "0x"))? 16 : 10;
+    base_num = (g_str_has_prefix(entry, "0x")) ? 16 : 10;
     offset = strtol(entry, &endptr, base_num);
 
     // Validate address
-    if (errno || offset < 0 || offset > 65535 || endptr == entry ||
-      *endptr != '\0') {
-    return;
+    if (errno || (offset < 0) || (offset > 65535) || (endptr == entry) || (*endptr != '\0')) {
+        return;
     }
 
     mark_offset = offset;
     gtk_adjustment_set_value(adjustment, offset);
 }
+
+
 #endif
 
 
-void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
-                            gpointer data GCC_UNUSED)
+void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED, gpointer data GCC_UNUSED)
 {
     GtkWidget *dialog, *content_area, *scrollbar, *label, *offset;
     GtkWidget *box, *box_address, *box_hex, *box_data, *box_data_horizontal;
@@ -359,8 +356,7 @@ void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
 
     gtk_box_pack_start(GTK_BOX(content_area), box, FALSE, FALSE, 8);
 
-    g_signal_connect(G_OBJECT(offset), "activate",
-                    G_CALLBACK(goto_offset), NULL);
+    g_signal_connect(G_OBJECT(offset), "activate", G_CALLBACK(goto_offset), NULL);
 #endif
 
     // Create text buffers
@@ -370,8 +366,7 @@ void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
     gtk_text_tag_table_add(tag_table, tag);
 
     tag = gtk_text_tag_new("background_yellow");
-    g_object_set(tag, "background", "yellow",
-                     "background-full-height", TRUE, NULL);
+    g_object_set(tag, "background", "yellow", "background-full-height", TRUE, NULL);
     gtk_text_tag_table_add(tag_table, tag);
 
     buffer_address = gtk_text_buffer_new(tag_table);
@@ -423,26 +418,23 @@ void menu_machine_memorybrowser(GtkAction *gtk_action GCC_UNUSED,
 
     // Scroll
     adjustment = GTK_ADJUSTMENT(
-    gtk_adjustment_new(memaddr, 0x0000, 0xffff, VIEW_NUM_COLS,
-                        (VIEW_NUM_ROWS * VIEW_NUM_COLS) / 2,
-                        (VIEW_NUM_ROWS * VIEW_NUM_COLS) - 1));
+    gtk_adjustment_new(memaddr,
+                       0x0000,
+                       0xffff,
+                       VIEW_NUM_COLS,
+                       ((VIEW_NUM_ROWS * VIEW_NUM_COLS) / 2),
+                       (VIEW_NUM_ROWS * VIEW_NUM_COLS) - 1));
     g_signal_connect(adjustment, "value-changed", G_CALLBACK(scroller), NULL);
     scrollbar = gtk_scrollbar_new(GTK_ORIENTATION_VERTICAL, adjustment);
     gtk_box_pack_start(GTK_BOX(box_data_horizontal), scrollbar, FALSE, FALSE, 0);
 
     // Allow scroll on text views
-    g_signal_connect(view_address, "scroll-event",
-                    G_CALLBACK(textview_wheel_scroll_event), adjustment);
-    g_signal_connect(view_hex, "scroll-event",
-                    G_CALLBACK(textview_wheel_scroll_event), adjustment);
-    g_signal_connect(view_data, "scroll-event",
-                    G_CALLBACK(textview_wheel_scroll_event), adjustment);
-    g_signal_connect(view_address, "key-press-event",
-                    G_CALLBACK(textview_key_press_event), adjustment);
-    g_signal_connect(view_hex, "key-press-event",
-                    G_CALLBACK(textview_key_press_event), adjustment);
-    g_signal_connect(view_data, "key-press-event",
-                    G_CALLBACK(textview_key_press_event), adjustment);
+    g_signal_connect(view_address, "scroll-event", G_CALLBACK(textview_wheel_scroll_event), adjustment);
+    g_signal_connect(view_hex, "scroll-event", G_CALLBACK(textview_wheel_scroll_event), adjustment);
+    g_signal_connect(view_data, "scroll-event", G_CALLBACK(textview_wheel_scroll_event), adjustment);
+    g_signal_connect(view_address, "key-press-event", G_CALLBACK(textview_key_press_event), adjustment);
+    g_signal_connect(view_hex, "key-press-event", G_CALLBACK(textview_key_press_event), adjustment);
+    g_signal_connect(view_data, "key-press-event", G_CALLBACK(textview_key_press_event), adjustment);
 
     update_display(memaddr);
 

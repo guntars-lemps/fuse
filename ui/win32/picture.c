@@ -35,7 +35,7 @@
 /* the memory will be allocated by Windows
    (DISPLAY_SCREEN_HEIGHT * DISPLAY_ASPECT_WIDTH * 4 bytes) */
 static void *picture;
-static const int picture_pitch = DISPLAY_ASPECT_WIDTH * 4;
+static const int pitch = DISPLAY_ASPECT_WIDTH * 4;
 
 static HWND hDialogPicture = NULL;
 static utils_file screen;
@@ -145,11 +145,11 @@ static void draw_screen(libspectrum_byte *screen, int border)
 
     for (y=0; y < DISPLAY_BORDER_HEIGHT; y++) {
     for (x=0; x < DISPLAY_ASPECT_WIDTH; x++) {
-      *(libspectrum_dword*)(picture + y * picture_pitch + 4 * x) =
+      *(libspectrum_dword*)(picture + y * pitch + 4 * x) =
         win32display_colours[border];
       *(libspectrum_dword*)(
           picture +
-          (y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT) * picture_pitch +
+          (y + DISPLAY_BORDER_HEIGHT + DISPLAY_HEIGHT) * pitch +
           4 * x
 ) = win32display_colours[border];
     }
@@ -159,11 +159,11 @@ static void draw_screen(libspectrum_byte *screen, int border)
 
     for (x=0; x < DISPLAY_BORDER_ASPECT_WIDTH; x++) {
       *(libspectrum_dword*)
-        (picture + (y + DISPLAY_BORDER_HEIGHT) * picture_pitch + 4 * x) =
+        (picture + (y + DISPLAY_BORDER_HEIGHT) * pitch + 4 * x) =
         win32display_colours[border];
       *(libspectrum_dword*)(
           picture +
-          (y + DISPLAY_BORDER_HEIGHT) * picture_pitch +
+          (y + DISPLAY_BORDER_HEIGHT) * pitch +
           4 * (x+DISPLAY_ASPECT_WIDTH-DISPLAY_BORDER_ASPECT_WIDTH)
 ) = win32display_colours[border];
     }
@@ -188,7 +188,7 @@ static void draw_screen(libspectrum_byte *screen, int border)
 
         *(libspectrum_dword*)(
             picture +
-            (y + DISPLAY_BORDER_HEIGHT) * picture_pitch +
+            (y + DISPLAY_BORDER_HEIGHT) * pitch +
             4 * (8 * x + DISPLAY_BORDER_ASPECT_WIDTH + i)
 ) = pix;
         data <<= 1;
