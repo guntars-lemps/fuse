@@ -48,23 +48,23 @@ typedef enum scaler_type {
     SCALER_PALTV3X,
     SCALER_HQ2X,
     SCALER_HQ3X,
-
     SCALER_NUM // End marker; do not remove
 } scaler_type;
 
 typedef enum scaler_flags_t {
     SCALER_FLAGS_NONE = 0,
-    SCALER_FLAGS_EXPAND = 1 << 0,
+    SCALER_FLAGS_EXPAND = (1 << 0),
 } scaler_flags_t;
 
 typedef void ScalerProc(const libspectrum_byte *srcPtr,
-             libspectrum_dword srcPitch,
-             libspectrum_byte *dstPtr, libspectrum_dword dstPitch,
-             int width, int height);
+                        libspectrum_dword srcPitch,
+                        libspectrum_byte *dstPtr,
+                        libspectrum_dword dstPitch,
+                        int width,
+                        int height);
 
 // The type of function used to expand the area dirtied by a scaler
-typedef void scaler_expand_fn(int *x, int *y, int *w, int *h,
-                   int image_width, int image_height);
+typedef void scaler_expand_fn(int *x, int *y, int *w, int *h, int image_width, int image_height);
 
 extern scaler_type current_scaler;
 extern ScalerProc *scaler_proc16, *scaler_proc32;
