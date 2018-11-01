@@ -39,8 +39,7 @@
 #include "utils.h"
 #include "sdlkeyboard.h"
 
-/* Map low byte of UCS-2(?) Unicode to Fuse input layer keysym for
-   upper case letters */
+// Map low byte of UCS-2(?) Unicode to Fuse input layer keysym for upper case letters
 extern const keysyms_map_t unicode_keysyms_map[];
 
 static GHashTable *unicode_keysyms_hash;
@@ -62,9 +61,9 @@ void sdlkeyboard_init(void)
 
     unicode_keysyms_hash = g_hash_table_new(g_int_hash, g_int_equal);
 
-    for (ptr3 = (keysyms_map_t *)unicode_keysyms_map; ptr3->ui; ptr3++)
-    g_hash_table_insert(unicode_keysyms_hash, &(ptr3->ui),
-                         &(ptr3->fuse));
+    for (ptr3 = (keysyms_map_t *)unicode_keysyms_map; ptr3->ui; ptr3++) {
+        g_hash_table_insert(unicode_keysyms_hash, &(ptr3->ui), &(ptr3->fuse));
+    }
 
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 }
@@ -84,19 +83,22 @@ void sdlkeyboard_keypress(SDL_KeyboardEvent *keyevent)
     fuse_keysym = keysyms_remap(keyevent->keysym.sym);
 
     // Currently unicode_keysyms_map contains ASCII character keys
-    if ((keyevent->keysym.unicode & 0xFF80) == 0)
-    unicode_keysym = unicode_keysyms_remap(keyevent->keysym.unicode);
-    else
-    unicode_keysym = INPUT_KEY_NONE;
+    if ((keyevent->keysym.unicode & 0xFF80) == 0) {
+        unicode_keysym = unicode_keysyms_remap(keyevent->keysym.unicode);
+    } else {
+        unicode_keysym = INPUT_KEY_NONE;
+    }
 
-    if (fuse_keysym == INPUT_KEY_NONE && unicode_keysym == INPUT_KEY_NONE)
-    return;
+    if ((fuse_keysym == INPUT_KEY_NONE) && (unicode_keysym == INPUT_KEY_NONE)) {
+        return;
+    }
 
     fuse_event.type = INPUT_EVENT_KEYPRESS;
-    if (unicode_keysym == INPUT_KEY_NONE)
-    fuse_event.types.key.native_key = fuse_keysym;
-    else
-    fuse_event.types.key.native_key = unicode_keysym;
+    if (unicode_keysym == INPUT_KEY_NONE) {
+        fuse_event.types.key.native_key = fuse_keysym;
+    } else {
+        fuse_event.types.key.native_key = unicode_keysym;
+    }
     fuse_event.types.key.spectrum_key = fuse_keysym;
 
     input_event(&fuse_event);
@@ -115,9 +117,9 @@ void sdlkeyboard_keyrelease(SDL_KeyboardEvent *keyevent)
     }
 
     fuse_event.type = INPUT_EVENT_KEYRELEASE;
-    /* SDL doesn't provide key release information for UNICODE, assuming that
-     the values will just be used for dialog boxes et. al. so put in SDL keysym
-     equivalent and hope for the best */
+    /* SDL doesn't provide key release information for UNICODE,
+       assuming that the values will just be used for dialog boxes et. al.
+       so put in SDL keysym equivalent and hope for the best */
     fuse_event.types.key.native_key = fuse_keysym;
     fuse_event.types.key.spectrum_key = fuse_keysym;
 

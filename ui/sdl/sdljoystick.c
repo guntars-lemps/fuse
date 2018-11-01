@@ -44,8 +44,7 @@
 static SDL_Joystick *joystick1 = NULL;
 static SDL_Joystick *joystick2 = NULL;
 
-static void do_axis(int which, Sint16 value, input_key negative,
-             input_key positive);
+static void do_axis(int which, Sint16 value, input_key negative, input_key positive);
 static void do_hat(int which, Uint8 value, Uint8 mask, input_key direction);
 
 
@@ -61,41 +60,38 @@ int ui_joystick_init(void)
 #endif
 
     if (error) {
-    ui_error(UI_ERROR_ERROR, "failed to initialise joystick subsystem");
-    return 0;
+        ui_error(UI_ERROR_ERROR, "failed to initialise joystick subsystem");
+        return 0;
     }
 
     retval = SDL_NumJoysticks();
 
     if (retval >= 2) {
 
-    retval = 2;
+        retval = 2;
 
-    if ((joystick2 = SDL_JoystickOpen(1)) == NULL) {
-      ui_error(UI_ERROR_ERROR, "failed to initialise joystick 2");
-      return 0;
-    }
+        if ((joystick2 = SDL_JoystickOpen(1)) == NULL) {
+            ui_error(UI_ERROR_ERROR, "failed to initialise joystick 2");
+            return 0;
+        }
 
-    if (SDL_JoystickNumAxes(joystick2) < 2    ||
-        SDL_JoystickNumButtons(joystick2) < 1) {
-      ui_error(UI_ERROR_ERROR, "sorry, joystick 2 is inadequate!");
-      return 0;
-    }
-
+        if ((SDL_JoystickNumAxes(joystick2) < 2) || (SDL_JoystickNumButtons(joystick2) < 1)) {
+            ui_error(UI_ERROR_ERROR, "sorry, joystick 2 is inadequate!");
+            return 0;
+        }
     }
 
     if (retval > 0) {
 
-    if ((joystick1 = SDL_JoystickOpen(0)) == NULL) {
-      ui_error(UI_ERROR_ERROR, "failed to initialise joystick 1");
-      return 0;
-    }
+        if ((joystick1 = SDL_JoystickOpen(0)) == NULL) {
+            ui_error(UI_ERROR_ERROR, "failed to initialise joystick 1");
+            return 0;
+        }
 
-    if (SDL_JoystickNumAxes(joystick1) < 2    ||
-        SDL_JoystickNumButtons(joystick1) < 1) {
-      ui_error(UI_ERROR_ERROR, "sorry, joystick 1 is inadequate!");
-      return 0;
-    }
+        if ((SDL_JoystickNumAxes(joystick1) < 2) || (SDL_JoystickNumButtons(joystick1) < 1)) {
+            ui_error(UI_ERROR_ERROR, "sorry, joystick 1 is inadequate!");
+            return 0;
+        }
     }
 
     SDL_JoystickEventState(SDL_ENABLE);
@@ -106,29 +102,28 @@ int ui_joystick_init(void)
 
 void ui_joystick_poll(void)
 {
-    /* No action needed in SDL UI; joysticks already handled by the SDL events
-     system */
+    // No action needed in SDL UI; joysticks already handled by the SDL events system
 
 #ifndef UI_SDL
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
-    switch (event.type) {
-    case SDL_JOYBUTTONDOWN:
-      sdljoystick_buttonpress(&(event.jbutton));
-      break;
-    case SDL_JOYBUTTONUP:
-      sdljoystick_buttonrelease(&(event.jbutton));
-      break;
-    case SDL_JOYAXISMOTION:
-      sdljoystick_axismove(&(event.jaxis));
-      break;
-    case SDL_JOYHATMOTION:
-      sdljoystick_hatmove(&(event.jhat));
-      break;
-    default:
-      break;
-    }
+        switch (event.type) {
+            case SDL_JOYBUTTONDOWN:
+                sdljoystick_buttonpress(&(event.jbutton));
+                break;
+            case SDL_JOYBUTTONUP:
+                sdljoystick_buttonrelease(&(event.jbutton));
+                break;
+            case SDL_JOYAXISMOTION:
+                sdljoystick_axismove(&(event.jaxis));
+                break;
+            case SDL_JOYHATMOTION:
+                sdljoystick_hatmove(&(event.jhat));
+                break;
+            default:
+                break;
+        }
     }
 #endif
 
@@ -141,7 +136,9 @@ static void button_action(SDL_JoyButtonEvent *buttonevent, input_event_type type
     input_event_t event;
 
     button = buttonevent->button;
-    if (button >= NUM_JOY_BUTTONS) return; // We support 'only' NUM_JOY_BUTTONS (15 as defined in ui/uijoystick.h) fire buttons
+    if (button >= NUM_JOY_BUTTONS) {
+        return; // We support 'only' NUM_JOY_BUTTONS (15 as defined in ui/uijoystick.h) fire buttons
+    }
 
     event.type = type;
     event.types.joystick.which = buttonevent->which;
@@ -166,11 +163,9 @@ void sdljoystick_buttonrelease(SDL_JoyButtonEvent *buttonevent)
 void sdljoystick_axismove(SDL_JoyAxisEvent *axisevent)
 {
     if (axisevent->axis == 0) {
-    do_axis(axisevent->which, axisevent->value,
-         INPUT_JOYSTICK_LEFT, INPUT_JOYSTICK_RIGHT);
+        do_axis(axisevent->which, axisevent->value, INPUT_JOYSTICK_LEFT, INPUT_JOYSTICK_RIGHT);
     } else if (axisevent->axis == 1) {
-    do_axis(axisevent->which, axisevent->value,
-         INPUT_JOYSTICK_UP,   INPUT_JOYSTICK_DOWN);
+        do_axis(axisevent->which, axisevent->value, INPUT_JOYSTICK_UP, INPUT_JOYSTICK_DOWN);
     }
 }
 
@@ -185,14 +180,14 @@ static void do_axis(int which, Sint16 value, input_key negative, input_key posit
     event2.types.joystick.button = positive;
 
     if (value > 16384) {
-    event1.type = INPUT_EVENT_JOYSTICK_RELEASE;
-    event2.type = INPUT_EVENT_JOYSTICK_PRESS;
+        event1.type = INPUT_EVENT_JOYSTICK_RELEASE;
+        event2.type = INPUT_EVENT_JOYSTICK_PRESS;
     } else if (value < -16384) {
-    event1.type = INPUT_EVENT_JOYSTICK_PRESS;
-    event2.type = INPUT_EVENT_JOYSTICK_RELEASE;
+        event1.type = INPUT_EVENT_JOYSTICK_PRESS;
+        event2.type = INPUT_EVENT_JOYSTICK_RELEASE;
     } else {
-    event1.type = INPUT_EVENT_JOYSTICK_RELEASE;
-    event2.type = INPUT_EVENT_JOYSTICK_RELEASE;
+        event1.type = INPUT_EVENT_JOYSTICK_RELEASE;
+        event2.type = INPUT_EVENT_JOYSTICK_RELEASE;
     }
 
     input_event(&event1);
@@ -206,7 +201,7 @@ void sdljoystick_hatmove(SDL_JoyHatEvent *hatevent)
     Uint8 value = hatevent->value;
 
     if (hatevent->hat != 0) {
-    return;
+        return;
     }
 
     do_hat(which, value, SDL_HAT_UP, INPUT_JOYSTICK_UP);
@@ -227,21 +222,25 @@ static void do_hat(int which, Uint8 value, Uint8 mask, input_key direction)
     input_event(&event);
 
     if (value & mask) {
-    event.type = INPUT_EVENT_JOYSTICK_PRESS;
-    input_event(&event);
+        event.type = INPUT_EVENT_JOYSTICK_PRESS;
+        input_event(&event);
     }
 }
 
 
 void ui_joystick_end(void)
 {
-    if (joystick1 != NULL || joystick2 != NULL) {
+    if ((joystick1 != NULL) || (joystick2 != NULL)) {
 
-    SDL_JoystickEventState(SDL_IGNORE);
-    if (joystick1 != NULL) SDL_JoystickClose(joystick1);
-    if (joystick2 != NULL) SDL_JoystickClose(joystick2);
-    joystick1 = NULL;
-    joystick2 = NULL;
+        SDL_JoystickEventState(SDL_IGNORE);
+        if (joystick1 != NULL) {
+            SDL_JoystickClose(joystick1);
+        }
+        if (joystick2 != NULL) {
+            SDL_JoystickClose(joystick2);
+        }
+        joystick1 = NULL;
+        joystick2 = NULL;
 
     }
 
