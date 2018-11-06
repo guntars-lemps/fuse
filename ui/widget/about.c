@@ -38,31 +38,29 @@ int widget_about_draw(void *data GCC_UNUSED)
     margin = 17;
     line = 0;
 
-    widget_dialog_with_border(1, 2, dialog_cols, 7+2);
+    widget_dialog_with_border(1, 2, dialog_cols, (7 + 2));
     widget_printstring(10, 16, WIDGET_COLOUR_TITLE, "About Fuse");
 
     string_width = widget_stringwidth("the Free Unix Spectrum Emulator (Fuse)");
-    x = margin - 8 + (dialog_cols * 8 - string_width) / 2;
-    widget_printstring(x, ++line * 8 + 24, WIDGET_COLOUR_FOREGROUND,
-                      "the Free Unix Spectrum Emulator (Fuse)");
+    x = margin - 8 + ((dialog_cols * 8) - string_width) / 2;
+    widget_printstring(x, ((++line * 8) + 24), WIDGET_COLOUR_FOREGROUND, "the Free Unix Spectrum Emulator (Fuse)");
 
     snprintf(buffer, 80, "Version %s", VERSION);
     string_width = widget_stringwidth(buffer);
-    x = margin - 8 + (dialog_cols * 8 - string_width) / 2;
-    widget_printstring(x, ++line * 8 + 24, WIDGET_COLOUR_FOREGROUND, buffer);
+    x = margin - 8 + ((dialog_cols * 8) - string_width) / 2;
+    widget_printstring(x, ((++line * 8) + 24), WIDGET_COLOUR_FOREGROUND, buffer);
 
     ++line;
 
     string_width = widget_stringwidth(FUSE_COPYRIGHT);
-    x = margin - 8 + (dialog_cols * 8 - string_width) / 2;
-    widget_printstring(x, ++line * 8 + 24, WIDGET_COLOUR_FOREGROUND,
-                      FUSE_COPYRIGHT);
+    x = margin - 8 + ((dialog_cols * 8) - string_width) / 2;
+    widget_printstring(x, ((++line * 8) + 24), WIDGET_COLOUR_FOREGROUND, FUSE_COPYRIGHT);
 
     ++line;
 
     string_width = widget_stringwidth(PACKAGE_URL);
-    x = margin - 8 + (dialog_cols * 8 - string_width) / 2;
-    widget_printstring(x, ++line * 8 + 24, 0x09, PACKAGE_URL);
+    x = margin - 8 + ((dialog_cols * 8) - string_width) / 2;
+    widget_printstring(x, ((++line * 8) + 24), 0x09, PACKAGE_URL);
 
     widget_display_lines(2, line + 3);
 
@@ -74,19 +72,19 @@ void widget_about_keyhandler(input_key key)
 {
     switch (key) {
 
-    case INPUT_KEY_Escape:
-    case INPUT_JOYSTICK_FIRE_2:
-    widget_end_widget(WIDGET_FINISHED_CANCEL);
-    return;
+        case INPUT_KEY_Escape:
+        case INPUT_JOYSTICK_FIRE_2:
+            widget_end_widget(WIDGET_FINISHED_CANCEL);
+            return;
 
-    case INPUT_KEY_Return:
-    case INPUT_KEY_KP_Enter:
-    case INPUT_JOYSTICK_FIRE_1:
-    widget_end_widget(WIDGET_FINISHED_OK);
-    return;
+        case INPUT_KEY_Return:
+        case INPUT_KEY_KP_Enter:
+        case INPUT_JOYSTICK_FIRE_1:
+            widget_end_widget(WIDGET_FINISHED_OK);
+            return;
 
-    default: // Keep gcc happy
-    break;
+        default: // Keep gcc happy
+            break;
 
     }
 }

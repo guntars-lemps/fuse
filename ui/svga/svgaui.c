@@ -89,18 +89,25 @@ int ui_event(void)
     b = mouse_getbutton();
 
     bd = b ^ oldbutton;
-    if (bd & MOUSE_LEFTBUTTON) ui_mouse_button(1, b & MOUSE_LEFTBUTTON);
-    if (bd & MOUSE_MIDDLEBUTTON) ui_mouse_button(2, b & MOUSE_MIDDLEBUTTON);
-    if (bd & MOUSE_RIGHTBUTTON) ui_mouse_button(3, b & MOUSE_RIGHTBUTTON);
+    if (bd & MOUSE_LEFTBUTTON) {
+        ui_mouse_button(1, b & MOUSE_LEFTBUTTON);
+    }
+    if (bd & MOUSE_MIDDLEBUTTON) {
+        ui_mouse_button(2, b & MOUSE_MIDDLEBUTTON);
+    }
+    if (bd & MOUSE_RIGHTBUTTON) {
+        ui_mouse_button(3, b & MOUSE_RIGHTBUTTON);
+    }
     oldbutton = b;
 
-    if (x != oldx || y != oldy) {
-    ui_mouse_motion(x - oldx, y - oldy);
-    oldx = x; oldy = y;
+    if ((x != oldx) || (y != oldy)) {
+        ui_mouse_motion((x - oldx), (y - oldy));
+        oldx = x;
+        oldy = y;
     }
-
     return 0;
 }
+
 
 int ui_end(void)
 {

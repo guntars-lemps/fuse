@@ -52,9 +52,9 @@ int svgakeyboard_init(void)
 
 static void svgakeyboard_keystroke(int scancode, int press)  {
     if (press) {
-    svgakeyboard_keypress(scancode);
+        svgakeyboard_keypress(scancode);
     } else {
-    svgakeyboard_keyrelease(scancode);
+        svgakeyboard_keyrelease(scancode);
     }
 }
 
@@ -95,6 +95,7 @@ static int svgakeyboard_keyrelease(int keysym)
 
     return input_event(&fuse_event);
 }
+
 
 int svgakeyboard_end(void)
 {
