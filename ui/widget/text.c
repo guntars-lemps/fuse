@@ -48,10 +48,10 @@ int widget_text_draw(void *data)
     widget_text_t* text_data = data;
 
     if (data) {
-    title = text_data->title;
-    allow = text_data->allow;
-    max_length = text_data->max_length;
-    snprintf(text, sizeof(text), "%s", text_data->text);
+        title = text_data->title;
+        allow = text_data->allow;
+        max_length = text_data->max_length;
+        snprintf(text, sizeof(text), "%s", text_data->text);
     }
 
     widget_dialog_with_border(1, 2, 30, 3);
@@ -75,14 +75,15 @@ static int widget_text_draw_text(void)
 
     tptr = text - 1;
     do {
-    width = widget_stringwidth (++tptr);
-    } while (width > 28 * 8 - 4);
+        width = widget_stringwidth(++tptr);
+    } while (width > ((28 * 8) - 4));
 
-    if (tptr != text)
-    widget_rectangle(14, 29, 1, 6, 5);
+    if (tptr != text) {
+        widget_rectangle(14, 29, 1, 6, 5);
+    }
 
     widget_printstring(16, 28, WIDGET_COLOUR_FOREGROUND, tptr);
-    widget_rectangle(17 + width, 35, 4, 1, 5);
+    widget_rectangle((17 + width), 35, 4, 1, 5);
 
     widget_display_rasters(28, 8);
     return 0;
@@ -93,54 +94,55 @@ void widget_text_keyhandler(input_key key)
 {
     switch (key) {
 
-    case INPUT_KEY_BackSpace: // Backspace generates DEL which is Caps + 0
-    delete_character(); widget_text_draw_text();
-    return;
+        case INPUT_KEY_BackSpace: // Backspace generates DEL which is Caps + 0
+            delete_character();
+            widget_text_draw_text();
+            return;
 
-    case INPUT_KEY_Escape:
-    widget_end_widget(WIDGET_FINISHED_CANCEL);
-    return;
+        case INPUT_KEY_Escape:
+            widget_end_widget(WIDGET_FINISHED_CANCEL);
+            return;
 
-    case INPUT_KEY_Return:
-    case INPUT_KEY_KP_Enter:
-    widget_end_widget(WIDGET_FINISHED_OK);
-    return;
+        case INPUT_KEY_Return:
+        case INPUT_KEY_KP_Enter:
+            widget_end_widget(WIDGET_FINISHED_OK);
+            return;
 
-    default: // Keep gcc happy
-    break;
+        default: // Keep gcc happy
+            break;
 
     }
 
     /* Input validation.
-   * We rely on various INPUT_KEY_* being mapped directly onto ASCII.
-   */
+       We rely on various INPUT_KEY_* being mapped directly onto ASCII.
+    */
 
     // FIXME: we *don't* want keypresses filtered through the input layer
 
     // First, return if the character isn't printable ASCII.
-    if (key < ' ' || key > '~') {
+    if ((key < ' ') || (key > '~')) {
         return;
     }
 
     // Return if the key isn't valid.
     switch (allow) {
-    case WIDGET_INPUT_ASCII:
-    break;
-    case WIDGET_INPUT_DIGIT:
-    if (!isdigit(key)) {
-        return;
-    }
-    break;
-    case WIDGET_INPUT_ALPHA:
-    if (!isalpha(key)) {
-        return;
-    }
-    break;
-    case WIDGET_INPUT_ALNUM:
-    if (!isdigit(key) && !isalpha(key)) {
-        return;
-    }
-    break;
+        case WIDGET_INPUT_ASCII:
+            break;
+        case WIDGET_INPUT_DIGIT:
+            if (!isdigit(key)) {
+                return;
+            }
+            break;
+        case WIDGET_INPUT_ALPHA:
+            if (!isalpha(key)) {
+                return;
+            }
+            break;
+        case WIDGET_INPUT_ALNUM:
+            if (!isdigit(key) && !isalpha(key)) {
+                 return;
+            }
+            break;
     }
 
     // If we've got this far, we have a valid key
@@ -154,7 +156,9 @@ static void delete_character(void)
 {
     size_t length = strlen(text);
 
-    if (length) text[length - 1] = '\0';
+    if (length) {
+        text[length - 1] = '\0';
+    }
 }
 
 
@@ -162,8 +166,9 @@ static void append_character(char c)
 {
     size_t length = strlen(text);
 
-    if (length < WIDGET_TEXT_LENGTH - 1 && length < max_length) {
-    text[length] = c; text[length + 1] = '\0';
+    if ((length < (WIDGET_TEXT_LENGTH - 1)) && (length < max_length)) {
+        text[length] = c;
+        text[length + 1] = '\0';
     }
 }
 
@@ -172,13 +177,12 @@ int widget_text_finish(widget_finish_state finished)
 {
     if (finished == WIDGET_FINISHED_OK) {
 
-    widget_text_text =
-      libspectrum_renew(char, widget_text_text, strlen(text) + 1);
+        widget_text_text = libspectrum_renew(char, widget_text_text, (strlen(text) + 1));
 
-    strcpy(widget_text_text, text);
+        strcpy(widget_text_text, text);
     } else {
-    free(widget_text_text);
-    widget_text_text = NULL;
+        free(widget_text_text);
+        widget_text_text = NULL;
     }
 
     return 0;

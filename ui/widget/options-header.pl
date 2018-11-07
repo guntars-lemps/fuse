@@ -75,8 +75,8 @@ if( $internal ) {
     foreach( @dialogs ) {
 
 	print << "CODE";
-int widget_$_->{name}_draw( void *data );
-void widget_$_->{name}_keyhandler( input_key key );
+int widget_$_->{name}_draw(void *data);
+void widget_$_->{name}_keyhandler(input_key key);
 
 CODE
     }
@@ -85,7 +85,7 @@ CODE
 	foreach my $widget ( @{ $_->{widgets} } ) {
 	    if( $widget->{type} eq "Combo" ) {
 		print <<"CODE";
-int option_enumerate_$_->{name}_$widget->{value}( void );
+int option_enumerate_$_->{name}_$widget->{value}(void);
 
 CODE
 	    }

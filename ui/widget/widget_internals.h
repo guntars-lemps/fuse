@@ -40,6 +40,8 @@
 #define WIDGET_COLOUR_HIGHLIGHT  13 // Cyan
 #define WIDGET_COLOUR_TITLE      WIDGET_COLOUR_BACKGROUND
 
+#define widget_display_lines(y,h) widget_display_rasters((y) * 8, (h) * 8)
+
 // The ways of finishing a widget
 typedef enum widget_finish_state {
     WIDGET_FINISHED_OK = 1,
@@ -75,7 +77,6 @@ void widget_printchar_fixed(int x, int y, int col, int c);
 void widget_print_title(int y, int col, const char *s);
 void widget_printstring_right(int x, int y, int col, const char *s);
 void widget_display_rasters(int y, int h);
-#define widget_display_lines(y,h) widget_display_rasters((y)*8,(h)*8)
 
 size_t widget_stringwidth(const char *s);
 size_t widget_substringwidth(const char *s, size_t count);
@@ -91,8 +92,8 @@ extern widget_finish_state widget_finished;
 int widget_dialog(int x, int y, int width, int height);
 int widget_dialog_with_border(int x, int y, int width, int height);
 
-int split_message(const char *message, char ***lines, size_t *count,
-           const size_t line_length);
+int split_message(const char *message, char ***lines, size_t *count, const size_t line_length);
+
 
 // File selector
 

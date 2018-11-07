@@ -41,6 +41,13 @@ struct widget_query_entry;
 // A generic click function
 typedef void (*widget_query_click_fn)(void);
 
+static size_t highlight_line = 0;
+
+static char **message_lines;
+static size_t num_message_lines;
+
+const int query_vert_external_margin = 8;
+
 // A general menu
 typedef struct widget_query_entry {
     const char *text;
@@ -55,9 +62,7 @@ static void widget_dont_save_click(void);
 static void widget_cancel_click(void);
 static void widget_yes_click(void);
 static void widget_no_click(void);
-static void widget_query_line_draw(int left_edge, int width,
-                                    struct widget_query_entry *menu,
-                                    const char *label);
+static void widget_query_line_draw(int left_edge, int width, struct widget_query_entry *menu, const char *label);
 
 static widget_query_entry query_save[] = {
     {"\012S\001ave", 0, INPUT_KEY_s, widget_save_click},
@@ -102,56 +107,50 @@ static void widget_no_click(void)
     widget_query.confirm = 0;
 }
 
-static size_t highlight_line = 0;
 
-static char **message_lines;
-static size_t num_message_lines;
-
-
-static void widget_query_line_draw(int left_edge, int width, struct widget_query_entry *menu,
-                        const char *label)
+static void widget_query_line_draw(int left_edge, int width, struct widget_query_entry *menu, const char *label)
 {
     int colour = WIDGET_COLOUR_BACKGROUND;
-    int y = (menu->index + num_message_lines) * 8 + 24;
+    int y = ((menu->index + num_message_lines) * 8) + 24;
 
-    if (menu->index == highlight_line) colour = WIDGET_COLOUR_HIGHLIGHT;
-    widget_rectangle(left_edge*8+1, y, width*8-2, 1*8, colour);
-    widget_printstring(left_edge*8+8, y, WIDGET_COLOUR_FOREGROUND,
-                      menu->text);
+    if (menu->index == highlight_line) {
+        colour = WIDGET_COLOUR_HIGHLIGHT;
+    }
+    widget_rectangle(((left_edge * 8) + 1), y, ((width * 8) - 2), (1 * 8), colour);
+    widget_printstring(((left_edge * 8) + 8), y, WIDGET_COLOUR_FOREGROUND, menu->text);
     widget_display_rasters(y, 8);
 }
 
-const int query_vert_external_margin = 8;
 
-
-static int widget_calculate_query_width(const char *title, widget_query_entry *menu,
-                  char **lines, int num_lines)
+static int widget_calculate_query_width(const char *title, widget_query_entry *menu, char **lines, int num_lines)
 {
     widget_query_entry *ptr;
-    int max_width=0;
+    int max_width = 0;
     int i;
 
     if (!menu) {
-    return 64;
+        return 64;
     }
 
-    max_width = widget_stringwidth(title)+5*8;
+    max_width = widget_stringwidth(title) + (5 * 8);
 
     for (ptr = menu; ptr->text; ptr++) {
-    int total_width = widget_stringwidth(ptr->text)+3*8;
+        int total_width = widget_stringwidth(ptr->text) + (3 * 8);
 
-    if (total_width > max_width)
-      max_width = total_width;
+        if (total_width > max_width) {
+            max_width = total_width;
+        }
     }
 
-    for (i=0; i<num_lines; i++) {
-    int total_width = widget_stringwidth(lines[i])+2*8;
+    for (i = 0; i < num_lines; i++) {
+        int total_width = widget_stringwidth(lines[i]) + (2 * 8);
 
-    if (total_width > max_width)
-      max_width = total_width;
+        if (total_width > max_width) {
+            max_width = total_width;
+        }
     }
 
-    return (max_width + query_vert_external_margin * 2) / 8;
+    return (max_width + (query_vert_external_margin * 2)) / 8;
 }
 
 
@@ -164,35 +163,34 @@ static int internal_query_draw(widget_query_entry *query, int save, const char *
     int i;
 
     if (split_message(message, &message_lines, &num_message_lines, 28)) {
-    return 1;
+        return 1;
     }
 
-    menu_width = widget_calculate_query_width(title, query, message_lines,
-                         num_message_lines);
+    menu_width = widget_calculate_query_width(title, query, message_lines, num_message_lines);
 
     height = num_message_lines;
 
     // How many options do we have?
-    for (ptr = query; ptr->text; ptr++)
-    height ++;
+    for (ptr = query; ptr->text; ptr++) {
+        height ++;
+    }
 
-    menu_left_edge_x = DISPLAY_WIDTH_COLS/2-menu_width/2;
+    menu_left_edge_x = (DISPLAY_WIDTH_COLS / 2) - (menu_width / 2);
 
     // Draw the dialog box
-    widget_dialog_with_border(menu_left_edge_x, 2, menu_width, 2 + height);
+    widget_dialog_with_border(menu_left_edge_x, 2, menu_width, (2 + height));
 
-    widget_printstring(menu_left_edge_x*8+2, 16, WIDGET_COLOUR_TITLE, title);
+    widget_printstring(((menu_left_edge_x * 8) + 2), 16, WIDGET_COLOUR_TITLE, title);
 
-    for (i=0; i<num_message_lines; i++) {
-    widget_printstring(menu_left_edge_x*8+8, i*8+24,
-                        WIDGET_COLOUR_FOREGROUND, message_lines[i]);
+    for (i = 0; i < num_message_lines; i++) {
+        widget_printstring(((menu_left_edge_x * 8) + 8), ((i * 8) + 24), WIDGET_COLOUR_FOREGROUND, message_lines[i]);
     }
 
     for (ptr = query; ptr->text; ptr++) {
-    widget_query_line_draw(menu_left_edge_x, menu_width, ptr, ptr->text);
+        widget_query_line_draw(menu_left_edge_x, menu_width, ptr, ptr->text);
     }
 
-    widget_display_lines(2, 2 + height);
+    widget_display_lines(2, (2 + height));
 
     return 0;
 }
@@ -202,7 +200,7 @@ int widget_query_draw(void *data)
 {
     highlight_line = 0;
     widget_query.confirm = 0;
-    return internal_query_draw(query_confirm, 0, (const char *) data);
+    return internal_query_draw(query_confirm, 0, (const char *)data);
 }
 
 
@@ -210,114 +208,100 @@ int widget_query_save_draw(void *data)
 {
     highlight_line = 0;
     widget_query.save = UI_CONFIRM_SAVE_CANCEL;
-    return internal_query_draw(query_save, 1, (const char *) data);
+    return internal_query_draw(query_save, 1, (const char *)data);
 }
 
 
-static void widget_query_generic_keyhandler(widget_query_entry *query, int num_entries,
-                                 input_key key)
+static void widget_query_generic_keyhandler(widget_query_entry *query, int num_entries, input_key key)
 {
     int new_highlight_line = 0;
     int cursor_pressed = 0;
     widget_query_entry *ptr;
-    int menu_width = widget_calculate_query_width(title, query, message_lines,
-                         num_message_lines);
-    int menu_left_edge_x = DISPLAY_WIDTH_COLS/2-menu_width/2;
+    int menu_width = widget_calculate_query_width(title, query, message_lines, num_message_lines);
+    int menu_left_edge_x = (DISPLAY_WIDTH_COLS / 2) - (menu_width / 2);
 
     switch (key) {
 
 #if 0
-    case INPUT_KEY_Resize: // Fake keypress used on window resize
-    widget_dialog_with_border(1, 2, 30, 2 + 20);
-    widget_general_show_all(&widget_options_settings);
-    break;
+        case INPUT_KEY_Resize: // Fake keypress used on window resize
+            widget_dialog_with_border(1, 2, 30, (2 + 20));
+            widget_general_show_all(&widget_options_settings);
+            break;
 #endif
 
-    case INPUT_KEY_Escape:
-    case INPUT_JOYSTICK_FIRE_2:
-    widget_end_widget(WIDGET_FINISHED_CANCEL);
-    break;
+        case INPUT_KEY_Escape:
+        case INPUT_JOYSTICK_FIRE_2:
+            widget_end_widget(WIDGET_FINISHED_CANCEL);
+            break;
 
-    case INPUT_KEY_Up:
-    case INPUT_KEY_7:
-    case INPUT_JOYSTICK_UP:
-    if (highlight_line) {
-      new_highlight_line = highlight_line - 1;
-      cursor_pressed = 1;
-    }
-    break;
+        case INPUT_KEY_Up:
+        case INPUT_KEY_7:
+        case INPUT_JOYSTICK_UP:
+            if (highlight_line) {
+                new_highlight_line = highlight_line - 1;
+                cursor_pressed = 1;
+            }
+            break;
 
-    case INPUT_KEY_Down:
-    case INPUT_KEY_6:
-    case INPUT_JOYSTICK_DOWN:
-    if (highlight_line < num_entries - 2) {
-      new_highlight_line = highlight_line + 1;
-      cursor_pressed = 1;
-    }
-    break;
+        case INPUT_KEY_Down:
+        case INPUT_KEY_6:
+        case INPUT_JOYSTICK_DOWN:
+            if (highlight_line < (num_entries - 2)) {
+                new_highlight_line = highlight_line + 1;
+                cursor_pressed = 1;
+            }
+            break;
 
-    case INPUT_KEY_Return:
-    case INPUT_KEY_KP_Enter:
-    case INPUT_JOYSTICK_FIRE_1:
-    query[highlight_line].click();
-    widget_end_all(WIDGET_FINISHED_OK);
-    display_refresh_all();
-    return;
+        case INPUT_KEY_Return:
+        case INPUT_KEY_KP_Enter:
+        case INPUT_JOYSTICK_FIRE_1:
+            query[highlight_line].click();
+            widget_end_all(WIDGET_FINISHED_OK);
+            display_refresh_all();
+            return;
 
-    default: // Keep gcc happy
-    break;
-
+        default: // Keep gcc happy
+            break;
     }
 
     if (cursor_pressed) {
-    int old_highlight_line = highlight_line;
-    highlight_line = new_highlight_line;
-    widget_query_line_draw(menu_left_edge_x, menu_width,
-                            query + old_highlight_line,
-                            query[old_highlight_line].text);
-    widget_query_line_draw(menu_left_edge_x, menu_width,
-                            query + highlight_line,
-                            query[highlight_line].text);
-    return;
+        int old_highlight_line = highlight_line;
+        highlight_line = new_highlight_line;
+        widget_query_line_draw(menu_left_edge_x, menu_width, (query + old_highlight_line), query[old_highlight_line].text);
+        widget_query_line_draw(menu_left_edge_x, menu_width, (query + highlight_line), query[highlight_line].text);
+        return;
     }
 
-    for (ptr=query; ptr->text != NULL; ptr++) {
-    if (key == ptr->key) {
-      int old_highlight_line = highlight_line;
-      ptr->click();
-      highlight_line = ptr->index;
-      widget_query_line_draw(menu_left_edge_x, menu_width,
-                              query + old_highlight_line,
-                              query[old_highlight_line].text);
-      widget_query_line_draw(menu_left_edge_x, menu_width, ptr,
-                              query[highlight_line].text);
-      break;
-    }
+    for (ptr = query; ptr->text != NULL; ptr++) {
+        if (key == ptr->key) {
+            int old_highlight_line = highlight_line;
+            ptr->click();
+            highlight_line = ptr->index;
+            widget_query_line_draw(menu_left_edge_x, menu_width, (query + old_highlight_line), query[old_highlight_line].text);
+            widget_query_line_draw(menu_left_edge_x, menu_width, ptr, query[highlight_line].text);
+            break;
+        }
     }
 }
 
 
 void widget_query_keyhandler(input_key key)
 {
-    widget_query_generic_keyhandler(query_confirm,
-                                   ARRAY_SIZE(query_confirm),
-                                   key);
+    widget_query_generic_keyhandler(query_confirm, ARRAY_SIZE(query_confirm), key);
 }
 
 
 void widget_query_save_keyhandler(input_key key)
 {
-    widget_query_generic_keyhandler(query_save,
-                                   ARRAY_SIZE(query_save),
-                                   key);
+    widget_query_generic_keyhandler(query_save, ARRAY_SIZE(query_save), key);
 }
 
 
 int widget_query_finish(widget_finish_state finished)
 {
     int i;
-    for (i=0; i<num_message_lines; i++) {
-    free(message_lines[i]);
+    for (i = 0; i < num_message_lines; i++) {
+        free(message_lines[i]);
     }
     free(message_lines);
     message_lines = NULL;
