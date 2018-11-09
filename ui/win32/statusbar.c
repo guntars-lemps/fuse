@@ -127,7 +127,7 @@ int win32statusbar_set_visibility(int visible)
 
 void win32statusbar_update_machine(const char *name)
 {
-    SendMessage(fuse_hStatusWindow, SB_SETTEXT, (WPARAM) 0, (LPARAM) name);
+    SendMessage(fuse_hStatusWindow, SB_SETTEXT, (WPARAM)0, (LPARAM)name);
 }
 
 
@@ -151,8 +151,8 @@ int ui_statusbar_update_speed(float speed)
     TCHAR buffer[8];
 
     _sntprintf(buffer, 8, "\t%3.0f%%", speed); // \t centers the text
-    SendMessage(fuse_hStatusWindow, SB_SETTEXT, (WPARAM) 2,
-               (LPARAM) buffer);
+    SendMessage(fuse_hStatusWindow, SB_SETTEXT, (WPARAM)2,
+               (LPARAM)buffer);
 
     return 0;
 }
@@ -286,5 +286,5 @@ void win32statusbar_resize(HWND hWnd, WPARAM wParam GCC_UNUSED, LPARAM lParam)
     parts[0] = parts[0] - icons_part_width - speed_bar_width;
     parts[1] = parts[0] + icons_part_width;
     parts[2] = parts[1] + speed_bar_width;
-    SendMessage(fuse_hStatusWindow, SB_SETPARTS, 3, (LPARAM) &parts);
+    SendMessage(fuse_hStatusWindow, SB_SETPARTS, 3, (LPARAM)&parts);
 }

@@ -33,8 +33,7 @@
 #include "about.h"
 
 
-static INT_PTR CALLBACK dialog_proc(HWND hwndDlg, UINT uMsg,
-                                     WPARAM wParam, LPARAM lParam);
+static INT_PTR CALLBACK dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 static HFONT hBoldFont;
 
@@ -45,10 +44,11 @@ void menu_help_about(int action)
     fuse_emulation_pause();
 
     if (!IsWindow(fuse_hABOWnd)) {
-    fuse_hABOWnd = CreateDialog(fuse_hInstance,
-                                 MAKEINTRESOURCE(IDD_ABOUT),
-                                 fuse_hWnd, dialog_proc);
-    if (fuse_hABOWnd == NULL) {fuse_emulation_unpause(); return;}
+        fuse_hABOWnd = CreateDialog(fuse_hInstance, MAKEINTRESOURCE(IDD_ABOUT), fuse_hWnd, dialog_proc);
+        if (fuse_hABOWnd == NULL) {
+            fuse_emulation_unpause();
+            return;
+        }
     }
 
     ShowWindow(fuse_hABOWnd, SW_SHOW);
@@ -67,44 +67,42 @@ static void dialog_init(HWND hwndDlg)
     lfHeight = -MulDiv(16, GetDeviceCaps(hdc, LOGPIXELSY), 72);
     ReleaseDC(NULL, hdc);
 
-    hBoldFont = CreateFont(lfHeight, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0,
-                          0, 0, 0, "Arial");
+    hBoldFont = CreateFont(lfHeight, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 0, 0, "Arial");
 
     if (hBoldFont) {
-    win32ui_set_font(hwndDlg, IDC_ABOUT_STATIC_VERSION, hBoldFont);
+        win32ui_set_font(hwndDlg, IDC_ABOUT_STATIC_VERSION, hBoldFont);
     }
 
     ConvertCtlStaticToHyperlink(hwndDlg, IDC_ABOUT_STATIC_WEBSITE);
 }
 
-static INT_PTR CALLBACK
-dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+
+static INT_PTR CALLBACK dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg) {
-    case WM_INITDIALOG:
-      dialog_init(hwndDlg);
-      return TRUE;
+        case WM_INITDIALOG:
+            dialog_init(hwndDlg);
+            return TRUE;
 
-    case WM_COMMAND:
-      switch (LOWORD(wParam)) {
-        case IDCLOSE:
-        case IDCANCEL:
-          DestroyWindow(hwndDlg);
-          fuse_hABOWnd = NULL;
-          if (hBoldFont) DeleteObject(hBoldFont);
-          return TRUE;
-        case IDC_ABOUT_STATIC_WEBSITE:
-          ShellExecute(hwndDlg, "open", PACKAGE_URL,
-                 NULL, NULL, SW_SHOWNORMAL);
-          return TRUE;
-      }
-      break;
+        case WM_COMMAND:
+            switch (LOWORD(wParam)) {
+                case IDCLOSE:
+                case IDCANCEL:
+                    DestroyWindow(hwndDlg);
+                    fuse_hABOWnd = NULL;
+                    if (hBoldFont) DeleteObject(hBoldFont);
+                        return TRUE;
 
-    case WM_CLOSE:
-      DestroyWindow(hwndDlg);
-      fuse_hABOWnd = NULL;
-      return TRUE;
+                case IDC_ABOUT_STATIC_WEBSITE:
+                    ShellExecute(hwndDlg, "open", PACKAGE_URL, NULL, NULL, SW_SHOWNORMAL);
+                    return TRUE;
+            }
+            break;
+
+        case WM_CLOSE:
+            DestroyWindow(hwndDlg);
+            fuse_hABOWnd = NULL;
+            return TRUE;
     }
-
     return FALSE;
 }

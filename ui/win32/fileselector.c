@@ -29,12 +29,12 @@
 #include "utils.h"
 #include "win32internals.h"
 
-/* FIXME: remember the last directory when opening/saving
+/*
+FIXME: remember the last directory when opening/saving
 static char *current_folder;
 */
 
-/* TODO: poll libspectrum for supported file extensions and avoid duplication
-   between UIs */
+/* TODO: poll libspectrum for supported file extensions and avoid duplication between UIs */
 static LPCTSTR file_filter = TEXT(
 "Supported Files\0"
 "*.mgtsnp;*.slt;*.sna;*.snapshot;*.snp;*.sp;*.szx;*.z80;*.zx-state;"
@@ -81,8 +81,8 @@ static LPCTSTR file_filter = TEXT(
 
 static DWORD filter_index = 0;
 
-static char*
-run_dialog(const char *title, int is_saving)
+
+static char *run_dialog(const char *title, int is_saving)
 {
     OPENFILENAME ofn;
     char szFile[512];
@@ -103,41 +103,39 @@ run_dialog(const char *title, int is_saving)
     ofn.lpstrFileTitle = NULL;
     ofn.lpstrInitialDir = NULL;
     ofn.lpstrTitle = title;
-    ofn.Flags = /* OFN_DONTADDTORECENT | */ OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+    ofn.Flags =  OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
     if (is_saving) {
-    ofn.Flags |= OFN_OVERWRITEPROMPT | OFN_NOREADONLYRETURN;
+        ofn.Flags |= OFN_OVERWRITEPROMPT | OFN_NOREADONLYRETURN;
     } else {
-    ofn.Flags |= OFN_FILEMUSTEXIST;
+        ofn.Flags |= OFN_FILEMUSTEXIST;
     }
     ofn.nFileOffset = 0;
     ofn.nFileExtension = 0;
     ofn.lpstrDefExt = NULL;
-// ofn.pvReserved = NULL;
-// ofn.FlagsEx = 0;
 
     if (is_saving) {
-    result = GetSaveFileName(&ofn);
+        result = GetSaveFileName(&ofn);
     } else {
-    result = GetOpenFileName(&ofn);
+        result = GetOpenFileName(&ofn);
     }
 
     filter_index = ofn.nFilterIndex;
 
     if (!result) {
-    return NULL;
+        return NULL;
     } else {
-    return utils_safe_strdup(ofn.lpstrFile);
+        return utils_safe_strdup(ofn.lpstrFile);
     }
 }
 
-char*
-ui_get_open_filename(const char *title)
+
+char *ui_get_open_filename(const char *title)
 {
     return run_dialog(title, 0);
 }
 
-char*
-ui_get_save_filename(const char *title)
+
+char *ui_get_save_filename(const char *title)
 {
     return run_dialog(title, 1);
 }

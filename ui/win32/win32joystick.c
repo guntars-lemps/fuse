@@ -207,7 +207,7 @@ void menu_options_joysticks_select(int action)
     setup_info(&info, action);
 
     DialogBoxParam(fuse_hInstance, MAKEINTRESOURCE(IDD_JOYSTICKS),
-                  fuse_hWnd, dialog_proc, (LPARAM) &info);
+                  fuse_hWnd, dialog_proc, (LPARAM)&info);
 
     fuse_emulation_unpause();
 }
@@ -281,9 +281,9 @@ static void dialog_init(HWND hwndDlg, struct joystick_info *info)
     else {
       // disable the button configuration part of the dialog
       SendMessage(info->button[i].label, WM_SETTEXT,
-                   0, (LPARAM) TEXT("N/A"));
+                   0, (LPARAM)TEXT("N/A"));
       SendMessage(info->button[i].static_label, WM_SETTEXT,
-                   0, (LPARAM) TEXT("N/A"));
+                   0, (LPARAM)TEXT("N/A"));
       EnableWindow(info->button[i].label, FALSE);
       EnableWindow(info->button[i].static_label, FALSE);
       EnableWindow(GetDlgItem(hwndDlg,
@@ -368,7 +368,7 @@ static void create_joystick_type_selector(struct joystick_info *info, HWND hwndD
     HFONT font;
     RECT rect;
 
-    font = (HFONT) SendMessage(hwndDlg, WM_GETFONT, 0, 0);
+    font = (HFONT)SendMessage(hwndDlg, WM_GETFONT, 0, 0);
 
     for (i = 0; i < JOYSTICK_TYPE_COUNT; i++) {
 
@@ -382,7 +382,7 @@ static void create_joystick_type_selector(struct joystick_info *info, HWND hwndD
                                        rect.right - rect.left,
                                        rect.bottom - rect.top,
                                        hwndDlg, 0, fuse_hInstance, 0);
-    SendMessage(info->radio[i], WM_SETFONT, (WPARAM) font, FALSE);
+    SendMessage(info->radio[i], WM_SETFONT, (WPARAM)font, FALSE);
 
     if (i == *(info->type))
       SendMessage(info->radio[i], BM_SETCHECK, BST_CHECKED, 0);
@@ -401,12 +401,12 @@ static void create_joystick_type_selector(struct joystick_info *info, HWND hwndD
 static void create_fire_button_selector(const TCHAR *title, struct button_info *info,
                              HWND hwndDlg)
 {
-    SendMessage(info->frame, WM_SETTEXT, 0, (LPARAM) title);
+    SendMessage(info->frame, WM_SETTEXT, 0, (LPARAM)title);
     info->key = *info->setting;
     set_key_text(info->label, info->key);
     set_key_text(info->static_label, info->key);
 
-    SetWindowLongPtr(info->label, GWLP_USERDATA, (LONG_PTR) info);
+    SetWindowLongPtr(info->label, GWLP_USERDATA, (LONG_PTR)info);
 }
 
 
@@ -419,7 +419,7 @@ static void set_key_text(HWND hlabel, keyboard_key_name key)
 
     _sntprintf(buffer, 40, "%s", text);
 
-    SendMessage(hlabel, WM_SETTEXT, 0, (LPARAM) buffer);
+    SendMessage(hlabel, WM_SETTEXT, 0, (LPARAM)buffer);
 }
 
 
@@ -450,10 +450,10 @@ static void show_key_selection_popoup(HWND hwndDlg, LPARAM lParam)
     struct button_info *info;
     BOOL menu_id;
 
-    info = (struct button_info *) GetWindowLongPtr((HWND) lParam,
+    info = (struct button_info *) GetWindowLongPtr((HWND)lParam,
                                                     GWLP_USERDATA);
     // create a popup right over the button that has been clicked
-    GetWindowRect((HWND) lParam, &rect);
+    GetWindowRect((HWND)lParam, &rect);
     hpopup = GetSubMenu(LoadMenu(fuse_hInstance,
                      MAKEINTRESOURCE(IDR_JOYSTICKS_POPUP)), 0);
     // popup returns the key value

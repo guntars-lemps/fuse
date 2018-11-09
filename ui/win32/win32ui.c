@@ -846,7 +846,7 @@ int window_recommended_width(HWND hwndDlg, LPCTSTR title)
 
 void win32ui_set_font(HWND hDlg, int nIDDlgItem, HFONT font)
 {
-    SendDlgItemMessage(hDlg, nIDDlgItem , WM_SETFONT, (WPARAM) font, FALSE);
+    SendDlgItemMessage(hDlg, nIDDlgItem , WM_SETFONT, (WPARAM)font, FALSE);
 }
 
 
@@ -858,7 +858,7 @@ static void selector_dialog_build(HWND hwndDlg, win32ui_select_info *items)
     RECT wr, cr, or;
 
     // set the title of the window
-    SendMessage(hwndDlg, WM_SETTEXT, 0, (LPARAM) items->dialog_title);
+    SendMessage(hwndDlg, WM_SETTEXT, 0, (LPARAM)items->dialog_title);
 
     // Get decorations (pixels)
     GetWindowRect(hwndDlg, &wr);
@@ -894,9 +894,9 @@ static void selector_dialog_build(HWND hwndDlg, win32ui_select_info *items)
     CreateWindow(TEXT("BUTTON"), items->labels[i],
                   dwStyle,
                   or.left, or.top, or.right, or.bottom,
-                  hwndDlg, (HMENU) (LONG_PTR) (IDC_SELECT_OFFSET + i), fuse_hInstance, 0);
+                  hwndDlg, (HMENU)(LONG_PTR)(IDC_SELECT_OFFSET + i), fuse_hInstance, 0);
     SendDlgItemMessage(hwndDlg, (IDC_SELECT_OFFSET + i), WM_SETFONT,
-                        (WPARAM) h_ms_font, FALSE);
+                        (WPARAM)h_ms_font, FALSE);
 
     // check the radiobutton corresponding to current label
     if (i == items->selected) {
@@ -919,17 +919,17 @@ static void selector_dialog_build(HWND hwndDlg, win32ui_select_info *items)
     CreateWindow(TEXT("BUTTON"), TEXT("&OK"),
                 WS_VISIBLE | WS_CHILD | WS_TABSTOP | WS_GROUP | BS_DEFPUSHBUTTON,
                 left, or.top, or.right, or.bottom,
-                hwndDlg, (HMENU) IDOK, fuse_hInstance, 0);
+                hwndDlg, (HMENU)IDOK, fuse_hInstance, 0);
     SendDlgItemMessage(hwndDlg, IDOK, WM_SETFONT,
-                      (WPARAM) h_ms_font, FALSE);
+                      (WPARAM)h_ms_font, FALSE);
 
     left += or.right + or.left;
     CreateWindow(TEXT("BUTTON"), TEXT("&Cancel"),
                 WS_VISIBLE | WS_CHILD | WS_TABSTOP,
                 left, or.top, or.right, or.bottom,
-                hwndDlg, (HMENU) IDCANCEL, fuse_hInstance, 0);
+                hwndDlg, (HMENU)IDCANCEL, fuse_hInstance, 0);
     SendDlgItemMessage(hwndDlg, IDCANCEL, WM_SETFONT,
-                      (WPARAM) h_ms_font, FALSE);
+                      (WPARAM)h_ms_font, FALSE);
 
     client_height += 21; // Button height (14) + bottom margin (7) (DLUs)
 
@@ -958,7 +958,7 @@ selector_dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
       return TRUE;
 
     case WM_SETFONT:
-      h_ms_font = (HFONT) wParam;
+      h_ms_font = (HFONT)wParam;
       return TRUE; // "This message does not return a value."
 
     case WM_COMMAND:

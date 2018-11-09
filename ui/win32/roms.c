@@ -71,7 +71,7 @@ int menu_select_roms_with_title(const char *title, size_t start, size_t n,
     info.is_peripheral = is_peripheral;
 
     DialogBoxParam(fuse_hInstance, MAKEINTRESOURCE(IDD_ROMS), fuse_hWnd,
-                  (DLGPROC) roms_proc, (LPARAM) &info);
+                  (DLGPROC)roms_proc, (LPARAM)&info);
 
     // And then carry on with emulation again
     fuse_emulation_unpause();
@@ -89,14 +89,14 @@ roms_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_INITDIALOG:
       roms_init(hwndDlg, lParam);
       // save callback_info in userdata of this dialog
-      SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (LONG_PTR) lParam);
+      SetWindowLongPtr(hwndDlg, GWLP_USERDATA, (LONG_PTR)lParam);
       return FALSE;
 
     case WM_COMMAND:
       switch (LOWORD(wParam)) {
 
         case IDOK:
-          roms_done(hwndDlg, GetWindowLongPtr((HWND) hwndDlg, GWLP_USERDATA));
+          roms_done(hwndDlg, GetWindowLongPtr((HWND)hwndDlg, GWLP_USERDATA));
           EndDialog(hwndDlg, 0);
           return 0;
 
@@ -106,7 +106,7 @@ roms_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         default:
           if (HIWORD(wParam) == BN_CLICKED) {
-            hedit = (HWND) GetWindowLongPtr((HWND) lParam, GWLP_USERDATA);
+            hedit = (HWND)GetWindowLongPtr((HWND)lParam, GWLP_USERDATA);
             if (hedit > 0) {
               select_new_rom(hedit);
               return 0;
@@ -188,7 +188,7 @@ static void add_rom(HWND hwndDlg, size_t start, size_t row, int is_peripheral)
 
     _sntprintf(buffer, 80, "ROM %lu", (unsigned long)row);
 
-    font = (HFONT) SendMessage(hwndDlg, WM_GETFONT, 0, 0);
+    font = (HFONT)SendMessage(hwndDlg, WM_GETFONT, 0, 0);
 
     // create a groupbox
     rect.left = 0; rect.top = (row * 30);
@@ -199,7 +199,7 @@ static void add_rom(HWND hwndDlg, size_t start, size_t row, int is_peripheral)
                            rect.left, rect.top,
                            rect.right - rect.left, rect.bottom - rect.top,
                            hwndDlg, 0, fuse_hInstance, 0);
-    SendMessage(hgroup, WM_SETFONT, (WPARAM) font, FALSE);
+    SendMessage(hgroup, WM_SETFONT, (WPARAM)font, FALSE);
 
     // create an edit
     setting = settings_get_rom_setting(&settings_current, start + row,
@@ -214,7 +214,7 @@ static void add_rom(HWND hwndDlg, size_t start, size_t row, int is_peripheral)
                           rect.left, rect.top,
                           rect.right - rect.left, rect.bottom - rect.top,
                           hwndDlg, 0, fuse_hInstance, 0);
-    SendMessage(hedit, WM_SETFONT, (WPARAM) font, FALSE);
+    SendMessage(hedit, WM_SETFONT, (WPARAM)font, FALSE);
 
     rom[row] = hedit;
 
@@ -227,10 +227,10 @@ static void add_rom(HWND hwndDlg, size_t start, size_t row, int is_peripheral)
                             rect.left, rect.top,
                             rect.right - rect.left, rect.bottom - rect.top,
                             hwndDlg, 0, fuse_hInstance, 0);
-    SendMessage(hbutton, WM_SETFONT, (WPARAM) font, FALSE);
+    SendMessage(hbutton, WM_SETFONT, (WPARAM)font, FALSE);
 
     // associate handle to the edit box with each Select button as user data
-    SetWindowLongPtr(hbutton, GWLP_USERDATA, (LONG_PTR) hedit);
+    SetWindowLongPtr(hbutton, GWLP_USERDATA, (LONG_PTR)hedit);
 }
 
 
@@ -243,7 +243,7 @@ static void select_new_rom(HWND hedit)
         return;
     }
 
-    SendMessage(hedit, WM_SETTEXT, 0, (LPARAM) filename);
+    SendMessage(hedit, WM_SETTEXT, 0, (LPARAM)filename);
 }
 
 
@@ -263,7 +263,7 @@ static void roms_done(HWND hwndDlg, LONG_PTR lParam)
 
     string_len = SendMessage(rom[i], WM_GETTEXTLENGTH, 0, 0);
     string = malloc(sizeof(TCHAR) * (string_len + 1));
-    SendMessage(rom[i], WM_GETTEXT, string_len + 1, (LPARAM) string);
+    SendMessage(rom[i], WM_GETTEXT, string_len + 1, (LPARAM)string);
 
     settings_set_string(setting, string);
     free(string);

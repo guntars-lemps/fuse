@@ -54,7 +54,7 @@ static void dialog_init(HWND hwndDlg)
     lvc.cx = 100; // FIXME: preferably calculate the whole length
     lvc.pszText = (LPTSTR) TEXT("Seconds");
     SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_INSERTCOLUMN, 0,
-                        (LPARAM) &lvc);
+                        (LPARAM)&lvc);
 }
 
 
@@ -77,7 +77,7 @@ static int update_list(HWND hwndDlg, GSList *points)
                                     LVM_GETITEMCOUNT, 0, 0);
     lvi.pszText = buffer2[0];
     SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_INSERTITEM, 0,
-                        (LPARAM) &lvi);
+                        (LPARAM)&lvi);
 
     points = points->next;
     }
@@ -125,7 +125,7 @@ int ui_get_rollback_point(GSList *points)
     current_block = -1;
 
     result = DialogBoxParam(fuse_hInstance, MAKEINTRESOURCE(IDD_ROLLBACK),
-                           fuse_hWnd, dialog_proc, (LPARAM) points);
+                           fuse_hWnd, dialog_proc, (LPARAM)points);
 
     fuse_emulation_unpause();
 
