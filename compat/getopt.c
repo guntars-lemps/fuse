@@ -227,7 +227,7 @@ static char *my_index (const char *str, int chr)
 {
     while (*str) {
         if (*str == chr) {
-            return (char *) str;
+            return (char *)str;
         }
         str++;
     }

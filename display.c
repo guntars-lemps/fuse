@@ -206,7 +206,7 @@ int display_init(int *argc, char ***argv)
 
 static int display_init_wrapper(void *context)
 {
-    display_startup_context *typed_context = (display_startup_context*) context;
+    display_startup_context *typed_context = (display_startup_context*)context;
 
     return display_init(typed_context->argc, typed_context->argv);
 }
@@ -761,7 +761,7 @@ void display_set_hires_border(int colour)
 static void set_border(int y, int start, int end, int colour)
 {
     libspectrum_dword chunk_detail = colour << 11;
-    int index = start + y * DISPLAY_SCREEN_WIDTH_COLS;
+    int index = start + (y * DISPLAY_SCREEN_WIDTH_COLS);
 
     for (;start < end; start++) {
         // Draw it if it is different to what was there last time - we know that data and mode will have been the same
@@ -888,7 +888,7 @@ static void update_ui_screen(void)
                 if (movie_recording) {
                     movie_add_area(ptr->x, ptr->y, ptr->w, ptr->h);
                 }
-                uidisplay_area(8 * scale * ptr->x, scale * ptr->y, 8 * scale * ptr->w, scale * ptr->h);
+                uidisplay_area((8 * scale * ptr->x), (scale * ptr->y), (8 * scale * ptr->w), (scale * ptr->h));
             }
         }
         rectangle_inactive_count = 0;

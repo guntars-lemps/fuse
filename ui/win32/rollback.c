@@ -41,20 +41,17 @@ static void dialog_init(HWND hwndDlg)
 {
     // set extended listview style to select full row, when an item is selected
     DWORD lv_ext_style;
-    lv_ext_style = SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV,
-                                     LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
+    lv_ext_style = SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
     lv_ext_style |= LVS_EX_FULLROWSELECT;
-    SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV,
-                      LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style);
+    SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, lv_ext_style);
 
     // Create the column in the listview
     LVCOLUMN lvc;
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT ;
     lvc.fmt = LVCFMT_LEFT;
     lvc.cx = 100; // FIXME: preferably calculate the whole length
-    lvc.pszText = (LPTSTR) TEXT("Seconds");
-    SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_INSERTCOLUMN, 0,
-                        (LPARAM)&lvc);
+    lvc.pszText = (LPTSTR)TEXT("Seconds");
+    SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_INSERTCOLUMN, 0, (LPARAM)&lvc);
 }
 
 
@@ -68,49 +65,46 @@ static int update_list(HWND hwndDlg, GSList *points)
     lvi.mask = LVIF_TEXT;
 
     while (points) {
-    TCHAR buffer[256];
-    TCHAR *buffer2[1] = {buffer};
+        TCHAR buffer[256];
+        TCHAR *buffer2[1] = {buffer};
 
-    _sntprintf(buffer, 256, "%.2f", GPOINTER_TO_INT(points->data) / 50.0);
+        _sntprintf(buffer, 256, "%.2f", (GPOINTER_TO_INT(points->data) / 50.0));
 
-    lvi.iItem = SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV,
-                                    LVM_GETITEMCOUNT, 0, 0);
-    lvi.pszText = buffer2[0];
-    SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_INSERTITEM, 0,
-                        (LPARAM)&lvi);
+        lvi.iItem = SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_GETITEMCOUNT, 0, 0);
+        lvi.pszText = buffer2[0];
+        SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_INSERTITEM, 0, (LPARAM)&lvi);
 
-    points = points->next;
+        points = points->next;
     }
 
     return 0;
 }
 
-static INT_PTR CALLBACK
-dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+
+static INT_PTR CALLBACK dialog_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg) {
 
-    case WM_INITDIALOG:
-      dialog_init(hwndDlg);
-      update_list(hwndDlg, (GSList *) lParam);
-      return FALSE;
+        case WM_INITDIALOG:
+            dialog_init(hwndDlg);
+            update_list(hwndDlg, (GSList *)lParam);
+            return FALSE;
 
-    case WM_COMMAND:
-      switch (LOWORD(wParam)) {
-        case IDOK:
-          EndDialog(hwndDlg, SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV,
-                     LVM_GETSELECTIONMARK, 0, 0));
-          return 0;
+        case WM_COMMAND:
+            switch (LOWORD(wParam)) {
+                case IDOK:
+                    EndDialog(hwndDlg, SendDlgItemMessage(hwndDlg, IDC_ROLLBACK_LV, LVM_GETSELECTIONMARK, 0, 0));
+                    return 0;
 
-        case IDCANCEL:
-          EndDialog(hwndDlg, -1);
-          return 0;
-      }
-      break;
+                case IDCANCEL:
+                    EndDialog(hwndDlg, -1);
+                    return 0;
+            }
+            break;
 
-    case WM_CLOSE:
-      EndDialog(hwndDlg, -1);
-      return 0;
+        case WM_CLOSE:
+            EndDialog(hwndDlg, -1);
+            return 0;
     }
     return FALSE;
 }
@@ -124,8 +118,7 @@ int ui_get_rollback_point(GSList *points)
 
     current_block = -1;
 
-    result = DialogBoxParam(fuse_hInstance, MAKEINTRESOURCE(IDD_ROLLBACK),
-                           fuse_hWnd, dialog_proc, (LPARAM)points);
+    result = DialogBoxParam(fuse_hInstance, MAKEINTRESOURCE(IDD_ROLLBACK), fuse_hWnd, dialog_proc, (LPARAM)points);
 
     fuse_emulation_unpause();
 

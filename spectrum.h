@@ -30,8 +30,8 @@
 
 #include "memory_pages.h"
 
-/* How many tstates have elapsed since the last interrupt? (or more
-   precisely, since the ULA last pulled the /INT line to the Z80 low) */
+/* How many tstates have elapsed since the last interrupt?
+  (or more precisely, since the ULA last pulled the /INT line to the Z80 low) */
 extern libspectrum_dword tstates;
 
 // Things relating to memory

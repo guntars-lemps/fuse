@@ -39,6 +39,7 @@ static int keypress(const input_event_key_t *event);
 static int keyrelease(const input_event_key_t *event);
 static int do_joystick(const input_event_joystick_t *joystick_event, int press);
 
+
 int input_event(const input_event_t *event)
 {
     switch (event->type) {

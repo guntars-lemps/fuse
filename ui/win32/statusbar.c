@@ -63,37 +63,38 @@ void win32statusbar_create(HWND hWnd)
 
     // FIXME: destroy those icons later on using DeleteObject
 
-    icon_tape_inactive = LoadImage(fuse_hInstance, "win32bmp_tape_inactive",
-                                  IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-    icon_tape_active = LoadImage(fuse_hInstance, "win32bmp_tape_active",
-                                IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_tape_inactive = LoadImage(fuse_hInstance, "win32bmp_tape_inactive", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_tape_active = LoadImage(fuse_hInstance, "win32bmp_tape_active", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-    icon_mdr_inactive = LoadImage(fuse_hInstance, "win32bmp_mdr_inactive",
-                                  IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-    icon_mdr_active = LoadImage(fuse_hInstance, "win32bmp_mdr_active",
-                                IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_mdr_inactive = LoadImage(fuse_hInstance, "win32bmp_mdr_inactive", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_mdr_active = LoadImage(fuse_hInstance, "win32bmp_mdr_active", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-    icon_disk_inactive = LoadImage(fuse_hInstance, "win32bmp_disk_inactive",
-                                  IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-    icon_disk_active = LoadImage(fuse_hInstance, "win32bmp_disk_active",
-                                IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_disk_inactive = LoadImage(fuse_hInstance, "win32bmp_disk_inactive", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_disk_active = LoadImage(fuse_hInstance, "win32bmp_disk_active", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-    icon_pause_inactive = LoadImage(fuse_hInstance, "win32bmp_pause_inactive",
-                                   IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-    icon_pause_active = LoadImage(fuse_hInstance, "win32bmp_pause_active",
-                                 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_pause_inactive = LoadImage(fuse_hInstance, "win32bmp_pause_inactive", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_pause_active = LoadImage(fuse_hInstance, "win32bmp_pause_active", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
-    icon_mouse_inactive = LoadImage(fuse_hInstance, "win32bmp_mouse_inactive",
-                                   IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
-    icon_mouse_active = LoadImage(fuse_hInstance, "win32bmp_mouse_active",
-                                 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_mouse_inactive = LoadImage(fuse_hInstance, "win32bmp_mouse_inactive", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+    icon_mouse_active = LoadImage(fuse_hInstance, "win32bmp_mouse_active", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
 
     dwStyle = WS_CHILD | SBARS_SIZEGRIP;
-    if (settings_current.statusbar) dwStyle = dwStyle | WS_VISIBLE;
+    if (settings_current.statusbar) {
+        dwStyle = dwStyle | WS_VISIBLE;
+    }
 
-    fuse_hStatusWindow = CreateWindowEx(0, STATUSCLASSNAME, NULL, dwStyle,
-                                       0, 0, 0, 0, hWnd, (HMENU)ID_STATUSBAR,
-                                       fuse_hInstance, NULL);
+    fuse_hStatusWindow = CreateWindowEx(0,
+                                        STATUSCLASSNAME,
+                                        NULL,
+                                        dwStyle,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        hWnd,
+                                        (HMENU)ID_STATUSBAR,
+                                        fuse_hInstance,
+                                        NULL);
 
     // minimum size of the status bar is the height of the highest icon
     SendMessage(fuse_hStatusWindow, SB_SETMINHEIGHT, icons_part_height, 0);
@@ -113,9 +114,9 @@ int win32statusbar_set_visibility(int visible)
     }
 
     if (visible) {
-    ShowWindow(fuse_hStatusWindow, SW_SHOW);
+        ShowWindow(fuse_hStatusWindow, SW_SHOW);
     } else {
-    ShowWindow(fuse_hStatusWindow, SW_HIDE);
+        ShowWindow(fuse_hStatusWindow, SW_HIDE);
     }
 
     // Update main window size
@@ -134,13 +135,13 @@ void win32statusbar_update_machine(const char *name)
 int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state)
 {
     // Fix flickering on +2A, +3 and +3e machines because of high refresh rate
-    if (item == UI_STATUSBAR_ITEM_DISK && icons_status[item] == state) {
+    if ((item == UI_STATUSBAR_ITEM_DISK) && (icons_status[item] == state)) {
         return 0;
     }
 
     icons_status[item] = state;
 
-    SendMessage(fuse_hStatusWindow, SB_SETTEXT, 1 | SBT_OWNERDRAW, 0);
+    SendMessage(fuse_hStatusWindow, SB_SETTEXT, (1 | SBT_OWNERDRAW), 0);
 
     return 0;
 }
@@ -151,8 +152,7 @@ int ui_statusbar_update_speed(float speed)
     TCHAR buffer[8];
 
     _sntprintf(buffer, 8, "\t%3.0f%%", speed); // \t centers the text
-    SendMessage(fuse_hStatusWindow, SB_SETTEXT, (WPARAM)2,
-               (LPARAM)buffer);
+    SendMessage(fuse_hStatusWindow, SB_SETTEXT, (WPARAM)2, (LPARAM)buffer);
 
     return 0;
 }
@@ -171,98 +171,111 @@ void win32statusbar_redraw(HWND hWnd, LPARAM lParam)
 
     src_bmp = 0;
 
-    di = (DRAWITEMSTRUCT*) lParam;
+    di = (DRAWITEMSTRUCT*)lParam;
     dest_dc = di->hDC;
     rc_item = di->rcItem;
 
     new_icons_part_width = 0;
 
-    for (i=0; i<5; i++) {
+    for (i = 0; i < 5; i++) {
 
-    switch (icons_order[i]) {
-      case UI_STATUSBAR_ITEM_DISK:
-        switch (icons_status[UI_STATUSBAR_ITEM_DISK]) {
-          case UI_STATUSBAR_STATE_NOT_AVAILABLE:
-            src_bmp = NULL; break;
-          case UI_STATUSBAR_STATE_ACTIVE:
-            src_bmp = icon_disk_active; break;
-          default:
-            src_bmp = icon_disk_inactive; break;
+        switch (icons_order[i]) {
+            case UI_STATUSBAR_ITEM_DISK:
+                switch (icons_status[UI_STATUSBAR_ITEM_DISK]) {
+                    case UI_STATUSBAR_STATE_NOT_AVAILABLE:
+                        src_bmp = NULL;
+                        break;
+                    case UI_STATUSBAR_STATE_ACTIVE:
+                        src_bmp = icon_disk_active;
+                        break;
+                    default:
+                        src_bmp = icon_disk_inactive;
+                        break;
+                }
+                break;
+
+            case UI_STATUSBAR_ITEM_MOUSE:
+                src_bmp = ((icons_status[UI_STATUSBAR_ITEM_MOUSE] == UI_STATUSBAR_STATE_ACTIVE) ?
+                           icon_mouse_active : icon_mouse_inactive);
+                break;
+
+            case UI_STATUSBAR_ITEM_PAUSED:
+                src_bmp = ((icons_status[UI_STATUSBAR_ITEM_PAUSED] == UI_STATUSBAR_STATE_ACTIVE) ?
+                           icon_pause_active : icon_pause_inactive);
+                break;
+
+            case UI_STATUSBAR_ITEM_MICRODRIVE:
+                switch (icons_status[UI_STATUSBAR_ITEM_MICRODRIVE]) {
+                    case UI_STATUSBAR_STATE_NOT_AVAILABLE:
+                        src_bmp = NULL;
+                        break;
+                    case UI_STATUSBAR_STATE_ACTIVE:
+                        src_bmp = icon_mdr_active;
+                        break;
+                    default:
+                        src_bmp = icon_mdr_inactive;
+                        break;
+                }
+                break;
+
+            case UI_STATUSBAR_ITEM_TAPE:
+                src_bmp = ((icons_status[UI_STATUSBAR_ITEM_TAPE] == UI_STATUSBAR_STATE_ACTIVE) ?
+                           icon_tape_active : icon_tape_inactive);
+                break;
         }
-        break;
 
-      case UI_STATUSBAR_ITEM_MOUSE:
-        src_bmp = (icons_status[UI_STATUSBAR_ITEM_MOUSE] == UI_STATUSBAR_STATE_ACTIVE ?
-                    icon_mouse_active : icon_mouse_inactive);
-        break;
+        if (src_bmp != NULL) {
+            new_icons_part_width += icons_part_margin;
 
-      case UI_STATUSBAR_ITEM_PAUSED:
-        src_bmp = (icons_status[UI_STATUSBAR_ITEM_PAUSED] == UI_STATUSBAR_STATE_ACTIVE ?
-                    icon_pause_active : icon_pause_inactive);
-        break;
+            // create a bitmap mask on the fly
+            GetObject(src_bmp, sizeof(bmp), &bmp);
+            src_bmp_mask = CreateBitmap(bmp.bmWidth, bmp.bmHeight, 1, 1, NULL);
+            src_dc = CreateCompatibleDC(NULL);
+            mask_dc = CreateCompatibleDC(NULL);
+            old_bmp = SelectObject(src_dc, src_bmp);
+            old_bmp_mask = SelectObject(mask_dc, src_bmp_mask);
+            SetBkColor(src_dc, RGB(0, 0, 0));
+            BitBlt(mask_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, src_dc, 0, 0, SRCCOPY);
+            BitBlt(src_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, mask_dc, 0, 0, SRCINVERT);
 
-      case UI_STATUSBAR_ITEM_MICRODRIVE:
-        switch (icons_status[UI_STATUSBAR_ITEM_MICRODRIVE]) {
-          case UI_STATUSBAR_STATE_NOT_AVAILABLE:
-            src_bmp = NULL; break;
-          case UI_STATUSBAR_STATE_ACTIVE:
-            src_bmp = icon_mdr_active; break;
-          default:
-            src_bmp = icon_mdr_inactive; break;
+            // blit the transparent icon onto the status bar
+            SelectObject(mask_dc, src_bmp_mask);
+            BitBlt(dest_dc,
+                   rc_item.left + new_icons_part_width,
+                   rc_item.top + (icons_part_height - bmp.bmHeight) - (2 * icons_part_margin),
+                   bmp.bmWidth,
+                   bmp.bmHeight,
+                   mask_dc,
+                   0,
+                   0,
+                   SRCAND);
+
+            SelectObject(src_dc, src_bmp);
+            BitBlt(dest_dc, rc_item.left + new_icons_part_width,
+                    rc_item.top + (icons_part_height - bmp.bmHeight)
+                    - (2 * icons_part_margin),
+                    bmp.bmWidth, bmp.bmHeight, src_dc, 0, 0, SRCPAINT);
+
+            SelectObject(src_dc, old_bmp);
+            SelectObject(mask_dc, old_bmp_mask);
+            DeleteDC(src_dc);
+            DeleteDC(mask_dc);
+            DeleteObject(src_bmp_mask);
+
+            new_icons_part_width += bmp.bmWidth;
         }
-        break;
-
-      case UI_STATUSBAR_ITEM_TAPE:
-        src_bmp = (icons_status[UI_STATUSBAR_ITEM_TAPE] == UI_STATUSBAR_STATE_ACTIVE ?
-                    icon_tape_active : icon_tape_inactive);
-        break;
     }
 
-    if (src_bmp != NULL) {
-      new_icons_part_width += icons_part_margin;
-
-      // create a bitmap mask on the fly
-      GetObject(src_bmp, sizeof(bmp), &bmp);
-      src_bmp_mask = CreateBitmap(bmp.bmWidth, bmp.bmHeight, 1, 1, NULL);
-      src_dc = CreateCompatibleDC(NULL);
-      mask_dc = CreateCompatibleDC(NULL);
-      old_bmp = SelectObject(src_dc, src_bmp);
-      old_bmp_mask = SelectObject(mask_dc, src_bmp_mask);
-      SetBkColor(src_dc, RGB(0, 0, 0));
-      BitBlt(mask_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, src_dc, 0, 0, SRCCOPY);
-      BitBlt(src_dc, 0, 0, bmp.bmWidth, bmp.bmHeight, mask_dc, 0, 0, SRCINVERT);
-
-      // blit the transparent icon onto the status bar
-      SelectObject(mask_dc, src_bmp_mask);
-      BitBlt(dest_dc, rc_item.left + new_icons_part_width,
-              rc_item.top + (icons_part_height - bmp.bmHeight)
-              - (2 * icons_part_margin),
-              bmp.bmWidth, bmp.bmHeight, mask_dc, 0, 0, SRCAND);
-
-      SelectObject(src_dc, src_bmp);
-      BitBlt(dest_dc, rc_item.left + new_icons_part_width,
-              rc_item.top + (icons_part_height - bmp.bmHeight)
-              - (2 * icons_part_margin),
-              bmp.bmWidth, bmp.bmHeight, src_dc, 0, 0, SRCPAINT);
-
-      SelectObject(src_dc, old_bmp);
-      SelectObject(mask_dc, old_bmp_mask);
-      DeleteDC(src_dc);
-      DeleteDC(mask_dc);
-      DeleteObject(src_bmp_mask);
-
-      new_icons_part_width += bmp.bmWidth;
+    if (new_icons_part_width > 0) {
+        new_icons_part_width += icons_part_margin;
     }
-    }
-
-    if (new_icons_part_width > 0) new_icons_part_width += icons_part_margin;
     // FIXME: if the calculations are correction I shouldn't be adding this
     new_icons_part_width += (2 * icons_part_margin);
 
     // Resize icons part if needed
     if (new_icons_part_width != icons_part_width) {
-    icons_part_width = new_icons_part_width;
-    win32statusbar_resize(fuse_hWnd, 0, 0);
+        icons_part_width = new_icons_part_width;
+        win32statusbar_resize(fuse_hWnd, 0, 0);
     }
 }
 
@@ -276,11 +289,11 @@ void win32statusbar_resize(HWND hWnd, WPARAM wParam GCC_UNUSED, LPARAM lParam)
     int parts[3];
 
     if (LOWORD(lParam) > 0) {
-    parts[0] = LOWORD(lParam);
+        parts[0] = LOWORD(lParam);
     }
     else {
-    GetClientRect(hWnd, &rcClient);
-    parts[0] = rcClient.right - rcClient.left;
+        GetClientRect(hWnd, &rcClient);
+        parts[0] = rcClient.right - rcClient.left;
     }
 
     parts[0] = parts[0] - icons_part_width - speed_bar_width;

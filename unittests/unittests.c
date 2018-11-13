@@ -50,7 +50,13 @@
 #include "unittests.h"
 
 
-#define TEST_ASSERT(x) do {if (!(x)) {printf("Test assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #x); return 1;}} while (0)
+#define TEST_ASSERT(x) \
+do {\
+    if (!(x)) {\
+        printf("Test assertion failed at %s:%d: %s\n", __FILE__, __LINE__, #x);\
+        return 1;\
+    }\
+} while (0)\
 
 
 static int contention_test(void)

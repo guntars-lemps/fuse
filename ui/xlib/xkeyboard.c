@@ -53,6 +53,7 @@ static void get_keysyms(XKeyEvent *event, input_event_t *fuse_event)
     fuse_event->types.key.spectrum_key = keysyms_remap(spectrum);
 }
 
+
 void xkeyboard_keypress(XKeyEvent *event)
 {
     input_event_t fuse_event;
@@ -62,6 +63,7 @@ void xkeyboard_keypress(XKeyEvent *event)
 
     input_event(&fuse_event);
 }
+
 
 void xkeyboard_keyrelease(XKeyEvent *event)
 {

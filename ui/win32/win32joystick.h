@@ -84,7 +84,5 @@
    button_down = 1 => button pressed
    button_down = 0 => button released
 */
-void win32joystick_buttonevent(int which_joystick, int button_down,
-                                unsigned int wParam);
-void win32joystick_move(int which_joystick,
-                         unsigned short pos_x, unsigned short pos_y);
+void win32joystick_buttonevent(int which_joystick, int button_down, unsigned int wParam);
+void win32joystick_move(int which_joystick, unsigned short pos_x, unsigned short pos_y);

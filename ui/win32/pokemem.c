@@ -215,7 +215,7 @@ LRESULT CALLBACK listview_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
         case WM_NOTIFY:
 
-            NMHDR *nmhdr = (NMHDR *) lParam;
+            NMHDR *nmhdr = (NMHDR *)lParam;
 
             switch (nmhdr->code) {
 
@@ -366,7 +366,7 @@ void initialize_dialog(HWND hwnd_dialog)
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
     lvc.fmt = LVCFMT_LEFT;
     lvc.cx = cx - (cx >> 2);
-    lvc.pszText = (LPTSTR) TEXT("Trainer");
+    lvc.pszText = (LPTSTR)TEXT("Trainer");
     SendMessage(hwnd_list, LVM_INSERTCOLUMN, 0, (LPARAM)&lvc);
 
     // Create value column

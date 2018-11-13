@@ -100,9 +100,9 @@
 #define FLAG_Z    0x40
 #define FLAG_S    0x80
 
-/* Get the appropriate contended memory delay. Use a macro for performance
-   reasons in the main core, but a function for flexibility when building
-   the core tester */
+/* Get the appropriate contended memory delay.
+   Use a macro for performance reasons in the main core,
+   but a function for flexibility when building the core tester */
 
 #ifndef CORETEST
 

@@ -942,7 +942,9 @@ int ui_mdr_write(int which, int saveas)
     return err;
 }
 
+
 #ifdef USE_WIDGET
+
 
 int ui_widget_init(void)
 {
@@ -954,7 +956,10 @@ int ui_widget_end(void)
 {
     return widget_end();
 }
+
+
 #else
+
 
 int ui_widget_init(void)
 {
@@ -976,4 +981,6 @@ void ui_popup_menu(int native_key)
 void ui_widget_keyhandler(int native_key)
 {
 }
+
+
 #endif // #ifndef USE_WIDGET

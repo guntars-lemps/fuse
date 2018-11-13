@@ -63,7 +63,7 @@ static void update_display(HWND hwndDlg, libspectrum_word base)
     int i, j;
 
     TCHAR buffer[8 + 64 + 20];
-    TCHAR *text[] = { &buffer[0], &buffer[8], &buffer[8 + 64] };
+    TCHAR *text[] = {&buffer[0], &buffer[8], &buffer[8 + 64]};
     TCHAR buffer2[8];
 
     memaddr = base;

@@ -208,7 +208,9 @@ int rzx_stop_recording(void)
 
     // Stop recording data
     rzx_recording = 0;
-    if (settings_current.movie_stop_after_rzx) movie_stop();
+    if (settings_current.movie_stop_after_rzx) {
+        movie_stop();
+    }
 
     // Embed final snapshot
     if (!rzx_competition_mode) {

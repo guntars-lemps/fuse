@@ -47,16 +47,16 @@ int xerror_handler(Display *display, XErrorEvent *error)
     /* If we were expecting an error to occur, just set a flag. Otherwise,
      exit in a fairly spectacular fashion */
     if (xerror_expecting) {
-    xerror_error = error->error_code;
+        xerror_error = error->error_code;
     } else {
 
-    char message[64];
+        char message[64];
 
-    XGetErrorText(display, error->error_code, message, 63);
+        XGetErrorText(display, error->error_code, message, 63);
 
-    fprintf(stderr, "X Error: %s\n", message);
+        fprintf(stderr, "X Error: %s\n", message);
 
-    exit(1);
+        exit(1);
 
     }
 

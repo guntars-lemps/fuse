@@ -123,7 +123,7 @@ static INT_PTR CALLBACK binarydata_proc(HWND hwndDlg, UINT uMsg, WPARAM wParam, 
                     return 0;
 
                 case IDOK:
-                    info = (struct binary_info *) GetWindowLongPtr(hwndDlg, GWLP_USERDATA);
+                    info = (struct binary_info *)GetWindowLongPtr(hwndDlg, GWLP_USERDATA);
                     info->on_execute(hwndDlg, (LONG_PTR)info) ;
                     return 0;
 

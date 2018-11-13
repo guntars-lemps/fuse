@@ -245,7 +245,9 @@ int utils_open_file(const char *filename, int autoload, libspectrum_id_t *type_p
 
     utils_close_file(&file);
 
-    if (type_ptr) *type_ptr = type;
+    if (type_ptr) {
+        *type_ptr = type;
+    }
 
     return 0;
 }

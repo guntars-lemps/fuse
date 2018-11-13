@@ -210,8 +210,12 @@ MENU_CALLBACK(menu_file_recording_stop)
 
     ui_widget_finish();
 
-    if (rzx_recording) rzx_stop_recording();
-    if (rzx_playback) rzx_stop_playback(1);
+    if (rzx_recording) {
+        rzx_stop_recording();
+    }
+    if (rzx_playback) {
+        rzx_stop_playback(1);
+    }
 }
 
 

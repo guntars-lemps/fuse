@@ -247,7 +247,8 @@ static void contend_port_postio(libspectrum_word port)
             tstates += 3;
         }
     } else {
-        printf("%5d PC %04x\n", tstates, port); tstates += 3;
+        printf("%5d PC %04x\n", tstates, port);
+        tstates += 3;
     }
 }
 

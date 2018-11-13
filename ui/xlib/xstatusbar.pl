@@ -58,18 +58,24 @@ foreach(sort keys %overlay) {
   my $N = uc $n;
 $overlay .= <<EOS;
 
-  switch( ${n}_state ) {
-  case UI_STATUSBAR_STATE_ACTIVE:
-    x = ${N}_ACTIVE_OFF; w = ${N}_ACTIVE_W; h = ${N}_ACTIVE_H;
-    break;
-  case UI_STATUSBAR_STATE_INACTIVE:
-    x = ${N}_INACTIVE_OFF; w = ${N}_INACTIVE_W; h = ${N}_INACTIVE_H;
-    break;
-  case UI_STATUSBAR_STATE_NOT_AVAILABLE:
-    w = 0;
-    break;
-  }
-  if( w ) xstatusbar_put_icon( x, w, h );
+    switch (${n}_state) {
+        case UI_STATUSBAR_STATE_ACTIVE:
+            x = ${N}_ACTIVE_OFF;
+            w = ${N}_ACTIVE_W;
+            h = ${N}_ACTIVE_H;
+            break;
+        case UI_STATUSBAR_STATE_INACTIVE:
+            x = ${N}_INACTIVE_OFF;
+            w = ${N}_INACTIVE_W;
+            h = ${N}_INACTIVE_H;
+            break;
+        case UI_STATUSBAR_STATE_NOT_AVAILABLE:
+            w = 0;
+            break;
+    }
+    if (w) {
+        xstatusbar_put_icon(x, w, h);
+    }
 EOS
 }
 print "#define PIXMAPS_W $offset\n#define PIXMAPS_H $maxh\n\n";
@@ -79,69 +85,75 @@ static ui_statusbar_state $xstates;
 static int status_updated;
 static int icon_size = 0;
 
-static void
-xstatusbar_add_pixmap(int x, int pw, int h, libspectrum_word *colors)
+static void xstatusbar_add_pixmap(int x, int pw, int h, libspectrum_word *colors)
 {
-  int y = 3 * DISPLAY_SCREEN_HEIGHT;
-  x *= icon_size;
-  for( ; h > 0; h-- ) {
-    int w = pw;
-    for( ; w > 0; w-- ) {
-      int i;
-      for( i = icon_size; i > 0; i-- ) {
-        xdisplay_putpixel( x, y, colors);
-        if( icon_size > 1 )
-          xdisplay_putpixel( x, y + 1, colors);
-        if( icon_size > 2 )
-          xdisplay_putpixel( x, y + 2, colors);
-        x++;
-      }
-      colors++;
+    int y = 3 * DISPLAY_SCREEN_HEIGHT;
+    x *= icon_size;
+    for (; h > 0; h--) {
+        int w = pw;
+        for (; w > 0; w--) {
+            int i;
+            for (i = icon_size; i > 0; i--) {
+                xdisplay_putpixel(x, y, colors);
+                if (icon_size > 1) {
+                    xdisplay_putpixel( x, y + 1, colors);
+                }
+                if (icon_size > 2) {
+                    xdisplay_putpixel( x, y + 2, colors);
+                }
+                x++;
+            }
+            colors++;
+        }
+        x -= pw * icon_size;
+        y += icon_size;
     }
-    x -= pw * icon_size; y += icon_size;
-  }
 }
+
+
 /* put status icons to X(Shm)Image extra area */
-void
-xstatusbar_init( int size )
+void xstatusbar_init(int size)
 {
-  if( icon_size == size )
-    return;
-  icon_size = size;
-
-$add_pixmap}
-
-static void
-xstatusbar_put_icon( int x, int w, int h )
-{
-  static int dx = 0;
-  static int dy = 0;
-  w *= icon_size; x *= icon_size; h *= icon_size;
-  if( x < 0 || dx == 0 ) {
-    dx = ( DISPLAY_ASPECT_WIDTH - 2 ) * xdisplay_current_size;
-    dy = ( DISPLAY_SCREEN_HEIGHT - 2 ) * xdisplay_current_size - PIXMAPS_H * icon_size;
-    return;
-  }
-  dx -= w;
-  if( shm_used ) {
-#ifdef X_USE_SHM
-    /* FIXME: should wait for an ShmCompletion event here */
-    XShmPutImage( display, xui_mainWindow, gc, image, x, 3 * DISPLAY_SCREEN_HEIGHT, dx, dy, w, h, True );
-#endif				/* #ifdef X_USE_SHM */
-  } else {
-    XPutImage( display, xui_mainWindow, gc, image, x, 3 * DISPLAY_SCREEN_HEIGHT, dx, dy, w, h );
-  }
-  dx -= 4; /* 4px space */
+    if (icon_size == size) {
+        return;
+    }
+    icon_size = size;
+    $add_pixmap
 }
 
-void
-xstatusbar_overlay( void )
-{
-  int x = 0, w = 0, h;
-  xstatusbar_put_icon( -1, 0, 0 );
 
-$overlay
-  status_updated = 0;
+static void xstatusbar_put_icon(int x, int w, int h)
+{
+    static int dx = 0;
+    static int dy = 0;
+    w *= icon_size;
+    x *= icon_size;
+    h *= icon_size;
+    if ((x < 0) || (dx == 0)) {
+        dx = (DISPLAY_ASPECT_WIDTH - 2) * xdisplay_current_size;
+        dy = ((DISPLAY_SCREEN_HEIGHT - 2) * xdisplay_current_size) - (PIXMAPS_H * icon_size);
+        return;
+    }
+    dx -= w;
+    if (shm_used) {
+#ifdef X_USE_SHM
+        /* FIXME: should wait for an ShmCompletion event here */
+        XShmPutImage(display, xui_mainWindow, gc, image, x, (3 * DISPLAY_SCREEN_HEIGHT), dx, dy, w, h, True);
+#endif				/* #ifdef X_USE_SHM */
+    } else {
+        XPutImage(display, xui_mainWindow, gc, image, x, (3 * DISPLAY_SCREEN_HEIGHT), dx, dy, w, h);
+    }
+    dx -= 4;
+    /* 4px space */
+}
+
+
+void xstatusbar_overlay(void)
+{
+    int x = 0, w = 0, h;
+    xstatusbar_put_icon(-1, 0, 0);
+    $overlay
+    status_updated = 0;
 }
 
 EOS
@@ -190,7 +202,7 @@ sub xpm_read() {
     #<character> { <key> <color> } { <key> <color> }
       if( /\s*\x22\s*([ -~])\s+c\s+(\x23[0-9a-fA-F]{6}|None)/ ) {
         if( substr( $2, 0, 1 ) eq '#' ) {
-          $_ = '0x' . sprintf('%04x', 
+          $_ = '0x' . sprintf('%04x',
                ((hex( substr( $2, 1, 2 ) ) >> 3) << 11) +
                ((hex( substr( $2, 3, 2 ) ) >> 2) << 5) +
                ((hex( substr( $2, 5, 2 ) ) >> 3))

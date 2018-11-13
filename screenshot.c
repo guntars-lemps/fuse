@@ -280,6 +280,7 @@ int screenshot_available_scalers(scaler_type scaler)
     }
 }
 
+
 #endif // #ifdef USE_LIBPNG
 
 
@@ -459,7 +460,7 @@ int screenshot_scr_read(const char *filename)
 
             // If it is a Timex and it is in hi colour or hires mode, switch out of hires or hicolour mode
             if (scld_last_dec.name.b1 || scld_last_dec.name.hires) {
-                scld_dec_write(0xff, scld_last_dec.byte & ~HIRES);
+                scld_dec_write(0xff, (scld_last_dec.byte & ~HIRES));
             }
             break;
 
@@ -470,7 +471,7 @@ int screenshot_scr_read(const char *filename)
                 if (!scld_last_dec.name.b1) {
                     scld_dec_write(0xff, (scld_last_dec.byte & ~HIRESATTR) | EXTCOLOUR);
                 }
-                memcpy(&RAM[memory_current_screen][display_get_addr(0,0) + ALTDFILE_OFFSET],
+                memcpy(&RAM[memory_current_screen][display_get_addr(0, 0) + ALTDFILE_OFFSET],
                        screen.buffer + MONO_BITMAP_SIZE,
                        MONO_BITMAP_SIZE);
             } else {

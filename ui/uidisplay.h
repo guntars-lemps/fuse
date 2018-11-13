@@ -35,8 +35,7 @@ void uidisplay_frame_end(void);
 int uidisplay_hotswap_gfx_mode(void);
 
 #ifdef USE_WIDGET
-/* Routines for backing up and restoring the frame buffer as the widget UI does
-   it's work */
+// Routines for backing up and restoring the frame buffer as the widget UI does it's work
 void uidisplay_frame_save(void);
 void uidisplay_frame_restore(void);
 #endif // #ifdef USE_WIDGET
@@ -48,9 +47,7 @@ int uidisplay_end(void);
 void uidisplay_spectrum_screen(const libspectrum_byte *screen, int border);
 
 void uidisplay_putpixel(int x, int y, int colour);
-void uidisplay_plot8(int x, int y, libspectrum_byte data, libspectrum_byte ink,
-                      libspectrum_byte paper);
-void uidisplay_plot16(int x, int y, libspectrum_word data, libspectrum_byte ink,
-                       libspectrum_byte paper);
+void uidisplay_plot8(int x, int y, libspectrum_byte data, libspectrum_byte ink, libspectrum_byte paper);
+void uidisplay_plot16(int x, int y, libspectrum_word data, libspectrum_byte ink, libspectrum_byte paper);
 
 #endif // #ifndef FUSE_UIDISPLAY_H

@@ -318,7 +318,7 @@ void memory_map_2k_read_write(libspectrum_word address, memory_page source[], in
     int i;
     for (i = 0; i < MEMORY_PAGES_IN_2K; i++) {
         int page_offset = (address >> MEMORY_PAGE_SIZE_LOGARITHM) + i;
-        memory_page *page = &source[page_num * MEMORY_PAGES_IN_2K + i];
+        memory_page *page = &source[(page_num * MEMORY_PAGES_IN_2K) + i];
         if (map_read) {
             memory_map_read[page_offset] = *page;
         }

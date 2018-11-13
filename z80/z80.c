@@ -181,7 +181,8 @@ int z80_interrupt(void)
                This occured whilst accepting an interrupt.
                For NMOS Z80s only, clear the parity flag to reflect the fact that
                IFF2 would have actually been cleared before its value was transferred by LD A,I or LD A,R.
-               We cannot do this when emulating LD itself as we cannot tell whether the next instruction will be interrupted. */
+               We cannot do this when emulating LD itself as we cannot tell whether
+               the next instruction will be interrupted. */
             F &= ~FLAG_P;
         }
 
@@ -210,11 +211,11 @@ int z80_interrupt(void)
 
             case 0:
                 /* We assume 0xff (RST 38) is on the data bus, as the Spectrum leaves
-                   it pulled high when the end-of-frame interrupt is delivered.  Only
-                   the first byte is provided directly to the Z80: all remaining bytes
-                   of the instruction are fetched from memory using PC, which is
-                   incremented as normal.  As RST 38 takes a single byte, we do not
-                   emulate fetching of additional bytes. */
+                   it pulled high when the end-of-frame interrupt is delivered.
+                   Only the first byte is provided directly to the Z80:
+                   all remaining bytes of the instruction are fetched from memory using PC,
+                   which is incremented as normal.
+                   As RST 38 takes a single byte, we do not emulate fetching of additional bytes. */
                 PC = 0x0038;
                 break;
 

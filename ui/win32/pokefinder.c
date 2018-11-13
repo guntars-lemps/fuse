@@ -179,7 +179,7 @@ static void update_pokefinder(void)
         dw_res = SendMessage(lv_hWnd, LVM_APPROXIMATEVIEWRECT, pokefinder_count, MAKELPARAM(-1, -1));
         rcx = lv_width; // same width
         rcy = HIWORD(dw_res);
-        SetWindowPos(lv_hWnd, NULL, 0, 0, rcx, rcy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+        SetWindowPos(lv_hWnd, NULL, 0, 0, rcx, rcy, (SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE));
 
         rcx = initial_width;
         rcy += initial_height + 10;

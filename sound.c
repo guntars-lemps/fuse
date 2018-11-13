@@ -48,16 +48,18 @@ int sound_enabled = 0; // Are we currently using the sound card
 static int sound_enabled_ever = 0; // whether sound has *ever* been in use; see sound_ay_write() and sound_ay_reset()
 int sound_stereo_ay = SOUND_STEREO_AY_NONE; // local copy of settings_current.stereo_ay
 
-/* assume all three tone channels together match the beeper volume (ish).
- * Must be <= 127 for all channels; 50 + 2 + (24 * 3) = 124.
- * (Now scaled up for 16-bit.)
+/*
+assume all three tone channels together match the beeper volume (ish).
+Must be <= 127 for all channels; 50 + 2 + (24 * 3) = 124.
+(Now scaled up for 16-bit.)
  */
 #define AMPL_BEEPER   (50 * 256)
-#define AMPL_TAPE     ( 2 * 256)
+#define AMPL_TAPE     (2 * 256)
 #define AMPL_AY_TONE  (24 * 256) // three of these
 
-/* max. number of sub-frame AY port writes allowed;
- * given the number of port writes theoretically possible in a 50th I think this should be plenty.
+/*
+max. number of sub-frame AY port writes allowed;
+given the number of port writes theoretically possible in a 50th I think this should be plenty.
  */
 #define AY_CHANGE_MAX 8000
 
@@ -217,9 +219,10 @@ void sound_init(const char *device)
     Blip_Synth **ay_mid_synth_r;
     Blip_Synth **ay_right_synth;
 
-    /* Allow sound as long as emulation speed is greater than 2%
-     (less than that and a single Speccy frame generates more than a seconds worth of sound
-     which is bigger than the maximum Blip_Buffer of 1 second) */
+    /*
+    Allow sound as long as emulation speed is greater than 2%
+    (less than that and a single Speccy frame generates more than a seconds worth of sound
+    which is bigger than the maximum Blip_Buffer of 1 second) */
     if (!(!sound_enabled && settings_current.sound && is_in_sound_enabled_range())) {
         return;
     }
@@ -262,18 +265,21 @@ void sound_init(const char *device)
     blip_synth_set_output(left_covox_synth, left_buf);
     blip_synth_set_treble_eq(left_covox_synth, treble);
 
-    /* important to override these settings if not using stereo
-     * (it would probably be confusing to mess with the stereo settings in settings_current though,
-     * which is why we make copies rather than using the real ones).
-     */
+    /*
+    important to override these settings if not using stereo
+    (it would probably be confusing to mess with the stereo settings in settings_current though,
+    which is why we make copies rather than using the real ones).
+    */
 
     ay_a_synth_r = NULL;
     ay_b_synth_r = NULL;
     ay_c_synth_r = NULL;
 
     if (sound_stereo_ay != SOUND_STEREO_AY_NONE) {
-        /* Attach the Blip_Synth's we've already created as appropriate, and
-         * create one more Blip_Synth for the middle channel's right buffer. */
+        /*
+        Attach the Blip_Synth's we've already created as appropriate, and
+        create one more Blip_Synth for the middle channel's right buffer.
+        */
         if (sound_stereo_ay == SOUND_STEREO_AY_ACB) {
             ay_left_synth = &ay_a_synth;
             ay_mid_synth = &ay_c_synth;
@@ -432,7 +438,7 @@ static void sound_ay_overlay(void)
     // If no AY chip, don't produce any AY sound (!)
     if (!(periph_is_active(PERIPH_TYPE_FULLER) ||
          periph_is_active(PERIPH_TYPE_MELODIK) ||
-         machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY)) {
+         (machine_current->capabilities & LIBSPECTRUM_MACHINE_CAPABILITY_AY))) {
         return;
     }
 
@@ -548,10 +554,11 @@ static void sound_ay_overlay(void)
             }
         }
 
-        /* generate tone + noise... or neither.
-         * (if no tone/noise is selected, the chip just shoves the level out unmodified.
-         * This is used by some sample-playing stuff)
-         */
+        /*
+        generate tone + noise... or neither.
+        (if no tone/noise is selected, the chip just shoves the level out unmodified.
+        This is used by some sample-playing stuff)
+        */
         chan1 = tone_level[0];
         chan2 = tone_level[1];
         chan3 = tone_level[2];
@@ -616,7 +623,7 @@ static void sound_ay_overlay(void)
                 noise_toggle = !noise_toggle;
             }
 
-            // rng is 17-bit shift reg, bit 0 is output.  input is bit 0 xor bit 3
+            // rng is 17-bit shift reg, bit 0 is output. input is bit 0 xor bit 3
             if (rng & 1) {
                 rng ^= 0x24000;
             }

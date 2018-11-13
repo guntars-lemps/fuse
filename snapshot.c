@@ -163,7 +163,8 @@ int snapshot_write(const char *filename)
     }
 
     if (flags & LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS) {
-        ui_error(UI_ERROR_WARNING, "A large amount of information has been lost in conversion; the snapshot probably won't work");
+        ui_error(UI_ERROR_WARNING,
+                 "A large amount of information has been lost in conversion; the snapshot probably won't work");
     } else if (flags & LIBSPECTRUM_FLAG_SNAPSHOT_MINOR_INFO_LOSS) {
         ui_error(UI_ERROR_WARNING, "Some information has been lost in conversion; the snapshot may not work");
     }

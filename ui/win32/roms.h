@@ -21,4 +21,4 @@
 
 */
 
-#define IDD_ROMS       1100
+#define IDD_ROMS 1100

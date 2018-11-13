@@ -59,12 +59,14 @@ int ui_end(void);
 
 // Error handling routines
 int ui_error(ui_error_level severity, const char *format, ...)
-     GCC_PRINTF(2, 3);
-libspectrum_error ui_libspectrum_error(libspectrum_error error,
-                    const char *format, va_list ap)
-     GCC_PRINTF(2, 0);
+GCC_PRINTF(2, 3);
+
+libspectrum_error ui_libspectrum_error(libspectrum_error error, const char *format, va_list ap)
+GCC_PRINTF(2, 0);
+
 int ui_verror(ui_error_level severity, const char *format, va_list ap)
-     GCC_PRINTF(2, 0);
+GCC_PRINTF(2, 0);
+
 int ui_error_specific(ui_error_level severity, const char *message);
 void ui_error_frame(void);
 
@@ -82,29 +84,25 @@ int ui_widgets_reset(void);
 
 // Confirm whether we want to save some data before overwriting it
 typedef enum ui_confirm_save_t {
-
     UI_CONFIRM_SAVE_SAVE, // Save the data
     UI_CONFIRM_SAVE_DONTSAVE, // Don't save the data
     UI_CONFIRM_SAVE_CANCEL, // Cancel the action
-
 } ui_confirm_save_t;
 
 ui_confirm_save_t ui_confirm_save(const char *format, ...)
-     GCC_PRINTF(1, 2);
+GCC_PRINTF(1, 2);
+
 ui_confirm_save_t ui_confirm_save_specific(const char *message);
 
 // Confirm whether we want to change a joystick setting
 typedef enum ui_confirm_joystick_t {
-
     UI_CONFIRM_JOYSTICK_NONE, // Don't map joystick
     UI_CONFIRM_JOYSTICK_KEYBOARD, // Map the joystick to the keyboard
     UI_CONFIRM_JOYSTICK_JOYSTICK_1, // Map the joystick to joystick 1
     UI_CONFIRM_JOYSTICK_JOYSTICK_2, // Map the joystick to joystick 2
-
 } ui_confirm_joystick_t;
 
-ui_confirm_joystick_t
-ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs);
+ui_confirm_joystick_t ui_confirm_joystick(libspectrum_joystick libspectrum_type, int inputs);
 
 // Mouse handling
 
@@ -127,7 +125,6 @@ int ui_get_rollback_point(GSList *points);
 // Routines to (de)activate certain menu items
 
 typedef enum ui_menu_item {
-
     UI_MENU_ITEM_INVALID = 0,
     UI_MENU_ITEM_FILE_SVG_CAPTURE,
     UI_MENU_ITEM_FILE_MOVIE_RECORDING,
@@ -241,8 +238,7 @@ typedef enum ui_menu_item {
     UI_MENU_ITEM_RECORDING,
     UI_MENU_ITEM_RECORDING_ROLLBACK,
     UI_MENU_ITEM_AY_LOGGING,
-    UI_MENU_ITEM_TAPE_RECORDING,
-
+    UI_MENU_ITEM_TAPE_RECORDING
 } ui_menu_item;
 
 int ui_menu_activate(ui_menu_item item, int active);
@@ -253,40 +249,31 @@ void ui_menu_disk_update(void);
 // Functions to update the statusbar
 
 typedef enum ui_statusbar_item {
-
     UI_STATUSBAR_ITEM_DISK,
     UI_STATUSBAR_ITEM_MICRODRIVE,
     UI_STATUSBAR_ITEM_MOUSE,
     UI_STATUSBAR_ITEM_PAUSED,
     UI_STATUSBAR_ITEM_TAPE,
-
 } ui_statusbar_item;
 
 typedef enum ui_statusbar_state {
-
     UI_STATUSBAR_STATE_NOT_AVAILABLE,
     UI_STATUSBAR_STATE_INACTIVE,
     UI_STATUSBAR_STATE_ACTIVE,
-
 } ui_statusbar_state;
 
 int ui_statusbar_update(ui_statusbar_item item, ui_statusbar_state state);
 int ui_statusbar_update_speed(float speed);
 
 typedef enum ui_tape_browser_update_type {
-
-    UI_TAPE_BROWSER_NEW_TAPE,             /* Whole tape image has changed
-                                           implies modified reset */
+    UI_TAPE_BROWSER_NEW_TAPE, // Whole tape image has changed implies modified reset
     UI_TAPE_BROWSER_SELECT_BLOCK, // Tape block selected has changed
-    UI_TAPE_BROWSER_NEW_BLOCK,            /* A new block has been appended,
-                                           implies modified set */
-    UI_TAPE_BROWSER_MODIFIED, // Tape modified status has changed
-
+    UI_TAPE_BROWSER_NEW_BLOCK, // A new block has been appended, implies modified set
+    UI_TAPE_BROWSER_MODIFIED // Tape modified status has changed
 } ui_tape_browser_update_type;
 
 // Cause the tape browser to be updated
-int ui_tape_browser_update(ui_tape_browser_update_type change,
-                            libspectrum_tape_block *block);
+int ui_tape_browser_update(ui_tape_browser_update_type change, libspectrum_tape_block *block);
 
 char *ui_get_open_filename(const char *title);
 char *ui_get_save_filename(const char *title);

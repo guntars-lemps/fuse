@@ -31,9 +31,8 @@ struct disk_t;
 struct ui_media_drive_info_t;
 
 typedef int (*ui_media_drive_is_available_fn)(void);
-typedef const struct fdd_params_t* (*ui_media_drive_get_params_fn) (void);
-typedef int (*ui_media_drive_insert_hook_fn)(
-    const struct ui_media_drive_info_t *drive, int new);
+typedef const struct fdd_params_t* (*ui_media_drive_get_params_fn)(void);
+typedef int (*ui_media_drive_insert_hook_fn)(const struct ui_media_drive_info_t *drive, int new);
 typedef int (*ui_media_drive_autoload_hook_fn)(void);
 
 typedef struct ui_media_drive_info_t
@@ -59,18 +58,16 @@ ui_media_drive_info_t *ui_media_drive_find(int controller, int drive);
 
 #define UI_MEDIA_DRIVE_UPDATE_ALL    (~0)
 #define UI_MEDIA_DRIVE_UPDATE_TOP    (1 << 0)
-#define UI_MEDIA_DRIVE_UPDATE_EJECT    (1 << 1)
-#define UI_MEDIA_DRIVE_UPDATE_FLIP    (1 << 2)
-#define UI_MEDIA_DRIVE_UPDATE_WP    (1 << 3)
+#define UI_MEDIA_DRIVE_UPDATE_EJECT  (1 << 1)
+#define UI_MEDIA_DRIVE_UPDATE_FLIP   (1 << 2)
+#define UI_MEDIA_DRIVE_UPDATE_WP     (1 << 3)
 
 int ui_media_drive_any_available(void);
 void ui_media_drive_update_parent_menus(void);
-void ui_media_drive_update_menus(const ui_media_drive_info_t *drive,
-                                  unsigned flags);
+void ui_media_drive_update_menus(const ui_media_drive_info_t *drive, unsigned flags);
 int ui_media_drive_eject_all(void);
 
-int ui_media_drive_insert(const ui_media_drive_info_t *drive,
-                           const char *filename, int autoload);
+int ui_media_drive_insert(const ui_media_drive_info_t *drive, const char *filename, int autoload);
 int ui_media_drive_save(int controller, int which, int saveas);
 int ui_media_drive_eject(int controller, int which);
 int ui_media_drive_flip(int controller, int which, int flip);
@@ -84,7 +81,8 @@ typedef enum ui_media_controller {
     UI_MEDIA_CONTROLLER_MDR,
     UI_MEDIA_CONTROLLER_OPUS,
     UI_MEDIA_CONTROLLER_DISCIPLE,
-    UI_MEDIA_CONTROLLER_DIDAKTIK,
+    UI_MEDIA_CONTROLLER_DIDAKTIK
 } ui_media_controller;
+
 
 #endif // #ifndef FUSE_UIMEDIA_H

@@ -74,8 +74,9 @@ void win32keyboard_init(void)
 
     oem_keysyms_hash = g_hash_table_new(g_int_hash, g_int_equal);
 
-    for (ptr3 = (keysyms_map_t *)oem_keysyms_map; ptr3->ui; ptr3++)
-    g_hash_table_insert(oem_keysyms_hash, &(ptr3->ui), &(ptr3->fuse));
+    for (ptr3 = (keysyms_map_t *)oem_keysyms_map; ptr3->ui; ptr3++) {
+        g_hash_table_insert(oem_keysyms_hash, &(ptr3->ui), &(ptr3->fuse));
+    }
 }
 
 
@@ -91,24 +92,24 @@ void win32keyboard_keypress(WPARAM wParam, LPARAM lParam)
     input_event_t fuse_event;
 
     switch (wParam) {
-    case VK_OEM_1:
-    case VK_OEM_2:
-    case VK_OEM_3:
-    case VK_OEM_4:
-    case VK_OEM_5:
-    case VK_OEM_6:
-    case VK_OEM_7:
-    case VK_OEM_8:
-    case VK_OEM_102:
-    case VK_OEM_COMMA:
-    case VK_OEM_MINUS:
-    case VK_OEM_PERIOD:
-    case VK_OEM_PLUS:
-    fuse_keysym = oem_keysyms_remap(wParam);
-    break;
-    default:
-    fuse_keysym = keysyms_remap(wParam);
-    break;
+        case VK_OEM_1:
+        case VK_OEM_2:
+        case VK_OEM_3:
+        case VK_OEM_4:
+        case VK_OEM_5:
+        case VK_OEM_6:
+        case VK_OEM_7:
+        case VK_OEM_8:
+        case VK_OEM_102:
+        case VK_OEM_COMMA:
+        case VK_OEM_MINUS:
+        case VK_OEM_PERIOD:
+        case VK_OEM_PLUS:
+            fuse_keysym = oem_keysyms_remap(wParam);
+            break;
+        default:
+            fuse_keysym = keysyms_remap(wParam);
+            break;
     }
 
     if (fuse_keysym == INPUT_KEY_NONE) {

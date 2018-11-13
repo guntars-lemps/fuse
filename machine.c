@@ -301,9 +301,7 @@ int machine_load_rom_bank_from_buffer(memory_page *bank_map,
 
     memcpy(data, buffer, length);
 
-    for (page = &bank_map[page_num * MEMORY_PAGES_IN_16K], offset = 0;
-         offset < length;
-         page++, offset += MEMORY_PAGE_SIZE) {
+    for (page = &bank_map[page_num * MEMORY_PAGES_IN_16K], offset = 0; offset < length; page++, offset += MEMORY_PAGE_SIZE) {
         page->offset = offset;
         page->page_num = page_num;
         page->page = data + offset;

@@ -21,6 +21,6 @@
 
 */
 
-#define IDD_MEM        4000
-#define IDC_MEM_LV     4001
-#define IDC_MEM_SB     4002
+#define IDD_MEM      4000
+#define IDC_MEM_LV   4001
+#define IDC_MEM_SB   4002

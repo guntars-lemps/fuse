@@ -189,6 +189,8 @@ static char get_screentype(void)
 
 
 #ifdef HAVE_ZLIB_H
+
+
 static void fwrite_compr(const void *b, size_t n, size_t m, FILE *f)
 {
     if (fmf_compr == 0) {
@@ -209,6 +211,8 @@ static void fwrite_compr(const void *b, size_t n, size_t m, FILE *f)
         } while (zstream.avail_in != 0);
     }
 }
+
+
 #else // HAVE_ZLIB_H
 #define fwrite_compr fwrite
 #endif // HAVE_ZLIB_H
@@ -251,7 +255,7 @@ static void movie_compress_area(int x, int y, int w, int h, int s)
             // d1 = d;
         }
         if ((b - buff) > (960 - 128)) { // worst case 40*1.5 per line
-            fwrite_compr(buff, b - buff, 1, of);
+            fwrite_compr(buff, (b - buff), 1, of);
             b = buff;
         }
     }
@@ -259,7 +263,7 @@ static void movie_compress_area(int x, int y, int w, int h, int s)
         *b++ = l;
     }
     if (b != buff) { // dump remain
-        fwrite_compr(buff, b - buff, 1, of);
+        fwrite_compr(buff, (b - buff), 1, of);
     }
 }
 
@@ -323,7 +327,7 @@ static void movie_start_fmf(const char *name)
 #else // HAVE_ZLIB_H
     fwrite("U", 1, 1, of); // cannot be compressed
 #endif // HAVE_ZLIB_H
-    movie_init_sound(settings_current.sound_freq, sound_stereo_ay != SOUND_STEREO_AY_NONE);
+    movie_init_sound(settings_current.sound_freq, (sound_stereo_ay != SOUND_STEREO_AY_NONE));
     head[0] = settings_current.frame_rate;
     head[1] = get_screentype();
     head[2] = get_timing();
