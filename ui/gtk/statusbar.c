@@ -45,12 +45,12 @@ static GdkPixbuf *pixbuf_mouse_inactive;
 static GdkPixbuf *pixbuf_mouse_active;
 
 
-static GtkWidget *microdrive_status, // Is any microdrive motor running?
-static GtkWidget *disk_status, // Is the disk motor running?
-static GtkWidget *mouse_status, // Have we grabbed the mouse?
-static GtkWidget *pause_status, // Is emulation paused (via the menu option)?
-static GtkWidget *tape_status, // Is the tape running?
-static GtkWidget *speed_status, // How fast are we running?
+static GtkWidget *microdrive_status; // Is any microdrive motor running?
+static GtkWidget *disk_status; // Is the disk motor running?
+static GtkWidget *mouse_status; // Have we grabbed the mouse?
+static GtkWidget *pause_status; // Is emulation paused (via the menu option)?
+static GtkWidget *tape_status; // Is the tape running?
+static GtkWidget *speed_status; // How fast are we running?
 static GtkWidget *machine_name; // What machine is being emulated?
 
 
